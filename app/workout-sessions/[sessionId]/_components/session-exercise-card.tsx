@@ -1,8 +1,9 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
-import { ChevronDown, Dumbbell, Loader2, Plus, Trash2, Zap } from "lucide-react";
+import { ChevronDown, Dumbbell, Info, Loader2, Plus, Trash2, Zap } from "lucide-react";
 
+import { ExerciseExecutionDialog } from "@/app/_components/exercise-media";
 import type {
   GetWorkoutSession200SessionExercisesItem,
   GetWorkoutSession200SessionExercisesItemSetsItem,
@@ -36,6 +37,7 @@ export function SessionExerciseCard({
   const [isExpanded, setIsExpanded] = useState(true);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isRemoving, startRemoveTransition] = useTransition();
+  const [isMediaOpen, setIsMediaOpen] = useState(false);
   // Inicializa a lista local de séries
   const [sets, setSets] = useState<
     GetWorkoutSession200SessionExercisesItemSetsItem[]
@@ -173,13 +175,23 @@ export function SessionExerciseCard({
       {/* Header do Exercício */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/10 font-heading text-[11px] font-bold text-primary">
               {exercise.order}
             </span>
             <h3 className="font-heading text-base font-bold text-foreground">
               {exercise.exerciseNameSnapshot}
             </h3>
+            <button
+              type="button"
+              onClick={() => setIsMediaOpen(true)}
+              title="Ver execução do exercício"
+              aria-label={`Ver execução de ${exercise.exerciseNameSnapshot}`}
+              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-heading font-medium text-primary bg-primary/10 hover:bg-primary/20 border border-primary/20 transition-colors cursor-pointer"
+            >
+              <Info className="size-3 text-primary" />
+              <span>Ver execução</span>
+            </button>
           </div>
 
           {prescriptionText && (
@@ -405,6 +417,14 @@ export function SessionExerciseCard({
           </div>
         </div>
       )}
+
+      {/* Diálogo de Execução do Exercício */}
+      <ExerciseExecutionDialog
+        isOpen={isMediaOpen}
+        onClose={() => setIsMediaOpen(false)}
+        exerciseId={exercise.exerciseId}
+        exerciseName={exercise.exerciseNameSnapshot}
+      />
     </div>
   );
 }

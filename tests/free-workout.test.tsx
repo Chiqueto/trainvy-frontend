@@ -171,6 +171,7 @@ describe("Task 1.8 — Treino Avulso Frontend Tests", () => {
             id: "ex-1",
             name: "Supino Reto",
             ownerUserId: null,
+            hasMedia: false,
             muscles: [
               {
                 id: "m-1",
@@ -198,6 +199,7 @@ describe("Task 1.8 — Treino Avulso Frontend Tests", () => {
           id: "ex-custom-1",
           name: "Supino Hammer",
           ownerUserId: "user-123",
+          hasMedia: false,
           muscles: [],
         },
         headers: new Headers(),
@@ -231,6 +233,7 @@ describe("Task 1.8 — Treino Avulso Frontend Tests", () => {
             id: "ex-1",
             name: "Supino Reto",
             ownerUserId: null,
+            hasMedia: false,
             muscles: [],
           },
         ],
@@ -300,6 +303,7 @@ describe("Task 1.8 — Treino Avulso Frontend Tests", () => {
             id: "ex-agachamento",
             name: "Agachamento Livre",
             ownerUserId: null,
+            hasMedia: false,
             muscles: [],
           },
         ],

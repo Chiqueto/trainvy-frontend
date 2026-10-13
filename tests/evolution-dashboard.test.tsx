@@ -295,6 +295,7 @@ describe("Exercise evolution search", () => {
             id: "exercise-1",
             name: "Supino Reto",
             ownerUserId: "user-1",
+            hasMedia: false,
             muscles: [
               {
                 id: "muscle-1",
@@ -346,6 +347,7 @@ describe("Exercise evolution search", () => {
           id: "practiced",
           name: "Supino praticado",
           ownerUserId: null,
+          hasMedia: false,
           muscles: [],
         },
       ],
@@ -398,6 +400,7 @@ describe("Exercise evolution search", () => {
             id: "old",
             name: "Resultado antigo",
             ownerUserId: null,
+            hasMedia: false,
             muscles: [],
           },
         ],

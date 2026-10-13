@@ -85,7 +85,13 @@ describe("Evolution server actions", () => {
     vi.mocked(listExercises).mockResolvedValue({
       status: 200,
       data: [
-        { id: "exercise-1", name: "Supino", ownerUserId: null, muscles: [] },
+        {
+          id: "exercise-1",
+          name: "Supino",
+          ownerUserId: null,
+          hasMedia: false,
+          muscles: [],
+        },
       ],
       headers: new Headers(),
     });

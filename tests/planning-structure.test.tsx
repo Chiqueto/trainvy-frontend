@@ -205,11 +205,11 @@ describe("gerenciamento da periodização", () => {
   it("exclui somente draft e redireciona ao Hub", async () => {
     const view = renderManagement("DRAFT");
     fireEvent.click(
-      screen.getByRole("button", { name: "Excluir periodização" }),
+      screen.getByRole("button", { name: /Excluir periodização/i }),
     );
     fireEvent.click(
       within(screen.getByRole("dialog")).getByRole("button", {
-        name: "Excluir periodização",
+        name: /Excluir definitivamente/i,
       }),
     );
     await waitFor(() => {

@@ -63,6 +63,7 @@ describe("Task 3.1C - Grupos Musculares no Frontend", () => {
           id: "ex-new-1",
           name: "Supino Inclinado",
           ownerUserId: "user-1",
+          hasMedia: false,
           muscles: [
             { id: "m-1", muscleGroup: "CHEST", role: "PRIMARY" },
             { id: "m-2", muscleGroup: "TRICEPS", role: "SECONDARY" },
@@ -92,6 +93,7 @@ describe("Task 3.1C - Grupos Musculares no Frontend", () => {
           id: "ex-custom-1",
           name: "Remada Articulada",
           ownerUserId: "user-1",
+          hasMedia: false,
           muscles: [
             { id: "m-3", muscleGroup: "BACK", role: "PRIMARY" },
             { id: "m-4", muscleGroup: "BICEPS", role: "SECONDARY" },
@@ -122,6 +124,7 @@ describe("Task 3.1C - Grupos Musculares no Frontend", () => {
             id: "ex-classified",
             name: "Supino Reto com Barra",
             ownerUserId: null,
+            hasMedia: false,
             muscles: [
               { id: "m-1", muscleGroup: "CHEST", role: "PRIMARY" },
               { id: "m-2", muscleGroup: "TRICEPS", role: "SECONDARY" },
@@ -131,6 +134,7 @@ describe("Task 3.1C - Grupos Musculares no Frontend", () => {
             id: "ex-unclassified-custom",
             name: "Meu Exercício Sem Classificação",
             ownerUserId: "user-me",
+            hasMedia: false,
             muscles: [],
           },
         ],

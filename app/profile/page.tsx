@@ -122,6 +122,30 @@ export default async function ProfilePage() {
 
         <GamificationThemeSelector currentTheme={data?.gamificationTheme} />
 
+        {/* Seção de Créditos & Atribuições */}
+        <div className="w-full rounded-xl border border-border/70 bg-card p-4 space-y-2 text-left shadow-xs">
+          <div className="flex items-center justify-between">
+            <span className="font-heading text-xs font-semibold text-foreground">
+              Créditos & Atribuições
+            </span>
+            <span className="text-[10px] font-mono text-muted-foreground uppercase">
+              Licença Livre
+            </span>
+          </div>
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            Exercise data by{" "}
+            <a
+              href="https://repdb.co"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-primary hover:underline inline-flex items-center gap-0.5"
+            >
+              RepDB (repdb.co)
+            </a>
+            . Ilustrações e demonstrações biomecânicas fornecidas sob a licença aberta oficial do catálogo livre RepDB.
+          </p>
+        </div>
+
         <LogoutButton />
 
       </div>

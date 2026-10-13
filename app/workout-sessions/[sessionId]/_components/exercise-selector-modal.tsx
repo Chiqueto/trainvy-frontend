@@ -6,6 +6,7 @@ import {
   ArrowLeft,
   Check,
   Dumbbell,
+  Eye,
   Loader2,
   Plus,
   Search,
@@ -409,6 +410,16 @@ export function ExerciseSelectorModal({
                           {isCustom && (
                             <span className="rounded-full bg-secondary/80 px-1.5 py-0.5 text-[9px] font-medium text-muted-foreground">
                               Próprio
+                            </span>
+                          )}
+
+                          {exercise.hasMedia && (
+                            <span
+                              title="Demonstração visual disponível"
+                              className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 px-1.5 py-0.5 text-[9px] font-medium"
+                            >
+                              <Eye className="size-2.5" />
+                              <span>Demo</span>
                             </span>
                           )}
                         </div>
