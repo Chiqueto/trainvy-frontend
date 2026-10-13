@@ -74,9 +74,20 @@ export default async function AuthPage({
           </p>
         </div>
 
-        <p className="font-heading text-xs leading-[1.4] text-primary-foreground/70">
-          ©2026 Copyright Trainvy. Todos os direitos reservados
-        </p>
+        <div className="flex flex-col items-center gap-2">
+          <div className="flex items-center justify-center gap-3 text-xs text-primary-foreground/80">
+            <Link href="/termos" className="hover:underline">
+              Termos de Uso
+            </Link>
+            <span>•</span>
+            <Link href="/privacidade" className="hover:underline">
+              Privacidade
+            </Link>
+          </div>
+          <p className="font-heading text-xs leading-[1.4] text-primary-foreground/70">
+            ©2026 Copyright Trainvy. Todos os direitos reservados
+          </p>
+        </div>
       </div>
     </div>
   );

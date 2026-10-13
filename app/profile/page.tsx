@@ -7,6 +7,8 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Weight, Ruler, BicepsFlexed, User } from "lucide-react";
 import { LogoutButton } from "./_components/logout-button";
 import { GamificationThemeSelector } from "./_components/gamification-theme-selector";
+import Link from "next/link";
+import { FeedbackButton } from "./_components/feedback-button";
 import { PwaInstallCard } from "@/app/_components/pwa/pwa-install-card";
 import { Logo } from "@/app/_components/logo";
 
@@ -126,6 +128,9 @@ export default async function ProfilePage() {
         {/* Instalação do Aplicativo (PWA) */}
         <PwaInstallCard />
 
+        {/* Feedback do Beta */}
+        <FeedbackButton />
+
         {/* Seção de Créditos & Atribuições */}
         <div className="w-full rounded-xl border border-border/70 bg-card p-4 space-y-2 text-left shadow-xs">
           <div className="flex items-center justify-between">
@@ -148,6 +153,23 @@ export default async function ProfilePage() {
             </a>
             . Ilustrações e demonstrações biomecânicas fornecidas sob a licença aberta oficial do catálogo livre RepDB.
           </p>
+        </div>
+
+        {/* Links Institucionais: Privacidade & Termos */}
+        <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground pt-1">
+          <Link
+            href="/privacidade"
+            className="hover:text-foreground hover:underline transition-colors"
+          >
+            Privacidade
+          </Link>
+          <span>•</span>
+          <Link
+            href="/termos"
+            className="hover:text-foreground hover:underline transition-colors"
+          >
+            Termos de Uso
+          </Link>
         </div>
 
         <LogoutButton />

@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -54,6 +54,30 @@ export function BottomNav({ activePage }: BottomNavProps) {
           (!isPlanningActive && !isEvolutionActive && !isProfileActive)
       );
 
+  const [optimisticTab, setOptimisticTab] = useState<string | null>(null);
+  const [prevPathname, setPrevPathname] = useState(pathname);
+
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
+    setOptimisticTab(null);
+  }
+
+  const effectivePlanningActive = optimisticTab
+    ? optimisticTab === "planning"
+    : isPlanningActive;
+
+  const effectiveEvolutionActive = optimisticTab
+    ? optimisticTab === "evolution"
+    : isEvolutionActive;
+
+  const effectiveProfileActive = optimisticTab
+    ? optimisticTab === "profile"
+    : isProfileActive;
+
+  const effectiveHomeActive = optimisticTab
+    ? optimisticTab === "home"
+    : (isHomeActive && !optimisticTab);
+
   return (
     <nav
       className="fixed bottom-0 left-0 right-0 z-50 rounded-t-[20px] border-t border-border bg-background/95 px-3 pt-2 shadow-lg backdrop-blur-md"
@@ -66,9 +90,11 @@ export function BottomNav({ activePage }: BottomNavProps) {
         {/* 1. Início */}
         <Link
           href="/"
+          prefetch={true}
+          onClick={() => setOptimisticTab("home")}
           className={cn(
             "group relative flex w-full flex-1 flex-col items-center justify-center rounded-xl px-1 py-1.5 transition-all duration-150",
-            isHomeActive
+            effectiveHomeActive
               ? "bg-primary/10 font-semibold text-primary"
               : "font-medium text-muted-foreground hover:text-foreground"
           )}
@@ -77,7 +103,7 @@ export function BottomNav({ activePage }: BottomNavProps) {
           <House
             className={cn(
               "size-5 transition-transform duration-150 group-active:scale-90",
-              isHomeActive
+              effectiveHomeActive
                 ? "text-primary text-foreground"
                 : "text-muted-foreground"
             )}
@@ -85,7 +111,7 @@ export function BottomNav({ activePage }: BottomNavProps) {
           <span className="mt-0.5 font-heading text-[11px] leading-tight tracking-tight">
             Início
           </span>
-          {isHomeActive && (
+          {effectiveHomeActive && (
             <span className="mt-0.5 h-0.5 w-4 rounded-full bg-primary" />
           )}
         </Link>
@@ -93,9 +119,11 @@ export function BottomNav({ activePage }: BottomNavProps) {
         {/* 2. Treinos */}
         <Link
           href="/planning"
+          prefetch={true}
+          onClick={() => setOptimisticTab("planning")}
           className={cn(
             "group relative flex w-full flex-1 flex-col items-center justify-center rounded-xl px-1 py-1.5 transition-all duration-150",
-            isPlanningActive
+            effectivePlanningActive
               ? "bg-primary/10 font-semibold text-primary"
               : "font-medium text-muted-foreground hover:text-foreground"
           )}
@@ -104,7 +132,7 @@ export function BottomNav({ activePage }: BottomNavProps) {
           <Dumbbell
             className={cn(
               "size-5 transition-transform duration-150 group-active:scale-90",
-              isPlanningActive
+              effectivePlanningActive
                 ? "text-primary text-foreground"
                 : "text-muted-foreground"
             )}
@@ -112,7 +140,7 @@ export function BottomNav({ activePage }: BottomNavProps) {
           <span className="mt-0.5 font-heading text-[11px] leading-tight tracking-tight">
             Treinos
           </span>
-          {isPlanningActive && (
+          {effectivePlanningActive && (
             <span className="mt-0.5 h-0.5 w-4 rounded-full bg-primary" />
           )}
         </Link>
@@ -132,9 +160,11 @@ export function BottomNav({ activePage }: BottomNavProps) {
         {/* 4. Evolução */}
         <Link
           href="/stats"
+          prefetch={true}
+          onClick={() => setOptimisticTab("evolution")}
           className={cn(
             "group relative flex w-full flex-1 flex-col items-center justify-center rounded-xl px-1 py-1.5 transition-all duration-150",
-            isEvolutionActive
+            effectiveEvolutionActive
               ? "bg-primary/10 font-semibold text-primary"
               : "font-medium text-muted-foreground hover:text-foreground"
           )}
@@ -143,7 +173,7 @@ export function BottomNav({ activePage }: BottomNavProps) {
           <TrendingUp
             className={cn(
               "size-5 transition-transform duration-150 group-active:scale-90",
-              isEvolutionActive
+              effectiveEvolutionActive
                 ? "text-primary text-foreground"
                 : "text-muted-foreground"
             )}
@@ -151,7 +181,7 @@ export function BottomNav({ activePage }: BottomNavProps) {
           <span className="mt-0.5 font-heading text-[11px] leading-tight tracking-tight">
             Evolução
           </span>
-          {isEvolutionActive && (
+          {effectiveEvolutionActive && (
             <span className="mt-0.5 h-0.5 w-4 rounded-full bg-primary" />
           )}
         </Link>
@@ -159,9 +189,11 @@ export function BottomNav({ activePage }: BottomNavProps) {
         {/* 5. Perfil */}
         <Link
           href="/profile"
+          prefetch={true}
+          onClick={() => setOptimisticTab("profile")}
           className={cn(
             "group relative flex w-full flex-1 flex-col items-center justify-center rounded-xl px-1 py-1.5 transition-all duration-150",
-            isProfileActive
+            effectiveProfileActive
               ? "bg-primary/10 font-semibold text-primary"
               : "font-medium text-muted-foreground hover:text-foreground"
           )}
@@ -170,7 +202,7 @@ export function BottomNav({ activePage }: BottomNavProps) {
           <UserRound
             className={cn(
               "size-5 transition-transform duration-150 group-active:scale-90",
-              isProfileActive
+              effectiveProfileActive
                 ? "text-primary text-foreground"
                 : "text-muted-foreground"
             )}
@@ -178,7 +210,7 @@ export function BottomNav({ activePage }: BottomNavProps) {
           <span className="mt-0.5 font-heading text-[11px] leading-tight tracking-tight">
             Perfil
           </span>
-          {isProfileActive && (
+          {effectiveProfileActive && (
             <span className="mt-0.5 h-0.5 w-4 rounded-full bg-primary" />
           )}
         </Link>

@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Chat } from "@/app/_components/chat";
 import { PwaProvider } from "@/app/_components/pwa/pwa-provider";
+import { PwaInstallPrompt } from "@/app/_components/pwa/pwa-install-prompt";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -80,6 +81,7 @@ export default function RootLayout({
         <PwaProvider>
           <NuqsAdapter>
             {children}
+            <PwaInstallPrompt />
             <Suspense>
               <Chat />
             </Suspense>

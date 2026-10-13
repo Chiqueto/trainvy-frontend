@@ -2068,1781 +2068,6 @@ export type DeleteAiConversationsId500 = {
   code: string;
 };
 
-export type ListExercisesParams = {
-  q?: string;
-  onlyWithHistory?: string;
-};
-
-export type ListExercises200ItemMusclesItemMuscleGroup =
-  (typeof ListExercises200ItemMusclesItemMuscleGroup)[keyof typeof ListExercises200ItemMusclesItemMuscleGroup];
-
-export const ListExercises200ItemMusclesItemMuscleGroup = {
-  CHEST: "CHEST",
-  BACK: "BACK",
-  SHOULDERS: "SHOULDERS",
-  BICEPS: "BICEPS",
-  TRICEPS: "TRICEPS",
-  FOREARMS: "FOREARMS",
-  QUADRICEPS: "QUADRICEPS",
-  HAMSTRINGS: "HAMSTRINGS",
-  GLUTES: "GLUTES",
-  ADDUCTORS: "ADDUCTORS",
-  HIP_ABDUCTORS: "HIP_ABDUCTORS",
-  CALVES: "CALVES",
-  CORE: "CORE",
-} as const;
-
-export type ListExercises200ItemMusclesItemRole =
-  (typeof ListExercises200ItemMusclesItemRole)[keyof typeof ListExercises200ItemMusclesItemRole];
-
-export const ListExercises200ItemMusclesItemRole = {
-  PRIMARY: "PRIMARY",
-  SECONDARY: "SECONDARY",
-} as const;
-
-export type ListExercises200ItemMusclesItem = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  id: string;
-  muscleGroup: ListExercises200ItemMusclesItemMuscleGroup;
-  role: ListExercises200ItemMusclesItemRole;
-};
-
-export type ListExercises200Item = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  id: string;
-  name: string;
-  /** @nullable */
-  ownerUserId: string | null;
-  hasMedia: boolean;
-  muscles: ListExercises200ItemMusclesItem[];
-};
-
-export type ListExercises401 = {
-  error: string;
-  code: string;
-};
-
-export type ListExercises500 = {
-  error: string;
-  code: string;
-};
-
-export type CreateExerciseBodyPrimaryMuscleGroupsItem =
-  (typeof CreateExerciseBodyPrimaryMuscleGroupsItem)[keyof typeof CreateExerciseBodyPrimaryMuscleGroupsItem];
-
-export const CreateExerciseBodyPrimaryMuscleGroupsItem = {
-  CHEST: "CHEST",
-  BACK: "BACK",
-  SHOULDERS: "SHOULDERS",
-  BICEPS: "BICEPS",
-  TRICEPS: "TRICEPS",
-  FOREARMS: "FOREARMS",
-  QUADRICEPS: "QUADRICEPS",
-  HAMSTRINGS: "HAMSTRINGS",
-  GLUTES: "GLUTES",
-  ADDUCTORS: "ADDUCTORS",
-  HIP_ABDUCTORS: "HIP_ABDUCTORS",
-  CALVES: "CALVES",
-  CORE: "CORE",
-} as const;
-
-export type CreateExerciseBodySecondaryMuscleGroupsItem =
-  (typeof CreateExerciseBodySecondaryMuscleGroupsItem)[keyof typeof CreateExerciseBodySecondaryMuscleGroupsItem];
-
-export const CreateExerciseBodySecondaryMuscleGroupsItem = {
-  CHEST: "CHEST",
-  BACK: "BACK",
-  SHOULDERS: "SHOULDERS",
-  BICEPS: "BICEPS",
-  TRICEPS: "TRICEPS",
-  FOREARMS: "FOREARMS",
-  QUADRICEPS: "QUADRICEPS",
-  HAMSTRINGS: "HAMSTRINGS",
-  GLUTES: "GLUTES",
-  ADDUCTORS: "ADDUCTORS",
-  HIP_ABDUCTORS: "HIP_ABDUCTORS",
-  CALVES: "CALVES",
-  CORE: "CORE",
-} as const;
-
-export type CreateExerciseBody = {
-  /** @minLength 1 */
-  name: string;
-  primaryMuscleGroups?: CreateExerciseBodyPrimaryMuscleGroupsItem[];
-  secondaryMuscleGroups?: CreateExerciseBodySecondaryMuscleGroupsItem[];
-};
-
-export type CreateExercise201MusclesItemMuscleGroup =
-  (typeof CreateExercise201MusclesItemMuscleGroup)[keyof typeof CreateExercise201MusclesItemMuscleGroup];
-
-export const CreateExercise201MusclesItemMuscleGroup = {
-  CHEST: "CHEST",
-  BACK: "BACK",
-  SHOULDERS: "SHOULDERS",
-  BICEPS: "BICEPS",
-  TRICEPS: "TRICEPS",
-  FOREARMS: "FOREARMS",
-  QUADRICEPS: "QUADRICEPS",
-  HAMSTRINGS: "HAMSTRINGS",
-  GLUTES: "GLUTES",
-  ADDUCTORS: "ADDUCTORS",
-  HIP_ABDUCTORS: "HIP_ABDUCTORS",
-  CALVES: "CALVES",
-  CORE: "CORE",
-} as const;
-
-export type CreateExercise201MusclesItemRole =
-  (typeof CreateExercise201MusclesItemRole)[keyof typeof CreateExercise201MusclesItemRole];
-
-export const CreateExercise201MusclesItemRole = {
-  PRIMARY: "PRIMARY",
-  SECONDARY: "SECONDARY",
-} as const;
-
-export type CreateExercise201MusclesItem = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  id: string;
-  muscleGroup: CreateExercise201MusclesItemMuscleGroup;
-  role: CreateExercise201MusclesItemRole;
-};
-
-export type CreateExercise201 = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  id: string;
-  name: string;
-  /** @nullable */
-  ownerUserId: string | null;
-  hasMedia: boolean;
-  muscles: CreateExercise201MusclesItem[];
-};
-
-export type CreateExercise400 = {
-  error: string;
-  code: string;
-};
-
-export type CreateExercise401 = {
-  error: string;
-  code: string;
-};
-
-export type CreateExercise409 = {
-  error: string;
-  code: string;
-};
-
-export type CreateExercise500 = {
-  error: string;
-  code: string;
-};
-
-export type UpdateExerciseMusclesBodyPrimaryMuscleGroupsItem =
-  (typeof UpdateExerciseMusclesBodyPrimaryMuscleGroupsItem)[keyof typeof UpdateExerciseMusclesBodyPrimaryMuscleGroupsItem];
-
-export const UpdateExerciseMusclesBodyPrimaryMuscleGroupsItem = {
-  CHEST: "CHEST",
-  BACK: "BACK",
-  SHOULDERS: "SHOULDERS",
-  BICEPS: "BICEPS",
-  TRICEPS: "TRICEPS",
-  FOREARMS: "FOREARMS",
-  QUADRICEPS: "QUADRICEPS",
-  HAMSTRINGS: "HAMSTRINGS",
-  GLUTES: "GLUTES",
-  ADDUCTORS: "ADDUCTORS",
-  HIP_ABDUCTORS: "HIP_ABDUCTORS",
-  CALVES: "CALVES",
-  CORE: "CORE",
-} as const;
-
-export type UpdateExerciseMusclesBodySecondaryMuscleGroupsItem =
-  (typeof UpdateExerciseMusclesBodySecondaryMuscleGroupsItem)[keyof typeof UpdateExerciseMusclesBodySecondaryMuscleGroupsItem];
-
-export const UpdateExerciseMusclesBodySecondaryMuscleGroupsItem = {
-  CHEST: "CHEST",
-  BACK: "BACK",
-  SHOULDERS: "SHOULDERS",
-  BICEPS: "BICEPS",
-  TRICEPS: "TRICEPS",
-  FOREARMS: "FOREARMS",
-  QUADRICEPS: "QUADRICEPS",
-  HAMSTRINGS: "HAMSTRINGS",
-  GLUTES: "GLUTES",
-  ADDUCTORS: "ADDUCTORS",
-  HIP_ABDUCTORS: "HIP_ABDUCTORS",
-  CALVES: "CALVES",
-  CORE: "CORE",
-} as const;
-
-export type UpdateExerciseMusclesBody = {
-  /** @minItems 1 */
-  primaryMuscleGroups: UpdateExerciseMusclesBodyPrimaryMuscleGroupsItem[];
-  secondaryMuscleGroups?: UpdateExerciseMusclesBodySecondaryMuscleGroupsItem[];
-};
-
-export type UpdateExerciseMuscles200MusclesItemMuscleGroup =
-  (typeof UpdateExerciseMuscles200MusclesItemMuscleGroup)[keyof typeof UpdateExerciseMuscles200MusclesItemMuscleGroup];
-
-export const UpdateExerciseMuscles200MusclesItemMuscleGroup = {
-  CHEST: "CHEST",
-  BACK: "BACK",
-  SHOULDERS: "SHOULDERS",
-  BICEPS: "BICEPS",
-  TRICEPS: "TRICEPS",
-  FOREARMS: "FOREARMS",
-  QUADRICEPS: "QUADRICEPS",
-  HAMSTRINGS: "HAMSTRINGS",
-  GLUTES: "GLUTES",
-  ADDUCTORS: "ADDUCTORS",
-  HIP_ABDUCTORS: "HIP_ABDUCTORS",
-  CALVES: "CALVES",
-  CORE: "CORE",
-} as const;
-
-export type UpdateExerciseMuscles200MusclesItemRole =
-  (typeof UpdateExerciseMuscles200MusclesItemRole)[keyof typeof UpdateExerciseMuscles200MusclesItemRole];
-
-export const UpdateExerciseMuscles200MusclesItemRole = {
-  PRIMARY: "PRIMARY",
-  SECONDARY: "SECONDARY",
-} as const;
-
-export type UpdateExerciseMuscles200MusclesItem = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  id: string;
-  muscleGroup: UpdateExerciseMuscles200MusclesItemMuscleGroup;
-  role: UpdateExerciseMuscles200MusclesItemRole;
-};
-
-export type UpdateExerciseMuscles200 = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  id: string;
-  name: string;
-  /** @nullable */
-  ownerUserId: string | null;
-  hasMedia: boolean;
-  muscles: UpdateExerciseMuscles200MusclesItem[];
-};
-
-export type UpdateExerciseMuscles400 = {
-  error: string;
-  code: string;
-};
-
-export type UpdateExerciseMuscles401 = {
-  error: string;
-  code: string;
-};
-
-export type UpdateExerciseMuscles404 = {
-  error: string;
-  code: string;
-};
-
-export type UpdateExerciseMuscles500 = {
-  error: string;
-  code: string;
-};
-
-/**
- * @nullable
- */
-export type GetExerciseMedia200MediaType =
-  | (typeof GetExerciseMedia200MediaType)[keyof typeof GetExerciseMedia200MediaType]
-  | null;
-
-export const GetExerciseMedia200MediaType = {
-  IMAGE_SEQUENCE: "IMAGE_SEQUENCE",
-  GIF: "GIF",
-  VIDEO: "VIDEO",
-} as const;
-
-/**
- * @nullable
- */
-export type GetExerciseMedia200Instructions = {
-  description: string;
-  setup: string;
-  execution: string;
-  tips: string;
-} | null;
-
-export type GetExerciseMedia200 = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  exerciseId: string;
-  hasMedia: boolean;
-  /** @nullable */
-  mediaType: GetExerciseMedia200MediaType;
-  /** @nullable */
-  startImagePath: string | null;
-  /** @nullable */
-  endImagePath: string | null;
-  /** @nullable */
-  motionPath: string | null;
-  /** @nullable */
-  instructions: GetExerciseMedia200Instructions;
-  /** @nullable */
-  attributionName: string | null;
-  /** @nullable */
-  attributionUrl: string | null;
-};
-
-export type GetExerciseMedia401 = {
-  error: string;
-  code: string;
-};
-
-export type GetExerciseMedia404 = {
-  error: string;
-  code: string;
-};
-
-export type GetExerciseMedia500 = {
-  error: string;
-  code: string;
-};
-
-export type GetWeeklyTrainingAnalyticsParams = {
-  tz: string;
-  startDate?: string;
-  endDate?: string;
-  /**
-   * @minimum 1
-   * @maximum 52
-   */
-  weeksCount?: number;
-};
-
-export type GetWeeklyTrainingAnalytics200WeeksItem = {
-  weekStartDate: string;
-  weekEndDate: string;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  workoutsCompleted: number;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  workingSets: number;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  warmupSets: number;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  loadVolumeGrams: number;
-  /** @minimum 0 */
-  loadVolumeKg: number;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  totalDurationInSeconds: number;
-  /** @minimum 0 */
-  averageDurationInSeconds: number;
-};
-
-export type GetWeeklyTrainingAnalytics200 = {
-  startDate: string;
-  endDate: string;
-  timezone: string;
-  weeks: GetWeeklyTrainingAnalytics200WeeksItem[];
-};
-
-export type GetWeeklyTrainingAnalytics400 = {
-  error: string;
-  code: string;
-};
-
-export type GetWeeklyTrainingAnalytics401 = {
-  error: string;
-  code: string;
-};
-
-export type GetWeeklyTrainingAnalytics500 = {
-  error: string;
-  code: string;
-};
-
-export type GetMuscleTrainingAnalyticsParams = {
-  tz: string;
-  startDate: string;
-  endDate: string;
-};
-
-export type GetMuscleTrainingAnalytics200MusclesItemMuscleGroup =
-  (typeof GetMuscleTrainingAnalytics200MusclesItemMuscleGroup)[keyof typeof GetMuscleTrainingAnalytics200MusclesItemMuscleGroup];
-
-export const GetMuscleTrainingAnalytics200MusclesItemMuscleGroup = {
-  CHEST: "CHEST",
-  BACK: "BACK",
-  SHOULDERS: "SHOULDERS",
-  BICEPS: "BICEPS",
-  TRICEPS: "TRICEPS",
-  FOREARMS: "FOREARMS",
-  QUADRICEPS: "QUADRICEPS",
-  HAMSTRINGS: "HAMSTRINGS",
-  GLUTES: "GLUTES",
-  ADDUCTORS: "ADDUCTORS",
-  HIP_ABDUCTORS: "HIP_ABDUCTORS",
-  CALVES: "CALVES",
-  CORE: "CORE",
-} as const;
-
-export type GetMuscleTrainingAnalytics200MusclesItem = {
-  muscleGroup: GetMuscleTrainingAnalytics200MusclesItemMuscleGroup;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  directWorkingSets: number;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  indirectWorkingSets: number;
-};
-
-export type GetMuscleTrainingAnalytics200 = {
-  startDate: string;
-  endDate: string;
-  timezone: string;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  totalWorkingSets: number;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  classifiedWorkingSets: number;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  unclassifiedWorkingSets: number;
-  muscles: GetMuscleTrainingAnalytics200MusclesItem[];
-};
-
-export type GetMuscleTrainingAnalytics400 = {
-  error: string;
-  code: string;
-};
-
-export type GetMuscleTrainingAnalytics401 = {
-  error: string;
-  code: string;
-};
-
-export type GetMuscleTrainingAnalytics500 = {
-  error: string;
-  code: string;
-};
-
-export type ListWorkoutHistoryParams = {
-  cursor?: string;
-  /**
-   * @minimum 1
-   * @maximum 50
-   */
-  limit?: number;
-  origin?: ListWorkoutHistoryOrigin;
-};
-
-export type ListWorkoutHistoryOrigin =
-  (typeof ListWorkoutHistoryOrigin)[keyof typeof ListWorkoutHistoryOrigin];
-
-export const ListWorkoutHistoryOrigin = {
-  PLANNED: "PLANNED",
-  FREE: "FREE",
-} as const;
-
-export type ListWorkoutHistory200ItemsItemOrigin =
-  (typeof ListWorkoutHistory200ItemsItemOrigin)[keyof typeof ListWorkoutHistory200ItemsItemOrigin];
-
-export const ListWorkoutHistory200ItemsItemOrigin = {
-  PLANNED: "PLANNED",
-  FREE: "FREE",
-} as const;
-
-export type ListWorkoutHistory200ItemsItem = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  id: string;
-  origin: ListWorkoutHistory200ItemsItemOrigin;
-  startedAt: string;
-  completedAt: string;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  durationInSeconds: number;
-  /**
-   * @nullable
-   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
-   */
-  workoutPlanId: string | null;
-  /** @nullable */
-  workoutPlanNameSnapshot: string | null;
-  /** @nullable */
-  workoutDayNameSnapshot: string | null;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  exercisesCount: number;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  workingSetsCount: number;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  warmupSetsCount: number;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  totalLoadVolumeGrams: number;
-  /** @minimum 0 */
-  totalLoadVolumeKg: number;
-};
-
-export type ListWorkoutHistory200 = {
-  items: ListWorkoutHistory200ItemsItem[];
-  /** @nullable */
-  nextCursor: string | null;
-  hasMore: boolean;
-};
-
-export type ListWorkoutHistory400 = {
-  error: string;
-  code: string;
-};
-
-export type ListWorkoutHistory401 = {
-  error: string;
-  code: string;
-};
-
-export type ListWorkoutHistory500 = {
-  error: string;
-  code: string;
-};
-
-export type GetWorkoutHistorySession200Origin =
-  (typeof GetWorkoutHistorySession200Origin)[keyof typeof GetWorkoutHistorySession200Origin];
-
-export const GetWorkoutHistorySession200Origin = {
-  PLANNED: "PLANNED",
-  FREE: "FREE",
-} as const;
-
-export type GetWorkoutHistorySession200Summary = {
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  exercisesCount: number;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  workingSetsCount: number;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  warmupSetsCount: number;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  totalLoadVolumeGrams: number;
-  /** @minimum 0 */
-  totalLoadVolumeKg: number;
-};
-
-export type GetWorkoutHistorySession200ExercisesItemPlanned = {
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  warmupSets: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  workingSets: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  reps: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  restTimeInSeconds: number | null;
-};
-
-export type GetWorkoutHistorySession200ExercisesItemPerformed = {
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  warmupSetsCount: number;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  workingSetsCount: number;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  loadVolumeGrams: number;
-  /** @minimum 0 */
-  loadVolumeKg: number;
-};
-
-export type GetWorkoutHistorySession200ExercisesItemSetsItemType =
-  (typeof GetWorkoutHistorySession200ExercisesItemSetsItemType)[keyof typeof GetWorkoutHistorySession200ExercisesItemSetsItemType];
-
-export const GetWorkoutHistorySession200ExercisesItemSetsItemType = {
-  WARMUP: "WARMUP",
-  WORKING: "WORKING",
-} as const;
-
-export type GetWorkoutHistorySession200ExercisesItemSetsItem = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  id: string;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
-  order: number;
-  type: GetWorkoutHistorySession200ExercisesItemSetsItemType;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  weightInGrams: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  reps: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  rir: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  durationInSeconds: number | null;
-  /** @nullable */
-  notes: string | null;
-  completedAt: string;
-};
-
-export type GetWorkoutHistorySession200ExercisesItem = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  id: string;
-  /**
-   * @nullable
-   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
-   */
-  exerciseId: string | null;
-  exerciseNameSnapshot: string;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
-  order: number;
-  /** @nullable */
-  notes: string | null;
-  planned: GetWorkoutHistorySession200ExercisesItemPlanned;
-  performed: GetWorkoutHistorySession200ExercisesItemPerformed;
-  sets: GetWorkoutHistorySession200ExercisesItemSetsItem[];
-};
-
-export type GetWorkoutHistorySession200 = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  id: string;
-  origin: GetWorkoutHistorySession200Origin;
-  startedAt: string;
-  completedAt: string;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  durationInSeconds: number;
-  /**
-   * @nullable
-   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
-   */
-  workoutPlanId: string | null;
-  /** @nullable */
-  workoutPlanNameSnapshot: string | null;
-  /** @nullable */
-  workoutDayNameSnapshot: string | null;
-  summary: GetWorkoutHistorySession200Summary;
-  exercises: GetWorkoutHistorySession200ExercisesItem[];
-};
-
-export type GetWorkoutHistorySession401 = {
-  error: string;
-  code: string;
-};
-
-export type GetWorkoutHistorySession404 = {
-  error: string;
-  code: string;
-};
-
-export type GetWorkoutHistorySession500 = {
-  error: string;
-  code: string;
-};
-
-export type GetExerciseEvolutionParams = {
-  cursor?: string;
-  /**
-   * @minimum 1
-   * @maximum 50
-   */
-  limit?: number;
-};
-
-export type GetExerciseEvolution200ExerciseMusclesItemMuscleGroup =
-  (typeof GetExerciseEvolution200ExerciseMusclesItemMuscleGroup)[keyof typeof GetExerciseEvolution200ExerciseMusclesItemMuscleGroup];
-
-export const GetExerciseEvolution200ExerciseMusclesItemMuscleGroup = {
-  CHEST: "CHEST",
-  BACK: "BACK",
-  SHOULDERS: "SHOULDERS",
-  BICEPS: "BICEPS",
-  TRICEPS: "TRICEPS",
-  FOREARMS: "FOREARMS",
-  QUADRICEPS: "QUADRICEPS",
-  HAMSTRINGS: "HAMSTRINGS",
-  GLUTES: "GLUTES",
-  ADDUCTORS: "ADDUCTORS",
-  HIP_ABDUCTORS: "HIP_ABDUCTORS",
-  CALVES: "CALVES",
-  CORE: "CORE",
-} as const;
-
-export type GetExerciseEvolution200ExerciseMusclesItemRole =
-  (typeof GetExerciseEvolution200ExerciseMusclesItemRole)[keyof typeof GetExerciseEvolution200ExerciseMusclesItemRole];
-
-export const GetExerciseEvolution200ExerciseMusclesItemRole = {
-  PRIMARY: "PRIMARY",
-  SECONDARY: "SECONDARY",
-} as const;
-
-export type GetExerciseEvolution200ExerciseMusclesItem = {
-  muscleGroup: GetExerciseEvolution200ExerciseMusclesItemMuscleGroup;
-  role: GetExerciseEvolution200ExerciseMusclesItemRole;
-};
-
-export type GetExerciseEvolution200Exercise = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  id: string;
-  name: string;
-  /** @nullable */
-  ownerUserId: string | null;
-  muscles: GetExerciseEvolution200ExerciseMusclesItem[];
-};
-
-/**
- * @nullable
- */
-export type GetExerciseEvolution200LoadPR = {
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  weightInGrams: number;
-  /** @minimum 0 */
-  weightKg: number;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  reps: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  rir: number | null;
-  completedAt: string;
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12} | 00000000-0000-0000-0000-000000000000 | ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  workoutSessionId: string;
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12} | ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  sessionExerciseId: string;
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12} | ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  workoutSetId: string;
-  origin: "PLANNED" | "FREE";
-  /** @nullable */
-  workoutPlanNameSnapshot: string | null;
-  /** @nullable */
-  workoutDayNameSnapshot: string | null;
-} | null;
-
-export type GetExerciseEvolution200ItemsItemOrigin =
-  (typeof GetExerciseEvolution200ItemsItemOrigin)[keyof typeof GetExerciseEvolution200ItemsItemOrigin];
-
-export const GetExerciseEvolution200ItemsItemOrigin = {
-  PLANNED: "PLANNED",
-  FREE: "FREE",
-} as const;
-
-/**
- * @nullable
- */
-export type GetExerciseEvolution200ItemsItemTopSet = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12} | 00000000-0000-0000-0000-000000000000 | ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  workoutSetId: string;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  weightInGrams: number | null;
-  /** @nullable */
-  weightKg: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  reps: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  rir: number | null;
-} | null;
-
-export type GetExerciseEvolution200ItemsItemSetsItem = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  id: string;
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  sessionExerciseId: string;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
-  order: number;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  weightInGrams: number | null;
-  /** @nullable */
-  weightKg: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  reps: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  rir: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  durationInSeconds: number | null;
-  /** @nullable */
-  notes: string | null;
-  completedAt: string;
-};
-
-export type GetExerciseEvolution200ItemsItem = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  workoutSessionId: string;
-  startedAt: string;
-  completedAt: string;
-  origin: GetExerciseEvolution200ItemsItemOrigin;
-  /** @nullable */
-  workoutPlanNameSnapshot: string | null;
-  /** @nullable */
-  workoutDayNameSnapshot: string | null;
-  exerciseNameSnapshot: string;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  workingSetsCount: number;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  totalReps: number;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   */
-  loadVolumeGrams: number;
-  /** @minimum 0 */
-  loadVolumeKg: number;
-  /** @nullable */
-  topSet: GetExerciseEvolution200ItemsItemTopSet;
-  sets: GetExerciseEvolution200ItemsItemSetsItem[];
-};
-
-export type GetExerciseEvolution200 = {
-  exercise: GetExerciseEvolution200Exercise;
-  /** @nullable */
-  loadPR: GetExerciseEvolution200LoadPR;
-  items: GetExerciseEvolution200ItemsItem[];
-  /** @nullable */
-  nextCursor: string | null;
-  hasMore: boolean;
-};
-
-export type GetExerciseEvolution400 = {
-  error: string;
-  code: string;
-};
-
-export type GetExerciseEvolution401 = {
-  error: string;
-  code: string;
-};
-
-export type GetExerciseEvolution404 = {
-  error: string;
-  code: string;
-};
-
-export type GetExerciseEvolution500 = {
-  error: string;
-  code: string;
-};
-
-export type GetActiveWorkoutSession200Origin =
-  (typeof GetActiveWorkoutSession200Origin)[keyof typeof GetActiveWorkoutSession200Origin];
-
-export const GetActiveWorkoutSession200Origin = {
-  PLANNED: "PLANNED",
-  FREE: "FREE",
-} as const;
-
-export type GetActiveWorkoutSession200SessionExercisesItemSetsItemType =
-  (typeof GetActiveWorkoutSession200SessionExercisesItemSetsItemType)[keyof typeof GetActiveWorkoutSession200SessionExercisesItemSetsItemType];
-
-export const GetActiveWorkoutSession200SessionExercisesItemSetsItemType = {
-  WARMUP: "WARMUP",
-  WORKING: "WORKING",
-} as const;
-
-export type GetActiveWorkoutSession200SessionExercisesItemSetsItem = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  id: string;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
-  order: number;
-  type: GetActiveWorkoutSession200SessionExercisesItemSetsItemType;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  weightInGrams: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  reps: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  rir: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  durationInSeconds: number | null;
-  /** @nullable */
-  notes: string | null;
-  /** @nullable */
-  completedAt: string | null;
-};
-
-export type GetActiveWorkoutSession200SessionExercisesItem = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  id: string;
-  /**
-   * @nullable
-   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
-   */
-  exerciseId?: string | null;
-  hasMedia?: boolean;
-  exerciseNameSnapshot: string;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
-  order: number;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  plannedSets: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  plannedWarmupSets?: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  plannedReps: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  plannedRestTimeInSeconds: number | null;
-  /** @nullable */
-  notes: string | null;
-  sets: GetActiveWorkoutSession200SessionExercisesItemSetsItem[];
-};
-
-export type GetActiveWorkoutSession200 = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  id: string;
-  origin?: GetActiveWorkoutSession200Origin;
-  /**
-   * @nullable
-   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
-   */
-  workoutDayId: string | null;
-  /**
-   * @nullable
-   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
-   */
-  workoutPlanId?: string | null;
-  /** @nullable */
-  workoutPlanNameSnapshot?: string | null;
-  /** @nullable */
-  workoutDayNameSnapshot?: string | null;
-  startedAt: string;
-  /** @nullable */
-  completedAt: string | null;
-  sessionExercises: GetActiveWorkoutSession200SessionExercisesItem[];
-};
-
-export type GetActiveWorkoutSession401 = {
-  error: string;
-  code: string;
-};
-
-export type GetActiveWorkoutSession404 = {
-  error: string;
-  code: string;
-};
-
-export type GetActiveWorkoutSession500 = {
-  error: string;
-  code: string;
-};
-
-export type GetWorkoutSession200Origin =
-  (typeof GetWorkoutSession200Origin)[keyof typeof GetWorkoutSession200Origin];
-
-export const GetWorkoutSession200Origin = {
-  PLANNED: "PLANNED",
-  FREE: "FREE",
-} as const;
-
-export type GetWorkoutSession200SessionExercisesItemSetsItemType =
-  (typeof GetWorkoutSession200SessionExercisesItemSetsItemType)[keyof typeof GetWorkoutSession200SessionExercisesItemSetsItemType];
-
-export const GetWorkoutSession200SessionExercisesItemSetsItemType = {
-  WARMUP: "WARMUP",
-  WORKING: "WORKING",
-} as const;
-
-export type GetWorkoutSession200SessionExercisesItemSetsItem = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  id: string;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
-  order: number;
-  type: GetWorkoutSession200SessionExercisesItemSetsItemType;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  weightInGrams: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  reps: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  rir: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  durationInSeconds: number | null;
-  /** @nullable */
-  notes: string | null;
-  /** @nullable */
-  completedAt: string | null;
-};
-
-export type GetWorkoutSession200SessionExercisesItem = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  id: string;
-  /**
-   * @nullable
-   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
-   */
-  exerciseId?: string | null;
-  hasMedia?: boolean;
-  exerciseNameSnapshot: string;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
-  order: number;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  plannedSets: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  plannedWarmupSets?: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  plannedReps: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  plannedRestTimeInSeconds: number | null;
-  /** @nullable */
-  notes: string | null;
-  sets: GetWorkoutSession200SessionExercisesItemSetsItem[];
-};
-
-export type GetWorkoutSession200 = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  id: string;
-  origin?: GetWorkoutSession200Origin;
-  /**
-   * @nullable
-   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
-   */
-  workoutDayId: string | null;
-  /**
-   * @nullable
-   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
-   */
-  workoutPlanId?: string | null;
-  /** @nullable */
-  workoutPlanNameSnapshot?: string | null;
-  /** @nullable */
-  workoutDayNameSnapshot?: string | null;
-  startedAt: string;
-  /** @nullable */
-  completedAt: string | null;
-  sessionExercises: GetWorkoutSession200SessionExercisesItem[];
-};
-
-export type GetWorkoutSession401 = {
-  error: string;
-  code: string;
-};
-
-export type GetWorkoutSession404 = {
-  error: string;
-  code: string;
-};
-
-export type GetWorkoutSession500 = {
-  error: string;
-  code: string;
-};
-
-export type CancelWorkoutSession200 = {
-  success: boolean;
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  sessionId: string;
-};
-
-export type CancelWorkoutSession400 = {
-  error: string;
-  code: string;
-};
-
-export type CancelWorkoutSession401 = {
-  error: string;
-  code: string;
-};
-
-export type CancelWorkoutSession404 = {
-  error: string;
-  code: string;
-};
-
-export type CancelWorkoutSession409 = {
-  error: string;
-  code: string;
-};
-
-export type CancelWorkoutSession500 = {
-  error: string;
-  code: string;
-};
-
-export type CompleteWorkoutSession200 = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  id: string;
-  /**
-   * @nullable
-   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
-   */
-  workoutDayId: string | null;
-  startedAt: string;
-  completedAt: string;
-};
-
-export type CompleteWorkoutSession400 = {
-  error: string;
-  code: string;
-};
-
-export type CompleteWorkoutSession401 = {
-  error: string;
-  code: string;
-};
-
-export type CompleteWorkoutSession404 = {
-  error: string;
-  code: string;
-};
-
-export type CompleteWorkoutSession500 = {
-  error: string;
-  code: string;
-};
-
-export type CreateWorkoutSetBodyType =
-  (typeof CreateWorkoutSetBodyType)[keyof typeof CreateWorkoutSetBodyType];
-
-export const CreateWorkoutSetBodyType = {
-  WARMUP: "WARMUP",
-  WORKING: "WORKING",
-} as const;
-
-export type CreateWorkoutSetBody = {
-  type?: CreateWorkoutSetBodyType;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  weightInGrams?: number | null;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  reps?: number | null;
-  /**
-   * @minimum 0
-   * @maximum 10
-   * @nullable
-   */
-  rir?: number | null;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  durationInSeconds?: number | null;
-  /**
-   * @maxLength 1000
-   * @nullable
-   */
-  notes?: string | null;
-  completed?: boolean;
-};
-
-export type CreateWorkoutSet201Type =
-  (typeof CreateWorkoutSet201Type)[keyof typeof CreateWorkoutSet201Type];
-
-export const CreateWorkoutSet201Type = {
-  WARMUP: "WARMUP",
-  WORKING: "WORKING",
-} as const;
-
-export type CreateWorkoutSet201 = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  id: string;
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  sessionExerciseId: string;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
-  order: number;
-  type: CreateWorkoutSet201Type;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  weightInGrams: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  reps: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  rir: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  durationInSeconds: number | null;
-  /** @nullable */
-  notes: string | null;
-  /** @nullable */
-  completedAt: string | null;
-};
-
-export type CreateWorkoutSet400 = {
-  error: string;
-  code: string;
-};
-
-export type CreateWorkoutSet401 = {
-  error: string;
-  code: string;
-};
-
-export type CreateWorkoutSet404 = {
-  error: string;
-  code: string;
-};
-
-export type CreateWorkoutSet409 = {
-  error: string;
-  code: string;
-};
-
-export type CreateWorkoutSet500 = {
-  error: string;
-  code: string;
-};
-
-export type UpdateWorkoutSetBodyType =
-  (typeof UpdateWorkoutSetBodyType)[keyof typeof UpdateWorkoutSetBodyType];
-
-export const UpdateWorkoutSetBodyType = {
-  WARMUP: "WARMUP",
-  WORKING: "WORKING",
-} as const;
-
-export type UpdateWorkoutSetBody = {
-  type?: UpdateWorkoutSetBodyType;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  weightInGrams?: number | null;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  reps?: number | null;
-  /**
-   * @minimum 0
-   * @maximum 10
-   * @nullable
-   */
-  rir?: number | null;
-  /**
-   * @minimum 0
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  durationInSeconds?: number | null;
-  /**
-   * @maxLength 1000
-   * @nullable
-   */
-  notes?: string | null;
-  completed?: boolean;
-};
-
-export type UpdateWorkoutSet200Type =
-  (typeof UpdateWorkoutSet200Type)[keyof typeof UpdateWorkoutSet200Type];
-
-export const UpdateWorkoutSet200Type = {
-  WARMUP: "WARMUP",
-  WORKING: "WORKING",
-} as const;
-
-export type UpdateWorkoutSet200 = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  id: string;
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  sessionExerciseId: string;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
-  order: number;
-  type: UpdateWorkoutSet200Type;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  weightInGrams: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  reps: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  rir: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  durationInSeconds: number | null;
-  /** @nullable */
-  notes: string | null;
-  /** @nullable */
-  completedAt: string | null;
-};
-
-export type UpdateWorkoutSet400 = {
-  error: string;
-  code: string;
-};
-
-export type UpdateWorkoutSet401 = {
-  error: string;
-  code: string;
-};
-
-export type UpdateWorkoutSet404 = {
-  error: string;
-  code: string;
-};
-
-export type UpdateWorkoutSet409 = {
-  error: string;
-  code: string;
-};
-
-export type UpdateWorkoutSet500 = {
-  error: string;
-  code: string;
-};
-
-export type DeleteWorkoutSet200 = {
-  success: boolean;
-};
-
-export type DeleteWorkoutSet401 = {
-  error: string;
-  code: string;
-};
-
-export type DeleteWorkoutSet404 = {
-  error: string;
-  code: string;
-};
-
-export type DeleteWorkoutSet409 = {
-  error: string;
-  code: string;
-};
-
-export type DeleteWorkoutSet500 = {
-  error: string;
-  code: string;
-};
-
-export type StartFreeWorkoutSession201Origin =
-  (typeof StartFreeWorkoutSession201Origin)[keyof typeof StartFreeWorkoutSession201Origin];
-
-export const StartFreeWorkoutSession201Origin = {
-  PLANNED: "PLANNED",
-  FREE: "FREE",
-} as const;
-
-export type StartFreeWorkoutSession201 = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  userWorkoutSessionId: string;
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  workoutSessionId: string;
-  origin?: StartFreeWorkoutSession201Origin;
-  /**
-   * @nullable
-   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
-   */
-  workoutDayId: string | null;
-  /**
-   * @nullable
-   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
-   */
-  workoutPlanId?: string | null;
-  /** @nullable */
-  workoutPlanNameSnapshot?: string | null;
-  /** @nullable */
-  workoutDayNameSnapshot?: string | null;
-  startedAt: string;
-  /** @nullable */
-  completedAt: string | null;
-};
-
-export type StartFreeWorkoutSession401 = {
-  error: string;
-  code: string;
-};
-
-export type StartFreeWorkoutSession409 = {
-  error: string;
-  code: string;
-};
-
-export type StartFreeWorkoutSession500 = {
-  error: string;
-  code: string;
-};
-
-export type AddExerciseToWorkoutSessionBody = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  exerciseId: string;
-};
-
-export type AddExerciseToWorkoutSession201SetsItemType =
-  (typeof AddExerciseToWorkoutSession201SetsItemType)[keyof typeof AddExerciseToWorkoutSession201SetsItemType];
-
-export const AddExerciseToWorkoutSession201SetsItemType = {
-  WARMUP: "WARMUP",
-  WORKING: "WORKING",
-} as const;
-
-export type AddExerciseToWorkoutSession201SetsItem = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  id: string;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
-  order: number;
-  type: AddExerciseToWorkoutSession201SetsItemType;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  weightInGrams: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  reps: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  rir: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  durationInSeconds: number | null;
-  /** @nullable */
-  notes: string | null;
-  /** @nullable */
-  completedAt: string | null;
-};
-
-export type AddExerciseToWorkoutSession201 = {
-  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
-  id: string;
-  /**
-   * @nullable
-   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
-   */
-  exerciseId?: string | null;
-  hasMedia?: boolean;
-  exerciseNameSnapshot: string;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
-  order: number;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  plannedSets: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  plannedWarmupSets?: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  plannedReps: number | null;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   * @nullable
-   */
-  plannedRestTimeInSeconds: number | null;
-  /** @nullable */
-  notes: string | null;
-  sets: AddExerciseToWorkoutSession201SetsItem[];
-};
-
-export type AddExerciseToWorkoutSession400 = {
-  error: string;
-  code: string;
-};
-
-export type AddExerciseToWorkoutSession401 = {
-  error: string;
-  code: string;
-};
-
-export type AddExerciseToWorkoutSession404 = {
-  error: string;
-  code: string;
-};
-
-export type AddExerciseToWorkoutSession409 = {
-  error: string;
-  code: string;
-};
-
-export type AddExerciseToWorkoutSession500 = {
-  error: string;
-  code: string;
-};
-
-export type RemoveExerciseFromWorkoutSession200 = {
-  success: boolean;
-};
-
-export type RemoveExerciseFromWorkoutSession400 = {
-  error: string;
-  code: string;
-};
-
-export type RemoveExerciseFromWorkoutSession401 = {
-  error: string;
-  code: string;
-};
-
-export type RemoveExerciseFromWorkoutSession404 = {
-  error: string;
-  code: string;
-};
-
-export type RemoveExerciseFromWorkoutSession409 = {
-  error: string;
-  code: string;
-};
-
-export type RemoveExerciseFromWorkoutSession500 = {
-  error: string;
-  code: string;
-};
-
 export type ListPublicPlansParams = {
   audience: ListPublicPlansAudience;
 };
@@ -5889,6 +4114,1781 @@ export type CancelManualSubscription409 = {
 };
 
 export type CancelManualSubscription500 = {
+  error: string;
+  code: string;
+};
+
+export type ListExercisesParams = {
+  q?: string;
+  onlyWithHistory?: string;
+};
+
+export type ListExercises200ItemMusclesItemMuscleGroup =
+  (typeof ListExercises200ItemMusclesItemMuscleGroup)[keyof typeof ListExercises200ItemMusclesItemMuscleGroup];
+
+export const ListExercises200ItemMusclesItemMuscleGroup = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+} as const;
+
+export type ListExercises200ItemMusclesItemRole =
+  (typeof ListExercises200ItemMusclesItemRole)[keyof typeof ListExercises200ItemMusclesItemRole];
+
+export const ListExercises200ItemMusclesItemRole = {
+  PRIMARY: "PRIMARY",
+  SECONDARY: "SECONDARY",
+} as const;
+
+export type ListExercises200ItemMusclesItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  muscleGroup: ListExercises200ItemMusclesItemMuscleGroup;
+  role: ListExercises200ItemMusclesItemRole;
+};
+
+export type ListExercises200Item = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  name: string;
+  /** @nullable */
+  ownerUserId: string | null;
+  hasMedia: boolean;
+  muscles: ListExercises200ItemMusclesItem[];
+};
+
+export type ListExercises401 = {
+  error: string;
+  code: string;
+};
+
+export type ListExercises500 = {
+  error: string;
+  code: string;
+};
+
+export type CreateExerciseBodyPrimaryMuscleGroupsItem =
+  (typeof CreateExerciseBodyPrimaryMuscleGroupsItem)[keyof typeof CreateExerciseBodyPrimaryMuscleGroupsItem];
+
+export const CreateExerciseBodyPrimaryMuscleGroupsItem = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+} as const;
+
+export type CreateExerciseBodySecondaryMuscleGroupsItem =
+  (typeof CreateExerciseBodySecondaryMuscleGroupsItem)[keyof typeof CreateExerciseBodySecondaryMuscleGroupsItem];
+
+export const CreateExerciseBodySecondaryMuscleGroupsItem = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+} as const;
+
+export type CreateExerciseBody = {
+  /** @minLength 1 */
+  name: string;
+  primaryMuscleGroups?: CreateExerciseBodyPrimaryMuscleGroupsItem[];
+  secondaryMuscleGroups?: CreateExerciseBodySecondaryMuscleGroupsItem[];
+};
+
+export type CreateExercise201MusclesItemMuscleGroup =
+  (typeof CreateExercise201MusclesItemMuscleGroup)[keyof typeof CreateExercise201MusclesItemMuscleGroup];
+
+export const CreateExercise201MusclesItemMuscleGroup = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+} as const;
+
+export type CreateExercise201MusclesItemRole =
+  (typeof CreateExercise201MusclesItemRole)[keyof typeof CreateExercise201MusclesItemRole];
+
+export const CreateExercise201MusclesItemRole = {
+  PRIMARY: "PRIMARY",
+  SECONDARY: "SECONDARY",
+} as const;
+
+export type CreateExercise201MusclesItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  muscleGroup: CreateExercise201MusclesItemMuscleGroup;
+  role: CreateExercise201MusclesItemRole;
+};
+
+export type CreateExercise201 = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  name: string;
+  /** @nullable */
+  ownerUserId: string | null;
+  hasMedia: boolean;
+  muscles: CreateExercise201MusclesItem[];
+};
+
+export type CreateExercise400 = {
+  error: string;
+  code: string;
+};
+
+export type CreateExercise401 = {
+  error: string;
+  code: string;
+};
+
+export type CreateExercise409 = {
+  error: string;
+  code: string;
+};
+
+export type CreateExercise500 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateExerciseMusclesBodyPrimaryMuscleGroupsItem =
+  (typeof UpdateExerciseMusclesBodyPrimaryMuscleGroupsItem)[keyof typeof UpdateExerciseMusclesBodyPrimaryMuscleGroupsItem];
+
+export const UpdateExerciseMusclesBodyPrimaryMuscleGroupsItem = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+} as const;
+
+export type UpdateExerciseMusclesBodySecondaryMuscleGroupsItem =
+  (typeof UpdateExerciseMusclesBodySecondaryMuscleGroupsItem)[keyof typeof UpdateExerciseMusclesBodySecondaryMuscleGroupsItem];
+
+export const UpdateExerciseMusclesBodySecondaryMuscleGroupsItem = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+} as const;
+
+export type UpdateExerciseMusclesBody = {
+  /** @minItems 1 */
+  primaryMuscleGroups: UpdateExerciseMusclesBodyPrimaryMuscleGroupsItem[];
+  secondaryMuscleGroups?: UpdateExerciseMusclesBodySecondaryMuscleGroupsItem[];
+};
+
+export type UpdateExerciseMuscles200MusclesItemMuscleGroup =
+  (typeof UpdateExerciseMuscles200MusclesItemMuscleGroup)[keyof typeof UpdateExerciseMuscles200MusclesItemMuscleGroup];
+
+export const UpdateExerciseMuscles200MusclesItemMuscleGroup = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+} as const;
+
+export type UpdateExerciseMuscles200MusclesItemRole =
+  (typeof UpdateExerciseMuscles200MusclesItemRole)[keyof typeof UpdateExerciseMuscles200MusclesItemRole];
+
+export const UpdateExerciseMuscles200MusclesItemRole = {
+  PRIMARY: "PRIMARY",
+  SECONDARY: "SECONDARY",
+} as const;
+
+export type UpdateExerciseMuscles200MusclesItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  muscleGroup: UpdateExerciseMuscles200MusclesItemMuscleGroup;
+  role: UpdateExerciseMuscles200MusclesItemRole;
+};
+
+export type UpdateExerciseMuscles200 = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  name: string;
+  /** @nullable */
+  ownerUserId: string | null;
+  hasMedia: boolean;
+  muscles: UpdateExerciseMuscles200MusclesItem[];
+};
+
+export type UpdateExerciseMuscles400 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateExerciseMuscles401 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateExerciseMuscles404 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateExerciseMuscles500 = {
+  error: string;
+  code: string;
+};
+
+/**
+ * @nullable
+ */
+export type GetExerciseMedia200MediaType =
+  | (typeof GetExerciseMedia200MediaType)[keyof typeof GetExerciseMedia200MediaType]
+  | null;
+
+export const GetExerciseMedia200MediaType = {
+  IMAGE_SEQUENCE: "IMAGE_SEQUENCE",
+  GIF: "GIF",
+  VIDEO: "VIDEO",
+} as const;
+
+/**
+ * @nullable
+ */
+export type GetExerciseMedia200Instructions = {
+  description: string;
+  setup: string;
+  execution: string;
+  tips: string;
+} | null;
+
+export type GetExerciseMedia200 = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  exerciseId: string;
+  hasMedia: boolean;
+  /** @nullable */
+  mediaType: GetExerciseMedia200MediaType;
+  /** @nullable */
+  startImagePath: string | null;
+  /** @nullable */
+  endImagePath: string | null;
+  /** @nullable */
+  motionPath: string | null;
+  /** @nullable */
+  instructions: GetExerciseMedia200Instructions;
+  /** @nullable */
+  attributionName: string | null;
+  /** @nullable */
+  attributionUrl: string | null;
+};
+
+export type GetExerciseMedia401 = {
+  error: string;
+  code: string;
+};
+
+export type GetExerciseMedia404 = {
+  error: string;
+  code: string;
+};
+
+export type GetExerciseMedia500 = {
+  error: string;
+  code: string;
+};
+
+export type GetActiveWorkoutSession200Origin =
+  (typeof GetActiveWorkoutSession200Origin)[keyof typeof GetActiveWorkoutSession200Origin];
+
+export const GetActiveWorkoutSession200Origin = {
+  PLANNED: "PLANNED",
+  FREE: "FREE",
+} as const;
+
+export type GetActiveWorkoutSession200SessionExercisesItemSetsItemType =
+  (typeof GetActiveWorkoutSession200SessionExercisesItemSetsItemType)[keyof typeof GetActiveWorkoutSession200SessionExercisesItemSetsItemType];
+
+export const GetActiveWorkoutSession200SessionExercisesItemSetsItemType = {
+  WARMUP: "WARMUP",
+  WORKING: "WORKING",
+} as const;
+
+export type GetActiveWorkoutSession200SessionExercisesItemSetsItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  order: number;
+  type: GetActiveWorkoutSession200SessionExercisesItemSetsItemType;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  weightInGrams: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  reps: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  rir: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  durationInSeconds: number | null;
+  /** @nullable */
+  notes: string | null;
+  /** @nullable */
+  completedAt: string | null;
+};
+
+export type GetActiveWorkoutSession200SessionExercisesItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId?: string | null;
+  hasMedia?: boolean;
+  exerciseNameSnapshot: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  order: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  plannedSets: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  plannedWarmupSets?: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  plannedReps: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  plannedRestTimeInSeconds: number | null;
+  /** @nullable */
+  notes: string | null;
+  sets: GetActiveWorkoutSession200SessionExercisesItemSetsItem[];
+};
+
+export type GetActiveWorkoutSession200 = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  origin?: GetActiveWorkoutSession200Origin;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutDayId: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutPlanId?: string | null;
+  /** @nullable */
+  workoutPlanNameSnapshot?: string | null;
+  /** @nullable */
+  workoutDayNameSnapshot?: string | null;
+  startedAt: string;
+  /** @nullable */
+  completedAt: string | null;
+  sessionExercises: GetActiveWorkoutSession200SessionExercisesItem[];
+};
+
+export type GetActiveWorkoutSession401 = {
+  error: string;
+  code: string;
+};
+
+export type GetActiveWorkoutSession404 = {
+  error: string;
+  code: string;
+};
+
+export type GetActiveWorkoutSession500 = {
+  error: string;
+  code: string;
+};
+
+export type GetWorkoutSession200Origin =
+  (typeof GetWorkoutSession200Origin)[keyof typeof GetWorkoutSession200Origin];
+
+export const GetWorkoutSession200Origin = {
+  PLANNED: "PLANNED",
+  FREE: "FREE",
+} as const;
+
+export type GetWorkoutSession200SessionExercisesItemSetsItemType =
+  (typeof GetWorkoutSession200SessionExercisesItemSetsItemType)[keyof typeof GetWorkoutSession200SessionExercisesItemSetsItemType];
+
+export const GetWorkoutSession200SessionExercisesItemSetsItemType = {
+  WARMUP: "WARMUP",
+  WORKING: "WORKING",
+} as const;
+
+export type GetWorkoutSession200SessionExercisesItemSetsItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  order: number;
+  type: GetWorkoutSession200SessionExercisesItemSetsItemType;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  weightInGrams: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  reps: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  rir: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  durationInSeconds: number | null;
+  /** @nullable */
+  notes: string | null;
+  /** @nullable */
+  completedAt: string | null;
+};
+
+export type GetWorkoutSession200SessionExercisesItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId?: string | null;
+  hasMedia?: boolean;
+  exerciseNameSnapshot: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  order: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  plannedSets: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  plannedWarmupSets?: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  plannedReps: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  plannedRestTimeInSeconds: number | null;
+  /** @nullable */
+  notes: string | null;
+  sets: GetWorkoutSession200SessionExercisesItemSetsItem[];
+};
+
+export type GetWorkoutSession200 = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  origin?: GetWorkoutSession200Origin;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutDayId: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutPlanId?: string | null;
+  /** @nullable */
+  workoutPlanNameSnapshot?: string | null;
+  /** @nullable */
+  workoutDayNameSnapshot?: string | null;
+  startedAt: string;
+  /** @nullable */
+  completedAt: string | null;
+  sessionExercises: GetWorkoutSession200SessionExercisesItem[];
+};
+
+export type GetWorkoutSession401 = {
+  error: string;
+  code: string;
+};
+
+export type GetWorkoutSession404 = {
+  error: string;
+  code: string;
+};
+
+export type GetWorkoutSession500 = {
+  error: string;
+  code: string;
+};
+
+export type CancelWorkoutSession200 = {
+  success: boolean;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  sessionId: string;
+};
+
+export type CancelWorkoutSession400 = {
+  error: string;
+  code: string;
+};
+
+export type CancelWorkoutSession401 = {
+  error: string;
+  code: string;
+};
+
+export type CancelWorkoutSession404 = {
+  error: string;
+  code: string;
+};
+
+export type CancelWorkoutSession409 = {
+  error: string;
+  code: string;
+};
+
+export type CancelWorkoutSession500 = {
+  error: string;
+  code: string;
+};
+
+export type CompleteWorkoutSession200 = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutDayId: string | null;
+  startedAt: string;
+  completedAt: string;
+};
+
+export type CompleteWorkoutSession400 = {
+  error: string;
+  code: string;
+};
+
+export type CompleteWorkoutSession401 = {
+  error: string;
+  code: string;
+};
+
+export type CompleteWorkoutSession404 = {
+  error: string;
+  code: string;
+};
+
+export type CompleteWorkoutSession500 = {
+  error: string;
+  code: string;
+};
+
+export type CreateWorkoutSetBodyType =
+  (typeof CreateWorkoutSetBodyType)[keyof typeof CreateWorkoutSetBodyType];
+
+export const CreateWorkoutSetBodyType = {
+  WARMUP: "WARMUP",
+  WORKING: "WORKING",
+} as const;
+
+export type CreateWorkoutSetBody = {
+  type?: CreateWorkoutSetBodyType;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  weightInGrams?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  reps?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  rir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  durationInSeconds?: number | null;
+  /**
+   * @maxLength 1000
+   * @nullable
+   */
+  notes?: string | null;
+  completed?: boolean;
+};
+
+export type CreateWorkoutSet201Type =
+  (typeof CreateWorkoutSet201Type)[keyof typeof CreateWorkoutSet201Type];
+
+export const CreateWorkoutSet201Type = {
+  WARMUP: "WARMUP",
+  WORKING: "WORKING",
+} as const;
+
+export type CreateWorkoutSet201 = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  sessionExerciseId: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  order: number;
+  type: CreateWorkoutSet201Type;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  weightInGrams: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  reps: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  rir: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  durationInSeconds: number | null;
+  /** @nullable */
+  notes: string | null;
+  /** @nullable */
+  completedAt: string | null;
+};
+
+export type CreateWorkoutSet400 = {
+  error: string;
+  code: string;
+};
+
+export type CreateWorkoutSet401 = {
+  error: string;
+  code: string;
+};
+
+export type CreateWorkoutSet404 = {
+  error: string;
+  code: string;
+};
+
+export type CreateWorkoutSet409 = {
+  error: string;
+  code: string;
+};
+
+export type CreateWorkoutSet500 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateWorkoutSetBodyType =
+  (typeof UpdateWorkoutSetBodyType)[keyof typeof UpdateWorkoutSetBodyType];
+
+export const UpdateWorkoutSetBodyType = {
+  WARMUP: "WARMUP",
+  WORKING: "WORKING",
+} as const;
+
+export type UpdateWorkoutSetBody = {
+  type?: UpdateWorkoutSetBodyType;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  weightInGrams?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  reps?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  rir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  durationInSeconds?: number | null;
+  /**
+   * @maxLength 1000
+   * @nullable
+   */
+  notes?: string | null;
+  completed?: boolean;
+};
+
+export type UpdateWorkoutSet200Type =
+  (typeof UpdateWorkoutSet200Type)[keyof typeof UpdateWorkoutSet200Type];
+
+export const UpdateWorkoutSet200Type = {
+  WARMUP: "WARMUP",
+  WORKING: "WORKING",
+} as const;
+
+export type UpdateWorkoutSet200 = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  sessionExerciseId: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  order: number;
+  type: UpdateWorkoutSet200Type;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  weightInGrams: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  reps: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  rir: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  durationInSeconds: number | null;
+  /** @nullable */
+  notes: string | null;
+  /** @nullable */
+  completedAt: string | null;
+};
+
+export type UpdateWorkoutSet400 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateWorkoutSet401 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateWorkoutSet404 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateWorkoutSet409 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateWorkoutSet500 = {
+  error: string;
+  code: string;
+};
+
+export type DeleteWorkoutSet200 = {
+  success: boolean;
+};
+
+export type DeleteWorkoutSet401 = {
+  error: string;
+  code: string;
+};
+
+export type DeleteWorkoutSet404 = {
+  error: string;
+  code: string;
+};
+
+export type DeleteWorkoutSet409 = {
+  error: string;
+  code: string;
+};
+
+export type DeleteWorkoutSet500 = {
+  error: string;
+  code: string;
+};
+
+export type StartFreeWorkoutSession201Origin =
+  (typeof StartFreeWorkoutSession201Origin)[keyof typeof StartFreeWorkoutSession201Origin];
+
+export const StartFreeWorkoutSession201Origin = {
+  PLANNED: "PLANNED",
+  FREE: "FREE",
+} as const;
+
+export type StartFreeWorkoutSession201 = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  userWorkoutSessionId: string;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  workoutSessionId: string;
+  origin?: StartFreeWorkoutSession201Origin;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutDayId: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutPlanId?: string | null;
+  /** @nullable */
+  workoutPlanNameSnapshot?: string | null;
+  /** @nullable */
+  workoutDayNameSnapshot?: string | null;
+  startedAt: string;
+  /** @nullable */
+  completedAt: string | null;
+};
+
+export type StartFreeWorkoutSession401 = {
+  error: string;
+  code: string;
+};
+
+export type StartFreeWorkoutSession409 = {
+  error: string;
+  code: string;
+};
+
+export type StartFreeWorkoutSession500 = {
+  error: string;
+  code: string;
+};
+
+export type AddExerciseToWorkoutSessionBody = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  exerciseId: string;
+};
+
+export type AddExerciseToWorkoutSession201SetsItemType =
+  (typeof AddExerciseToWorkoutSession201SetsItemType)[keyof typeof AddExerciseToWorkoutSession201SetsItemType];
+
+export const AddExerciseToWorkoutSession201SetsItemType = {
+  WARMUP: "WARMUP",
+  WORKING: "WORKING",
+} as const;
+
+export type AddExerciseToWorkoutSession201SetsItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  order: number;
+  type: AddExerciseToWorkoutSession201SetsItemType;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  weightInGrams: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  reps: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  rir: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  durationInSeconds: number | null;
+  /** @nullable */
+  notes: string | null;
+  /** @nullable */
+  completedAt: string | null;
+};
+
+export type AddExerciseToWorkoutSession201 = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId?: string | null;
+  hasMedia?: boolean;
+  exerciseNameSnapshot: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  order: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  plannedSets: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  plannedWarmupSets?: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  plannedReps: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  plannedRestTimeInSeconds: number | null;
+  /** @nullable */
+  notes: string | null;
+  sets: AddExerciseToWorkoutSession201SetsItem[];
+};
+
+export type AddExerciseToWorkoutSession400 = {
+  error: string;
+  code: string;
+};
+
+export type AddExerciseToWorkoutSession401 = {
+  error: string;
+  code: string;
+};
+
+export type AddExerciseToWorkoutSession404 = {
+  error: string;
+  code: string;
+};
+
+export type AddExerciseToWorkoutSession409 = {
+  error: string;
+  code: string;
+};
+
+export type AddExerciseToWorkoutSession500 = {
+  error: string;
+  code: string;
+};
+
+export type RemoveExerciseFromWorkoutSession200 = {
+  success: boolean;
+};
+
+export type RemoveExerciseFromWorkoutSession400 = {
+  error: string;
+  code: string;
+};
+
+export type RemoveExerciseFromWorkoutSession401 = {
+  error: string;
+  code: string;
+};
+
+export type RemoveExerciseFromWorkoutSession404 = {
+  error: string;
+  code: string;
+};
+
+export type RemoveExerciseFromWorkoutSession409 = {
+  error: string;
+  code: string;
+};
+
+export type RemoveExerciseFromWorkoutSession500 = {
+  error: string;
+  code: string;
+};
+
+export type GetWeeklyTrainingAnalyticsParams = {
+  tz: string;
+  startDate?: string;
+  endDate?: string;
+  /**
+   * @minimum 1
+   * @maximum 52
+   */
+  weeksCount?: number;
+};
+
+export type GetWeeklyTrainingAnalytics200WeeksItem = {
+  weekStartDate: string;
+  weekEndDate: string;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  workoutsCompleted: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  workingSets: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  warmupSets: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  loadVolumeGrams: number;
+  /** @minimum 0 */
+  loadVolumeKg: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  totalDurationInSeconds: number;
+  /** @minimum 0 */
+  averageDurationInSeconds: number;
+};
+
+export type GetWeeklyTrainingAnalytics200 = {
+  startDate: string;
+  endDate: string;
+  timezone: string;
+  weeks: GetWeeklyTrainingAnalytics200WeeksItem[];
+};
+
+export type GetWeeklyTrainingAnalytics400 = {
+  error: string;
+  code: string;
+};
+
+export type GetWeeklyTrainingAnalytics401 = {
+  error: string;
+  code: string;
+};
+
+export type GetWeeklyTrainingAnalytics500 = {
+  error: string;
+  code: string;
+};
+
+export type GetMuscleTrainingAnalyticsParams = {
+  tz: string;
+  startDate: string;
+  endDate: string;
+};
+
+export type GetMuscleTrainingAnalytics200MusclesItemMuscleGroup =
+  (typeof GetMuscleTrainingAnalytics200MusclesItemMuscleGroup)[keyof typeof GetMuscleTrainingAnalytics200MusclesItemMuscleGroup];
+
+export const GetMuscleTrainingAnalytics200MusclesItemMuscleGroup = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+} as const;
+
+export type GetMuscleTrainingAnalytics200MusclesItem = {
+  muscleGroup: GetMuscleTrainingAnalytics200MusclesItemMuscleGroup;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  directWorkingSets: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  indirectWorkingSets: number;
+};
+
+export type GetMuscleTrainingAnalytics200 = {
+  startDate: string;
+  endDate: string;
+  timezone: string;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  totalWorkingSets: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  classifiedWorkingSets: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  unclassifiedWorkingSets: number;
+  muscles: GetMuscleTrainingAnalytics200MusclesItem[];
+};
+
+export type GetMuscleTrainingAnalytics400 = {
+  error: string;
+  code: string;
+};
+
+export type GetMuscleTrainingAnalytics401 = {
+  error: string;
+  code: string;
+};
+
+export type GetMuscleTrainingAnalytics500 = {
+  error: string;
+  code: string;
+};
+
+export type ListWorkoutHistoryParams = {
+  cursor?: string;
+  /**
+   * @minimum 1
+   * @maximum 50
+   */
+  limit?: number;
+  origin?: ListWorkoutHistoryOrigin;
+};
+
+export type ListWorkoutHistoryOrigin =
+  (typeof ListWorkoutHistoryOrigin)[keyof typeof ListWorkoutHistoryOrigin];
+
+export const ListWorkoutHistoryOrigin = {
+  PLANNED: "PLANNED",
+  FREE: "FREE",
+} as const;
+
+export type ListWorkoutHistory200ItemsItemOrigin =
+  (typeof ListWorkoutHistory200ItemsItemOrigin)[keyof typeof ListWorkoutHistory200ItemsItemOrigin];
+
+export const ListWorkoutHistory200ItemsItemOrigin = {
+  PLANNED: "PLANNED",
+  FREE: "FREE",
+} as const;
+
+export type ListWorkoutHistory200ItemsItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  origin: ListWorkoutHistory200ItemsItemOrigin;
+  startedAt: string;
+  completedAt: string;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  durationInSeconds: number;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutPlanId: string | null;
+  /** @nullable */
+  workoutPlanNameSnapshot: string | null;
+  /** @nullable */
+  workoutDayNameSnapshot: string | null;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  exercisesCount: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  workingSetsCount: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  warmupSetsCount: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  totalLoadVolumeGrams: number;
+  /** @minimum 0 */
+  totalLoadVolumeKg: number;
+};
+
+export type ListWorkoutHistory200 = {
+  items: ListWorkoutHistory200ItemsItem[];
+  /** @nullable */
+  nextCursor: string | null;
+  hasMore: boolean;
+};
+
+export type ListWorkoutHistory400 = {
+  error: string;
+  code: string;
+};
+
+export type ListWorkoutHistory401 = {
+  error: string;
+  code: string;
+};
+
+export type ListWorkoutHistory500 = {
+  error: string;
+  code: string;
+};
+
+export type GetWorkoutHistorySession200Origin =
+  (typeof GetWorkoutHistorySession200Origin)[keyof typeof GetWorkoutHistorySession200Origin];
+
+export const GetWorkoutHistorySession200Origin = {
+  PLANNED: "PLANNED",
+  FREE: "FREE",
+} as const;
+
+export type GetWorkoutHistorySession200Summary = {
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  exercisesCount: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  workingSetsCount: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  warmupSetsCount: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  totalLoadVolumeGrams: number;
+  /** @minimum 0 */
+  totalLoadVolumeKg: number;
+};
+
+export type GetWorkoutHistorySession200ExercisesItemPlanned = {
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  warmupSets: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  workingSets: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  reps: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  restTimeInSeconds: number | null;
+};
+
+export type GetWorkoutHistorySession200ExercisesItemPerformed = {
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  warmupSetsCount: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  workingSetsCount: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  loadVolumeGrams: number;
+  /** @minimum 0 */
+  loadVolumeKg: number;
+};
+
+export type GetWorkoutHistorySession200ExercisesItemSetsItemType =
+  (typeof GetWorkoutHistorySession200ExercisesItemSetsItemType)[keyof typeof GetWorkoutHistorySession200ExercisesItemSetsItemType];
+
+export const GetWorkoutHistorySession200ExercisesItemSetsItemType = {
+  WARMUP: "WARMUP",
+  WORKING: "WORKING",
+} as const;
+
+export type GetWorkoutHistorySession200ExercisesItemSetsItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  order: number;
+  type: GetWorkoutHistorySession200ExercisesItemSetsItemType;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  weightInGrams: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  reps: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  rir: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  durationInSeconds: number | null;
+  /** @nullable */
+  notes: string | null;
+  completedAt: string;
+};
+
+export type GetWorkoutHistorySession200ExercisesItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId: string | null;
+  exerciseNameSnapshot: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  order: number;
+  /** @nullable */
+  notes: string | null;
+  planned: GetWorkoutHistorySession200ExercisesItemPlanned;
+  performed: GetWorkoutHistorySession200ExercisesItemPerformed;
+  sets: GetWorkoutHistorySession200ExercisesItemSetsItem[];
+};
+
+export type GetWorkoutHistorySession200 = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  origin: GetWorkoutHistorySession200Origin;
+  startedAt: string;
+  completedAt: string;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  durationInSeconds: number;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutPlanId: string | null;
+  /** @nullable */
+  workoutPlanNameSnapshot: string | null;
+  /** @nullable */
+  workoutDayNameSnapshot: string | null;
+  summary: GetWorkoutHistorySession200Summary;
+  exercises: GetWorkoutHistorySession200ExercisesItem[];
+};
+
+export type GetWorkoutHistorySession401 = {
+  error: string;
+  code: string;
+};
+
+export type GetWorkoutHistorySession404 = {
+  error: string;
+  code: string;
+};
+
+export type GetWorkoutHistorySession500 = {
+  error: string;
+  code: string;
+};
+
+export type GetExerciseEvolutionParams = {
+  cursor?: string;
+  /**
+   * @minimum 1
+   * @maximum 50
+   */
+  limit?: number;
+};
+
+export type GetExerciseEvolution200ExerciseMusclesItemMuscleGroup =
+  (typeof GetExerciseEvolution200ExerciseMusclesItemMuscleGroup)[keyof typeof GetExerciseEvolution200ExerciseMusclesItemMuscleGroup];
+
+export const GetExerciseEvolution200ExerciseMusclesItemMuscleGroup = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+} as const;
+
+export type GetExerciseEvolution200ExerciseMusclesItemRole =
+  (typeof GetExerciseEvolution200ExerciseMusclesItemRole)[keyof typeof GetExerciseEvolution200ExerciseMusclesItemRole];
+
+export const GetExerciseEvolution200ExerciseMusclesItemRole = {
+  PRIMARY: "PRIMARY",
+  SECONDARY: "SECONDARY",
+} as const;
+
+export type GetExerciseEvolution200ExerciseMusclesItem = {
+  muscleGroup: GetExerciseEvolution200ExerciseMusclesItemMuscleGroup;
+  role: GetExerciseEvolution200ExerciseMusclesItemRole;
+};
+
+export type GetExerciseEvolution200Exercise = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  name: string;
+  /** @nullable */
+  ownerUserId: string | null;
+  muscles: GetExerciseEvolution200ExerciseMusclesItem[];
+};
+
+/**
+ * @nullable
+ */
+export type GetExerciseEvolution200LoadPR = {
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  weightInGrams: number;
+  /** @minimum 0 */
+  weightKg: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  reps: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  rir: number | null;
+  completedAt: string;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12} | 00000000-0000-0000-0000-000000000000 | ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  workoutSessionId: string;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12} | ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  sessionExerciseId: string;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12} | ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  workoutSetId: string;
+  origin: "PLANNED" | "FREE";
+  /** @nullable */
+  workoutPlanNameSnapshot: string | null;
+  /** @nullable */
+  workoutDayNameSnapshot: string | null;
+} | null;
+
+export type GetExerciseEvolution200ItemsItemOrigin =
+  (typeof GetExerciseEvolution200ItemsItemOrigin)[keyof typeof GetExerciseEvolution200ItemsItemOrigin];
+
+export const GetExerciseEvolution200ItemsItemOrigin = {
+  PLANNED: "PLANNED",
+  FREE: "FREE",
+} as const;
+
+/**
+ * @nullable
+ */
+export type GetExerciseEvolution200ItemsItemTopSet = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12} | 00000000-0000-0000-0000-000000000000 | ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  workoutSetId: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  weightInGrams: number | null;
+  /** @nullable */
+  weightKg: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  reps: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  rir: number | null;
+} | null;
+
+export type GetExerciseEvolution200ItemsItemSetsItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  sessionExerciseId: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  order: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  weightInGrams: number | null;
+  /** @nullable */
+  weightKg: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  reps: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  rir: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  durationInSeconds: number | null;
+  /** @nullable */
+  notes: string | null;
+  completedAt: string;
+};
+
+export type GetExerciseEvolution200ItemsItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  workoutSessionId: string;
+  startedAt: string;
+  completedAt: string;
+  origin: GetExerciseEvolution200ItemsItemOrigin;
+  /** @nullable */
+  workoutPlanNameSnapshot: string | null;
+  /** @nullable */
+  workoutDayNameSnapshot: string | null;
+  exerciseNameSnapshot: string;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  workingSetsCount: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  totalReps: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  loadVolumeGrams: number;
+  /** @minimum 0 */
+  loadVolumeKg: number;
+  /** @nullable */
+  topSet: GetExerciseEvolution200ItemsItemTopSet;
+  sets: GetExerciseEvolution200ItemsItemSetsItem[];
+};
+
+export type GetExerciseEvolution200 = {
+  exercise: GetExerciseEvolution200Exercise;
+  /** @nullable */
+  loadPR: GetExerciseEvolution200LoadPR;
+  items: GetExerciseEvolution200ItemsItem[];
+  /** @nullable */
+  nextCursor: string | null;
+  hasMore: boolean;
+};
+
+export type GetExerciseEvolution400 = {
+  error: string;
+  code: string;
+};
+
+export type GetExerciseEvolution401 = {
+  error: string;
+  code: string;
+};
+
+export type GetExerciseEvolution404 = {
+  error: string;
+  code: string;
+};
+
+export type GetExerciseEvolution500 = {
   error: string;
   code: string;
 };
@@ -7969,1217 +7969,6 @@ export const deleteAiConversationsId = async (
   );
 };
 
-/**
- * @summary List global exercises and user custom exercises with optional search query
- */
-export type listExercisesResponse200 = {
-  data: ListExercises200Item[];
-  status: 200;
-};
-
-export type listExercisesResponse401 = {
-  data: ListExercises401;
-  status: 401;
-};
-
-export type listExercisesResponse500 = {
-  data: ListExercises500;
-  status: 500;
-};
-
-export type listExercisesResponseSuccess = listExercisesResponse200 & {
-  headers: Headers;
-};
-export type listExercisesResponseError = (
-  | listExercisesResponse401
-  | listExercisesResponse500
-) & {
-  headers: Headers;
-};
-
-export type listExercisesResponse =
-  | listExercisesResponseSuccess
-  | listExercisesResponseError;
-
-export const getListExercisesUrl = (params?: ListExercisesParams) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : value.toString());
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/exercises/?${stringifiedParams}`
-    : `/exercises/`;
-};
-
-export const listExercises = async (
-  params?: ListExercisesParams,
-  options?: RequestInit,
-): Promise<listExercisesResponse> => {
-  return customFetch<listExercisesResponse>(getListExercisesUrl(params), {
-    ...options,
-    method: "GET",
-  });
-};
-
-/**
- * @summary Create a custom exercise for the authenticated user
- */
-export type createExerciseResponse201 = {
-  data: CreateExercise201;
-  status: 201;
-};
-
-export type createExerciseResponse400 = {
-  data: CreateExercise400;
-  status: 400;
-};
-
-export type createExerciseResponse401 = {
-  data: CreateExercise401;
-  status: 401;
-};
-
-export type createExerciseResponse409 = {
-  data: CreateExercise409;
-  status: 409;
-};
-
-export type createExerciseResponse500 = {
-  data: CreateExercise500;
-  status: 500;
-};
-
-export type createExerciseResponseSuccess = createExerciseResponse201 & {
-  headers: Headers;
-};
-export type createExerciseResponseError = (
-  | createExerciseResponse400
-  | createExerciseResponse401
-  | createExerciseResponse409
-  | createExerciseResponse500
-) & {
-  headers: Headers;
-};
-
-export type createExerciseResponse =
-  | createExerciseResponseSuccess
-  | createExerciseResponseError;
-
-export const getCreateExerciseUrl = () => {
-  return `/exercises/`;
-};
-
-export const createExercise = async (
-  createExerciseBody: CreateExerciseBody,
-  options?: RequestInit,
-): Promise<createExerciseResponse> => {
-  return customFetch<createExerciseResponse>(getCreateExerciseUrl(), {
-    ...options,
-    method: "POST",
-    headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(createExerciseBody),
-  });
-};
-
-/**
- * @summary Update muscle groups classification of a custom exercise
- */
-export type updateExerciseMusclesResponse200 = {
-  data: UpdateExerciseMuscles200;
-  status: 200;
-};
-
-export type updateExerciseMusclesResponse400 = {
-  data: UpdateExerciseMuscles400;
-  status: 400;
-};
-
-export type updateExerciseMusclesResponse401 = {
-  data: UpdateExerciseMuscles401;
-  status: 401;
-};
-
-export type updateExerciseMusclesResponse404 = {
-  data: UpdateExerciseMuscles404;
-  status: 404;
-};
-
-export type updateExerciseMusclesResponse500 = {
-  data: UpdateExerciseMuscles500;
-  status: 500;
-};
-
-export type updateExerciseMusclesResponseSuccess =
-  updateExerciseMusclesResponse200 & {
-    headers: Headers;
-  };
-export type updateExerciseMusclesResponseError = (
-  | updateExerciseMusclesResponse400
-  | updateExerciseMusclesResponse401
-  | updateExerciseMusclesResponse404
-  | updateExerciseMusclesResponse500
-) & {
-  headers: Headers;
-};
-
-export type updateExerciseMusclesResponse =
-  | updateExerciseMusclesResponseSuccess
-  | updateExerciseMusclesResponseError;
-
-export const getUpdateExerciseMusclesUrl = (id: string) => {
-  return `/exercises/${id}/muscles`;
-};
-
-export const updateExerciseMuscles = async (
-  id: string,
-  updateExerciseMusclesBody: UpdateExerciseMusclesBody,
-  options?: RequestInit,
-): Promise<updateExerciseMusclesResponse> => {
-  return customFetch<updateExerciseMusclesResponse>(
-    getUpdateExerciseMusclesUrl(id),
-    {
-      ...options,
-      method: "PUT",
-      headers: { "Content-Type": "application/json", ...options?.headers },
-      body: JSON.stringify(updateExerciseMusclesBody),
-    },
-  );
-};
-
-/**
- * @summary Get visual execution media and instructions for an exercise
- */
-export type getExerciseMediaResponse200 = {
-  data: GetExerciseMedia200;
-  status: 200;
-};
-
-export type getExerciseMediaResponse401 = {
-  data: GetExerciseMedia401;
-  status: 401;
-};
-
-export type getExerciseMediaResponse404 = {
-  data: GetExerciseMedia404;
-  status: 404;
-};
-
-export type getExerciseMediaResponse500 = {
-  data: GetExerciseMedia500;
-  status: 500;
-};
-
-export type getExerciseMediaResponseSuccess = getExerciseMediaResponse200 & {
-  headers: Headers;
-};
-export type getExerciseMediaResponseError = (
-  | getExerciseMediaResponse401
-  | getExerciseMediaResponse404
-  | getExerciseMediaResponse500
-) & {
-  headers: Headers;
-};
-
-export type getExerciseMediaResponse =
-  | getExerciseMediaResponseSuccess
-  | getExerciseMediaResponseError;
-
-export const getGetExerciseMediaUrl = (exerciseId: string) => {
-  return `/exercises/${exerciseId}/media`;
-};
-
-export const getExerciseMedia = async (
-  exerciseId: string,
-  options?: RequestInit,
-): Promise<getExerciseMediaResponse> => {
-  return customFetch<getExerciseMediaResponse>(
-    getGetExerciseMediaUrl(exerciseId),
-    {
-      ...options,
-      method: "GET",
-    },
-  );
-};
-
-/**
- * @summary Get weekly volume and duration training analytics
- */
-export type getWeeklyTrainingAnalyticsResponse200 = {
-  data: GetWeeklyTrainingAnalytics200;
-  status: 200;
-};
-
-export type getWeeklyTrainingAnalyticsResponse400 = {
-  data: GetWeeklyTrainingAnalytics400;
-  status: 400;
-};
-
-export type getWeeklyTrainingAnalyticsResponse401 = {
-  data: GetWeeklyTrainingAnalytics401;
-  status: 401;
-};
-
-export type getWeeklyTrainingAnalyticsResponse500 = {
-  data: GetWeeklyTrainingAnalytics500;
-  status: 500;
-};
-
-export type getWeeklyTrainingAnalyticsResponseSuccess =
-  getWeeklyTrainingAnalyticsResponse200 & {
-    headers: Headers;
-  };
-export type getWeeklyTrainingAnalyticsResponseError = (
-  | getWeeklyTrainingAnalyticsResponse400
-  | getWeeklyTrainingAnalyticsResponse401
-  | getWeeklyTrainingAnalyticsResponse500
-) & {
-  headers: Headers;
-};
-
-export type getWeeklyTrainingAnalyticsResponse =
-  | getWeeklyTrainingAnalyticsResponseSuccess
-  | getWeeklyTrainingAnalyticsResponseError;
-
-export const getGetWeeklyTrainingAnalyticsUrl = (
-  params: GetWeeklyTrainingAnalyticsParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : value.toString());
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/history/analytics/weekly?${stringifiedParams}`
-    : `/history/analytics/weekly`;
-};
-
-export const getWeeklyTrainingAnalytics = async (
-  params: GetWeeklyTrainingAnalyticsParams,
-  options?: RequestInit,
-): Promise<getWeeklyTrainingAnalyticsResponse> => {
-  return customFetch<getWeeklyTrainingAnalyticsResponse>(
-    getGetWeeklyTrainingAnalyticsUrl(params),
-    {
-      ...options,
-      method: "GET",
-    },
-  );
-};
-
-/**
- * @summary Get muscle direct and indirect working sets analytics
- */
-export type getMuscleTrainingAnalyticsResponse200 = {
-  data: GetMuscleTrainingAnalytics200;
-  status: 200;
-};
-
-export type getMuscleTrainingAnalyticsResponse400 = {
-  data: GetMuscleTrainingAnalytics400;
-  status: 400;
-};
-
-export type getMuscleTrainingAnalyticsResponse401 = {
-  data: GetMuscleTrainingAnalytics401;
-  status: 401;
-};
-
-export type getMuscleTrainingAnalyticsResponse500 = {
-  data: GetMuscleTrainingAnalytics500;
-  status: 500;
-};
-
-export type getMuscleTrainingAnalyticsResponseSuccess =
-  getMuscleTrainingAnalyticsResponse200 & {
-    headers: Headers;
-  };
-export type getMuscleTrainingAnalyticsResponseError = (
-  | getMuscleTrainingAnalyticsResponse400
-  | getMuscleTrainingAnalyticsResponse401
-  | getMuscleTrainingAnalyticsResponse500
-) & {
-  headers: Headers;
-};
-
-export type getMuscleTrainingAnalyticsResponse =
-  | getMuscleTrainingAnalyticsResponseSuccess
-  | getMuscleTrainingAnalyticsResponseError;
-
-export const getGetMuscleTrainingAnalyticsUrl = (
-  params: GetMuscleTrainingAnalyticsParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : value.toString());
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/history/analytics/muscles?${stringifiedParams}`
-    : `/history/analytics/muscles`;
-};
-
-export const getMuscleTrainingAnalytics = async (
-  params: GetMuscleTrainingAnalyticsParams,
-  options?: RequestInit,
-): Promise<getMuscleTrainingAnalyticsResponse> => {
-  return customFetch<getMuscleTrainingAnalyticsResponse>(
-    getGetMuscleTrainingAnalyticsUrl(params),
-    {
-      ...options,
-      method: "GET",
-    },
-  );
-};
-
-/**
- * @summary List completed workout sessions history with cursor pagination
- */
-export type listWorkoutHistoryResponse200 = {
-  data: ListWorkoutHistory200;
-  status: 200;
-};
-
-export type listWorkoutHistoryResponse400 = {
-  data: ListWorkoutHistory400;
-  status: 400;
-};
-
-export type listWorkoutHistoryResponse401 = {
-  data: ListWorkoutHistory401;
-  status: 401;
-};
-
-export type listWorkoutHistoryResponse500 = {
-  data: ListWorkoutHistory500;
-  status: 500;
-};
-
-export type listWorkoutHistoryResponseSuccess =
-  listWorkoutHistoryResponse200 & {
-    headers: Headers;
-  };
-export type listWorkoutHistoryResponseError = (
-  | listWorkoutHistoryResponse400
-  | listWorkoutHistoryResponse401
-  | listWorkoutHistoryResponse500
-) & {
-  headers: Headers;
-};
-
-export type listWorkoutHistoryResponse =
-  | listWorkoutHistoryResponseSuccess
-  | listWorkoutHistoryResponseError;
-
-export const getListWorkoutHistoryUrl = (params?: ListWorkoutHistoryParams) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : value.toString());
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/history/sessions?${stringifiedParams}`
-    : `/history/sessions`;
-};
-
-export const listWorkoutHistory = async (
-  params?: ListWorkoutHistoryParams,
-  options?: RequestInit,
-): Promise<listWorkoutHistoryResponse> => {
-  return customFetch<listWorkoutHistoryResponse>(
-    getListWorkoutHistoryUrl(params),
-    {
-      ...options,
-      method: "GET",
-    },
-  );
-};
-
-/**
- * @summary Get details of a completed workout session in history
- */
-export type getWorkoutHistorySessionResponse200 = {
-  data: GetWorkoutHistorySession200;
-  status: 200;
-};
-
-export type getWorkoutHistorySessionResponse401 = {
-  data: GetWorkoutHistorySession401;
-  status: 401;
-};
-
-export type getWorkoutHistorySessionResponse404 = {
-  data: GetWorkoutHistorySession404;
-  status: 404;
-};
-
-export type getWorkoutHistorySessionResponse500 = {
-  data: GetWorkoutHistorySession500;
-  status: 500;
-};
-
-export type getWorkoutHistorySessionResponseSuccess =
-  getWorkoutHistorySessionResponse200 & {
-    headers: Headers;
-  };
-export type getWorkoutHistorySessionResponseError = (
-  | getWorkoutHistorySessionResponse401
-  | getWorkoutHistorySessionResponse404
-  | getWorkoutHistorySessionResponse500
-) & {
-  headers: Headers;
-};
-
-export type getWorkoutHistorySessionResponse =
-  | getWorkoutHistorySessionResponseSuccess
-  | getWorkoutHistorySessionResponseError;
-
-export const getGetWorkoutHistorySessionUrl = (sessionId: string) => {
-  return `/history/sessions/${sessionId}`;
-};
-
-export const getWorkoutHistorySession = async (
-  sessionId: string,
-  options?: RequestInit,
-): Promise<getWorkoutHistorySessionResponse> => {
-  return customFetch<getWorkoutHistorySessionResponse>(
-    getGetWorkoutHistorySessionUrl(sessionId),
-    {
-      ...options,
-      method: "GET",
-    },
-  );
-};
-
-/**
- * @summary Get longitudinal evolution and load PR for a specific canonical exercise
- */
-export type getExerciseEvolutionResponse200 = {
-  data: GetExerciseEvolution200;
-  status: 200;
-};
-
-export type getExerciseEvolutionResponse400 = {
-  data: GetExerciseEvolution400;
-  status: 400;
-};
-
-export type getExerciseEvolutionResponse401 = {
-  data: GetExerciseEvolution401;
-  status: 401;
-};
-
-export type getExerciseEvolutionResponse404 = {
-  data: GetExerciseEvolution404;
-  status: 404;
-};
-
-export type getExerciseEvolutionResponse500 = {
-  data: GetExerciseEvolution500;
-  status: 500;
-};
-
-export type getExerciseEvolutionResponseSuccess =
-  getExerciseEvolutionResponse200 & {
-    headers: Headers;
-  };
-export type getExerciseEvolutionResponseError = (
-  | getExerciseEvolutionResponse400
-  | getExerciseEvolutionResponse401
-  | getExerciseEvolutionResponse404
-  | getExerciseEvolutionResponse500
-) & {
-  headers: Headers;
-};
-
-export type getExerciseEvolutionResponse =
-  | getExerciseEvolutionResponseSuccess
-  | getExerciseEvolutionResponseError;
-
-export const getGetExerciseEvolutionUrl = (
-  exerciseId: string,
-  params?: GetExerciseEvolutionParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : value.toString());
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/history/exercises/${exerciseId}?${stringifiedParams}`
-    : `/history/exercises/${exerciseId}`;
-};
-
-export const getExerciseEvolution = async (
-  exerciseId: string,
-  params?: GetExerciseEvolutionParams,
-  options?: RequestInit,
-): Promise<getExerciseEvolutionResponse> => {
-  return customFetch<getExerciseEvolutionResponse>(
-    getGetExerciseEvolutionUrl(exerciseId, params),
-    {
-      ...options,
-      method: "GET",
-    },
-  );
-};
-
-/**
- * @summary Get current active workout session with all exercises and sets
- */
-export type getActiveWorkoutSessionResponse200 = {
-  data: GetActiveWorkoutSession200;
-  status: 200;
-};
-
-export type getActiveWorkoutSessionResponse401 = {
-  data: GetActiveWorkoutSession401;
-  status: 401;
-};
-
-export type getActiveWorkoutSessionResponse404 = {
-  data: GetActiveWorkoutSession404;
-  status: 404;
-};
-
-export type getActiveWorkoutSessionResponse500 = {
-  data: GetActiveWorkoutSession500;
-  status: 500;
-};
-
-export type getActiveWorkoutSessionResponseSuccess =
-  getActiveWorkoutSessionResponse200 & {
-    headers: Headers;
-  };
-export type getActiveWorkoutSessionResponseError = (
-  | getActiveWorkoutSessionResponse401
-  | getActiveWorkoutSessionResponse404
-  | getActiveWorkoutSessionResponse500
-) & {
-  headers: Headers;
-};
-
-export type getActiveWorkoutSessionResponse =
-  | getActiveWorkoutSessionResponseSuccess
-  | getActiveWorkoutSessionResponseError;
-
-export const getGetActiveWorkoutSessionUrl = () => {
-  return `/workout-sessions/active`;
-};
-
-export const getActiveWorkoutSession = async (
-  options?: RequestInit,
-): Promise<getActiveWorkoutSessionResponse> => {
-  return customFetch<getActiveWorkoutSessionResponse>(
-    getGetActiveWorkoutSessionUrl(),
-    {
-      ...options,
-      method: "GET",
-    },
-  );
-};
-
-/**
- * @summary Get a workout session with all exercises and sets
- */
-export type getWorkoutSessionResponse200 = {
-  data: GetWorkoutSession200;
-  status: 200;
-};
-
-export type getWorkoutSessionResponse401 = {
-  data: GetWorkoutSession401;
-  status: 401;
-};
-
-export type getWorkoutSessionResponse404 = {
-  data: GetWorkoutSession404;
-  status: 404;
-};
-
-export type getWorkoutSessionResponse500 = {
-  data: GetWorkoutSession500;
-  status: 500;
-};
-
-export type getWorkoutSessionResponseSuccess = getWorkoutSessionResponse200 & {
-  headers: Headers;
-};
-export type getWorkoutSessionResponseError = (
-  | getWorkoutSessionResponse401
-  | getWorkoutSessionResponse404
-  | getWorkoutSessionResponse500
-) & {
-  headers: Headers;
-};
-
-export type getWorkoutSessionResponse =
-  | getWorkoutSessionResponseSuccess
-  | getWorkoutSessionResponseError;
-
-export const getGetWorkoutSessionUrl = (sessionId: string) => {
-  return `/workout-sessions/${sessionId}`;
-};
-
-export const getWorkoutSession = async (
-  sessionId: string,
-  options?: RequestInit,
-): Promise<getWorkoutSessionResponse> => {
-  return customFetch<getWorkoutSessionResponse>(
-    getGetWorkoutSessionUrl(sessionId),
-    {
-      ...options,
-      method: "GET",
-    },
-  );
-};
-
-/**
- * @summary Cancel and discard an active workout session
- */
-export type cancelWorkoutSessionResponse200 = {
-  data: CancelWorkoutSession200;
-  status: 200;
-};
-
-export type cancelWorkoutSessionResponse400 = {
-  data: CancelWorkoutSession400;
-  status: 400;
-};
-
-export type cancelWorkoutSessionResponse401 = {
-  data: CancelWorkoutSession401;
-  status: 401;
-};
-
-export type cancelWorkoutSessionResponse404 = {
-  data: CancelWorkoutSession404;
-  status: 404;
-};
-
-export type cancelWorkoutSessionResponse409 = {
-  data: CancelWorkoutSession409;
-  status: 409;
-};
-
-export type cancelWorkoutSessionResponse500 = {
-  data: CancelWorkoutSession500;
-  status: 500;
-};
-
-export type cancelWorkoutSessionResponseSuccess =
-  cancelWorkoutSessionResponse200 & {
-    headers: Headers;
-  };
-export type cancelWorkoutSessionResponseError = (
-  | cancelWorkoutSessionResponse400
-  | cancelWorkoutSessionResponse401
-  | cancelWorkoutSessionResponse404
-  | cancelWorkoutSessionResponse409
-  | cancelWorkoutSessionResponse500
-) & {
-  headers: Headers;
-};
-
-export type cancelWorkoutSessionResponse =
-  | cancelWorkoutSessionResponseSuccess
-  | cancelWorkoutSessionResponseError;
-
-export const getCancelWorkoutSessionUrl = (sessionId: string) => {
-  return `/workout-sessions/${sessionId}`;
-};
-
-export const cancelWorkoutSession = async (
-  sessionId: string,
-  options?: RequestInit,
-): Promise<cancelWorkoutSessionResponse> => {
-  return customFetch<cancelWorkoutSessionResponse>(
-    getCancelWorkoutSessionUrl(sessionId),
-    {
-      ...options,
-      method: "DELETE",
-    },
-  );
-};
-
-/**
- * @summary Complete an active workout session
- */
-export type completeWorkoutSessionResponse200 = {
-  data: CompleteWorkoutSession200;
-  status: 200;
-};
-
-export type completeWorkoutSessionResponse400 = {
-  data: CompleteWorkoutSession400;
-  status: 400;
-};
-
-export type completeWorkoutSessionResponse401 = {
-  data: CompleteWorkoutSession401;
-  status: 401;
-};
-
-export type completeWorkoutSessionResponse404 = {
-  data: CompleteWorkoutSession404;
-  status: 404;
-};
-
-export type completeWorkoutSessionResponse500 = {
-  data: CompleteWorkoutSession500;
-  status: 500;
-};
-
-export type completeWorkoutSessionResponseSuccess =
-  completeWorkoutSessionResponse200 & {
-    headers: Headers;
-  };
-export type completeWorkoutSessionResponseError = (
-  | completeWorkoutSessionResponse400
-  | completeWorkoutSessionResponse401
-  | completeWorkoutSessionResponse404
-  | completeWorkoutSessionResponse500
-) & {
-  headers: Headers;
-};
-
-export type completeWorkoutSessionResponse =
-  | completeWorkoutSessionResponseSuccess
-  | completeWorkoutSessionResponseError;
-
-export const getCompleteWorkoutSessionUrl = (sessionId: string) => {
-  return `/workout-sessions/${sessionId}/complete`;
-};
-
-export const completeWorkoutSession = async (
-  sessionId: string,
-  options?: RequestInit,
-): Promise<completeWorkoutSessionResponse> => {
-  return customFetch<completeWorkoutSessionResponse>(
-    getCompleteWorkoutSessionUrl(sessionId),
-    {
-      ...options,
-      method: "POST",
-    },
-  );
-};
-
-/**
- * @summary Create a new workout set for a session exercise
- */
-export type createWorkoutSetResponse201 = {
-  data: CreateWorkoutSet201;
-  status: 201;
-};
-
-export type createWorkoutSetResponse400 = {
-  data: CreateWorkoutSet400;
-  status: 400;
-};
-
-export type createWorkoutSetResponse401 = {
-  data: CreateWorkoutSet401;
-  status: 401;
-};
-
-export type createWorkoutSetResponse404 = {
-  data: CreateWorkoutSet404;
-  status: 404;
-};
-
-export type createWorkoutSetResponse409 = {
-  data: CreateWorkoutSet409;
-  status: 409;
-};
-
-export type createWorkoutSetResponse500 = {
-  data: CreateWorkoutSet500;
-  status: 500;
-};
-
-export type createWorkoutSetResponseSuccess = createWorkoutSetResponse201 & {
-  headers: Headers;
-};
-export type createWorkoutSetResponseError = (
-  | createWorkoutSetResponse400
-  | createWorkoutSetResponse401
-  | createWorkoutSetResponse404
-  | createWorkoutSetResponse409
-  | createWorkoutSetResponse500
-) & {
-  headers: Headers;
-};
-
-export type createWorkoutSetResponse =
-  | createWorkoutSetResponseSuccess
-  | createWorkoutSetResponseError;
-
-export const getCreateWorkoutSetUrl = (sessionExerciseId: string) => {
-  return `/session-exercises/${sessionExerciseId}/sets`;
-};
-
-export const createWorkoutSet = async (
-  sessionExerciseId: string,
-  createWorkoutSetBody: CreateWorkoutSetBody,
-  options?: RequestInit,
-): Promise<createWorkoutSetResponse> => {
-  return customFetch<createWorkoutSetResponse>(
-    getCreateWorkoutSetUrl(sessionExerciseId),
-    {
-      ...options,
-      method: "POST",
-      headers: { "Content-Type": "application/json", ...options?.headers },
-      body: JSON.stringify(createWorkoutSetBody),
-    },
-  );
-};
-
-/**
- * @summary Update an existing workout set
- */
-export type updateWorkoutSetResponse200 = {
-  data: UpdateWorkoutSet200;
-  status: 200;
-};
-
-export type updateWorkoutSetResponse400 = {
-  data: UpdateWorkoutSet400;
-  status: 400;
-};
-
-export type updateWorkoutSetResponse401 = {
-  data: UpdateWorkoutSet401;
-  status: 401;
-};
-
-export type updateWorkoutSetResponse404 = {
-  data: UpdateWorkoutSet404;
-  status: 404;
-};
-
-export type updateWorkoutSetResponse409 = {
-  data: UpdateWorkoutSet409;
-  status: 409;
-};
-
-export type updateWorkoutSetResponse500 = {
-  data: UpdateWorkoutSet500;
-  status: 500;
-};
-
-export type updateWorkoutSetResponseSuccess = updateWorkoutSetResponse200 & {
-  headers: Headers;
-};
-export type updateWorkoutSetResponseError = (
-  | updateWorkoutSetResponse400
-  | updateWorkoutSetResponse401
-  | updateWorkoutSetResponse404
-  | updateWorkoutSetResponse409
-  | updateWorkoutSetResponse500
-) & {
-  headers: Headers;
-};
-
-export type updateWorkoutSetResponse =
-  | updateWorkoutSetResponseSuccess
-  | updateWorkoutSetResponseError;
-
-export const getUpdateWorkoutSetUrl = (setId: string) => {
-  return `/workout-sets/${setId}`;
-};
-
-export const updateWorkoutSet = async (
-  setId: string,
-  updateWorkoutSetBody: UpdateWorkoutSetBody,
-  options?: RequestInit,
-): Promise<updateWorkoutSetResponse> => {
-  return customFetch<updateWorkoutSetResponse>(getUpdateWorkoutSetUrl(setId), {
-    ...options,
-    method: "PATCH",
-    headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(updateWorkoutSetBody),
-  });
-};
-
-/**
- * @summary Delete a workout set
- */
-export type deleteWorkoutSetResponse200 = {
-  data: DeleteWorkoutSet200;
-  status: 200;
-};
-
-export type deleteWorkoutSetResponse401 = {
-  data: DeleteWorkoutSet401;
-  status: 401;
-};
-
-export type deleteWorkoutSetResponse404 = {
-  data: DeleteWorkoutSet404;
-  status: 404;
-};
-
-export type deleteWorkoutSetResponse409 = {
-  data: DeleteWorkoutSet409;
-  status: 409;
-};
-
-export type deleteWorkoutSetResponse500 = {
-  data: DeleteWorkoutSet500;
-  status: 500;
-};
-
-export type deleteWorkoutSetResponseSuccess = deleteWorkoutSetResponse200 & {
-  headers: Headers;
-};
-export type deleteWorkoutSetResponseError = (
-  | deleteWorkoutSetResponse401
-  | deleteWorkoutSetResponse404
-  | deleteWorkoutSetResponse409
-  | deleteWorkoutSetResponse500
-) & {
-  headers: Headers;
-};
-
-export type deleteWorkoutSetResponse =
-  | deleteWorkoutSetResponseSuccess
-  | deleteWorkoutSetResponseError;
-
-export const getDeleteWorkoutSetUrl = (setId: string) => {
-  return `/workout-sets/${setId}`;
-};
-
-export const deleteWorkoutSet = async (
-  setId: string,
-  options?: RequestInit,
-): Promise<deleteWorkoutSetResponse> => {
-  return customFetch<deleteWorkoutSetResponse>(getDeleteWorkoutSetUrl(setId), {
-    ...options,
-    method: "DELETE",
-  });
-};
-
-/**
- * @summary Start a free workout session without a workout plan or day
- */
-export type startFreeWorkoutSessionResponse201 = {
-  data: StartFreeWorkoutSession201;
-  status: 201;
-};
-
-export type startFreeWorkoutSessionResponse401 = {
-  data: StartFreeWorkoutSession401;
-  status: 401;
-};
-
-export type startFreeWorkoutSessionResponse409 = {
-  data: StartFreeWorkoutSession409;
-  status: 409;
-};
-
-export type startFreeWorkoutSessionResponse500 = {
-  data: StartFreeWorkoutSession500;
-  status: 500;
-};
-
-export type startFreeWorkoutSessionResponseSuccess =
-  startFreeWorkoutSessionResponse201 & {
-    headers: Headers;
-  };
-export type startFreeWorkoutSessionResponseError = (
-  | startFreeWorkoutSessionResponse401
-  | startFreeWorkoutSessionResponse409
-  | startFreeWorkoutSessionResponse500
-) & {
-  headers: Headers;
-};
-
-export type startFreeWorkoutSessionResponse =
-  | startFreeWorkoutSessionResponseSuccess
-  | startFreeWorkoutSessionResponseError;
-
-export const getStartFreeWorkoutSessionUrl = () => {
-  return `/workout-sessions/free`;
-};
-
-export const startFreeWorkoutSession = async (
-  options?: RequestInit,
-): Promise<startFreeWorkoutSessionResponse> => {
-  return customFetch<startFreeWorkoutSessionResponse>(
-    getStartFreeWorkoutSessionUrl(),
-    {
-      ...options,
-      method: "POST",
-    },
-  );
-};
-
-/**
- * @summary Add an exercise to an active free workout session
- */
-export type addExerciseToWorkoutSessionResponse201 = {
-  data: AddExerciseToWorkoutSession201;
-  status: 201;
-};
-
-export type addExerciseToWorkoutSessionResponse400 = {
-  data: AddExerciseToWorkoutSession400;
-  status: 400;
-};
-
-export type addExerciseToWorkoutSessionResponse401 = {
-  data: AddExerciseToWorkoutSession401;
-  status: 401;
-};
-
-export type addExerciseToWorkoutSessionResponse404 = {
-  data: AddExerciseToWorkoutSession404;
-  status: 404;
-};
-
-export type addExerciseToWorkoutSessionResponse409 = {
-  data: AddExerciseToWorkoutSession409;
-  status: 409;
-};
-
-export type addExerciseToWorkoutSessionResponse500 = {
-  data: AddExerciseToWorkoutSession500;
-  status: 500;
-};
-
-export type addExerciseToWorkoutSessionResponseSuccess =
-  addExerciseToWorkoutSessionResponse201 & {
-    headers: Headers;
-  };
-export type addExerciseToWorkoutSessionResponseError = (
-  | addExerciseToWorkoutSessionResponse400
-  | addExerciseToWorkoutSessionResponse401
-  | addExerciseToWorkoutSessionResponse404
-  | addExerciseToWorkoutSessionResponse409
-  | addExerciseToWorkoutSessionResponse500
-) & {
-  headers: Headers;
-};
-
-export type addExerciseToWorkoutSessionResponse =
-  | addExerciseToWorkoutSessionResponseSuccess
-  | addExerciseToWorkoutSessionResponseError;
-
-export const getAddExerciseToWorkoutSessionUrl = (sessionId: string) => {
-  return `/workout-sessions/${sessionId}/exercises`;
-};
-
-export const addExerciseToWorkoutSession = async (
-  sessionId: string,
-  addExerciseToWorkoutSessionBody: AddExerciseToWorkoutSessionBody,
-  options?: RequestInit,
-): Promise<addExerciseToWorkoutSessionResponse> => {
-  return customFetch<addExerciseToWorkoutSessionResponse>(
-    getAddExerciseToWorkoutSessionUrl(sessionId),
-    {
-      ...options,
-      method: "POST",
-      headers: { "Content-Type": "application/json", ...options?.headers },
-      body: JSON.stringify(addExerciseToWorkoutSessionBody),
-    },
-  );
-};
-
-/**
- * @summary Remove an exercise from an active free workout session
- */
-export type removeExerciseFromWorkoutSessionResponse200 = {
-  data: RemoveExerciseFromWorkoutSession200;
-  status: 200;
-};
-
-export type removeExerciseFromWorkoutSessionResponse400 = {
-  data: RemoveExerciseFromWorkoutSession400;
-  status: 400;
-};
-
-export type removeExerciseFromWorkoutSessionResponse401 = {
-  data: RemoveExerciseFromWorkoutSession401;
-  status: 401;
-};
-
-export type removeExerciseFromWorkoutSessionResponse404 = {
-  data: RemoveExerciseFromWorkoutSession404;
-  status: 404;
-};
-
-export type removeExerciseFromWorkoutSessionResponse409 = {
-  data: RemoveExerciseFromWorkoutSession409;
-  status: 409;
-};
-
-export type removeExerciseFromWorkoutSessionResponse500 = {
-  data: RemoveExerciseFromWorkoutSession500;
-  status: 500;
-};
-
-export type removeExerciseFromWorkoutSessionResponseSuccess =
-  removeExerciseFromWorkoutSessionResponse200 & {
-    headers: Headers;
-  };
-export type removeExerciseFromWorkoutSessionResponseError = (
-  | removeExerciseFromWorkoutSessionResponse400
-  | removeExerciseFromWorkoutSessionResponse401
-  | removeExerciseFromWorkoutSessionResponse404
-  | removeExerciseFromWorkoutSessionResponse409
-  | removeExerciseFromWorkoutSessionResponse500
-) & {
-  headers: Headers;
-};
-
-export type removeExerciseFromWorkoutSessionResponse =
-  | removeExerciseFromWorkoutSessionResponseSuccess
-  | removeExerciseFromWorkoutSessionResponseError;
-
-export const getRemoveExerciseFromWorkoutSessionUrl = (
-  sessionExerciseId: string,
-) => {
-  return `/session-exercises/${sessionExerciseId}`;
-};
-
-export const removeExerciseFromWorkoutSession = async (
-  sessionExerciseId: string,
-  options?: RequestInit,
-): Promise<removeExerciseFromWorkoutSessionResponse> => {
-  return customFetch<removeExerciseFromWorkoutSessionResponse>(
-    getRemoveExerciseFromWorkoutSessionUrl(sessionExerciseId),
-    {
-      ...options,
-      method: "DELETE",
-    },
-  );
-};
-
 export type listPublicPlansResponse200 = {
   data: ListPublicPlans200Item[];
   status: 200;
@@ -10458,6 +9247,1217 @@ export const cancelManualSubscription = async (
       method: "POST",
       headers: { "Content-Type": "application/json", ...options?.headers },
       body: JSON.stringify(cancelManualSubscriptionBody),
+    },
+  );
+};
+
+/**
+ * @summary List global exercises and user custom exercises with optional search query
+ */
+export type listExercisesResponse200 = {
+  data: ListExercises200Item[];
+  status: 200;
+};
+
+export type listExercisesResponse401 = {
+  data: ListExercises401;
+  status: 401;
+};
+
+export type listExercisesResponse500 = {
+  data: ListExercises500;
+  status: 500;
+};
+
+export type listExercisesResponseSuccess = listExercisesResponse200 & {
+  headers: Headers;
+};
+export type listExercisesResponseError = (
+  | listExercisesResponse401
+  | listExercisesResponse500
+) & {
+  headers: Headers;
+};
+
+export type listExercisesResponse =
+  | listExercisesResponseSuccess
+  | listExercisesResponseError;
+
+export const getListExercisesUrl = (params?: ListExercisesParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/exercises/?${stringifiedParams}`
+    : `/exercises/`;
+};
+
+export const listExercises = async (
+  params?: ListExercisesParams,
+  options?: RequestInit,
+): Promise<listExercisesResponse> => {
+  return customFetch<listExercisesResponse>(getListExercisesUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+/**
+ * @summary Create a custom exercise for the authenticated user
+ */
+export type createExerciseResponse201 = {
+  data: CreateExercise201;
+  status: 201;
+};
+
+export type createExerciseResponse400 = {
+  data: CreateExercise400;
+  status: 400;
+};
+
+export type createExerciseResponse401 = {
+  data: CreateExercise401;
+  status: 401;
+};
+
+export type createExerciseResponse409 = {
+  data: CreateExercise409;
+  status: 409;
+};
+
+export type createExerciseResponse500 = {
+  data: CreateExercise500;
+  status: 500;
+};
+
+export type createExerciseResponseSuccess = createExerciseResponse201 & {
+  headers: Headers;
+};
+export type createExerciseResponseError = (
+  | createExerciseResponse400
+  | createExerciseResponse401
+  | createExerciseResponse409
+  | createExerciseResponse500
+) & {
+  headers: Headers;
+};
+
+export type createExerciseResponse =
+  | createExerciseResponseSuccess
+  | createExerciseResponseError;
+
+export const getCreateExerciseUrl = () => {
+  return `/exercises/`;
+};
+
+export const createExercise = async (
+  createExerciseBody: CreateExerciseBody,
+  options?: RequestInit,
+): Promise<createExerciseResponse> => {
+  return customFetch<createExerciseResponse>(getCreateExerciseUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createExerciseBody),
+  });
+};
+
+/**
+ * @summary Update muscle groups classification of a custom exercise
+ */
+export type updateExerciseMusclesResponse200 = {
+  data: UpdateExerciseMuscles200;
+  status: 200;
+};
+
+export type updateExerciseMusclesResponse400 = {
+  data: UpdateExerciseMuscles400;
+  status: 400;
+};
+
+export type updateExerciseMusclesResponse401 = {
+  data: UpdateExerciseMuscles401;
+  status: 401;
+};
+
+export type updateExerciseMusclesResponse404 = {
+  data: UpdateExerciseMuscles404;
+  status: 404;
+};
+
+export type updateExerciseMusclesResponse500 = {
+  data: UpdateExerciseMuscles500;
+  status: 500;
+};
+
+export type updateExerciseMusclesResponseSuccess =
+  updateExerciseMusclesResponse200 & {
+    headers: Headers;
+  };
+export type updateExerciseMusclesResponseError = (
+  | updateExerciseMusclesResponse400
+  | updateExerciseMusclesResponse401
+  | updateExerciseMusclesResponse404
+  | updateExerciseMusclesResponse500
+) & {
+  headers: Headers;
+};
+
+export type updateExerciseMusclesResponse =
+  | updateExerciseMusclesResponseSuccess
+  | updateExerciseMusclesResponseError;
+
+export const getUpdateExerciseMusclesUrl = (id: string) => {
+  return `/exercises/${id}/muscles`;
+};
+
+export const updateExerciseMuscles = async (
+  id: string,
+  updateExerciseMusclesBody: UpdateExerciseMusclesBody,
+  options?: RequestInit,
+): Promise<updateExerciseMusclesResponse> => {
+  return customFetch<updateExerciseMusclesResponse>(
+    getUpdateExerciseMusclesUrl(id),
+    {
+      ...options,
+      method: "PUT",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(updateExerciseMusclesBody),
+    },
+  );
+};
+
+/**
+ * @summary Get visual execution media and instructions for an exercise
+ */
+export type getExerciseMediaResponse200 = {
+  data: GetExerciseMedia200;
+  status: 200;
+};
+
+export type getExerciseMediaResponse401 = {
+  data: GetExerciseMedia401;
+  status: 401;
+};
+
+export type getExerciseMediaResponse404 = {
+  data: GetExerciseMedia404;
+  status: 404;
+};
+
+export type getExerciseMediaResponse500 = {
+  data: GetExerciseMedia500;
+  status: 500;
+};
+
+export type getExerciseMediaResponseSuccess = getExerciseMediaResponse200 & {
+  headers: Headers;
+};
+export type getExerciseMediaResponseError = (
+  | getExerciseMediaResponse401
+  | getExerciseMediaResponse404
+  | getExerciseMediaResponse500
+) & {
+  headers: Headers;
+};
+
+export type getExerciseMediaResponse =
+  | getExerciseMediaResponseSuccess
+  | getExerciseMediaResponseError;
+
+export const getGetExerciseMediaUrl = (exerciseId: string) => {
+  return `/exercises/${exerciseId}/media`;
+};
+
+export const getExerciseMedia = async (
+  exerciseId: string,
+  options?: RequestInit,
+): Promise<getExerciseMediaResponse> => {
+  return customFetch<getExerciseMediaResponse>(
+    getGetExerciseMediaUrl(exerciseId),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Get current active workout session with all exercises and sets
+ */
+export type getActiveWorkoutSessionResponse200 = {
+  data: GetActiveWorkoutSession200;
+  status: 200;
+};
+
+export type getActiveWorkoutSessionResponse401 = {
+  data: GetActiveWorkoutSession401;
+  status: 401;
+};
+
+export type getActiveWorkoutSessionResponse404 = {
+  data: GetActiveWorkoutSession404;
+  status: 404;
+};
+
+export type getActiveWorkoutSessionResponse500 = {
+  data: GetActiveWorkoutSession500;
+  status: 500;
+};
+
+export type getActiveWorkoutSessionResponseSuccess =
+  getActiveWorkoutSessionResponse200 & {
+    headers: Headers;
+  };
+export type getActiveWorkoutSessionResponseError = (
+  | getActiveWorkoutSessionResponse401
+  | getActiveWorkoutSessionResponse404
+  | getActiveWorkoutSessionResponse500
+) & {
+  headers: Headers;
+};
+
+export type getActiveWorkoutSessionResponse =
+  | getActiveWorkoutSessionResponseSuccess
+  | getActiveWorkoutSessionResponseError;
+
+export const getGetActiveWorkoutSessionUrl = () => {
+  return `/workout-sessions/active`;
+};
+
+export const getActiveWorkoutSession = async (
+  options?: RequestInit,
+): Promise<getActiveWorkoutSessionResponse> => {
+  return customFetch<getActiveWorkoutSessionResponse>(
+    getGetActiveWorkoutSessionUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Get a workout session with all exercises and sets
+ */
+export type getWorkoutSessionResponse200 = {
+  data: GetWorkoutSession200;
+  status: 200;
+};
+
+export type getWorkoutSessionResponse401 = {
+  data: GetWorkoutSession401;
+  status: 401;
+};
+
+export type getWorkoutSessionResponse404 = {
+  data: GetWorkoutSession404;
+  status: 404;
+};
+
+export type getWorkoutSessionResponse500 = {
+  data: GetWorkoutSession500;
+  status: 500;
+};
+
+export type getWorkoutSessionResponseSuccess = getWorkoutSessionResponse200 & {
+  headers: Headers;
+};
+export type getWorkoutSessionResponseError = (
+  | getWorkoutSessionResponse401
+  | getWorkoutSessionResponse404
+  | getWorkoutSessionResponse500
+) & {
+  headers: Headers;
+};
+
+export type getWorkoutSessionResponse =
+  | getWorkoutSessionResponseSuccess
+  | getWorkoutSessionResponseError;
+
+export const getGetWorkoutSessionUrl = (sessionId: string) => {
+  return `/workout-sessions/${sessionId}`;
+};
+
+export const getWorkoutSession = async (
+  sessionId: string,
+  options?: RequestInit,
+): Promise<getWorkoutSessionResponse> => {
+  return customFetch<getWorkoutSessionResponse>(
+    getGetWorkoutSessionUrl(sessionId),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Cancel and discard an active workout session
+ */
+export type cancelWorkoutSessionResponse200 = {
+  data: CancelWorkoutSession200;
+  status: 200;
+};
+
+export type cancelWorkoutSessionResponse400 = {
+  data: CancelWorkoutSession400;
+  status: 400;
+};
+
+export type cancelWorkoutSessionResponse401 = {
+  data: CancelWorkoutSession401;
+  status: 401;
+};
+
+export type cancelWorkoutSessionResponse404 = {
+  data: CancelWorkoutSession404;
+  status: 404;
+};
+
+export type cancelWorkoutSessionResponse409 = {
+  data: CancelWorkoutSession409;
+  status: 409;
+};
+
+export type cancelWorkoutSessionResponse500 = {
+  data: CancelWorkoutSession500;
+  status: 500;
+};
+
+export type cancelWorkoutSessionResponseSuccess =
+  cancelWorkoutSessionResponse200 & {
+    headers: Headers;
+  };
+export type cancelWorkoutSessionResponseError = (
+  | cancelWorkoutSessionResponse400
+  | cancelWorkoutSessionResponse401
+  | cancelWorkoutSessionResponse404
+  | cancelWorkoutSessionResponse409
+  | cancelWorkoutSessionResponse500
+) & {
+  headers: Headers;
+};
+
+export type cancelWorkoutSessionResponse =
+  | cancelWorkoutSessionResponseSuccess
+  | cancelWorkoutSessionResponseError;
+
+export const getCancelWorkoutSessionUrl = (sessionId: string) => {
+  return `/workout-sessions/${sessionId}`;
+};
+
+export const cancelWorkoutSession = async (
+  sessionId: string,
+  options?: RequestInit,
+): Promise<cancelWorkoutSessionResponse> => {
+  return customFetch<cancelWorkoutSessionResponse>(
+    getCancelWorkoutSessionUrl(sessionId),
+    {
+      ...options,
+      method: "DELETE",
+    },
+  );
+};
+
+/**
+ * @summary Complete an active workout session
+ */
+export type completeWorkoutSessionResponse200 = {
+  data: CompleteWorkoutSession200;
+  status: 200;
+};
+
+export type completeWorkoutSessionResponse400 = {
+  data: CompleteWorkoutSession400;
+  status: 400;
+};
+
+export type completeWorkoutSessionResponse401 = {
+  data: CompleteWorkoutSession401;
+  status: 401;
+};
+
+export type completeWorkoutSessionResponse404 = {
+  data: CompleteWorkoutSession404;
+  status: 404;
+};
+
+export type completeWorkoutSessionResponse500 = {
+  data: CompleteWorkoutSession500;
+  status: 500;
+};
+
+export type completeWorkoutSessionResponseSuccess =
+  completeWorkoutSessionResponse200 & {
+    headers: Headers;
+  };
+export type completeWorkoutSessionResponseError = (
+  | completeWorkoutSessionResponse400
+  | completeWorkoutSessionResponse401
+  | completeWorkoutSessionResponse404
+  | completeWorkoutSessionResponse500
+) & {
+  headers: Headers;
+};
+
+export type completeWorkoutSessionResponse =
+  | completeWorkoutSessionResponseSuccess
+  | completeWorkoutSessionResponseError;
+
+export const getCompleteWorkoutSessionUrl = (sessionId: string) => {
+  return `/workout-sessions/${sessionId}/complete`;
+};
+
+export const completeWorkoutSession = async (
+  sessionId: string,
+  options?: RequestInit,
+): Promise<completeWorkoutSessionResponse> => {
+  return customFetch<completeWorkoutSessionResponse>(
+    getCompleteWorkoutSessionUrl(sessionId),
+    {
+      ...options,
+      method: "POST",
+    },
+  );
+};
+
+/**
+ * @summary Create a new workout set for a session exercise
+ */
+export type createWorkoutSetResponse201 = {
+  data: CreateWorkoutSet201;
+  status: 201;
+};
+
+export type createWorkoutSetResponse400 = {
+  data: CreateWorkoutSet400;
+  status: 400;
+};
+
+export type createWorkoutSetResponse401 = {
+  data: CreateWorkoutSet401;
+  status: 401;
+};
+
+export type createWorkoutSetResponse404 = {
+  data: CreateWorkoutSet404;
+  status: 404;
+};
+
+export type createWorkoutSetResponse409 = {
+  data: CreateWorkoutSet409;
+  status: 409;
+};
+
+export type createWorkoutSetResponse500 = {
+  data: CreateWorkoutSet500;
+  status: 500;
+};
+
+export type createWorkoutSetResponseSuccess = createWorkoutSetResponse201 & {
+  headers: Headers;
+};
+export type createWorkoutSetResponseError = (
+  | createWorkoutSetResponse400
+  | createWorkoutSetResponse401
+  | createWorkoutSetResponse404
+  | createWorkoutSetResponse409
+  | createWorkoutSetResponse500
+) & {
+  headers: Headers;
+};
+
+export type createWorkoutSetResponse =
+  | createWorkoutSetResponseSuccess
+  | createWorkoutSetResponseError;
+
+export const getCreateWorkoutSetUrl = (sessionExerciseId: string) => {
+  return `/session-exercises/${sessionExerciseId}/sets`;
+};
+
+export const createWorkoutSet = async (
+  sessionExerciseId: string,
+  createWorkoutSetBody: CreateWorkoutSetBody,
+  options?: RequestInit,
+): Promise<createWorkoutSetResponse> => {
+  return customFetch<createWorkoutSetResponse>(
+    getCreateWorkoutSetUrl(sessionExerciseId),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(createWorkoutSetBody),
+    },
+  );
+};
+
+/**
+ * @summary Update an existing workout set
+ */
+export type updateWorkoutSetResponse200 = {
+  data: UpdateWorkoutSet200;
+  status: 200;
+};
+
+export type updateWorkoutSetResponse400 = {
+  data: UpdateWorkoutSet400;
+  status: 400;
+};
+
+export type updateWorkoutSetResponse401 = {
+  data: UpdateWorkoutSet401;
+  status: 401;
+};
+
+export type updateWorkoutSetResponse404 = {
+  data: UpdateWorkoutSet404;
+  status: 404;
+};
+
+export type updateWorkoutSetResponse409 = {
+  data: UpdateWorkoutSet409;
+  status: 409;
+};
+
+export type updateWorkoutSetResponse500 = {
+  data: UpdateWorkoutSet500;
+  status: 500;
+};
+
+export type updateWorkoutSetResponseSuccess = updateWorkoutSetResponse200 & {
+  headers: Headers;
+};
+export type updateWorkoutSetResponseError = (
+  | updateWorkoutSetResponse400
+  | updateWorkoutSetResponse401
+  | updateWorkoutSetResponse404
+  | updateWorkoutSetResponse409
+  | updateWorkoutSetResponse500
+) & {
+  headers: Headers;
+};
+
+export type updateWorkoutSetResponse =
+  | updateWorkoutSetResponseSuccess
+  | updateWorkoutSetResponseError;
+
+export const getUpdateWorkoutSetUrl = (setId: string) => {
+  return `/workout-sets/${setId}`;
+};
+
+export const updateWorkoutSet = async (
+  setId: string,
+  updateWorkoutSetBody: UpdateWorkoutSetBody,
+  options?: RequestInit,
+): Promise<updateWorkoutSetResponse> => {
+  return customFetch<updateWorkoutSetResponse>(getUpdateWorkoutSetUrl(setId), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateWorkoutSetBody),
+  });
+};
+
+/**
+ * @summary Delete a workout set
+ */
+export type deleteWorkoutSetResponse200 = {
+  data: DeleteWorkoutSet200;
+  status: 200;
+};
+
+export type deleteWorkoutSetResponse401 = {
+  data: DeleteWorkoutSet401;
+  status: 401;
+};
+
+export type deleteWorkoutSetResponse404 = {
+  data: DeleteWorkoutSet404;
+  status: 404;
+};
+
+export type deleteWorkoutSetResponse409 = {
+  data: DeleteWorkoutSet409;
+  status: 409;
+};
+
+export type deleteWorkoutSetResponse500 = {
+  data: DeleteWorkoutSet500;
+  status: 500;
+};
+
+export type deleteWorkoutSetResponseSuccess = deleteWorkoutSetResponse200 & {
+  headers: Headers;
+};
+export type deleteWorkoutSetResponseError = (
+  | deleteWorkoutSetResponse401
+  | deleteWorkoutSetResponse404
+  | deleteWorkoutSetResponse409
+  | deleteWorkoutSetResponse500
+) & {
+  headers: Headers;
+};
+
+export type deleteWorkoutSetResponse =
+  | deleteWorkoutSetResponseSuccess
+  | deleteWorkoutSetResponseError;
+
+export const getDeleteWorkoutSetUrl = (setId: string) => {
+  return `/workout-sets/${setId}`;
+};
+
+export const deleteWorkoutSet = async (
+  setId: string,
+  options?: RequestInit,
+): Promise<deleteWorkoutSetResponse> => {
+  return customFetch<deleteWorkoutSetResponse>(getDeleteWorkoutSetUrl(setId), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+/**
+ * @summary Start a free workout session without a workout plan or day
+ */
+export type startFreeWorkoutSessionResponse201 = {
+  data: StartFreeWorkoutSession201;
+  status: 201;
+};
+
+export type startFreeWorkoutSessionResponse401 = {
+  data: StartFreeWorkoutSession401;
+  status: 401;
+};
+
+export type startFreeWorkoutSessionResponse409 = {
+  data: StartFreeWorkoutSession409;
+  status: 409;
+};
+
+export type startFreeWorkoutSessionResponse500 = {
+  data: StartFreeWorkoutSession500;
+  status: 500;
+};
+
+export type startFreeWorkoutSessionResponseSuccess =
+  startFreeWorkoutSessionResponse201 & {
+    headers: Headers;
+  };
+export type startFreeWorkoutSessionResponseError = (
+  | startFreeWorkoutSessionResponse401
+  | startFreeWorkoutSessionResponse409
+  | startFreeWorkoutSessionResponse500
+) & {
+  headers: Headers;
+};
+
+export type startFreeWorkoutSessionResponse =
+  | startFreeWorkoutSessionResponseSuccess
+  | startFreeWorkoutSessionResponseError;
+
+export const getStartFreeWorkoutSessionUrl = () => {
+  return `/workout-sessions/free`;
+};
+
+export const startFreeWorkoutSession = async (
+  options?: RequestInit,
+): Promise<startFreeWorkoutSessionResponse> => {
+  return customFetch<startFreeWorkoutSessionResponse>(
+    getStartFreeWorkoutSessionUrl(),
+    {
+      ...options,
+      method: "POST",
+    },
+  );
+};
+
+/**
+ * @summary Add an exercise to an active free workout session
+ */
+export type addExerciseToWorkoutSessionResponse201 = {
+  data: AddExerciseToWorkoutSession201;
+  status: 201;
+};
+
+export type addExerciseToWorkoutSessionResponse400 = {
+  data: AddExerciseToWorkoutSession400;
+  status: 400;
+};
+
+export type addExerciseToWorkoutSessionResponse401 = {
+  data: AddExerciseToWorkoutSession401;
+  status: 401;
+};
+
+export type addExerciseToWorkoutSessionResponse404 = {
+  data: AddExerciseToWorkoutSession404;
+  status: 404;
+};
+
+export type addExerciseToWorkoutSessionResponse409 = {
+  data: AddExerciseToWorkoutSession409;
+  status: 409;
+};
+
+export type addExerciseToWorkoutSessionResponse500 = {
+  data: AddExerciseToWorkoutSession500;
+  status: 500;
+};
+
+export type addExerciseToWorkoutSessionResponseSuccess =
+  addExerciseToWorkoutSessionResponse201 & {
+    headers: Headers;
+  };
+export type addExerciseToWorkoutSessionResponseError = (
+  | addExerciseToWorkoutSessionResponse400
+  | addExerciseToWorkoutSessionResponse401
+  | addExerciseToWorkoutSessionResponse404
+  | addExerciseToWorkoutSessionResponse409
+  | addExerciseToWorkoutSessionResponse500
+) & {
+  headers: Headers;
+};
+
+export type addExerciseToWorkoutSessionResponse =
+  | addExerciseToWorkoutSessionResponseSuccess
+  | addExerciseToWorkoutSessionResponseError;
+
+export const getAddExerciseToWorkoutSessionUrl = (sessionId: string) => {
+  return `/workout-sessions/${sessionId}/exercises`;
+};
+
+export const addExerciseToWorkoutSession = async (
+  sessionId: string,
+  addExerciseToWorkoutSessionBody: AddExerciseToWorkoutSessionBody,
+  options?: RequestInit,
+): Promise<addExerciseToWorkoutSessionResponse> => {
+  return customFetch<addExerciseToWorkoutSessionResponse>(
+    getAddExerciseToWorkoutSessionUrl(sessionId),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(addExerciseToWorkoutSessionBody),
+    },
+  );
+};
+
+/**
+ * @summary Remove an exercise from an active free workout session
+ */
+export type removeExerciseFromWorkoutSessionResponse200 = {
+  data: RemoveExerciseFromWorkoutSession200;
+  status: 200;
+};
+
+export type removeExerciseFromWorkoutSessionResponse400 = {
+  data: RemoveExerciseFromWorkoutSession400;
+  status: 400;
+};
+
+export type removeExerciseFromWorkoutSessionResponse401 = {
+  data: RemoveExerciseFromWorkoutSession401;
+  status: 401;
+};
+
+export type removeExerciseFromWorkoutSessionResponse404 = {
+  data: RemoveExerciseFromWorkoutSession404;
+  status: 404;
+};
+
+export type removeExerciseFromWorkoutSessionResponse409 = {
+  data: RemoveExerciseFromWorkoutSession409;
+  status: 409;
+};
+
+export type removeExerciseFromWorkoutSessionResponse500 = {
+  data: RemoveExerciseFromWorkoutSession500;
+  status: 500;
+};
+
+export type removeExerciseFromWorkoutSessionResponseSuccess =
+  removeExerciseFromWorkoutSessionResponse200 & {
+    headers: Headers;
+  };
+export type removeExerciseFromWorkoutSessionResponseError = (
+  | removeExerciseFromWorkoutSessionResponse400
+  | removeExerciseFromWorkoutSessionResponse401
+  | removeExerciseFromWorkoutSessionResponse404
+  | removeExerciseFromWorkoutSessionResponse409
+  | removeExerciseFromWorkoutSessionResponse500
+) & {
+  headers: Headers;
+};
+
+export type removeExerciseFromWorkoutSessionResponse =
+  | removeExerciseFromWorkoutSessionResponseSuccess
+  | removeExerciseFromWorkoutSessionResponseError;
+
+export const getRemoveExerciseFromWorkoutSessionUrl = (
+  sessionExerciseId: string,
+) => {
+  return `/session-exercises/${sessionExerciseId}`;
+};
+
+export const removeExerciseFromWorkoutSession = async (
+  sessionExerciseId: string,
+  options?: RequestInit,
+): Promise<removeExerciseFromWorkoutSessionResponse> => {
+  return customFetch<removeExerciseFromWorkoutSessionResponse>(
+    getRemoveExerciseFromWorkoutSessionUrl(sessionExerciseId),
+    {
+      ...options,
+      method: "DELETE",
+    },
+  );
+};
+
+/**
+ * @summary Get weekly volume and duration training analytics
+ */
+export type getWeeklyTrainingAnalyticsResponse200 = {
+  data: GetWeeklyTrainingAnalytics200;
+  status: 200;
+};
+
+export type getWeeklyTrainingAnalyticsResponse400 = {
+  data: GetWeeklyTrainingAnalytics400;
+  status: 400;
+};
+
+export type getWeeklyTrainingAnalyticsResponse401 = {
+  data: GetWeeklyTrainingAnalytics401;
+  status: 401;
+};
+
+export type getWeeklyTrainingAnalyticsResponse500 = {
+  data: GetWeeklyTrainingAnalytics500;
+  status: 500;
+};
+
+export type getWeeklyTrainingAnalyticsResponseSuccess =
+  getWeeklyTrainingAnalyticsResponse200 & {
+    headers: Headers;
+  };
+export type getWeeklyTrainingAnalyticsResponseError = (
+  | getWeeklyTrainingAnalyticsResponse400
+  | getWeeklyTrainingAnalyticsResponse401
+  | getWeeklyTrainingAnalyticsResponse500
+) & {
+  headers: Headers;
+};
+
+export type getWeeklyTrainingAnalyticsResponse =
+  | getWeeklyTrainingAnalyticsResponseSuccess
+  | getWeeklyTrainingAnalyticsResponseError;
+
+export const getGetWeeklyTrainingAnalyticsUrl = (
+  params: GetWeeklyTrainingAnalyticsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/history/analytics/weekly?${stringifiedParams}`
+    : `/history/analytics/weekly`;
+};
+
+export const getWeeklyTrainingAnalytics = async (
+  params: GetWeeklyTrainingAnalyticsParams,
+  options?: RequestInit,
+): Promise<getWeeklyTrainingAnalyticsResponse> => {
+  return customFetch<getWeeklyTrainingAnalyticsResponse>(
+    getGetWeeklyTrainingAnalyticsUrl(params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Get muscle direct and indirect working sets analytics
+ */
+export type getMuscleTrainingAnalyticsResponse200 = {
+  data: GetMuscleTrainingAnalytics200;
+  status: 200;
+};
+
+export type getMuscleTrainingAnalyticsResponse400 = {
+  data: GetMuscleTrainingAnalytics400;
+  status: 400;
+};
+
+export type getMuscleTrainingAnalyticsResponse401 = {
+  data: GetMuscleTrainingAnalytics401;
+  status: 401;
+};
+
+export type getMuscleTrainingAnalyticsResponse500 = {
+  data: GetMuscleTrainingAnalytics500;
+  status: 500;
+};
+
+export type getMuscleTrainingAnalyticsResponseSuccess =
+  getMuscleTrainingAnalyticsResponse200 & {
+    headers: Headers;
+  };
+export type getMuscleTrainingAnalyticsResponseError = (
+  | getMuscleTrainingAnalyticsResponse400
+  | getMuscleTrainingAnalyticsResponse401
+  | getMuscleTrainingAnalyticsResponse500
+) & {
+  headers: Headers;
+};
+
+export type getMuscleTrainingAnalyticsResponse =
+  | getMuscleTrainingAnalyticsResponseSuccess
+  | getMuscleTrainingAnalyticsResponseError;
+
+export const getGetMuscleTrainingAnalyticsUrl = (
+  params: GetMuscleTrainingAnalyticsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/history/analytics/muscles?${stringifiedParams}`
+    : `/history/analytics/muscles`;
+};
+
+export const getMuscleTrainingAnalytics = async (
+  params: GetMuscleTrainingAnalyticsParams,
+  options?: RequestInit,
+): Promise<getMuscleTrainingAnalyticsResponse> => {
+  return customFetch<getMuscleTrainingAnalyticsResponse>(
+    getGetMuscleTrainingAnalyticsUrl(params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary List completed workout sessions history with cursor pagination
+ */
+export type listWorkoutHistoryResponse200 = {
+  data: ListWorkoutHistory200;
+  status: 200;
+};
+
+export type listWorkoutHistoryResponse400 = {
+  data: ListWorkoutHistory400;
+  status: 400;
+};
+
+export type listWorkoutHistoryResponse401 = {
+  data: ListWorkoutHistory401;
+  status: 401;
+};
+
+export type listWorkoutHistoryResponse500 = {
+  data: ListWorkoutHistory500;
+  status: 500;
+};
+
+export type listWorkoutHistoryResponseSuccess =
+  listWorkoutHistoryResponse200 & {
+    headers: Headers;
+  };
+export type listWorkoutHistoryResponseError = (
+  | listWorkoutHistoryResponse400
+  | listWorkoutHistoryResponse401
+  | listWorkoutHistoryResponse500
+) & {
+  headers: Headers;
+};
+
+export type listWorkoutHistoryResponse =
+  | listWorkoutHistoryResponseSuccess
+  | listWorkoutHistoryResponseError;
+
+export const getListWorkoutHistoryUrl = (params?: ListWorkoutHistoryParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/history/sessions?${stringifiedParams}`
+    : `/history/sessions`;
+};
+
+export const listWorkoutHistory = async (
+  params?: ListWorkoutHistoryParams,
+  options?: RequestInit,
+): Promise<listWorkoutHistoryResponse> => {
+  return customFetch<listWorkoutHistoryResponse>(
+    getListWorkoutHistoryUrl(params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Get details of a completed workout session in history
+ */
+export type getWorkoutHistorySessionResponse200 = {
+  data: GetWorkoutHistorySession200;
+  status: 200;
+};
+
+export type getWorkoutHistorySessionResponse401 = {
+  data: GetWorkoutHistorySession401;
+  status: 401;
+};
+
+export type getWorkoutHistorySessionResponse404 = {
+  data: GetWorkoutHistorySession404;
+  status: 404;
+};
+
+export type getWorkoutHistorySessionResponse500 = {
+  data: GetWorkoutHistorySession500;
+  status: 500;
+};
+
+export type getWorkoutHistorySessionResponseSuccess =
+  getWorkoutHistorySessionResponse200 & {
+    headers: Headers;
+  };
+export type getWorkoutHistorySessionResponseError = (
+  | getWorkoutHistorySessionResponse401
+  | getWorkoutHistorySessionResponse404
+  | getWorkoutHistorySessionResponse500
+) & {
+  headers: Headers;
+};
+
+export type getWorkoutHistorySessionResponse =
+  | getWorkoutHistorySessionResponseSuccess
+  | getWorkoutHistorySessionResponseError;
+
+export const getGetWorkoutHistorySessionUrl = (sessionId: string) => {
+  return `/history/sessions/${sessionId}`;
+};
+
+export const getWorkoutHistorySession = async (
+  sessionId: string,
+  options?: RequestInit,
+): Promise<getWorkoutHistorySessionResponse> => {
+  return customFetch<getWorkoutHistorySessionResponse>(
+    getGetWorkoutHistorySessionUrl(sessionId),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Get longitudinal evolution and load PR for a specific canonical exercise
+ */
+export type getExerciseEvolutionResponse200 = {
+  data: GetExerciseEvolution200;
+  status: 200;
+};
+
+export type getExerciseEvolutionResponse400 = {
+  data: GetExerciseEvolution400;
+  status: 400;
+};
+
+export type getExerciseEvolutionResponse401 = {
+  data: GetExerciseEvolution401;
+  status: 401;
+};
+
+export type getExerciseEvolutionResponse404 = {
+  data: GetExerciseEvolution404;
+  status: 404;
+};
+
+export type getExerciseEvolutionResponse500 = {
+  data: GetExerciseEvolution500;
+  status: 500;
+};
+
+export type getExerciseEvolutionResponseSuccess =
+  getExerciseEvolutionResponse200 & {
+    headers: Headers;
+  };
+export type getExerciseEvolutionResponseError = (
+  | getExerciseEvolutionResponse400
+  | getExerciseEvolutionResponse401
+  | getExerciseEvolutionResponse404
+  | getExerciseEvolutionResponse500
+) & {
+  headers: Headers;
+};
+
+export type getExerciseEvolutionResponse =
+  | getExerciseEvolutionResponseSuccess
+  | getExerciseEvolutionResponseError;
+
+export const getGetExerciseEvolutionUrl = (
+  exerciseId: string,
+  params?: GetExerciseEvolutionParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/history/exercises/${exerciseId}?${stringifiedParams}`
+    : `/history/exercises/${exerciseId}`;
+};
+
+export const getExerciseEvolution = async (
+  exerciseId: string,
+  params?: GetExerciseEvolutionParams,
+  options?: RequestInit,
+): Promise<getExerciseEvolutionResponse> => {
+  return customFetch<getExerciseEvolutionResponse>(
+    getGetExerciseEvolutionUrl(exerciseId, params),
+    {
+      ...options,
+      method: "GET",
     },
   );
 };

@@ -332,6 +332,9 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
     }
   }, []);
 
+  const [quotaErrorMessage, setQuotaErrorMessage] = useState<string | null>(null);
+  const pendingMessageRef = useRef<string>("");
+
   const {
     messages,
     sendMessage,
@@ -347,6 +350,27 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
     }),
     onFinish: () => {
       fetchConversations();
+    },
+    onError: (error) => {
+      const msg = error?.message || "";
+      if (
+        msg.includes("429") ||
+        msg.includes("limite") ||
+        msg.includes("cota") ||
+        msg.includes("AI_DAILY_QUOTA_EXCEEDED") ||
+        msg.includes("AI_MINUTE_LIMIT_EXCEEDED")
+      ) {
+        setQuotaErrorMessage(
+          "Você atingiu o limite do Coach IA nesta versão de testes. Seu acesso será renovado automaticamente à meia-noite UTC (21h Brasília)."
+        );
+      } else {
+        setQuotaErrorMessage(
+          "Não foi possível processar sua mensagem agora. Tente novamente em instantes."
+        );
+      }
+      if (pendingMessageRef.current) {
+        form.setValue("message", pendingMessageRef.current);
+      }
     },
   });
 
@@ -426,6 +450,8 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
   };
 
   const onSubmit = (values: ChatFormValues) => {
+    pendingMessageRef.current = values.message;
+    setQuotaErrorMessage(null);
     sendMessage({ text: values.message });
     form.reset();
   };
@@ -923,6 +949,19 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
                 {suggestion}
               </button>
             ))}
+          </div>
+        )}
+
+        {quotaErrorMessage && (
+          <div className="mx-5 mb-1 rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-xs text-destructive flex items-center justify-between gap-2 animate-in fade-in duration-200">
+            <span>{quotaErrorMessage}</span>
+            <button
+              type="button"
+              onClick={() => setQuotaErrorMessage(null)}
+              className="text-xs font-semibold hover:underline shrink-0"
+            >
+              Fechar
+            </button>
           </div>
         )}
 

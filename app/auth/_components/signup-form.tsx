@@ -217,6 +217,18 @@ export function SignupForm({
             ? "Concluir cadastro"
             : "Continuar com Google"}
       </Button>
+
+      <p className="text-center text-xs text-muted-foreground leading-relaxed pt-1">
+        Ao continuar, você concorda com nossos{" "}
+        <Link href="/termos" className="text-primary underline hover:text-primary/80">
+          Termos de Uso
+        </Link>{" "}
+        e{" "}
+        <Link href="/privacidade" className="text-primary underline hover:text-primary/80">
+          Política de Privacidade
+        </Link>
+        .
+      </p>
     </main>
   );
 }

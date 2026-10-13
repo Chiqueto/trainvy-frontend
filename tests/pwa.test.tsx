@@ -5,7 +5,17 @@ import { describe, expect, it, vi } from "vitest";
 
 import manifest from "@/app/manifest";
 import { PwaInstallCard } from "@/app/_components/pwa/pwa-install-card";
+import { PwaInstallPrompt } from "@/app/_components/pwa/pwa-install-prompt";
 import { PwaProvider } from "@/app/_components/pwa/pwa-provider";
+
+let mockPathname = "/";
+vi.mock("next/navigation", async () => {
+  const actual = await vi.importActual("next/navigation");
+  return {
+    ...actual,
+    usePathname: () => mockPathname,
+  };
+});
 
 describe("PWA — Progressive Web App Foundation (Task 4.X.1 Hardening)", () => {
   describe("1. Web App Manifest (manifest.ts)", () => {
@@ -131,6 +141,35 @@ describe("PWA — Progressive Web App Foundation (Task 4.X.1 Hardening)", () => 
         value: originalReadyState,
         configurable: true,
       });
+    });
+  });
+
+  describe("5. PwaInstallPrompt (Floating Toast Prompt)", () => {
+    it("não renderiza imediatamente antes do delay de 3 segundos", () => {
+      vi.useFakeTimers();
+      render(
+        <PwaProvider>
+          <PwaInstallPrompt />
+        </PwaProvider>,
+      );
+
+      expect(screen.queryByText("Instale o Trainvy")).toBeNull();
+      vi.useRealTimers();
+    });
+
+    it("não renderiza se estiver em rota restrita de treino ativo", () => {
+      vi.useFakeTimers();
+      mockPathname = "/workout-sessions/session-123";
+
+      render(
+        <PwaProvider>
+          <PwaInstallPrompt />
+        </PwaProvider>,
+      );
+
+      vi.advanceTimersByTime(3500);
+      expect(screen.queryByText("Instale o Trainvy")).toBeNull();
+      vi.useRealTimers();
     });
   });
 });
