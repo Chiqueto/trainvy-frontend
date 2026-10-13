@@ -4,13 +4,13 @@ import { authClient } from "@/app/_lib/auth-client";
 import { getUserTrainData } from "@/app/_lib/api/fetch-generated";
 import { BottomNav } from "@/app/_components/bottom-nav";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Weight, Ruler, BicepsFlexed, User } from "lucide-react";
 import { LogoutButton } from "./_components/logout-button";
 import { GamificationThemeSelector } from "./_components/gamification-theme-selector";
 import Link from "next/link";
 import { FeedbackButton } from "./_components/feedback-button";
 import { PwaInstallCard } from "@/app/_components/pwa/pwa-install-card";
 import { Logo } from "@/app/_components/logo";
+import { ProfileMetricsSection } from "./_components/profile-metrics-section";
 
 
 export default async function ProfilePage() {
@@ -33,11 +33,6 @@ export default async function ProfilePage() {
 
   const user = session.data.user;
   const data = trainData.data;
-
-  const weightInKg = data ? data.weightInGrams / 1000 : null;
-  const heightInCm = data?.heightInCentimeters ?? null;
-  const bodyFatPercentage = data?.bodyFatPercentage ?? null;
-  const age = data?.age ?? null;
 
   return (
     <div className="flex min-h-svh flex-col bg-background pb-24">
@@ -65,63 +60,14 @@ export default async function ProfilePage() {
           </div>
         </div>
 
-        <div className="grid w-full grid-cols-2 gap-3">
-          <div className="flex flex-col items-center gap-5 rounded-xl bg-primary/8 p-5">
-            <div className="flex items-center rounded-full bg-primary/8 p-[9px]">
-              <Weight className="size-4 text-primary" />
-            </div>
-            <div className="flex flex-col items-center gap-1.5">
-              <span className="font-heading text-2xl font-semibold leading-[1.15] text-foreground">
-                {weightInKg ?? "-"}
-              </span>
-              <span className="font-heading text-xs uppercase leading-[1.4] text-muted-foreground">
-                Kg
-              </span>
-            </div>
-          </div>
-
-          <div className="flex flex-col items-center gap-5 rounded-xl bg-primary/8 p-5">
-            <div className="flex items-center rounded-full bg-primary/8 p-[9px]">
-              <Ruler className="size-4 text-primary" />
-            </div>
-            <div className="flex flex-col items-center gap-1.5">
-              <span className="font-heading text-2xl font-semibold leading-[1.15] text-foreground">
-                {heightInCm ?? "-"}
-              </span>
-              <span className="font-heading text-xs uppercase leading-[1.4] text-muted-foreground">
-                Cm
-              </span>
-            </div>
-          </div>
-
-          <div className="flex flex-col items-center gap-5 rounded-xl bg-primary/8 p-5">
-            <div className="flex items-center rounded-full bg-primary/8 p-[9px]">
-              <BicepsFlexed className="size-4 text-primary" />
-            </div>
-            <div className="flex flex-col items-center gap-1.5">
-              <span className="font-heading text-2xl font-semibold leading-[1.15] text-foreground">
-                {bodyFatPercentage != null ? `${bodyFatPercentage}%` : "-"}
-              </span>
-              <span className="font-heading text-xs uppercase leading-[1.4] text-muted-foreground">
-                Gc
-              </span>
-            </div>
-          </div>
-
-          <div className="flex flex-col items-center gap-5 rounded-xl bg-primary/8 p-5">
-            <div className="flex items-center rounded-full bg-primary/8 p-[9px]">
-              <User className="size-4 text-primary" />
-            </div>
-            <div className="flex flex-col items-center gap-1.5">
-              <span className="font-heading text-2xl font-semibold leading-[1.15] text-foreground">
-                {age ?? "-"}
-              </span>
-              <span className="font-heading text-xs uppercase leading-[1.4] text-muted-foreground">
-                Anos
-              </span>
-            </div>
-          </div>
-        </div>
+        <ProfileMetricsSection
+          weightInGrams={data?.weightInGrams}
+          heightInCentimeters={data?.heightInCentimeters}
+          age={data?.age}
+          bodyFatPercentage={data?.bodyFatPercentage}
+          weightDiffInGrams={data?.weightDiffInGrams}
+          bodyFatDiff={data?.bodyFatDiff}
+        />
 
         <GamificationThemeSelector currentTheme={data?.gamificationTheme} />
 

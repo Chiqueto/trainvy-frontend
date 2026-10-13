@@ -1,7 +1,11 @@
 import { redirect } from "next/navigation";
 import { authClient } from "@/app/_lib/auth-client";
 import { headers } from "next/headers";
-import { getStats, getUserTrainData } from "@/app/_lib/api/fetch-generated";
+import {
+  getStats,
+  getUserMetricsHistory,
+  getUserTrainData,
+} from "@/app/_lib/api/fetch-generated";
 import dayjs from "dayjs";
 import { CircleCheck, CirclePercent, Hourglass } from "lucide-react";
 import { BottomNav } from "@/app/_components/bottom-nav";
@@ -9,6 +13,7 @@ import { StreakBanner } from "./_components/streak-banner";
 import { StatsHeatmap } from "./_components/stats-heatmap";
 import { StatCard } from "./_components/stat-card";
 import { EvolutionDashboard } from "./_components/evolution-dashboard";
+import { BodyMetricsEvolution } from "./_components/body-metrics-evolution";
 import { Logo } from "@/app/_components/logo";
 
 function formatTotalTime(totalSeconds: number): string {
@@ -34,18 +39,28 @@ export default async function StatsPage() {
     .format("YYYY-MM-DD");
   const to = today.endOf("month").add(7, "day").format("YYYY-MM-DD");
 
-  const [statsResponse, trainData] = await Promise.all([
+  const [statsResponse, trainData, metricsHistoryResponse] = await Promise.all([
     getStats({ from, to, timezoneOffset: today.utcOffset() }),
     getUserTrainData(),
+    getUserMetricsHistory().catch(() => null),
   ]);
 
   const needsOnboarding =
     (trainData.status === 200 && !trainData.data) || trainData.status === 404;
   if (needsOnboarding) redirect("/onboarding");
 
+  const userTrainData = trainData.status === 200 ? trainData.data : null;
+
   if (statsResponse.status !== 200) {
     throw new Error("Failed to fetch stats");
   }
+
+  const initialHistory =
+    metricsHistoryResponse &&
+    metricsHistoryResponse.status === 200 &&
+    Array.isArray(metricsHistoryResponse.data)
+      ? metricsHistoryResponse.data
+      : undefined;
 
   const {
     workoutStreak,
@@ -75,6 +90,16 @@ export default async function StatsPage() {
 
       <main className="flex flex-col gap-6 p-5">
         <EvolutionDashboard />
+
+        <BodyMetricsEvolution
+          initialWeightInGrams={userTrainData?.weightInGrams}
+          initialHeightInCm={userTrainData?.heightInCentimeters}
+          initialAge={userTrainData?.age}
+          initialBodyFat={userTrainData?.bodyFatPercentage}
+          initialWeightDiffInGrams={userTrainData?.weightDiffInGrams}
+          initialBodyFatDiff={userTrainData?.bodyFatDiff}
+          initialHistory={initialHistory}
+        />
 
         <section aria-labelledby="consistency-title" className="mt-8">
           <div className="mb-3">

@@ -17,6 +17,7 @@ import { ConsistencyTracker } from "./_components/consistency-tracker";
 import { StartFreeWorkoutButton } from "./_components/start-free-workout-button";
 import { WorkoutDayCard } from "./_components/workout-day-card";
 import { Logo } from "./_components/logo";
+import { HomeBodyMetricsCard } from "./_components/home-body-metrics-card";
 
 export default async function Home() {
   const session = await authClient.getSession({
@@ -43,6 +44,8 @@ export default async function Home() {
   const needsOnboarding =
     (trainData.status === 200 && !trainData.data) || trainData.status === 404;
   if (needsOnboarding) redirect("/onboarding");
+
+  const userTrainData = trainData.status === 200 ? trainData.data : null;
 
   let activeWorkoutPlanId: string | null = null;
   let todayWorkoutDay: GetHomeData200TodayWorkoutDay | undefined = undefined;
@@ -281,6 +284,15 @@ export default async function Home() {
           </div>
         </div>
       ) : null}
+
+      <HomeBodyMetricsCard
+        weightInGrams={userTrainData?.weightInGrams}
+        heightInCentimeters={userTrainData?.heightInCentimeters}
+        age={userTrainData?.age}
+        bodyFatPercentage={userTrainData?.bodyFatPercentage}
+        weightDiffInGrams={userTrainData?.weightDiffInGrams}
+        bodyFatDiff={userTrainData?.bodyFatDiff}
+      />
 
       <BottomNav />
     </div>

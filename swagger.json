@@ -6103,6 +6103,22 @@
                         "ANIMALS",
                         "MOVIES_SERIES"
                       ]
+                    },
+                    "previousWeightInGrams": {
+                      "nullable": true,
+                      "type": "number"
+                    },
+                    "previousBodyFatPercentage": {
+                      "nullable": true,
+                      "type": "number"
+                    },
+                    "weightDiffInGrams": {
+                      "nullable": true,
+                      "type": "number"
+                    },
+                    "bodyFatDiff": {
+                      "nullable": true,
+                      "type": "number"
                     }
                   },
                   "required": [
@@ -6396,6 +6412,127 @@
                     "gamificationTheme"
                   ],
                   "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me/metrics/history": {
+      "get": {
+        "operationId": "getUserMetricsHistory",
+        "summary": "Get user body metrics history",
+        "tags": [
+          "Me"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "weightInGrams": {
+                        "type": "number"
+                      },
+                      "weightKg": {
+                        "type": "number"
+                      },
+                      "heightInCentimeters": {
+                        "nullable": true,
+                        "type": "number"
+                      },
+                      "age": {
+                        "nullable": true,
+                        "type": "number"
+                      },
+                      "bodyFatPercentage": {
+                        "nullable": true,
+                        "type": "number"
+                      },
+                      "loggedAt": {
+                        "type": "string"
+                      },
+                      "weightDiffInGrams": {
+                        "nullable": true,
+                        "type": "number"
+                      },
+                      "weightDiffKg": {
+                        "nullable": true,
+                        "type": "number"
+                      },
+                      "bodyFatDiff": {
+                        "nullable": true,
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "weightInGrams",
+                      "weightKg",
+                      "heightInCentimeters",
+                      "age",
+                      "bodyFatPercentage",
+                      "loggedAt",
+                      "weightDiffInGrams",
+                      "weightDiffKg",
+                      "bodyFatDiff"
+                    ],
+                    "additionalProperties": false
+                  }
                 }
               }
             }

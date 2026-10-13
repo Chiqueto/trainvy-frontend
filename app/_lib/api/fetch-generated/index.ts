@@ -1845,6 +1845,14 @@ export type GetUserTrainData200 = {
     | "VEHICLES"
     | "ANIMALS"
     | "MOVIES_SERIES";
+  /** @nullable */
+  previousWeightInGrams?: number | null;
+  /** @nullable */
+  previousBodyFatPercentage?: number | null;
+  /** @nullable */
+  weightDiffInGrams?: number | null;
+  /** @nullable */
+  bodyFatDiff?: number | null;
 } | null;
 
 export type GetUserTrainData401 = {
@@ -1955,6 +1963,35 @@ export type UpdateGamificationTheme401 = {
 };
 
 export type UpdateGamificationTheme500 = {
+  error: string;
+  code: string;
+};
+
+export type GetUserMetricsHistory200Item = {
+  id: string;
+  weightInGrams: number;
+  weightKg: number;
+  /** @nullable */
+  heightInCentimeters: number | null;
+  /** @nullable */
+  age: number | null;
+  /** @nullable */
+  bodyFatPercentage: number | null;
+  loggedAt: string;
+  /** @nullable */
+  weightDiffInGrams: number | null;
+  /** @nullable */
+  weightDiffKg: number | null;
+  /** @nullable */
+  bodyFatDiff: number | null;
+};
+
+export type GetUserMetricsHistory401 = {
+  error: string;
+  code: string;
+};
+
+export type GetUserMetricsHistory500 = {
   error: string;
   code: string;
 };
@@ -7718,6 +7755,55 @@ export const updateGamificationTheme = async (
       method: "PATCH",
       headers: { "Content-Type": "application/json", ...options?.headers },
       body: JSON.stringify(updateGamificationThemeBody),
+    },
+  );
+};
+
+/**
+ * @summary Get user body metrics history
+ */
+export type getUserMetricsHistoryResponse200 = {
+  data: GetUserMetricsHistory200Item[];
+  status: 200;
+};
+
+export type getUserMetricsHistoryResponse401 = {
+  data: GetUserMetricsHistory401;
+  status: 401;
+};
+
+export type getUserMetricsHistoryResponse500 = {
+  data: GetUserMetricsHistory500;
+  status: 500;
+};
+
+export type getUserMetricsHistoryResponseSuccess =
+  getUserMetricsHistoryResponse200 & {
+    headers: Headers;
+  };
+export type getUserMetricsHistoryResponseError = (
+  | getUserMetricsHistoryResponse401
+  | getUserMetricsHistoryResponse500
+) & {
+  headers: Headers;
+};
+
+export type getUserMetricsHistoryResponse =
+  | getUserMetricsHistoryResponseSuccess
+  | getUserMetricsHistoryResponseError;
+
+export const getGetUserMetricsHistoryUrl = () => {
+  return `/me/metrics/history`;
+};
+
+export const getUserMetricsHistory = async (
+  options?: RequestInit,
+): Promise<getUserMetricsHistoryResponse> => {
+  return customFetch<getUserMetricsHistoryResponse>(
+    getGetUserMetricsHistoryUrl(),
+    {
+      ...options,
+      method: "GET",
     },
   );
 };
