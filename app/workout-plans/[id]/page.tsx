@@ -11,7 +11,6 @@ import { Goal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { BottomNav } from "@/app/_components/bottom-nav";
 import { WorkoutDayCard } from "@/app/_components/workout-day-card";
-import { RestDayCard } from "./_components/rest-day-card";
 import { Logo } from "@/app/_components/logo";
 
 const WEEKDAY_ORDER = [
@@ -63,6 +62,8 @@ export default async function WorkoutPlanPage({
     return WEEKDAY_ORDER.indexOf(a.weekDay) - WEEKDAY_ORDER.indexOf(b.weekDay);
   });
 
+  const trainingDays = sortedDays.filter((day) => !day.isRest);
+
   return (
     <div className="flex min-h-svh flex-col bg-background pb-24">
       <div className="relative flex h-[296px] shrink-0 flex-col items-start justify-between overflow-hidden rounded-b-[20px] px-5 pb-10 pt-5">
@@ -89,7 +90,7 @@ export default async function WorkoutPlanPage({
       </div>
 
       <div className="flex flex-col gap-3 p-5">
-        {sortedDays.map((day, index) => {
+        {trainingDays.map((day, index) => {
           const isNext = day.id === nextWorkoutDayId;
           const isLastCompleted = day.id === lastCompletedWorkoutDayId;
           const tag = isNext
@@ -98,9 +99,7 @@ export default async function WorkoutPlanPage({
               ? "ÚLTIMO REALIZADO"
               : `TREINO ${String.fromCharCode(65 + (index % 26))}`;
 
-          return day.isRest ? (
-            <RestDayCard key={day.id} weekDay={day.weekDay} />
-          ) : (
+          return (
             <Link
               key={day.id}
               href={`/workout-plans/${id}/days/${day.id}`}

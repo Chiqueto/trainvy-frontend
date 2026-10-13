@@ -11,12 +11,14 @@ import {
   MoreHorizontal,
   PauseCircle,
   PlayCircle,
+  Trash2,
 } from "lucide-react";
 
 import type { GetPlanningOverview200PlansItem } from "@/app/_lib/api/fetch-generated";
 import {
   activateWorkoutPlanAction,
   deactivateWorkoutPlanAction,
+  deleteWorkoutPlanAction,
   duplicateWorkoutPlanAction,
 } from "@/app/planning/_actions";
 import { Badge } from "@/components/ui/badge";
@@ -24,7 +26,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PlanningConfirmDialog } from "./planning-confirm-dialog";
 
-type DialogKind = "activate" | "deactivate" | "duplicate" | null;
+type DialogKind = "activate" | "deactivate" | "duplicate" | "delete" | null;
 
 interface WorkoutPlanCardProps {
   plan: GetPlanningOverview200PlansItem;
@@ -59,7 +61,9 @@ export function WorkoutPlanCard({ plan }: WorkoutPlanCardProps) {
           ? await activateWorkoutPlanAction(plan.id)
           : dialog === "deactivate"
             ? await deactivateWorkoutPlanAction(plan.id)
-            : await duplicateWorkoutPlanAction(plan.id, copyName);
+            : dialog === "duplicate"
+              ? await duplicateWorkoutPlanAction(plan.id, copyName)
+              : await deleteWorkoutPlanAction(plan.id);
 
       if (!result.success) {
         setFeedback({ kind: "error", message: result.error });
@@ -72,7 +76,9 @@ export function WorkoutPlanCard({ plan }: WorkoutPlanCardProps) {
           ? "Plano ativado com sucesso."
           : dialog === "deactivate"
             ? "Plano desativado com sucesso."
-            : "Cópia criada como plano inativo.";
+            : dialog === "duplicate"
+              ? "Cópia criada como plano inativo."
+              : "Plano de treino excluído definitivamente.";
 
       setFeedback({ kind: "success", message: successMessage });
       setDialog(null);
@@ -205,6 +211,18 @@ export function WorkoutPlanCard({ plan }: WorkoutPlanCardProps) {
                   <Copy className="size-4" />
                   Duplicar
                 </button>
+
+                <div className="my-1 h-px bg-border/60" />
+
+                <button
+                  type="button"
+                  role="menuitem"
+                  className="flex min-h-11 w-full items-center gap-2.5 rounded-xl px-3 text-left text-sm font-medium text-destructive transition hover:bg-destructive/10"
+                  onClick={() => openDialog("delete")}
+                >
+                  <Trash2 className="size-4 text-destructive" />
+                  Excluir definitivamente
+                </button>
               </div>
             </>
           )}
@@ -245,6 +263,25 @@ export function WorkoutPlanCard({ plan }: WorkoutPlanCardProps) {
         }
         confirmLabel="Desativar plano"
         pendingLabel="Desativando..."
+        isPending={isPending}
+        onCancel={() => setDialog(null)}
+        onConfirm={handleMutation}
+      />
+
+      <PlanningConfirmDialog
+        open={dialog === "delete"}
+        title="Excluir plano definitivamente"
+        destructive
+        description={
+          <>
+            <p>Tem certeza que deseja excluir o plano &ldquo;{plan.name}&rdquo;?</p>
+            <p className="mt-2 text-muted-foreground">
+              Ele nunca mais será exibido para você. Treinos já concluídos no histórico continuarão preservados.
+            </p>
+          </>
+        }
+        confirmLabel="Excluir definitivamente"
+        pendingLabel="Excluindo..."
         isPending={isPending}
         onCancel={() => setDialog(null)}
         onConfirm={handleMutation}

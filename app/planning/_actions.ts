@@ -11,6 +11,7 @@ import {
   createWorkoutPlan,
   createWorkoutPlanInPeriodization,
   deletePeriodization,
+  deleteWorkoutPlan,
   deactivatePeriodization,
   deactivateWorkoutPlan,
   duplicateWorkoutPlan,
@@ -31,6 +32,7 @@ import {
   type CreateWorkoutPlanInPeriodization201,
   type CreateWorkoutPlanInPeriodizationBody,
   type DeletePeriodization200,
+  type DeleteWorkoutPlan200,
   type DeactivatePeriodization200,
   type DeactivateWorkoutPlan200,
   type DuplicateWorkoutPlan201,
@@ -140,6 +142,23 @@ export async function duplicateWorkoutPlanAction(
   try {
     const response = await duplicateWorkoutPlan(planId, { name: copyName });
     if (response.status !== 201) return apiError(response.data);
+
+    revalidatePlanning(`/workout-plans/${planId}`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    return connectionError(error);
+  }
+}
+
+export async function deleteWorkoutPlanAction(
+  id: string,
+): Promise<PlanningActionResult<DeleteWorkoutPlan200>> {
+  const planId = validId(id);
+  if (!planId) return invalidInput("Plano inválido.");
+
+  try {
+    const response = await deleteWorkoutPlan(planId);
+    if (response.status !== 200) return apiError(response.data);
 
     revalidatePlanning(`/workout-plans/${planId}`);
     return { success: true, data: response.data };

@@ -215,16 +215,14 @@ export function PeriodizationManagement({
         )}
       </div>
 
-      {status === "DRAFT" && (
-        <Button
-          variant="ghost"
-          className="h-11 rounded-full text-destructive hover:bg-destructive/10 hover:text-destructive"
-          onClick={() => setDialog("delete")}
-        >
-          <Trash2 />
-          Excluir periodização
-        </Button>
-      )}
+      <Button
+        variant="ghost"
+        className="h-11 rounded-full text-destructive hover:bg-destructive/10 hover:text-destructive"
+        onClick={() => setDialog("delete")}
+      >
+        <Trash2 />
+        Excluir periodização definitivamente
+      </Button>
 
       {feedback && !dialog && (
         <p
@@ -428,14 +426,16 @@ export function PeriodizationManagement({
 
       <PlanningConfirmDialog
         open={dialog === "delete"}
-        title="Excluir esta periodização?"
+        title="Excluir periodização definitivamente?"
         description={
           <>
-            <p>Os planos de treino não serão excluídos.</p>
-            <p className="mt-2">Eles continuarão disponíveis separadamente.</p>
+            <p>Esta periodização nunca mais será exibida para você.</p>
+            <p className="mt-2 text-muted-foreground">
+              Os planos de treino vinculados continuarão disponíveis separadamente e o histórico de treinos já realizados será preservado.
+            </p>
           </>
         }
-        confirmLabel="Excluir periodização"
+        confirmLabel="Excluir definitivamente"
         pendingLabel="Excluindo..."
         destructive
         isPending={isPending}

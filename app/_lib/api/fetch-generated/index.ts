@@ -275,6 +275,26 @@ export type GetWorkoutPlan500 = {
   code: string;
 };
 
+export type DeleteWorkoutPlan200 = {
+  success: boolean;
+  message: string;
+};
+
+export type DeleteWorkoutPlan401 = {
+  error: string;
+  code: string;
+};
+
+export type DeleteWorkoutPlan404 = {
+  error: string;
+  code: string;
+};
+
+export type DeleteWorkoutPlan500 = {
+  error: string;
+  code: string;
+};
+
 export type GetWorkoutDay200WeekDay =
   (typeof GetWorkoutDay200WeekDay)[keyof typeof GetWorkoutDay200WeekDay];
 
@@ -566,16 +586,16 @@ export type StartWorkoutSession500 = {
 };
 
 export type UpdateWorkoutSessionBody = {
-  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$ */
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$ */
   completedAt: string;
 };
 
 export type UpdateWorkoutSession200 = {
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
-  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$ */
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$ */
   startedAt: string;
-  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$ */
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$ */
   completedAt: string;
 };
 
@@ -5961,6 +5981,58 @@ export const getWorkoutPlan = async (
   return customFetch<getWorkoutPlanResponse>(getGetWorkoutPlanUrl(id), {
     ...options,
     method: "GET",
+  });
+};
+
+/**
+ * @summary Delete a workout plan (soft delete)
+ */
+export type deleteWorkoutPlanResponse200 = {
+  data: DeleteWorkoutPlan200;
+  status: 200;
+};
+
+export type deleteWorkoutPlanResponse401 = {
+  data: DeleteWorkoutPlan401;
+  status: 401;
+};
+
+export type deleteWorkoutPlanResponse404 = {
+  data: DeleteWorkoutPlan404;
+  status: 404;
+};
+
+export type deleteWorkoutPlanResponse500 = {
+  data: DeleteWorkoutPlan500;
+  status: 500;
+};
+
+export type deleteWorkoutPlanResponseSuccess = deleteWorkoutPlanResponse200 & {
+  headers: Headers;
+};
+export type deleteWorkoutPlanResponseError = (
+  | deleteWorkoutPlanResponse401
+  | deleteWorkoutPlanResponse404
+  | deleteWorkoutPlanResponse500
+) & {
+  headers: Headers;
+};
+
+export type deleteWorkoutPlanResponse =
+  | deleteWorkoutPlanResponseSuccess
+  | deleteWorkoutPlanResponseError;
+
+export const getDeleteWorkoutPlanUrl = (id: string) => {
+  return `/workout-plans/${id}`;
+};
+
+export const deleteWorkoutPlan = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteWorkoutPlanResponse> => {
+  return customFetch<deleteWorkoutPlanResponse>(getDeleteWorkoutPlanUrl(id), {
+    ...options,
+    method: "DELETE",
   });
 };
 
