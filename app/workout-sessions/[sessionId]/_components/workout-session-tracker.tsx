@@ -80,13 +80,16 @@ export function WorkoutSessionTracker({ session }: WorkoutSessionTrackerProps) {
       } else {
         const newExercise: GetWorkoutSession200SessionExercisesItem = {
           id: res.data.id,
+          exerciseId: res.data.exerciseId ?? exerciseId,
+          hasMedia: res.data.hasMedia ?? false,
+          plannedWarmupSets: res.data.plannedWarmupSets ?? null,
           exerciseNameSnapshot: res.data.exerciseNameSnapshot,
           order: res.data.order,
           plannedSets: res.data.plannedSets,
           plannedReps: res.data.plannedReps,
           plannedRestTimeInSeconds: res.data.plannedRestTimeInSeconds,
           notes: res.data.notes,
-          sets: [],
+          sets: res.data.sets ?? [],
         };
         setSessionData((prev) => ({
           ...prev,

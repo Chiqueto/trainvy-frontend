@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   AlertCircle,
   CheckCircle2,
@@ -32,51 +32,106 @@ export function ExerciseExecutionDialog({
   exerciseName,
 }: ExerciseExecutionDialogProps) {
   const [data, setData] = useState<GetExerciseMedia200 | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(Boolean(isOpen && exerciseId));
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  // Armazena a chave de rastreamento para limpar dados síncronamente durante a renderização se mudar o exercício ou status de abertura
+  const dialogKey = `${isOpen ? "open" : "closed"}-${exerciseId ?? ""}`;
+  const [prevDialogKey, setPrevDialogKey] = useState(dialogKey);
+
+  if (dialogKey !== prevDialogKey) {
+    setPrevDialogKey(dialogKey);
+    setData(null);
+    setErrorMessage(null);
+    setIsLoading(Boolean(isOpen && exerciseId));
+  }
+
+  const previousActiveElementRef = useRef<HTMLElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+
+  // Gerenciamento de foco ao abrir e fechar o diálogo
   useEffect(() => {
-    if (!isOpen || !exerciseId) return;
+    if (isOpen) {
+      previousActiveElementRef.current = document.activeElement as HTMLElement | null;
+      const timer = window.setTimeout(() => {
+        closeButtonRef.current?.focus();
+      }, 50);
+      return () => window.clearTimeout(timer);
+    } else if (previousActiveElementRef.current) {
+      previousActiveElementRef.current.focus();
+    }
+  }, [isOpen]);
 
-    let isMounted = true;
-    const timer = window.setTimeout(async () => {
-      setIsLoading(true);
-      setErrorMessage(null);
+  // Carregamento de dados com cancelamento estrito de requisição assíncrona antiga
+  useEffect(() => {
+    if (!isOpen || !exerciseId) {
+      return;
+    }
 
-      try {
-        const res = await getExerciseMediaAction(exerciseId);
-        if (!isMounted) return;
+    let isCurrent = true;
+    const requestedId = exerciseId;
+
+    getExerciseMediaAction(requestedId)
+      .then((res) => {
+        // Se o componente desmontou ou o exerciseId mudou enquanto a requisição estava em voo, descarta
+        if (!isCurrent) return;
         if (res.success) {
           setData(res.data);
         } else {
           setErrorMessage(res.error);
         }
-      } catch (err) {
-        if (!isMounted) return;
+      })
+      .catch((err) => {
+        if (!isCurrent) return;
         setErrorMessage(
           err instanceof Error
             ? err.message
             : "Falha ao carregar instruções do exercício",
         );
-      } finally {
-        if (isMounted) setIsLoading(false);
-      }
-    }, 0);
+      })
+      .finally(() => {
+        if (isCurrent) {
+          setIsLoading(false);
+        }
+      });
 
     return () => {
-      isMounted = false;
-      window.clearTimeout(timer);
+      isCurrent = false;
     };
   }, [isOpen, exerciseId]);
 
-  // Fechamento via teclado (ESC)
+  // Fechamento via teclado (ESC) e contenção básica de foco
   useEffect(() => {
     if (!isOpen) return;
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
+        e.preventDefault();
         onClose();
+        return;
+      }
+
+      // Tab trap simples para conter foco no modal
+      if (e.key === "Tab" && dialogRef.current) {
+        const focusableElements = dialogRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        );
+        if (focusableElements.length > 0) {
+          const first = focusableElements[0];
+          const last = focusableElements[focusableElements.length - 1];
+
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
       }
     };
+
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
@@ -91,6 +146,7 @@ export function ExerciseExecutionDialog({
       onClick={onClose}
     >
       <div
+        ref={dialogRef}
         className="w-full max-w-lg max-h-[92vh] flex flex-col bg-card border border-border/80 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
@@ -111,6 +167,7 @@ export function ExerciseExecutionDialog({
             </h2>
           </div>
           <button
+            ref={closeButtonRef}
             type="button"
             onClick={onClose}
             aria-label="Fechar guia de execução"
@@ -130,30 +187,60 @@ export function ExerciseExecutionDialog({
               </p>
             </div>
           ) : errorMessage ? (
-            <div className="p-4 rounded-xl border border-destructive/40 bg-destructive/10 text-destructive space-y-2">
-              <div className="flex items-center gap-2 font-heading font-semibold text-xs">
-                <AlertCircle className="size-4 shrink-0" />
-                <span>Não foi possível carregar a demonstração</span>
+            <div className="flex flex-col items-center justify-center p-8 text-center rounded-2xl border border-destructive/30 bg-destructive/5 space-y-3">
+              <div className="size-10 rounded-full bg-destructive/10 text-destructive flex items-center justify-center">
+                <AlertCircle className="size-5" />
               </div>
-              <p className="text-xs text-muted-foreground">{errorMessage}</p>
+              <p className="text-xs font-heading font-semibold text-destructive">
+                Não foi possível carregar a demonstração
+              </p>
+              <p className="text-xs text-muted-foreground max-w-xs">
+                {errorMessage}
+              </p>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  if (exerciseId) {
+                    setIsLoading(true);
+                    setErrorMessage(null);
+                    getExerciseMediaAction(exerciseId)
+                      .then((res) => {
+                        if (res.success) setData(res.data);
+                        else setErrorMessage(res.error);
+                      })
+                      .catch((e) =>
+                        setErrorMessage(
+                          e instanceof Error ? e.message : "Erro desconhecido",
+                        ),
+                      )
+                      .finally(() => setIsLoading(false));
+                  }
+                }}
+                className="mt-2 text-xs"
+              >
+                Tentar novamente
+              </Button>
             </div>
           ) : (
             <>
-              {/* Prévia Visual */}
+              {/* Visualizador de Imagens */}
               <ExerciseMediaPreview
                 media={data}
                 exerciseName={exerciseName}
+                autoPlay={true}
               />
 
-              {/* Orientações e Instruções de Execução */}
+              {/* Instruções Detalhadas em PT-BR */}
               {instructions ? (
-                <div className="space-y-3 pt-1">
-                  {/* Descrição */}
+                <div className="space-y-3 pt-2">
+                  {/* Padrão de Movimento */}
                   {instructions.description && (
                     <div className="p-3.5 rounded-xl border border-border/60 bg-muted/25 space-y-1">
                       <div className="flex items-center gap-1.5 text-xs font-heading font-semibold text-foreground">
                         <Info className="size-3.5 text-primary" />
-                        <span>Sobre o Exercício</span>
+                        <span>Padrão do Movimento</span>
                       </div>
                       <p className="text-xs text-muted-foreground leading-relaxed">
                         {instructions.description}
@@ -161,7 +248,7 @@ export function ExerciseExecutionDialog({
                     </div>
                   )}
 
-                  {/* Como Iniciar (Setup) */}
+                  {/* Preparação e Postura */}
                   {instructions.setup && (
                     <div className="p-3.5 rounded-xl border border-border/60 bg-muted/25 space-y-1">
                       <div className="flex items-center gap-1.5 text-xs font-heading font-semibold text-foreground">
@@ -174,7 +261,7 @@ export function ExerciseExecutionDialog({
                     </div>
                   )}
 
-                  {/* Como Executar */}
+                  {/* Execução */}
                   {instructions.execution && (
                     <div className="p-3.5 rounded-xl border border-border/60 bg-muted/25 space-y-1">
                       <div className="flex items-center gap-1.5 text-xs font-heading font-semibold text-foreground">

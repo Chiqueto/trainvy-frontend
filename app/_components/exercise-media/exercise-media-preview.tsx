@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
-import { Dumbbell, ImageOff, Pause, Play } from "lucide-react";
+import { Dumbbell, ImageOff, Info, Pause, Play } from "lucide-react";
 
 export interface ExerciseMediaData {
   startImagePath?: string | null;
@@ -19,20 +19,57 @@ interface ExerciseMediaPreviewProps {
   autoPlay?: boolean;
 }
 
+function subscribeToReducedMotion(callback: () => void) {
+  if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+    return () => {};
+  }
+  const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  mediaQuery.addEventListener("change", callback);
+  return () => mediaQuery.removeEventListener("change", callback);
+}
+
+function getReducedMotionSnapshot(): boolean {
+  if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+    return false;
+  }
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function getReducedMotionServerSnapshot(): boolean {
+  return false;
+}
+
 export function ExerciseMediaPreview({
   media,
   exerciseName,
   className = "",
   autoPlay = true,
 }: ExerciseMediaPreviewProps) {
+  const prefersReducedMotion = useSyncExternalStore(
+    subscribeToReducedMotion,
+    getReducedMotionSnapshot,
+    getReducedMotionServerSnapshot,
+  );
+
   const [activePose, setActivePose] = useState<"start" | "peak">("start");
-  const [isPlaying, setIsPlaying] = useState(autoPlay);
+  const [isPlaying, setIsPlaying] = useState(autoPlay && !prefersReducedMotion);
   const [imageError, setImageError] = useState(false);
 
   const startImage = media?.startImagePath ?? null;
   const endImage = media?.endImagePath ?? null;
   const hasBoth = Boolean(startImage && endImage);
   const singleImage = startImage || endImage;
+
+  // Limpeza e redefinição de estado ao trocar de exercício/mídia durante a renderização
+  const mediaKey = `${startImage ?? ""}|${endImage ?? ""}|${exerciseName}|${autoPlay}|${prefersReducedMotion}`;
+  const [prevMediaKey, setPrevMediaKey] = useState(mediaKey);
+
+  if (mediaKey !== prevMediaKey) {
+    setPrevMediaKey(mediaKey);
+    setActivePose("start");
+    setImageError(false);
+    setIsPlaying(autoPlay && !prefersReducedMotion);
+  }
 
   // Animação em loop alternando entre Início e Pico (cadência natural de repetição)
   useEffect(() => {
@@ -45,7 +82,7 @@ export function ExerciseMediaPreview({
     return () => clearInterval(interval);
   }, [isPlaying, hasBoth]);
 
-  // Estado Vazio: nenhuma imagem disponível
+  // Estado Vazio: nenhuma imagem disponível ou erro no carregamento
   if (!media || (!startImage && !endImage) || imageError) {
     return (
       <div
@@ -255,6 +292,14 @@ export function ExerciseMediaPreview({
               Pico de Contração
             </button>
           </div>
+        </div>
+      )}
+
+      {/* Nota de esclarecimento sobre posições ilustrativas */}
+      {hasBoth && (
+        <div className="flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground/80 py-0.5">
+          <Info className="size-3 shrink-0" />
+          <span>Posições ilustrativas de referência (início e pico de contração)</span>
         </div>
       )}
     </div>

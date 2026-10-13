@@ -96,15 +96,24 @@ export function PwaProvider({ children }: { children: ReactNode }) {
   const isInstalled = isStandalone || appInstalledManually;
 
   useEffect(() => {
-    // 1. Registrar Service Worker em produção
+    let loadHandler: (() => void) | null = null;
+
+    // 1. Registrar Service Worker com suporte a pós-load e pré-load
     if ("serviceWorker" in navigator && process.env.NODE_ENV === "production") {
-      window.addEventListener("load", () => {
+      const registerSW = () => {
         navigator.serviceWorker
           .register("/sw.js")
           .catch((err) =>
             console.error("Falha ao registrar Service Worker:", err),
           );
-      });
+      };
+
+      if (document.readyState === "complete") {
+        registerSW();
+      } else {
+        loadHandler = registerSW;
+        window.addEventListener("load", loadHandler);
+      }
     }
 
     // 2. Capturar evento de instalação do navegador
@@ -122,6 +131,9 @@ export function PwaProvider({ children }: { children: ReactNode }) {
     window.addEventListener("appinstalled", handleAppInstalled);
 
     return () => {
+      if (loadHandler) {
+        window.removeEventListener("load", loadHandler);
+      }
       window.removeEventListener(
         "beforeinstallprompt",
         handleBeforeInstallPrompt,

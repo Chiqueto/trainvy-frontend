@@ -145,9 +145,146 @@ describe("Task 4.X — Exercise Media Foundation (Frontend)", () => {
         ),
       ).toBeDefined();
     });
+    it("respeita preferência por movimento reduzido iniciando sem loop automático", () => {
+      const originalMatchMedia = window.matchMedia;
+      window.matchMedia = vi.fn().mockImplementation((query) => ({
+        matches: query === "(prefers-reduced-motion: reduce)",
+        media: query,
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      }));
+
+      try {
+        render(
+          <ExerciseMediaPreview
+            media={{
+              startImagePath: "/exercise-media/repdb/bench-press-start.webp",
+              endImagePath: "/exercise-media/repdb/bench-press-peak.webp",
+              mediaType: "IMAGE_SEQUENCE",
+            }}
+            exerciseName="Supino Reto"
+            autoPlay={true}
+          />,
+        );
+
+        // Deve iniciar pausado quando prefere movimento reduzido
+        expect(screen.getByText("Animar Movimento")).toBeDefined();
+        expect(screen.queryByText("Loop")).toBeNull();
+      } finally {
+        window.matchMedia = originalMatchMedia;
+      }
+    });
+
+    it("exibe esclarecimento sobre posições ilustrativas de referência", () => {
+      render(
+        <ExerciseMediaPreview
+          media={{
+            startImagePath: "/exercise-media/repdb/bench-press-start.webp",
+            endImagePath: "/exercise-media/repdb/bench-press-peak.webp",
+            mediaType: "IMAGE_SEQUENCE",
+          }}
+          exerciseName="Supino Reto"
+        />,
+      );
+
+      expect(
+        screen.getByText(
+          "Posições ilustrativas de referência (início e pico de contração)",
+        ),
+      ).toBeDefined();
+    });
   });
 
   describe("2. ExerciseExecutionDialog (Modal e Instruções)", () => {
+    it("limpa dados imediatamente ao trocar exerciseId e descarta resposta assíncrona antiga para evitar flash de dados", async () => {
+      let resolveFirst: ((val: unknown) => void) | null = null;
+      const firstPromise = new Promise((resolve) => {
+        resolveFirst = resolve;
+      });
+
+      vi.mocked(mediaActions.getExerciseMediaAction).mockImplementation((id) => {
+        if (id === "exercise-1") {
+          return firstPromise as Promise<{ success: true; data: mediaActions.GetExerciseMedia200 }>;
+        }
+        return Promise.resolve({
+          success: true,
+          data: {
+            exerciseId: "exercise-2",
+            hasMedia: true,
+            mediaType: "IMAGE_SEQUENCE",
+            startImagePath: "/exercise-media/repdb/squat-start.webp",
+            endImagePath: "/exercise-media/repdb/squat-peak.webp",
+            motionPath: null,
+            instructions: {
+              description: "Agachamento oficial.",
+              setup: "Pés na largura dos ombros.",
+              execution: "Descer e subir.",
+              tips: "Manter coluna ereta.",
+            },
+            attributionName: "RepDB",
+            attributionUrl: "https://repdb.co",
+          },
+        });
+      });
+
+      const { rerender } = render(
+        <ExerciseExecutionDialog
+          isOpen={true}
+          onClose={vi.fn()}
+          exerciseId="exercise-1"
+          exerciseName="Supino Antigo"
+        />,
+      );
+
+      // Exercise-1 ainda está carregando
+      expect(screen.getByText("Carregando demonstração e instruções...")).toBeDefined();
+
+      // Troca imediatamente para Exercise-2
+      rerender(
+        <ExerciseExecutionDialog
+          isOpen={true}
+          onClose={vi.fn()}
+          exerciseId="exercise-2"
+          exerciseName="Agachamento Novo"
+        />,
+      );
+
+      // Exercise-2 termina
+      await waitFor(() => {
+        expect(screen.getByText("Agachamento oficial.")).toBeDefined();
+      });
+
+      // Agora resolve o Exercise-1 antigo atrasado
+      act(() => {
+        resolveFirst?.({
+          success: true,
+          data: {
+            exerciseId: "exercise-1",
+            hasMedia: true,
+            mediaType: "IMAGE_SEQUENCE",
+            startImagePath: "/exercise-media/repdb/bench-press-start.webp",
+            endImagePath: "/exercise-media/repdb/bench-press-peak.webp",
+            motionPath: null,
+            instructions: {
+              description: "Supino Antigo atrasado.",
+              setup: "Setup.",
+              execution: "Exec.",
+              tips: "Tips.",
+            },
+            attributionName: "RepDB",
+            attributionUrl: "https://repdb.co",
+          },
+        });
+      });
+
+      // Garante que o Supino Antigo atrasado NÃO sobrescreveu o Agachamento Novo!
+      expect(screen.getByText("Agachamento oficial.")).toBeDefined();
+      expect(screen.queryByText("Supino Antigo atrasado.")).toBeNull();
+    });
     it("abre, exibe loading e depois apresenta instruções estruturadas em PT-BR e crédito RepDB", async () => {
       vi.mocked(mediaActions.getExerciseMediaAction).mockResolvedValueOnce({
         success: true,
