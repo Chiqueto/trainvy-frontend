@@ -56,21 +56,24 @@ export default async function StatsPage() {
   } = statsResponse.data;
 
   return (
-    <div className="flex min-h-svh flex-col bg-background pb-24">
-      <div className="mx-auto flex h-14 w-full max-w-3xl items-center px-5">
-        <Logo size="md" asLink />
-      </div>
+    <div className="flex min-h-svh flex-col bg-background pb-28">
+      {/* Header Mobile-First alinhado à esquerda como nas demais abas */}
+      <header className="sticky top-0 z-30 flex flex-col gap-3 border-b border-border/60 bg-background/95 px-5 py-4 backdrop-blur-md">
+        <div className="flex items-center justify-between">
+          <Logo size="md" asLink />
+        </div>
 
-      <main className="mx-auto w-full max-w-3xl px-4 pb-6 sm:px-6">
-        <header className="pb-5 pt-1">
-          <h1 className="font-heading text-2xl font-semibold text-foreground">
+        <div className="flex flex-col gap-0.5">
+          <h1 className="font-heading text-xl font-bold tracking-tight text-foreground">
             Evolução
           </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="font-heading text-xs text-muted-foreground">
             Acompanhe seu treino ao longo do tempo
           </p>
-        </header>
+        </div>
+      </header>
 
+      <main className="flex flex-col gap-6 p-5">
         <EvolutionDashboard />
 
         <section aria-labelledby="consistency-title" className="mt-8">

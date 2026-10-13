@@ -7,6 +7,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Weight, Ruler, BicepsFlexed, User } from "lucide-react";
 import { LogoutButton } from "./_components/logout-button";
 import { GamificationThemeSelector } from "./_components/gamification-theme-selector";
+import { PwaInstallCard } from "@/app/_components/pwa/pwa-install-card";
 import { Logo } from "@/app/_components/logo";
 
 
@@ -121,6 +122,9 @@ export default async function ProfilePage() {
         </div>
 
         <GamificationThemeSelector currentTheme={data?.gamificationTheme} />
+
+        {/* Instalação do Aplicativo (PWA) */}
+        <PwaInstallCard />
 
         {/* Seção de Créditos & Atribuições */}
         <div className="w-full rounded-xl border border-border/70 bg-card p-4 space-y-2 text-left shadow-xs">
