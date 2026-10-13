@@ -1,5 +1,5 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { ExerciseExecutionDialog } from "@/app/_components/exercise-media/exercise-execution-dialog";
 import { ExerciseMediaPreview } from "@/app/_components/exercise-media/exercise-media-preview";
@@ -12,6 +12,10 @@ vi.mock("@/app/_actions/exercise-media", () => ({
 }));
 
 describe("Task 4.X — Exercise Media Foundation (Frontend)", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   describe("1. ExerciseMediaPreview (Componente de Prévia Visual)", () => {
     it("exibe duas imagens com alternância entre Posição Inicial e Pico de Contração", () => {
       render(
@@ -46,6 +50,55 @@ describe("Task 4.X — Exercise Media Foundation (Frontend)", () => {
       );
       expect(peakImg).toBeDefined();
       expect(peakImg.getAttribute("src")).toContain("bench-press-peak.webp");
+    });
+
+    it("executa animação simulada em loop entre os dois quadros e permite pausar/retomar", () => {
+      vi.useFakeTimers();
+
+      render(
+        <ExerciseMediaPreview
+          media={{
+            startImagePath: "/exercise-media/repdb/bench-press-start.webp",
+            endImagePath: "/exercise-media/repdb/bench-press-peak.webp",
+            mediaType: "IMAGE_SEQUENCE",
+          }}
+          exerciseName="Supino Reto com Barra"
+          autoPlay={true}
+        />,
+      );
+
+      try {
+        // Inicia em loop na posição inicial
+        expect(screen.getByText("1. Posição Inicial")).toBeDefined();
+        expect(screen.getByText("Loop")).toBeDefined();
+        expect(screen.getByText("Pausar Loop")).toBeDefined();
+
+        // Avança 1200ms -> alterna para o pico de contração
+        act(() => {
+          vi.advanceTimersByTime(1200);
+        });
+        expect(screen.getByText("2. Pico de Contração")).toBeDefined();
+
+        // Avança mais 1200ms -> retorna para a posição inicial (ping-pong)
+        act(() => {
+          vi.advanceTimersByTime(1200);
+        });
+        expect(screen.getByText("1. Posição Inicial")).toBeDefined();
+
+        // Clica em Pausar Loop
+        const pauseBtn = screen.getByRole("button", { name: /Pausar Loop/i });
+        fireEvent.click(pauseBtn);
+        expect(screen.getByText("Animar Movimento")).toBeDefined();
+        expect(screen.queryByText("Loop")).toBeNull();
+
+        // Clica para reativar o loop
+        const resumeBtn = screen.getByRole("button", { name: /Animar Movimento/i });
+        fireEvent.click(resumeBtn);
+        expect(screen.getByText("Pausar Loop")).toBeDefined();
+        expect(screen.getByText("Loop")).toBeDefined();
+      } finally {
+        vi.useRealTimers();
+      }
     });
 
     it("exibe apenas uma imagem quando o exercício possui apenas uma posição", () => {
@@ -251,8 +304,8 @@ describe("Task 4.X — Exercise Media Foundation (Frontend)", () => {
       // Diálogo aberto
       await waitFor(() => {
         expect(screen.getByText("Guia de Execução")).toBeDefined();
+        expect(screen.getByText("Supino Reto oficial.")).toBeDefined();
       });
-      expect(screen.getByText("Supino Reto oficial.")).toBeDefined();
 
       // Nenhuma mutação foi disparada
       expect(onMutationStart).not.toHaveBeenCalled();
