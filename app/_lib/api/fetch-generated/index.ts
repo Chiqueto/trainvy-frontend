@@ -592,16 +592,16 @@ export type StartWorkoutSession500 = {
 };
 
 export type UpdateWorkoutSessionBody = {
-  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$ */
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$ */
   completedAt: string;
 };
 
 export type UpdateWorkoutSession200 = {
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
-  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$ */
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$ */
   startedAt: string;
-  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$ */
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$ */
   completedAt: string;
 };
 
@@ -2375,6 +2375,416 @@ export type GetCommercialContext409 = {
 };
 
 export type GetCommercialContext500 = {
+  error: string;
+  code: string;
+};
+
+export type CreateCoachInvitationBody = {
+  /**
+   * @minimum 1
+   * @maximum 30
+   */
+  expiresInDays?: number;
+};
+
+export type CreateCoachInvitation201 = {
+  id: string;
+  token: string;
+  expiresAt: string;
+  createdAt: string;
+};
+
+export type CreateCoachInvitation400 = {
+  error: string;
+  code: string;
+};
+
+export type CreateCoachInvitation401 = {
+  error: string;
+  code: string;
+};
+
+export type CreateCoachInvitation403 = {
+  error: string;
+  code: string;
+};
+
+export type CreateCoachInvitation404 = {
+  error: string;
+  code: string;
+};
+
+export type CreateCoachInvitation409 = {
+  error: string;
+  code: string;
+};
+
+export type CreateCoachInvitation500 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachInvitations200ItemStatus =
+  (typeof ListCoachInvitations200ItemStatus)[keyof typeof ListCoachInvitations200ItemStatus];
+
+export const ListCoachInvitations200ItemStatus = {
+  PENDING: "PENDING",
+  ACCEPTED: "ACCEPTED",
+  CANCELLED: "CANCELLED",
+  EXPIRED: "EXPIRED",
+} as const;
+
+export type ListCoachInvitations200Item = {
+  id: string;
+  status: ListCoachInvitations200ItemStatus;
+  expiresAt: string;
+  createdAt: string;
+  /** @nullable */
+  acceptedAt: string | null;
+  /** @nullable */
+  cancelledAt: string | null;
+};
+
+export type ListCoachInvitations400 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachInvitations401 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachInvitations403 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachInvitations404 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachInvitations409 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachInvitations500 = {
+  error: string;
+  code: string;
+};
+
+export type CancelCoachInvitation200 = {
+  success: boolean;
+};
+
+export type CancelCoachInvitation400 = {
+  error: string;
+  code: string;
+};
+
+export type CancelCoachInvitation401 = {
+  error: string;
+  code: string;
+};
+
+export type CancelCoachInvitation403 = {
+  error: string;
+  code: string;
+};
+
+export type CancelCoachInvitation404 = {
+  error: string;
+  code: string;
+};
+
+export type CancelCoachInvitation409 = {
+  error: string;
+  code: string;
+};
+
+export type CancelCoachInvitation500 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachAthletes200AthletesItem = {
+  linkId: string;
+  athleteId: string;
+  name: string;
+  email: string;
+  /** @nullable */
+  image: string | null;
+  acceptedAt: string;
+};
+
+export type ListCoachAthletes200 = {
+  athletes: ListCoachAthletes200AthletesItem[];
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  activeCount: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  limit: number | null;
+};
+
+export type ListCoachAthletes400 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachAthletes401 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachAthletes403 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachAthletes404 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachAthletes409 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachAthletes500 = {
+  error: string;
+  code: string;
+};
+
+export type RevokeCoachAthleteLink200 = {
+  success: boolean;
+};
+
+export type RevokeCoachAthleteLink400 = {
+  error: string;
+  code: string;
+};
+
+export type RevokeCoachAthleteLink401 = {
+  error: string;
+  code: string;
+};
+
+export type RevokeCoachAthleteLink403 = {
+  error: string;
+  code: string;
+};
+
+export type RevokeCoachAthleteLink404 = {
+  error: string;
+  code: string;
+};
+
+export type RevokeCoachAthleteLink409 = {
+  error: string;
+  code: string;
+};
+
+export type RevokeCoachAthleteLink500 = {
+  error: string;
+  code: string;
+};
+
+/**
+ * @nullable
+ */
+export type GetInvitationPreview200Coach = {
+  id: string;
+  name: string;
+  /** @nullable */
+  image: string | null;
+} | null;
+
+export type GetInvitationPreview200 = {
+  isValid: boolean;
+  /** @nullable */
+  reason?: string | null;
+  /** @nullable */
+  message?: string | null;
+  /** @nullable */
+  coach: GetInvitationPreview200Coach;
+  /** @nullable */
+  expiresAt: string | null;
+};
+
+export type GetInvitationPreview400 = {
+  error: string;
+  code: string;
+};
+
+export type GetInvitationPreview401 = {
+  error: string;
+  code: string;
+};
+
+export type GetInvitationPreview403 = {
+  error: string;
+  code: string;
+};
+
+export type GetInvitationPreview404 = {
+  error: string;
+  code: string;
+};
+
+export type GetInvitationPreview409 = {
+  error: string;
+  code: string;
+};
+
+export type GetInvitationPreview500 = {
+  error: string;
+  code: string;
+};
+
+export type AcceptCoachInvitationBody = {
+  /** @minLength 8 */
+  token: string;
+};
+
+export type AcceptCoachInvitation200Link = {
+  id: string;
+  coachId: string;
+  athleteId: string;
+  status: string;
+  createdAt: string;
+};
+
+export type AcceptCoachInvitation200Coach = {
+  id: string;
+  name: string;
+  /** @nullable */
+  image: string | null;
+};
+
+export type AcceptCoachInvitation200 = {
+  success: boolean;
+  link: AcceptCoachInvitation200Link;
+  coach: AcceptCoachInvitation200Coach;
+};
+
+export type AcceptCoachInvitation400 = {
+  error: string;
+  code: string;
+};
+
+export type AcceptCoachInvitation401 = {
+  error: string;
+  code: string;
+};
+
+export type AcceptCoachInvitation403 = {
+  error: string;
+  code: string;
+};
+
+export type AcceptCoachInvitation404 = {
+  error: string;
+  code: string;
+};
+
+export type AcceptCoachInvitation409 = {
+  error: string;
+  code: string;
+};
+
+export type AcceptCoachInvitation500 = {
+  error: string;
+  code: string;
+};
+
+/**
+ * @nullable
+ */
+export type GetAthleteCoachRelationship200Relationship = {
+  linkId: string;
+  coachId: string;
+  coachName: string;
+  coachEmail: string;
+  /** @nullable */
+  coachImage: string | null;
+  acceptedAt: string;
+} | null;
+
+export type GetAthleteCoachRelationship200 = {
+  hasCoach: boolean;
+  /** @nullable */
+  relationship: GetAthleteCoachRelationship200Relationship;
+};
+
+export type GetAthleteCoachRelationship400 = {
+  error: string;
+  code: string;
+};
+
+export type GetAthleteCoachRelationship401 = {
+  error: string;
+  code: string;
+};
+
+export type GetAthleteCoachRelationship403 = {
+  error: string;
+  code: string;
+};
+
+export type GetAthleteCoachRelationship404 = {
+  error: string;
+  code: string;
+};
+
+export type GetAthleteCoachRelationship409 = {
+  error: string;
+  code: string;
+};
+
+export type GetAthleteCoachRelationship500 = {
+  error: string;
+  code: string;
+};
+
+export type RevokeAthleteCoachRelationship200 = {
+  success: boolean;
+};
+
+export type RevokeAthleteCoachRelationship400 = {
+  error: string;
+  code: string;
+};
+
+export type RevokeAthleteCoachRelationship401 = {
+  error: string;
+  code: string;
+};
+
+export type RevokeAthleteCoachRelationship403 = {
+  error: string;
+  code: string;
+};
+
+export type RevokeAthleteCoachRelationship404 = {
+  error: string;
+  code: string;
+};
+
+export type RevokeAthleteCoachRelationship409 = {
+  error: string;
+  code: string;
+};
+
+export type RevokeAthleteCoachRelationship500 = {
   error: string;
   code: string;
 };
@@ -8315,6 +8725,669 @@ export const getCommercialContext = async (
     {
       ...options,
       method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Criar convite seguro para novo aluno
+ */
+export type createCoachInvitationResponse201 = {
+  data: CreateCoachInvitation201;
+  status: 201;
+};
+
+export type createCoachInvitationResponse400 = {
+  data: CreateCoachInvitation400;
+  status: 400;
+};
+
+export type createCoachInvitationResponse401 = {
+  data: CreateCoachInvitation401;
+  status: 401;
+};
+
+export type createCoachInvitationResponse403 = {
+  data: CreateCoachInvitation403;
+  status: 403;
+};
+
+export type createCoachInvitationResponse404 = {
+  data: CreateCoachInvitation404;
+  status: 404;
+};
+
+export type createCoachInvitationResponse409 = {
+  data: CreateCoachInvitation409;
+  status: 409;
+};
+
+export type createCoachInvitationResponse500 = {
+  data: CreateCoachInvitation500;
+  status: 500;
+};
+
+export type createCoachInvitationResponseSuccess =
+  createCoachInvitationResponse201 & {
+    headers: Headers;
+  };
+export type createCoachInvitationResponseError = (
+  | createCoachInvitationResponse400
+  | createCoachInvitationResponse401
+  | createCoachInvitationResponse403
+  | createCoachInvitationResponse404
+  | createCoachInvitationResponse409
+  | createCoachInvitationResponse500
+) & {
+  headers: Headers;
+};
+
+export type createCoachInvitationResponse =
+  | createCoachInvitationResponseSuccess
+  | createCoachInvitationResponseError;
+
+export const getCreateCoachInvitationUrl = () => {
+  return `/coach/invitations`;
+};
+
+export const createCoachInvitation = async (
+  createCoachInvitationBody: CreateCoachInvitationBody,
+  options?: RequestInit,
+): Promise<createCoachInvitationResponse> => {
+  return customFetch<createCoachInvitationResponse>(
+    getCreateCoachInvitationUrl(),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(createCoachInvitationBody),
+    },
+  );
+};
+
+/**
+ * @summary Listar convites emitidos pelo treinador
+ */
+export type listCoachInvitationsResponse200 = {
+  data: ListCoachInvitations200Item[];
+  status: 200;
+};
+
+export type listCoachInvitationsResponse400 = {
+  data: ListCoachInvitations400;
+  status: 400;
+};
+
+export type listCoachInvitationsResponse401 = {
+  data: ListCoachInvitations401;
+  status: 401;
+};
+
+export type listCoachInvitationsResponse403 = {
+  data: ListCoachInvitations403;
+  status: 403;
+};
+
+export type listCoachInvitationsResponse404 = {
+  data: ListCoachInvitations404;
+  status: 404;
+};
+
+export type listCoachInvitationsResponse409 = {
+  data: ListCoachInvitations409;
+  status: 409;
+};
+
+export type listCoachInvitationsResponse500 = {
+  data: ListCoachInvitations500;
+  status: 500;
+};
+
+export type listCoachInvitationsResponseSuccess =
+  listCoachInvitationsResponse200 & {
+    headers: Headers;
+  };
+export type listCoachInvitationsResponseError = (
+  | listCoachInvitationsResponse400
+  | listCoachInvitationsResponse401
+  | listCoachInvitationsResponse403
+  | listCoachInvitationsResponse404
+  | listCoachInvitationsResponse409
+  | listCoachInvitationsResponse500
+) & {
+  headers: Headers;
+};
+
+export type listCoachInvitationsResponse =
+  | listCoachInvitationsResponseSuccess
+  | listCoachInvitationsResponseError;
+
+export const getListCoachInvitationsUrl = () => {
+  return `/coach/invitations`;
+};
+
+export const listCoachInvitations = async (
+  options?: RequestInit,
+): Promise<listCoachInvitationsResponse> => {
+  return customFetch<listCoachInvitationsResponse>(
+    getListCoachInvitationsUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Cancelar convite emitido
+ */
+export type cancelCoachInvitationResponse200 = {
+  data: CancelCoachInvitation200;
+  status: 200;
+};
+
+export type cancelCoachInvitationResponse400 = {
+  data: CancelCoachInvitation400;
+  status: 400;
+};
+
+export type cancelCoachInvitationResponse401 = {
+  data: CancelCoachInvitation401;
+  status: 401;
+};
+
+export type cancelCoachInvitationResponse403 = {
+  data: CancelCoachInvitation403;
+  status: 403;
+};
+
+export type cancelCoachInvitationResponse404 = {
+  data: CancelCoachInvitation404;
+  status: 404;
+};
+
+export type cancelCoachInvitationResponse409 = {
+  data: CancelCoachInvitation409;
+  status: 409;
+};
+
+export type cancelCoachInvitationResponse500 = {
+  data: CancelCoachInvitation500;
+  status: 500;
+};
+
+export type cancelCoachInvitationResponseSuccess =
+  cancelCoachInvitationResponse200 & {
+    headers: Headers;
+  };
+export type cancelCoachInvitationResponseError = (
+  | cancelCoachInvitationResponse400
+  | cancelCoachInvitationResponse401
+  | cancelCoachInvitationResponse403
+  | cancelCoachInvitationResponse404
+  | cancelCoachInvitationResponse409
+  | cancelCoachInvitationResponse500
+) & {
+  headers: Headers;
+};
+
+export type cancelCoachInvitationResponse =
+  | cancelCoachInvitationResponseSuccess
+  | cancelCoachInvitationResponseError;
+
+export const getCancelCoachInvitationUrl = (id: string) => {
+  return `/coach/invitations/${id}`;
+};
+
+export const cancelCoachInvitation = async (
+  id: string,
+  options?: RequestInit,
+): Promise<cancelCoachInvitationResponse> => {
+  return customFetch<cancelCoachInvitationResponse>(
+    getCancelCoachInvitationUrl(id),
+    {
+      ...options,
+      method: "DELETE",
+    },
+  );
+};
+
+/**
+ * @summary Listar alunos ativos vinculados ao treinador
+ */
+export type listCoachAthletesResponse200 = {
+  data: ListCoachAthletes200;
+  status: 200;
+};
+
+export type listCoachAthletesResponse400 = {
+  data: ListCoachAthletes400;
+  status: 400;
+};
+
+export type listCoachAthletesResponse401 = {
+  data: ListCoachAthletes401;
+  status: 401;
+};
+
+export type listCoachAthletesResponse403 = {
+  data: ListCoachAthletes403;
+  status: 403;
+};
+
+export type listCoachAthletesResponse404 = {
+  data: ListCoachAthletes404;
+  status: 404;
+};
+
+export type listCoachAthletesResponse409 = {
+  data: ListCoachAthletes409;
+  status: 409;
+};
+
+export type listCoachAthletesResponse500 = {
+  data: ListCoachAthletes500;
+  status: 500;
+};
+
+export type listCoachAthletesResponseSuccess = listCoachAthletesResponse200 & {
+  headers: Headers;
+};
+export type listCoachAthletesResponseError = (
+  | listCoachAthletesResponse400
+  | listCoachAthletesResponse401
+  | listCoachAthletesResponse403
+  | listCoachAthletesResponse404
+  | listCoachAthletesResponse409
+  | listCoachAthletesResponse500
+) & {
+  headers: Headers;
+};
+
+export type listCoachAthletesResponse =
+  | listCoachAthletesResponseSuccess
+  | listCoachAthletesResponseError;
+
+export const getListCoachAthletesUrl = () => {
+  return `/coach/athletes`;
+};
+
+export const listCoachAthletes = async (
+  options?: RequestInit,
+): Promise<listCoachAthletesResponse> => {
+  return customFetch<listCoachAthletesResponse>(getListCoachAthletesUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+/**
+ * @summary Encerrar vínculo com aluno
+ */
+export type revokeCoachAthleteLinkResponse200 = {
+  data: RevokeCoachAthleteLink200;
+  status: 200;
+};
+
+export type revokeCoachAthleteLinkResponse400 = {
+  data: RevokeCoachAthleteLink400;
+  status: 400;
+};
+
+export type revokeCoachAthleteLinkResponse401 = {
+  data: RevokeCoachAthleteLink401;
+  status: 401;
+};
+
+export type revokeCoachAthleteLinkResponse403 = {
+  data: RevokeCoachAthleteLink403;
+  status: 403;
+};
+
+export type revokeCoachAthleteLinkResponse404 = {
+  data: RevokeCoachAthleteLink404;
+  status: 404;
+};
+
+export type revokeCoachAthleteLinkResponse409 = {
+  data: RevokeCoachAthleteLink409;
+  status: 409;
+};
+
+export type revokeCoachAthleteLinkResponse500 = {
+  data: RevokeCoachAthleteLink500;
+  status: 500;
+};
+
+export type revokeCoachAthleteLinkResponseSuccess =
+  revokeCoachAthleteLinkResponse200 & {
+    headers: Headers;
+  };
+export type revokeCoachAthleteLinkResponseError = (
+  | revokeCoachAthleteLinkResponse400
+  | revokeCoachAthleteLinkResponse401
+  | revokeCoachAthleteLinkResponse403
+  | revokeCoachAthleteLinkResponse404
+  | revokeCoachAthleteLinkResponse409
+  | revokeCoachAthleteLinkResponse500
+) & {
+  headers: Headers;
+};
+
+export type revokeCoachAthleteLinkResponse =
+  | revokeCoachAthleteLinkResponseSuccess
+  | revokeCoachAthleteLinkResponseError;
+
+export const getRevokeCoachAthleteLinkUrl = (linkId: string) => {
+  return `/coach/athletes/${linkId}`;
+};
+
+export const revokeCoachAthleteLink = async (
+  linkId: string,
+  options?: RequestInit,
+): Promise<revokeCoachAthleteLinkResponse> => {
+  return customFetch<revokeCoachAthleteLinkResponse>(
+    getRevokeCoachAthleteLinkUrl(linkId),
+    {
+      ...options,
+      method: "DELETE",
+    },
+  );
+};
+
+/**
+ * @summary Consultar preview seguro de convite de treinador
+ */
+export type getInvitationPreviewResponse200 = {
+  data: GetInvitationPreview200;
+  status: 200;
+};
+
+export type getInvitationPreviewResponse400 = {
+  data: GetInvitationPreview400;
+  status: 400;
+};
+
+export type getInvitationPreviewResponse401 = {
+  data: GetInvitationPreview401;
+  status: 401;
+};
+
+export type getInvitationPreviewResponse403 = {
+  data: GetInvitationPreview403;
+  status: 403;
+};
+
+export type getInvitationPreviewResponse404 = {
+  data: GetInvitationPreview404;
+  status: 404;
+};
+
+export type getInvitationPreviewResponse409 = {
+  data: GetInvitationPreview409;
+  status: 409;
+};
+
+export type getInvitationPreviewResponse500 = {
+  data: GetInvitationPreview500;
+  status: 500;
+};
+
+export type getInvitationPreviewResponseSuccess =
+  getInvitationPreviewResponse200 & {
+    headers: Headers;
+  };
+export type getInvitationPreviewResponseError = (
+  | getInvitationPreviewResponse400
+  | getInvitationPreviewResponse401
+  | getInvitationPreviewResponse403
+  | getInvitationPreviewResponse404
+  | getInvitationPreviewResponse409
+  | getInvitationPreviewResponse500
+) & {
+  headers: Headers;
+};
+
+export type getInvitationPreviewResponse =
+  | getInvitationPreviewResponseSuccess
+  | getInvitationPreviewResponseError;
+
+export const getGetInvitationPreviewUrl = (token: string) => {
+  return `/coach/invitations/preview/${token}`;
+};
+
+export const getInvitationPreview = async (
+  token: string,
+  options?: RequestInit,
+): Promise<getInvitationPreviewResponse> => {
+  return customFetch<getInvitationPreviewResponse>(
+    getGetInvitationPreviewUrl(token),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Aceitar convite de treinador
+ */
+export type acceptCoachInvitationResponse200 = {
+  data: AcceptCoachInvitation200;
+  status: 200;
+};
+
+export type acceptCoachInvitationResponse400 = {
+  data: AcceptCoachInvitation400;
+  status: 400;
+};
+
+export type acceptCoachInvitationResponse401 = {
+  data: AcceptCoachInvitation401;
+  status: 401;
+};
+
+export type acceptCoachInvitationResponse403 = {
+  data: AcceptCoachInvitation403;
+  status: 403;
+};
+
+export type acceptCoachInvitationResponse404 = {
+  data: AcceptCoachInvitation404;
+  status: 404;
+};
+
+export type acceptCoachInvitationResponse409 = {
+  data: AcceptCoachInvitation409;
+  status: 409;
+};
+
+export type acceptCoachInvitationResponse500 = {
+  data: AcceptCoachInvitation500;
+  status: 500;
+};
+
+export type acceptCoachInvitationResponseSuccess =
+  acceptCoachInvitationResponse200 & {
+    headers: Headers;
+  };
+export type acceptCoachInvitationResponseError = (
+  | acceptCoachInvitationResponse400
+  | acceptCoachInvitationResponse401
+  | acceptCoachInvitationResponse403
+  | acceptCoachInvitationResponse404
+  | acceptCoachInvitationResponse409
+  | acceptCoachInvitationResponse500
+) & {
+  headers: Headers;
+};
+
+export type acceptCoachInvitationResponse =
+  | acceptCoachInvitationResponseSuccess
+  | acceptCoachInvitationResponseError;
+
+export const getAcceptCoachInvitationUrl = () => {
+  return `/coach/invitations/accept`;
+};
+
+export const acceptCoachInvitation = async (
+  acceptCoachInvitationBody: AcceptCoachInvitationBody,
+  options?: RequestInit,
+): Promise<acceptCoachInvitationResponse> => {
+  return customFetch<acceptCoachInvitationResponse>(
+    getAcceptCoachInvitationUrl(),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(acceptCoachInvitationBody),
+    },
+  );
+};
+
+/**
+ * @summary Consultar vínculo ativo com treinador
+ */
+export type getAthleteCoachRelationshipResponse200 = {
+  data: GetAthleteCoachRelationship200;
+  status: 200;
+};
+
+export type getAthleteCoachRelationshipResponse400 = {
+  data: GetAthleteCoachRelationship400;
+  status: 400;
+};
+
+export type getAthleteCoachRelationshipResponse401 = {
+  data: GetAthleteCoachRelationship401;
+  status: 401;
+};
+
+export type getAthleteCoachRelationshipResponse403 = {
+  data: GetAthleteCoachRelationship403;
+  status: 403;
+};
+
+export type getAthleteCoachRelationshipResponse404 = {
+  data: GetAthleteCoachRelationship404;
+  status: 404;
+};
+
+export type getAthleteCoachRelationshipResponse409 = {
+  data: GetAthleteCoachRelationship409;
+  status: 409;
+};
+
+export type getAthleteCoachRelationshipResponse500 = {
+  data: GetAthleteCoachRelationship500;
+  status: 500;
+};
+
+export type getAthleteCoachRelationshipResponseSuccess =
+  getAthleteCoachRelationshipResponse200 & {
+    headers: Headers;
+  };
+export type getAthleteCoachRelationshipResponseError = (
+  | getAthleteCoachRelationshipResponse400
+  | getAthleteCoachRelationshipResponse401
+  | getAthleteCoachRelationshipResponse403
+  | getAthleteCoachRelationshipResponse404
+  | getAthleteCoachRelationshipResponse409
+  | getAthleteCoachRelationshipResponse500
+) & {
+  headers: Headers;
+};
+
+export type getAthleteCoachRelationshipResponse =
+  | getAthleteCoachRelationshipResponseSuccess
+  | getAthleteCoachRelationshipResponseError;
+
+export const getGetAthleteCoachRelationshipUrl = () => {
+  return `/me/coach-relationship`;
+};
+
+export const getAthleteCoachRelationship = async (
+  options?: RequestInit,
+): Promise<getAthleteCoachRelationshipResponse> => {
+  return customFetch<getAthleteCoachRelationshipResponse>(
+    getGetAthleteCoachRelationshipUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Atleta encerra vínculo com o treinador
+ */
+export type revokeAthleteCoachRelationshipResponse200 = {
+  data: RevokeAthleteCoachRelationship200;
+  status: 200;
+};
+
+export type revokeAthleteCoachRelationshipResponse400 = {
+  data: RevokeAthleteCoachRelationship400;
+  status: 400;
+};
+
+export type revokeAthleteCoachRelationshipResponse401 = {
+  data: RevokeAthleteCoachRelationship401;
+  status: 401;
+};
+
+export type revokeAthleteCoachRelationshipResponse403 = {
+  data: RevokeAthleteCoachRelationship403;
+  status: 403;
+};
+
+export type revokeAthleteCoachRelationshipResponse404 = {
+  data: RevokeAthleteCoachRelationship404;
+  status: 404;
+};
+
+export type revokeAthleteCoachRelationshipResponse409 = {
+  data: RevokeAthleteCoachRelationship409;
+  status: 409;
+};
+
+export type revokeAthleteCoachRelationshipResponse500 = {
+  data: RevokeAthleteCoachRelationship500;
+  status: 500;
+};
+
+export type revokeAthleteCoachRelationshipResponseSuccess =
+  revokeAthleteCoachRelationshipResponse200 & {
+    headers: Headers;
+  };
+export type revokeAthleteCoachRelationshipResponseError = (
+  | revokeAthleteCoachRelationshipResponse400
+  | revokeAthleteCoachRelationshipResponse401
+  | revokeAthleteCoachRelationshipResponse403
+  | revokeAthleteCoachRelationshipResponse404
+  | revokeAthleteCoachRelationshipResponse409
+  | revokeAthleteCoachRelationshipResponse500
+) & {
+  headers: Headers;
+};
+
+export type revokeAthleteCoachRelationshipResponse =
+  | revokeAthleteCoachRelationshipResponseSuccess
+  | revokeAthleteCoachRelationshipResponseError;
+
+export const getRevokeAthleteCoachRelationshipUrl = (linkId: string) => {
+  return `/me/coach-relationship/${linkId}`;
+};
+
+export const revokeAthleteCoachRelationship = async (
+  linkId: string,
+  options?: RequestInit,
+): Promise<revokeAthleteCoachRelationshipResponse> => {
+  return customFetch<revokeAthleteCoachRelationshipResponse>(
+    getRevokeAthleteCoachRelationshipUrl(linkId),
+    {
+      ...options,
+      method: "DELETE",
     },
   );
 };

@@ -1,7 +1,11 @@
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { authClient } from "@/app/_lib/auth-client";
-import { getUserTrainData } from "@/app/_lib/api/fetch-generated";
+import {
+  getAthleteCoachRelationship,
+  getCommercialContext,
+  getUserTrainData,
+} from "@/app/_lib/api/fetch-generated";
 import { BottomNav } from "@/app/_components/bottom-nav";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { LogoutButton } from "./_components/logout-button";
@@ -11,6 +15,8 @@ import { FeedbackButton } from "./_components/feedback-button";
 import { PwaInstallCard } from "@/app/_components/pwa/pwa-install-card";
 import { Logo } from "@/app/_components/logo";
 import { ProfileMetricsSection } from "./_components/profile-metrics-section";
+import { CoachAreaLinkCard } from "./_components/coach-area-link-card";
+import { MyCoachSection } from "./_components/my-coach-section";
 
 
 export default async function ProfilePage() {
@@ -22,7 +28,11 @@ export default async function ProfilePage() {
 
   if (!session.data?.user) redirect("/auth");
 
-  const trainData = await getUserTrainData();
+  const [trainData, commercialRes, relationshipRes] = await Promise.all([
+    getUserTrainData(),
+    getCommercialContext({ cache: "no-store" }),
+    getAthleteCoachRelationship({ cache: "no-store" }),
+  ]);
 
   if (trainData.status === 401) redirect("/auth");
 
@@ -36,6 +46,12 @@ export default async function ProfilePage() {
 
   const user = session.data.user;
   const data = trainData.data;
+  const commercialData = commercialRes.status === 200 ? commercialRes.data : null;
+  const isCoach = commercialData?.accountType === "COACH";
+  const relationship =
+    relationshipRes.status === 200 && relationshipRes.data.hasCoach
+      ? relationshipRes.data.relationship
+      : null;
 
   return (
     <div className="flex min-h-svh flex-col bg-background pb-24">
@@ -57,11 +73,17 @@ export default async function ProfilePage() {
                 {user.name}
               </h1>
               <p className="font-heading text-sm leading-[1.15] text-foreground/70">
-                Plano Basico
+                {commercialData?.plan?.name ?? "Plano Básico"}
               </p>
             </div>
           </div>
         </div>
+
+        {/* Acesso rápido exclusivo para Personal Trainer */}
+        {isCoach && <CoachAreaLinkCard />}
+
+        {/* Meu Treinador (para atletas) */}
+        {!isCoach && <MyCoachSection relationship={relationship} />}
 
         <ProfileMetricsSection
           weightInGrams={data?.weightInGrams}
