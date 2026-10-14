@@ -2830,6 +2830,1339 @@ export type RevokeAthleteCoachRelationship500 = {
   code: string;
 };
 
+export type CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay =
+  (typeof CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay)[keyof typeof CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay];
+
+export const CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay = {
+  MONDAY: "MONDAY",
+  TUESDAY: "TUESDAY",
+  WEDNESDAY: "WEDNESDAY",
+  THURSDAY: "THURSDAY",
+  FRIDAY: "FRIDAY",
+  SATURDAY: "SATURDAY",
+  SUNDAY: "SUNDAY",
+} as const;
+
+export type CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItem = {
+  /** @minLength 1 */
+  name: string;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  order: number;
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  sets: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  warmupSets?: number;
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  reps: number;
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  restTimeInSeconds: number;
+};
+
+export type CreateWorkoutPrescriptionDraftBodyWorkoutDaysItem = {
+  /** @minLength 1 */
+  name: string;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  order?: number;
+  weekDay?: CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay;
+  isRest?: boolean;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  estimatedDurationInSeconds: number;
+  /** @nullable */
+  coverImageUrl?: string | null;
+  exercises: CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItem[];
+};
+
+export type CreateWorkoutPrescriptionDraftBody = {
+  athleteId: string;
+  /**
+   * @minLength 1
+   * @maxLength 100
+   */
+  name: string;
+  /**
+   * @maxLength 1000
+   * @nullable
+   */
+  notes?: string | null;
+  /** @minItems 1 */
+  workoutDays: CreateWorkoutPrescriptionDraftBodyWorkoutDaysItem[];
+};
+
+export type CreateWorkoutPrescriptionDraft201Status =
+  (typeof CreateWorkoutPrescriptionDraft201Status)[keyof typeof CreateWorkoutPrescriptionDraft201Status];
+
+export const CreateWorkoutPrescriptionDraft201Status = {
+  DRAFT: "DRAFT",
+  SENT: "SENT",
+  ACCEPTED: "ACCEPTED",
+  DECLINED: "DECLINED",
+  CANCELLED: "CANCELLED",
+} as const;
+
+export type CreateWorkoutPrescriptionDraft201Coach = {
+  id: string;
+  name: string;
+  email?: string;
+  /** @nullable */
+  image?: string | null;
+};
+
+export type CreateWorkoutPrescriptionDraft201Athlete = {
+  id: string;
+  name: string;
+  email?: string;
+  /** @nullable */
+  image?: string | null;
+};
+
+export type CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemWeekDay =
+  (typeof CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemWeekDay)[keyof typeof CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemWeekDay];
+
+export const CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemWeekDay = {
+  MONDAY: "MONDAY",
+  TUESDAY: "TUESDAY",
+  WEDNESDAY: "WEDNESDAY",
+  THURSDAY: "THURSDAY",
+  FRIDAY: "FRIDAY",
+  SATURDAY: "SATURDAY",
+  SUNDAY: "SUNDAY",
+} as const;
+
+export type CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItem =
+  {
+    name: string;
+    order: number;
+    sets: number;
+    warmupSets: number;
+    reps: number;
+    restTimeInSeconds: number;
+  };
+
+export type CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItem = {
+  name: string;
+  order: number;
+  weekDay: CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemWeekDay;
+  isRest: boolean;
+  estimatedDurationInSeconds: number;
+  /** @nullable */
+  coverImageUrl?: string | null;
+  exercises: CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItem[];
+};
+
+export type CreateWorkoutPrescriptionDraft201Payload = {
+  workoutDays: CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItem[];
+};
+
+export type CreateWorkoutPrescriptionDraft201 = {
+  id: string;
+  coachId: string;
+  athleteId: string;
+  status: CreateWorkoutPrescriptionDraft201Status;
+  name: string;
+  /** @nullable */
+  notes: string | null;
+  version: number;
+  /** @nullable */
+  acceptedWorkoutPlanId: string | null;
+  /** @nullable */
+  sentAt: string | null;
+  /** @nullable */
+  respondedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  coach?: CreateWorkoutPrescriptionDraft201Coach;
+  athlete?: CreateWorkoutPrescriptionDraft201Athlete;
+  payload?: CreateWorkoutPrescriptionDraft201Payload;
+};
+
+export type CreateWorkoutPrescriptionDraft400 = {
+  error: string;
+  code: string;
+};
+
+export type CreateWorkoutPrescriptionDraft401 = {
+  error: string;
+  code: string;
+};
+
+export type CreateWorkoutPrescriptionDraft403 = {
+  error: string;
+  code: string;
+};
+
+export type CreateWorkoutPrescriptionDraft404 = {
+  error: string;
+  code: string;
+};
+
+export type CreateWorkoutPrescriptionDraft409 = {
+  error: string;
+  code: string;
+};
+
+export type CreateWorkoutPrescriptionDraft500 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay =
+  (typeof UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay)[keyof typeof UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay];
+
+export const UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay = {
+  MONDAY: "MONDAY",
+  TUESDAY: "TUESDAY",
+  WEDNESDAY: "WEDNESDAY",
+  THURSDAY: "THURSDAY",
+  FRIDAY: "FRIDAY",
+  SATURDAY: "SATURDAY",
+  SUNDAY: "SUNDAY",
+} as const;
+
+export type UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItem = {
+  /** @minLength 1 */
+  name: string;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  order: number;
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  sets: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  warmupSets?: number;
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  reps: number;
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  restTimeInSeconds: number;
+};
+
+export type UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItem = {
+  /** @minLength 1 */
+  name: string;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  order?: number;
+  weekDay?: UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay;
+  isRest?: boolean;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  estimatedDurationInSeconds: number;
+  /** @nullable */
+  coverImageUrl?: string | null;
+  exercises: UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItem[];
+};
+
+export type UpdateWorkoutPrescriptionDraftBody = {
+  /**
+   * @minLength 1
+   * @maxLength 100
+   */
+  name: string;
+  /**
+   * @maxLength 1000
+   * @nullable
+   */
+  notes?: string | null;
+  /** @minItems 1 */
+  workoutDays: UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItem[];
+};
+
+export type UpdateWorkoutPrescriptionDraft200Status =
+  (typeof UpdateWorkoutPrescriptionDraft200Status)[keyof typeof UpdateWorkoutPrescriptionDraft200Status];
+
+export const UpdateWorkoutPrescriptionDraft200Status = {
+  DRAFT: "DRAFT",
+  SENT: "SENT",
+  ACCEPTED: "ACCEPTED",
+  DECLINED: "DECLINED",
+  CANCELLED: "CANCELLED",
+} as const;
+
+export type UpdateWorkoutPrescriptionDraft200Coach = {
+  id: string;
+  name: string;
+  email?: string;
+  /** @nullable */
+  image?: string | null;
+};
+
+export type UpdateWorkoutPrescriptionDraft200Athlete = {
+  id: string;
+  name: string;
+  email?: string;
+  /** @nullable */
+  image?: string | null;
+};
+
+export type UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemWeekDay =
+  (typeof UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemWeekDay)[keyof typeof UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemWeekDay];
+
+export const UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemWeekDay = {
+  MONDAY: "MONDAY",
+  TUESDAY: "TUESDAY",
+  WEDNESDAY: "WEDNESDAY",
+  THURSDAY: "THURSDAY",
+  FRIDAY: "FRIDAY",
+  SATURDAY: "SATURDAY",
+  SUNDAY: "SUNDAY",
+} as const;
+
+export type UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItem =
+  {
+    name: string;
+    order: number;
+    sets: number;
+    warmupSets: number;
+    reps: number;
+    restTimeInSeconds: number;
+  };
+
+export type UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItem = {
+  name: string;
+  order: number;
+  weekDay: UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemWeekDay;
+  isRest: boolean;
+  estimatedDurationInSeconds: number;
+  /** @nullable */
+  coverImageUrl?: string | null;
+  exercises: UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItem[];
+};
+
+export type UpdateWorkoutPrescriptionDraft200Payload = {
+  workoutDays: UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItem[];
+};
+
+export type UpdateWorkoutPrescriptionDraft200 = {
+  id: string;
+  coachId: string;
+  athleteId: string;
+  status: UpdateWorkoutPrescriptionDraft200Status;
+  name: string;
+  /** @nullable */
+  notes: string | null;
+  version: number;
+  /** @nullable */
+  acceptedWorkoutPlanId: string | null;
+  /** @nullable */
+  sentAt: string | null;
+  /** @nullable */
+  respondedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  coach?: UpdateWorkoutPrescriptionDraft200Coach;
+  athlete?: UpdateWorkoutPrescriptionDraft200Athlete;
+  payload?: UpdateWorkoutPrescriptionDraft200Payload;
+};
+
+export type UpdateWorkoutPrescriptionDraft400 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateWorkoutPrescriptionDraft401 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateWorkoutPrescriptionDraft403 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateWorkoutPrescriptionDraft404 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateWorkoutPrescriptionDraft409 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateWorkoutPrescriptionDraft500 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachPrescriptionDetails200Status =
+  (typeof GetCoachPrescriptionDetails200Status)[keyof typeof GetCoachPrescriptionDetails200Status];
+
+export const GetCoachPrescriptionDetails200Status = {
+  DRAFT: "DRAFT",
+  SENT: "SENT",
+  ACCEPTED: "ACCEPTED",
+  DECLINED: "DECLINED",
+  CANCELLED: "CANCELLED",
+} as const;
+
+export type GetCoachPrescriptionDetails200Coach = {
+  id: string;
+  name: string;
+  email?: string;
+  /** @nullable */
+  image?: string | null;
+};
+
+export type GetCoachPrescriptionDetails200Athlete = {
+  id: string;
+  name: string;
+  email?: string;
+  /** @nullable */
+  image?: string | null;
+};
+
+export type GetCoachPrescriptionDetails200PayloadWorkoutDaysItemWeekDay =
+  (typeof GetCoachPrescriptionDetails200PayloadWorkoutDaysItemWeekDay)[keyof typeof GetCoachPrescriptionDetails200PayloadWorkoutDaysItemWeekDay];
+
+export const GetCoachPrescriptionDetails200PayloadWorkoutDaysItemWeekDay = {
+  MONDAY: "MONDAY",
+  TUESDAY: "TUESDAY",
+  WEDNESDAY: "WEDNESDAY",
+  THURSDAY: "THURSDAY",
+  FRIDAY: "FRIDAY",
+  SATURDAY: "SATURDAY",
+  SUNDAY: "SUNDAY",
+} as const;
+
+export type GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItem =
+  {
+    name: string;
+    order: number;
+    sets: number;
+    warmupSets: number;
+    reps: number;
+    restTimeInSeconds: number;
+  };
+
+export type GetCoachPrescriptionDetails200PayloadWorkoutDaysItem = {
+  name: string;
+  order: number;
+  weekDay: GetCoachPrescriptionDetails200PayloadWorkoutDaysItemWeekDay;
+  isRest: boolean;
+  estimatedDurationInSeconds: number;
+  /** @nullable */
+  coverImageUrl?: string | null;
+  exercises: GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItem[];
+};
+
+export type GetCoachPrescriptionDetails200Payload = {
+  workoutDays: GetCoachPrescriptionDetails200PayloadWorkoutDaysItem[];
+};
+
+export type GetCoachPrescriptionDetails200 = {
+  id: string;
+  coachId: string;
+  athleteId: string;
+  status: GetCoachPrescriptionDetails200Status;
+  name: string;
+  /** @nullable */
+  notes: string | null;
+  version: number;
+  /** @nullable */
+  acceptedWorkoutPlanId: string | null;
+  /** @nullable */
+  sentAt: string | null;
+  /** @nullable */
+  respondedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  coach?: GetCoachPrescriptionDetails200Coach;
+  athlete?: GetCoachPrescriptionDetails200Athlete;
+  payload?: GetCoachPrescriptionDetails200Payload;
+};
+
+export type GetCoachPrescriptionDetails400 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachPrescriptionDetails401 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachPrescriptionDetails403 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachPrescriptionDetails404 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachPrescriptionDetails409 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachPrescriptionDetails500 = {
+  error: string;
+  code: string;
+};
+
+export type SendWorkoutPrescription200Status =
+  (typeof SendWorkoutPrescription200Status)[keyof typeof SendWorkoutPrescription200Status];
+
+export const SendWorkoutPrescription200Status = {
+  DRAFT: "DRAFT",
+  SENT: "SENT",
+  ACCEPTED: "ACCEPTED",
+  DECLINED: "DECLINED",
+  CANCELLED: "CANCELLED",
+} as const;
+
+export type SendWorkoutPrescription200Coach = {
+  id: string;
+  name: string;
+  email?: string;
+  /** @nullable */
+  image?: string | null;
+};
+
+export type SendWorkoutPrescription200Athlete = {
+  id: string;
+  name: string;
+  email?: string;
+  /** @nullable */
+  image?: string | null;
+};
+
+export type SendWorkoutPrescription200PayloadWorkoutDaysItemWeekDay =
+  (typeof SendWorkoutPrescription200PayloadWorkoutDaysItemWeekDay)[keyof typeof SendWorkoutPrescription200PayloadWorkoutDaysItemWeekDay];
+
+export const SendWorkoutPrescription200PayloadWorkoutDaysItemWeekDay = {
+  MONDAY: "MONDAY",
+  TUESDAY: "TUESDAY",
+  WEDNESDAY: "WEDNESDAY",
+  THURSDAY: "THURSDAY",
+  FRIDAY: "FRIDAY",
+  SATURDAY: "SATURDAY",
+  SUNDAY: "SUNDAY",
+} as const;
+
+export type SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItem = {
+  name: string;
+  order: number;
+  sets: number;
+  warmupSets: number;
+  reps: number;
+  restTimeInSeconds: number;
+};
+
+export type SendWorkoutPrescription200PayloadWorkoutDaysItem = {
+  name: string;
+  order: number;
+  weekDay: SendWorkoutPrescription200PayloadWorkoutDaysItemWeekDay;
+  isRest: boolean;
+  estimatedDurationInSeconds: number;
+  /** @nullable */
+  coverImageUrl?: string | null;
+  exercises: SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItem[];
+};
+
+export type SendWorkoutPrescription200Payload = {
+  workoutDays: SendWorkoutPrescription200PayloadWorkoutDaysItem[];
+};
+
+export type SendWorkoutPrescription200 = {
+  id: string;
+  coachId: string;
+  athleteId: string;
+  status: SendWorkoutPrescription200Status;
+  name: string;
+  /** @nullable */
+  notes: string | null;
+  version: number;
+  /** @nullable */
+  acceptedWorkoutPlanId: string | null;
+  /** @nullable */
+  sentAt: string | null;
+  /** @nullable */
+  respondedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  coach?: SendWorkoutPrescription200Coach;
+  athlete?: SendWorkoutPrescription200Athlete;
+  payload?: SendWorkoutPrescription200Payload;
+};
+
+export type SendWorkoutPrescription400 = {
+  error: string;
+  code: string;
+};
+
+export type SendWorkoutPrescription401 = {
+  error: string;
+  code: string;
+};
+
+export type SendWorkoutPrescription403 = {
+  error: string;
+  code: string;
+};
+
+export type SendWorkoutPrescription404 = {
+  error: string;
+  code: string;
+};
+
+export type SendWorkoutPrescription409 = {
+  error: string;
+  code: string;
+};
+
+export type SendWorkoutPrescription500 = {
+  error: string;
+  code: string;
+};
+
+export type CancelWorkoutPrescription200Status =
+  (typeof CancelWorkoutPrescription200Status)[keyof typeof CancelWorkoutPrescription200Status];
+
+export const CancelWorkoutPrescription200Status = {
+  DRAFT: "DRAFT",
+  SENT: "SENT",
+  ACCEPTED: "ACCEPTED",
+  DECLINED: "DECLINED",
+  CANCELLED: "CANCELLED",
+} as const;
+
+export type CancelWorkoutPrescription200Coach = {
+  id: string;
+  name: string;
+  email?: string;
+  /** @nullable */
+  image?: string | null;
+};
+
+export type CancelWorkoutPrescription200Athlete = {
+  id: string;
+  name: string;
+  email?: string;
+  /** @nullable */
+  image?: string | null;
+};
+
+export type CancelWorkoutPrescription200PayloadWorkoutDaysItemWeekDay =
+  (typeof CancelWorkoutPrescription200PayloadWorkoutDaysItemWeekDay)[keyof typeof CancelWorkoutPrescription200PayloadWorkoutDaysItemWeekDay];
+
+export const CancelWorkoutPrescription200PayloadWorkoutDaysItemWeekDay = {
+  MONDAY: "MONDAY",
+  TUESDAY: "TUESDAY",
+  WEDNESDAY: "WEDNESDAY",
+  THURSDAY: "THURSDAY",
+  FRIDAY: "FRIDAY",
+  SATURDAY: "SATURDAY",
+  SUNDAY: "SUNDAY",
+} as const;
+
+export type CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItem = {
+  name: string;
+  order: number;
+  sets: number;
+  warmupSets: number;
+  reps: number;
+  restTimeInSeconds: number;
+};
+
+export type CancelWorkoutPrescription200PayloadWorkoutDaysItem = {
+  name: string;
+  order: number;
+  weekDay: CancelWorkoutPrescription200PayloadWorkoutDaysItemWeekDay;
+  isRest: boolean;
+  estimatedDurationInSeconds: number;
+  /** @nullable */
+  coverImageUrl?: string | null;
+  exercises: CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItem[];
+};
+
+export type CancelWorkoutPrescription200Payload = {
+  workoutDays: CancelWorkoutPrescription200PayloadWorkoutDaysItem[];
+};
+
+export type CancelWorkoutPrescription200 = {
+  id: string;
+  coachId: string;
+  athleteId: string;
+  status: CancelWorkoutPrescription200Status;
+  name: string;
+  /** @nullable */
+  notes: string | null;
+  version: number;
+  /** @nullable */
+  acceptedWorkoutPlanId: string | null;
+  /** @nullable */
+  sentAt: string | null;
+  /** @nullable */
+  respondedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  coach?: CancelWorkoutPrescription200Coach;
+  athlete?: CancelWorkoutPrescription200Athlete;
+  payload?: CancelWorkoutPrescription200Payload;
+};
+
+export type CancelWorkoutPrescription400 = {
+  error: string;
+  code: string;
+};
+
+export type CancelWorkoutPrescription401 = {
+  error: string;
+  code: string;
+};
+
+export type CancelWorkoutPrescription403 = {
+  error: string;
+  code: string;
+};
+
+export type CancelWorkoutPrescription404 = {
+  error: string;
+  code: string;
+};
+
+export type CancelWorkoutPrescription409 = {
+  error: string;
+  code: string;
+};
+
+export type CancelWorkoutPrescription500 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachAthletePrescriptions200ItemStatus =
+  (typeof ListCoachAthletePrescriptions200ItemStatus)[keyof typeof ListCoachAthletePrescriptions200ItemStatus];
+
+export const ListCoachAthletePrescriptions200ItemStatus = {
+  DRAFT: "DRAFT",
+  SENT: "SENT",
+  ACCEPTED: "ACCEPTED",
+  DECLINED: "DECLINED",
+  CANCELLED: "CANCELLED",
+} as const;
+
+export type ListCoachAthletePrescriptions200ItemCoach = {
+  id: string;
+  name: string;
+  email?: string;
+  /** @nullable */
+  image?: string | null;
+};
+
+export type ListCoachAthletePrescriptions200ItemAthlete = {
+  id: string;
+  name: string;
+  email?: string;
+  /** @nullable */
+  image?: string | null;
+};
+
+export type ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemWeekDay =
+  (typeof ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemWeekDay)[keyof typeof ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemWeekDay];
+
+export const ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemWeekDay =
+  {
+    MONDAY: "MONDAY",
+    TUESDAY: "TUESDAY",
+    WEDNESDAY: "WEDNESDAY",
+    THURSDAY: "THURSDAY",
+    FRIDAY: "FRIDAY",
+    SATURDAY: "SATURDAY",
+    SUNDAY: "SUNDAY",
+  } as const;
+
+export type ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItem =
+  {
+    name: string;
+    order: number;
+    sets: number;
+    warmupSets: number;
+    reps: number;
+    restTimeInSeconds: number;
+  };
+
+export type ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItem = {
+  name: string;
+  order: number;
+  weekDay: ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemWeekDay;
+  isRest: boolean;
+  estimatedDurationInSeconds: number;
+  /** @nullable */
+  coverImageUrl?: string | null;
+  exercises: ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItem[];
+};
+
+export type ListCoachAthletePrescriptions200ItemPayload = {
+  workoutDays: ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItem[];
+};
+
+export type ListCoachAthletePrescriptions200Item = {
+  id: string;
+  coachId: string;
+  athleteId: string;
+  status: ListCoachAthletePrescriptions200ItemStatus;
+  name: string;
+  /** @nullable */
+  notes: string | null;
+  version: number;
+  /** @nullable */
+  acceptedWorkoutPlanId: string | null;
+  /** @nullable */
+  sentAt: string | null;
+  /** @nullable */
+  respondedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  coach?: ListCoachAthletePrescriptions200ItemCoach;
+  athlete?: ListCoachAthletePrescriptions200ItemAthlete;
+  payload?: ListCoachAthletePrescriptions200ItemPayload;
+};
+
+export type ListCoachAthletePrescriptions400 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachAthletePrescriptions401 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachAthletePrescriptions403 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachAthletePrescriptions404 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachAthletePrescriptions409 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachAthletePrescriptions500 = {
+  error: string;
+  code: string;
+};
+
+export type ListAthletePrescriptions200ItemStatus =
+  (typeof ListAthletePrescriptions200ItemStatus)[keyof typeof ListAthletePrescriptions200ItemStatus];
+
+export const ListAthletePrescriptions200ItemStatus = {
+  DRAFT: "DRAFT",
+  SENT: "SENT",
+  ACCEPTED: "ACCEPTED",
+  DECLINED: "DECLINED",
+  CANCELLED: "CANCELLED",
+} as const;
+
+export type ListAthletePrescriptions200ItemCoach = {
+  id: string;
+  name: string;
+  email?: string;
+  /** @nullable */
+  image?: string | null;
+};
+
+export type ListAthletePrescriptions200ItemAthlete = {
+  id: string;
+  name: string;
+  email?: string;
+  /** @nullable */
+  image?: string | null;
+};
+
+export type ListAthletePrescriptions200ItemPayloadWorkoutDaysItemWeekDay =
+  (typeof ListAthletePrescriptions200ItemPayloadWorkoutDaysItemWeekDay)[keyof typeof ListAthletePrescriptions200ItemPayloadWorkoutDaysItemWeekDay];
+
+export const ListAthletePrescriptions200ItemPayloadWorkoutDaysItemWeekDay = {
+  MONDAY: "MONDAY",
+  TUESDAY: "TUESDAY",
+  WEDNESDAY: "WEDNESDAY",
+  THURSDAY: "THURSDAY",
+  FRIDAY: "FRIDAY",
+  SATURDAY: "SATURDAY",
+  SUNDAY: "SUNDAY",
+} as const;
+
+export type ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItem =
+  {
+    name: string;
+    order: number;
+    sets: number;
+    warmupSets: number;
+    reps: number;
+    restTimeInSeconds: number;
+  };
+
+export type ListAthletePrescriptions200ItemPayloadWorkoutDaysItem = {
+  name: string;
+  order: number;
+  weekDay: ListAthletePrescriptions200ItemPayloadWorkoutDaysItemWeekDay;
+  isRest: boolean;
+  estimatedDurationInSeconds: number;
+  /** @nullable */
+  coverImageUrl?: string | null;
+  exercises: ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItem[];
+};
+
+export type ListAthletePrescriptions200ItemPayload = {
+  workoutDays: ListAthletePrescriptions200ItemPayloadWorkoutDaysItem[];
+};
+
+export type ListAthletePrescriptions200Item = {
+  id: string;
+  coachId: string;
+  athleteId: string;
+  status: ListAthletePrescriptions200ItemStatus;
+  name: string;
+  /** @nullable */
+  notes: string | null;
+  version: number;
+  /** @nullable */
+  acceptedWorkoutPlanId: string | null;
+  /** @nullable */
+  sentAt: string | null;
+  /** @nullable */
+  respondedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  coach?: ListAthletePrescriptions200ItemCoach;
+  athlete?: ListAthletePrescriptions200ItemAthlete;
+  payload?: ListAthletePrescriptions200ItemPayload;
+};
+
+export type ListAthletePrescriptions400 = {
+  error: string;
+  code: string;
+};
+
+export type ListAthletePrescriptions401 = {
+  error: string;
+  code: string;
+};
+
+export type ListAthletePrescriptions403 = {
+  error: string;
+  code: string;
+};
+
+export type ListAthletePrescriptions404 = {
+  error: string;
+  code: string;
+};
+
+export type ListAthletePrescriptions409 = {
+  error: string;
+  code: string;
+};
+
+export type ListAthletePrescriptions500 = {
+  error: string;
+  code: string;
+};
+
+export type GetAthletePrescriptionDetails200Status =
+  (typeof GetAthletePrescriptionDetails200Status)[keyof typeof GetAthletePrescriptionDetails200Status];
+
+export const GetAthletePrescriptionDetails200Status = {
+  DRAFT: "DRAFT",
+  SENT: "SENT",
+  ACCEPTED: "ACCEPTED",
+  DECLINED: "DECLINED",
+  CANCELLED: "CANCELLED",
+} as const;
+
+export type GetAthletePrescriptionDetails200Coach = {
+  id: string;
+  name: string;
+  email?: string;
+  /** @nullable */
+  image?: string | null;
+};
+
+export type GetAthletePrescriptionDetails200Athlete = {
+  id: string;
+  name: string;
+  email?: string;
+  /** @nullable */
+  image?: string | null;
+};
+
+export type GetAthletePrescriptionDetails200PayloadWorkoutDaysItemWeekDay =
+  (typeof GetAthletePrescriptionDetails200PayloadWorkoutDaysItemWeekDay)[keyof typeof GetAthletePrescriptionDetails200PayloadWorkoutDaysItemWeekDay];
+
+export const GetAthletePrescriptionDetails200PayloadWorkoutDaysItemWeekDay = {
+  MONDAY: "MONDAY",
+  TUESDAY: "TUESDAY",
+  WEDNESDAY: "WEDNESDAY",
+  THURSDAY: "THURSDAY",
+  FRIDAY: "FRIDAY",
+  SATURDAY: "SATURDAY",
+  SUNDAY: "SUNDAY",
+} as const;
+
+export type GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItem =
+  {
+    name: string;
+    order: number;
+    sets: number;
+    warmupSets: number;
+    reps: number;
+    restTimeInSeconds: number;
+  };
+
+export type GetAthletePrescriptionDetails200PayloadWorkoutDaysItem = {
+  name: string;
+  order: number;
+  weekDay: GetAthletePrescriptionDetails200PayloadWorkoutDaysItemWeekDay;
+  isRest: boolean;
+  estimatedDurationInSeconds: number;
+  /** @nullable */
+  coverImageUrl?: string | null;
+  exercises: GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItem[];
+};
+
+export type GetAthletePrescriptionDetails200Payload = {
+  workoutDays: GetAthletePrescriptionDetails200PayloadWorkoutDaysItem[];
+};
+
+export type GetAthletePrescriptionDetails200 = {
+  id: string;
+  coachId: string;
+  athleteId: string;
+  status: GetAthletePrescriptionDetails200Status;
+  name: string;
+  /** @nullable */
+  notes: string | null;
+  version: number;
+  /** @nullable */
+  acceptedWorkoutPlanId: string | null;
+  /** @nullable */
+  sentAt: string | null;
+  /** @nullable */
+  respondedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  coach?: GetAthletePrescriptionDetails200Coach;
+  athlete?: GetAthletePrescriptionDetails200Athlete;
+  payload?: GetAthletePrescriptionDetails200Payload;
+};
+
+export type GetAthletePrescriptionDetails400 = {
+  error: string;
+  code: string;
+};
+
+export type GetAthletePrescriptionDetails401 = {
+  error: string;
+  code: string;
+};
+
+export type GetAthletePrescriptionDetails403 = {
+  error: string;
+  code: string;
+};
+
+export type GetAthletePrescriptionDetails404 = {
+  error: string;
+  code: string;
+};
+
+export type GetAthletePrescriptionDetails409 = {
+  error: string;
+  code: string;
+};
+
+export type GetAthletePrescriptionDetails500 = {
+  error: string;
+  code: string;
+};
+
+export type AcceptWorkoutPrescription200PrescriptionStatus =
+  (typeof AcceptWorkoutPrescription200PrescriptionStatus)[keyof typeof AcceptWorkoutPrescription200PrescriptionStatus];
+
+export const AcceptWorkoutPrescription200PrescriptionStatus = {
+  DRAFT: "DRAFT",
+  SENT: "SENT",
+  ACCEPTED: "ACCEPTED",
+  DECLINED: "DECLINED",
+  CANCELLED: "CANCELLED",
+} as const;
+
+export type AcceptWorkoutPrescription200PrescriptionCoach = {
+  id: string;
+  name: string;
+  email?: string;
+  /** @nullable */
+  image?: string | null;
+};
+
+export type AcceptWorkoutPrescription200PrescriptionAthlete = {
+  id: string;
+  name: string;
+  email?: string;
+  /** @nullable */
+  image?: string | null;
+};
+
+export type AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemWeekDay =
+  (typeof AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemWeekDay)[keyof typeof AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemWeekDay];
+
+export const AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemWeekDay =
+  {
+    MONDAY: "MONDAY",
+    TUESDAY: "TUESDAY",
+    WEDNESDAY: "WEDNESDAY",
+    THURSDAY: "THURSDAY",
+    FRIDAY: "FRIDAY",
+    SATURDAY: "SATURDAY",
+    SUNDAY: "SUNDAY",
+  } as const;
+
+export type AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItem =
+  {
+    name: string;
+    order: number;
+    sets: number;
+    warmupSets: number;
+    reps: number;
+    restTimeInSeconds: number;
+  };
+
+export type AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItem = {
+  name: string;
+  order: number;
+  weekDay: AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemWeekDay;
+  isRest: boolean;
+  estimatedDurationInSeconds: number;
+  /** @nullable */
+  coverImageUrl?: string | null;
+  exercises: AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItem[];
+};
+
+export type AcceptWorkoutPrescription200PrescriptionPayload = {
+  workoutDays: AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItem[];
+};
+
+export type AcceptWorkoutPrescription200Prescription = {
+  id: string;
+  coachId: string;
+  athleteId: string;
+  status: AcceptWorkoutPrescription200PrescriptionStatus;
+  name: string;
+  /** @nullable */
+  notes: string | null;
+  version: number;
+  /** @nullable */
+  acceptedWorkoutPlanId: string | null;
+  /** @nullable */
+  sentAt: string | null;
+  /** @nullable */
+  respondedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  coach?: AcceptWorkoutPrescription200PrescriptionCoach;
+  athlete?: AcceptWorkoutPrescription200PrescriptionAthlete;
+  payload?: AcceptWorkoutPrescription200PrescriptionPayload;
+};
+
+export type AcceptWorkoutPrescription200 = {
+  success: boolean;
+  prescription: AcceptWorkoutPrescription200Prescription;
+  workoutPlanId: string;
+  workoutPlanName: string;
+};
+
+export type AcceptWorkoutPrescription400 = {
+  error: string;
+  code: string;
+};
+
+export type AcceptWorkoutPrescription401 = {
+  error: string;
+  code: string;
+};
+
+export type AcceptWorkoutPrescription403 = {
+  error: string;
+  code: string;
+};
+
+export type AcceptWorkoutPrescription404 = {
+  error: string;
+  code: string;
+};
+
+export type AcceptWorkoutPrescription409 = {
+  error: string;
+  code: string;
+};
+
+export type AcceptWorkoutPrescription500 = {
+  error: string;
+  code: string;
+};
+
+export type DeclineWorkoutPrescription200Status =
+  (typeof DeclineWorkoutPrescription200Status)[keyof typeof DeclineWorkoutPrescription200Status];
+
+export const DeclineWorkoutPrescription200Status = {
+  DRAFT: "DRAFT",
+  SENT: "SENT",
+  ACCEPTED: "ACCEPTED",
+  DECLINED: "DECLINED",
+  CANCELLED: "CANCELLED",
+} as const;
+
+export type DeclineWorkoutPrescription200Coach = {
+  id: string;
+  name: string;
+  email?: string;
+  /** @nullable */
+  image?: string | null;
+};
+
+export type DeclineWorkoutPrescription200Athlete = {
+  id: string;
+  name: string;
+  email?: string;
+  /** @nullable */
+  image?: string | null;
+};
+
+export type DeclineWorkoutPrescription200PayloadWorkoutDaysItemWeekDay =
+  (typeof DeclineWorkoutPrescription200PayloadWorkoutDaysItemWeekDay)[keyof typeof DeclineWorkoutPrescription200PayloadWorkoutDaysItemWeekDay];
+
+export const DeclineWorkoutPrescription200PayloadWorkoutDaysItemWeekDay = {
+  MONDAY: "MONDAY",
+  TUESDAY: "TUESDAY",
+  WEDNESDAY: "WEDNESDAY",
+  THURSDAY: "THURSDAY",
+  FRIDAY: "FRIDAY",
+  SATURDAY: "SATURDAY",
+  SUNDAY: "SUNDAY",
+} as const;
+
+export type DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItem = {
+  name: string;
+  order: number;
+  sets: number;
+  warmupSets: number;
+  reps: number;
+  restTimeInSeconds: number;
+};
+
+export type DeclineWorkoutPrescription200PayloadWorkoutDaysItem = {
+  name: string;
+  order: number;
+  weekDay: DeclineWorkoutPrescription200PayloadWorkoutDaysItemWeekDay;
+  isRest: boolean;
+  estimatedDurationInSeconds: number;
+  /** @nullable */
+  coverImageUrl?: string | null;
+  exercises: DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItem[];
+};
+
+export type DeclineWorkoutPrescription200Payload = {
+  workoutDays: DeclineWorkoutPrescription200PayloadWorkoutDaysItem[];
+};
+
+export type DeclineWorkoutPrescription200 = {
+  id: string;
+  coachId: string;
+  athleteId: string;
+  status: DeclineWorkoutPrescription200Status;
+  name: string;
+  /** @nullable */
+  notes: string | null;
+  version: number;
+  /** @nullable */
+  acceptedWorkoutPlanId: string | null;
+  /** @nullable */
+  sentAt: string | null;
+  /** @nullable */
+  respondedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  coach?: DeclineWorkoutPrescription200Coach;
+  athlete?: DeclineWorkoutPrescription200Athlete;
+  payload?: DeclineWorkoutPrescription200Payload;
+};
+
+export type DeclineWorkoutPrescription400 = {
+  error: string;
+  code: string;
+};
+
+export type DeclineWorkoutPrescription401 = {
+  error: string;
+  code: string;
+};
+
+export type DeclineWorkoutPrescription403 = {
+  error: string;
+  code: string;
+};
+
+export type DeclineWorkoutPrescription404 = {
+  error: string;
+  code: string;
+};
+
+export type DeclineWorkoutPrescription409 = {
+  error: string;
+  code: string;
+};
+
+export type DeclineWorkoutPrescription500 = {
+  error: string;
+  code: string;
+};
+
 export type GetAdminOverview200PendingCoachesItemAccountType =
   (typeof GetAdminOverview200PendingCoachesItemAccountType)[keyof typeof GetAdminOverview200PendingCoachesItemAccountType];
 
@@ -9503,6 +10836,750 @@ export const revokeAthleteCoachRelationship = async (
     {
       ...options,
       method: "DELETE",
+    },
+  );
+};
+
+/**
+ * @summary Criar rascunho de prescrição de treino para um aluno
+ */
+export type createWorkoutPrescriptionDraftResponse201 = {
+  data: CreateWorkoutPrescriptionDraft201;
+  status: 201;
+};
+
+export type createWorkoutPrescriptionDraftResponse400 = {
+  data: CreateWorkoutPrescriptionDraft400;
+  status: 400;
+};
+
+export type createWorkoutPrescriptionDraftResponse401 = {
+  data: CreateWorkoutPrescriptionDraft401;
+  status: 401;
+};
+
+export type createWorkoutPrescriptionDraftResponse403 = {
+  data: CreateWorkoutPrescriptionDraft403;
+  status: 403;
+};
+
+export type createWorkoutPrescriptionDraftResponse404 = {
+  data: CreateWorkoutPrescriptionDraft404;
+  status: 404;
+};
+
+export type createWorkoutPrescriptionDraftResponse409 = {
+  data: CreateWorkoutPrescriptionDraft409;
+  status: 409;
+};
+
+export type createWorkoutPrescriptionDraftResponse500 = {
+  data: CreateWorkoutPrescriptionDraft500;
+  status: 500;
+};
+
+export type createWorkoutPrescriptionDraftResponseSuccess =
+  createWorkoutPrescriptionDraftResponse201 & {
+    headers: Headers;
+  };
+export type createWorkoutPrescriptionDraftResponseError = (
+  | createWorkoutPrescriptionDraftResponse400
+  | createWorkoutPrescriptionDraftResponse401
+  | createWorkoutPrescriptionDraftResponse403
+  | createWorkoutPrescriptionDraftResponse404
+  | createWorkoutPrescriptionDraftResponse409
+  | createWorkoutPrescriptionDraftResponse500
+) & {
+  headers: Headers;
+};
+
+export type createWorkoutPrescriptionDraftResponse =
+  | createWorkoutPrescriptionDraftResponseSuccess
+  | createWorkoutPrescriptionDraftResponseError;
+
+export const getCreateWorkoutPrescriptionDraftUrl = () => {
+  return `/coach/prescriptions`;
+};
+
+export const createWorkoutPrescriptionDraft = async (
+  createWorkoutPrescriptionDraftBody: CreateWorkoutPrescriptionDraftBody,
+  options?: RequestInit,
+): Promise<createWorkoutPrescriptionDraftResponse> => {
+  return customFetch<createWorkoutPrescriptionDraftResponse>(
+    getCreateWorkoutPrescriptionDraftUrl(),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(createWorkoutPrescriptionDraftBody),
+    },
+  );
+};
+
+/**
+ * @summary Atualizar rascunho de prescrição existente antes do envio
+ */
+export type updateWorkoutPrescriptionDraftResponse200 = {
+  data: UpdateWorkoutPrescriptionDraft200;
+  status: 200;
+};
+
+export type updateWorkoutPrescriptionDraftResponse400 = {
+  data: UpdateWorkoutPrescriptionDraft400;
+  status: 400;
+};
+
+export type updateWorkoutPrescriptionDraftResponse401 = {
+  data: UpdateWorkoutPrescriptionDraft401;
+  status: 401;
+};
+
+export type updateWorkoutPrescriptionDraftResponse403 = {
+  data: UpdateWorkoutPrescriptionDraft403;
+  status: 403;
+};
+
+export type updateWorkoutPrescriptionDraftResponse404 = {
+  data: UpdateWorkoutPrescriptionDraft404;
+  status: 404;
+};
+
+export type updateWorkoutPrescriptionDraftResponse409 = {
+  data: UpdateWorkoutPrescriptionDraft409;
+  status: 409;
+};
+
+export type updateWorkoutPrescriptionDraftResponse500 = {
+  data: UpdateWorkoutPrescriptionDraft500;
+  status: 500;
+};
+
+export type updateWorkoutPrescriptionDraftResponseSuccess =
+  updateWorkoutPrescriptionDraftResponse200 & {
+    headers: Headers;
+  };
+export type updateWorkoutPrescriptionDraftResponseError = (
+  | updateWorkoutPrescriptionDraftResponse400
+  | updateWorkoutPrescriptionDraftResponse401
+  | updateWorkoutPrescriptionDraftResponse403
+  | updateWorkoutPrescriptionDraftResponse404
+  | updateWorkoutPrescriptionDraftResponse409
+  | updateWorkoutPrescriptionDraftResponse500
+) & {
+  headers: Headers;
+};
+
+export type updateWorkoutPrescriptionDraftResponse =
+  | updateWorkoutPrescriptionDraftResponseSuccess
+  | updateWorkoutPrescriptionDraftResponseError;
+
+export const getUpdateWorkoutPrescriptionDraftUrl = (id: string) => {
+  return `/coach/prescriptions/${id}`;
+};
+
+export const updateWorkoutPrescriptionDraft = async (
+  id: string,
+  updateWorkoutPrescriptionDraftBody: UpdateWorkoutPrescriptionDraftBody,
+  options?: RequestInit,
+): Promise<updateWorkoutPrescriptionDraftResponse> => {
+  return customFetch<updateWorkoutPrescriptionDraftResponse>(
+    getUpdateWorkoutPrescriptionDraftUrl(id),
+    {
+      ...options,
+      method: "PUT",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(updateWorkoutPrescriptionDraftBody),
+    },
+  );
+};
+
+/**
+ * @summary Consultar detalhes completos de uma prescrição criada pelo treinador
+ */
+export type getCoachPrescriptionDetailsResponse200 = {
+  data: GetCoachPrescriptionDetails200;
+  status: 200;
+};
+
+export type getCoachPrescriptionDetailsResponse400 = {
+  data: GetCoachPrescriptionDetails400;
+  status: 400;
+};
+
+export type getCoachPrescriptionDetailsResponse401 = {
+  data: GetCoachPrescriptionDetails401;
+  status: 401;
+};
+
+export type getCoachPrescriptionDetailsResponse403 = {
+  data: GetCoachPrescriptionDetails403;
+  status: 403;
+};
+
+export type getCoachPrescriptionDetailsResponse404 = {
+  data: GetCoachPrescriptionDetails404;
+  status: 404;
+};
+
+export type getCoachPrescriptionDetailsResponse409 = {
+  data: GetCoachPrescriptionDetails409;
+  status: 409;
+};
+
+export type getCoachPrescriptionDetailsResponse500 = {
+  data: GetCoachPrescriptionDetails500;
+  status: 500;
+};
+
+export type getCoachPrescriptionDetailsResponseSuccess =
+  getCoachPrescriptionDetailsResponse200 & {
+    headers: Headers;
+  };
+export type getCoachPrescriptionDetailsResponseError = (
+  | getCoachPrescriptionDetailsResponse400
+  | getCoachPrescriptionDetailsResponse401
+  | getCoachPrescriptionDetailsResponse403
+  | getCoachPrescriptionDetailsResponse404
+  | getCoachPrescriptionDetailsResponse409
+  | getCoachPrescriptionDetailsResponse500
+) & {
+  headers: Headers;
+};
+
+export type getCoachPrescriptionDetailsResponse =
+  | getCoachPrescriptionDetailsResponseSuccess
+  | getCoachPrescriptionDetailsResponseError;
+
+export const getGetCoachPrescriptionDetailsUrl = (id: string) => {
+  return `/coach/prescriptions/${id}`;
+};
+
+export const getCoachPrescriptionDetails = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getCoachPrescriptionDetailsResponse> => {
+  return customFetch<getCoachPrescriptionDetailsResponse>(
+    getGetCoachPrescriptionDetailsUrl(id),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Enviar prescrição em rascunho para o aluno
+ */
+export type sendWorkoutPrescriptionResponse200 = {
+  data: SendWorkoutPrescription200;
+  status: 200;
+};
+
+export type sendWorkoutPrescriptionResponse400 = {
+  data: SendWorkoutPrescription400;
+  status: 400;
+};
+
+export type sendWorkoutPrescriptionResponse401 = {
+  data: SendWorkoutPrescription401;
+  status: 401;
+};
+
+export type sendWorkoutPrescriptionResponse403 = {
+  data: SendWorkoutPrescription403;
+  status: 403;
+};
+
+export type sendWorkoutPrescriptionResponse404 = {
+  data: SendWorkoutPrescription404;
+  status: 404;
+};
+
+export type sendWorkoutPrescriptionResponse409 = {
+  data: SendWorkoutPrescription409;
+  status: 409;
+};
+
+export type sendWorkoutPrescriptionResponse500 = {
+  data: SendWorkoutPrescription500;
+  status: 500;
+};
+
+export type sendWorkoutPrescriptionResponseSuccess =
+  sendWorkoutPrescriptionResponse200 & {
+    headers: Headers;
+  };
+export type sendWorkoutPrescriptionResponseError = (
+  | sendWorkoutPrescriptionResponse400
+  | sendWorkoutPrescriptionResponse401
+  | sendWorkoutPrescriptionResponse403
+  | sendWorkoutPrescriptionResponse404
+  | sendWorkoutPrescriptionResponse409
+  | sendWorkoutPrescriptionResponse500
+) & {
+  headers: Headers;
+};
+
+export type sendWorkoutPrescriptionResponse =
+  | sendWorkoutPrescriptionResponseSuccess
+  | sendWorkoutPrescriptionResponseError;
+
+export const getSendWorkoutPrescriptionUrl = (id: string) => {
+  return `/coach/prescriptions/${id}/send`;
+};
+
+export const sendWorkoutPrescription = async (
+  id: string,
+  options?: RequestInit,
+): Promise<sendWorkoutPrescriptionResponse> => {
+  return customFetch<sendWorkoutPrescriptionResponse>(
+    getSendWorkoutPrescriptionUrl(id),
+    {
+      ...options,
+      method: "POST",
+    },
+  );
+};
+
+/**
+ * @summary Cancelar prescrição pendente ou em rascunho
+ */
+export type cancelWorkoutPrescriptionResponse200 = {
+  data: CancelWorkoutPrescription200;
+  status: 200;
+};
+
+export type cancelWorkoutPrescriptionResponse400 = {
+  data: CancelWorkoutPrescription400;
+  status: 400;
+};
+
+export type cancelWorkoutPrescriptionResponse401 = {
+  data: CancelWorkoutPrescription401;
+  status: 401;
+};
+
+export type cancelWorkoutPrescriptionResponse403 = {
+  data: CancelWorkoutPrescription403;
+  status: 403;
+};
+
+export type cancelWorkoutPrescriptionResponse404 = {
+  data: CancelWorkoutPrescription404;
+  status: 404;
+};
+
+export type cancelWorkoutPrescriptionResponse409 = {
+  data: CancelWorkoutPrescription409;
+  status: 409;
+};
+
+export type cancelWorkoutPrescriptionResponse500 = {
+  data: CancelWorkoutPrescription500;
+  status: 500;
+};
+
+export type cancelWorkoutPrescriptionResponseSuccess =
+  cancelWorkoutPrescriptionResponse200 & {
+    headers: Headers;
+  };
+export type cancelWorkoutPrescriptionResponseError = (
+  | cancelWorkoutPrescriptionResponse400
+  | cancelWorkoutPrescriptionResponse401
+  | cancelWorkoutPrescriptionResponse403
+  | cancelWorkoutPrescriptionResponse404
+  | cancelWorkoutPrescriptionResponse409
+  | cancelWorkoutPrescriptionResponse500
+) & {
+  headers: Headers;
+};
+
+export type cancelWorkoutPrescriptionResponse =
+  | cancelWorkoutPrescriptionResponseSuccess
+  | cancelWorkoutPrescriptionResponseError;
+
+export const getCancelWorkoutPrescriptionUrl = (id: string) => {
+  return `/coach/prescriptions/${id}/cancel`;
+};
+
+export const cancelWorkoutPrescription = async (
+  id: string,
+  options?: RequestInit,
+): Promise<cancelWorkoutPrescriptionResponse> => {
+  return customFetch<cancelWorkoutPrescriptionResponse>(
+    getCancelWorkoutPrescriptionUrl(id),
+    {
+      ...options,
+      method: "POST",
+    },
+  );
+};
+
+/**
+ * @summary Listar prescrições elaboradas pelo treinador para um aluno
+ */
+export type listCoachAthletePrescriptionsResponse200 = {
+  data: ListCoachAthletePrescriptions200Item[];
+  status: 200;
+};
+
+export type listCoachAthletePrescriptionsResponse400 = {
+  data: ListCoachAthletePrescriptions400;
+  status: 400;
+};
+
+export type listCoachAthletePrescriptionsResponse401 = {
+  data: ListCoachAthletePrescriptions401;
+  status: 401;
+};
+
+export type listCoachAthletePrescriptionsResponse403 = {
+  data: ListCoachAthletePrescriptions403;
+  status: 403;
+};
+
+export type listCoachAthletePrescriptionsResponse404 = {
+  data: ListCoachAthletePrescriptions404;
+  status: 404;
+};
+
+export type listCoachAthletePrescriptionsResponse409 = {
+  data: ListCoachAthletePrescriptions409;
+  status: 409;
+};
+
+export type listCoachAthletePrescriptionsResponse500 = {
+  data: ListCoachAthletePrescriptions500;
+  status: 500;
+};
+
+export type listCoachAthletePrescriptionsResponseSuccess =
+  listCoachAthletePrescriptionsResponse200 & {
+    headers: Headers;
+  };
+export type listCoachAthletePrescriptionsResponseError = (
+  | listCoachAthletePrescriptionsResponse400
+  | listCoachAthletePrescriptionsResponse401
+  | listCoachAthletePrescriptionsResponse403
+  | listCoachAthletePrescriptionsResponse404
+  | listCoachAthletePrescriptionsResponse409
+  | listCoachAthletePrescriptionsResponse500
+) & {
+  headers: Headers;
+};
+
+export type listCoachAthletePrescriptionsResponse =
+  | listCoachAthletePrescriptionsResponseSuccess
+  | listCoachAthletePrescriptionsResponseError;
+
+export const getListCoachAthletePrescriptionsUrl = (athleteId: string) => {
+  return `/coach/athletes/${athleteId}/prescriptions`;
+};
+
+export const listCoachAthletePrescriptions = async (
+  athleteId: string,
+  options?: RequestInit,
+): Promise<listCoachAthletePrescriptionsResponse> => {
+  return customFetch<listCoachAthletePrescriptionsResponse>(
+    getListCoachAthletePrescriptionsUrl(athleteId),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Listar prescrições de treino recebidas pelo atleta
+ */
+export type listAthletePrescriptionsResponse200 = {
+  data: ListAthletePrescriptions200Item[];
+  status: 200;
+};
+
+export type listAthletePrescriptionsResponse400 = {
+  data: ListAthletePrescriptions400;
+  status: 400;
+};
+
+export type listAthletePrescriptionsResponse401 = {
+  data: ListAthletePrescriptions401;
+  status: 401;
+};
+
+export type listAthletePrescriptionsResponse403 = {
+  data: ListAthletePrescriptions403;
+  status: 403;
+};
+
+export type listAthletePrescriptionsResponse404 = {
+  data: ListAthletePrescriptions404;
+  status: 404;
+};
+
+export type listAthletePrescriptionsResponse409 = {
+  data: ListAthletePrescriptions409;
+  status: 409;
+};
+
+export type listAthletePrescriptionsResponse500 = {
+  data: ListAthletePrescriptions500;
+  status: 500;
+};
+
+export type listAthletePrescriptionsResponseSuccess =
+  listAthletePrescriptionsResponse200 & {
+    headers: Headers;
+  };
+export type listAthletePrescriptionsResponseError = (
+  | listAthletePrescriptionsResponse400
+  | listAthletePrescriptionsResponse401
+  | listAthletePrescriptionsResponse403
+  | listAthletePrescriptionsResponse404
+  | listAthletePrescriptionsResponse409
+  | listAthletePrescriptionsResponse500
+) & {
+  headers: Headers;
+};
+
+export type listAthletePrescriptionsResponse =
+  | listAthletePrescriptionsResponseSuccess
+  | listAthletePrescriptionsResponseError;
+
+export const getListAthletePrescriptionsUrl = () => {
+  return `/me/prescriptions`;
+};
+
+export const listAthletePrescriptions = async (
+  options?: RequestInit,
+): Promise<listAthletePrescriptionsResponse> => {
+  return customFetch<listAthletePrescriptionsResponse>(
+    getListAthletePrescriptionsUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Consultar detalhes da prescrição recebida pelo atleta
+ */
+export type getAthletePrescriptionDetailsResponse200 = {
+  data: GetAthletePrescriptionDetails200;
+  status: 200;
+};
+
+export type getAthletePrescriptionDetailsResponse400 = {
+  data: GetAthletePrescriptionDetails400;
+  status: 400;
+};
+
+export type getAthletePrescriptionDetailsResponse401 = {
+  data: GetAthletePrescriptionDetails401;
+  status: 401;
+};
+
+export type getAthletePrescriptionDetailsResponse403 = {
+  data: GetAthletePrescriptionDetails403;
+  status: 403;
+};
+
+export type getAthletePrescriptionDetailsResponse404 = {
+  data: GetAthletePrescriptionDetails404;
+  status: 404;
+};
+
+export type getAthletePrescriptionDetailsResponse409 = {
+  data: GetAthletePrescriptionDetails409;
+  status: 409;
+};
+
+export type getAthletePrescriptionDetailsResponse500 = {
+  data: GetAthletePrescriptionDetails500;
+  status: 500;
+};
+
+export type getAthletePrescriptionDetailsResponseSuccess =
+  getAthletePrescriptionDetailsResponse200 & {
+    headers: Headers;
+  };
+export type getAthletePrescriptionDetailsResponseError = (
+  | getAthletePrescriptionDetailsResponse400
+  | getAthletePrescriptionDetailsResponse401
+  | getAthletePrescriptionDetailsResponse403
+  | getAthletePrescriptionDetailsResponse404
+  | getAthletePrescriptionDetailsResponse409
+  | getAthletePrescriptionDetailsResponse500
+) & {
+  headers: Headers;
+};
+
+export type getAthletePrescriptionDetailsResponse =
+  | getAthletePrescriptionDetailsResponseSuccess
+  | getAthletePrescriptionDetailsResponseError;
+
+export const getGetAthletePrescriptionDetailsUrl = (id: string) => {
+  return `/me/prescriptions/${id}`;
+};
+
+export const getAthletePrescriptionDetails = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getAthletePrescriptionDetailsResponse> => {
+  return customFetch<getAthletePrescriptionDetailsResponse>(
+    getGetAthletePrescriptionDetailsUrl(id),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Aceitar prescrição de treino e gerar planejamento próprio inativo
+ */
+export type acceptWorkoutPrescriptionResponse200 = {
+  data: AcceptWorkoutPrescription200;
+  status: 200;
+};
+
+export type acceptWorkoutPrescriptionResponse400 = {
+  data: AcceptWorkoutPrescription400;
+  status: 400;
+};
+
+export type acceptWorkoutPrescriptionResponse401 = {
+  data: AcceptWorkoutPrescription401;
+  status: 401;
+};
+
+export type acceptWorkoutPrescriptionResponse403 = {
+  data: AcceptWorkoutPrescription403;
+  status: 403;
+};
+
+export type acceptWorkoutPrescriptionResponse404 = {
+  data: AcceptWorkoutPrescription404;
+  status: 404;
+};
+
+export type acceptWorkoutPrescriptionResponse409 = {
+  data: AcceptWorkoutPrescription409;
+  status: 409;
+};
+
+export type acceptWorkoutPrescriptionResponse500 = {
+  data: AcceptWorkoutPrescription500;
+  status: 500;
+};
+
+export type acceptWorkoutPrescriptionResponseSuccess =
+  acceptWorkoutPrescriptionResponse200 & {
+    headers: Headers;
+  };
+export type acceptWorkoutPrescriptionResponseError = (
+  | acceptWorkoutPrescriptionResponse400
+  | acceptWorkoutPrescriptionResponse401
+  | acceptWorkoutPrescriptionResponse403
+  | acceptWorkoutPrescriptionResponse404
+  | acceptWorkoutPrescriptionResponse409
+  | acceptWorkoutPrescriptionResponse500
+) & {
+  headers: Headers;
+};
+
+export type acceptWorkoutPrescriptionResponse =
+  | acceptWorkoutPrescriptionResponseSuccess
+  | acceptWorkoutPrescriptionResponseError;
+
+export const getAcceptWorkoutPrescriptionUrl = (id: string) => {
+  return `/me/prescriptions/${id}/accept`;
+};
+
+export const acceptWorkoutPrescription = async (
+  id: string,
+  options?: RequestInit,
+): Promise<acceptWorkoutPrescriptionResponse> => {
+  return customFetch<acceptWorkoutPrescriptionResponse>(
+    getAcceptWorkoutPrescriptionUrl(id),
+    {
+      ...options,
+      method: "POST",
+    },
+  );
+};
+
+/**
+ * @summary Recusar prescrição de treino recebida
+ */
+export type declineWorkoutPrescriptionResponse200 = {
+  data: DeclineWorkoutPrescription200;
+  status: 200;
+};
+
+export type declineWorkoutPrescriptionResponse400 = {
+  data: DeclineWorkoutPrescription400;
+  status: 400;
+};
+
+export type declineWorkoutPrescriptionResponse401 = {
+  data: DeclineWorkoutPrescription401;
+  status: 401;
+};
+
+export type declineWorkoutPrescriptionResponse403 = {
+  data: DeclineWorkoutPrescription403;
+  status: 403;
+};
+
+export type declineWorkoutPrescriptionResponse404 = {
+  data: DeclineWorkoutPrescription404;
+  status: 404;
+};
+
+export type declineWorkoutPrescriptionResponse409 = {
+  data: DeclineWorkoutPrescription409;
+  status: 409;
+};
+
+export type declineWorkoutPrescriptionResponse500 = {
+  data: DeclineWorkoutPrescription500;
+  status: 500;
+};
+
+export type declineWorkoutPrescriptionResponseSuccess =
+  declineWorkoutPrescriptionResponse200 & {
+    headers: Headers;
+  };
+export type declineWorkoutPrescriptionResponseError = (
+  | declineWorkoutPrescriptionResponse400
+  | declineWorkoutPrescriptionResponse401
+  | declineWorkoutPrescriptionResponse403
+  | declineWorkoutPrescriptionResponse404
+  | declineWorkoutPrescriptionResponse409
+  | declineWorkoutPrescriptionResponse500
+) & {
+  headers: Headers;
+};
+
+export type declineWorkoutPrescriptionResponse =
+  | declineWorkoutPrescriptionResponseSuccess
+  | declineWorkoutPrescriptionResponseError;
+
+export const getDeclineWorkoutPrescriptionUrl = (id: string) => {
+  return `/me/prescriptions/${id}/decline`;
+};
+
+export const declineWorkoutPrescription = async (
+  id: string,
+  options?: RequestInit,
+): Promise<declineWorkoutPrescriptionResponse> => {
+  return customFetch<declineWorkoutPrescriptionResponse>(
+    getDeclineWorkoutPrescriptionUrl(id),
+    {
+      ...options,
+      method: "POST",
     },
   );
 };

@@ -2,18 +2,20 @@
 
 import { revalidatePath } from "next/cache";
 import {
-  addWorkoutPlanToPeriodization,
+  acceptWorkoutPrescription,
   activatePeriodization,
   activateWorkoutPlan,
+  addWorkoutPlanToPeriodization,
   advancePeriodization,
   completePeriodization,
   createPeriodization,
   createWorkoutPlan,
   createWorkoutPlanInPeriodization,
-  deletePeriodization,
-  deleteWorkoutPlan,
   deactivatePeriodization,
   deactivateWorkoutPlan,
+  declineWorkoutPrescription,
+  deletePeriodization,
+  deleteWorkoutPlan,
   duplicateWorkoutPlan,
   removeWorkoutPlanFromPeriodization,
   reorderPeriodizationPlans,
@@ -469,6 +471,52 @@ export async function createStandaloneWorkoutPlanAction(
 
     revalidatePlanning(`/workout-plans/${response.data.id}`);
     return { success: true, data: response.data };
+  } catch (error) {
+    return connectionError(error);
+  }
+}
+
+export async function acceptPrescriptionAction(
+  prescriptionId: string,
+): Promise<PlanningActionResult<{ workoutPlanId: string; workoutPlanName: string }>> {
+  const id = validId(prescriptionId);
+  if (!id) return invalidInput("ID da prescrição inválido.");
+
+  try {
+    const res = await acceptWorkoutPrescription(id, { cache: "no-store" });
+    if (res.status !== 200) {
+      const err = (res.data as { error?: string })?.error ?? "Erro ao aceitar prescrição.";
+      return { success: false, error: err };
+    }
+
+    revalidatePlanning(`/workout-plans/${res.data.workoutPlanId}`);
+    return {
+      success: true,
+      data: {
+        workoutPlanId: res.data.workoutPlanId,
+        workoutPlanName: res.data.workoutPlanName,
+      },
+    };
+  } catch (error) {
+    return connectionError(error);
+  }
+}
+
+export async function declinePrescriptionAction(
+  prescriptionId: string,
+): Promise<PlanningActionResult<{ success: boolean }>> {
+  const id = validId(prescriptionId);
+  if (!id) return invalidInput("ID da prescrição inválido.");
+
+  try {
+    const res = await declineWorkoutPrescription(id, { cache: "no-store" });
+    if (res.status !== 200) {
+      const err = (res.data as { error?: string })?.error ?? "Erro ao recusar prescrição.";
+      return { success: false, error: err };
+    }
+
+    revalidatePlanning();
+    return { success: true, data: { success: true } };
   } catch (error) {
     return connectionError(error);
   }

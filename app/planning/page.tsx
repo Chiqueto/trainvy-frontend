@@ -10,10 +10,15 @@ import { authClient } from "@/app/_lib/auth-client";
 import {
   getPlanningOverview,
   getUserTrainData,
+  listAthletePrescriptions,
 } from "@/app/_lib/api/fetch-generated";
 import { BottomNav } from "@/app/_components/bottom-nav";
 import { PlanningCreateMenu } from "./_components/planning-create-menu";
 import { PlanningHub } from "./_components/planning-hub";
+import {
+  ReceivedPrescriptionsCard,
+  type AthletePrescriptionItem,
+} from "./_components/received-prescriptions-card";
 import { Logo } from "@/app/_components/logo";
 
 export const dynamic = "force-dynamic";
@@ -27,13 +32,15 @@ export default async function PlanningPage() {
 
   if (!session.data?.user) redirect("/auth");
 
-  const [overviewResponse, trainData] = await Promise.all([
-    getPlanningOverview().catch((err) => {
-      console.error("Failed to fetch planning overview:", err);
-      return null;
-    }),
-    getUserTrainData(),
-  ]);
+  const [overviewResponse, trainData, prescriptionsResponse] =
+    await Promise.all([
+      getPlanningOverview().catch((err) => {
+        console.error("Failed to fetch planning overview:", err);
+        return null;
+      }),
+      getUserTrainData(),
+      listAthletePrescriptions().catch(() => null),
+    ]);
 
   const needsOnboarding =
     (trainData.status === 200 && !trainData.data) || trainData.status === 404;
@@ -86,6 +93,11 @@ export default async function PlanningPage() {
 
   const { activeContext, plans, periodizations } = overviewResponse.data;
 
+  const athletePrescriptions: AthletePrescriptionItem[] =
+    prescriptionsResponse?.status === 200 && Array.isArray(prescriptionsResponse.data)
+      ? (prescriptionsResponse.data as unknown as AthletePrescriptionItem[])
+      : [];
+
   return (
     <div className="flex min-h-svh flex-col bg-background pb-28">
       {/* Header Mobile-First */}
@@ -106,6 +118,8 @@ export default async function PlanningPage() {
       </header>
 
       <main className="flex flex-col gap-6 p-5">
+        <ReceivedPrescriptionsCard prescriptions={athletePrescriptions} />
+
         <PlanningHub
           activeContext={activeContext}
           plans={plans}

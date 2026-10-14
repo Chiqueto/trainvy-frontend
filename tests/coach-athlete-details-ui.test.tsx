@@ -40,6 +40,7 @@ vi.mock("@/app/personal/_actions", () => ({
 vi.mock("@/app/_lib/api/fetch-generated", () => ({
   getCommercialContext: vi.fn(),
   getCoachAthleteDetails: vi.fn(),
+  listCoachAthletePrescriptions: vi.fn().mockResolvedValue({ status: 200, data: [] }),
 }));
 
 vi.mock("@/app/_lib/require-account-setup", () => ({

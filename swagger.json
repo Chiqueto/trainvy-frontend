@@ -9922,6 +9922,3935 @@
         }
       }
     },
+    "/coach/prescriptions": {
+      "post": {
+        "operationId": "createWorkoutPrescriptionDraft",
+        "summary": "Criar rascunho de prescrição de treino para um aluno",
+        "tags": [
+          "Coach"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "athleteId": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100
+                  },
+                  "notes": {
+                    "nullable": true,
+                    "type": "string",
+                    "maxLength": 1000
+                  },
+                  "workoutDays": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "order": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "weekDay": {
+                          "default": "MONDAY",
+                          "type": "string",
+                          "enum": [
+                            "MONDAY",
+                            "TUESDAY",
+                            "WEDNESDAY",
+                            "THURSDAY",
+                            "FRIDAY",
+                            "SATURDAY",
+                            "SUNDAY"
+                          ]
+                        },
+                        "isRest": {
+                          "default": false,
+                          "type": "boolean"
+                        },
+                        "estimatedDurationInSeconds": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "coverImageUrl": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "exercises": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "order": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "sets": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 9007199254740991
+                              },
+                              "warmupSets": {
+                                "default": 0,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "reps": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 9007199254740991
+                              },
+                              "restTimeInSeconds": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "order",
+                              "sets",
+                              "reps",
+                              "restTimeInSeconds"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "estimatedDurationInSeconds",
+                        "exercises"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "athleteId",
+                  "name",
+                  "workoutDays"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "coachId": {
+                      "type": "string"
+                    },
+                    "athleteId": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "DRAFT",
+                        "SENT",
+                        "ACCEPTED",
+                        "DECLINED",
+                        "CANCELLED"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "notes": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "version": {
+                      "type": "number"
+                    },
+                    "acceptedWorkoutPlanId": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "sentAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "respondedAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    },
+                    "coach": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "image": {
+                          "nullable": true,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "athlete": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "image": {
+                          "nullable": true,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "payload": {
+                      "type": "object",
+                      "properties": {
+                        "workoutDays": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string"
+                              },
+                              "order": {
+                                "type": "number"
+                              },
+                              "weekDay": {
+                                "type": "string",
+                                "enum": [
+                                  "MONDAY",
+                                  "TUESDAY",
+                                  "WEDNESDAY",
+                                  "THURSDAY",
+                                  "FRIDAY",
+                                  "SATURDAY",
+                                  "SUNDAY"
+                                ]
+                              },
+                              "isRest": {
+                                "type": "boolean"
+                              },
+                              "estimatedDurationInSeconds": {
+                                "type": "number"
+                              },
+                              "coverImageUrl": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "exercises": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "order": {
+                                      "type": "number"
+                                    },
+                                    "sets": {
+                                      "type": "number"
+                                    },
+                                    "warmupSets": {
+                                      "type": "number"
+                                    },
+                                    "reps": {
+                                      "type": "number"
+                                    },
+                                    "restTimeInSeconds": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": [
+                                    "name",
+                                    "order",
+                                    "sets",
+                                    "warmupSets",
+                                    "reps",
+                                    "restTimeInSeconds"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "order",
+                              "weekDay",
+                              "isRest",
+                              "estimatedDurationInSeconds",
+                              "exercises"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "workoutDays"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "coachId",
+                    "athleteId",
+                    "status",
+                    "name",
+                    "notes",
+                    "version",
+                    "acceptedWorkoutPlanId",
+                    "sentAt",
+                    "respondedAt",
+                    "createdAt",
+                    "updatedAt"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coach/prescriptions/{id}": {
+      "put": {
+        "operationId": "updateWorkoutPrescriptionDraft",
+        "summary": "Atualizar rascunho de prescrição existente antes do envio",
+        "tags": [
+          "Coach"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100
+                  },
+                  "notes": {
+                    "nullable": true,
+                    "type": "string",
+                    "maxLength": 1000
+                  },
+                  "workoutDays": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "order": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "weekDay": {
+                          "default": "MONDAY",
+                          "type": "string",
+                          "enum": [
+                            "MONDAY",
+                            "TUESDAY",
+                            "WEDNESDAY",
+                            "THURSDAY",
+                            "FRIDAY",
+                            "SATURDAY",
+                            "SUNDAY"
+                          ]
+                        },
+                        "isRest": {
+                          "default": false,
+                          "type": "boolean"
+                        },
+                        "estimatedDurationInSeconds": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "coverImageUrl": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "exercises": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "order": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "sets": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 9007199254740991
+                              },
+                              "warmupSets": {
+                                "default": 0,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "reps": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 9007199254740991
+                              },
+                              "restTimeInSeconds": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "order",
+                              "sets",
+                              "reps",
+                              "restTimeInSeconds"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "estimatedDurationInSeconds",
+                        "exercises"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "name",
+                  "workoutDays"
+                ]
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "coachId": {
+                      "type": "string"
+                    },
+                    "athleteId": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "DRAFT",
+                        "SENT",
+                        "ACCEPTED",
+                        "DECLINED",
+                        "CANCELLED"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "notes": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "version": {
+                      "type": "number"
+                    },
+                    "acceptedWorkoutPlanId": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "sentAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "respondedAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    },
+                    "coach": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "image": {
+                          "nullable": true,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "athlete": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "image": {
+                          "nullable": true,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "payload": {
+                      "type": "object",
+                      "properties": {
+                        "workoutDays": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string"
+                              },
+                              "order": {
+                                "type": "number"
+                              },
+                              "weekDay": {
+                                "type": "string",
+                                "enum": [
+                                  "MONDAY",
+                                  "TUESDAY",
+                                  "WEDNESDAY",
+                                  "THURSDAY",
+                                  "FRIDAY",
+                                  "SATURDAY",
+                                  "SUNDAY"
+                                ]
+                              },
+                              "isRest": {
+                                "type": "boolean"
+                              },
+                              "estimatedDurationInSeconds": {
+                                "type": "number"
+                              },
+                              "coverImageUrl": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "exercises": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "order": {
+                                      "type": "number"
+                                    },
+                                    "sets": {
+                                      "type": "number"
+                                    },
+                                    "warmupSets": {
+                                      "type": "number"
+                                    },
+                                    "reps": {
+                                      "type": "number"
+                                    },
+                                    "restTimeInSeconds": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": [
+                                    "name",
+                                    "order",
+                                    "sets",
+                                    "warmupSets",
+                                    "reps",
+                                    "restTimeInSeconds"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "order",
+                              "weekDay",
+                              "isRest",
+                              "estimatedDurationInSeconds",
+                              "exercises"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "workoutDays"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "coachId",
+                    "athleteId",
+                    "status",
+                    "name",
+                    "notes",
+                    "version",
+                    "acceptedWorkoutPlanId",
+                    "sentAt",
+                    "respondedAt",
+                    "createdAt",
+                    "updatedAt"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getCoachPrescriptionDetails",
+        "summary": "Consultar detalhes completos de uma prescrição criada pelo treinador",
+        "tags": [
+          "Coach"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "coachId": {
+                      "type": "string"
+                    },
+                    "athleteId": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "DRAFT",
+                        "SENT",
+                        "ACCEPTED",
+                        "DECLINED",
+                        "CANCELLED"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "notes": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "version": {
+                      "type": "number"
+                    },
+                    "acceptedWorkoutPlanId": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "sentAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "respondedAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    },
+                    "coach": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "image": {
+                          "nullable": true,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "athlete": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "image": {
+                          "nullable": true,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "payload": {
+                      "type": "object",
+                      "properties": {
+                        "workoutDays": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string"
+                              },
+                              "order": {
+                                "type": "number"
+                              },
+                              "weekDay": {
+                                "type": "string",
+                                "enum": [
+                                  "MONDAY",
+                                  "TUESDAY",
+                                  "WEDNESDAY",
+                                  "THURSDAY",
+                                  "FRIDAY",
+                                  "SATURDAY",
+                                  "SUNDAY"
+                                ]
+                              },
+                              "isRest": {
+                                "type": "boolean"
+                              },
+                              "estimatedDurationInSeconds": {
+                                "type": "number"
+                              },
+                              "coverImageUrl": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "exercises": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "order": {
+                                      "type": "number"
+                                    },
+                                    "sets": {
+                                      "type": "number"
+                                    },
+                                    "warmupSets": {
+                                      "type": "number"
+                                    },
+                                    "reps": {
+                                      "type": "number"
+                                    },
+                                    "restTimeInSeconds": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": [
+                                    "name",
+                                    "order",
+                                    "sets",
+                                    "warmupSets",
+                                    "reps",
+                                    "restTimeInSeconds"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "order",
+                              "weekDay",
+                              "isRest",
+                              "estimatedDurationInSeconds",
+                              "exercises"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "workoutDays"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "coachId",
+                    "athleteId",
+                    "status",
+                    "name",
+                    "notes",
+                    "version",
+                    "acceptedWorkoutPlanId",
+                    "sentAt",
+                    "respondedAt",
+                    "createdAt",
+                    "updatedAt"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coach/prescriptions/{id}/send": {
+      "post": {
+        "operationId": "sendWorkoutPrescription",
+        "summary": "Enviar prescrição em rascunho para o aluno",
+        "tags": [
+          "Coach"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "coachId": {
+                      "type": "string"
+                    },
+                    "athleteId": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "DRAFT",
+                        "SENT",
+                        "ACCEPTED",
+                        "DECLINED",
+                        "CANCELLED"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "notes": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "version": {
+                      "type": "number"
+                    },
+                    "acceptedWorkoutPlanId": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "sentAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "respondedAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    },
+                    "coach": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "image": {
+                          "nullable": true,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "athlete": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "image": {
+                          "nullable": true,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "payload": {
+                      "type": "object",
+                      "properties": {
+                        "workoutDays": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string"
+                              },
+                              "order": {
+                                "type": "number"
+                              },
+                              "weekDay": {
+                                "type": "string",
+                                "enum": [
+                                  "MONDAY",
+                                  "TUESDAY",
+                                  "WEDNESDAY",
+                                  "THURSDAY",
+                                  "FRIDAY",
+                                  "SATURDAY",
+                                  "SUNDAY"
+                                ]
+                              },
+                              "isRest": {
+                                "type": "boolean"
+                              },
+                              "estimatedDurationInSeconds": {
+                                "type": "number"
+                              },
+                              "coverImageUrl": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "exercises": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "order": {
+                                      "type": "number"
+                                    },
+                                    "sets": {
+                                      "type": "number"
+                                    },
+                                    "warmupSets": {
+                                      "type": "number"
+                                    },
+                                    "reps": {
+                                      "type": "number"
+                                    },
+                                    "restTimeInSeconds": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": [
+                                    "name",
+                                    "order",
+                                    "sets",
+                                    "warmupSets",
+                                    "reps",
+                                    "restTimeInSeconds"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "order",
+                              "weekDay",
+                              "isRest",
+                              "estimatedDurationInSeconds",
+                              "exercises"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "workoutDays"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "coachId",
+                    "athleteId",
+                    "status",
+                    "name",
+                    "notes",
+                    "version",
+                    "acceptedWorkoutPlanId",
+                    "sentAt",
+                    "respondedAt",
+                    "createdAt",
+                    "updatedAt"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coach/prescriptions/{id}/cancel": {
+      "post": {
+        "operationId": "cancelWorkoutPrescription",
+        "summary": "Cancelar prescrição pendente ou em rascunho",
+        "tags": [
+          "Coach"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "coachId": {
+                      "type": "string"
+                    },
+                    "athleteId": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "DRAFT",
+                        "SENT",
+                        "ACCEPTED",
+                        "DECLINED",
+                        "CANCELLED"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "notes": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "version": {
+                      "type": "number"
+                    },
+                    "acceptedWorkoutPlanId": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "sentAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "respondedAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    },
+                    "coach": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "image": {
+                          "nullable": true,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "athlete": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "image": {
+                          "nullable": true,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "payload": {
+                      "type": "object",
+                      "properties": {
+                        "workoutDays": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string"
+                              },
+                              "order": {
+                                "type": "number"
+                              },
+                              "weekDay": {
+                                "type": "string",
+                                "enum": [
+                                  "MONDAY",
+                                  "TUESDAY",
+                                  "WEDNESDAY",
+                                  "THURSDAY",
+                                  "FRIDAY",
+                                  "SATURDAY",
+                                  "SUNDAY"
+                                ]
+                              },
+                              "isRest": {
+                                "type": "boolean"
+                              },
+                              "estimatedDurationInSeconds": {
+                                "type": "number"
+                              },
+                              "coverImageUrl": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "exercises": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "order": {
+                                      "type": "number"
+                                    },
+                                    "sets": {
+                                      "type": "number"
+                                    },
+                                    "warmupSets": {
+                                      "type": "number"
+                                    },
+                                    "reps": {
+                                      "type": "number"
+                                    },
+                                    "restTimeInSeconds": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": [
+                                    "name",
+                                    "order",
+                                    "sets",
+                                    "warmupSets",
+                                    "reps",
+                                    "restTimeInSeconds"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "order",
+                              "weekDay",
+                              "isRest",
+                              "estimatedDurationInSeconds",
+                              "exercises"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "workoutDays"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "coachId",
+                    "athleteId",
+                    "status",
+                    "name",
+                    "notes",
+                    "version",
+                    "acceptedWorkoutPlanId",
+                    "sentAt",
+                    "respondedAt",
+                    "createdAt",
+                    "updatedAt"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/coach/athletes/{athleteId}/prescriptions": {
+      "get": {
+        "operationId": "listCoachAthletePrescriptions",
+        "summary": "Listar prescrições elaboradas pelo treinador para um aluno",
+        "tags": [
+          "Coach"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "athleteId",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "coachId": {
+                        "type": "string"
+                      },
+                      "athleteId": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "DRAFT",
+                          "SENT",
+                          "ACCEPTED",
+                          "DECLINED",
+                          "CANCELLED"
+                        ]
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "notes": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "version": {
+                        "type": "number"
+                      },
+                      "acceptedWorkoutPlanId": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "sentAt": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "respondedAt": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      },
+                      "updatedAt": {
+                        "type": "string"
+                      },
+                      "coach": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "email": {
+                            "type": "string"
+                          },
+                          "image": {
+                            "nullable": true,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "athlete": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "email": {
+                            "type": "string"
+                          },
+                          "image": {
+                            "nullable": true,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "workoutDays": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string"
+                                },
+                                "order": {
+                                  "type": "number"
+                                },
+                                "weekDay": {
+                                  "type": "string",
+                                  "enum": [
+                                    "MONDAY",
+                                    "TUESDAY",
+                                    "WEDNESDAY",
+                                    "THURSDAY",
+                                    "FRIDAY",
+                                    "SATURDAY",
+                                    "SUNDAY"
+                                  ]
+                                },
+                                "isRest": {
+                                  "type": "boolean"
+                                },
+                                "estimatedDurationInSeconds": {
+                                  "type": "number"
+                                },
+                                "coverImageUrl": {
+                                  "nullable": true,
+                                  "type": "string"
+                                },
+                                "exercises": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "name": {
+                                        "type": "string"
+                                      },
+                                      "order": {
+                                        "type": "number"
+                                      },
+                                      "sets": {
+                                        "type": "number"
+                                      },
+                                      "warmupSets": {
+                                        "type": "number"
+                                      },
+                                      "reps": {
+                                        "type": "number"
+                                      },
+                                      "restTimeInSeconds": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "name",
+                                      "order",
+                                      "sets",
+                                      "warmupSets",
+                                      "reps",
+                                      "restTimeInSeconds"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                }
+                              },
+                              "required": [
+                                "name",
+                                "order",
+                                "weekDay",
+                                "isRest",
+                                "estimatedDurationInSeconds",
+                                "exercises"
+                              ],
+                              "additionalProperties": false
+                            }
+                          }
+                        },
+                        "required": [
+                          "workoutDays"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "coachId",
+                      "athleteId",
+                      "status",
+                      "name",
+                      "notes",
+                      "version",
+                      "acceptedWorkoutPlanId",
+                      "sentAt",
+                      "respondedAt",
+                      "createdAt",
+                      "updatedAt"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me/prescriptions": {
+      "get": {
+        "operationId": "listAthletePrescriptions",
+        "summary": "Listar prescrições de treino recebidas pelo atleta",
+        "tags": [
+          "Me"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "coachId": {
+                        "type": "string"
+                      },
+                      "athleteId": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "DRAFT",
+                          "SENT",
+                          "ACCEPTED",
+                          "DECLINED",
+                          "CANCELLED"
+                        ]
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "notes": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "version": {
+                        "type": "number"
+                      },
+                      "acceptedWorkoutPlanId": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "sentAt": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "respondedAt": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      },
+                      "updatedAt": {
+                        "type": "string"
+                      },
+                      "coach": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "email": {
+                            "type": "string"
+                          },
+                          "image": {
+                            "nullable": true,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "athlete": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "email": {
+                            "type": "string"
+                          },
+                          "image": {
+                            "nullable": true,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "payload": {
+                        "type": "object",
+                        "properties": {
+                          "workoutDays": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string"
+                                },
+                                "order": {
+                                  "type": "number"
+                                },
+                                "weekDay": {
+                                  "type": "string",
+                                  "enum": [
+                                    "MONDAY",
+                                    "TUESDAY",
+                                    "WEDNESDAY",
+                                    "THURSDAY",
+                                    "FRIDAY",
+                                    "SATURDAY",
+                                    "SUNDAY"
+                                  ]
+                                },
+                                "isRest": {
+                                  "type": "boolean"
+                                },
+                                "estimatedDurationInSeconds": {
+                                  "type": "number"
+                                },
+                                "coverImageUrl": {
+                                  "nullable": true,
+                                  "type": "string"
+                                },
+                                "exercises": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "name": {
+                                        "type": "string"
+                                      },
+                                      "order": {
+                                        "type": "number"
+                                      },
+                                      "sets": {
+                                        "type": "number"
+                                      },
+                                      "warmupSets": {
+                                        "type": "number"
+                                      },
+                                      "reps": {
+                                        "type": "number"
+                                      },
+                                      "restTimeInSeconds": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "name",
+                                      "order",
+                                      "sets",
+                                      "warmupSets",
+                                      "reps",
+                                      "restTimeInSeconds"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                }
+                              },
+                              "required": [
+                                "name",
+                                "order",
+                                "weekDay",
+                                "isRest",
+                                "estimatedDurationInSeconds",
+                                "exercises"
+                              ],
+                              "additionalProperties": false
+                            }
+                          }
+                        },
+                        "required": [
+                          "workoutDays"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "coachId",
+                      "athleteId",
+                      "status",
+                      "name",
+                      "notes",
+                      "version",
+                      "acceptedWorkoutPlanId",
+                      "sentAt",
+                      "respondedAt",
+                      "createdAt",
+                      "updatedAt"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me/prescriptions/{id}": {
+      "get": {
+        "operationId": "getAthletePrescriptionDetails",
+        "summary": "Consultar detalhes da prescrição recebida pelo atleta",
+        "tags": [
+          "Me"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "coachId": {
+                      "type": "string"
+                    },
+                    "athleteId": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "DRAFT",
+                        "SENT",
+                        "ACCEPTED",
+                        "DECLINED",
+                        "CANCELLED"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "notes": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "version": {
+                      "type": "number"
+                    },
+                    "acceptedWorkoutPlanId": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "sentAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "respondedAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    },
+                    "coach": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "image": {
+                          "nullable": true,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "athlete": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "image": {
+                          "nullable": true,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "payload": {
+                      "type": "object",
+                      "properties": {
+                        "workoutDays": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string"
+                              },
+                              "order": {
+                                "type": "number"
+                              },
+                              "weekDay": {
+                                "type": "string",
+                                "enum": [
+                                  "MONDAY",
+                                  "TUESDAY",
+                                  "WEDNESDAY",
+                                  "THURSDAY",
+                                  "FRIDAY",
+                                  "SATURDAY",
+                                  "SUNDAY"
+                                ]
+                              },
+                              "isRest": {
+                                "type": "boolean"
+                              },
+                              "estimatedDurationInSeconds": {
+                                "type": "number"
+                              },
+                              "coverImageUrl": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "exercises": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "order": {
+                                      "type": "number"
+                                    },
+                                    "sets": {
+                                      "type": "number"
+                                    },
+                                    "warmupSets": {
+                                      "type": "number"
+                                    },
+                                    "reps": {
+                                      "type": "number"
+                                    },
+                                    "restTimeInSeconds": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": [
+                                    "name",
+                                    "order",
+                                    "sets",
+                                    "warmupSets",
+                                    "reps",
+                                    "restTimeInSeconds"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "order",
+                              "weekDay",
+                              "isRest",
+                              "estimatedDurationInSeconds",
+                              "exercises"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "workoutDays"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "coachId",
+                    "athleteId",
+                    "status",
+                    "name",
+                    "notes",
+                    "version",
+                    "acceptedWorkoutPlanId",
+                    "sentAt",
+                    "respondedAt",
+                    "createdAt",
+                    "updatedAt"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me/prescriptions/{id}/accept": {
+      "post": {
+        "operationId": "acceptWorkoutPrescription",
+        "summary": "Aceitar prescrição de treino e gerar planejamento próprio inativo",
+        "tags": [
+          "Me"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "prescription": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "coachId": {
+                          "type": "string"
+                        },
+                        "athleteId": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "DRAFT",
+                            "SENT",
+                            "ACCEPTED",
+                            "DECLINED",
+                            "CANCELLED"
+                          ]
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "notes": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "version": {
+                          "type": "number"
+                        },
+                        "acceptedWorkoutPlanId": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "sentAt": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "respondedAt": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        },
+                        "updatedAt": {
+                          "type": "string"
+                        },
+                        "coach": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "email": {
+                              "type": "string"
+                            },
+                            "image": {
+                              "nullable": true,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "name"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "athlete": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "email": {
+                              "type": "string"
+                            },
+                            "image": {
+                              "nullable": true,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "name"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "payload": {
+                          "type": "object",
+                          "properties": {
+                            "workoutDays": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "order": {
+                                    "type": "number"
+                                  },
+                                  "weekDay": {
+                                    "type": "string",
+                                    "enum": [
+                                      "MONDAY",
+                                      "TUESDAY",
+                                      "WEDNESDAY",
+                                      "THURSDAY",
+                                      "FRIDAY",
+                                      "SATURDAY",
+                                      "SUNDAY"
+                                    ]
+                                  },
+                                  "isRest": {
+                                    "type": "boolean"
+                                  },
+                                  "estimatedDurationInSeconds": {
+                                    "type": "number"
+                                  },
+                                  "coverImageUrl": {
+                                    "nullable": true,
+                                    "type": "string"
+                                  },
+                                  "exercises": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "name": {
+                                          "type": "string"
+                                        },
+                                        "order": {
+                                          "type": "number"
+                                        },
+                                        "sets": {
+                                          "type": "number"
+                                        },
+                                        "warmupSets": {
+                                          "type": "number"
+                                        },
+                                        "reps": {
+                                          "type": "number"
+                                        },
+                                        "restTimeInSeconds": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "required": [
+                                        "name",
+                                        "order",
+                                        "sets",
+                                        "warmupSets",
+                                        "reps",
+                                        "restTimeInSeconds"
+                                      ],
+                                      "additionalProperties": false
+                                    }
+                                  }
+                                },
+                                "required": [
+                                  "name",
+                                  "order",
+                                  "weekDay",
+                                  "isRest",
+                                  "estimatedDurationInSeconds",
+                                  "exercises"
+                                ],
+                                "additionalProperties": false
+                              }
+                            }
+                          },
+                          "required": [
+                            "workoutDays"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "coachId",
+                        "athleteId",
+                        "status",
+                        "name",
+                        "notes",
+                        "version",
+                        "acceptedWorkoutPlanId",
+                        "sentAt",
+                        "respondedAt",
+                        "createdAt",
+                        "updatedAt"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "workoutPlanId": {
+                      "type": "string"
+                    },
+                    "workoutPlanName": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "prescription",
+                    "workoutPlanId",
+                    "workoutPlanName"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me/prescriptions/{id}/decline": {
+      "post": {
+        "operationId": "declineWorkoutPrescription",
+        "summary": "Recusar prescrição de treino recebida",
+        "tags": [
+          "Me"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "coachId": {
+                      "type": "string"
+                    },
+                    "athleteId": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "DRAFT",
+                        "SENT",
+                        "ACCEPTED",
+                        "DECLINED",
+                        "CANCELLED"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "notes": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "version": {
+                      "type": "number"
+                    },
+                    "acceptedWorkoutPlanId": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "sentAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "respondedAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    },
+                    "coach": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "image": {
+                          "nullable": true,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "athlete": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "image": {
+                          "nullable": true,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "payload": {
+                      "type": "object",
+                      "properties": {
+                        "workoutDays": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string"
+                              },
+                              "order": {
+                                "type": "number"
+                              },
+                              "weekDay": {
+                                "type": "string",
+                                "enum": [
+                                  "MONDAY",
+                                  "TUESDAY",
+                                  "WEDNESDAY",
+                                  "THURSDAY",
+                                  "FRIDAY",
+                                  "SATURDAY",
+                                  "SUNDAY"
+                                ]
+                              },
+                              "isRest": {
+                                "type": "boolean"
+                              },
+                              "estimatedDurationInSeconds": {
+                                "type": "number"
+                              },
+                              "coverImageUrl": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "exercises": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "order": {
+                                      "type": "number"
+                                    },
+                                    "sets": {
+                                      "type": "number"
+                                    },
+                                    "warmupSets": {
+                                      "type": "number"
+                                    },
+                                    "reps": {
+                                      "type": "number"
+                                    },
+                                    "restTimeInSeconds": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": [
+                                    "name",
+                                    "order",
+                                    "sets",
+                                    "warmupSets",
+                                    "reps",
+                                    "restTimeInSeconds"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "order",
+                              "weekDay",
+                              "isRest",
+                              "estimatedDurationInSeconds",
+                              "exercises"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "workoutDays"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "coachId",
+                    "athleteId",
+                    "status",
+                    "name",
+                    "notes",
+                    "version",
+                    "acceptedWorkoutPlanId",
+                    "sentAt",
+                    "respondedAt",
+                    "createdAt",
+                    "updatedAt"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/admin/overview": {
       "get": {
         "operationId": "getAdminOverview",

@@ -91,6 +91,7 @@ vi.mock("@/app/_lib/api/fetch-generated", () => ({
   getUserTrainData: vi.fn(),
   getWorkoutPlan: vi.fn(),
   getActiveWorkoutSession: vi.fn(),
+  listAthletePrescriptions: vi.fn().mockResolvedValue({ status: 200, data: [] }),
   getCommercialContext: vi.fn().mockResolvedValue({
     status: 200,
     data: {
