@@ -24,12 +24,15 @@ export default async function ProfilePage() {
 
   const trainData = await getUserTrainData();
 
+  if (trainData.status === 401) redirect("/auth");
+
+  const needsOnboarding =
+    (trainData.status === 200 && !trainData.data) || trainData.status === 404;
+  if (needsOnboarding) redirect("/onboarding");
+
   if (trainData.status !== 200) {
     throw new Error("Failed to fetch user train data");
   }
-
-  const needsOnboarding = !trainData.data;
-  if (needsOnboarding) redirect("/onboarding");
 
   const user = session.data.user;
   const data = trainData.data;

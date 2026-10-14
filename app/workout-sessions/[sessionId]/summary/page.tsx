@@ -77,13 +77,14 @@ export default async function WorkoutSummaryPage({
   let totalVolumeGrams = 0;
 
   const exerciseBreakdowns = workoutSession.sessionExercises.map((exercise) => {
-    const completedSetsCount = 0;
+    let completedSetsCount = 0;
     let maxWeightGrams = 0;
     let exerciseReps = 0;
 
     for (const set of exercise.sets) {
       if (set.completedAt) {
         totalSetsCompleted++;
+        completedSetsCount++;
         if (set.type === "WORKING") {
           totalWorkingSets++;
         }
@@ -327,9 +328,11 @@ export default async function WorkoutSummaryPage({
                       {idx + 1}. {item.name}
                     </span>
                     <span className="text-[11px] text-muted-foreground">
-                      {item.exerciseReps > 0
-                        ? `${item.exerciseReps} repetições totais`
-                        : "Série completada"}
+                      {item.completedSetsCount > 0
+                        ? `${item.completedSetsCount} ${item.completedSetsCount === 1 ? "série" : "séries"}${item.exerciseReps > 0 ? ` • ${item.exerciseReps} reps` : ""}`
+                        : item.exerciseReps > 0
+                          ? `${item.exerciseReps} repetições totais`
+                          : "Série completada"}
                     </span>
                   </div>
 

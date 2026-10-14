@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState, useTransition } from "react";
+import { useCallback, useEffect, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -53,6 +53,37 @@ export function WorkoutSessionTracker({ session }: WorkoutSessionTrackerProps) {
   const handleMutationEnd = useCallback(() => {
     setPendingMutationsCount((c) => Math.max(0, c - 1));
   }, []);
+
+  // Escuta alteração de visibilidade (ex: app em background ou tela desligada)
+  // para disparar blur e persistir qualquer valor digitado antes do congelamento
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        if (
+          document.activeElement instanceof HTMLElement &&
+          (document.activeElement.tagName === "INPUT" ||
+            document.activeElement.tagName === "TEXTAREA")
+        ) {
+          document.activeElement.blur();
+        }
+      }
+    };
+
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (pendingMutationsCount > 0) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [pendingMutationsCount]);
 
   const isReadOnly = !!sessionData.completedAt;
   const isFreeWorkout = sessionData.workoutDayId === null;

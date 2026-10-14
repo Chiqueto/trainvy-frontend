@@ -499,6 +499,9 @@ describe("Tracker Real UI & Actions (Task 1.6)", () => {
       const delBtn = screen.getByRole("button", { name: /remover/i });
       fireEvent.click(delBtn);
 
+      const confirmBtn = screen.getByRole("button", { name: /sim/i });
+      fireEvent.click(confirmBtn);
+
       await waitFor(() => {
         expect(api.deleteWorkoutSet).toHaveBeenCalledWith("set-del");
         expect(onDeleteSet).toHaveBeenCalledWith("set-del");

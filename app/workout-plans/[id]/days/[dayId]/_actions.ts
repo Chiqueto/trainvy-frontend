@@ -3,8 +3,8 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import {
+  completeWorkoutSession,
   startWorkoutSession,
-  updateWorkoutSession,
 } from "@/app/_lib/api/fetch-generated";
 
 export async function startWorkoutAction(
@@ -27,10 +27,14 @@ export async function completeWorkoutAction(
   workoutDayId: string,
   sessionId: string,
 ) {
-  await updateWorkoutSession(workoutPlanId, workoutDayId, sessionId, {
-    completedAt: new Date().toISOString(),
-  });
+  const response = await completeWorkoutSession(sessionId);
+  if (response.status !== 200) {
+    const errorData = response.data as { error?: string };
+    throw new Error(errorData?.error || "Erro ao finalizar treino");
+  }
+
   revalidatePath(`/workout-plans/${workoutPlanId}/days/${workoutDayId}`);
+  revalidatePath("/");
   redirect(`/workout-sessions/${sessionId}/summary`);
 }
 

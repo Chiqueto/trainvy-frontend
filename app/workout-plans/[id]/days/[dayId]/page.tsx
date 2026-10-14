@@ -5,9 +5,10 @@ import {
   getWorkoutDay,
   getUserTrainData,
 } from "@/app/_lib/api/fetch-generated";
+import Link from "next/link";
 import dayjs from "dayjs";
 import { WorkoutCover } from "@/app/_components/workout-cover";
-import { Calendar, Timer, Dumbbell } from "lucide-react";
+import { Calendar, Timer, Dumbbell, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BottomNav } from "@/app/_components/bottom-nav";
 import { BackButton } from "./_components/back-button";
@@ -132,6 +133,15 @@ export default async function WorkoutDayPage({
                 workoutDayId={dayId}
               />
             )}
+            {hasInProgressSession && inProgressSession && (
+              <Link
+                href={`/workout-sessions/${inProgressSession.id}`}
+                className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 font-heading text-sm font-semibold text-primary-foreground shadow-md transition hover:bg-primary/90 active:scale-95"
+              >
+                <span>Continuar</span>
+                <Play className="size-3.5 fill-current" />
+              </Link>
+            )}
             {hasCompletedSession && (
               <Button
                 variant="ghost"
@@ -154,7 +164,14 @@ export default async function WorkoutDayPage({
       </div>
 
       {hasInProgressSession && inProgressSession && (
-        <div className="px-5 pt-5">
+        <div className="flex flex-col gap-2.5 px-5 pt-5">
+          <Link
+            href={`/workout-sessions/${inProgressSession.id}`}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary py-3.5 font-heading text-sm font-semibold text-primary-foreground shadow-md transition hover:bg-primary/90 active:scale-95"
+          >
+            <Play className="size-4 fill-current" />
+            <span>Continuar treino no Tracker</span>
+          </Link>
           <CompleteWorkoutButton
             workoutPlanId={workoutPlanId}
             workoutDayId={dayId}

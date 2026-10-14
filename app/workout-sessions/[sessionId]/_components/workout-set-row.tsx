@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Check, Trash2 } from "lucide-react";
+import { Check, Loader2, Trash2 } from "lucide-react";
 import dayjs from "dayjs";
 
 import type { GetWorkoutSession200SessionExercisesItemSetsItem } from "@/app/_lib/api/fetch-generated";
@@ -59,8 +59,9 @@ export function WorkoutSetRow({
   const [completedAt, setCompletedAt] = useState<string | null>(
     () => set.completedAt,
   );
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
 
-  const [, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition();
 
   // Parse current inputs
   const parseCurrentData = () => {
@@ -226,9 +227,14 @@ export function WorkoutSetRow({
     });
   };
 
-  // Excluir série
-  const handleDelete = () => {
-    if (isReadOnly) return;
+  // Excluir série com confirmação
+  const handleInitiateDelete = () => {
+    if (isReadOnly || isPending) return;
+    setIsConfirmingDelete(true);
+  };
+
+  const handleExecuteDelete = () => {
+    if (isReadOnly || isPending) return;
 
     onMutationStart?.();
     startTransition(async () => {
@@ -236,6 +242,7 @@ export function WorkoutSetRow({
         const res = await deleteWorkoutSetAction(sessionId, set.id);
         if (!res.success) {
           onError(res.error);
+          setIsConfirmingDelete(false);
         } else {
           onDeleteSet(set.id);
         }
@@ -334,12 +341,13 @@ export function WorkoutSetRow({
             <button
               type="button"
               role="switch"
+              disabled={isPending}
               aria-checked={isWarmup}
               onClick={handleToggleType}
               title={isWarmup ? "Série de aquecimento (clique para alternar)" : "Série de trabalho (clique para alternar)"}
               className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
-                isWarmup ? "bg-amber-500" : "bg-muted-foreground/30"
-              }`}
+                isPending ? "opacity-60 cursor-not-allowed" : ""
+              } ${isWarmup ? "bg-amber-500" : "bg-muted-foreground/30"}`}
             >
               <span
                 className={`pointer-events-none inline-block size-4 transform rounded-full bg-white shadow-sm ring-0 transition-transform ${
@@ -348,7 +356,7 @@ export function WorkoutSetRow({
               />
             </button>
             <span
-              onClick={handleToggleType}
+              onClick={isPending ? undefined : handleToggleType}
               className={`cursor-pointer font-heading text-[11px] font-semibold select-none transition-colors ${
                 isWarmup ? "text-amber-500 font-bold" : "text-muted-foreground"
               }`}
@@ -360,29 +368,71 @@ export function WorkoutSetRow({
 
         {/* Delete & Complete Action Buttons */}
         <div className="flex items-center gap-1.5">
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={handleDelete}
-            className="size-8 text-muted-foreground/60 hover:text-destructive hover:bg-destructive/10"
-            title="Remover série"
-          >
-            <Trash2 className="size-4" />
-            <span className="sr-only">Remover</span>
-          </Button>
+          {isConfirmingDelete ? (
+            <div className="flex items-center gap-1 rounded-lg border border-destructive/30 bg-destructive/5 px-1.5 py-0.5 animate-in fade-in">
+              <span className="font-heading text-[10px] font-semibold text-destructive">
+                Excluir?
+              </span>
+              <Button
+                type="button"
+                variant="destructive"
+                size="sm"
+                onClick={handleExecuteDelete}
+                disabled={isPending}
+                className="h-6 px-2 font-heading text-[11px] font-bold rounded-md"
+              >
+                {isPending ? (
+                  <Loader2 className="size-3 animate-spin" />
+                ) : (
+                  "Sim"
+                )}
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsConfirmingDelete(false)}
+                disabled={isPending}
+                className="h-6 px-1.5 font-heading text-[11px] text-muted-foreground hover:text-foreground rounded-md"
+              >
+                Não
+              </Button>
+            </div>
+          ) : (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              disabled={isPending}
+              onClick={handleInitiateDelete}
+              className="size-8 text-muted-foreground/60 hover:text-destructive hover:bg-destructive/10"
+              title="Remover série"
+            >
+              <Trash2 className="size-4" />
+              <span className="sr-only">Remover</span>
+            </Button>
+          )}
 
           <button
             type="button"
+            disabled={isPending}
             onClick={handleToggleComplete}
             aria-label={isCompleted ? "Desfazer conclusão" : "Concluir série"}
             className={`flex size-10 shrink-0 items-center justify-center rounded-full border transition-all ${
+              isPending
+                ? "opacity-75 cursor-not-allowed"
+                : "cursor-pointer active:scale-95"
+            } ${
               isCompleted
                 ? "bg-primary text-primary-foreground border-primary shadow-sm"
-                : "border-border/80 bg-background text-muted-foreground hover:border-primary/60 hover:text-primary active:scale-95"
+                : "border-border/80 bg-background text-muted-foreground hover:border-primary/60 hover:text-primary"
             }`}
           >
-            <Check className={`size-5 ${isCompleted ? "stroke-[3]" : "stroke-2"}`} />
+            {isPending ? (
+              <Loader2 className="size-4 animate-spin text-primary" />
+            ) : (
+              <Check className={`size-5 ${isCompleted ? "stroke-[3]" : "stroke-2"}`} />
+            )}
           </button>
         </div>
       </div>
