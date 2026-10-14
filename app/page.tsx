@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { requireAccountSetup } from "./_lib/require-account-setup";
+import { getReturnToCookie } from "./_lib/auth-return-to";
 import { authClient } from "@/app/_lib/auth-client";
 import { headers } from "next/headers";
 import {
@@ -28,6 +29,11 @@ export default async function Home() {
 
   if (!session.data?.user) redirect("/auth");
   await requireAccountSetup();
+
+  const returnTo = await getReturnToCookie(true);
+  if (returnTo) {
+    redirect(returnTo);
+  }
 
   const today = dayjs();
   const [homeData, trainData, activeSessionResponse] = await Promise.all([

@@ -21,8 +21,10 @@ const labels: Record<string, string> = {
 
 export function SignupForm({
   authenticated = false,
+  returnTo,
 }: {
   authenticated?: boolean;
+  returnTo?: string | null;
 }) {
   const router = useRouter();
   const [type, setType] = useState<"ATHLETE" | "COACH">("ATHLETE");
@@ -75,14 +77,34 @@ export function SignupForm({
       });
       if (!result.success) throw new Error("intent");
       if (authenticated) {
-        router.push("/auth/complete");
+        router.push(
+          returnTo
+            ? `/auth/complete?returnTo=${encodeURIComponent(returnTo)}`
+            : "/auth/complete",
+        );
         return;
       }
+
+      const callbackOrigin =
+        typeof window !== "undefined" && window.location.origin
+          ? window.location.origin
+          : (
+              process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
+            ).replace(/\/+$/, "");
+
+      const callbackURL = returnTo
+        ? `${callbackOrigin}/auth/complete?returnTo=${encodeURIComponent(returnTo)}`
+        : `${callbackOrigin}/auth/complete`;
+
+      const errorCallbackURL = returnTo
+        ? `${callbackOrigin}/auth?returnTo=${encodeURIComponent(returnTo)}`
+        : `${callbackOrigin}/auth`;
+
       const oauth = await authClient.signIn.social({
         provider: "google",
         requestSignUp: true,
-        callbackURL: `${window.location.origin}/auth/complete`,
-        errorCallbackURL: `${window.location.origin}/auth`,
+        callbackURL,
+        errorCallbackURL,
       });
       if (oauth.error) throw new Error("oauth");
     } catch {
@@ -93,7 +115,14 @@ export function SignupForm({
 
   return (
     <main className="mx-auto flex min-h-svh w-full max-w-xl flex-col gap-6 px-5 py-10">
-      <Link href="/auth" className="w-fit text-sm underline">
+      <Link
+        href={
+          returnTo
+            ? `/auth?returnTo=${encodeURIComponent(returnTo)}`
+            : "/auth"
+        }
+        className="w-fit text-sm underline"
+      >
         Voltar para entrar
       </Link>
       <div>

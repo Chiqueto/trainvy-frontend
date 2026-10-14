@@ -1,4 +1,3 @@
-import { ArrowLeft } from "lucide-react";
 import { BottomNav } from "@/app/_components/bottom-nav";
 
 export default function PersonalLoading() {

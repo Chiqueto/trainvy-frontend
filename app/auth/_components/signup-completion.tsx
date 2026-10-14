@@ -20,13 +20,17 @@ const messages: Record<string, string> = {
   UNAUTHORIZED: "Entre com Google para continuar.",
 };
 
-export function SignupCompletion() {
+export function SignupCompletion({
+  returnTo,
+}: {
+  returnTo?: string | null;
+}) {
   const router = useRouter();
   const [attempt, setAttempt] = useState(0);
   const [code, setCode] = useState<string | null>(null);
   useEffect(() => {
     let current = true;
-    finishSignup()
+    finishSignup(returnTo)
       .then((result) => {
         if (!current) return;
         if (result.success) router.replace(result.destination);
@@ -38,7 +42,7 @@ export function SignupCompletion() {
     return () => {
       current = false;
     };
-  }, [attempt, router]);
+  }, [attempt, router, returnTo]);
   if (!code) return <p role="status">Verificando sua conta...</p>;
   return (
     <div className="space-y-4">
@@ -57,7 +61,15 @@ export function SignupCompletion() {
       </Button>
       <Link
         className="block underline"
-        href={code === "UNAUTHORIZED" ? "/auth" : "/auth/signup"}
+        href={
+          code === "UNAUTHORIZED"
+            ? returnTo
+              ? `/auth?returnTo=${encodeURIComponent(returnTo)}`
+              : "/auth"
+            : returnTo
+              ? `/auth/signup?returnTo=${encodeURIComponent(returnTo)}`
+              : "/auth/signup"
+        }
       >
         {code === "UNAUTHORIZED" ? "Entrar" : "Reiniciar cadastro"}
       </Link>

@@ -6,7 +6,11 @@ import { Loader2 } from "lucide-react";
 import { authClient } from "@/app/_lib/auth-client";
 import { Button } from "@/components/ui/button";
 
-export const SignInWithGoogle = () => {
+export const SignInWithGoogle = ({
+  returnTo,
+}: {
+  returnTo?: string | null;
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -22,13 +26,19 @@ export const SignInWithGoogle = () => {
               process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
             ).replace(/\/+$/, "");
 
-      const callbackURL = `${callbackOrigin}/auth/complete`;
+      const callbackURL = returnTo
+        ? `${callbackOrigin}/auth/complete?returnTo=${encodeURIComponent(returnTo)}`
+        : `${callbackOrigin}/auth/complete`;
+
+      const errorCallbackURL = returnTo
+        ? `${callbackOrigin}/auth?returnTo=${encodeURIComponent(returnTo)}`
+        : `${callbackOrigin}/auth`;
 
       const result = await authClient.signIn.social({
         provider: "google",
         callbackURL,
         requestSignUp: false,
-        errorCallbackURL: `${callbackOrigin}/auth`,
+        errorCallbackURL,
       });
 
       if (result?.error) {

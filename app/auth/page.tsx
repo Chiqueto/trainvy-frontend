@@ -5,15 +5,26 @@ import { authClient } from "@/app/_lib/auth-client";
 import { headers } from "next/headers";
 import { SignInWithGoogle } from "./_components/sign-in-with-google";
 import { Logo } from "@/app/_components/logo";
+import {
+  clearReturnToCookie,
+  sanitizeReturnTo,
+  setReturnToCookie,
+} from "@/app/_lib/auth-return-to";
 
 export const dynamic = "force-dynamic";
 
 export default async function AuthPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; returnTo?: string }>;
 }) {
-  const { error: oauthError } = await searchParams;
+  const { error: oauthError, returnTo: rawReturnTo } = await searchParams;
+  const sanitizedReturnTo = sanitizeReturnTo(rawReturnTo);
+
+  if (sanitizedReturnTo) {
+    await setReturnToCookie(sanitizedReturnTo);
+  }
+
   let session = null;
   try {
     session = await authClient.getSession({
@@ -27,7 +38,13 @@ export default async function AuthPage({
     }
   }
 
-  if (session?.data?.user) redirect("/auth/complete");
+  if (session?.data?.user) {
+    if (sanitizedReturnTo) {
+      await clearReturnToCookie();
+      redirect(sanitizedReturnTo);
+    }
+    redirect("/auth/complete");
+  }
 
   return (
     <div className="relative flex min-h-svh flex-col bg-black">
@@ -56,7 +73,7 @@ export default async function AuthPage({
             O app que vai transformar a forma como você treina.
           </h1>
 
-          <SignInWithGoogle />
+          <SignInWithGoogle returnTo={sanitizedReturnTo} />
           {oauthError && (
             <p
               role="alert"
@@ -68,7 +85,14 @@ export default async function AuthPage({
           )}
           <p className="text-sm text-primary-foreground">
             Ainda não tem conta?{" "}
-            <Link href="/auth/signup" className="font-semibold underline">
+            <Link
+              href={
+                sanitizedReturnTo
+                  ? `/auth/signup?returnTo=${encodeURIComponent(sanitizedReturnTo)}`
+                  : "/auth/signup"
+              }
+              className="font-semibold underline"
+            >
               Criar conta
             </Link>
           </p>

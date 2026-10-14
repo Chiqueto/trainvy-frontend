@@ -5,6 +5,7 @@ import { ExerciseExecutionDialog } from "@/app/_components/exercise-media/exerci
 import { ExerciseMediaPreview } from "@/app/_components/exercise-media/exercise-media-preview";
 import { SessionExerciseCard } from "@/app/workout-sessions/[sessionId]/_components/session-exercise-card";
 import * as mediaActions from "@/app/_actions/exercise-media";
+import type { GetExerciseMedia200 } from "@/app/_lib/api/fetch-generated";
 
 // Mock das Server Actions de Mídia
 vi.mock("@/app/_actions/exercise-media", () => ({
@@ -208,7 +209,7 @@ describe("Task 4.X — Exercise Media Foundation (Frontend)", () => {
 
       vi.mocked(mediaActions.getExerciseMediaAction).mockImplementation((id) => {
         if (id === "exercise-1") {
-          return firstPromise as Promise<{ success: true; data: mediaActions.GetExerciseMedia200 }>;
+          return firstPromise as Promise<{ success: true; data: GetExerciseMedia200 }>;
         }
         return Promise.resolve({
           success: true,

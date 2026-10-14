@@ -8,6 +8,10 @@ import {
   listPublicPlans,
 } from "@/app/_lib/api/fetch-generated";
 import type { CreateSignupIntentBody } from "@/app/_lib/api/fetch-generated";
+import {
+  RETURN_TO_COOKIE_NAME,
+  sanitizeReturnTo,
+} from "@/app/_lib/auth-return-to";
 
 const intentCookie = "trainvy-signup-intent";
 
@@ -45,7 +49,7 @@ export async function beginSignup(input: CreateSignupIntentBody) {
   }
 }
 
-export async function finishSignup() {
+export async function finishSignup(explicitReturnTo?: string | null) {
   try {
     const context = await getCommercialContext({ cache: "no-store" });
     if (context.status === 401)
@@ -53,8 +57,19 @@ export async function finishSignup() {
     if (context.status !== 200)
       return { success: false as const, code: "UNAVAILABLE" };
     const jar = await cookies();
+
+    const cookieReturnTo = sanitizeReturnTo(
+      jar.get(RETURN_TO_COOKIE_NAME)?.value,
+    );
+    const sanitizedReturnTo =
+      sanitizeReturnTo(explicitReturnTo) ?? cookieReturnTo;
+
     if (context.data.accountSetupCompletedAt) {
       jar.delete(intentCookie);
+      if (sanitizedReturnTo) {
+        jar.delete(RETURN_TO_COOKIE_NAME);
+        return { success: true as const, destination: sanitizedReturnTo };
+      }
       return { success: true as const, destination: "/" };
     }
     const token = jar.get(intentCookie)?.value;
@@ -64,6 +79,10 @@ export async function finishSignup() {
     if (result.status !== 200) {
       if (result.data.code === "ACCOUNT_ALREADY_INITIALIZED") {
         jar.delete(intentCookie);
+        if (sanitizedReturnTo) {
+          jar.delete(RETURN_TO_COOKIE_NAME);
+          return { success: true as const, destination: sanitizedReturnTo };
+        }
         return { success: true as const, destination: "/" };
       }
       return {
@@ -72,10 +91,17 @@ export async function finishSignup() {
       };
     }
     jar.delete(intentCookie);
+    if (result.data.accountType === "ATHLETE") {
+      return {
+        success: true as const,
+        destination: "/onboarding",
+      };
+    }
+    // Coach accounts cannot accept student invitations
+    jar.delete(RETURN_TO_COOKIE_NAME);
     return {
       success: true as const,
-      destination:
-        result.data.accountType === "ATHLETE" ? "/onboarding" : "/auth/welcome",
+      destination: "/auth/welcome",
     };
   } catch {
     return { success: false as const, code: "UNAVAILABLE" };

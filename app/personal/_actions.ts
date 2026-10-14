@@ -30,7 +30,7 @@ export async function createInvitationAction(expiresInDays: number = 7) {
       success: false as const,
       error: errorMsg,
     };
-  } catch (error) {
+  } catch {
     return {
       success: false as const,
       error: "Falha na comunicação com o servidor.",
