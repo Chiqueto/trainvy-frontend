@@ -2564,6 +2564,47 @@ export type ListCoachAthletes500 = {
   code: string;
 };
 
+export type GetCoachAthleteDetails200 = {
+  linkId: string;
+  athleteId: string;
+  name: string;
+  email: string;
+  /** @nullable */
+  image: string | null;
+  acceptedAt: string;
+  status: string;
+};
+
+export type GetCoachAthleteDetails400 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachAthleteDetails401 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachAthleteDetails403 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachAthleteDetails404 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachAthleteDetails409 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachAthleteDetails500 = {
+  error: string;
+  code: string;
+};
+
 export type RevokeCoachAthleteLink200 = {
   success: boolean;
 };
@@ -9019,6 +9060,80 @@ export const listCoachAthletes = async (
     ...options,
     method: "GET",
   });
+};
+
+/**
+ * @summary Obter detalhes básicos de um aluno ativo vinculado
+ */
+export type getCoachAthleteDetailsResponse200 = {
+  data: GetCoachAthleteDetails200;
+  status: 200;
+};
+
+export type getCoachAthleteDetailsResponse400 = {
+  data: GetCoachAthleteDetails400;
+  status: 400;
+};
+
+export type getCoachAthleteDetailsResponse401 = {
+  data: GetCoachAthleteDetails401;
+  status: 401;
+};
+
+export type getCoachAthleteDetailsResponse403 = {
+  data: GetCoachAthleteDetails403;
+  status: 403;
+};
+
+export type getCoachAthleteDetailsResponse404 = {
+  data: GetCoachAthleteDetails404;
+  status: 404;
+};
+
+export type getCoachAthleteDetailsResponse409 = {
+  data: GetCoachAthleteDetails409;
+  status: 409;
+};
+
+export type getCoachAthleteDetailsResponse500 = {
+  data: GetCoachAthleteDetails500;
+  status: 500;
+};
+
+export type getCoachAthleteDetailsResponseSuccess =
+  getCoachAthleteDetailsResponse200 & {
+    headers: Headers;
+  };
+export type getCoachAthleteDetailsResponseError = (
+  | getCoachAthleteDetailsResponse400
+  | getCoachAthleteDetailsResponse401
+  | getCoachAthleteDetailsResponse403
+  | getCoachAthleteDetailsResponse404
+  | getCoachAthleteDetailsResponse409
+  | getCoachAthleteDetailsResponse500
+) & {
+  headers: Headers;
+};
+
+export type getCoachAthleteDetailsResponse =
+  | getCoachAthleteDetailsResponseSuccess
+  | getCoachAthleteDetailsResponseError;
+
+export const getGetCoachAthleteDetailsUrl = (athleteId: string) => {
+  return `/coach/athletes/${athleteId}`;
+};
+
+export const getCoachAthleteDetails = async (
+  athleteId: string,
+  options?: RequestInit,
+): Promise<getCoachAthleteDetailsResponse> => {
+  return customFetch<getCoachAthleteDetailsResponse>(
+    getGetCoachAthleteDetailsUrl(athleteId),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
 };
 
 /**
