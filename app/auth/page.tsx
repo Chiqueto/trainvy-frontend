@@ -5,11 +5,7 @@ import { authClient } from "@/app/_lib/auth-client";
 import { headers } from "next/headers";
 import { SignInWithGoogle } from "./_components/sign-in-with-google";
 import { Logo } from "@/app/_components/logo";
-import {
-  clearReturnToCookie,
-  sanitizeReturnTo,
-  setReturnToCookie,
-} from "@/app/_lib/auth-return-to";
+import { sanitizeReturnTo } from "@/app/_lib/auth-return-to";
 
 export const dynamic = "force-dynamic";
 
@@ -20,10 +16,6 @@ export default async function AuthPage({
 }) {
   const { error: oauthError, returnTo: rawReturnTo } = await searchParams;
   const sanitizedReturnTo = sanitizeReturnTo(rawReturnTo);
-
-  if (sanitizedReturnTo) {
-    await setReturnToCookie(sanitizedReturnTo);
-  }
 
   let session = null;
   try {
@@ -40,7 +32,6 @@ export default async function AuthPage({
 
   if (session?.data?.user) {
     if (sanitizedReturnTo) {
-      await clearReturnToCookie();
       redirect(sanitizedReturnTo);
     }
     redirect("/auth/complete");

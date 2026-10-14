@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Loader2 } from "lucide-react";
 import { authClient } from "@/app/_lib/auth-client";
 import { Button } from "@/components/ui/button";
+import { setAuthReturnToAction } from "../_actions";
 
 export const SignInWithGoogle = ({
   returnTo,
@@ -18,6 +19,10 @@ export const SignInWithGoogle = ({
     try {
       setIsLoading(true);
       setErrorMessage(null);
+
+      if (returnTo) {
+        await setAuthReturnToAction(returnTo);
+      }
 
       const callbackOrigin =
         typeof window !== "undefined" && window.location.origin

@@ -41,6 +41,23 @@ export function sanitizeReturnTo(raw?: string | null): string | null {
   return trimmed;
 }
 
+/**
+ * Read-only getter for the returnTo cookie.
+ * Safe to call inside Server Components during render because it NEVER mutates cookies (never calls set or delete).
+ */
+export async function readReturnToCookie(): Promise<string | null> {
+  const jar = await cookies();
+  const raw =
+    typeof jar?.get === "function"
+      ? jar.get(RETURN_TO_COOKIE_NAME)?.value
+      : null;
+  return sanitizeReturnTo(raw);
+}
+
+/**
+ * Sets the returnTo cookie with security flags.
+ * MUST only be called in Server Actions or Route Handlers.
+ */
 export async function setReturnToCookie(destination: string): Promise<boolean> {
   const sanitized = sanitizeReturnTo(destination);
   if (!sanitized) return false;
@@ -58,7 +75,22 @@ export async function setReturnToCookie(destination: string): Promise<boolean> {
   return true;
 }
 
-export async function getReturnToCookie(clear = false): Promise<string | null> {
+/**
+ * Clears the returnTo cookie.
+ * MUST only be called in Server Actions or Route Handlers.
+ */
+export async function clearReturnToCookie(): Promise<void> {
+  const jar = await cookies();
+  if (typeof jar?.delete === "function") {
+    jar.delete(RETURN_TO_COOKIE_NAME);
+  }
+}
+
+/**
+ * Atomically reads, validates, and clears the returnTo cookie.
+ * MUST only be called in Server Actions or Route Handlers.
+ */
+export async function consumeReturnToCookie(): Promise<string | null> {
   const jar = await cookies();
   const raw =
     typeof jar?.get === "function"
@@ -66,18 +98,19 @@ export async function getReturnToCookie(clear = false): Promise<string | null> {
       : null;
   const sanitized = sanitizeReturnTo(raw);
 
-  if (clear || (raw && !sanitized)) {
-    if (typeof jar?.delete === "function") {
-      jar.delete(RETURN_TO_COOKIE_NAME);
-    }
+  if (typeof jar?.delete === "function") {
+    jar.delete(RETURN_TO_COOKIE_NAME);
   }
 
   return sanitized;
 }
 
-export async function clearReturnToCookie(): Promise<void> {
-  const jar = await cookies();
-  if (typeof jar?.delete === "function") {
-    jar.delete(RETURN_TO_COOKIE_NAME);
+/**
+ * @deprecated Use readReturnToCookie for Server Components / read-only contexts, or consumeReturnToCookie for Server Actions / Route Handlers.
+ */
+export async function getReturnToCookie(consume = false): Promise<string | null> {
+  if (consume) {
+    return consumeReturnToCookie();
   }
+  return readReturnToCookie();
 }

@@ -9,11 +9,24 @@ import {
 } from "@/app/_lib/api/fetch-generated";
 import type { CreateSignupIntentBody } from "@/app/_lib/api/fetch-generated";
 import {
+  clearReturnToCookie,
   RETURN_TO_COOKIE_NAME,
   sanitizeReturnTo,
+  setReturnToCookie,
 } from "@/app/_lib/auth-return-to";
 
 const intentCookie = "trainvy-signup-intent";
+
+export async function setAuthReturnToAction(rawReturnTo?: string | null) {
+  if (!rawReturnTo) return { success: false as const };
+  const ok = await setReturnToCookie(rawReturnTo);
+  return { success: ok };
+}
+
+export async function clearAuthReturnToAction() {
+  await clearReturnToCookie();
+  return { success: true };
+}
 
 export async function loadCoachPlans() {
   try {
@@ -28,7 +41,9 @@ export async function loadCoachPlans() {
   }
 }
 
-export async function beginSignup(input: CreateSignupIntentBody) {
+export async function beginSignup(
+  input: CreateSignupIntentBody & { returnTo?: string | null },
+) {
   try {
     // Forward only the intended fields; API validates audience, publication and price.
     const result = await createSignupIntent({
@@ -43,6 +58,11 @@ export async function beginSignup(input: CreateSignupIntentBody) {
       path: "/",
       expires: new Date(result.data.expiresAt),
     });
+
+    if (input.returnTo) {
+      await setReturnToCookie(input.returnTo);
+    }
+
     return { success: true as const }; // Never return the bearer token to browser JavaScript.
   } catch {
     return { success: false as const };

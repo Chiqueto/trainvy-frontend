@@ -74,6 +74,7 @@ export function SignupForm({
       const result = await beginSignup({
         accountType: type,
         planCode: type === "ATHLETE" ? "ATHLETE_FREE" : planCode,
+        returnTo: returnTo ?? undefined,
       });
       if (!result.success) throw new Error("intent");
       if (authenticated) {

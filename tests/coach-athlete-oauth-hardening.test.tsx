@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import {
   sanitizeReturnTo,
   RETURN_TO_COOKIE_NAME,
   setReturnToCookie,
+  readReturnToCookie,
+  consumeReturnToCookie,
   getReturnToCookie,
   clearReturnToCookie,
 } from "@/app/_lib/auth-return-to";
@@ -134,12 +136,21 @@ describe("TASK 6.1.1 — Coach ↔ Athlete Security & Reliability Hardening", ()
       expect(mockCookiesStore.get(RETURN_TO_COOKIE_NAME)).toBeUndefined();
     });
 
-    it("descarta cookies corrompidos ou maliciosos automaticamente", async () => {
+    it("descarta cookies corrompidos ou maliciosos automaticamente com consumeReturnToCookie", async () => {
       mockCookiesStore.set(RETURN_TO_COOKIE_NAME, { value: "https://evil.com" });
 
-      const retrieved = await getReturnToCookie();
+      const retrieved = await consumeReturnToCookie();
       expect(retrieved).toBeNull();
       expect(mockCookiesStore.get(RETURN_TO_COOKIE_NAME)).toBeUndefined();
+    });
+
+    it("readReturnToCookie retorna null de forma segura sem mutar cookies", async () => {
+      mockCookiesStore.set(RETURN_TO_COOKIE_NAME, { value: "https://evil.com" });
+
+      const retrieved = await readReturnToCookie();
+      expect(retrieved).toBeNull();
+      // Não removeu o cookie porque leitura em Server Components é estritamente imutável
+      expect(mockCookiesStore.get(RETURN_TO_COOKIE_NAME)).toBeDefined();
     });
   });
 
@@ -253,14 +264,16 @@ describe("TASK 6.1.1 — Coach ↔ Athlete Security & Reliability Hardening", ()
       const btn = screen.getByRole("button", { name: /fazer login com google/i });
       btn.click();
 
-      expect(authClient.signIn.social).toHaveBeenCalledWith(
-        expect.objectContaining({
-          provider: "google",
-          requestSignUp: false,
-          callbackURL: expect.stringContaining("returnTo=%2Fconvite%2Ftok_google_123"),
-          errorCallbackURL: expect.stringContaining("returnTo=%2Fconvite%2Ftok_google_123"),
-        }),
-      );
+      await waitFor(() => {
+        expect(authClient.signIn.social).toHaveBeenCalledWith(
+          expect.objectContaining({
+            provider: "google",
+            requestSignUp: false,
+            callbackURL: expect.stringContaining("returnTo=%2Fconvite%2Ftok_google_123"),
+            errorCallbackURL: expect.stringContaining("returnTo=%2Fconvite%2Ftok_google_123"),
+          }),
+        );
+      });
     });
 
     it("usa callback padrão quando não há returnTo", async () => {
@@ -269,14 +282,16 @@ describe("TASK 6.1.1 — Coach ↔ Athlete Security & Reliability Hardening", ()
       const btn = screen.getByRole("button", { name: /fazer login com google/i });
       btn.click();
 
-      expect(authClient.signIn.social).toHaveBeenCalledWith(
-        expect.objectContaining({
-          provider: "google",
-          requestSignUp: false,
-          callbackURL: expect.not.stringContaining("returnTo="),
-          errorCallbackURL: expect.not.stringContaining("returnTo="),
-        }),
-      );
+      await waitFor(() => {
+        expect(authClient.signIn.social).toHaveBeenCalledWith(
+          expect.objectContaining({
+            provider: "google",
+            requestSignUp: false,
+            callbackURL: expect.not.stringContaining("returnTo="),
+            errorCallbackURL: expect.not.stringContaining("returnTo="),
+          }),
+        );
+      });
     });
   });
 
