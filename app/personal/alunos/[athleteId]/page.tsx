@@ -6,6 +6,7 @@ import {
   Calendar,
   CheckCircle2,
   Dumbbell,
+  LineChart,
   Mail,
   Shield,
   ShieldAlert,
@@ -26,6 +27,7 @@ import {
   type PrescriptionListItem,
 } from "./_components/coach-prescriptions-list";
 import { RetryButton } from "./_components/retry-button";
+import { CoachAthleteEvolutionDashboard } from "./_components/coach-athlete-evolution-dashboard";
 
 interface AthleteDetailsPageProps {
   params: Promise<{
@@ -63,7 +65,12 @@ export default async function AthleteDetailsPage({
 
   const { athleteId } = await params;
   const { tab } = (await searchParams) ?? {};
-  const currentTab = tab === "prescriptions" ? "prescriptions" : "overview";
+  const currentTab =
+    tab === "prescriptions"
+      ? "prescriptions"
+      : tab === "evolution"
+        ? "evolution"
+        : "overview";
 
   // Busca detalhes do aluno — com tratamento explícito de erros (Requirement 11)
   let athleteData = null;
@@ -188,8 +195,8 @@ export default async function AthleteDetailsPage({
           </span>
         </div>
 
-        {/* Tab Switcher: Visão Geral vs Treinos Prescritos */}
-        <div className="grid grid-cols-2 p-1 rounded-2xl bg-muted/60 border border-border/60">
+        {/* Tab Switcher: Visão Geral vs Evolução vs Treinos Prescritos */}
+        <div className="grid grid-cols-3 p-1 rounded-2xl bg-muted/60 border border-border/60">
           <Link
             href={`/personal/alunos/${athleteId}?tab=overview`}
             className={`h-9 rounded-xl font-heading text-xs font-semibold flex items-center justify-center transition-all ${
@@ -201,6 +208,17 @@ export default async function AthleteDetailsPage({
             Visão Geral
           </Link>
           <Link
+            href={`/personal/alunos/${athleteId}?tab=evolution`}
+            className={`h-9 rounded-xl font-heading text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
+              currentTab === "evolution"
+                ? "bg-card text-foreground shadow-xs"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <LineChart className="size-3.5" />
+            <span>Evolução</span>
+          </Link>
+          <Link
             href={`/personal/alunos/${athleteId}?tab=prescriptions`}
             className={`h-9 rounded-xl font-heading text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
               currentTab === "prescriptions"
@@ -209,7 +227,7 @@ export default async function AthleteDetailsPage({
             }`}
           >
             <Dumbbell className="size-3.5" />
-            <span>Treinos Prescritos</span>
+            <span>Prescrições</span>
             {prescriptions.length > 0 && (
               <span className="flex size-4 items-center justify-center rounded-full bg-primary/20 text-[10px] font-bold text-primary">
                 {prescriptions.length}
@@ -224,6 +242,11 @@ export default async function AthleteDetailsPage({
             athleteId={athleteId}
             athleteName={athleteData.name}
             prescriptions={prescriptions}
+          />
+        ) : currentTab === "evolution" ? (
+          <CoachAthleteEvolutionDashboard
+            athleteId={athleteId}
+            athleteName={athleteData.name}
           />
         ) : (
           <>
@@ -287,12 +310,22 @@ export default async function AthleteDetailsPage({
               </h2>
 
               <div className="grid grid-cols-1 gap-2.5">
-                <Link href={`/personal/alunos/${athleteId}?tab=prescriptions`}>
+                <Link href={`/personal/alunos/${athleteId}?tab=evolution`}>
                   <Button
                     variant="default"
                     className="w-full h-11 rounded-xl font-heading font-semibold text-xs flex items-center justify-center gap-2 shadow-sm"
                   >
-                    <Dumbbell className="size-4" />
+                    <LineChart className="size-4" />
+                    <span>Acompanhar Evolução e Histórico</span>
+                  </Button>
+                </Link>
+
+                <Link href={`/personal/alunos/${athleteId}?tab=prescriptions`}>
+                  <Button
+                    variant="outline"
+                    className="w-full h-11 rounded-xl font-heading font-semibold text-xs border-border/80 hover:bg-card hover:border-primary/40 flex items-center justify-center gap-2"
+                  >
+                    <Dumbbell className="size-4 text-primary" />
                     <span>Gerenciar Treinos Prescritos</span>
                   </Button>
                 </Link>
@@ -323,8 +356,9 @@ export default async function AthleteDetailsPage({
               <p className="text-xs text-muted-foreground leading-relaxed">
                 Você pode criar e prescrever treinos personalizados para este
                 aluno. O aluno mantém a posse de seus registros e histórico.
-                Métricas corporais, cargas registradas e sessões avulsas
-                permanecem privadas ao atleta.
+                O acesso à evolução requer consentimento explícito e ativo
+                concedido pelo atleta em seu perfil. Métricas corporais e dados
+                privados permanecem estritamente sob controle do aluno.
               </p>
             </section>
           </>

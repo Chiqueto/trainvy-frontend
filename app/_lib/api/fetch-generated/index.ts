@@ -592,16 +592,16 @@ export type StartWorkoutSession500 = {
 };
 
 export type UpdateWorkoutSessionBody = {
-  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$ */
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$ */
   completedAt: string;
 };
 
 export type UpdateWorkoutSession200 = {
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
-  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$ */
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$ */
   startedAt: string;
-  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$ */
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$ */
   completedAt: string;
 };
 
@@ -3100,6 +3100,10 @@ export type UpdateWorkoutPrescriptionDraftBody = {
    * @nullable
    */
   notes?: string | null;
+  /**
+   * @maximum 9007199254740991
+   * @exclusiveMinimum 0
+   */
   version?: number;
   /** @minItems 1 */
   workoutDays: UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItem[];
@@ -4160,6 +4164,898 @@ export type DeclineWorkoutPrescription409 = {
 };
 
 export type DeclineWorkoutPrescription500 = {
+  error: string;
+  code: string;
+};
+
+/**
+ * @nullable
+ */
+export type GetAthleteCoachProgressSharing200Coach = {
+  id: string;
+  name: string;
+  email: string;
+  /** @nullable */
+  image: string | null;
+} | null;
+
+/**
+ * @nullable
+ */
+export type GetAthleteCoachProgressSharing200SharingConsent = {
+  enabled: boolean;
+  includePreviousHistory: boolean;
+  /** @nullable */
+  sharedAt: string | null;
+  /** @nullable */
+  revokedAt: string | null;
+} | null;
+
+export type GetAthleteCoachProgressSharing200 = {
+  hasActiveCoach: boolean;
+  /** @nullable */
+  coach: GetAthleteCoachProgressSharing200Coach;
+  /** @nullable */
+  sharingConsent: GetAthleteCoachProgressSharing200SharingConsent;
+};
+
+export type GetAthleteCoachProgressSharing400 = {
+  error: string;
+  code: string;
+};
+
+export type GetAthleteCoachProgressSharing401 = {
+  error: string;
+  code: string;
+};
+
+export type GetAthleteCoachProgressSharing403 = {
+  error: string;
+  code: string;
+};
+
+export type GetAthleteCoachProgressSharing404 = {
+  error: string;
+  code: string;
+};
+
+export type GetAthleteCoachProgressSharing500 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateAthleteCoachProgressSharingBody = {
+  enabled: boolean;
+  includePreviousHistory: boolean;
+};
+
+/**
+ * @nullable
+ */
+export type UpdateAthleteCoachProgressSharing200Coach = {
+  id: string;
+  name: string;
+  email: string;
+  /** @nullable */
+  image: string | null;
+} | null;
+
+/**
+ * @nullable
+ */
+export type UpdateAthleteCoachProgressSharing200SharingConsent = {
+  enabled: boolean;
+  includePreviousHistory: boolean;
+  /** @nullable */
+  sharedAt: string | null;
+  /** @nullable */
+  revokedAt: string | null;
+} | null;
+
+export type UpdateAthleteCoachProgressSharing200 = {
+  hasActiveCoach: boolean;
+  /** @nullable */
+  coach: UpdateAthleteCoachProgressSharing200Coach;
+  /** @nullable */
+  sharingConsent: UpdateAthleteCoachProgressSharing200SharingConsent;
+};
+
+export type UpdateAthleteCoachProgressSharing400 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateAthleteCoachProgressSharing401 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateAthleteCoachProgressSharing403 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateAthleteCoachProgressSharing404 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateAthleteCoachProgressSharing500 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachAthleteProgressOverviewParams = {
+  tz?: string;
+  /**
+   * @minimum 1
+   * @maximum 52
+   */
+  weeksCount?: number;
+};
+
+export type GetCoachAthleteProgressOverview200Athlete = {
+  id: string;
+  name: string;
+  email: string;
+  /** @nullable */
+  image: string | null;
+};
+
+export type GetCoachAthleteProgressOverview200Range = {
+  weeksCount: number;
+  startDate: string;
+  endDate: string;
+};
+
+export type GetCoachAthleteProgressOverview200WeeklyWeeksItem = {
+  weekStartDate: string;
+  weekEndDate: string;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  workoutsCompleted: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  workingSets: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  warmupSets: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  loadVolumeGrams: number;
+  /** @minimum 0 */
+  loadVolumeKg: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  totalDurationInSeconds: number;
+  /** @minimum 0 */
+  averageDurationInSeconds: number;
+};
+
+export type GetCoachAthleteProgressOverview200Weekly = {
+  startDate: string;
+  endDate: string;
+  timezone: string;
+  weeks: GetCoachAthleteProgressOverview200WeeklyWeeksItem[];
+};
+
+export type GetCoachAthleteProgressOverview200MusclesMusclesItemMuscleGroup =
+  (typeof GetCoachAthleteProgressOverview200MusclesMusclesItemMuscleGroup)[keyof typeof GetCoachAthleteProgressOverview200MusclesMusclesItemMuscleGroup];
+
+export const GetCoachAthleteProgressOverview200MusclesMusclesItemMuscleGroup = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+} as const;
+
+export type GetCoachAthleteProgressOverview200MusclesMusclesItem = {
+  muscleGroup: GetCoachAthleteProgressOverview200MusclesMusclesItemMuscleGroup;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  directWorkingSets: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  indirectWorkingSets: number;
+};
+
+export type GetCoachAthleteProgressOverview200Muscles = {
+  startDate: string;
+  endDate: string;
+  timezone: string;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  totalWorkingSets: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  classifiedWorkingSets: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  unclassifiedWorkingSets: number;
+  muscles: GetCoachAthleteProgressOverview200MusclesMusclesItem[];
+};
+
+export type GetCoachAthleteProgressOverview200Summary = {
+  totalWorkouts: number;
+  weeklyFrequency: number;
+  totalWorkingSets: number;
+  totalLoadVolumeKg: number;
+  averageDurationInSeconds: number;
+};
+
+export type GetCoachAthleteProgressOverview200 = {
+  athlete: GetCoachAthleteProgressOverview200Athlete;
+  range: GetCoachAthleteProgressOverview200Range;
+  weekly: GetCoachAthleteProgressOverview200Weekly;
+  muscles: GetCoachAthleteProgressOverview200Muscles;
+  summary: GetCoachAthleteProgressOverview200Summary;
+};
+
+export type GetCoachAthleteProgressOverview400 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachAthleteProgressOverview401 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachAthleteProgressOverview403 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachAthleteProgressOverview404 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachAthleteProgressOverview500 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachAthleteProgressSessionsParams = {
+  cursor?: string;
+  /**
+   * @minimum 1
+   * @maximum 50
+   */
+  limit?: number;
+  origin?: ListCoachAthleteProgressSessionsOrigin;
+};
+
+export type ListCoachAthleteProgressSessionsOrigin =
+  (typeof ListCoachAthleteProgressSessionsOrigin)[keyof typeof ListCoachAthleteProgressSessionsOrigin];
+
+export const ListCoachAthleteProgressSessionsOrigin = {
+  PLANNED: "PLANNED",
+  FREE: "FREE",
+} as const;
+
+export type ListCoachAthleteProgressSessions200ItemsItemOrigin =
+  (typeof ListCoachAthleteProgressSessions200ItemsItemOrigin)[keyof typeof ListCoachAthleteProgressSessions200ItemsItemOrigin];
+
+export const ListCoachAthleteProgressSessions200ItemsItemOrigin = {
+  PLANNED: "PLANNED",
+  FREE: "FREE",
+} as const;
+
+export type ListCoachAthleteProgressSessions200ItemsItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  origin: ListCoachAthleteProgressSessions200ItemsItemOrigin;
+  startedAt: string;
+  completedAt: string;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  durationInSeconds: number;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutPlanId: string | null;
+  /** @nullable */
+  workoutPlanNameSnapshot: string | null;
+  /** @nullable */
+  workoutDayNameSnapshot: string | null;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  exercisesCount: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  workingSetsCount: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  warmupSetsCount: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  totalLoadVolumeGrams: number;
+  /** @minimum 0 */
+  totalLoadVolumeKg: number;
+};
+
+export type ListCoachAthleteProgressSessions200 = {
+  items: ListCoachAthleteProgressSessions200ItemsItem[];
+  /** @nullable */
+  nextCursor: string | null;
+  hasMore: boolean;
+};
+
+export type ListCoachAthleteProgressSessions400 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachAthleteProgressSessions401 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachAthleteProgressSessions403 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachAthleteProgressSessions404 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachAthleteProgressSessions500 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachAthleteProgressSessionDetail200Origin =
+  (typeof GetCoachAthleteProgressSessionDetail200Origin)[keyof typeof GetCoachAthleteProgressSessionDetail200Origin];
+
+export const GetCoachAthleteProgressSessionDetail200Origin = {
+  PLANNED: "PLANNED",
+  FREE: "FREE",
+} as const;
+
+export type GetCoachAthleteProgressSessionDetail200Summary = {
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  exercisesCount: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  workingSetsCount: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  warmupSetsCount: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  totalLoadVolumeGrams: number;
+  /** @minimum 0 */
+  totalLoadVolumeKg: number;
+};
+
+export type GetCoachAthleteProgressSessionDetail200ExercisesItemPlanned = {
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  warmupSets: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  workingSets: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  reps: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  restTimeInSeconds: number | null;
+};
+
+export type GetCoachAthleteProgressSessionDetail200ExercisesItemPerformed = {
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  warmupSetsCount: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  workingSetsCount: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  loadVolumeGrams: number;
+  /** @minimum 0 */
+  loadVolumeKg: number;
+};
+
+export type GetCoachAthleteProgressSessionDetail200ExercisesItemSetsItemType =
+  (typeof GetCoachAthleteProgressSessionDetail200ExercisesItemSetsItemType)[keyof typeof GetCoachAthleteProgressSessionDetail200ExercisesItemSetsItemType];
+
+export const GetCoachAthleteProgressSessionDetail200ExercisesItemSetsItemType =
+  {
+    WARMUP: "WARMUP",
+    WORKING: "WORKING",
+  } as const;
+
+export type GetCoachAthleteProgressSessionDetail200ExercisesItemSetsItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  order: number;
+  type: GetCoachAthleteProgressSessionDetail200ExercisesItemSetsItemType;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  weightInGrams: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  reps: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  rir: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  durationInSeconds: number | null;
+  /** @nullable */
+  notes: string | null;
+  completedAt: string;
+};
+
+export type GetCoachAthleteProgressSessionDetail200ExercisesItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId: string | null;
+  exerciseNameSnapshot: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  order: number;
+  /** @nullable */
+  notes: string | null;
+  planned: GetCoachAthleteProgressSessionDetail200ExercisesItemPlanned;
+  performed: GetCoachAthleteProgressSessionDetail200ExercisesItemPerformed;
+  sets: GetCoachAthleteProgressSessionDetail200ExercisesItemSetsItem[];
+};
+
+export type GetCoachAthleteProgressSessionDetail200 = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  origin: GetCoachAthleteProgressSessionDetail200Origin;
+  startedAt: string;
+  completedAt: string;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  durationInSeconds: number;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutPlanId: string | null;
+  /** @nullable */
+  workoutPlanNameSnapshot: string | null;
+  /** @nullable */
+  workoutDayNameSnapshot: string | null;
+  summary: GetCoachAthleteProgressSessionDetail200Summary;
+  exercises: GetCoachAthleteProgressSessionDetail200ExercisesItem[];
+};
+
+export type GetCoachAthleteProgressSessionDetail400 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachAthleteProgressSessionDetail401 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachAthleteProgressSessionDetail403 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachAthleteProgressSessionDetail404 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachAthleteProgressSessionDetail500 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachAthleteProgressExercisesParams = {
+  q?: string;
+  onlyWithHistory?: ListCoachAthleteProgressExercisesOnlyWithHistory;
+};
+
+export type ListCoachAthleteProgressExercisesOnlyWithHistory =
+  (typeof ListCoachAthleteProgressExercisesOnlyWithHistory)[keyof typeof ListCoachAthleteProgressExercisesOnlyWithHistory];
+
+export const ListCoachAthleteProgressExercisesOnlyWithHistory = {
+  true: "true",
+  false: "false",
+} as const;
+
+export type ListCoachAthleteProgressExercises200ItemMusclesItemMuscleGroup =
+  (typeof ListCoachAthleteProgressExercises200ItemMusclesItemMuscleGroup)[keyof typeof ListCoachAthleteProgressExercises200ItemMusclesItemMuscleGroup];
+
+export const ListCoachAthleteProgressExercises200ItemMusclesItemMuscleGroup = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+} as const;
+
+export type ListCoachAthleteProgressExercises200ItemMusclesItemRole =
+  (typeof ListCoachAthleteProgressExercises200ItemMusclesItemRole)[keyof typeof ListCoachAthleteProgressExercises200ItemMusclesItemRole];
+
+export const ListCoachAthleteProgressExercises200ItemMusclesItemRole = {
+  PRIMARY: "PRIMARY",
+  SECONDARY: "SECONDARY",
+} as const;
+
+export type ListCoachAthleteProgressExercises200ItemMusclesItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  muscleGroup: ListCoachAthleteProgressExercises200ItemMusclesItemMuscleGroup;
+  role: ListCoachAthleteProgressExercises200ItemMusclesItemRole;
+};
+
+export type ListCoachAthleteProgressExercises200Item = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  name: string;
+  /** @nullable */
+  ownerUserId: string | null;
+  hasMedia: boolean;
+  muscles: ListCoachAthleteProgressExercises200ItemMusclesItem[];
+};
+
+export type ListCoachAthleteProgressExercises400 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachAthleteProgressExercises401 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachAthleteProgressExercises403 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachAthleteProgressExercises404 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachAthleteProgressExercises500 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachAthleteProgressExerciseEvolutionParams = {
+  cursor?: string;
+  /**
+   * @minimum 1
+   * @maximum 50
+   */
+  limit?: number;
+};
+
+export type GetCoachAthleteProgressExerciseEvolution200ExerciseMusclesItemMuscleGroup =
+  (typeof GetCoachAthleteProgressExerciseEvolution200ExerciseMusclesItemMuscleGroup)[keyof typeof GetCoachAthleteProgressExerciseEvolution200ExerciseMusclesItemMuscleGroup];
+
+export const GetCoachAthleteProgressExerciseEvolution200ExerciseMusclesItemMuscleGroup =
+  {
+    CHEST: "CHEST",
+    BACK: "BACK",
+    SHOULDERS: "SHOULDERS",
+    BICEPS: "BICEPS",
+    TRICEPS: "TRICEPS",
+    FOREARMS: "FOREARMS",
+    QUADRICEPS: "QUADRICEPS",
+    HAMSTRINGS: "HAMSTRINGS",
+    GLUTES: "GLUTES",
+    ADDUCTORS: "ADDUCTORS",
+    HIP_ABDUCTORS: "HIP_ABDUCTORS",
+    CALVES: "CALVES",
+    CORE: "CORE",
+  } as const;
+
+export type GetCoachAthleteProgressExerciseEvolution200ExerciseMusclesItemRole =
+  (typeof GetCoachAthleteProgressExerciseEvolution200ExerciseMusclesItemRole)[keyof typeof GetCoachAthleteProgressExerciseEvolution200ExerciseMusclesItemRole];
+
+export const GetCoachAthleteProgressExerciseEvolution200ExerciseMusclesItemRole =
+  {
+    PRIMARY: "PRIMARY",
+    SECONDARY: "SECONDARY",
+  } as const;
+
+export type GetCoachAthleteProgressExerciseEvolution200ExerciseMusclesItem = {
+  muscleGroup: GetCoachAthleteProgressExerciseEvolution200ExerciseMusclesItemMuscleGroup;
+  role: GetCoachAthleteProgressExerciseEvolution200ExerciseMusclesItemRole;
+};
+
+export type GetCoachAthleteProgressExerciseEvolution200Exercise = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  name: string;
+  /** @nullable */
+  ownerUserId: string | null;
+  muscles: GetCoachAthleteProgressExerciseEvolution200ExerciseMusclesItem[];
+};
+
+/**
+ * @nullable
+ */
+export type GetCoachAthleteProgressExerciseEvolution200LoadPR = {
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  weightInGrams: number;
+  /** @minimum 0 */
+  weightKg: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  reps: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  rir: number | null;
+  completedAt: string;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12} | 00000000-0000-0000-0000-000000000000 | ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  workoutSessionId: string;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12} | ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  sessionExerciseId: string;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12} | ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  workoutSetId: string;
+  origin: "PLANNED" | "FREE";
+  /** @nullable */
+  workoutPlanNameSnapshot: string | null;
+  /** @nullable */
+  workoutDayNameSnapshot: string | null;
+} | null;
+
+export type GetCoachAthleteProgressExerciseEvolution200ItemsItemOrigin =
+  (typeof GetCoachAthleteProgressExerciseEvolution200ItemsItemOrigin)[keyof typeof GetCoachAthleteProgressExerciseEvolution200ItemsItemOrigin];
+
+export const GetCoachAthleteProgressExerciseEvolution200ItemsItemOrigin = {
+  PLANNED: "PLANNED",
+  FREE: "FREE",
+} as const;
+
+/**
+ * @nullable
+ */
+export type GetCoachAthleteProgressExerciseEvolution200ItemsItemTopSet = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12} | 00000000-0000-0000-0000-000000000000 | ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  workoutSetId: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  weightInGrams: number | null;
+  /** @nullable */
+  weightKg: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  reps: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  rir: number | null;
+} | null;
+
+export type GetCoachAthleteProgressExerciseEvolution200ItemsItemSetsItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  sessionExerciseId: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  order: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  weightInGrams: number | null;
+  /** @nullable */
+  weightKg: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  reps: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  rir: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  durationInSeconds: number | null;
+  /** @nullable */
+  notes: string | null;
+  completedAt: string;
+};
+
+export type GetCoachAthleteProgressExerciseEvolution200ItemsItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  workoutSessionId: string;
+  startedAt: string;
+  completedAt: string;
+  origin: GetCoachAthleteProgressExerciseEvolution200ItemsItemOrigin;
+  /** @nullable */
+  workoutPlanNameSnapshot: string | null;
+  /** @nullable */
+  workoutDayNameSnapshot: string | null;
+  exerciseNameSnapshot: string;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  workingSetsCount: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  totalReps: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  loadVolumeGrams: number;
+  /** @minimum 0 */
+  loadVolumeKg: number;
+  /** @nullable */
+  topSet: GetCoachAthleteProgressExerciseEvolution200ItemsItemTopSet;
+  sets: GetCoachAthleteProgressExerciseEvolution200ItemsItemSetsItem[];
+};
+
+export type GetCoachAthleteProgressExerciseEvolution200 = {
+  exercise: GetCoachAthleteProgressExerciseEvolution200Exercise;
+  /** @nullable */
+  loadPR: GetCoachAthleteProgressExerciseEvolution200LoadPR;
+  items: GetCoachAthleteProgressExerciseEvolution200ItemsItem[];
+  /** @nullable */
+  nextCursor: string | null;
+  hasMore: boolean;
+};
+
+export type GetCoachAthleteProgressExerciseEvolution400 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachAthleteProgressExerciseEvolution401 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachAthleteProgressExerciseEvolution403 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachAthleteProgressExerciseEvolution404 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachAthleteProgressExerciseEvolution500 = {
   error: string;
   code: string;
 };
@@ -11581,6 +12477,557 @@ export const declineWorkoutPrescription = async (
     {
       ...options,
       method: "POST",
+    },
+  );
+};
+
+/**
+ * @summary Consultar consentimento e escopo de compartilhamento de evolução
+ */
+export type getAthleteCoachProgressSharingResponse200 = {
+  data: GetAthleteCoachProgressSharing200;
+  status: 200;
+};
+
+export type getAthleteCoachProgressSharingResponse400 = {
+  data: GetAthleteCoachProgressSharing400;
+  status: 400;
+};
+
+export type getAthleteCoachProgressSharingResponse401 = {
+  data: GetAthleteCoachProgressSharing401;
+  status: 401;
+};
+
+export type getAthleteCoachProgressSharingResponse403 = {
+  data: GetAthleteCoachProgressSharing403;
+  status: 403;
+};
+
+export type getAthleteCoachProgressSharingResponse404 = {
+  data: GetAthleteCoachProgressSharing404;
+  status: 404;
+};
+
+export type getAthleteCoachProgressSharingResponse500 = {
+  data: GetAthleteCoachProgressSharing500;
+  status: 500;
+};
+
+export type getAthleteCoachProgressSharingResponseSuccess =
+  getAthleteCoachProgressSharingResponse200 & {
+    headers: Headers;
+  };
+export type getAthleteCoachProgressSharingResponseError = (
+  | getAthleteCoachProgressSharingResponse400
+  | getAthleteCoachProgressSharingResponse401
+  | getAthleteCoachProgressSharingResponse403
+  | getAthleteCoachProgressSharingResponse404
+  | getAthleteCoachProgressSharingResponse500
+) & {
+  headers: Headers;
+};
+
+export type getAthleteCoachProgressSharingResponse =
+  | getAthleteCoachProgressSharingResponseSuccess
+  | getAthleteCoachProgressSharingResponseError;
+
+export const getGetAthleteCoachProgressSharingUrl = () => {
+  return `/me/coach-progress-sharing`;
+};
+
+export const getAthleteCoachProgressSharing = async (
+  options?: RequestInit,
+): Promise<getAthleteCoachProgressSharingResponse> => {
+  return customFetch<getAthleteCoachProgressSharingResponse>(
+    getGetAthleteCoachProgressSharingUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Atualizar consentimento e escopo de compartilhamento de evolução
+ */
+export type updateAthleteCoachProgressSharingResponse200 = {
+  data: UpdateAthleteCoachProgressSharing200;
+  status: 200;
+};
+
+export type updateAthleteCoachProgressSharingResponse400 = {
+  data: UpdateAthleteCoachProgressSharing400;
+  status: 400;
+};
+
+export type updateAthleteCoachProgressSharingResponse401 = {
+  data: UpdateAthleteCoachProgressSharing401;
+  status: 401;
+};
+
+export type updateAthleteCoachProgressSharingResponse403 = {
+  data: UpdateAthleteCoachProgressSharing403;
+  status: 403;
+};
+
+export type updateAthleteCoachProgressSharingResponse404 = {
+  data: UpdateAthleteCoachProgressSharing404;
+  status: 404;
+};
+
+export type updateAthleteCoachProgressSharingResponse500 = {
+  data: UpdateAthleteCoachProgressSharing500;
+  status: 500;
+};
+
+export type updateAthleteCoachProgressSharingResponseSuccess =
+  updateAthleteCoachProgressSharingResponse200 & {
+    headers: Headers;
+  };
+export type updateAthleteCoachProgressSharingResponseError = (
+  | updateAthleteCoachProgressSharingResponse400
+  | updateAthleteCoachProgressSharingResponse401
+  | updateAthleteCoachProgressSharingResponse403
+  | updateAthleteCoachProgressSharingResponse404
+  | updateAthleteCoachProgressSharingResponse500
+) & {
+  headers: Headers;
+};
+
+export type updateAthleteCoachProgressSharingResponse =
+  | updateAthleteCoachProgressSharingResponseSuccess
+  | updateAthleteCoachProgressSharingResponseError;
+
+export const getUpdateAthleteCoachProgressSharingUrl = () => {
+  return `/me/coach-progress-sharing`;
+};
+
+export const updateAthleteCoachProgressSharing = async (
+  updateAthleteCoachProgressSharingBody: UpdateAthleteCoachProgressSharingBody,
+  options?: RequestInit,
+): Promise<updateAthleteCoachProgressSharingResponse> => {
+  return customFetch<updateAthleteCoachProgressSharingResponse>(
+    getUpdateAthleteCoachProgressSharingUrl(),
+    {
+      ...options,
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(updateAthleteCoachProgressSharingBody),
+    },
+  );
+};
+
+/**
+ * @summary Consultar visão geral, volume e distribuição de evolução do aluno
+ */
+export type getCoachAthleteProgressOverviewResponse200 = {
+  data: GetCoachAthleteProgressOverview200;
+  status: 200;
+};
+
+export type getCoachAthleteProgressOverviewResponse400 = {
+  data: GetCoachAthleteProgressOverview400;
+  status: 400;
+};
+
+export type getCoachAthleteProgressOverviewResponse401 = {
+  data: GetCoachAthleteProgressOverview401;
+  status: 401;
+};
+
+export type getCoachAthleteProgressOverviewResponse403 = {
+  data: GetCoachAthleteProgressOverview403;
+  status: 403;
+};
+
+export type getCoachAthleteProgressOverviewResponse404 = {
+  data: GetCoachAthleteProgressOverview404;
+  status: 404;
+};
+
+export type getCoachAthleteProgressOverviewResponse500 = {
+  data: GetCoachAthleteProgressOverview500;
+  status: 500;
+};
+
+export type getCoachAthleteProgressOverviewResponseSuccess =
+  getCoachAthleteProgressOverviewResponse200 & {
+    headers: Headers;
+  };
+export type getCoachAthleteProgressOverviewResponseError = (
+  | getCoachAthleteProgressOverviewResponse400
+  | getCoachAthleteProgressOverviewResponse401
+  | getCoachAthleteProgressOverviewResponse403
+  | getCoachAthleteProgressOverviewResponse404
+  | getCoachAthleteProgressOverviewResponse500
+) & {
+  headers: Headers;
+};
+
+export type getCoachAthleteProgressOverviewResponse =
+  | getCoachAthleteProgressOverviewResponseSuccess
+  | getCoachAthleteProgressOverviewResponseError;
+
+export const getGetCoachAthleteProgressOverviewUrl = (
+  athleteId: string,
+  params?: GetCoachAthleteProgressOverviewParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/coach/athletes/${athleteId}/progress/overview?${stringifiedParams}`
+    : `/coach/athletes/${athleteId}/progress/overview`;
+};
+
+export const getCoachAthleteProgressOverview = async (
+  athleteId: string,
+  params?: GetCoachAthleteProgressOverviewParams,
+  options?: RequestInit,
+): Promise<getCoachAthleteProgressOverviewResponse> => {
+  return customFetch<getCoachAthleteProgressOverviewResponse>(
+    getGetCoachAthleteProgressOverviewUrl(athleteId, params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Listar histórico de treinos concluídos autorizados do aluno
+ */
+export type listCoachAthleteProgressSessionsResponse200 = {
+  data: ListCoachAthleteProgressSessions200;
+  status: 200;
+};
+
+export type listCoachAthleteProgressSessionsResponse400 = {
+  data: ListCoachAthleteProgressSessions400;
+  status: 400;
+};
+
+export type listCoachAthleteProgressSessionsResponse401 = {
+  data: ListCoachAthleteProgressSessions401;
+  status: 401;
+};
+
+export type listCoachAthleteProgressSessionsResponse403 = {
+  data: ListCoachAthleteProgressSessions403;
+  status: 403;
+};
+
+export type listCoachAthleteProgressSessionsResponse404 = {
+  data: ListCoachAthleteProgressSessions404;
+  status: 404;
+};
+
+export type listCoachAthleteProgressSessionsResponse500 = {
+  data: ListCoachAthleteProgressSessions500;
+  status: 500;
+};
+
+export type listCoachAthleteProgressSessionsResponseSuccess =
+  listCoachAthleteProgressSessionsResponse200 & {
+    headers: Headers;
+  };
+export type listCoachAthleteProgressSessionsResponseError = (
+  | listCoachAthleteProgressSessionsResponse400
+  | listCoachAthleteProgressSessionsResponse401
+  | listCoachAthleteProgressSessionsResponse403
+  | listCoachAthleteProgressSessionsResponse404
+  | listCoachAthleteProgressSessionsResponse500
+) & {
+  headers: Headers;
+};
+
+export type listCoachAthleteProgressSessionsResponse =
+  | listCoachAthleteProgressSessionsResponseSuccess
+  | listCoachAthleteProgressSessionsResponseError;
+
+export const getListCoachAthleteProgressSessionsUrl = (
+  athleteId: string,
+  params?: ListCoachAthleteProgressSessionsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/coach/athletes/${athleteId}/progress/sessions?${stringifiedParams}`
+    : `/coach/athletes/${athleteId}/progress/sessions`;
+};
+
+export const listCoachAthleteProgressSessions = async (
+  athleteId: string,
+  params?: ListCoachAthleteProgressSessionsParams,
+  options?: RequestInit,
+): Promise<listCoachAthleteProgressSessionsResponse> => {
+  return customFetch<listCoachAthleteProgressSessionsResponse>(
+    getListCoachAthleteProgressSessionsUrl(athleteId, params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Consultar detalhe e snapshot histórico de treino concluído do aluno
+ */
+export type getCoachAthleteProgressSessionDetailResponse200 = {
+  data: GetCoachAthleteProgressSessionDetail200;
+  status: 200;
+};
+
+export type getCoachAthleteProgressSessionDetailResponse400 = {
+  data: GetCoachAthleteProgressSessionDetail400;
+  status: 400;
+};
+
+export type getCoachAthleteProgressSessionDetailResponse401 = {
+  data: GetCoachAthleteProgressSessionDetail401;
+  status: 401;
+};
+
+export type getCoachAthleteProgressSessionDetailResponse403 = {
+  data: GetCoachAthleteProgressSessionDetail403;
+  status: 403;
+};
+
+export type getCoachAthleteProgressSessionDetailResponse404 = {
+  data: GetCoachAthleteProgressSessionDetail404;
+  status: 404;
+};
+
+export type getCoachAthleteProgressSessionDetailResponse500 = {
+  data: GetCoachAthleteProgressSessionDetail500;
+  status: 500;
+};
+
+export type getCoachAthleteProgressSessionDetailResponseSuccess =
+  getCoachAthleteProgressSessionDetailResponse200 & {
+    headers: Headers;
+  };
+export type getCoachAthleteProgressSessionDetailResponseError = (
+  | getCoachAthleteProgressSessionDetailResponse400
+  | getCoachAthleteProgressSessionDetailResponse401
+  | getCoachAthleteProgressSessionDetailResponse403
+  | getCoachAthleteProgressSessionDetailResponse404
+  | getCoachAthleteProgressSessionDetailResponse500
+) & {
+  headers: Headers;
+};
+
+export type getCoachAthleteProgressSessionDetailResponse =
+  | getCoachAthleteProgressSessionDetailResponseSuccess
+  | getCoachAthleteProgressSessionDetailResponseError;
+
+export const getGetCoachAthleteProgressSessionDetailUrl = (
+  athleteId: string,
+  sessionId: string,
+) => {
+  return `/coach/athletes/${athleteId}/progress/sessions/${sessionId}`;
+};
+
+export const getCoachAthleteProgressSessionDetail = async (
+  athleteId: string,
+  sessionId: string,
+  options?: RequestInit,
+): Promise<getCoachAthleteProgressSessionDetailResponse> => {
+  return customFetch<getCoachAthleteProgressSessionDetailResponse>(
+    getGetCoachAthleteProgressSessionDetailUrl(athleteId, sessionId),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Listar exercícios presentes no histórico autorizado do aluno
+ */
+export type listCoachAthleteProgressExercisesResponse200 = {
+  data: ListCoachAthleteProgressExercises200Item[];
+  status: 200;
+};
+
+export type listCoachAthleteProgressExercisesResponse400 = {
+  data: ListCoachAthleteProgressExercises400;
+  status: 400;
+};
+
+export type listCoachAthleteProgressExercisesResponse401 = {
+  data: ListCoachAthleteProgressExercises401;
+  status: 401;
+};
+
+export type listCoachAthleteProgressExercisesResponse403 = {
+  data: ListCoachAthleteProgressExercises403;
+  status: 403;
+};
+
+export type listCoachAthleteProgressExercisesResponse404 = {
+  data: ListCoachAthleteProgressExercises404;
+  status: 404;
+};
+
+export type listCoachAthleteProgressExercisesResponse500 = {
+  data: ListCoachAthleteProgressExercises500;
+  status: 500;
+};
+
+export type listCoachAthleteProgressExercisesResponseSuccess =
+  listCoachAthleteProgressExercisesResponse200 & {
+    headers: Headers;
+  };
+export type listCoachAthleteProgressExercisesResponseError = (
+  | listCoachAthleteProgressExercisesResponse400
+  | listCoachAthleteProgressExercisesResponse401
+  | listCoachAthleteProgressExercisesResponse403
+  | listCoachAthleteProgressExercisesResponse404
+  | listCoachAthleteProgressExercisesResponse500
+) & {
+  headers: Headers;
+};
+
+export type listCoachAthleteProgressExercisesResponse =
+  | listCoachAthleteProgressExercisesResponseSuccess
+  | listCoachAthleteProgressExercisesResponseError;
+
+export const getListCoachAthleteProgressExercisesUrl = (
+  athleteId: string,
+  params?: ListCoachAthleteProgressExercisesParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/coach/athletes/${athleteId}/progress/exercises?${stringifiedParams}`
+    : `/coach/athletes/${athleteId}/progress/exercises`;
+};
+
+export const listCoachAthleteProgressExercises = async (
+  athleteId: string,
+  params?: ListCoachAthleteProgressExercisesParams,
+  options?: RequestInit,
+): Promise<listCoachAthleteProgressExercisesResponse> => {
+  return customFetch<listCoachAthleteProgressExercisesResponse>(
+    getListCoachAthleteProgressExercisesUrl(athleteId, params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Consultar evolução longitudinal e PR de exercício autorizado do aluno
+ */
+export type getCoachAthleteProgressExerciseEvolutionResponse200 = {
+  data: GetCoachAthleteProgressExerciseEvolution200;
+  status: 200;
+};
+
+export type getCoachAthleteProgressExerciseEvolutionResponse400 = {
+  data: GetCoachAthleteProgressExerciseEvolution400;
+  status: 400;
+};
+
+export type getCoachAthleteProgressExerciseEvolutionResponse401 = {
+  data: GetCoachAthleteProgressExerciseEvolution401;
+  status: 401;
+};
+
+export type getCoachAthleteProgressExerciseEvolutionResponse403 = {
+  data: GetCoachAthleteProgressExerciseEvolution403;
+  status: 403;
+};
+
+export type getCoachAthleteProgressExerciseEvolutionResponse404 = {
+  data: GetCoachAthleteProgressExerciseEvolution404;
+  status: 404;
+};
+
+export type getCoachAthleteProgressExerciseEvolutionResponse500 = {
+  data: GetCoachAthleteProgressExerciseEvolution500;
+  status: 500;
+};
+
+export type getCoachAthleteProgressExerciseEvolutionResponseSuccess =
+  getCoachAthleteProgressExerciseEvolutionResponse200 & {
+    headers: Headers;
+  };
+export type getCoachAthleteProgressExerciseEvolutionResponseError = (
+  | getCoachAthleteProgressExerciseEvolutionResponse400
+  | getCoachAthleteProgressExerciseEvolutionResponse401
+  | getCoachAthleteProgressExerciseEvolutionResponse403
+  | getCoachAthleteProgressExerciseEvolutionResponse404
+  | getCoachAthleteProgressExerciseEvolutionResponse500
+) & {
+  headers: Headers;
+};
+
+export type getCoachAthleteProgressExerciseEvolutionResponse =
+  | getCoachAthleteProgressExerciseEvolutionResponseSuccess
+  | getCoachAthleteProgressExerciseEvolutionResponseError;
+
+export const getGetCoachAthleteProgressExerciseEvolutionUrl = (
+  athleteId: string,
+  exerciseId: string,
+  params?: GetCoachAthleteProgressExerciseEvolutionParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/coach/athletes/${athleteId}/progress/exercises/${exerciseId}?${stringifiedParams}`
+    : `/coach/athletes/${athleteId}/progress/exercises/${exerciseId}`;
+};
+
+export const getCoachAthleteProgressExerciseEvolution = async (
+  athleteId: string,
+  exerciseId: string,
+  params?: GetCoachAthleteProgressExerciseEvolutionParams,
+  options?: RequestInit,
+): Promise<getCoachAthleteProgressExerciseEvolutionResponse> => {
+  return customFetch<getCoachAthleteProgressExerciseEvolutionResponse>(
+    getGetCoachAthleteProgressExerciseEvolutionUrl(
+      athleteId,
+      exerciseId,
+      params,
+    ),
+    {
+      ...options,
+      method: "GET",
     },
   );
 };

@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { authClient } from "@/app/_lib/auth-client";
 import {
+  getAthleteCoachProgressSharing,
   getAthleteCoachRelationship,
   getCommercialContext,
   getUserTrainData,
@@ -28,10 +29,11 @@ export default async function ProfilePage() {
 
   if (!session.data?.user) redirect("/auth");
 
-  const [trainData, commercialRes, relationshipRes] = await Promise.all([
+  const [trainData, commercialRes, relationshipRes, sharingRes] = await Promise.all([
     getUserTrainData(),
     getCommercialContext({ cache: "no-store" }),
     getAthleteCoachRelationship({ cache: "no-store" }),
+    getAthleteCoachProgressSharing({ cache: "no-store" }).catch(() => null),
   ]);
 
   if (trainData.status === 401) redirect("/auth");
@@ -51,6 +53,10 @@ export default async function ProfilePage() {
   const relationship =
     relationshipRes.status === 200 && relationshipRes.data.hasCoach
       ? relationshipRes.data.relationship
+      : null;
+  const sharingConsent =
+    sharingRes && sharingRes.status === 200 && sharingRes.data.sharing
+      ? sharingRes.data.sharing
       : null;
 
   return (
@@ -83,7 +89,12 @@ export default async function ProfilePage() {
         {isCoach && <CoachAreaLinkCard />}
 
         {/* Meu Treinador (para atletas) */}
-        {!isCoach && <MyCoachSection relationship={relationship} />}
+        {!isCoach && (
+          <MyCoachSection
+            relationship={relationship}
+            initialSharingConsent={sharingConsent}
+          />
+        )}
 
         <ProfileMetricsSection
           weightInGrams={data?.weightInGrams}
