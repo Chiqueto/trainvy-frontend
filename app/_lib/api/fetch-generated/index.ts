@@ -3100,6 +3100,7 @@ export type UpdateWorkoutPrescriptionDraftBody = {
    * @nullable
    */
   notes?: string | null;
+  version?: number;
   /** @minItems 1 */
   workoutDays: UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItem[];
 };

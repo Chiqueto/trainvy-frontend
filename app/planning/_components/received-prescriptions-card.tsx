@@ -110,6 +110,7 @@ export function ReceivedPrescriptionsCard({
       const res = await acceptPrescriptionAction(prescriptionId);
       if (!res.success) {
         setErrorMsg(res.error);
+        router.refresh();
         return;
       }
 
@@ -128,6 +129,7 @@ export function ReceivedPrescriptionsCard({
       const res = await declinePrescriptionAction(declineTarget.id);
       if (!res.success) {
         setErrorMsg(res.error);
+        router.refresh();
         return;
       }
       setDeclineTarget(null);

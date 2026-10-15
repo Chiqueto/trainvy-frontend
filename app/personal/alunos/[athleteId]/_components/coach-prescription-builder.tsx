@@ -33,6 +33,7 @@ export interface InitialPrescriptionData {
   id?: string;
   name: string;
   notes?: string | null;
+  version?: number;
   workoutDays?: Array<{
     name: string;
     order?: number;
@@ -203,6 +204,7 @@ export function CoachPrescriptionBuilder({
             name: name.trim(),
             notes: notes.trim() || null,
             workoutDays: serializedWorkoutDays,
+            version: initialData.version,
           },
         });
 

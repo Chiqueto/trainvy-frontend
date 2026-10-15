@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   AlertCircle,
   Calendar,
@@ -82,6 +83,7 @@ export function CoachPrescriptionsList({
   athleteName,
   prescriptions,
 }: CoachPrescriptionsListProps) {
+  const router = useRouter();
   const [selectedPrescription, setSelectedPrescription] =
     useState<PrescriptionListItem | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
@@ -99,6 +101,7 @@ export function CoachPrescriptionsList({
       if (!res.success) {
         setActionError(res.error);
       }
+      router.refresh();
     });
   }
 
@@ -114,6 +117,7 @@ export function CoachPrescriptionsList({
         setActionError(res.error);
       }
       setCancelTargetId(null);
+      router.refresh();
     });
   }
 
