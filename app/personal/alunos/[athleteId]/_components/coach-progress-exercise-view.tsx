@@ -1,14 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useState, useTransition } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   AlertCircle,
-  Calendar,
   Check,
-  Dumbbell,
-  Layers3,
   Loader2,
-  Scale,
   Search,
   Trophy,
 } from "lucide-react";
@@ -50,7 +46,7 @@ export function CoachProgressExerciseView({
 
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  // Busca inicial da lista de exercícios com histórico autorizado
+  // Busca lista de exercícios com histórico autorizado (com debounce)
   const loadExercises = useCallback(
     async (q = "") => {
       setIsSearching(true);
@@ -66,16 +62,12 @@ export function CoachProgressExerciseView({
     [athleteId],
   );
 
+  // Carregamento inicial e debounce na busca
   useEffect(() => {
-    loadExercises();
-  }, [loadExercises]);
-
-  // Debounce na busca
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      loadExercises(searchQuery);
-    }, 300);
-    return () => clearTimeout(timer);
+    const timer = window.setTimeout(() => {
+      void loadExercises(searchQuery);
+    }, searchQuery ? 300 : 0);
+    return () => window.clearTimeout(timer);
   }, [searchQuery, loadExercises]);
 
   // Carregar evolução quando um exercício for selecionado

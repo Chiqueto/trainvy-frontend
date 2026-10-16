@@ -1,10 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useState, useTransition } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Activity,
   AlertCircle,
-  Calendar,
   Clock3,
   Dumbbell,
   Filter,
@@ -57,7 +56,13 @@ export function CoachAthleteEvolutionDashboard({
 }: CoachAthleteEvolutionDashboardProps) {
   const [subTab, setSubTab] = useState<EvolutionSubTab>("overview");
   const [weeksCount, setWeeksCount] = useState<EvolutionRange>(4);
-  const [timezone, setTimezone] = useState<string>("UTC");
+  const [timezone] = useState<string>(() => {
+    try {
+      return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+    } catch {
+      return "UTC";
+    }
+  });
 
   // Estados de Overview
   const [overviewData, setOverviewData] =
@@ -79,16 +84,6 @@ export function CoachAthleteEvolutionDashboard({
   const [selectedSessionDetail, setSelectedSessionDetail] =
     useState<GetCoachAthleteProgressSessionDetail200 | null>(null);
   const [isLoadingSessionDetail, setIsLoadingSessionDetail] = useState(false);
-
-  // Detecta Timezone do Navegador
-  useEffect(() => {
-    try {
-      const detected = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      if (detected) setTimezone(detected);
-    } catch {
-      setTimezone("UTC");
-    }
-  }, []);
 
   // Carrega Overview de Progresso
   const loadOverview = useCallback(
@@ -116,7 +111,10 @@ export function CoachAthleteEvolutionDashboard({
   );
 
   useEffect(() => {
-    loadOverview(weeksCount, timezone);
+    const timer = window.setTimeout(() => {
+      void loadOverview(weeksCount, timezone);
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, [weeksCount, timezone, loadOverview]);
 
   // Carrega Lista de Sessões
@@ -141,7 +139,10 @@ export function CoachAthleteEvolutionDashboard({
 
   useEffect(() => {
     if (subTab === "sessions") {
-      loadSessions(sessionsOrigin);
+      const timer = window.setTimeout(() => {
+        void loadSessions(sessionsOrigin);
+      }, 0);
+      return () => window.clearTimeout(timer);
     }
   }, [subTab, sessionsOrigin, loadSessions]);
 
@@ -208,7 +209,7 @@ export function CoachAthleteEvolutionDashboard({
             Compartilhamento Não Autorizado
           </h2>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            Este aluno ainda não autorizou o compartilhamento do histórico de treinos.
+            O aluno <strong className="text-foreground">{athleteName}</strong> ainda não autorizou o compartilhamento do histórico de treinos.
           </p>
         </div>
 

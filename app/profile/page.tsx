@@ -55,8 +55,8 @@ export default async function ProfilePage() {
       ? relationshipRes.data.relationship
       : null;
   const sharingConsent =
-    sharingRes && sharingRes.status === 200 && sharingRes.data.sharing
-      ? sharingRes.data.sharing
+    sharingRes && sharingRes.status === 200 && sharingRes.data.sharingConsent
+      ? sharingRes.data.sharingConsent
       : null;
 
   return (

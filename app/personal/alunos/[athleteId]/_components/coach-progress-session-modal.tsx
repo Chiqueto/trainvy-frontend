@@ -20,7 +20,6 @@ import {
   formatWeightInGrams,
   formatWeightKg,
   getHistorySessionTitle,
-  getSetTypeLabel,
 } from "@/app/_lib/training-formatters";
 
 interface CoachProgressSessionModalProps {
@@ -199,7 +198,9 @@ export function CoachProgressSessionModal({
 
                 {/* Metas Planejadas (quando disponíveis no snapshot) */}
                 {session.origin === "PLANNED" &&
-                  (exercise.planned.targetRepsMin || exercise.planned.workingSets) && (
+                  (exercise.planned.reps ||
+                    exercise.planned.workingSets ||
+                    exercise.planned.restTimeInSeconds) && (
                     <div className="rounded-xl bg-muted/40 px-3 py-2 text-[11px] text-muted-foreground flex flex-wrap gap-x-4 gap-y-1">
                       {exercise.planned.workingSets && (
                         <span>
@@ -209,22 +210,19 @@ export function CoachProgressSessionModal({
                           </strong>
                         </span>
                       )}
-                      {exercise.planned.targetRepsMin && (
+                      {exercise.planned.reps && (
                         <span>
                           Reps:{" "}
                           <strong className="text-foreground">
-                            {exercise.planned.targetRepsMin}
-                            {exercise.planned.targetRepsMax
-                              ? `-${exercise.planned.targetRepsMax}`
-                              : ""}
+                            {exercise.planned.reps}
                           </strong>
                         </span>
                       )}
-                      {exercise.planned.targetRir !== null && (
+                      {exercise.planned.restTimeInSeconds && (
                         <span>
-                          RIR:{" "}
+                          Descanso:{" "}
                           <strong className="text-foreground">
-                            {exercise.planned.targetRir}
+                            {exercise.planned.restTimeInSeconds}s
                           </strong>
                         </span>
                       )}

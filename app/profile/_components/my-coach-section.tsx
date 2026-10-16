@@ -9,8 +9,6 @@ import {
   Info,
   Loader2,
   Lock,
-  Shield,
-  ShieldCheck,
   UserCheck,
   UserX,
 } from "lucide-react";
