@@ -209,7 +209,7 @@ export function CoachAthleteEvolutionDashboard({
             Compartilhamento Não Autorizado
           </h2>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            O aluno <strong className="text-foreground">{athleteName}</strong> ainda não autorizou o compartilhamento do histórico de treinos.
+            Este aluno ainda não autorizou o compartilhamento do histórico de treinos.
           </p>
         </div>
 
@@ -295,7 +295,10 @@ export function CoachAthleteEvolutionDashboard({
   return (
     <div className="space-y-5">
       {/* Sub-navegação interna de Evolução */}
-      <div className="grid grid-cols-3 p-1 rounded-2xl bg-muted/60 border border-border/60">
+      <div
+        className="grid grid-cols-3 p-1 rounded-2xl bg-muted/60 border border-border/60"
+        aria-label={`Sub-navegação de evolução de ${athleteName}`}
+      >
         <button
           type="button"
           onClick={() => setSubTab("overview")}
