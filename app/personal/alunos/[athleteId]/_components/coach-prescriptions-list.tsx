@@ -37,6 +37,8 @@ export interface PrescriptionDayExercise {
   restSeconds?: number;
   restTimeInSeconds?: number;
   notes?: string;
+  alternative1ExerciseName?: string | null;
+  alternative2ExerciseName?: string | null;
 }
 
 export interface PrescriptionDay {
@@ -465,19 +467,33 @@ export function CoachPrescriptionsList({
                           return (
                             <div
                               key={exIdx}
-                              className="flex items-center justify-between text-xs py-1 px-2 rounded-lg bg-muted/30"
+                              className="flex flex-col text-xs py-1.5 px-2.5 rounded-lg bg-muted/30 gap-0.5"
                             >
-                              <span className="font-medium text-foreground">
-                                {exName}
-                              </span>
-                              <span className="font-mono text-muted-foreground text-[11px]">
-                                {warmup > 0 && (
-                                  <span className="text-amber-500 font-medium mr-1.5">
-                                    {warmup}aq +
-                                  </span>
-                                )}
-                                {ex.sets}x{ex.reps} • {restTime}s
-                              </span>
+                              <div className="flex items-center justify-between">
+                                <span className="font-medium text-foreground">
+                                  {exName}
+                                </span>
+                                <span className="font-mono text-muted-foreground text-[11px]">
+                                  {warmup > 0 && (
+                                    <span className="text-amber-500 font-medium mr-1.5">
+                                      {warmup}aq +
+                                    </span>
+                                  )}
+                                  {ex.sets}x{ex.reps} • {restTime}s
+                                </span>
+                              </div>
+                              {(ex.alternative1ExerciseName ||
+                                ex.alternative2ExerciseName) && (
+                                <p className="text-[10px] text-muted-foreground">
+                                  Alt:{" "}
+                                  {[
+                                    ex.alternative1ExerciseName,
+                                    ex.alternative2ExerciseName,
+                                  ]
+                                    .filter(Boolean)
+                                    .join(" • ")}
+                                </p>
+                              )}
                             </div>
                           );
                         })}

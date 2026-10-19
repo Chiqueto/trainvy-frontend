@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
-import { ChevronDown, Dumbbell, Info, Loader2, Plus, Trash2, Zap } from "lucide-react";
+import { ArrowRightLeft, ChevronDown, Dumbbell, Info, Loader2, Plus, Trash2, Zap } from "lucide-react";
 
 import { ExerciseExecutionDialog } from "@/app/_components/exercise-media";
 import type {
@@ -11,6 +11,7 @@ import type {
 import { Button } from "@/components/ui/button";
 
 import { createWorkoutSetAction } from "../_actions";
+import { SubstituteExerciseModal } from "./substitute-exercise-modal";
 import { WorkoutSetRow } from "./workout-set-row";
 
 interface SessionExerciseCardProps {
@@ -19,6 +20,7 @@ interface SessionExerciseCardProps {
   isReadOnly: boolean;
   isFreeWorkout?: boolean;
   onRemoveExercise?: (sessionExerciseId: string) => Promise<void>;
+  onSubstituteExercise?: (sessionExerciseId: string, newExerciseId: string) => Promise<void>;
   onError: (errorMsg: string) => void;
   onMutationStart?: () => void;
   onMutationEnd?: () => void;
@@ -30,6 +32,7 @@ export function SessionExerciseCard({
   isReadOnly,
   isFreeWorkout = false,
   onRemoveExercise,
+  onSubstituteExercise,
   onError,
   onMutationStart,
   onMutationEnd,
@@ -38,6 +41,7 @@ export function SessionExerciseCard({
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isRemoving, startRemoveTransition] = useTransition();
   const [isMediaOpen, setIsMediaOpen] = useState(false);
+  const [isSubstituteModalOpen, setIsSubstituteModalOpen] = useState(false);
   // Inicializa a lista local de séries
   const [sets, setSets] = useState<
     GetWorkoutSession200SessionExercisesItemSetsItem[]
@@ -182,6 +186,14 @@ export function SessionExerciseCard({
             <h3 className="font-heading text-base font-bold text-foreground">
               {exercise.exerciseNameSnapshot}
             </h3>
+
+            {/* Badge de Substituído */}
+            {exercise.wasSubstituted && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-heading font-semibold text-amber-500 bg-amber-500/10 border border-amber-500/20">
+                Substituído
+              </span>
+            )}
+
             <button
               type="button"
               onClick={() => setIsMediaOpen(true)}
@@ -192,7 +204,29 @@ export function SessionExerciseCard({
               <Info className="size-3 text-primary" />
               <span>Ver execução</span>
             </button>
+
+            {/* Botão de Substituir (Apenas em treino planejado) */}
+            {!isReadOnly && !isFreeWorkout && onSubstituteExercise && (
+              <button
+                type="button"
+                onClick={() => setIsSubstituteModalOpen(true)}
+                title="Substituir exercício neste treino"
+                aria-label={`Substituir exercício ${exercise.exerciseNameSnapshot}`}
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-heading font-medium text-muted-foreground hover:text-foreground bg-muted/60 hover:bg-muted border border-border/80 transition-colors cursor-pointer"
+              >
+                <ArrowRightLeft className="size-3" />
+                <span>Substituir</span>
+              </button>
+            )}
           </div>
+
+          {/* Subtítulo de exercício original se foi substituído */}
+          {exercise.wasSubstituted && exercise.plannedExerciseNameSnapshot && (
+            <p className="font-heading text-xs text-amber-500/90 pl-7 flex items-center gap-1">
+              <span className="font-medium">Original planejado:</span>{" "}
+              {exercise.plannedExerciseNameSnapshot}
+            </p>
+          )}
 
           {prescriptionText && (
             <p className="font-heading text-xs text-muted-foreground pl-7">
@@ -425,6 +459,18 @@ export function SessionExerciseCard({
         exerciseId={exercise.exerciseId}
         exerciseName={exercise.exerciseNameSnapshot}
       />
+
+      {/* Modal de Substituição de Exercício */}
+      {isSubstituteModalOpen && onSubstituteExercise && (
+        <SubstituteExerciseModal
+          isOpen={isSubstituteModalOpen}
+          onClose={() => setIsSubstituteModalOpen(false)}
+          exercise={exercise}
+          onSubstitute={(newExerciseId) =>
+            onSubstituteExercise(exercise.id, newExerciseId)
+          }
+        />
+      )}
     </div>
   );
 }

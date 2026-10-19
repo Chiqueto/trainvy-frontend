@@ -16,6 +16,8 @@ export type WorkoutPlanDraftExercise = {
   sets: number;
   reps: number;
   restTimeInSeconds: number;
+  alternative1Name?: string;
+  alternative2Name?: string;
 };
 
 export type WorkoutPlanDraftDay = {
@@ -28,7 +30,15 @@ export type WorkoutPlanDraftDay = {
 };
 
 export function createDraftExercise(): WorkoutPlanDraftExercise {
-  return { name: "", warmupSets: 0, sets: 3, reps: 10, restTimeInSeconds: 60 };
+  return {
+    name: "",
+    warmupSets: 0,
+    sets: 3,
+    reps: 10,
+    restTimeInSeconds: 60,
+    alternative1Name: "",
+    alternative2Name: "",
+  };
 }
 
 export function createDraftWorkoutDay(letter: string): WorkoutPlanDraftDay {
@@ -126,6 +136,8 @@ export function serializeWorkoutDays(
           sets: exercise.sets,
           reps: exercise.reps,
           restTimeInSeconds: exercise.restTimeInSeconds,
+          alternative1Name: exercise.alternative1Name?.trim() || null,
+          alternative2Name: exercise.alternative2Name?.trim() || null,
         })),
   }));
 }

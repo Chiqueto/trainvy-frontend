@@ -97,6 +97,31 @@ export type CreateWorkoutPlanBodyWorkoutDaysItemExercisesItem = {
   order: number;
   /** @minLength 1 */
   name: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative1ExerciseId?: string | null;
+  /**
+   * @minLength 1
+   * @nullable
+   */
+  alternative1Name?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative2ExerciseId?: string | null;
+  /**
+   * @minLength 1
+   * @nullable
+   */
+  alternative2Name?: string | null;
   /** @minimum 1 */
   sets: number;
   /**
@@ -153,6 +178,31 @@ export type CreateWorkoutPlan201WorkoutDaysItemExercisesItem = {
   order: number;
   /** @minLength 1 */
   name: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative1ExerciseId?: string | null;
+  /**
+   * @minLength 1
+   * @nullable
+   */
+  alternative1Name?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative2ExerciseId?: string | null;
+  /**
+   * @minLength 1
+   * @nullable
+   */
+  alternative2Name?: string | null;
   /** @minimum 1 */
   sets: number;
   /**
@@ -308,6 +358,24 @@ export const GetWorkoutDay200WeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+/**
+ * @nullable
+ */
+export type GetWorkoutDay200ExercisesItemAlternative1Exercise = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12} | 00000000-0000-0000-0000-000000000000 | ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  name: string;
+} | null;
+
+/**
+ * @nullable
+ */
+export type GetWorkoutDay200ExercisesItemAlternative2Exercise = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12} | 00000000-0000-0000-0000-000000000000 | ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  name: string;
+} | null;
+
 export type GetWorkoutDay200ExercisesItem = {
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
@@ -321,6 +389,20 @@ export type GetWorkoutDay200ExercisesItem = {
   order: number;
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   workoutDayId: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative1ExerciseId?: string | null;
+  /** @nullable */
+  alternative1Exercise?: GetWorkoutDay200ExercisesItemAlternative1Exercise;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative2ExerciseId?: string | null;
+  /** @nullable */
+  alternative2Exercise?: GetWorkoutDay200ExercisesItemAlternative2Exercise;
   sets: number;
   warmupSets: number;
   reps: number;
@@ -453,6 +535,31 @@ export type DuplicateWorkoutPlan201WorkoutDaysItemExercisesItem = {
   order: number;
   /** @minLength 1 */
   name: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative1ExerciseId?: string | null;
+  /**
+   * @minLength 1
+   * @nullable
+   */
+  alternative1Name?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative2ExerciseId?: string | null;
+  /**
+   * @minLength 1
+   * @nullable
+   */
+  alternative2Name?: string | null;
   /** @minimum 1 */
   sets: number;
   /**
@@ -540,6 +647,30 @@ export type StartWorkoutSession201ExercisesItem = {
   exerciseId: string | null;
   exerciseNameSnapshot: string;
   order: number;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  plannedExerciseId?: string | null;
+  /** @nullable */
+  plannedExerciseNameSnapshot?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative1ExerciseId?: string | null;
+  /** @nullable */
+  alternative1ExerciseNameSnapshot?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative2ExerciseId?: string | null;
+  /** @nullable */
+  alternative2ExerciseNameSnapshot?: string | null;
+  wasSubstituted: boolean;
+  /** @nullable */
+  substitutedAt?: string | null;
   /** @nullable */
   plannedSets: number | null;
   /** @nullable */
@@ -975,6 +1106,31 @@ export type CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItem = {
   order: number;
   /** @minLength 1 */
   name: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative1ExerciseId?: string | null;
+  /**
+   * @minLength 1
+   * @nullable
+   */
+  alternative1Name?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative2ExerciseId?: string | null;
+  /**
+   * @minLength 1
+   * @nullable
+   */
+  alternative2Name?: string | null;
   /** @minimum 1 */
   sets: number;
   /**
@@ -1037,6 +1193,31 @@ export type CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercis
     order: number;
     /** @minLength 1 */
     name: string;
+    /**
+     * @nullable
+     * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+     */
+    exerciseId?: string | null;
+    /**
+     * @nullable
+     * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+     */
+    alternative1ExerciseId?: string | null;
+    /**
+     * @minLength 1
+     * @nullable
+     */
+    alternative1Name?: string | null;
+    /**
+     * @nullable
+     * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+     */
+    alternative2ExerciseId?: string | null;
+    /**
+     * @minLength 1
+     * @nullable
+     */
+    alternative2Name?: string | null;
     /** @minimum 1 */
     sets: number;
     /**
@@ -2852,6 +3033,25 @@ export type CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItem = {
    */
   order: number;
   /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative1ExerciseId?: string | null;
+  /** @nullable */
+  alternative1ExerciseName?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative2ExerciseId?: string | null;
+  /** @nullable */
+  alternative2ExerciseName?: string | null;
+  /**
    * @minimum 1
    * @maximum 9007199254740991
    */
@@ -2953,6 +3153,16 @@ export type CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItem
   {
     name: string;
     order: number;
+    /** @nullable */
+    exerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseName?: string | null;
+    /** @nullable */
+    alternative2ExerciseId?: string | null;
+    /** @nullable */
+    alternative2ExerciseName?: string | null;
     sets: number;
     warmupSets: number;
     reps: number;
@@ -3047,6 +3257,25 @@ export type UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItem = {
    * @maximum 9007199254740991
    */
   order: number;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative1ExerciseId?: string | null;
+  /** @nullable */
+  alternative1ExerciseName?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative2ExerciseId?: string | null;
+  /** @nullable */
+  alternative2ExerciseName?: string | null;
   /**
    * @minimum 1
    * @maximum 9007199254740991
@@ -3153,6 +3382,16 @@ export type UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItem
   {
     name: string;
     order: number;
+    /** @nullable */
+    exerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseName?: string | null;
+    /** @nullable */
+    alternative2ExerciseId?: string | null;
+    /** @nullable */
+    alternative2ExerciseName?: string | null;
     sets: number;
     warmupSets: number;
     reps: number;
@@ -3270,6 +3509,16 @@ export type GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItem =
   {
     name: string;
     order: number;
+    /** @nullable */
+    exerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseName?: string | null;
+    /** @nullable */
+    alternative2ExerciseId?: string | null;
+    /** @nullable */
+    alternative2ExerciseName?: string | null;
     sets: number;
     warmupSets: number;
     reps: number;
@@ -3386,6 +3635,16 @@ export const SendWorkoutPrescription200PayloadWorkoutDaysItemWeekDay = {
 export type SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItem = {
   name: string;
   order: number;
+  /** @nullable */
+  exerciseId?: string | null;
+  /** @nullable */
+  alternative1ExerciseId?: string | null;
+  /** @nullable */
+  alternative1ExerciseName?: string | null;
+  /** @nullable */
+  alternative2ExerciseId?: string | null;
+  /** @nullable */
+  alternative2ExerciseName?: string | null;
   sets: number;
   warmupSets: number;
   reps: number;
@@ -3502,6 +3761,16 @@ export const CancelWorkoutPrescription200PayloadWorkoutDaysItemWeekDay = {
 export type CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItem = {
   name: string;
   order: number;
+  /** @nullable */
+  exerciseId?: string | null;
+  /** @nullable */
+  alternative1ExerciseId?: string | null;
+  /** @nullable */
+  alternative1ExerciseName?: string | null;
+  /** @nullable */
+  alternative2ExerciseId?: string | null;
+  /** @nullable */
+  alternative2ExerciseName?: string | null;
   sets: number;
   warmupSets: number;
   reps: number;
@@ -3620,6 +3889,16 @@ export type ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesI
   {
     name: string;
     order: number;
+    /** @nullable */
+    exerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseName?: string | null;
+    /** @nullable */
+    alternative2ExerciseId?: string | null;
+    /** @nullable */
+    alternative2ExerciseName?: string | null;
     sets: number;
     warmupSets: number;
     reps: number;
@@ -3737,6 +4016,16 @@ export type ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItem =
   {
     name: string;
     order: number;
+    /** @nullable */
+    exerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseName?: string | null;
+    /** @nullable */
+    alternative2ExerciseId?: string | null;
+    /** @nullable */
+    alternative2ExerciseName?: string | null;
     sets: number;
     warmupSets: number;
     reps: number;
@@ -3854,6 +4143,16 @@ export type GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItem 
   {
     name: string;
     order: number;
+    /** @nullable */
+    exerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseName?: string | null;
+    /** @nullable */
+    alternative2ExerciseId?: string | null;
+    /** @nullable */
+    alternative2ExerciseName?: string | null;
     sets: number;
     warmupSets: number;
     reps: number;
@@ -3972,6 +4271,16 @@ export type AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExerci
   {
     name: string;
     order: number;
+    /** @nullable */
+    exerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseName?: string | null;
+    /** @nullable */
+    alternative2ExerciseId?: string | null;
+    /** @nullable */
+    alternative2ExerciseName?: string | null;
     sets: number;
     warmupSets: number;
     reps: number;
@@ -4095,6 +4404,16 @@ export const DeclineWorkoutPrescription200PayloadWorkoutDaysItemWeekDay = {
 export type DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItem = {
   name: string;
   order: number;
+  /** @nullable */
+  exerciseId?: string | null;
+  /** @nullable */
+  alternative1ExerciseId?: string | null;
+  /** @nullable */
+  alternative1ExerciseName?: string | null;
+  /** @nullable */
+  alternative2ExerciseId?: string | null;
+  /** @nullable */
+  alternative2ExerciseName?: string | null;
   sets: number;
   warmupSets: number;
   reps: number;
@@ -4690,6 +5009,30 @@ export type GetCoachAthleteProgressSessionDetail200ExercisesItem = {
   order: number;
   /** @nullable */
   notes: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  plannedExerciseId?: string | null;
+  /** @nullable */
+  plannedExerciseNameSnapshot?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative1ExerciseId?: string | null;
+  /** @nullable */
+  alternative1ExerciseNameSnapshot?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative2ExerciseId?: string | null;
+  /** @nullable */
+  alternative2ExerciseNameSnapshot?: string | null;
+  wasSubstituted: boolean;
+  /** @nullable */
+  substitutedAt?: string | null;
   planned: GetCoachAthleteProgressSessionDetail200ExercisesItemPlanned;
   performed: GetCoachAthleteProgressSessionDetail200ExercisesItemPerformed;
   sets: GetCoachAthleteProgressSessionDetail200ExercisesItemSetsItem[];
@@ -7241,6 +7584,30 @@ export type GetActiveWorkoutSession200SessionExercisesItem = {
    */
   order: number;
   /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  plannedExerciseId?: string | null;
+  /** @nullable */
+  plannedExerciseNameSnapshot?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative1ExerciseId?: string | null;
+  /** @nullable */
+  alternative1ExerciseNameSnapshot?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative2ExerciseId?: string | null;
+  /** @nullable */
+  alternative2ExerciseNameSnapshot?: string | null;
+  wasSubstituted: boolean;
+  /** @nullable */
+  substitutedAt?: string | null;
+  /**
    * @minimum -9007199254740991
    * @maximum 9007199254740991
    * @nullable
@@ -7378,6 +7745,30 @@ export type GetWorkoutSession200SessionExercisesItem = {
    * @maximum 9007199254740991
    */
   order: number;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  plannedExerciseId?: string | null;
+  /** @nullable */
+  plannedExerciseNameSnapshot?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative1ExerciseId?: string | null;
+  /** @nullable */
+  alternative1ExerciseNameSnapshot?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative2ExerciseId?: string | null;
+  /** @nullable */
+  alternative2ExerciseNameSnapshot?: string | null;
+  wasSubstituted: boolean;
+  /** @nullable */
+  substitutedAt?: string | null;
   /**
    * @minimum -9007199254740991
    * @maximum 9007199254740991
@@ -7881,6 +8272,30 @@ export type AddExerciseToWorkoutSession201 = {
    */
   order: number;
   /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  plannedExerciseId?: string | null;
+  /** @nullable */
+  plannedExerciseNameSnapshot?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative1ExerciseId?: string | null;
+  /** @nullable */
+  alternative1ExerciseNameSnapshot?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative2ExerciseId?: string | null;
+  /** @nullable */
+  alternative2ExerciseNameSnapshot?: string | null;
+  wasSubstituted: boolean;
+  /** @nullable */
+  substitutedAt?: string | null;
+  /**
    * @minimum -9007199254740991
    * @maximum 9007199254740991
    * @nullable
@@ -7959,6 +8374,151 @@ export type RemoveExerciseFromWorkoutSession409 = {
 };
 
 export type RemoveExerciseFromWorkoutSession500 = {
+  error: string;
+  code: string;
+};
+
+export type SubstituteSessionExerciseBody = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  newExerciseId: string;
+};
+
+export type SubstituteSessionExercise200SetsItemType =
+  (typeof SubstituteSessionExercise200SetsItemType)[keyof typeof SubstituteSessionExercise200SetsItemType];
+
+export const SubstituteSessionExercise200SetsItemType = {
+  WARMUP: "WARMUP",
+  WORKING: "WORKING",
+} as const;
+
+export type SubstituteSessionExercise200SetsItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  order: number;
+  type: SubstituteSessionExercise200SetsItemType;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  weightInGrams: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  reps: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  rir: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  durationInSeconds: number | null;
+  /** @nullable */
+  notes: string | null;
+  /** @nullable */
+  completedAt: string | null;
+};
+
+export type SubstituteSessionExercise200 = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId?: string | null;
+  hasMedia?: boolean;
+  exerciseNameSnapshot: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  order: number;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  plannedExerciseId?: string | null;
+  /** @nullable */
+  plannedExerciseNameSnapshot?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative1ExerciseId?: string | null;
+  /** @nullable */
+  alternative1ExerciseNameSnapshot?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative2ExerciseId?: string | null;
+  /** @nullable */
+  alternative2ExerciseNameSnapshot?: string | null;
+  wasSubstituted: boolean;
+  /** @nullable */
+  substitutedAt?: string | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  plannedSets: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  plannedWarmupSets?: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  plannedReps: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  plannedRestTimeInSeconds: number | null;
+  /** @nullable */
+  notes: string | null;
+  sets: SubstituteSessionExercise200SetsItem[];
+};
+
+export type SubstituteSessionExercise400 = {
+  error: string;
+  code: string;
+};
+
+export type SubstituteSessionExercise401 = {
+  error: string;
+  code: string;
+};
+
+export type SubstituteSessionExercise404 = {
+  error: string;
+  code: string;
+};
+
+export type SubstituteSessionExercise409 = {
+  error: string;
+  code: string;
+};
+
+export type SubstituteSessionExercise500 = {
   error: string;
   code: string;
 };
@@ -8340,6 +8900,30 @@ export type GetWorkoutHistorySession200ExercisesItem = {
   order: number;
   /** @nullable */
   notes: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  plannedExerciseId?: string | null;
+  /** @nullable */
+  plannedExerciseNameSnapshot?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative1ExerciseId?: string | null;
+  /** @nullable */
+  alternative1ExerciseNameSnapshot?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative2ExerciseId?: string | null;
+  /** @nullable */
+  alternative2ExerciseNameSnapshot?: string | null;
+  wasSubstituted: boolean;
+  /** @nullable */
+  substitutedAt?: string | null;
   planned: GetWorkoutHistorySession200ExercisesItemPlanned;
   performed: GetWorkoutHistorySession200ExercisesItemPerformed;
   sets: GetWorkoutHistorySession200ExercisesItemSetsItem[];
@@ -14915,6 +15499,81 @@ export const removeExerciseFromWorkoutSession = async (
     {
       ...options,
       method: "DELETE",
+    },
+  );
+};
+
+/**
+ * @summary Substitute an exercise during an active workout session
+ */
+export type substituteSessionExerciseResponse200 = {
+  data: SubstituteSessionExercise200;
+  status: 200;
+};
+
+export type substituteSessionExerciseResponse400 = {
+  data: SubstituteSessionExercise400;
+  status: 400;
+};
+
+export type substituteSessionExerciseResponse401 = {
+  data: SubstituteSessionExercise401;
+  status: 401;
+};
+
+export type substituteSessionExerciseResponse404 = {
+  data: SubstituteSessionExercise404;
+  status: 404;
+};
+
+export type substituteSessionExerciseResponse409 = {
+  data: SubstituteSessionExercise409;
+  status: 409;
+};
+
+export type substituteSessionExerciseResponse500 = {
+  data: SubstituteSessionExercise500;
+  status: 500;
+};
+
+export type substituteSessionExerciseResponseSuccess =
+  substituteSessionExerciseResponse200 & {
+    headers: Headers;
+  };
+export type substituteSessionExerciseResponseError = (
+  | substituteSessionExerciseResponse400
+  | substituteSessionExerciseResponse401
+  | substituteSessionExerciseResponse404
+  | substituteSessionExerciseResponse409
+  | substituteSessionExerciseResponse500
+) & {
+  headers: Headers;
+};
+
+export type substituteSessionExerciseResponse =
+  | substituteSessionExerciseResponseSuccess
+  | substituteSessionExerciseResponseError;
+
+export const getSubstituteSessionExerciseUrl = (
+  sessionId: string,
+  sessionExerciseId: string,
+) => {
+  return `/workout-sessions/${sessionId}/exercises/${sessionExerciseId}/substitute`;
+};
+
+export const substituteSessionExercise = async (
+  sessionId: string,
+  sessionExerciseId: string,
+  substituteSessionExerciseBody: SubstituteSessionExerciseBody,
+  options?: RequestInit,
+): Promise<substituteSessionExerciseResponse> => {
+  return customFetch<substituteSessionExerciseResponse>(
+    getSubstituteSessionExerciseUrl(sessionId, sessionExerciseId),
+    {
+      ...options,
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(substituteSessionExerciseBody),
     },
   );
 };

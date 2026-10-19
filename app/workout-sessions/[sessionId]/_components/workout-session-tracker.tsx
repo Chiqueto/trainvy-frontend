@@ -26,6 +26,7 @@ import {
   cancelWorkoutSessionAction,
   completeWorkoutSessionAction,
   removeExerciseFromWorkoutSessionAction,
+  substituteSessionExerciseAction,
 } from "../_actions";
 import { ExerciseSelectorModal } from "./exercise-selector-modal";
 import { SessionExerciseCard } from "./session-exercise-card";
@@ -116,6 +117,21 @@ export function WorkoutSessionTracker({ session }: WorkoutSessionTrackerProps) {
           plannedWarmupSets: res.data.plannedWarmupSets ?? null,
           exerciseNameSnapshot: res.data.exerciseNameSnapshot,
           order: res.data.order,
+          plannedExerciseId:
+            (res.data as any).plannedExerciseId ?? res.data.exerciseId ?? exerciseId,
+          plannedExerciseNameSnapshot:
+            (res.data as any).plannedExerciseNameSnapshot ??
+            res.data.exerciseNameSnapshot,
+          alternative1ExerciseId:
+            (res.data as any).alternative1ExerciseId ?? null,
+          alternative1ExerciseNameSnapshot:
+            (res.data as any).alternative1ExerciseNameSnapshot ?? null,
+          alternative2ExerciseId:
+            (res.data as any).alternative2ExerciseId ?? null,
+          alternative2ExerciseNameSnapshot:
+            (res.data as any).alternative2ExerciseNameSnapshot ?? null,
+          wasSubstituted: (res.data as any).wasSubstituted ?? false,
+          substitutedAt: (res.data as any).substitutedAt ?? null,
           plannedSets: res.data.plannedSets,
           plannedReps: res.data.plannedReps,
           plannedRestTimeInSeconds: res.data.plannedRestTimeInSeconds,
@@ -147,6 +163,57 @@ export function WorkoutSessionTracker({ session }: WorkoutSessionTrackerProps) {
           ...prev,
           sessionExercises: prev.sessionExercises.filter(
             (e) => e.id !== sessionExerciseId,
+          ),
+        }));
+      }
+    } finally {
+      handleMutationEnd();
+    }
+  };
+
+  const handleSubstituteExercise = async (
+    sessionExerciseId: string,
+    newExerciseId: string,
+  ) => {
+    handleMutationStart();
+    try {
+      const res = await substituteSessionExerciseAction(
+        sessionData.id,
+        sessionExerciseId,
+        newExerciseId,
+      );
+      if (!res.success) {
+        setErrorMessage(res.error);
+        throw new Error(res.error);
+      } else {
+        setSessionData((prev) => ({
+          ...prev,
+          sessionExercises: prev.sessionExercises.map((ex) =>
+            ex.id === sessionExerciseId
+              ? {
+                  ...ex,
+                  exerciseId: res.data.exerciseId ?? newExerciseId,
+                  exerciseNameSnapshot: res.data.exerciseNameSnapshot,
+                  plannedExerciseId:
+                    res.data.plannedExerciseId ?? ex.plannedExerciseId,
+                  plannedExerciseNameSnapshot:
+                    res.data.plannedExerciseNameSnapshot ??
+                    ex.plannedExerciseNameSnapshot,
+                  wasSubstituted: res.data.wasSubstituted,
+                  substitutedAt: res.data.substitutedAt ?? null,
+                  hasMedia: res.data.hasMedia ?? ex.hasMedia,
+                  alternative1ExerciseId:
+                    res.data.alternative1ExerciseId ?? ex.alternative1ExerciseId,
+                  alternative1ExerciseNameSnapshot:
+                    res.data.alternative1ExerciseNameSnapshot ??
+                    ex.alternative1ExerciseNameSnapshot,
+                  alternative2ExerciseId:
+                    res.data.alternative2ExerciseId ?? ex.alternative2ExerciseId,
+                  alternative2ExerciseNameSnapshot:
+                    res.data.alternative2ExerciseNameSnapshot ??
+                    ex.alternative2ExerciseNameSnapshot,
+                }
+              : ex,
           ),
         }));
       }
@@ -364,6 +431,7 @@ export function WorkoutSessionTracker({ session }: WorkoutSessionTrackerProps) {
                 isReadOnly={isReadOnly}
                 isFreeWorkout={isFreeWorkout}
                 onRemoveExercise={handleRemoveExercise}
+                onSubstituteExercise={handleSubstituteExercise}
                 onError={(msg) => setErrorMessage(msg)}
                 onMutationStart={handleMutationStart}
                 onMutationEnd={handleMutationEnd}

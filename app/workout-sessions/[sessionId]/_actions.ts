@@ -12,6 +12,7 @@ import {
   listExercises,
   removeExerciseFromWorkoutSession,
   startFreeWorkoutSession,
+  substituteSessionExercise,
   updateExerciseMuscles,
   updateWorkoutSet,
   type AddExerciseToWorkoutSession201,
@@ -24,6 +25,7 @@ import {
   type CreateWorkoutSetBody,
   type ListExercises200Item,
   type RemoveExerciseFromWorkoutSession200,
+  type SubstituteSessionExercise200,
   type UpdateExerciseMuscles200,
   type UpdateExerciseMusclesBodyPrimaryMuscleGroupsItem,
   type UpdateExerciseMusclesBodySecondaryMuscleGroupsItem,
@@ -329,3 +331,39 @@ export async function cancelWorkoutSessionAction(
     };
   }
 }
+
+/**
+ * Substitui o exercício de um SessionExercise por outro durante a sessão ativa.
+ */
+export async function substituteSessionExerciseAction(
+  sessionId: string,
+  sessionExerciseId: string,
+  newExerciseId: string,
+): Promise<ActionResult<SubstituteSessionExercise200>> {
+  try {
+    const response = await substituteSessionExercise(
+      sessionId,
+      sessionExerciseId,
+      { newExerciseId },
+    );
+
+    if (response.status !== 200) {
+      const errorMsg =
+        (response.data as { error?: string })?.error ||
+        "Erro ao substituir exercício";
+      return { success: false, error: errorMsg };
+    }
+
+    return {
+      success: true,
+      data: response.data,
+    };
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error:
+        (err as Error)?.message || "Erro de conexão ao substituir exercício",
+    };
+  }
+}
+

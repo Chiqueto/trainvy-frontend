@@ -437,6 +437,40 @@ export function WorkoutPlanBuilder({
                           />
                         </label>
                       </div>
+
+                      <div className="pt-2 border-t border-border/40">
+                        <span className="text-[11px] font-medium text-muted-foreground">
+                          Alternativas fixas (opcional)
+                        </span>
+                        <div className="mt-1.5 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                          <label className="flex flex-col gap-1 text-[11px] text-muted-foreground">
+                            Alternativa 1
+                            <Input
+                              value={exercise.alternative1Name ?? ""}
+                              placeholder="Ex: Leg Press 45°"
+                              className="h-8 text-xs font-normal"
+                              onChange={(event) =>
+                                updateExercise(dayIndex, exerciseIndex, {
+                                  alternative1Name: event.target.value,
+                                })
+                              }
+                            />
+                          </label>
+                          <label className="flex flex-col gap-1 text-[11px] text-muted-foreground">
+                            Alternativa 2
+                            <Input
+                              value={exercise.alternative2Name ?? ""}
+                              placeholder="Ex: Hack Squat"
+                              className="h-8 text-xs font-normal"
+                              onChange={(event) =>
+                                updateExercise(dayIndex, exerciseIndex, {
+                                  alternative2Name: event.target.value,
+                                })
+                              }
+                            />
+                          </label>
+                        </div>
+                      </div>
                     </div>
                   ))}
 

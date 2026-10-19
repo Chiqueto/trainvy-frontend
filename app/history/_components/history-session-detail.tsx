@@ -5,6 +5,7 @@ import {
   Clock3,
   Dumbbell,
   Layers3,
+  Repeat,
   Scale,
 } from "lucide-react";
 
@@ -177,9 +178,30 @@ function ExerciseSection({
 
   return (
     <section className="rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-5">
-      <h2 className="font-heading text-base font-semibold text-foreground">
-        {exercise.exerciseNameSnapshot}
-      </h2>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h2 className="font-heading text-base font-semibold text-foreground">
+          {exercise.exerciseNameSnapshot}
+        </h2>
+        {exercise.wasSubstituted && (
+          <Badge
+            variant="outline"
+            className="border-amber-500/30 bg-amber-500/10 text-amber-500 text-[10px] font-medium"
+          >
+            <Repeat className="mr-1 size-3" />
+            Substituído
+          </Badge>
+        )}
+      </div>
+
+      {exercise.wasSubstituted && exercise.plannedExerciseNameSnapshot && (
+        <p className="mt-1 text-xs text-muted-foreground">
+          Original planejado:{" "}
+          <span className="font-medium text-foreground/90">
+            {exercise.plannedExerciseNameSnapshot}
+          </span>
+        </p>
+      )}
+
       {exercise.exerciseId && (
         <Link
           href={`/stats/exercises/${exercise.exerciseId}`}

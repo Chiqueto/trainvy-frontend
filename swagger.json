@@ -295,6 +295,34 @@
                                 "type": "string",
                                 "minLength": 1
                               },
+                              "exerciseId": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "alternative1ExerciseId": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "alternative1Name": {
+                                "nullable": true,
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "alternative2ExerciseId": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "alternative2Name": {
+                                "nullable": true,
+                                "type": "string",
+                                "minLength": 1
+                              },
                               "sets": {
                                 "type": "number",
                                 "minimum": 1
@@ -414,6 +442,34 @@
                                   "minimum": 0
                                 },
                                 "name": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "exerciseId": {
+                                  "nullable": true,
+                                  "type": "string",
+                                  "format": "uuid",
+                                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                },
+                                "alternative1ExerciseId": {
+                                  "nullable": true,
+                                  "type": "string",
+                                  "format": "uuid",
+                                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                },
+                                "alternative1Name": {
+                                  "nullable": true,
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "alternative2ExerciseId": {
+                                  "nullable": true,
+                                  "type": "string",
+                                  "format": "uuid",
+                                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                },
+                                "alternative2Name": {
+                                  "nullable": true,
                                   "type": "string",
                                   "minLength": 1
                                 },
@@ -995,6 +1051,56 @@
                             "format": "uuid",
                             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                           },
+                          "alternative1ExerciseId": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "alternative1Exercise": {
+                            "nullable": true,
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "alternative2ExerciseId": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "alternative2Exercise": {
+                            "nullable": true,
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name"
+                            ],
+                            "additionalProperties": false
+                          },
                           "sets": {
                             "type": "number"
                           },
@@ -1545,6 +1651,34 @@
                                   "type": "string",
                                   "minLength": 1
                                 },
+                                "exerciseId": {
+                                  "nullable": true,
+                                  "type": "string",
+                                  "format": "uuid",
+                                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                },
+                                "alternative1ExerciseId": {
+                                  "nullable": true,
+                                  "type": "string",
+                                  "format": "uuid",
+                                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                },
+                                "alternative1Name": {
+                                  "nullable": true,
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "alternative2ExerciseId": {
+                                  "nullable": true,
+                                  "type": "string",
+                                  "format": "uuid",
+                                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                },
+                                "alternative2Name": {
+                                  "nullable": true,
+                                  "type": "string",
+                                  "minLength": 1
+                                },
                                 "sets": {
                                   "type": "number",
                                   "minimum": 1
@@ -1807,6 +1941,44 @@
                           "order": {
                             "type": "number"
                           },
+                          "plannedExerciseId": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "plannedExerciseNameSnapshot": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "alternative1ExerciseId": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "alternative1ExerciseNameSnapshot": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "alternative2ExerciseId": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "alternative2ExerciseNameSnapshot": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "wasSubstituted": {
+                            "default": false,
+                            "type": "boolean"
+                          },
+                          "substitutedAt": {
+                            "nullable": true,
+                            "type": "string"
+                          },
                           "plannedSets": {
                             "nullable": true,
                             "type": "number"
@@ -1830,6 +2002,7 @@
                           "exerciseId",
                           "exerciseNameSnapshot",
                           "order",
+                          "wasSubstituted",
                           "plannedSets",
                           "plannedReps",
                           "plannedRestTimeInSeconds"
@@ -3366,6 +3539,34 @@
                                 "type": "string",
                                 "minLength": 1
                               },
+                              "exerciseId": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "alternative1ExerciseId": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "alternative1Name": {
+                                "nullable": true,
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "alternative2ExerciseId": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "alternative2Name": {
+                                "nullable": true,
+                                "type": "string",
+                                "minLength": 1
+                              },
                               "sets": {
                                 "type": "number",
                                 "minimum": 1
@@ -3555,6 +3756,34 @@
                                       "minimum": 0
                                     },
                                     "name": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    },
+                                    "exerciseId": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "format": "uuid",
+                                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                    },
+                                    "alternative1ExerciseId": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "format": "uuid",
+                                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                    },
+                                    "alternative1Name": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "minLength": 1
+                                    },
+                                    "alternative2ExerciseId": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "format": "uuid",
+                                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                    },
+                                    "alternative2Name": {
+                                      "nullable": true,
                                       "type": "string",
                                       "minLength": 1
                                     },
@@ -10004,6 +10233,32 @@
                                 "minimum": 0,
                                 "maximum": 9007199254740991
                               },
+                              "exerciseId": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "alternative1ExerciseId": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "alternative1ExerciseName": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "alternative2ExerciseId": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "alternative2ExerciseName": {
+                                "nullable": true,
+                                "type": "string"
+                              },
                               "sets": {
                                 "type": "integer",
                                 "minimum": 1,
@@ -10200,6 +10455,26 @@
                                     },
                                     "order": {
                                       "type": "number"
+                                    },
+                                    "exerciseId": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative1ExerciseId": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative1ExerciseName": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative2ExerciseId": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative2ExerciseName": {
+                                      "nullable": true,
+                                      "type": "string"
                                     },
                                     "sets": {
                                       "type": "number"
@@ -10489,6 +10764,32 @@
                                 "minimum": 0,
                                 "maximum": 9007199254740991
                               },
+                              "exerciseId": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "alternative1ExerciseId": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "alternative1ExerciseName": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "alternative2ExerciseId": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "alternative2ExerciseName": {
+                                "nullable": true,
+                                "type": "string"
+                              },
                               "sets": {
                                 "type": "integer",
                                 "minimum": 1,
@@ -10694,6 +10995,26 @@
                                     },
                                     "order": {
                                       "type": "number"
+                                    },
+                                    "exerciseId": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative1ExerciseId": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative1ExerciseName": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative2ExerciseId": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative2ExerciseName": {
+                                      "nullable": true,
+                                      "type": "string"
                                     },
                                     "sets": {
                                       "type": "number"
@@ -11060,6 +11381,26 @@
                                     },
                                     "order": {
                                       "type": "number"
+                                    },
+                                    "exerciseId": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative1ExerciseId": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative1ExerciseName": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative2ExerciseId": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative2ExerciseName": {
+                                      "nullable": true,
+                                      "type": "string"
                                     },
                                     "sets": {
                                       "type": "number"
@@ -11429,6 +11770,26 @@
                                     "order": {
                                       "type": "number"
                                     },
+                                    "exerciseId": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative1ExerciseId": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative1ExerciseName": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative2ExerciseId": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative2ExerciseName": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
                                     "sets": {
                                       "type": "number"
                                     },
@@ -11796,6 +12157,26 @@
                                     },
                                     "order": {
                                       "type": "number"
+                                    },
+                                    "exerciseId": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative1ExerciseId": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative1ExerciseName": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative2ExerciseId": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative2ExerciseName": {
+                                      "nullable": true,
+                                      "type": "string"
                                     },
                                     "sets": {
                                       "type": "number"
@@ -12167,6 +12548,26 @@
                                       "order": {
                                         "type": "number"
                                       },
+                                      "exerciseId": {
+                                        "nullable": true,
+                                        "type": "string"
+                                      },
+                                      "alternative1ExerciseId": {
+                                        "nullable": true,
+                                        "type": "string"
+                                      },
+                                      "alternative1ExerciseName": {
+                                        "nullable": true,
+                                        "type": "string"
+                                      },
+                                      "alternative2ExerciseId": {
+                                        "nullable": true,
+                                        "type": "string"
+                                      },
+                                      "alternative2ExerciseName": {
+                                        "nullable": true,
+                                        "type": "string"
+                                      },
                                       "sets": {
                                         "type": "number"
                                       },
@@ -12527,6 +12928,26 @@
                                       },
                                       "order": {
                                         "type": "number"
+                                      },
+                                      "exerciseId": {
+                                        "nullable": true,
+                                        "type": "string"
+                                      },
+                                      "alternative1ExerciseId": {
+                                        "nullable": true,
+                                        "type": "string"
+                                      },
+                                      "alternative1ExerciseName": {
+                                        "nullable": true,
+                                        "type": "string"
+                                      },
+                                      "alternative2ExerciseId": {
+                                        "nullable": true,
+                                        "type": "string"
+                                      },
+                                      "alternative2ExerciseName": {
+                                        "nullable": true,
+                                        "type": "string"
                                       },
                                       "sets": {
                                         "type": "number"
@@ -12896,6 +13317,26 @@
                                     },
                                     "order": {
                                       "type": "number"
+                                    },
+                                    "exerciseId": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative1ExerciseId": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative1ExerciseName": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative2ExerciseId": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative2ExerciseName": {
+                                      "nullable": true,
+                                      "type": "string"
                                     },
                                     "sets": {
                                       "type": "number"
@@ -13270,6 +13711,26 @@
                                         },
                                         "order": {
                                           "type": "number"
+                                        },
+                                        "exerciseId": {
+                                          "nullable": true,
+                                          "type": "string"
+                                        },
+                                        "alternative1ExerciseId": {
+                                          "nullable": true,
+                                          "type": "string"
+                                        },
+                                        "alternative1ExerciseName": {
+                                          "nullable": true,
+                                          "type": "string"
+                                        },
+                                        "alternative2ExerciseId": {
+                                          "nullable": true,
+                                          "type": "string"
+                                        },
+                                        "alternative2ExerciseName": {
+                                          "nullable": true,
+                                          "type": "string"
                                         },
                                         "sets": {
                                           "type": "number"
@@ -13653,6 +14114,26 @@
                                     },
                                     "order": {
                                       "type": "number"
+                                    },
+                                    "exerciseId": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative1ExerciseId": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative1ExerciseName": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative2ExerciseId": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "alternative2ExerciseName": {
+                                      "nullable": true,
+                                      "type": "string"
                                     },
                                     "sets": {
                                       "type": "number"
@@ -15099,6 +15580,44 @@
                             "nullable": true,
                             "type": "string"
                           },
+                          "plannedExerciseId": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "plannedExerciseNameSnapshot": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "alternative1ExerciseId": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "alternative1ExerciseNameSnapshot": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "alternative2ExerciseId": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "alternative2ExerciseNameSnapshot": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "wasSubstituted": {
+                            "default": false,
+                            "type": "boolean"
+                          },
+                          "substitutedAt": {
+                            "nullable": true,
+                            "type": "string"
+                          },
                           "planned": {
                             "type": "object",
                             "properties": {
@@ -15241,6 +15760,7 @@
                           "exerciseNameSnapshot",
                           "order",
                           "notes",
+                          "wasSubstituted",
                           "planned",
                           "performed",
                           "sets"
@@ -21640,6 +22160,44 @@
                             "minimum": -9007199254740991,
                             "maximum": 9007199254740991
                           },
+                          "plannedExerciseId": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "plannedExerciseNameSnapshot": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "alternative1ExerciseId": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "alternative1ExerciseNameSnapshot": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "alternative2ExerciseId": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "alternative2ExerciseNameSnapshot": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "wasSubstituted": {
+                            "default": false,
+                            "type": "boolean"
+                          },
+                          "substitutedAt": {
+                            "nullable": true,
+                            "type": "string"
+                          },
                           "plannedSets": {
                             "nullable": true,
                             "type": "integer",
@@ -21742,6 +22300,7 @@
                           "id",
                           "exerciseNameSnapshot",
                           "order",
+                          "wasSubstituted",
                           "plannedSets",
                           "plannedReps",
                           "plannedRestTimeInSeconds",
@@ -21929,6 +22488,44 @@
                             "minimum": -9007199254740991,
                             "maximum": 9007199254740991
                           },
+                          "plannedExerciseId": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "plannedExerciseNameSnapshot": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "alternative1ExerciseId": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "alternative1ExerciseNameSnapshot": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "alternative2ExerciseId": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "alternative2ExerciseNameSnapshot": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "wasSubstituted": {
+                            "default": false,
+                            "type": "boolean"
+                          },
+                          "substitutedAt": {
+                            "nullable": true,
+                            "type": "string"
+                          },
                           "plannedSets": {
                             "nullable": true,
                             "type": "integer",
@@ -22031,6 +22628,7 @@
                           "id",
                           "exerciseNameSnapshot",
                           "order",
+                          "wasSubstituted",
                           "plannedSets",
                           "plannedReps",
                           "plannedRestTimeInSeconds",
@@ -23318,6 +23916,44 @@
                       "minimum": -9007199254740991,
                       "maximum": 9007199254740991
                     },
+                    "plannedExerciseId": {
+                      "nullable": true,
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "plannedExerciseNameSnapshot": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "alternative1ExerciseId": {
+                      "nullable": true,
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "alternative1ExerciseNameSnapshot": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "alternative2ExerciseId": {
+                      "nullable": true,
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "alternative2ExerciseNameSnapshot": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "wasSubstituted": {
+                      "default": false,
+                      "type": "boolean"
+                    },
+                    "substitutedAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
                     "plannedSets": {
                       "nullable": true,
                       "type": "integer",
@@ -23420,6 +24056,7 @@
                     "id",
                     "exerciseNameSnapshot",
                     "order",
+                    "wasSubstituted",
                     "plannedSets",
                     "plannedReps",
                     "plannedRestTimeInSeconds",
@@ -23582,6 +24219,355 @@
                   },
                   "required": [
                     "success"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workout-sessions/{sessionId}/exercises/{sessionExerciseId}/substitute": {
+      "patch": {
+        "operationId": "substituteSessionExercise",
+        "summary": "Substitute an exercise during an active workout session",
+        "tags": [
+          "Workout Session"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "newExerciseId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  }
+                },
+                "required": [
+                  "newExerciseId"
+                ]
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "sessionId",
+            "required": true
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "sessionExerciseId",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "exerciseId": {
+                      "nullable": true,
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "hasMedia": {
+                      "type": "boolean"
+                    },
+                    "exerciseNameSnapshot": {
+                      "type": "string"
+                    },
+                    "order": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "plannedExerciseId": {
+                      "nullable": true,
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "plannedExerciseNameSnapshot": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "alternative1ExerciseId": {
+                      "nullable": true,
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "alternative1ExerciseNameSnapshot": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "alternative2ExerciseId": {
+                      "nullable": true,
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "alternative2ExerciseNameSnapshot": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "wasSubstituted": {
+                      "default": false,
+                      "type": "boolean"
+                    },
+                    "substitutedAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "plannedSets": {
+                      "nullable": true,
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "plannedWarmupSets": {
+                      "nullable": true,
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "plannedReps": {
+                      "nullable": true,
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "plannedRestTimeInSeconds": {
+                      "nullable": true,
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "notes": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "sets": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "order": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "WARMUP",
+                              "WORKING"
+                            ]
+                          },
+                          "weightInGrams": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "reps": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "rir": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "durationInSeconds": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "notes": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "completedAt": {
+                            "nullable": true,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "order",
+                          "type",
+                          "weightInGrams",
+                          "reps",
+                          "rir",
+                          "durationInSeconds",
+                          "notes",
+                          "completedAt"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "exerciseNameSnapshot",
+                    "order",
+                    "wasSubstituted",
+                    "plannedSets",
+                    "plannedReps",
+                    "plannedRestTimeInSeconds",
+                    "notes",
+                    "sets"
                   ],
                   "additionalProperties": false
                 }
@@ -24455,6 +25441,44 @@
                             "nullable": true,
                             "type": "string"
                           },
+                          "plannedExerciseId": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "plannedExerciseNameSnapshot": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "alternative1ExerciseId": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "alternative1ExerciseNameSnapshot": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "alternative2ExerciseId": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "alternative2ExerciseNameSnapshot": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "wasSubstituted": {
+                            "default": false,
+                            "type": "boolean"
+                          },
+                          "substitutedAt": {
+                            "nullable": true,
+                            "type": "string"
+                          },
                           "planned": {
                             "type": "object",
                             "properties": {
@@ -24597,6 +25621,7 @@
                           "exerciseNameSnapshot",
                           "order",
                           "notes",
+                          "wasSubstituted",
                           "planned",
                           "performed",
                           "sets"

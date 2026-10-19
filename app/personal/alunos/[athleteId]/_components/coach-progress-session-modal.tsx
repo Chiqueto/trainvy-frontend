@@ -6,6 +6,7 @@ import {
   Dumbbell,
   Flame,
   Layers3,
+  Repeat,
   Scale,
   Shield,
   X,
@@ -170,12 +171,31 @@ export function CoachProgressSessionModal({
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <span className="text-[10px] font-mono font-bold text-muted-foreground">
-                      #{exIdx + 1}
-                    </span>
-                    <h4 className="font-heading text-sm font-bold text-foreground">
-                      {exercise.exerciseNameSnapshot}
-                    </h4>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-[10px] font-mono font-bold text-muted-foreground">
+                        #{exIdx + 1}
+                      </span>
+                      <h4 className="font-heading text-sm font-bold text-foreground">
+                        {exercise.exerciseNameSnapshot}
+                      </h4>
+                      {exercise.wasSubstituted && (
+                        <Badge
+                          variant="outline"
+                          className="border-amber-500/30 bg-amber-500/10 text-amber-500 text-[10px] font-medium py-0 px-1.5"
+                        >
+                          <Repeat className="mr-1 size-2.5" />
+                          Substituído
+                        </Badge>
+                      )}
+                    </div>
+                    {exercise.wasSubstituted && exercise.plannedExerciseNameSnapshot && (
+                      <p className="mt-0.5 text-xs text-muted-foreground">
+                        Original prescrito:{" "}
+                        <span className="font-medium text-foreground/90">
+                          {exercise.plannedExerciseNameSnapshot}
+                        </span>
+                      </p>
+                    )}
                     {exercise.notes && (
                       <p className="mt-1 text-xs text-muted-foreground italic">
                         &quot;{exercise.notes}&quot;

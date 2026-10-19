@@ -47,6 +47,8 @@ export interface InitialPrescriptionData {
       warmupSets?: number;
       reps: number;
       restTimeInSeconds: number;
+      alternative1ExerciseName?: string | null;
+      alternative2ExerciseName?: string | null;
     }>;
   }>;
 }
@@ -82,6 +84,8 @@ export function CoachPrescriptionBuilder({
           warmupSets: e.warmupSets ?? 0,
           reps: e.reps,
           restTimeInSeconds: e.restTimeInSeconds,
+          alternative1Name: e.alternative1ExerciseName ?? "",
+          alternative2Name: e.alternative2ExerciseName ?? "",
         })),
       }));
     }
@@ -178,6 +182,8 @@ export function CoachPrescriptionBuilder({
             warmupSets: Number(exercise.warmupSets) || 0,
             reps: Number(exercise.reps) || 1,
             restTimeInSeconds: Number(exercise.restTimeInSeconds) || 60,
+            alternative1ExerciseName: exercise.alternative1Name?.trim() || null,
+            alternative2ExerciseName: exercise.alternative2Name?.trim() || null,
           })),
     }));
   }
@@ -592,6 +598,35 @@ export function CoachPrescriptionBuilder({
                                   })
                                 }
                                 className="h-8 rounded-lg text-xs font-mono"
+                              />
+                            </div>
+                          </div>
+
+                          {/* Alternativas Fixas Prescritas */}
+                          <div className="pt-2 border-t border-border/40">
+                            <span className="text-[10px] font-heading font-medium text-muted-foreground uppercase">
+                              Alternativas Fixas (opcional)
+                            </span>
+                            <div className="mt-1 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                              <Input
+                                value={exercise.alternative1Name ?? ""}
+                                onChange={(e) =>
+                                  updateExercise(dayIndex, exerciseIndex, {
+                                    alternative1Name: e.target.value,
+                                  })
+                                }
+                                placeholder="Alternativa 1 (ex: Hack Squat)"
+                                className="h-8 rounded-lg text-xs"
+                              />
+                              <Input
+                                value={exercise.alternative2Name ?? ""}
+                                onChange={(e) =>
+                                  updateExercise(dayIndex, exerciseIndex, {
+                                    alternative2Name: e.target.value,
+                                  })
+                                }
+                                placeholder="Alternativa 2 (ex: Leg Press 45°)"
+                                className="h-8 rounded-lg text-xs"
                               />
                             </div>
                           </div>
