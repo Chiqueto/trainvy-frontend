@@ -6,10 +6,15 @@ import {
   addExerciseToWorkoutSession,
   cancelWorkoutSession,
   completeWorkoutSession,
+  confirmWorkoutSetProposal,
   createExercise,
   createWorkoutSet,
   deleteWorkoutSet,
+  discardWorkoutSetProposal,
+  getAiConsent,
   listExercises,
+  listWorkoutSetProposals,
+  patchAiConsent,
   removeExerciseFromWorkoutSession,
   startFreeWorkoutSession,
   substituteSessionExercise,
@@ -18,12 +23,20 @@ import {
   type AddExerciseToWorkoutSession201,
   type CancelWorkoutSession200,
   type CompleteWorkoutSession200,
+  type ConfirmWorkoutSetProposal200,
+  type ConfirmWorkoutSetProposalBody,
   type CreateExercise201,
   type CreateExerciseBodyPrimaryMuscleGroupsItem,
   type CreateExerciseBodySecondaryMuscleGroupsItem,
   type CreateWorkoutSet201,
   type CreateWorkoutSetBody,
+  type DiscardWorkoutSetProposal200,
+  type DiscardWorkoutSetProposalBody,
+  type GetAiConsent200,
   type ListExercises200Item,
+  type ListWorkoutSetProposals200,
+  type PatchAiConsent200,
+  type PatchAiConsentBody,
   type RemoveExerciseFromWorkoutSession200,
   type SubstituteSessionExercise200,
   type UpdateExerciseMuscles200,
@@ -372,4 +385,147 @@ export async function substituteSessionExerciseAction(
     };
   }
 }
+
+/**
+ * Lista propostas de séries ativas/históricas da sessão de treino.
+ */
+export async function listWorkoutSetProposalsAction(
+  sessionId: string,
+): Promise<ActionResult<ListWorkoutSetProposals200>> {
+  try {
+    const response = await listWorkoutSetProposals(sessionId);
+    if (response.status !== 200) {
+      const errorMsg =
+        (response.data as { error?: string })?.error ||
+        "Erro ao listar propostas de séries";
+      const code = (response.data as { code?: string })?.code;
+      return { success: false, error: errorMsg, code };
+    }
+
+    return { success: true, data: response.data };
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error:
+        (err as Error)?.message || "Erro de conexão ao listar propostas de séries",
+    };
+  }
+}
+
+/**
+ * Confirma proposta de séries gerada pela IA, persistindo WorkoutSets reais no banco.
+ */
+export async function confirmWorkoutSetProposalAction(
+  sessionId: string,
+  proposalId: string,
+  body: ConfirmWorkoutSetProposalBody,
+): Promise<ActionResult<ConfirmWorkoutSetProposal200>> {
+  try {
+    const response = await confirmWorkoutSetProposal(
+      sessionId,
+      proposalId,
+      body,
+    );
+
+    if (response.status !== 200) {
+      const errorMsg =
+        (response.data as { error?: string })?.error ||
+        "Erro ao confirmar proposta de séries";
+      const code = (response.data as { code?: string })?.code;
+      return { success: false, error: errorMsg, code };
+    }
+
+    revalidatePath(`/workout-sessions/${sessionId}`);
+    return { success: true, data: response.data };
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error:
+        (err as Error)?.message || "Erro de conexão ao confirmar proposta",
+    };
+  }
+}
+
+/**
+ * Descarta proposta de séries gerada pela IA.
+ */
+export async function discardWorkoutSetProposalAction(
+  sessionId: string,
+  proposalId: string,
+  body: DiscardWorkoutSetProposalBody = {},
+): Promise<ActionResult<DiscardWorkoutSetProposal200>> {
+  try {
+    const response = await discardWorkoutSetProposal(
+      sessionId,
+      proposalId,
+      body,
+    );
+
+    if (response.status !== 200) {
+      const errorMsg =
+        (response.data as { error?: string })?.error ||
+        "Erro ao descartar proposta de séries";
+      const code = (response.data as { code?: string })?.code;
+      return { success: false, error: errorMsg, code };
+    }
+
+    revalidatePath(`/workout-sessions/${sessionId}`);
+    return { success: true, data: response.data };
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error:
+        (err as Error)?.message || "Erro de conexão ao descartar proposta",
+    };
+  }
+}
+
+/**
+ * Consulta status de consentimento LGPD para uso do histórico de treinos pela IA.
+ */
+export async function getAiConsentAction(): Promise<ActionResult<GetAiConsent200>> {
+  try {
+    const response = await getAiConsent();
+    if (response.status !== 200) {
+      const errorMsg =
+        (response.data as { error?: string })?.error ||
+        "Erro ao consultar consentimento de IA";
+      return { success: false, error: errorMsg };
+    }
+
+    return { success: true, data: response.data };
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error:
+        (err as Error)?.message || "Erro de conexão ao consultar consentimento",
+    };
+  }
+}
+
+/**
+ * Atualiza status de consentimento LGPD para uso do histórico de treinos pela IA.
+ */
+export async function updateAiConsentAction(
+  body: PatchAiConsentBody,
+): Promise<ActionResult<PatchAiConsent200>> {
+  try {
+    const response = await patchAiConsent(body);
+    if (response.status !== 200) {
+      const errorMsg =
+        (response.data as { error?: string })?.error ||
+        "Erro ao atualizar consentimento de IA";
+      return { success: false, error: errorMsg };
+    }
+
+    return { success: true, data: response.data };
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error:
+        (err as Error)?.message || "Erro de conexão ao atualizar consentimento",
+    };
+  }
+}
+
 

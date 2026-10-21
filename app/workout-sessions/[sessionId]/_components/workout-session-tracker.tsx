@@ -10,6 +10,7 @@ import {
   Dumbbell,
   Loader2,
   Plus,
+  Sparkles,
   Trophy,
   X,
 } from "lucide-react";
@@ -30,6 +31,7 @@ import {
   substituteSessionExerciseAction,
 } from "../_actions";
 import { ExerciseSelectorModal } from "./exercise-selector-modal";
+import { SessionAiAssistantDrawer } from "./session-ai-assistant-drawer";
 import { SessionExerciseCard } from "./session-exercise-card";
 
 interface WorkoutSessionTrackerProps {
@@ -45,6 +47,54 @@ export function WorkoutSessionTracker({ session }: WorkoutSessionTrackerProps) {
   const [pendingSetsMessage, setPendingSetsMessage] = useState<string | null>(null);
   const [showExerciseSelector, setShowExerciseSelector] = useState(false);
   const [pendingMutationsCount, setPendingMutationsCount] = useState(0);
+
+  const [showAiDrawer, setShowAiDrawer] = useState(false);
+  const [focusedExerciseId, setFocusedExerciseId] = useState<string | null>(null);
+  const [focusedExerciseName, setFocusedExerciseName] = useState<string | null>(null);
+
+  const handleOpenAiDrawer = useCallback(
+    (exerciseId?: string, exerciseName?: string) => {
+      setFocusedExerciseId(exerciseId ?? null);
+      setFocusedExerciseName(exerciseName ?? null);
+      setShowAiDrawer(true);
+    },
+    [],
+  );
+
+  const handleSetsConfirmedFromAi = useCallback(
+    (createdSets: any[], sessionExerciseId: string) => {
+      setSessionData((prev) => ({
+        ...prev,
+        sessionExercises: prev.sessionExercises.map((ex) =>
+          ex.id === sessionExerciseId
+            ? {
+                ...ex,
+                sets: [
+                  ...ex.sets,
+                  ...createdSets.map((s: any) => ({
+                    id: s.id,
+                    order: s.order,
+                    type: s.type,
+                    weightInGrams: s.weightInGrams,
+                    reps: s.reps,
+                    rir: s.rir,
+                    durationInSeconds: s.durationInSeconds,
+                    notes: s.notes,
+                    completedAt: s.completedAt,
+                    exerciseId: s.exerciseId ?? ex.exerciseId,
+                    exerciseNameSnapshot:
+                      s.exerciseNameSnapshot ?? ex.exerciseNameSnapshot,
+                    proposalId: s.proposalId,
+                  })),
+                ],
+              }
+            : ex,
+        ),
+      }));
+      router.refresh();
+    },
+    [router],
+  );
 
   const [isFinishing, startFinishTransition] = useTransition();
   const [isCancelling, startCancelTransition] = useTransition();
@@ -119,6 +169,7 @@ export function WorkoutSessionTracker({ session }: WorkoutSessionTrackerProps) {
           plannedWarmupSets: res.data.plannedWarmupSets ?? null,
           exerciseNameSnapshot: res.data.exerciseNameSnapshot,
           order: res.data.order,
+          revision: (res.data as any).revision ?? 0,
           plannedExerciseId:
             (res.data as any).plannedExerciseId ?? res.data.exerciseId ?? exerciseId,
           plannedExerciseNameSnapshot:
@@ -339,6 +390,16 @@ export function WorkoutSessionTracker({ session }: WorkoutSessionTrackerProps) {
                   Salvando...
                 </span>
               )}
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => handleOpenAiDrawer()}
+                className="rounded-full border-primary/30 bg-primary/10 px-3 py-1 font-heading text-xs font-semibold text-primary hover:bg-primary/20 hover:border-primary/50 cursor-pointer"
+              >
+                <Sparkles className="mr-1.5 size-3.5 text-primary" />
+                <span>Coach IA</span>
+              </Button>
               <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 font-heading text-xs font-semibold text-primary">
                 <span className="relative flex size-2">
                   <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-75" />
@@ -426,6 +487,12 @@ export function WorkoutSessionTracker({ session }: WorkoutSessionTrackerProps) {
                 isFreeWorkout={isFreeWorkout}
                 onRemoveExercise={handleRemoveExercise}
                 onSubstituteExercise={handleSubstituteExercise}
+                onOpenAi={() =>
+                  handleOpenAiDrawer(
+                    exercise.id,
+                    exercise.exerciseNameSnapshot,
+                  )
+                }
                 onError={(msg) => toast.error(msg)}
                 onMutationStart={handleMutationStart}
                 onMutationEnd={handleMutationEnd}
@@ -668,6 +735,16 @@ export function WorkoutSessionTracker({ session }: WorkoutSessionTrackerProps) {
         isOpen={showExerciseSelector}
         onClose={() => setShowExerciseSelector(false)}
         onSelectExercise={handleAddExercise}
+      />
+
+      {/* Drawer do Assistente de Treino IA */}
+      <SessionAiAssistantDrawer
+        isOpen={showAiDrawer}
+        onClose={() => setShowAiDrawer(false)}
+        sessionId={sessionData.id}
+        selectedExerciseId={focusedExerciseId}
+        selectedExerciseName={focusedExerciseName}
+        onSetsConfirmed={handleSetsConfirmedFromAi}
       />
     </div>
   );

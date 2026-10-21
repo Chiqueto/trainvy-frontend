@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
-import { ArrowRightLeft, ChevronDown, Dumbbell, Info, Loader2, Plus, Trash2, Zap } from "lucide-react";
+import { useEffect, useMemo, useState, useTransition } from "react";
+import { ArrowRightLeft, ChevronDown, Dumbbell, Info, Loader2, Plus, Sparkles, Trash2, Zap } from "lucide-react";
 
 import { ExerciseExecutionDialog } from "@/app/_components/exercise-media";
 import type {
@@ -22,6 +22,7 @@ interface SessionExerciseCardProps {
   isFreeWorkout?: boolean;
   onRemoveExercise?: (sessionExerciseId: string) => Promise<void>;
   onSubstituteExercise?: (sessionExerciseId: string, newExerciseId: string) => Promise<void>;
+  onOpenAi?: () => void;
   onError: (errorMsg: string) => void;
   onMutationStart?: () => void;
   onMutationEnd?: () => void;
@@ -34,6 +35,7 @@ export function SessionExerciseCard({
   isFreeWorkout = false,
   onRemoveExercise,
   onSubstituteExercise,
+  onOpenAi,
   onError,
   onMutationStart,
   onMutationEnd,
@@ -47,6 +49,10 @@ export function SessionExerciseCard({
   const [sets, setSets] = useState<
     GetWorkoutSession200SessionExercisesItemSetsItem[]
   >(() => [...exercise.sets].sort((a, b) => a.order - b.order));
+
+  useEffect(() => {
+    setSets([...exercise.sets].sort((a, b) => a.order - b.order));
+  }, [exercise.sets]);
 
   const completedSetsCount = useMemo(
     () => sets.filter((s) => !!s.completedAt).length,
@@ -224,6 +230,20 @@ export function SessionExerciseCard({
               >
                 <ArrowRightLeft className="size-3" />
                 <span>Substituir</span>
+              </button>
+            )}
+
+            {/* Botão de Coach IA do Exercício */}
+            {!isReadOnly && onOpenAi && (
+              <button
+                type="button"
+                onClick={onOpenAi}
+                title="Pedir ajuda ao Coach IA para este exercício"
+                aria-label={`Ajuda do Coach IA para ${exercise.exerciseNameSnapshot}`}
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-heading font-semibold text-primary bg-primary/10 hover:bg-primary/20 border border-primary/25 transition-colors cursor-pointer"
+              >
+                <Sparkles className="size-3 text-primary" />
+                <span>Coach IA</span>
               </button>
             )}
           </div>
