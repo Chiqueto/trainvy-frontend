@@ -668,7 +668,7 @@ export type StartWorkoutSession201ExercisesItem = {
   alternative2ExerciseId?: string | null;
   /** @nullable */
   alternative2ExerciseNameSnapshot?: string | null;
-  wasSubstituted: boolean;
+  wasSubstituted?: boolean;
   /** @nullable */
   substitutedAt?: string | null;
   /** @nullable */
@@ -2182,6 +2182,14 @@ export type PostAiParams = {
    * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
    */
   conversationId?: string;
+  /**
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutSessionId?: string;
+  /**
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  sessionExerciseId?: string;
 };
 
 export type PostAiBody = {
@@ -2190,6 +2198,10 @@ export type PostAiBody = {
   conversationId?: string;
   /** @maxLength 255 */
   timezone?: string;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  workoutSessionId?: string;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  sessionExerciseId?: string;
 };
 
 export type GetAiConversations200ConversationsItem = {
@@ -2282,6 +2294,52 @@ export type DeleteAiConversationsId404 = {
 };
 
 export type DeleteAiConversationsId500 = {
+  error: string;
+  code: string;
+};
+
+export type GetAiConsent200 = {
+  aiTrainingHistoryAccess: boolean;
+  /** @nullable */
+  aiTrainingHistoryConsentAt: string | null;
+};
+
+export type GetAiConsent401 = {
+  error: string;
+  code: string;
+};
+
+export type GetAiConsent404 = {
+  error: string;
+  code: string;
+};
+
+export type GetAiConsent500 = {
+  error: string;
+  code: string;
+};
+
+export type PatchAiConsentBody = {
+  aiTrainingHistoryAccess: boolean;
+};
+
+export type PatchAiConsent200 = {
+  aiTrainingHistoryAccess: boolean;
+  /** @nullable */
+  aiTrainingHistoryConsentAt: string | null;
+};
+
+export type PatchAiConsent401 = {
+  error: string;
+  code: string;
+};
+
+export type PatchAiConsent404 = {
+  error: string;
+  code: string;
+};
+
+export type PatchAiConsent500 = {
   error: string;
   code: string;
 };
@@ -4991,6 +5049,18 @@ export type GetCoachAthleteProgressSessionDetail200ExercisesItemSetsItem = {
   /** @nullable */
   notes: string | null;
   completedAt: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId?: string | null;
+  /** @nullable */
+  exerciseNameSnapshot?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  proposalId?: string | null;
 };
 
 export type GetCoachAthleteProgressSessionDetail200ExercisesItem = {
@@ -5030,7 +5100,7 @@ export type GetCoachAthleteProgressSessionDetail200ExercisesItem = {
   alternative2ExerciseId?: string | null;
   /** @nullable */
   alternative2ExerciseNameSnapshot?: string | null;
-  wasSubstituted: boolean;
+  wasSubstituted?: boolean;
   /** @nullable */
   substitutedAt?: string | null;
   planned: GetCoachAthleteProgressSessionDetail200ExercisesItemPlanned;
@@ -5140,6 +5210,7 @@ export type ListCoachAthleteProgressExercises200Item = {
   name: string;
   /** @nullable */
   ownerUserId: string | null;
+  isUnilateral?: boolean;
   hasMedia: boolean;
   muscles: ListCoachAthleteProgressExercises200ItemMusclesItem[];
 };
@@ -7224,6 +7295,7 @@ export type ListExercises200Item = {
   name: string;
   /** @nullable */
   ownerUserId: string | null;
+  isUnilateral?: boolean;
   hasMedia: boolean;
   muscles: ListExercises200ItemMusclesItem[];
 };
@@ -7279,6 +7351,7 @@ export const CreateExerciseBodySecondaryMuscleGroupsItem = {
 export type CreateExerciseBody = {
   /** @minLength 1 */
   name: string;
+  isUnilateral?: boolean;
   primaryMuscleGroups?: CreateExerciseBodyPrimaryMuscleGroupsItem[];
   secondaryMuscleGroups?: CreateExerciseBodySecondaryMuscleGroupsItem[];
 };
@@ -7323,6 +7396,7 @@ export type CreateExercise201 = {
   name: string;
   /** @nullable */
   ownerUserId: string | null;
+  isUnilateral?: boolean;
   hasMedia: boolean;
   muscles: CreateExercise201MusclesItem[];
 };
@@ -7431,6 +7505,7 @@ export type UpdateExerciseMuscles200 = {
   name: string;
   /** @nullable */
   ownerUserId: string | null;
+  isUnilateral?: boolean;
   hasMedia: boolean;
   muscles: UpdateExerciseMuscles200MusclesItem[];
 };
@@ -7566,6 +7641,18 @@ export type GetActiveWorkoutSession200SessionExercisesItemSetsItem = {
   notes: string | null;
   /** @nullable */
   completedAt: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId?: string | null;
+  /** @nullable */
+  exerciseNameSnapshot?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  proposalId?: string | null;
 };
 
 export type GetActiveWorkoutSession200SessionExercisesItem = {
@@ -7583,6 +7670,11 @@ export type GetActiveWorkoutSession200SessionExercisesItem = {
    * @maximum 9007199254740991
    */
   order: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  revision: number;
   /**
    * @nullable
    * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
@@ -7604,7 +7696,7 @@ export type GetActiveWorkoutSession200SessionExercisesItem = {
   alternative2ExerciseId?: string | null;
   /** @nullable */
   alternative2ExerciseNameSnapshot?: string | null;
-  wasSubstituted: boolean;
+  wasSubstituted?: boolean;
   /** @nullable */
   substitutedAt?: string | null;
   /**
@@ -7633,6 +7725,7 @@ export type GetActiveWorkoutSession200SessionExercisesItem = {
   plannedRestTimeInSeconds: number | null;
   /** @nullable */
   notes: string | null;
+  isUnilateral?: boolean;
   sets: GetActiveWorkoutSession200SessionExercisesItemSetsItem[];
 };
 
@@ -7728,6 +7821,18 @@ export type GetWorkoutSession200SessionExercisesItemSetsItem = {
   notes: string | null;
   /** @nullable */
   completedAt: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId?: string | null;
+  /** @nullable */
+  exerciseNameSnapshot?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  proposalId?: string | null;
 };
 
 export type GetWorkoutSession200SessionExercisesItem = {
@@ -7745,6 +7850,11 @@ export type GetWorkoutSession200SessionExercisesItem = {
    * @maximum 9007199254740991
    */
   order: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  revision: number;
   /**
    * @nullable
    * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
@@ -7766,7 +7876,7 @@ export type GetWorkoutSession200SessionExercisesItem = {
   alternative2ExerciseId?: string | null;
   /** @nullable */
   alternative2ExerciseNameSnapshot?: string | null;
-  wasSubstituted: boolean;
+  wasSubstituted?: boolean;
   /** @nullable */
   substitutedAt?: string | null;
   /**
@@ -7795,6 +7905,7 @@ export type GetWorkoutSession200SessionExercisesItem = {
   plannedRestTimeInSeconds: number | null;
   /** @nullable */
   notes: string | null;
+  isUnilateral?: boolean;
   sets: GetWorkoutSession200SessionExercisesItemSetsItem[];
 };
 
@@ -7867,6 +7978,13 @@ export type CancelWorkoutSession500 = {
   error: string;
   code: string;
 };
+
+/**
+ * @nullable
+ */
+export type CompleteWorkoutSessionBody = {
+  forceComplete?: boolean;
+} | null;
 
 export type CompleteWorkoutSession200 = {
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
@@ -7989,6 +8107,18 @@ export type CreateWorkoutSet201 = {
   notes: string | null;
   /** @nullable */
   completedAt: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId?: string | null;
+  /** @nullable */
+  exerciseNameSnapshot?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  proposalId?: string | null;
 };
 
 export type CreateWorkoutSet400 = {
@@ -8105,6 +8235,18 @@ export type UpdateWorkoutSet200 = {
   notes: string | null;
   /** @nullable */
   completedAt: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId?: string | null;
+  /** @nullable */
+  exerciseNameSnapshot?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  proposalId?: string | null;
 };
 
 export type UpdateWorkoutSet400 = {
@@ -8254,6 +8396,18 @@ export type AddExerciseToWorkoutSession201SetsItem = {
   notes: string | null;
   /** @nullable */
   completedAt: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId?: string | null;
+  /** @nullable */
+  exerciseNameSnapshot?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  proposalId?: string | null;
 };
 
 export type AddExerciseToWorkoutSession201 = {
@@ -8271,6 +8425,11 @@ export type AddExerciseToWorkoutSession201 = {
    * @maximum 9007199254740991
    */
   order: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  revision: number;
   /**
    * @nullable
    * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
@@ -8292,7 +8451,7 @@ export type AddExerciseToWorkoutSession201 = {
   alternative2ExerciseId?: string | null;
   /** @nullable */
   alternative2ExerciseNameSnapshot?: string | null;
-  wasSubstituted: boolean;
+  wasSubstituted?: boolean;
   /** @nullable */
   substitutedAt?: string | null;
   /**
@@ -8321,6 +8480,7 @@ export type AddExerciseToWorkoutSession201 = {
   plannedRestTimeInSeconds: number | null;
   /** @nullable */
   notes: string | null;
+  isUnilateral?: boolean;
   sets: AddExerciseToWorkoutSession201SetsItem[];
 };
 
@@ -8428,6 +8588,18 @@ export type SubstituteSessionExercise200SetsItem = {
   notes: string | null;
   /** @nullable */
   completedAt: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId?: string | null;
+  /** @nullable */
+  exerciseNameSnapshot?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  proposalId?: string | null;
 };
 
 export type SubstituteSessionExercise200 = {
@@ -8445,6 +8617,11 @@ export type SubstituteSessionExercise200 = {
    * @maximum 9007199254740991
    */
   order: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  revision: number;
   /**
    * @nullable
    * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
@@ -8466,7 +8643,7 @@ export type SubstituteSessionExercise200 = {
   alternative2ExerciseId?: string | null;
   /** @nullable */
   alternative2ExerciseNameSnapshot?: string | null;
-  wasSubstituted: boolean;
+  wasSubstituted?: boolean;
   /** @nullable */
   substitutedAt?: string | null;
   /**
@@ -8495,6 +8672,7 @@ export type SubstituteSessionExercise200 = {
   plannedRestTimeInSeconds: number | null;
   /** @nullable */
   notes: string | null;
+  isUnilateral?: boolean;
   sets: SubstituteSessionExercise200SetsItem[];
 };
 
@@ -8519,6 +8697,591 @@ export type SubstituteSessionExercise409 = {
 };
 
 export type SubstituteSessionExercise500 = {
+  error: string;
+  code: string;
+};
+
+export type ListWorkoutSetProposals200ProposalsItemStatus =
+  (typeof ListWorkoutSetProposals200ProposalsItemStatus)[keyof typeof ListWorkoutSetProposals200ProposalsItemStatus];
+
+export const ListWorkoutSetProposals200ProposalsItemStatus = {
+  PENDING: "PENDING",
+  CONFIRMED: "CONFIRMED",
+  DISCARDED: "DISCARDED",
+  INVALIDATED: "INVALIDATED",
+  SUPERSEDED: "SUPERSEDED",
+} as const;
+
+export type ListWorkoutSetProposals200ProposalsItemSuggestedSetsItemType =
+  (typeof ListWorkoutSetProposals200ProposalsItemSuggestedSetsItemType)[keyof typeof ListWorkoutSetProposals200ProposalsItemSuggestedSetsItemType];
+
+export const ListWorkoutSetProposals200ProposalsItemSuggestedSetsItemType = {
+  WARMUP: "WARMUP",
+  WORKING: "WORKING",
+} as const;
+
+export type ListWorkoutSetProposals200ProposalsItemSuggestedSetsItem = {
+  type: ListWorkoutSetProposals200ProposalsItemSuggestedSetsItemType;
+  /**
+   * @minimum 0
+   * @maximum 1000
+   * @nullable
+   */
+  weightKg?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 500
+   * @nullable
+   */
+  reps?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  rir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 86400
+   * @nullable
+   */
+  durationInSeconds?: number | null;
+  /**
+   * @maxLength 500
+   * @nullable
+   */
+  notes?: string | null;
+};
+
+export type ListWorkoutSetProposals200ProposalsItemConfirmedSetsItemType =
+  (typeof ListWorkoutSetProposals200ProposalsItemConfirmedSetsItemType)[keyof typeof ListWorkoutSetProposals200ProposalsItemConfirmedSetsItemType];
+
+export const ListWorkoutSetProposals200ProposalsItemConfirmedSetsItemType = {
+  WARMUP: "WARMUP",
+  WORKING: "WORKING",
+} as const;
+
+export type ListWorkoutSetProposals200ProposalsItemConfirmedSetsItem = {
+  type: ListWorkoutSetProposals200ProposalsItemConfirmedSetsItemType;
+  /**
+   * @minimum 0
+   * @maximum 1000
+   * @nullable
+   */
+  weightKg?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 500
+   * @nullable
+   */
+  reps?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  rir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 86400
+   * @nullable
+   */
+  durationInSeconds?: number | null;
+  /**
+   * @maxLength 500
+   * @nullable
+   */
+  notes?: string | null;
+};
+
+export type ListWorkoutSetProposals200ProposalsItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  userId: string;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  workoutSessionId: string;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  sessionExerciseId: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  targetExerciseId?: string | null;
+  targetExerciseNameSnapshot: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  targetSessionExerciseRevision: number;
+  status: ListWorkoutSetProposals200ProposalsItemStatus;
+  /** @nullable */
+  invalidationReason?: string | null;
+  suggestedSets: ListWorkoutSetProposals200ProposalsItemSuggestedSetsItem[];
+  /** @nullable */
+  confirmedSets?:
+    | ListWorkoutSetProposals200ProposalsItemConfirmedSetsItem[]
+    | null;
+  /** @nullable */
+  idempotencyKey?: string | null;
+  expiresAt: string;
+  /** @nullable */
+  confirmedAt?: string | null;
+  /** @nullable */
+  discardedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ListWorkoutSetProposals200 = {
+  proposals: ListWorkoutSetProposals200ProposalsItem[];
+};
+
+export type ListWorkoutSetProposals401 = {
+  error: string;
+  code: string;
+};
+
+export type ListWorkoutSetProposals404 = {
+  error: string;
+  code: string;
+};
+
+export type ListWorkoutSetProposals500 = {
+  error: string;
+  code: string;
+};
+
+export type ConfirmWorkoutSetProposalBodySetsItemType =
+  (typeof ConfirmWorkoutSetProposalBodySetsItemType)[keyof typeof ConfirmWorkoutSetProposalBodySetsItemType];
+
+export const ConfirmWorkoutSetProposalBodySetsItemType = {
+  WARMUP: "WARMUP",
+  WORKING: "WORKING",
+} as const;
+
+export type ConfirmWorkoutSetProposalBodySetsItem = {
+  type?: ConfirmWorkoutSetProposalBodySetsItemType;
+  /**
+   * @minimum 0
+   * @maximum 1000
+   * @nullable
+   */
+  weightKg?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 500
+   * @nullable
+   */
+  reps?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  rir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 86400
+   * @nullable
+   */
+  durationInSeconds?: number | null;
+  /**
+   * @maxLength 500
+   * @nullable
+   */
+  notes?: string | null;
+};
+
+export type ConfirmWorkoutSetProposalBody = {
+  /** @maxLength 100 */
+  idempotencyKey?: string;
+  /** @minItems 1 */
+  sets: ConfirmWorkoutSetProposalBodySetsItem[];
+};
+
+export type ConfirmWorkoutSetProposal200ProposalStatus =
+  (typeof ConfirmWorkoutSetProposal200ProposalStatus)[keyof typeof ConfirmWorkoutSetProposal200ProposalStatus];
+
+export const ConfirmWorkoutSetProposal200ProposalStatus = {
+  PENDING: "PENDING",
+  CONFIRMED: "CONFIRMED",
+  DISCARDED: "DISCARDED",
+  INVALIDATED: "INVALIDATED",
+  SUPERSEDED: "SUPERSEDED",
+} as const;
+
+export type ConfirmWorkoutSetProposal200ProposalSuggestedSetsItemType =
+  (typeof ConfirmWorkoutSetProposal200ProposalSuggestedSetsItemType)[keyof typeof ConfirmWorkoutSetProposal200ProposalSuggestedSetsItemType];
+
+export const ConfirmWorkoutSetProposal200ProposalSuggestedSetsItemType = {
+  WARMUP: "WARMUP",
+  WORKING: "WORKING",
+} as const;
+
+export type ConfirmWorkoutSetProposal200ProposalSuggestedSetsItem = {
+  type: ConfirmWorkoutSetProposal200ProposalSuggestedSetsItemType;
+  /**
+   * @minimum 0
+   * @maximum 1000
+   * @nullable
+   */
+  weightKg?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 500
+   * @nullable
+   */
+  reps?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  rir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 86400
+   * @nullable
+   */
+  durationInSeconds?: number | null;
+  /**
+   * @maxLength 500
+   * @nullable
+   */
+  notes?: string | null;
+};
+
+export type ConfirmWorkoutSetProposal200ProposalConfirmedSetsItemType =
+  (typeof ConfirmWorkoutSetProposal200ProposalConfirmedSetsItemType)[keyof typeof ConfirmWorkoutSetProposal200ProposalConfirmedSetsItemType];
+
+export const ConfirmWorkoutSetProposal200ProposalConfirmedSetsItemType = {
+  WARMUP: "WARMUP",
+  WORKING: "WORKING",
+} as const;
+
+export type ConfirmWorkoutSetProposal200ProposalConfirmedSetsItem = {
+  type: ConfirmWorkoutSetProposal200ProposalConfirmedSetsItemType;
+  /**
+   * @minimum 0
+   * @maximum 1000
+   * @nullable
+   */
+  weightKg?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 500
+   * @nullable
+   */
+  reps?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  rir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 86400
+   * @nullable
+   */
+  durationInSeconds?: number | null;
+  /**
+   * @maxLength 500
+   * @nullable
+   */
+  notes?: string | null;
+};
+
+export type ConfirmWorkoutSetProposal200Proposal = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  userId: string;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  workoutSessionId: string;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  sessionExerciseId: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  targetExerciseId?: string | null;
+  targetExerciseNameSnapshot: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  targetSessionExerciseRevision: number;
+  status: ConfirmWorkoutSetProposal200ProposalStatus;
+  /** @nullable */
+  invalidationReason?: string | null;
+  suggestedSets: ConfirmWorkoutSetProposal200ProposalSuggestedSetsItem[];
+  /** @nullable */
+  confirmedSets?:
+    | ConfirmWorkoutSetProposal200ProposalConfirmedSetsItem[]
+    | null;
+  /** @nullable */
+  idempotencyKey?: string | null;
+  expiresAt: string;
+  /** @nullable */
+  confirmedAt?: string | null;
+  /** @nullable */
+  discardedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ConfirmWorkoutSetProposal200CreatedSetsItemType =
+  (typeof ConfirmWorkoutSetProposal200CreatedSetsItemType)[keyof typeof ConfirmWorkoutSetProposal200CreatedSetsItemType];
+
+export const ConfirmWorkoutSetProposal200CreatedSetsItemType = {
+  WARMUP: "WARMUP",
+  WORKING: "WORKING",
+} as const;
+
+export type ConfirmWorkoutSetProposal200CreatedSetsItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  order: number;
+  type: ConfirmWorkoutSetProposal200CreatedSetsItemType;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  weightInGrams: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  reps: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  rir: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  durationInSeconds: number | null;
+  /** @nullable */
+  notes: string | null;
+  /** @nullable */
+  completedAt: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId?: string | null;
+  /** @nullable */
+  exerciseNameSnapshot?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  proposalId?: string | null;
+};
+
+export type ConfirmWorkoutSetProposal200 = {
+  success: boolean;
+  proposal: ConfirmWorkoutSetProposal200Proposal;
+  createdSets: ConfirmWorkoutSetProposal200CreatedSetsItem[];
+};
+
+export type ConfirmWorkoutSetProposal400 = {
+  error: string;
+  code: string;
+};
+
+export type ConfirmWorkoutSetProposal401 = {
+  error: string;
+  code: string;
+};
+
+export type ConfirmWorkoutSetProposal404 = {
+  error: string;
+  code: string;
+};
+
+export type ConfirmWorkoutSetProposal409 = {
+  error: string;
+  code: string;
+};
+
+export type ConfirmWorkoutSetProposal500 = {
+  error: string;
+  code: string;
+};
+
+export type DiscardWorkoutSetProposalBody = {
+  /** @maxLength 255 */
+  reason?: string;
+};
+
+export type DiscardWorkoutSetProposal200ProposalStatus =
+  (typeof DiscardWorkoutSetProposal200ProposalStatus)[keyof typeof DiscardWorkoutSetProposal200ProposalStatus];
+
+export const DiscardWorkoutSetProposal200ProposalStatus = {
+  PENDING: "PENDING",
+  CONFIRMED: "CONFIRMED",
+  DISCARDED: "DISCARDED",
+  INVALIDATED: "INVALIDATED",
+  SUPERSEDED: "SUPERSEDED",
+} as const;
+
+export type DiscardWorkoutSetProposal200ProposalSuggestedSetsItemType =
+  (typeof DiscardWorkoutSetProposal200ProposalSuggestedSetsItemType)[keyof typeof DiscardWorkoutSetProposal200ProposalSuggestedSetsItemType];
+
+export const DiscardWorkoutSetProposal200ProposalSuggestedSetsItemType = {
+  WARMUP: "WARMUP",
+  WORKING: "WORKING",
+} as const;
+
+export type DiscardWorkoutSetProposal200ProposalSuggestedSetsItem = {
+  type: DiscardWorkoutSetProposal200ProposalSuggestedSetsItemType;
+  /**
+   * @minimum 0
+   * @maximum 1000
+   * @nullable
+   */
+  weightKg?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 500
+   * @nullable
+   */
+  reps?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  rir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 86400
+   * @nullable
+   */
+  durationInSeconds?: number | null;
+  /**
+   * @maxLength 500
+   * @nullable
+   */
+  notes?: string | null;
+};
+
+export type DiscardWorkoutSetProposal200ProposalConfirmedSetsItemType =
+  (typeof DiscardWorkoutSetProposal200ProposalConfirmedSetsItemType)[keyof typeof DiscardWorkoutSetProposal200ProposalConfirmedSetsItemType];
+
+export const DiscardWorkoutSetProposal200ProposalConfirmedSetsItemType = {
+  WARMUP: "WARMUP",
+  WORKING: "WORKING",
+} as const;
+
+export type DiscardWorkoutSetProposal200ProposalConfirmedSetsItem = {
+  type: DiscardWorkoutSetProposal200ProposalConfirmedSetsItemType;
+  /**
+   * @minimum 0
+   * @maximum 1000
+   * @nullable
+   */
+  weightKg?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 500
+   * @nullable
+   */
+  reps?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  rir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 86400
+   * @nullable
+   */
+  durationInSeconds?: number | null;
+  /**
+   * @maxLength 500
+   * @nullable
+   */
+  notes?: string | null;
+};
+
+export type DiscardWorkoutSetProposal200Proposal = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  userId: string;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  workoutSessionId: string;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  sessionExerciseId: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  targetExerciseId?: string | null;
+  targetExerciseNameSnapshot: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  targetSessionExerciseRevision: number;
+  status: DiscardWorkoutSetProposal200ProposalStatus;
+  /** @nullable */
+  invalidationReason?: string | null;
+  suggestedSets: DiscardWorkoutSetProposal200ProposalSuggestedSetsItem[];
+  /** @nullable */
+  confirmedSets?:
+    | DiscardWorkoutSetProposal200ProposalConfirmedSetsItem[]
+    | null;
+  /** @nullable */
+  idempotencyKey?: string | null;
+  expiresAt: string;
+  /** @nullable */
+  confirmedAt?: string | null;
+  /** @nullable */
+  discardedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type DiscardWorkoutSetProposal200 = {
+  success: boolean;
+  proposal: DiscardWorkoutSetProposal200Proposal;
+};
+
+export type DiscardWorkoutSetProposal400 = {
+  error: string;
+  code: string;
+};
+
+export type DiscardWorkoutSetProposal401 = {
+  error: string;
+  code: string;
+};
+
+export type DiscardWorkoutSetProposal404 = {
+  error: string;
+  code: string;
+};
+
+export type DiscardWorkoutSetProposal409 = {
+  error: string;
+  code: string;
+};
+
+export type DiscardWorkoutSetProposal500 = {
   error: string;
   code: string;
 };
@@ -8882,6 +9645,18 @@ export type GetWorkoutHistorySession200ExercisesItemSetsItem = {
   /** @nullable */
   notes: string | null;
   completedAt: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId?: string | null;
+  /** @nullable */
+  exerciseNameSnapshot?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  proposalId?: string | null;
 };
 
 export type GetWorkoutHistorySession200ExercisesItem = {
@@ -8921,7 +9696,7 @@ export type GetWorkoutHistorySession200ExercisesItem = {
   alternative2ExerciseId?: string | null;
   /** @nullable */
   alternative2ExerciseNameSnapshot?: string | null;
-  wasSubstituted: boolean;
+  wasSubstituted?: boolean;
   /** @nullable */
   substitutedAt?: string | null;
   planned: GetWorkoutHistorySession200ExercisesItemPlanned;
@@ -11318,6 +12093,111 @@ export const deleteAiConversationsId = async (
       method: "DELETE",
     },
   );
+};
+
+/**
+ * @summary Get AI history training access consent status (LGPD)
+ */
+export type getAiConsentResponse200 = {
+  data: GetAiConsent200;
+  status: 200;
+};
+
+export type getAiConsentResponse401 = {
+  data: GetAiConsent401;
+  status: 401;
+};
+
+export type getAiConsentResponse404 = {
+  data: GetAiConsent404;
+  status: 404;
+};
+
+export type getAiConsentResponse500 = {
+  data: GetAiConsent500;
+  status: 500;
+};
+
+export type getAiConsentResponseSuccess = getAiConsentResponse200 & {
+  headers: Headers;
+};
+export type getAiConsentResponseError = (
+  | getAiConsentResponse401
+  | getAiConsentResponse404
+  | getAiConsentResponse500
+) & {
+  headers: Headers;
+};
+
+export type getAiConsentResponse =
+  | getAiConsentResponseSuccess
+  | getAiConsentResponseError;
+
+export const getGetAiConsentUrl = () => {
+  return `/ai/consent`;
+};
+
+export const getAiConsent = async (
+  options?: RequestInit,
+): Promise<getAiConsentResponse> => {
+  return customFetch<getAiConsentResponse>(getGetAiConsentUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+/**
+ * @summary Update AI history training access consent status (LGPD)
+ */
+export type patchAiConsentResponse200 = {
+  data: PatchAiConsent200;
+  status: 200;
+};
+
+export type patchAiConsentResponse401 = {
+  data: PatchAiConsent401;
+  status: 401;
+};
+
+export type patchAiConsentResponse404 = {
+  data: PatchAiConsent404;
+  status: 404;
+};
+
+export type patchAiConsentResponse500 = {
+  data: PatchAiConsent500;
+  status: 500;
+};
+
+export type patchAiConsentResponseSuccess = patchAiConsentResponse200 & {
+  headers: Headers;
+};
+export type patchAiConsentResponseError = (
+  | patchAiConsentResponse401
+  | patchAiConsentResponse404
+  | patchAiConsentResponse500
+) & {
+  headers: Headers;
+};
+
+export type patchAiConsentResponse =
+  | patchAiConsentResponseSuccess
+  | patchAiConsentResponseError;
+
+export const getPatchAiConsentUrl = () => {
+  return `/ai/consent`;
+};
+
+export const patchAiConsent = async (
+  patchAiConsentBody: PatchAiConsentBody,
+  options?: RequestInit,
+): Promise<patchAiConsentResponse> => {
+  return customFetch<patchAiConsentResponse>(getPatchAiConsentUrl(), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(patchAiConsentBody),
+  });
 };
 
 export type listPublicPlansResponse200 = {
@@ -15101,6 +15981,7 @@ export const getCompleteWorkoutSessionUrl = (sessionId: string) => {
 
 export const completeWorkoutSession = async (
   sessionId: string,
+  completeWorkoutSessionBody: CompleteWorkoutSessionBody,
   options?: RequestInit,
 ): Promise<completeWorkoutSessionResponse> => {
   return customFetch<completeWorkoutSessionResponse>(
@@ -15108,6 +15989,8 @@ export const completeWorkoutSession = async (
     {
       ...options,
       method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(completeWorkoutSessionBody),
     },
   );
 };
@@ -15574,6 +16457,212 @@ export const substituteSessionExercise = async (
       method: "PATCH",
       headers: { "Content-Type": "application/json", ...options?.headers },
       body: JSON.stringify(substituteSessionExerciseBody),
+    },
+  );
+};
+
+/**
+ * @summary List set proposals for a workout session
+ */
+export type listWorkoutSetProposalsResponse200 = {
+  data: ListWorkoutSetProposals200;
+  status: 200;
+};
+
+export type listWorkoutSetProposalsResponse401 = {
+  data: ListWorkoutSetProposals401;
+  status: 401;
+};
+
+export type listWorkoutSetProposalsResponse404 = {
+  data: ListWorkoutSetProposals404;
+  status: 404;
+};
+
+export type listWorkoutSetProposalsResponse500 = {
+  data: ListWorkoutSetProposals500;
+  status: 500;
+};
+
+export type listWorkoutSetProposalsResponseSuccess =
+  listWorkoutSetProposalsResponse200 & {
+    headers: Headers;
+  };
+export type listWorkoutSetProposalsResponseError = (
+  | listWorkoutSetProposalsResponse401
+  | listWorkoutSetProposalsResponse404
+  | listWorkoutSetProposalsResponse500
+) & {
+  headers: Headers;
+};
+
+export type listWorkoutSetProposalsResponse =
+  | listWorkoutSetProposalsResponseSuccess
+  | listWorkoutSetProposalsResponseError;
+
+export const getListWorkoutSetProposalsUrl = (sessionId: string) => {
+  return `/workout-sessions/${sessionId}/set-proposals`;
+};
+
+export const listWorkoutSetProposals = async (
+  sessionId: string,
+  options?: RequestInit,
+): Promise<listWorkoutSetProposalsResponse> => {
+  return customFetch<listWorkoutSetProposalsResponse>(
+    getListWorkoutSetProposalsUrl(sessionId),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Confirm and persist proposed workout sets with lock order and revision validation
+ */
+export type confirmWorkoutSetProposalResponse200 = {
+  data: ConfirmWorkoutSetProposal200;
+  status: 200;
+};
+
+export type confirmWorkoutSetProposalResponse400 = {
+  data: ConfirmWorkoutSetProposal400;
+  status: 400;
+};
+
+export type confirmWorkoutSetProposalResponse401 = {
+  data: ConfirmWorkoutSetProposal401;
+  status: 401;
+};
+
+export type confirmWorkoutSetProposalResponse404 = {
+  data: ConfirmWorkoutSetProposal404;
+  status: 404;
+};
+
+export type confirmWorkoutSetProposalResponse409 = {
+  data: ConfirmWorkoutSetProposal409;
+  status: 409;
+};
+
+export type confirmWorkoutSetProposalResponse500 = {
+  data: ConfirmWorkoutSetProposal500;
+  status: 500;
+};
+
+export type confirmWorkoutSetProposalResponseSuccess =
+  confirmWorkoutSetProposalResponse200 & {
+    headers: Headers;
+  };
+export type confirmWorkoutSetProposalResponseError = (
+  | confirmWorkoutSetProposalResponse400
+  | confirmWorkoutSetProposalResponse401
+  | confirmWorkoutSetProposalResponse404
+  | confirmWorkoutSetProposalResponse409
+  | confirmWorkoutSetProposalResponse500
+) & {
+  headers: Headers;
+};
+
+export type confirmWorkoutSetProposalResponse =
+  | confirmWorkoutSetProposalResponseSuccess
+  | confirmWorkoutSetProposalResponseError;
+
+export const getConfirmWorkoutSetProposalUrl = (
+  sessionId: string,
+  proposalId: string,
+) => {
+  return `/workout-sessions/${sessionId}/set-proposals/${proposalId}/confirm`;
+};
+
+export const confirmWorkoutSetProposal = async (
+  sessionId: string,
+  proposalId: string,
+  confirmWorkoutSetProposalBody: ConfirmWorkoutSetProposalBody,
+  options?: RequestInit,
+): Promise<confirmWorkoutSetProposalResponse> => {
+  return customFetch<confirmWorkoutSetProposalResponse>(
+    getConfirmWorkoutSetProposalUrl(sessionId, proposalId),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(confirmWorkoutSetProposalBody),
+    },
+  );
+};
+
+/**
+ * @summary Discard a proposed workout set
+ */
+export type discardWorkoutSetProposalResponse200 = {
+  data: DiscardWorkoutSetProposal200;
+  status: 200;
+};
+
+export type discardWorkoutSetProposalResponse400 = {
+  data: DiscardWorkoutSetProposal400;
+  status: 400;
+};
+
+export type discardWorkoutSetProposalResponse401 = {
+  data: DiscardWorkoutSetProposal401;
+  status: 401;
+};
+
+export type discardWorkoutSetProposalResponse404 = {
+  data: DiscardWorkoutSetProposal404;
+  status: 404;
+};
+
+export type discardWorkoutSetProposalResponse409 = {
+  data: DiscardWorkoutSetProposal409;
+  status: 409;
+};
+
+export type discardWorkoutSetProposalResponse500 = {
+  data: DiscardWorkoutSetProposal500;
+  status: 500;
+};
+
+export type discardWorkoutSetProposalResponseSuccess =
+  discardWorkoutSetProposalResponse200 & {
+    headers: Headers;
+  };
+export type discardWorkoutSetProposalResponseError = (
+  | discardWorkoutSetProposalResponse400
+  | discardWorkoutSetProposalResponse401
+  | discardWorkoutSetProposalResponse404
+  | discardWorkoutSetProposalResponse409
+  | discardWorkoutSetProposalResponse500
+) & {
+  headers: Headers;
+};
+
+export type discardWorkoutSetProposalResponse =
+  | discardWorkoutSetProposalResponseSuccess
+  | discardWorkoutSetProposalResponseError;
+
+export const getDiscardWorkoutSetProposalUrl = (
+  sessionId: string,
+  proposalId: string,
+) => {
+  return `/workout-sessions/${sessionId}/set-proposals/${proposalId}/discard`;
+};
+
+export const discardWorkoutSetProposal = async (
+  sessionId: string,
+  proposalId: string,
+  discardWorkoutSetProposalBody: DiscardWorkoutSetProposalBody,
+  options?: RequestInit,
+): Promise<discardWorkoutSetProposalResponse> => {
+  return customFetch<discardWorkoutSetProposalResponse>(
+    getDiscardWorkoutSetProposalUrl(sessionId, proposalId),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(discardWorkoutSetProposalBody),
     },
   );
 };
