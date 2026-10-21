@@ -35,7 +35,7 @@ import {
 
 export type ActionResult<T> =
   | { success: true; data: T }
-  | { success: false; error: string };
+  | { success: false; error: string; code?: string };
 
 /**
  * Cria uma nova série para o SessionExercise especificado.
@@ -117,14 +117,16 @@ export async function deleteWorkoutSetAction(
  */
 export async function completeWorkoutSessionAction(
   sessionId: string,
+  body?: { forceComplete?: boolean },
 ): Promise<ActionResult<CompleteWorkoutSession200>> {
   try {
-    const response = await completeWorkoutSession(sessionId);
+    const response = await completeWorkoutSession(sessionId, body ?? {});
     if (response.status !== 200) {
+      const errorData = response.data as { error?: string; code?: string } | undefined;
       const errorMsg =
-        (response.data as { error?: string })?.error ||
-        "Erro ao finalizar treino";
-      return { success: false, error: errorMsg };
+        errorData?.error || "Erro ao finalizar treino";
+      const code = errorData?.code;
+      return { success: false, error: errorMsg, code };
     }
 
     revalidatePath(`/workout-sessions/${sessionId}`);
@@ -185,6 +187,7 @@ export async function createExerciseAction(
     | string
     | {
         name: string;
+        isUnilateral?: boolean;
         primaryMuscleGroups?: CreateExerciseBodyPrimaryMuscleGroupsItem[];
         secondaryMuscleGroups?: CreateExerciseBodySecondaryMuscleGroupsItem[];
       },
@@ -196,6 +199,8 @@ export async function createExerciseAction(
       return { success: false, error: "Nome do exercício é obrigatório" };
     }
 
+    const isUnilateral =
+      typeof input === "object" ? input.isUnilateral : undefined;
     const primaryMuscleGroups =
       typeof input === "object" ? input.primaryMuscleGroups : undefined;
     const secondaryMuscleGroups =
@@ -203,6 +208,7 @@ export async function createExerciseAction(
 
     const response = await createExercise({
       name: trimmed,
+      isUnilateral,
       primaryMuscleGroups,
       secondaryMuscleGroups,
     });

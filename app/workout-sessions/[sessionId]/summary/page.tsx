@@ -97,7 +97,8 @@ export default async function WorkoutSummaryPage({
             maxWeightGrams = set.weightInGrams;
           }
           if (set.reps) {
-            totalVolumeGrams += set.weightInGrams * set.reps;
+            const sideMultiplier = exercise.isUnilateral ? 2 : 1;
+            totalVolumeGrams += set.weightInGrams * set.reps * sideMultiplier;
           }
         }
       }
@@ -107,6 +108,7 @@ export default async function WorkoutSummaryPage({
       id: exercise.id,
       name: exercise.exerciseNameSnapshot,
       order: exercise.order,
+      isUnilateral: exercise.isUnilateral,
       completedSetsCount,
       exerciseReps,
       maxWeightKg: gramsToKg(maxWeightGrams),

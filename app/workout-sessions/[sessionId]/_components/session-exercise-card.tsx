@@ -15,8 +15,9 @@ import { SubstituteExerciseModal } from "./substitute-exercise-modal";
 import { WorkoutSetRow } from "./workout-set-row";
 
 interface SessionExerciseCardProps {
-  sessionId: string;
+  sessionId?: string;
   exercise: GetWorkoutSession200SessionExercisesItem;
+  exerciseIndex?: number;
   isReadOnly: boolean;
   isFreeWorkout?: boolean;
   onRemoveExercise?: (sessionExerciseId: string) => Promise<void>;
@@ -27,7 +28,7 @@ interface SessionExerciseCardProps {
 }
 
 export function SessionExerciseCard({
-  sessionId,
+  sessionId = "",
   exercise,
   isReadOnly,
   isFreeWorkout = false,
@@ -194,6 +195,13 @@ export function SessionExerciseCard({
               </span>
             )}
 
+            {/* Badge de Unilateral */}
+            {exercise.isUnilateral && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-heading font-semibold text-primary bg-primary/10 border border-primary/20">
+                Unilateral (×2)
+              </span>
+            )}
+
             <button
               type="button"
               onClick={() => setIsMediaOpen(true)}
@@ -231,6 +239,12 @@ export function SessionExerciseCard({
           {prescriptionText && (
             <p className="font-heading text-xs text-muted-foreground pl-7">
               <span className="font-medium text-foreground/80">Planejado:</span> {prescriptionText}
+            </p>
+          )}
+
+          {exercise.isUnilateral && (
+            <p className="font-heading text-[11px] text-primary/80 pl-7">
+              Unilateral: cada série é feita em ambos os lados (volume ×2)
             </p>
           )}
 

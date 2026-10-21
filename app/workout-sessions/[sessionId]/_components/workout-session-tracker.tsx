@@ -20,6 +20,7 @@ import type {
   GetWorkoutSession200SessionExercisesItem,
 } from "@/app/_lib/api/fetch-generated";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 import {
   addExerciseToWorkoutSessionAction,
@@ -38,9 +39,10 @@ interface WorkoutSessionTrackerProps {
 export function WorkoutSessionTracker({ session }: WorkoutSessionTrackerProps) {
   const router = useRouter();
   const [sessionData, setSessionData] = useState(() => session);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showPendingSetsModal, setShowPendingSetsModal] = useState(false);
+  const [pendingSetsMessage, setPendingSetsMessage] = useState<string | null>(null);
   const [showExerciseSelector, setShowExerciseSelector] = useState(false);
   const [pendingMutationsCount, setPendingMutationsCount] = useState(0);
 
@@ -107,7 +109,7 @@ export function WorkoutSessionTracker({ session }: WorkoutSessionTrackerProps) {
         exerciseId,
       );
       if (!res.success) {
-        setErrorMessage(res.error);
+        toast.error(res.error);
         throw new Error(res.error);
       } else {
         const newExercise: GetWorkoutSession200SessionExercisesItem = {
@@ -156,7 +158,7 @@ export function WorkoutSessionTracker({ session }: WorkoutSessionTrackerProps) {
         sessionExerciseId,
       );
       if (!res.success) {
-        setErrorMessage(res.error);
+        toast.error(res.error);
         throw new Error(res.error);
       } else {
         setSessionData((prev) => ({
@@ -183,7 +185,7 @@ export function WorkoutSessionTracker({ session }: WorkoutSessionTrackerProps) {
         newExerciseId,
       );
       if (!res.success) {
-        setErrorMessage(res.error);
+        toast.error(res.error);
         throw new Error(res.error);
       } else {
         setSessionData((prev) => ({
@@ -236,20 +238,30 @@ export function WorkoutSessionTracker({ session }: WorkoutSessionTrackerProps) {
     setShowConfirmModal(true);
   };
 
-  const handleConfirmFinish = () => {
+  const handleConfirmFinish = (forceComplete = false) => {
     if (isReadOnly || isFinishing || pendingMutationsCount > 0) return;
 
     startFinishTransition(async () => {
-      const res = await completeWorkoutSessionAction(sessionData.id);
+      const res = await completeWorkoutSessionAction(
+        sessionData.id,
+        forceComplete ? { forceComplete: true } : undefined,
+      );
       if (!res.success) {
-        setErrorMessage(res.error);
         setShowConfirmModal(false);
+        if (res.code === "PENDING_WORKOUT_SETS") {
+          setPendingSetsMessage(res.error);
+          setShowPendingSetsModal(true);
+        } else {
+          toast.error(res.error);
+        }
       } else {
         setSessionData((prev) => ({
           ...prev,
           completedAt: res.data.completedAt,
         }));
         setShowConfirmModal(false);
+        setShowPendingSetsModal(false);
+        toast.success("Treino concluído com sucesso!");
         router.push(`/workout-sessions/${sessionData.id}/summary`);
       }
     });
@@ -261,10 +273,11 @@ export function WorkoutSessionTracker({ session }: WorkoutSessionTrackerProps) {
     startCancelTransition(async () => {
       const res = await cancelWorkoutSessionAction(sessionData.id);
       if (!res.success) {
-        setErrorMessage(res.error);
+        toast.error(res.error);
         setShowCancelModal(false);
       } else {
         setShowCancelModal(false);
+        toast.success("Treino cancelado.");
         router.push("/");
       }
     });
@@ -272,26 +285,7 @@ export function WorkoutSessionTracker({ session }: WorkoutSessionTrackerProps) {
 
   return (
     <div className="flex flex-col gap-5 p-5">
-      {/* Toast / Banner de Erro Inline (Preserva dados do formulário) */}
-      {errorMessage && (
-        <div
-          role="alert"
-          className="flex items-center justify-between rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-destructive animate-in fade-in slide-in-from-top-2"
-        >
-          <div className="flex items-center gap-2">
-            <AlertCircle className="size-4 shrink-0" />
-            <p className="font-heading text-xs font-semibold">{errorMessage}</p>
-          </div>
-          <button
-            type="button"
-            onClick={() => setErrorMessage(null)}
-            className="rounded-md p-1 hover:bg-destructive/20"
-          >
-            <X className="size-4" />
-            <span className="sr-only">Fechar</span>
-          </button>
-        </div>
-      )}
+
 
       {/* Banner de Conclusão / Acesso à Tela Bonitinha */}
       {isReadOnly && (
@@ -432,7 +426,7 @@ export function WorkoutSessionTracker({ session }: WorkoutSessionTrackerProps) {
                 isFreeWorkout={isFreeWorkout}
                 onRemoveExercise={handleRemoveExercise}
                 onSubstituteExercise={handleSubstituteExercise}
-                onError={(msg) => setErrorMessage(msg)}
+                onError={(msg) => toast.error(msg)}
                 onMutationStart={handleMutationStart}
                 onMutationEnd={handleMutationEnd}
               />
@@ -494,16 +488,17 @@ export function WorkoutSessionTracker({ session }: WorkoutSessionTrackerProps) {
         </div>
       )}
 
-      {/* Modal de Confirmação Simples e Não-Alarmista */}
+      {/* Modal de Confirmação de Conclusão */}
       {showConfirmModal && (
         <div
           role="dialog"
           aria-modal="true"
           aria-labelledby="finish-modal-title"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in"
+          className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-background/80 backdrop-blur-sm animate-in fade-in"
+          onClick={() => setShowConfirmModal(false)}
         >
           <div
-            className="w-full max-w-sm rounded-2xl border border-border bg-card p-6 shadow-xl flex flex-col gap-4 animate-in zoom-in-95"
+            className="w-full max-w-sm rounded-t-3xl sm:rounded-3xl border border-border bg-card p-6 shadow-2xl flex flex-col gap-4 pb-[max(1.25rem,calc(0.75rem+env(safe-area-inset-bottom,0px)))] sm:pb-6 animate-in slide-in-from-bottom-4 sm:zoom-in-95"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex flex-col gap-2">
@@ -530,7 +525,7 @@ export function WorkoutSessionTracker({ session }: WorkoutSessionTrackerProps) {
               </Button>
               <Button
                 type="button"
-                onClick={handleConfirmFinish}
+                onClick={() => handleConfirmFinish(false)}
                 disabled={isFinishing || pendingMutationsCount > 0}
                 className="rounded-xl font-heading text-sm font-semibold"
               >
@@ -548,16 +543,78 @@ export function WorkoutSessionTracker({ session }: WorkoutSessionTrackerProps) {
         </div>
       )}
 
+      {/* Modal de Séries Pendentes */}
+      {showPendingSetsModal && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="pending-sets-modal-title"
+          className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-background/80 backdrop-blur-sm animate-in fade-in"
+          onClick={() => setShowPendingSetsModal(false)}
+        >
+          <div
+            className="w-full max-w-md rounded-t-3xl sm:rounded-3xl border border-amber-500/30 bg-card p-6 shadow-2xl flex flex-col gap-4 pb-[max(1.25rem,calc(0.75rem+env(safe-area-inset-bottom,0px)))] sm:pb-6 animate-in slide-in-from-bottom-4 sm:zoom-in-95"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start gap-3">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-500 border border-amber-500/20">
+                <AlertCircle className="size-5" />
+              </div>
+              <div className="flex flex-col gap-1">
+                <h3
+                  id="pending-sets-modal-title"
+                  className="font-heading text-lg font-bold text-foreground"
+                >
+                  Séries pendentes
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {pendingSetsMessage ||
+                    "Existem séries não concluídas nesta sessão. Deseja finalizá-las e concluir o treino?"}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2.5 pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowPendingSetsModal(false)}
+                disabled={isFinishing}
+                className="rounded-xl font-heading text-sm"
+              >
+                OK
+              </Button>
+              <Button
+                type="button"
+                onClick={() => handleConfirmFinish(true)}
+                disabled={isFinishing || pendingMutationsCount > 0}
+                className="rounded-xl font-heading text-sm font-semibold bg-primary hover:bg-primary/90 text-primary-foreground"
+              >
+                {isFinishing ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="size-4 animate-spin" />
+                    Finalizando...
+                  </span>
+                ) : (
+                  "Finalizar todas e concluir o treino"
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Modal de Cancelamento de Treino */}
       {showCancelModal && (
         <div
           role="dialog"
           aria-modal="true"
           aria-labelledby="cancel-modal-title"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in"
+          className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-background/80 backdrop-blur-sm animate-in fade-in"
+          onClick={() => setShowCancelModal(false)}
         >
           <div
-            className="w-full max-w-sm rounded-2xl border border-destructive/20 bg-card p-6 shadow-xl flex flex-col gap-4 animate-in zoom-in-95"
+            className="w-full max-w-sm rounded-t-3xl sm:rounded-3xl border border-destructive/20 bg-card p-6 shadow-2xl flex flex-col gap-4 pb-[max(1.25rem,calc(0.75rem+env(safe-area-inset-bottom,0px)))] sm:pb-6 animate-in slide-in-from-bottom-4 sm:zoom-in-95"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex flex-col gap-2">

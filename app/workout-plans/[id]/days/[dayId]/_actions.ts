@@ -27,7 +27,7 @@ export async function completeWorkoutAction(
   workoutDayId: string,
   sessionId: string,
 ) {
-  const response = await completeWorkoutSession(sessionId);
+  const response = await completeWorkoutSession(sessionId, {});
   if (response.status !== 200) {
     const errorData = response.data as { error?: string };
     throw new Error(errorData?.error || "Erro ao finalizar treino");
