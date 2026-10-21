@@ -9,8 +9,10 @@ const STORAGE_LIST_KEY = "trainvy:exercises:list:v1";
 const STORAGE_VERSION_KEY = "trainvy:exercises:version:v1";
 const STORAGE_SYNCED_KEY = "trainvy:exercises:synced_at:v1";
 
+export type CachedExercise = ListExercises200Item;
+
 interface MemoryCache {
-  exercises: ListExercises200Item[];
+  exercises: CachedExercise[];
   version: string;
   syncedAt: number;
 }

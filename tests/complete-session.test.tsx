@@ -54,6 +54,7 @@ describe("Task 1.7 — Finalização Segura da WorkoutSession", () => {
         plannedReps: 10,
         plannedRestTimeInSeconds: 90,
         notes: null,
+        revision: 1,
         sets: [
           {
             id: "set-1",

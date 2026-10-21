@@ -4,6 +4,7 @@ import { Clock3, Dumbbell, Layers3, Scale } from "lucide-react";
 import type { ListWorkoutHistory200ItemsItem } from "@/app/_lib/api/fetch-generated";
 import { LocalDate } from "@/app/_components/local-date";
 import {
+  formatDateOnly,
   formatDuration,
   formatWeightKg,
   getHistorySessionTitle,
@@ -36,18 +37,34 @@ export function HistorySessionCard({
               </p>
             )}
         </div>
-        <Badge
-          variant="secondary"
-          className="shrink-0 font-heading text-[10px] uppercase tracking-wide"
-        >
-          {session.origin === "PLANNED" ? "Planejado" : "Avulso"}
-        </Badge>
+        <div className="flex shrink-0 items-center gap-1.5">
+          {session.isRetroactive && (
+            <Badge
+              variant="outline"
+              className="border-amber-500/40 bg-amber-500/10 font-heading text-[10px] uppercase tracking-wide text-amber-500"
+            >
+              Retroativo
+            </Badge>
+          )}
+          <Badge
+            variant="secondary"
+            className="font-heading text-[10px] uppercase tracking-wide"
+          >
+            {session.origin === "PLANNED" ? "Planejado" : "Avulso"}
+          </Badge>
+        </div>
       </div>
 
-      <LocalDate
-        isoDate={session.completedAt}
-        className="mt-2 block text-xs text-muted-foreground"
-      />
+      {session.timePrecision === "DATE_ONLY" && session.sessionDate ? (
+        <span className="mt-2 block text-xs text-muted-foreground">
+          {formatDateOnly(session.sessionDate)}
+        </span>
+      ) : (
+        <LocalDate
+          isoDate={session.completedAt}
+          className="mt-2 block text-xs text-muted-foreground"
+        />
+      )}
 
       <div className="mt-4 grid grid-cols-2 gap-x-3 gap-y-2.5 text-xs text-muted-foreground">
         <Metric

@@ -16,6 +16,7 @@ import type {
 } from "@/app/_lib/api/fetch-generated";
 import { LocalDate } from "@/app/_components/local-date";
 import {
+  formatDateOnly,
   formatDuration,
   formatSetDuration,
   formatWeightInGrams,
@@ -48,15 +49,31 @@ export function HistorySessionDetail({
             <h1 className="font-heading text-2xl font-semibold text-foreground">
               {title}
             </h1>
-            <LocalDate
-              isoDate={session.completedAt}
-              long
-              className="mt-1 block text-sm text-muted-foreground"
-            />
+            {session.timePrecision === "DATE_ONLY" && session.sessionDate ? (
+              <span className="mt-1 block text-sm text-muted-foreground">
+                {formatDateOnly(session.sessionDate, { long: true })}
+              </span>
+            ) : (
+              <LocalDate
+                isoDate={session.completedAt}
+                long
+                className="mt-1 block text-sm text-muted-foreground"
+              />
+            )}
           </div>
-          <Badge variant="secondary" className="mt-1 shrink-0">
-            {session.origin === "PLANNED" ? "Planejado" : "Avulso"}
-          </Badge>
+          <div className="mt-1 flex shrink-0 items-center gap-1.5">
+            {session.isRetroactive && (
+              <Badge
+                variant="outline"
+                className="border-amber-500/40 bg-amber-500/10 font-heading text-[10px] uppercase tracking-wide text-amber-500"
+              >
+                Retroativo
+              </Badge>
+            )}
+            <Badge variant="secondary">
+              {session.origin === "PLANNED" ? "Planejado" : "Avulso"}
+            </Badge>
+          </div>
         </div>
         {session.origin === "PLANNED" &&
           session.workoutPlanNameSnapshot &&

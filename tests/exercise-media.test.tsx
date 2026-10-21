@@ -412,6 +412,7 @@ describe("Task 4.X — Exercise Media Foundation (Frontend)", () => {
             plannedReps: 10,
             plannedRestTimeInSeconds: 60,
             notes: "Carga alvo 80kg",
+            revision: 1,
             sets: [
               {
                 id: "set-1",

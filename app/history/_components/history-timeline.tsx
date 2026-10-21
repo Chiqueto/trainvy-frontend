@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { AlertCircle, ArrowLeft, Loader2 } from "lucide-react";
+import { AlertCircle, ArrowLeft, CalendarPlus, Loader2 } from "lucide-react";
 
 import type {
   ListWorkoutHistory200,
@@ -160,16 +160,25 @@ export function HistoryTimeline({
         </Link>
       </div>
 
-      <header>
-        <p className="font-heading text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-          Evolução
-        </p>
-        <h1 className="mt-1 font-heading text-2xl font-semibold text-foreground">
-          Histórico
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Seus treinos concluídos
-        </p>
+      <header className="flex items-start justify-between gap-4">
+        <div>
+          <p className="font-heading text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+            Evolução
+          </p>
+          <h1 className="mt-1 font-heading text-2xl font-semibold text-foreground">
+            Histórico
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Seus treinos concluídos
+          </p>
+        </div>
+        <Link
+          href="/?chat_open=true&chat_initial_message=Esqueci%20de%20marcar%20um%20treino%20passado"
+          className="inline-flex items-center gap-1.5 rounded-xl border border-primary/30 bg-primary/10 px-3 py-2 text-xs font-semibold text-primary transition hover:bg-primary/20"
+        >
+          <CalendarPlus className="size-3.5" />
+          <span>Treino Esquecido</span>
+        </Link>
       </header>
 
       <div

@@ -94,6 +94,7 @@ describe("Tracker & WorkoutSession Navigation (Task 1.5)", () => {
             plannedRestTimeInSeconds: 60,
             notes: null,
             sets: [],
+            revision: 1,
           },
           {
             id: "ex-1",
@@ -104,6 +105,7 @@ describe("Tracker & WorkoutSession Navigation (Task 1.5)", () => {
             plannedRestTimeInSeconds: 90,
             notes: null,
             sets: [],
+            revision: 1,
           },
         ],
       },
@@ -136,6 +138,7 @@ describe("Tracker & WorkoutSession Navigation (Task 1.5)", () => {
             plannedReps: 10,
             plannedRestTimeInSeconds: 60,
             notes: null,
+            revision: 1,
             sets: [
               {
                 id: "set-1",
@@ -191,6 +194,7 @@ describe("Tracker & WorkoutSession Navigation (Task 1.5)", () => {
             plannedRestTimeInSeconds: 60,
             notes: null,
             sets: [], // Sem séries
+            revision: 1,
           },
         ],
       },
@@ -239,6 +243,7 @@ describe("Tracker & WorkoutSession Navigation (Task 1.5)", () => {
           plannedReps: 8,
           plannedRestTimeInSeconds: 120,
           notes: null,
+          revision: 1,
           sets: [
             {
               id: "set-1",

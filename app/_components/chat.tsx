@@ -29,11 +29,13 @@ import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { ForgottenWorkoutRecoveryModal } from "@/app/history/_components/forgotten-workout-recovery-modal";
 
 const SUGGESTED_MESSAGES = [
   "Monte um plano de treino para mim",
   "Monte uma periodização para mim",
   "Explique meu planejamento atual",
+  "Esqueci de marcar um treino passado",
 ];
 
 const THINKING_PHRASES = [
@@ -82,7 +84,12 @@ const chatFormSchema = z.object({
 
 type ChatFormValues = z.infer<typeof chatFormSchema>;
 
-export type AiToolKind = "PROPOSAL" | "READ" | "MUTATION_DRAFT" | "OTHER";
+export type AiToolKind =
+  | "PROPOSAL"
+  | "READ"
+  | "MUTATION_DRAFT"
+  | "RECOVERY_DRAFT"
+  | "OTHER";
 
 const READ_TOOL_NAMES = new Set([
   "getPlanningOverview",
@@ -136,6 +143,9 @@ export function getAiToolKind(part: any): AiToolKind {
     name === "createPeriodizationDraft"
   ) {
     return "MUTATION_DRAFT";
+  }
+  if (name === "proposeForgottenWorkoutDraft") {
+    return "RECOVERY_DRAFT";
   }
   return "OTHER";
 }
@@ -300,6 +310,9 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
   const [showDrawer, setShowDrawer] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [thinkingPhraseIndex, setThinkingPhraseIndex] = useState(0);
+  const [activeRecoveryDraftId, setActiveRecoveryDraftId] = useState<
+    string | null
+  >(null);
 
   const activeConversationIdRef = useRef<string | null>(null);
   activeConversationIdRef.current = activeConversationId;
@@ -900,6 +913,50 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
                       }
                     }
 
+                    if (toolKind === "RECOVERY_DRAFT") {
+                      const draftId =
+                        anyPart.output?.draftId || anyPart.output?.draft?.id;
+                      const draftData = anyPart.output?.draft;
+
+                      if (anyPart.state === "output-available" && draftId) {
+                        return (
+                          <div
+                            key={index}
+                            className="mt-2.5 space-y-2 rounded-xl border border-primary/30 bg-card p-3 text-xs shadow-sm"
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-1.5 font-semibold text-primary">
+                                <Dumbbell className="size-4" />
+                                <span>Rascunho de Treino Esquecido</span>
+                              </div>
+                              {draftData?.sessionDate && (
+                                <span className="rounded-md border border-border px-1.5 py-0.5 text-[10px] text-muted-foreground">
+                                  {draftData.sessionDate}
+                                </span>
+                              )}
+                            </div>
+
+                            <p className="text-muted-foreground">
+                              {draftData?.title || "Treino Passado"} •{" "}
+                              {draftData?.proposedExercises?.length ?? 0}{" "}
+                              exercício(s) identificado(s)
+                            </p>
+
+                            <div className="pt-1">
+                              <Button
+                                size="sm"
+                                type="button"
+                                onClick={() => setActiveRecoveryDraftId(draftId)}
+                                className="h-7 text-xs font-semibold gap-1.5"
+                              >
+                                Revisar e Salvar no Histórico
+                              </Button>
+                            </div>
+                          </div>
+                        );
+                      }
+                    }
+
                     return null;
                   })}
                 </>
@@ -999,18 +1056,40 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
     </div>
   );
 
-  if (embedded) return chatContent;
+  const modalElement = activeRecoveryDraftId ? (
+    <ForgottenWorkoutRecoveryModal
+      draftId={activeRecoveryDraftId}
+      isOpen={true}
+      onClose={() => setActiveRecoveryDraftId(null)}
+      onConfirmed={() => {
+        setActiveRecoveryDraftId(null);
+        router.refresh();
+      }}
+    />
+  ) : null;
+
+  if (embedded) {
+    return (
+      <>
+        {chatContent}
+        {modalElement}
+      </>
+    );
+  }
 
   return (
-    <div className="fixed inset-0 z-[60]">
-      <div
-        className="absolute inset-0 bg-foreground/30"
-        onClick={handleClose}
-      />
+    <>
+      <div className="fixed inset-0 z-[60]">
+        <div
+          className="absolute inset-0 bg-foreground/30"
+          onClick={handleClose}
+        />
 
-      <div className="absolute inset-x-4 bottom-4 top-24 sm:top-36 flex flex-col">
-        {chatContent}
+        <div className="absolute inset-x-4 bottom-4 top-24 sm:top-36 flex flex-col">
+          {chatContent}
+        </div>
       </div>
-    </div>
+      {modalElement}
+    </>
   );
 }

@@ -65,17 +65,19 @@ describe("Task 6.5A — In-Session AI Assistant & Set Proposal Card UI", () => {
 
   const mockProposal: ListWorkoutSetProposals200ProposalsItem = {
     id: "prop-1",
+    userId: "user-1",
     workoutSessionId: "session-1",
     sessionExerciseId: "se-1",
     targetExerciseId: "ex-1",
     targetExerciseNameSnapshot: "Supino Inclinado com Halteres",
-    sourceContextRevision: 1,
+    targetSessionExerciseRevision: 1,
     status: "PENDING",
     invalidationReason: null,
+    expiresAt: "2026-10-21T12:00:00.000Z",
     createdAt: "2026-10-21T10:00:00.000Z",
+    updatedAt: "2026-10-21T10:00:00.000Z",
     suggestedSets: [
       {
-        order: 1,
         type: "WARMUP",
         weightKg: 20,
         reps: 12,
@@ -84,7 +86,6 @@ describe("Task 6.5A — In-Session AI Assistant & Set Proposal Card UI", () => {
         notes: "Aquecimento progressivo",
       },
       {
-        order: 2,
         type: "WORKING",
         weightKg: 32,
         reps: 10,

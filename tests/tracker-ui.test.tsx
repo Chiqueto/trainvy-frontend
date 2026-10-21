@@ -171,6 +171,7 @@ describe("Tracker Real UI & Actions (Task 1.6)", () => {
         plannedRestTimeInSeconds: 120,
         notes: "Pegada fechada",
         sets: [],
+        revision: 1,
       };
 
       render(
@@ -575,6 +576,7 @@ describe("Tracker Real UI & Actions (Task 1.6)", () => {
             plannedReps: 8,
             plannedRestTimeInSeconds: 90,
             notes: null,
+            revision: 1,
             sets: [
               {
                 id: "set-1",

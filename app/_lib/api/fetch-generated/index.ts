@@ -4848,6 +4848,14 @@ export const ListCoachAthleteProgressSessions200ItemsItemOrigin = {
   FREE: "FREE",
 } as const;
 
+export type ListCoachAthleteProgressSessions200ItemsItemTimePrecision =
+  (typeof ListCoachAthleteProgressSessions200ItemsItemTimePrecision)[keyof typeof ListCoachAthleteProgressSessions200ItemsItemTimePrecision];
+
+export const ListCoachAthleteProgressSessions200ItemsItemTimePrecision = {
+  EXACT_TIME: "EXACT_TIME",
+  DATE_ONLY: "DATE_ONLY",
+} as const;
+
 export type ListCoachAthleteProgressSessions200ItemsItem = {
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
@@ -4857,8 +4865,13 @@ export type ListCoachAthleteProgressSessions200ItemsItem = {
   /**
    * @minimum 0
    * @maximum 9007199254740991
+   * @nullable
    */
-  durationInSeconds: number;
+  durationInSeconds: number | null;
+  /** @nullable */
+  sessionDate?: string | null;
+  timePrecision?: ListCoachAthleteProgressSessions200ItemsItemTimePrecision;
+  isRetroactive?: boolean;
   /**
    * @nullable
    * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
@@ -4930,6 +4943,14 @@ export type GetCoachAthleteProgressSessionDetail200Origin =
 export const GetCoachAthleteProgressSessionDetail200Origin = {
   PLANNED: "PLANNED",
   FREE: "FREE",
+} as const;
+
+export type GetCoachAthleteProgressSessionDetail200TimePrecision =
+  (typeof GetCoachAthleteProgressSessionDetail200TimePrecision)[keyof typeof GetCoachAthleteProgressSessionDetail200TimePrecision];
+
+export const GetCoachAthleteProgressSessionDetail200TimePrecision = {
+  EXACT_TIME: "EXACT_TIME",
+  DATE_ONLY: "DATE_ONLY",
 } as const;
 
 export type GetCoachAthleteProgressSessionDetail200Summary = {
@@ -5117,8 +5138,13 @@ export type GetCoachAthleteProgressSessionDetail200 = {
   /**
    * @minimum 0
    * @maximum 9007199254740991
+   * @nullable
    */
-  durationInSeconds: number;
+  durationInSeconds: number | null;
+  /** @nullable */
+  sessionDate?: string | null;
+  timePrecision?: GetCoachAthleteProgressSessionDetail200TimePrecision;
+  isRetroactive?: boolean;
   /**
    * @nullable
    * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
@@ -9317,6 +9343,1160 @@ export type DiscardWorkoutSetProposal500 = {
   code: string;
 };
 
+export type CreateForgottenWorkoutDraftBodyExercisesItemSetsItemType =
+  (typeof CreateForgottenWorkoutDraftBodyExercisesItemSetsItemType)[keyof typeof CreateForgottenWorkoutDraftBodyExercisesItemSetsItemType];
+
+export const CreateForgottenWorkoutDraftBodyExercisesItemSetsItemType = {
+  WARMUP: "WARMUP",
+  WORKING: "WORKING",
+} as const;
+
+export type CreateForgottenWorkoutDraftBodyExercisesItemSetsItem = {
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  order: number;
+  type?: CreateForgottenWorkoutDraftBodyExercisesItemSetsItemType;
+  /** @minimum 0 */
+  weightKg: number;
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  reps: number;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  rir?: number | null;
+};
+
+export type CreateForgottenWorkoutDraftBodyExercisesItem = {
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  order?: number;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  exerciseId: string;
+  /** @minLength 1 */
+  exerciseNameSnapshot?: string;
+  /** @minItems 1 */
+  sets: CreateForgottenWorkoutDraftBodyExercisesItemSetsItem[];
+};
+
+export type CreateForgottenWorkoutDraftBody = {
+  /** @pattern ^\d{4}-\d{2}-\d{2}$ */
+  date: string;
+  /** @minLength 1 */
+  timezone: string;
+  /**
+   * @minLength 1
+   * @maxLength 100
+   */
+  title: string;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  conversationId?: string;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  workoutPlanId?: string;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  workoutDayId?: string;
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$ */
+  startedAt?: string;
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$ */
+  completedAt?: string;
+  /** @minItems 1 */
+  exercises: CreateForgottenWorkoutDraftBodyExercisesItem[];
+  /** @maxLength 100 */
+  idempotencyKey?: string;
+};
+
+export type CreateForgottenWorkoutDraft201Status =
+  (typeof CreateForgottenWorkoutDraft201Status)[keyof typeof CreateForgottenWorkoutDraft201Status];
+
+export const CreateForgottenWorkoutDraft201Status = {
+  DRAFT: "DRAFT",
+  CONFIRMED: "CONFIRMED",
+  DISCARDED: "DISCARDED",
+  EXPIRED: "EXPIRED",
+} as const;
+
+export type CreateForgottenWorkoutDraft201TimePrecision =
+  (typeof CreateForgottenWorkoutDraft201TimePrecision)[keyof typeof CreateForgottenWorkoutDraft201TimePrecision];
+
+export const CreateForgottenWorkoutDraft201TimePrecision = {
+  EXACT_TIME: "EXACT_TIME",
+  DATE_ONLY: "DATE_ONLY",
+} as const;
+
+export type CreateForgottenWorkoutDraft201Origin =
+  (typeof CreateForgottenWorkoutDraft201Origin)[keyof typeof CreateForgottenWorkoutDraft201Origin];
+
+export const CreateForgottenWorkoutDraft201Origin = {
+  PLANNED: "PLANNED",
+  FREE: "FREE",
+} as const;
+
+export type CreateForgottenWorkoutDraft201ProposedExercisesItemSetsItemType =
+  (typeof CreateForgottenWorkoutDraft201ProposedExercisesItemSetsItemType)[keyof typeof CreateForgottenWorkoutDraft201ProposedExercisesItemSetsItemType];
+
+export const CreateForgottenWorkoutDraft201ProposedExercisesItemSetsItemType = {
+  WARMUP: "WARMUP",
+  WORKING: "WORKING",
+} as const;
+
+export type CreateForgottenWorkoutDraft201ProposedExercisesItemSetsItem = {
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  order: number;
+  type: CreateForgottenWorkoutDraft201ProposedExercisesItemSetsItemType;
+  /** @minimum 0 */
+  weightKg: number;
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  reps: number;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  rir?: number | null;
+};
+
+export type CreateForgottenWorkoutDraft201ProposedExercisesItem = {
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  order: number;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  exerciseId: string;
+  /** @minLength 1 */
+  exerciseNameSnapshot: string;
+  /** @minItems 1 */
+  sets: CreateForgottenWorkoutDraft201ProposedExercisesItemSetsItem[];
+};
+
+export type CreateForgottenWorkoutDraft201 = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  userId: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  conversationId?: string | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  revision: number;
+  status: CreateForgottenWorkoutDraft201Status;
+  sessionDate: string;
+  timePrecision: CreateForgottenWorkoutDraft201TimePrecision;
+  /** @nullable */
+  startedAt?: string | null;
+  /** @nullable */
+  completedAt?: string | null;
+  timezone: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutPlanId?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutDayId?: string | null;
+  title: string;
+  origin: CreateForgottenWorkoutDraft201Origin;
+  proposedExercises: CreateForgottenWorkoutDraft201ProposedExercisesItem[];
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  confirmedSessionId?: string | null;
+  /** @nullable */
+  idempotencyKey?: string | null;
+  expiresAt: string;
+  /** @nullable */
+  confirmedAt?: string | null;
+  /** @nullable */
+  discardedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CreateForgottenWorkoutDraft400 = {
+  error: string;
+  code: string;
+};
+
+export type CreateForgottenWorkoutDraft401 = {
+  error: string;
+  code: string;
+};
+
+export type CreateForgottenWorkoutDraft403 = {
+  error: string;
+  code: string;
+};
+
+export type CreateForgottenWorkoutDraft404 = {
+  error: string;
+  code: string;
+};
+
+export type CreateForgottenWorkoutDraft409 = {
+  error: string;
+  code: string;
+};
+
+export type CreateForgottenWorkoutDraft500 = {
+  error: string;
+  code: string;
+};
+
+export type ListActiveForgottenWorkoutDraftsParams = {
+  /**
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  conversationId?: string;
+};
+
+export type ListActiveForgottenWorkoutDrafts200DraftsItemStatus =
+  (typeof ListActiveForgottenWorkoutDrafts200DraftsItemStatus)[keyof typeof ListActiveForgottenWorkoutDrafts200DraftsItemStatus];
+
+export const ListActiveForgottenWorkoutDrafts200DraftsItemStatus = {
+  DRAFT: "DRAFT",
+  CONFIRMED: "CONFIRMED",
+  DISCARDED: "DISCARDED",
+  EXPIRED: "EXPIRED",
+} as const;
+
+export type ListActiveForgottenWorkoutDrafts200DraftsItemTimePrecision =
+  (typeof ListActiveForgottenWorkoutDrafts200DraftsItemTimePrecision)[keyof typeof ListActiveForgottenWorkoutDrafts200DraftsItemTimePrecision];
+
+export const ListActiveForgottenWorkoutDrafts200DraftsItemTimePrecision = {
+  EXACT_TIME: "EXACT_TIME",
+  DATE_ONLY: "DATE_ONLY",
+} as const;
+
+export type ListActiveForgottenWorkoutDrafts200DraftsItemOrigin =
+  (typeof ListActiveForgottenWorkoutDrafts200DraftsItemOrigin)[keyof typeof ListActiveForgottenWorkoutDrafts200DraftsItemOrigin];
+
+export const ListActiveForgottenWorkoutDrafts200DraftsItemOrigin = {
+  PLANNED: "PLANNED",
+  FREE: "FREE",
+} as const;
+
+export type ListActiveForgottenWorkoutDrafts200DraftsItemProposedExercisesItemSetsItemType =
+  (typeof ListActiveForgottenWorkoutDrafts200DraftsItemProposedExercisesItemSetsItemType)[keyof typeof ListActiveForgottenWorkoutDrafts200DraftsItemProposedExercisesItemSetsItemType];
+
+export const ListActiveForgottenWorkoutDrafts200DraftsItemProposedExercisesItemSetsItemType =
+  {
+    WARMUP: "WARMUP",
+    WORKING: "WORKING",
+  } as const;
+
+export type ListActiveForgottenWorkoutDrafts200DraftsItemProposedExercisesItemSetsItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 9007199254740991
+     */
+    order: number;
+    type: ListActiveForgottenWorkoutDrafts200DraftsItemProposedExercisesItemSetsItemType;
+    /** @minimum 0 */
+    weightKg: number;
+    /**
+     * @minimum 1
+     * @maximum 9007199254740991
+     */
+    reps: number;
+    /**
+     * @minimum 0
+     * @maximum 10
+     * @nullable
+     */
+    rir?: number | null;
+  };
+
+export type ListActiveForgottenWorkoutDrafts200DraftsItemProposedExercisesItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 9007199254740991
+     */
+    order: number;
+    /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+    exerciseId: string;
+    /** @minLength 1 */
+    exerciseNameSnapshot: string;
+    /** @minItems 1 */
+    sets: ListActiveForgottenWorkoutDrafts200DraftsItemProposedExercisesItemSetsItem[];
+  };
+
+export type ListActiveForgottenWorkoutDrafts200DraftsItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  userId: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  conversationId?: string | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  revision: number;
+  status: ListActiveForgottenWorkoutDrafts200DraftsItemStatus;
+  sessionDate: string;
+  timePrecision: ListActiveForgottenWorkoutDrafts200DraftsItemTimePrecision;
+  /** @nullable */
+  startedAt?: string | null;
+  /** @nullable */
+  completedAt?: string | null;
+  timezone: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutPlanId?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutDayId?: string | null;
+  title: string;
+  origin: ListActiveForgottenWorkoutDrafts200DraftsItemOrigin;
+  proposedExercises: ListActiveForgottenWorkoutDrafts200DraftsItemProposedExercisesItem[];
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  confirmedSessionId?: string | null;
+  /** @nullable */
+  idempotencyKey?: string | null;
+  expiresAt: string;
+  /** @nullable */
+  confirmedAt?: string | null;
+  /** @nullable */
+  discardedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ListActiveForgottenWorkoutDrafts200 = {
+  drafts: ListActiveForgottenWorkoutDrafts200DraftsItem[];
+};
+
+export type ListActiveForgottenWorkoutDrafts401 = {
+  error: string;
+  code: string;
+};
+
+export type ListActiveForgottenWorkoutDrafts500 = {
+  error: string;
+  code: string;
+};
+
+export type GetForgottenWorkoutDraft200DraftStatus =
+  (typeof GetForgottenWorkoutDraft200DraftStatus)[keyof typeof GetForgottenWorkoutDraft200DraftStatus];
+
+export const GetForgottenWorkoutDraft200DraftStatus = {
+  DRAFT: "DRAFT",
+  CONFIRMED: "CONFIRMED",
+  DISCARDED: "DISCARDED",
+  EXPIRED: "EXPIRED",
+} as const;
+
+export type GetForgottenWorkoutDraft200DraftTimePrecision =
+  (typeof GetForgottenWorkoutDraft200DraftTimePrecision)[keyof typeof GetForgottenWorkoutDraft200DraftTimePrecision];
+
+export const GetForgottenWorkoutDraft200DraftTimePrecision = {
+  EXACT_TIME: "EXACT_TIME",
+  DATE_ONLY: "DATE_ONLY",
+} as const;
+
+export type GetForgottenWorkoutDraft200DraftOrigin =
+  (typeof GetForgottenWorkoutDraft200DraftOrigin)[keyof typeof GetForgottenWorkoutDraft200DraftOrigin];
+
+export const GetForgottenWorkoutDraft200DraftOrigin = {
+  PLANNED: "PLANNED",
+  FREE: "FREE",
+} as const;
+
+export type GetForgottenWorkoutDraft200DraftProposedExercisesItemSetsItemType =
+  (typeof GetForgottenWorkoutDraft200DraftProposedExercisesItemSetsItemType)[keyof typeof GetForgottenWorkoutDraft200DraftProposedExercisesItemSetsItemType];
+
+export const GetForgottenWorkoutDraft200DraftProposedExercisesItemSetsItemType =
+  {
+    WARMUP: "WARMUP",
+    WORKING: "WORKING",
+  } as const;
+
+export type GetForgottenWorkoutDraft200DraftProposedExercisesItemSetsItem = {
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  order: number;
+  type: GetForgottenWorkoutDraft200DraftProposedExercisesItemSetsItemType;
+  /** @minimum 0 */
+  weightKg: number;
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  reps: number;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  rir?: number | null;
+};
+
+export type GetForgottenWorkoutDraft200DraftProposedExercisesItem = {
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  order: number;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  exerciseId: string;
+  /** @minLength 1 */
+  exerciseNameSnapshot: string;
+  /** @minItems 1 */
+  sets: GetForgottenWorkoutDraft200DraftProposedExercisesItemSetsItem[];
+};
+
+export type GetForgottenWorkoutDraft200Draft = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  userId: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  conversationId?: string | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  revision: number;
+  status: GetForgottenWorkoutDraft200DraftStatus;
+  sessionDate: string;
+  timePrecision: GetForgottenWorkoutDraft200DraftTimePrecision;
+  /** @nullable */
+  startedAt?: string | null;
+  /** @nullable */
+  completedAt?: string | null;
+  timezone: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutPlanId?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutDayId?: string | null;
+  title: string;
+  origin: GetForgottenWorkoutDraft200DraftOrigin;
+  proposedExercises: GetForgottenWorkoutDraft200DraftProposedExercisesItem[];
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  confirmedSessionId?: string | null;
+  /** @nullable */
+  idempotencyKey?: string | null;
+  expiresAt: string;
+  /** @nullable */
+  confirmedAt?: string | null;
+  /** @nullable */
+  discardedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type GetForgottenWorkoutDraft200ConflictsConflictingSessionsItemTimePrecision =
+  (typeof GetForgottenWorkoutDraft200ConflictsConflictingSessionsItemTimePrecision)[keyof typeof GetForgottenWorkoutDraft200ConflictsConflictingSessionsItemTimePrecision];
+
+export const GetForgottenWorkoutDraft200ConflictsConflictingSessionsItemTimePrecision =
+  {
+    EXACT_TIME: "EXACT_TIME",
+    DATE_ONLY: "DATE_ONLY",
+  } as const;
+
+export type GetForgottenWorkoutDraft200ConflictsConflictingSessionsItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  /** @nullable */
+  sessionDate?: string | null;
+  startedAt: string;
+  /** @nullable */
+  completedAt?: string | null;
+  /** @nullable */
+  workoutPlanNameSnapshot?: string | null;
+  /** @nullable */
+  workoutDayNameSnapshot?: string | null;
+  /** @nullable */
+  workoutDayId?: string | null;
+  timePrecision?: GetForgottenWorkoutDraft200ConflictsConflictingSessionsItemTimePrecision;
+  isRetroactive?: boolean;
+};
+
+export type GetForgottenWorkoutDraft200Conflicts = {
+  hasConflict: boolean;
+  /** @nullable */
+  reason?: string | null;
+  conflictingSessions: GetForgottenWorkoutDraft200ConflictsConflictingSessionsItem[];
+};
+
+export type GetForgottenWorkoutDraft200 = {
+  draft: GetForgottenWorkoutDraft200Draft;
+  conflicts: GetForgottenWorkoutDraft200Conflicts;
+};
+
+export type GetForgottenWorkoutDraft401 = {
+  error: string;
+  code: string;
+};
+
+export type GetForgottenWorkoutDraft403 = {
+  error: string;
+  code: string;
+};
+
+export type GetForgottenWorkoutDraft404 = {
+  error: string;
+  code: string;
+};
+
+export type GetForgottenWorkoutDraft500 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateForgottenWorkoutDraftBodyExercisesItemSetsItemType =
+  (typeof UpdateForgottenWorkoutDraftBodyExercisesItemSetsItemType)[keyof typeof UpdateForgottenWorkoutDraftBodyExercisesItemSetsItemType];
+
+export const UpdateForgottenWorkoutDraftBodyExercisesItemSetsItemType = {
+  WARMUP: "WARMUP",
+  WORKING: "WORKING",
+} as const;
+
+export type UpdateForgottenWorkoutDraftBodyExercisesItemSetsItem = {
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  order: number;
+  type?: UpdateForgottenWorkoutDraftBodyExercisesItemSetsItemType;
+  /** @minimum 0 */
+  weightKg: number;
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  reps: number;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  rir?: number | null;
+};
+
+export type UpdateForgottenWorkoutDraftBodyExercisesItem = {
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  order?: number;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  exerciseId: string;
+  /** @minLength 1 */
+  exerciseNameSnapshot?: string;
+  /** @minItems 1 */
+  sets: UpdateForgottenWorkoutDraftBodyExercisesItemSetsItem[];
+};
+
+export type UpdateForgottenWorkoutDraftBody = {
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  clientRevision: number;
+  /** @pattern ^\d{4}-\d{2}-\d{2}$ */
+  date?: string;
+  /** @minLength 1 */
+  timezone?: string;
+  /**
+   * @minLength 1
+   * @maxLength 100
+   */
+  title?: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutPlanId?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutDayId?: string | null;
+  /**
+   * @nullable
+   * @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$
+   */
+  startedAt?: string | null;
+  /**
+   * @nullable
+   * @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$
+   */
+  completedAt?: string | null;
+  /** @minItems 1 */
+  exercises?: UpdateForgottenWorkoutDraftBodyExercisesItem[];
+};
+
+export type UpdateForgottenWorkoutDraft200Status =
+  (typeof UpdateForgottenWorkoutDraft200Status)[keyof typeof UpdateForgottenWorkoutDraft200Status];
+
+export const UpdateForgottenWorkoutDraft200Status = {
+  DRAFT: "DRAFT",
+  CONFIRMED: "CONFIRMED",
+  DISCARDED: "DISCARDED",
+  EXPIRED: "EXPIRED",
+} as const;
+
+export type UpdateForgottenWorkoutDraft200TimePrecision =
+  (typeof UpdateForgottenWorkoutDraft200TimePrecision)[keyof typeof UpdateForgottenWorkoutDraft200TimePrecision];
+
+export const UpdateForgottenWorkoutDraft200TimePrecision = {
+  EXACT_TIME: "EXACT_TIME",
+  DATE_ONLY: "DATE_ONLY",
+} as const;
+
+export type UpdateForgottenWorkoutDraft200Origin =
+  (typeof UpdateForgottenWorkoutDraft200Origin)[keyof typeof UpdateForgottenWorkoutDraft200Origin];
+
+export const UpdateForgottenWorkoutDraft200Origin = {
+  PLANNED: "PLANNED",
+  FREE: "FREE",
+} as const;
+
+export type UpdateForgottenWorkoutDraft200ProposedExercisesItemSetsItemType =
+  (typeof UpdateForgottenWorkoutDraft200ProposedExercisesItemSetsItemType)[keyof typeof UpdateForgottenWorkoutDraft200ProposedExercisesItemSetsItemType];
+
+export const UpdateForgottenWorkoutDraft200ProposedExercisesItemSetsItemType = {
+  WARMUP: "WARMUP",
+  WORKING: "WORKING",
+} as const;
+
+export type UpdateForgottenWorkoutDraft200ProposedExercisesItemSetsItem = {
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  order: number;
+  type: UpdateForgottenWorkoutDraft200ProposedExercisesItemSetsItemType;
+  /** @minimum 0 */
+  weightKg: number;
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  reps: number;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  rir?: number | null;
+};
+
+export type UpdateForgottenWorkoutDraft200ProposedExercisesItem = {
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  order: number;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  exerciseId: string;
+  /** @minLength 1 */
+  exerciseNameSnapshot: string;
+  /** @minItems 1 */
+  sets: UpdateForgottenWorkoutDraft200ProposedExercisesItemSetsItem[];
+};
+
+export type UpdateForgottenWorkoutDraft200 = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  userId: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  conversationId?: string | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  revision: number;
+  status: UpdateForgottenWorkoutDraft200Status;
+  sessionDate: string;
+  timePrecision: UpdateForgottenWorkoutDraft200TimePrecision;
+  /** @nullable */
+  startedAt?: string | null;
+  /** @nullable */
+  completedAt?: string | null;
+  timezone: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutPlanId?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutDayId?: string | null;
+  title: string;
+  origin: UpdateForgottenWorkoutDraft200Origin;
+  proposedExercises: UpdateForgottenWorkoutDraft200ProposedExercisesItem[];
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  confirmedSessionId?: string | null;
+  /** @nullable */
+  idempotencyKey?: string | null;
+  expiresAt: string;
+  /** @nullable */
+  confirmedAt?: string | null;
+  /** @nullable */
+  discardedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type UpdateForgottenWorkoutDraft400 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateForgottenWorkoutDraft401 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateForgottenWorkoutDraft403 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateForgottenWorkoutDraft404 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateForgottenWorkoutDraft409 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateForgottenWorkoutDraft500 = {
+  error: string;
+  code: string;
+};
+
+export type DiscardForgottenWorkoutDraftBody = {
+  /** @maxLength 255 */
+  reason?: string;
+};
+
+export type DiscardForgottenWorkoutDraft200DraftStatus =
+  (typeof DiscardForgottenWorkoutDraft200DraftStatus)[keyof typeof DiscardForgottenWorkoutDraft200DraftStatus];
+
+export const DiscardForgottenWorkoutDraft200DraftStatus = {
+  DRAFT: "DRAFT",
+  CONFIRMED: "CONFIRMED",
+  DISCARDED: "DISCARDED",
+  EXPIRED: "EXPIRED",
+} as const;
+
+export type DiscardForgottenWorkoutDraft200DraftTimePrecision =
+  (typeof DiscardForgottenWorkoutDraft200DraftTimePrecision)[keyof typeof DiscardForgottenWorkoutDraft200DraftTimePrecision];
+
+export const DiscardForgottenWorkoutDraft200DraftTimePrecision = {
+  EXACT_TIME: "EXACT_TIME",
+  DATE_ONLY: "DATE_ONLY",
+} as const;
+
+export type DiscardForgottenWorkoutDraft200DraftOrigin =
+  (typeof DiscardForgottenWorkoutDraft200DraftOrigin)[keyof typeof DiscardForgottenWorkoutDraft200DraftOrigin];
+
+export const DiscardForgottenWorkoutDraft200DraftOrigin = {
+  PLANNED: "PLANNED",
+  FREE: "FREE",
+} as const;
+
+export type DiscardForgottenWorkoutDraft200DraftProposedExercisesItemSetsItemType =
+  (typeof DiscardForgottenWorkoutDraft200DraftProposedExercisesItemSetsItemType)[keyof typeof DiscardForgottenWorkoutDraft200DraftProposedExercisesItemSetsItemType];
+
+export const DiscardForgottenWorkoutDraft200DraftProposedExercisesItemSetsItemType =
+  {
+    WARMUP: "WARMUP",
+    WORKING: "WORKING",
+  } as const;
+
+export type DiscardForgottenWorkoutDraft200DraftProposedExercisesItemSetsItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 9007199254740991
+     */
+    order: number;
+    type: DiscardForgottenWorkoutDraft200DraftProposedExercisesItemSetsItemType;
+    /** @minimum 0 */
+    weightKg: number;
+    /**
+     * @minimum 1
+     * @maximum 9007199254740991
+     */
+    reps: number;
+    /**
+     * @minimum 0
+     * @maximum 10
+     * @nullable
+     */
+    rir?: number | null;
+  };
+
+export type DiscardForgottenWorkoutDraft200DraftProposedExercisesItem = {
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  order: number;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  exerciseId: string;
+  /** @minLength 1 */
+  exerciseNameSnapshot: string;
+  /** @minItems 1 */
+  sets: DiscardForgottenWorkoutDraft200DraftProposedExercisesItemSetsItem[];
+};
+
+export type DiscardForgottenWorkoutDraft200Draft = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  userId: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  conversationId?: string | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  revision: number;
+  status: DiscardForgottenWorkoutDraft200DraftStatus;
+  sessionDate: string;
+  timePrecision: DiscardForgottenWorkoutDraft200DraftTimePrecision;
+  /** @nullable */
+  startedAt?: string | null;
+  /** @nullable */
+  completedAt?: string | null;
+  timezone: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutPlanId?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutDayId?: string | null;
+  title: string;
+  origin: DiscardForgottenWorkoutDraft200DraftOrigin;
+  proposedExercises: DiscardForgottenWorkoutDraft200DraftProposedExercisesItem[];
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  confirmedSessionId?: string | null;
+  /** @nullable */
+  idempotencyKey?: string | null;
+  expiresAt: string;
+  /** @nullable */
+  confirmedAt?: string | null;
+  /** @nullable */
+  discardedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type DiscardForgottenWorkoutDraft200 = {
+  success: boolean;
+  draft: DiscardForgottenWorkoutDraft200Draft;
+};
+
+export type DiscardForgottenWorkoutDraft400 = {
+  error: string;
+  code: string;
+};
+
+export type DiscardForgottenWorkoutDraft401 = {
+  error: string;
+  code: string;
+};
+
+export type DiscardForgottenWorkoutDraft403 = {
+  error: string;
+  code: string;
+};
+
+export type DiscardForgottenWorkoutDraft404 = {
+  error: string;
+  code: string;
+};
+
+export type DiscardForgottenWorkoutDraft409 = {
+  error: string;
+  code: string;
+};
+
+export type DiscardForgottenWorkoutDraft500 = {
+  error: string;
+  code: string;
+};
+
+export type ConfirmForgottenWorkoutRecoveryBody = {
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  clientRevision: number;
+  /** @maxLength 100 */
+  idempotencyKey?: string;
+  confirmConflict?: boolean;
+};
+
+export type ConfirmForgottenWorkoutRecovery200DraftStatus =
+  (typeof ConfirmForgottenWorkoutRecovery200DraftStatus)[keyof typeof ConfirmForgottenWorkoutRecovery200DraftStatus];
+
+export const ConfirmForgottenWorkoutRecovery200DraftStatus = {
+  DRAFT: "DRAFT",
+  CONFIRMED: "CONFIRMED",
+  DISCARDED: "DISCARDED",
+  EXPIRED: "EXPIRED",
+} as const;
+
+export type ConfirmForgottenWorkoutRecovery200DraftTimePrecision =
+  (typeof ConfirmForgottenWorkoutRecovery200DraftTimePrecision)[keyof typeof ConfirmForgottenWorkoutRecovery200DraftTimePrecision];
+
+export const ConfirmForgottenWorkoutRecovery200DraftTimePrecision = {
+  EXACT_TIME: "EXACT_TIME",
+  DATE_ONLY: "DATE_ONLY",
+} as const;
+
+export type ConfirmForgottenWorkoutRecovery200DraftOrigin =
+  (typeof ConfirmForgottenWorkoutRecovery200DraftOrigin)[keyof typeof ConfirmForgottenWorkoutRecovery200DraftOrigin];
+
+export const ConfirmForgottenWorkoutRecovery200DraftOrigin = {
+  PLANNED: "PLANNED",
+  FREE: "FREE",
+} as const;
+
+export type ConfirmForgottenWorkoutRecovery200DraftProposedExercisesItemSetsItemType =
+  (typeof ConfirmForgottenWorkoutRecovery200DraftProposedExercisesItemSetsItemType)[keyof typeof ConfirmForgottenWorkoutRecovery200DraftProposedExercisesItemSetsItemType];
+
+export const ConfirmForgottenWorkoutRecovery200DraftProposedExercisesItemSetsItemType =
+  {
+    WARMUP: "WARMUP",
+    WORKING: "WORKING",
+  } as const;
+
+export type ConfirmForgottenWorkoutRecovery200DraftProposedExercisesItemSetsItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 9007199254740991
+     */
+    order: number;
+    type: ConfirmForgottenWorkoutRecovery200DraftProposedExercisesItemSetsItemType;
+    /** @minimum 0 */
+    weightKg: number;
+    /**
+     * @minimum 1
+     * @maximum 9007199254740991
+     */
+    reps: number;
+    /**
+     * @minimum 0
+     * @maximum 10
+     * @nullable
+     */
+    rir?: number | null;
+  };
+
+export type ConfirmForgottenWorkoutRecovery200DraftProposedExercisesItem = {
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  order: number;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  exerciseId: string;
+  /** @minLength 1 */
+  exerciseNameSnapshot: string;
+  /** @minItems 1 */
+  sets: ConfirmForgottenWorkoutRecovery200DraftProposedExercisesItemSetsItem[];
+};
+
+export type ConfirmForgottenWorkoutRecovery200Draft = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  userId: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  conversationId?: string | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  revision: number;
+  status: ConfirmForgottenWorkoutRecovery200DraftStatus;
+  sessionDate: string;
+  timePrecision: ConfirmForgottenWorkoutRecovery200DraftTimePrecision;
+  /** @nullable */
+  startedAt?: string | null;
+  /** @nullable */
+  completedAt?: string | null;
+  timezone: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutPlanId?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutDayId?: string | null;
+  title: string;
+  origin: ConfirmForgottenWorkoutRecovery200DraftOrigin;
+  proposedExercises: ConfirmForgottenWorkoutRecovery200DraftProposedExercisesItem[];
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  confirmedSessionId?: string | null;
+  /** @nullable */
+  idempotencyKey?: string | null;
+  expiresAt: string;
+  /** @nullable */
+  confirmedAt?: string | null;
+  /** @nullable */
+  discardedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ConfirmForgottenWorkoutRecovery200 = {
+  success: boolean;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  sessionId: string;
+  draft: ConfirmForgottenWorkoutRecovery200Draft;
+};
+
+export type ConfirmForgottenWorkoutRecovery400 = {
+  error: string;
+  code: string;
+};
+
+export type ConfirmForgottenWorkoutRecovery401 = {
+  error: string;
+  code: string;
+};
+
+export type ConfirmForgottenWorkoutRecovery403 = {
+  error: string;
+  code: string;
+};
+
+export type ConfirmForgottenWorkoutRecovery404 = {
+  error: string;
+  code: string;
+};
+
+export type ConfirmForgottenWorkoutRecovery409 = {
+  error: string;
+  code: string;
+};
+
+export type ConfirmForgottenWorkoutRecovery500 = {
+  error: string;
+  code: string;
+};
+
+export type PostFeedbackBodyCategory =
+  (typeof PostFeedbackBodyCategory)[keyof typeof PostFeedbackBodyCategory];
+
+export const PostFeedbackBodyCategory = {
+  BUG: "BUG",
+  SUGGESTION: "SUGGESTION",
+  QUESTION: "QUESTION",
+  OTHER: "OTHER",
+} as const;
+
+export type PostFeedbackBody = {
+  category?: PostFeedbackBodyCategory;
+  /**
+   * @minLength 5
+   * @maxLength 2000
+   */
+  message: string;
+};
+
+export type PostFeedback201 = {
+  success: boolean;
+  id: string;
+};
+
+export type PostFeedback400 = {
+  error: string;
+  code: string;
+};
+
+export type PostFeedback401 = {
+  error: string;
+  code: string;
+};
+
+export type PostFeedback500 = {
+  error: string;
+  code: string;
+};
+
 export type GetWeeklyTrainingAnalyticsParams = {
   tz: string;
   startDate?: string;
@@ -9486,6 +10666,14 @@ export const ListWorkoutHistory200ItemsItemOrigin = {
   FREE: "FREE",
 } as const;
 
+export type ListWorkoutHistory200ItemsItemTimePrecision =
+  (typeof ListWorkoutHistory200ItemsItemTimePrecision)[keyof typeof ListWorkoutHistory200ItemsItemTimePrecision];
+
+export const ListWorkoutHistory200ItemsItemTimePrecision = {
+  EXACT_TIME: "EXACT_TIME",
+  DATE_ONLY: "DATE_ONLY",
+} as const;
+
 export type ListWorkoutHistory200ItemsItem = {
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
@@ -9495,8 +10683,13 @@ export type ListWorkoutHistory200ItemsItem = {
   /**
    * @minimum 0
    * @maximum 9007199254740991
+   * @nullable
    */
-  durationInSeconds: number;
+  durationInSeconds: number | null;
+  /** @nullable */
+  sessionDate?: string | null;
+  timePrecision?: ListWorkoutHistory200ItemsItemTimePrecision;
+  isRetroactive?: boolean;
   /**
    * @nullable
    * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
@@ -9558,6 +10751,14 @@ export type GetWorkoutHistorySession200Origin =
 export const GetWorkoutHistorySession200Origin = {
   PLANNED: "PLANNED",
   FREE: "FREE",
+} as const;
+
+export type GetWorkoutHistorySession200TimePrecision =
+  (typeof GetWorkoutHistorySession200TimePrecision)[keyof typeof GetWorkoutHistorySession200TimePrecision];
+
+export const GetWorkoutHistorySession200TimePrecision = {
+  EXACT_TIME: "EXACT_TIME",
+  DATE_ONLY: "DATE_ONLY",
 } as const;
 
 export type GetWorkoutHistorySession200Summary = {
@@ -9744,8 +10945,13 @@ export type GetWorkoutHistorySession200 = {
   /**
    * @minimum 0
    * @maximum 9007199254740991
+   * @nullable
    */
-  durationInSeconds: number;
+  durationInSeconds: number | null;
+  /** @nullable */
+  sessionDate?: string | null;
+  timePrecision?: GetWorkoutHistorySession200TimePrecision;
+  isRetroactive?: boolean;
   /**
    * @nullable
    * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
@@ -16751,6 +17957,493 @@ export const discardWorkoutSetProposal = async (
       body: JSON.stringify(discardWorkoutSetProposalBody),
     },
   );
+};
+
+/**
+ * @summary Create a draft for recovering a forgotten past workout session
+ */
+export type createForgottenWorkoutDraftResponse201 = {
+  data: CreateForgottenWorkoutDraft201;
+  status: 201;
+};
+
+export type createForgottenWorkoutDraftResponse400 = {
+  data: CreateForgottenWorkoutDraft400;
+  status: 400;
+};
+
+export type createForgottenWorkoutDraftResponse401 = {
+  data: CreateForgottenWorkoutDraft401;
+  status: 401;
+};
+
+export type createForgottenWorkoutDraftResponse403 = {
+  data: CreateForgottenWorkoutDraft403;
+  status: 403;
+};
+
+export type createForgottenWorkoutDraftResponse404 = {
+  data: CreateForgottenWorkoutDraft404;
+  status: 404;
+};
+
+export type createForgottenWorkoutDraftResponse409 = {
+  data: CreateForgottenWorkoutDraft409;
+  status: 409;
+};
+
+export type createForgottenWorkoutDraftResponse500 = {
+  data: CreateForgottenWorkoutDraft500;
+  status: 500;
+};
+
+export type createForgottenWorkoutDraftResponseSuccess =
+  createForgottenWorkoutDraftResponse201 & {
+    headers: Headers;
+  };
+export type createForgottenWorkoutDraftResponseError = (
+  | createForgottenWorkoutDraftResponse400
+  | createForgottenWorkoutDraftResponse401
+  | createForgottenWorkoutDraftResponse403
+  | createForgottenWorkoutDraftResponse404
+  | createForgottenWorkoutDraftResponse409
+  | createForgottenWorkoutDraftResponse500
+) & {
+  headers: Headers;
+};
+
+export type createForgottenWorkoutDraftResponse =
+  | createForgottenWorkoutDraftResponseSuccess
+  | createForgottenWorkoutDraftResponseError;
+
+export const getCreateForgottenWorkoutDraftUrl = () => {
+  return `/workout-sessions/recovery/drafts`;
+};
+
+export const createForgottenWorkoutDraft = async (
+  createForgottenWorkoutDraftBody: CreateForgottenWorkoutDraftBody,
+  options?: RequestInit,
+): Promise<createForgottenWorkoutDraftResponse> => {
+  return customFetch<createForgottenWorkoutDraftResponse>(
+    getCreateForgottenWorkoutDraftUrl(),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(createForgottenWorkoutDraftBody),
+    },
+  );
+};
+
+/**
+ * @summary List active pending recovery drafts for user or conversation
+ */
+export type listActiveForgottenWorkoutDraftsResponse200 = {
+  data: ListActiveForgottenWorkoutDrafts200;
+  status: 200;
+};
+
+export type listActiveForgottenWorkoutDraftsResponse401 = {
+  data: ListActiveForgottenWorkoutDrafts401;
+  status: 401;
+};
+
+export type listActiveForgottenWorkoutDraftsResponse500 = {
+  data: ListActiveForgottenWorkoutDrafts500;
+  status: 500;
+};
+
+export type listActiveForgottenWorkoutDraftsResponseSuccess =
+  listActiveForgottenWorkoutDraftsResponse200 & {
+    headers: Headers;
+  };
+export type listActiveForgottenWorkoutDraftsResponseError = (
+  | listActiveForgottenWorkoutDraftsResponse401
+  | listActiveForgottenWorkoutDraftsResponse500
+) & {
+  headers: Headers;
+};
+
+export type listActiveForgottenWorkoutDraftsResponse =
+  | listActiveForgottenWorkoutDraftsResponseSuccess
+  | listActiveForgottenWorkoutDraftsResponseError;
+
+export const getListActiveForgottenWorkoutDraftsUrl = (
+  params?: ListActiveForgottenWorkoutDraftsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/workout-sessions/recovery/drafts?${stringifiedParams}`
+    : `/workout-sessions/recovery/drafts`;
+};
+
+export const listActiveForgottenWorkoutDrafts = async (
+  params?: ListActiveForgottenWorkoutDraftsParams,
+  options?: RequestInit,
+): Promise<listActiveForgottenWorkoutDraftsResponse> => {
+  return customFetch<listActiveForgottenWorkoutDraftsResponse>(
+    getListActiveForgottenWorkoutDraftsUrl(params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Get recovery draft details with current conflict status
+ */
+export type getForgottenWorkoutDraftResponse200 = {
+  data: GetForgottenWorkoutDraft200;
+  status: 200;
+};
+
+export type getForgottenWorkoutDraftResponse401 = {
+  data: GetForgottenWorkoutDraft401;
+  status: 401;
+};
+
+export type getForgottenWorkoutDraftResponse403 = {
+  data: GetForgottenWorkoutDraft403;
+  status: 403;
+};
+
+export type getForgottenWorkoutDraftResponse404 = {
+  data: GetForgottenWorkoutDraft404;
+  status: 404;
+};
+
+export type getForgottenWorkoutDraftResponse500 = {
+  data: GetForgottenWorkoutDraft500;
+  status: 500;
+};
+
+export type getForgottenWorkoutDraftResponseSuccess =
+  getForgottenWorkoutDraftResponse200 & {
+    headers: Headers;
+  };
+export type getForgottenWorkoutDraftResponseError = (
+  | getForgottenWorkoutDraftResponse401
+  | getForgottenWorkoutDraftResponse403
+  | getForgottenWorkoutDraftResponse404
+  | getForgottenWorkoutDraftResponse500
+) & {
+  headers: Headers;
+};
+
+export type getForgottenWorkoutDraftResponse =
+  | getForgottenWorkoutDraftResponseSuccess
+  | getForgottenWorkoutDraftResponseError;
+
+export const getGetForgottenWorkoutDraftUrl = (draftId: string) => {
+  return `/workout-sessions/recovery/drafts/${draftId}`;
+};
+
+export const getForgottenWorkoutDraft = async (
+  draftId: string,
+  options?: RequestInit,
+): Promise<getForgottenWorkoutDraftResponse> => {
+  return customFetch<getForgottenWorkoutDraftResponse>(
+    getGetForgottenWorkoutDraftUrl(draftId),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Edit details, exercises or sets of a forgotten workout draft
+ */
+export type updateForgottenWorkoutDraftResponse200 = {
+  data: UpdateForgottenWorkoutDraft200;
+  status: 200;
+};
+
+export type updateForgottenWorkoutDraftResponse400 = {
+  data: UpdateForgottenWorkoutDraft400;
+  status: 400;
+};
+
+export type updateForgottenWorkoutDraftResponse401 = {
+  data: UpdateForgottenWorkoutDraft401;
+  status: 401;
+};
+
+export type updateForgottenWorkoutDraftResponse403 = {
+  data: UpdateForgottenWorkoutDraft403;
+  status: 403;
+};
+
+export type updateForgottenWorkoutDraftResponse404 = {
+  data: UpdateForgottenWorkoutDraft404;
+  status: 404;
+};
+
+export type updateForgottenWorkoutDraftResponse409 = {
+  data: UpdateForgottenWorkoutDraft409;
+  status: 409;
+};
+
+export type updateForgottenWorkoutDraftResponse500 = {
+  data: UpdateForgottenWorkoutDraft500;
+  status: 500;
+};
+
+export type updateForgottenWorkoutDraftResponseSuccess =
+  updateForgottenWorkoutDraftResponse200 & {
+    headers: Headers;
+  };
+export type updateForgottenWorkoutDraftResponseError = (
+  | updateForgottenWorkoutDraftResponse400
+  | updateForgottenWorkoutDraftResponse401
+  | updateForgottenWorkoutDraftResponse403
+  | updateForgottenWorkoutDraftResponse404
+  | updateForgottenWorkoutDraftResponse409
+  | updateForgottenWorkoutDraftResponse500
+) & {
+  headers: Headers;
+};
+
+export type updateForgottenWorkoutDraftResponse =
+  | updateForgottenWorkoutDraftResponseSuccess
+  | updateForgottenWorkoutDraftResponseError;
+
+export const getUpdateForgottenWorkoutDraftUrl = (draftId: string) => {
+  return `/workout-sessions/recovery/drafts/${draftId}`;
+};
+
+export const updateForgottenWorkoutDraft = async (
+  draftId: string,
+  updateForgottenWorkoutDraftBody: UpdateForgottenWorkoutDraftBody,
+  options?: RequestInit,
+): Promise<updateForgottenWorkoutDraftResponse> => {
+  return customFetch<updateForgottenWorkoutDraftResponse>(
+    getUpdateForgottenWorkoutDraftUrl(draftId),
+    {
+      ...options,
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(updateForgottenWorkoutDraftBody),
+    },
+  );
+};
+
+/**
+ * @summary Discard a pending recovery draft
+ */
+export type discardForgottenWorkoutDraftResponse200 = {
+  data: DiscardForgottenWorkoutDraft200;
+  status: 200;
+};
+
+export type discardForgottenWorkoutDraftResponse400 = {
+  data: DiscardForgottenWorkoutDraft400;
+  status: 400;
+};
+
+export type discardForgottenWorkoutDraftResponse401 = {
+  data: DiscardForgottenWorkoutDraft401;
+  status: 401;
+};
+
+export type discardForgottenWorkoutDraftResponse403 = {
+  data: DiscardForgottenWorkoutDraft403;
+  status: 403;
+};
+
+export type discardForgottenWorkoutDraftResponse404 = {
+  data: DiscardForgottenWorkoutDraft404;
+  status: 404;
+};
+
+export type discardForgottenWorkoutDraftResponse409 = {
+  data: DiscardForgottenWorkoutDraft409;
+  status: 409;
+};
+
+export type discardForgottenWorkoutDraftResponse500 = {
+  data: DiscardForgottenWorkoutDraft500;
+  status: 500;
+};
+
+export type discardForgottenWorkoutDraftResponseSuccess =
+  discardForgottenWorkoutDraftResponse200 & {
+    headers: Headers;
+  };
+export type discardForgottenWorkoutDraftResponseError = (
+  | discardForgottenWorkoutDraftResponse400
+  | discardForgottenWorkoutDraftResponse401
+  | discardForgottenWorkoutDraftResponse403
+  | discardForgottenWorkoutDraftResponse404
+  | discardForgottenWorkoutDraftResponse409
+  | discardForgottenWorkoutDraftResponse500
+) & {
+  headers: Headers;
+};
+
+export type discardForgottenWorkoutDraftResponse =
+  | discardForgottenWorkoutDraftResponseSuccess
+  | discardForgottenWorkoutDraftResponseError;
+
+export const getDiscardForgottenWorkoutDraftUrl = (draftId: string) => {
+  return `/workout-sessions/recovery/drafts/${draftId}/discard`;
+};
+
+export const discardForgottenWorkoutDraft = async (
+  draftId: string,
+  discardForgottenWorkoutDraftBody: DiscardForgottenWorkoutDraftBody,
+  options?: RequestInit,
+): Promise<discardForgottenWorkoutDraftResponse> => {
+  return customFetch<discardForgottenWorkoutDraftResponse>(
+    getDiscardForgottenWorkoutDraftUrl(draftId),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(discardForgottenWorkoutDraftBody),
+    },
+  );
+};
+
+/**
+ * @summary Confirm recovery draft, creating retroactive WorkoutSession atomically
+ */
+export type confirmForgottenWorkoutRecoveryResponse200 = {
+  data: ConfirmForgottenWorkoutRecovery200;
+  status: 200;
+};
+
+export type confirmForgottenWorkoutRecoveryResponse400 = {
+  data: ConfirmForgottenWorkoutRecovery400;
+  status: 400;
+};
+
+export type confirmForgottenWorkoutRecoveryResponse401 = {
+  data: ConfirmForgottenWorkoutRecovery401;
+  status: 401;
+};
+
+export type confirmForgottenWorkoutRecoveryResponse403 = {
+  data: ConfirmForgottenWorkoutRecovery403;
+  status: 403;
+};
+
+export type confirmForgottenWorkoutRecoveryResponse404 = {
+  data: ConfirmForgottenWorkoutRecovery404;
+  status: 404;
+};
+
+export type confirmForgottenWorkoutRecoveryResponse409 = {
+  data: ConfirmForgottenWorkoutRecovery409;
+  status: 409;
+};
+
+export type confirmForgottenWorkoutRecoveryResponse500 = {
+  data: ConfirmForgottenWorkoutRecovery500;
+  status: 500;
+};
+
+export type confirmForgottenWorkoutRecoveryResponseSuccess =
+  confirmForgottenWorkoutRecoveryResponse200 & {
+    headers: Headers;
+  };
+export type confirmForgottenWorkoutRecoveryResponseError = (
+  | confirmForgottenWorkoutRecoveryResponse400
+  | confirmForgottenWorkoutRecoveryResponse401
+  | confirmForgottenWorkoutRecoveryResponse403
+  | confirmForgottenWorkoutRecoveryResponse404
+  | confirmForgottenWorkoutRecoveryResponse409
+  | confirmForgottenWorkoutRecoveryResponse500
+) & {
+  headers: Headers;
+};
+
+export type confirmForgottenWorkoutRecoveryResponse =
+  | confirmForgottenWorkoutRecoveryResponseSuccess
+  | confirmForgottenWorkoutRecoveryResponseError;
+
+export const getConfirmForgottenWorkoutRecoveryUrl = (draftId: string) => {
+  return `/workout-sessions/recovery/drafts/${draftId}/confirm`;
+};
+
+export const confirmForgottenWorkoutRecovery = async (
+  draftId: string,
+  confirmForgottenWorkoutRecoveryBody: ConfirmForgottenWorkoutRecoveryBody,
+  options?: RequestInit,
+): Promise<confirmForgottenWorkoutRecoveryResponse> => {
+  return customFetch<confirmForgottenWorkoutRecoveryResponse>(
+    getConfirmForgottenWorkoutRecoveryUrl(draftId),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(confirmForgottenWorkoutRecoveryBody),
+    },
+  );
+};
+
+/**
+ * @summary Submit beta feedback (Trainvy)
+ */
+export type postFeedbackResponse201 = {
+  data: PostFeedback201;
+  status: 201;
+};
+
+export type postFeedbackResponse400 = {
+  data: PostFeedback400;
+  status: 400;
+};
+
+export type postFeedbackResponse401 = {
+  data: PostFeedback401;
+  status: 401;
+};
+
+export type postFeedbackResponse500 = {
+  data: PostFeedback500;
+  status: 500;
+};
+
+export type postFeedbackResponseSuccess = postFeedbackResponse201 & {
+  headers: Headers;
+};
+export type postFeedbackResponseError = (
+  | postFeedbackResponse400
+  | postFeedbackResponse401
+  | postFeedbackResponse500
+) & {
+  headers: Headers;
+};
+
+export type postFeedbackResponse =
+  | postFeedbackResponseSuccess
+  | postFeedbackResponseError;
+
+export const getPostFeedbackUrl = () => {
+  return `/feedback/`;
+};
+
+export const postFeedback = async (
+  postFeedbackBody: PostFeedbackBody,
+  options?: RequestInit,
+): Promise<postFeedbackResponse> => {
+  return customFetch<postFeedbackResponse>(getPostFeedbackUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(postFeedbackBody),
+  });
 };
 
 /**

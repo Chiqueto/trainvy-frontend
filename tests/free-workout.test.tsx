@@ -82,6 +82,7 @@ describe("Task 1.8 — Treino Avulso Frontend Tests", () => {
         plannedRestTimeInSeconds: 90,
         notes: null,
         sets: [],
+        revision: 1,
       },
     ],
   };
@@ -271,6 +272,7 @@ describe("Task 1.8 — Treino Avulso Frontend Tests", () => {
           plannedRestTimeInSeconds: null,
           notes: null,
           sets: [],
+          revision: 1,
         },
         headers: new Headers(),
       });
@@ -321,6 +323,7 @@ describe("Task 1.8 — Treino Avulso Frontend Tests", () => {
           plannedRestTimeInSeconds: null,
           notes: null,
           sets: [],
+          revision: 1,
         },
         headers: new Headers(),
       });
@@ -364,6 +367,7 @@ describe("Task 1.8 — Treino Avulso Frontend Tests", () => {
             plannedRestTimeInSeconds: null,
             notes: null,
             sets: [],
+            revision: 1,
           },
         ],
       };
@@ -414,6 +418,7 @@ describe("Task 1.8 — Treino Avulso Frontend Tests", () => {
             plannedRestTimeInSeconds: null,
             notes: null,
             sets: [],
+            revision: 1,
           },
         ],
       };
@@ -451,6 +456,7 @@ describe("Task 1.8 — Treino Avulso Frontend Tests", () => {
             plannedReps: null,
             plannedRestTimeInSeconds: null,
             notes: null,
+            revision: 1,
             sets: [
               {
                 id: "set-1",
@@ -541,6 +547,7 @@ describe("Task 1.8 — Treino Avulso Frontend Tests", () => {
             plannedRestTimeInSeconds: null,
             notes: null,
             sets: [],
+            revision: 1,
           },
         ],
       };

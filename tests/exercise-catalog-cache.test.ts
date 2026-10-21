@@ -41,7 +41,7 @@ describe("Exercise Catalog Client Cache & Instant Search", () => {
       isUnilateral: false,
       hasMedia: false,
       muscles: [
-        { id: "m-5", muscleGroup: "LEGS", role: "PRIMARY" },
+        { id: "m-5", muscleGroup: "QUADRICEPS", role: "PRIMARY" },
         { id: "m-6", muscleGroup: "GLUTES", role: "SECONDARY" },
       ],
     },
@@ -108,7 +108,7 @@ describe("Exercise Catalog Client Cache & Instant Search", () => {
     });
 
     it("filtra por grupo muscular específico via muscleFilter", () => {
-      const legResults = filterExercisesInstant(sampleExercises, "", "LEGS");
+      const legResults = filterExercisesInstant(sampleExercises, "", "QUADRICEPS");
       expect(legResults).toHaveLength(1);
       expect(legResults[0].name).toBe("Agachamento Livre");
     });
@@ -142,7 +142,7 @@ describe("Exercise Catalog Client Cache & Instant Search", () => {
       updateExerciseInLocalCache({
         ...sampleExercises[2],
         muscles: [
-          { id: "m-5", muscleGroup: "LEGS", role: "PRIMARY" },
+          { id: "m-5", muscleGroup: "QUADRICEPS", role: "PRIMARY" },
           { id: "m-extra", muscleGroup: "CALVES", role: "SECONDARY" },
         ],
       });
