@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import {
   AlertCircle,
   ArrowRightLeft,
@@ -16,11 +16,14 @@ import type {
   GetWorkoutSession200SessionExercisesItem,
   ListExercises200Item,
 } from "@/app/_lib/api/fetch-generated";
-import { getMuscleGroupLabel, type MuscleGroup } from "@/app/_lib/muscle-labels";
+import { useExerciseCatalog } from "@/app/_lib/hooks/use-exercise-catalog";
+import {
+  ALL_MUSCLE_GROUPS,
+  getMuscleGroupLabel,
+  type MuscleGroup,
+} from "@/app/_lib/muscle-labels";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
-import { listExercisesAction } from "../_actions";
 
 interface SubstituteExerciseModalProps {
   isOpen: boolean;
@@ -36,39 +39,32 @@ export function SubstituteExerciseModal({
   onSubstitute,
 }: SubstituteExerciseModalProps) {
   const [query, setQuery] = useState("");
-  const [exercises, setExercises] = useState<ListExercises200Item[]>([]);
-  const [isLoadingCatalog, setIsLoadingCatalog] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSubmitting, startSubmittingTransition] = useTransition();
 
-  // Carrega exercícios do catálogo com debounce
-  useEffect(() => {
-    if (!isOpen) return;
+  const {
+    exercises: allExercises,
+    search,
+    isSyncing,
+    hasNewUpdate,
+    dismissUpdateNotice,
+  } = useExerciseCatalog({ autoSync: isOpen });
 
-    let isMounted = true;
-    const timer = setTimeout(async () => {
-      setIsLoadingCatalog(true);
-      const res = await listExercisesAction(query.trim() || undefined);
-      if (isMounted) {
-        setIsLoadingCatalog(false);
-        if (res.success) {
-          setExercises(res.data);
-        } else {
-          setErrorMessage(res.error);
-        }
-      }
-    }, 200);
+  const [selectedMuscleFilter, setSelectedMuscleFilter] = useState<MuscleGroup | "">("");
 
-    return () => {
-      isMounted = false;
-      clearTimeout(timer);
-    };
-  }, [isOpen, query]);
+  // Busca instantânea em memória (0 ms)
+  const filteredCatalog = useMemo(() => {
+    const list = search(query, selectedMuscleFilter);
+    return list.filter((ex) => ex.id !== exercise.exerciseId);
+  }, [search, query, selectedMuscleFilter, exercise.exerciseId]);
+
+  const isLoadingCatalog = allExercises.length === 0 && isSyncing;
 
   if (!isOpen) return null;
 
   const handleClose = () => {
     setQuery("");
+    setSelectedMuscleFilter("");
     setErrorMessage(null);
     onClose();
   };
@@ -87,11 +83,6 @@ export function SubstituteExerciseModal({
       }
     });
   };
-
-  // Filtra o exercício já selecionado atualmente
-  const filteredCatalog = exercises.filter(
-    (ex) => ex.id !== exercise.exerciseId,
-  );
 
   const hasAlternative1 =
     !!exercise.alternative1ExerciseId &&
@@ -120,12 +111,20 @@ export function SubstituteExerciseModal({
               <ArrowRightLeft className="size-4" />
             </div>
             <div className="flex flex-col">
-              <h2
-                id="substitute-modal-title"
-                className="font-heading text-lg font-bold text-foreground leading-tight"
-              >
-                Substituir Exercício
-              </h2>
+              <div className="flex items-center gap-2">
+                <h2
+                  id="substitute-modal-title"
+                  className="font-heading text-lg font-bold text-foreground leading-tight"
+                >
+                  Substituir Exercício
+                </h2>
+                {isSyncing && (
+                  <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                    <Loader2 className="size-3 animate-spin text-primary" />
+                    <span className="hidden sm:inline">Atualizando...</span>
+                  </span>
+                )}
+              </div>
               <p className="font-heading text-xs text-muted-foreground">
                 Atual:{" "}
                 <span className="font-semibold text-foreground">
@@ -247,12 +246,27 @@ export function SubstituteExerciseModal({
             </span>
           </div>
 
+          {/* Aviso de catálogo atualizado em segundo plano */}
+          {hasNewUpdate && (
+            <div className="flex items-center justify-between rounded-xl bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 text-[11px] font-heading font-medium text-emerald-500 animate-in fade-in">
+              <span>✨ Catálogo de exercícios atualizado</span>
+              <button
+                type="button"
+                onClick={dismissUpdateNotice}
+                className="rounded p-0.5 hover:bg-emerald-500/20"
+              >
+                <X className="size-3.5" />
+                <span className="sr-only">Fechar aviso</span>
+              </button>
+            </div>
+          )}
+
           {/* Campo de Busca */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
             <Input
               type="text"
-              placeholder="Buscar por nome do exercício..."
+              placeholder="Buscar por nome ou músculo (ex: supino, peito)..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className="pl-9 pr-8 font-heading text-sm h-10 rounded-xl"
@@ -267,6 +281,39 @@ export function SubstituteExerciseModal({
                 <X className="size-4" />
               </button>
             )}
+          </div>
+
+          {/* Chips Rápidos de Filtro por Grupo Muscular */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs scrollbar-none">
+            <button
+              type="button"
+              onClick={() => setSelectedMuscleFilter("")}
+              className={`rounded-lg px-2.5 py-1 text-[11px] font-heading font-semibold transition shrink-0 cursor-pointer ${
+                selectedMuscleFilter === ""
+                  ? "bg-primary text-primary-foreground shadow-xs"
+                  : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
+              }`}
+            >
+              Todos
+            </button>
+            {ALL_MUSCLE_GROUPS.map((mg) => (
+              <button
+                key={mg.value}
+                type="button"
+                onClick={() =>
+                  setSelectedMuscleFilter(
+                    selectedMuscleFilter === mg.value ? "" : mg.value,
+                  )
+                }
+                className={`rounded-lg px-2.5 py-1 text-[11px] font-heading font-semibold transition shrink-0 cursor-pointer ${
+                  selectedMuscleFilter === mg.value
+                    ? "bg-primary text-primary-foreground shadow-xs"
+                    : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
+                }`}
+              >
+                {mg.label}
+              </button>
+            ))}
           </div>
 
           {/* Lista de Exercícios */}

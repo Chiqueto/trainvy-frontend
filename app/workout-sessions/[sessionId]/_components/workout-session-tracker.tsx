@@ -30,6 +30,7 @@ import {
   removeExerciseFromWorkoutSessionAction,
   substituteSessionExerciseAction,
 } from "../_actions";
+import { useExerciseCatalog } from "@/app/_lib/hooks/use-exercise-catalog";
 import { ExerciseSelectorModal } from "./exercise-selector-modal";
 import { SessionAiAssistantDrawer } from "./session-ai-assistant-drawer";
 import { SessionExerciseCard } from "./session-exercise-card";
@@ -39,6 +40,9 @@ interface WorkoutSessionTrackerProps {
 }
 
 export function WorkoutSessionTracker({ session }: WorkoutSessionTrackerProps) {
+  // Prefetch and sync the exercise catalog in background so search is instant when opening modals
+  useExerciseCatalog({ autoSync: true });
+
   const router = useRouter();
   const [sessionData, setSessionData] = useState(() => session);
   const [showConfirmModal, setShowConfirmModal] = useState(false);

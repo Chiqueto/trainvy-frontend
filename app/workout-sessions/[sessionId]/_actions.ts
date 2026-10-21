@@ -12,6 +12,7 @@ import {
   deleteWorkoutSet,
   discardWorkoutSetProposal,
   getAiConsent,
+  getExerciseCatalogVersion,
   listExercises,
   listWorkoutSetProposals,
   patchAiConsent,
@@ -33,6 +34,7 @@ import {
   type DiscardWorkoutSetProposal200,
   type DiscardWorkoutSetProposalBody,
   type GetAiConsent200,
+  type GetExerciseCatalogVersion200,
   type ListExercises200Item,
   type ListWorkoutSetProposals200,
   type PatchAiConsent200,
@@ -188,6 +190,29 @@ export async function listExercisesAction(
     return {
       success: false,
       error: (err as Error)?.message || "Erro de conexão ao listar exercícios",
+    };
+  }
+}
+
+/**
+ * Obtém versão e timestamp do catálogo de exercícios para validação e invalidação de cache.
+ */
+export async function getExerciseCatalogVersionAction(): Promise<
+  ActionResult<GetExerciseCatalogVersion200>
+> {
+  try {
+    const response = await getExerciseCatalogVersion();
+    if (response.status !== 200) {
+      return {
+        success: false,
+        error: "Erro ao verificar versão do catálogo de exercícios",
+      };
+    }
+    return { success: true, data: response.data };
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error: (err as Error)?.message || "Erro de conexão ao verificar catálogo",
     };
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import {
   AlertCircle,
   ArrowLeft,
@@ -19,6 +19,7 @@ import type {
   CreateExerciseBodySecondaryMuscleGroupsItem,
   ListExercises200Item,
 } from "@/app/_lib/api/fetch-generated";
+import { useExerciseCatalog } from "@/app/_lib/hooks/use-exercise-catalog";
 import {
   ALL_MUSCLE_GROUPS,
   getMuscleGroupLabel,
@@ -30,7 +31,6 @@ import { Switch } from "@/components/ui/switch";
 
 import {
   createExerciseAction,
-  listExercisesAction,
   updateExerciseMusclesAction,
 } from "../_actions";
 
@@ -49,10 +49,27 @@ export function ExerciseSelectorModal({
 }: ExerciseSelectorModalProps) {
   const [view, setView] = useState<ModalView>("LIST");
   const [query, setQuery] = useState("");
-  const [exercises, setExercises] = useState<ListExercises200Item[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSubmitting, startSubmittingTransition] = useTransition();
+
+  const {
+    exercises: allExercises,
+    search,
+    isSyncing,
+    hasNewUpdate,
+    dismissUpdateNotice,
+    addCustomExercise,
+    updateExerciseInCache,
+  } = useExerciseCatalog({ autoSync: isOpen });
+
+  const [selectedMuscleFilter, setSelectedMuscleFilter] = useState<MuscleGroup | "">("");
+
+  // Busca instantânea em memória (0 ms)
+  const exercises = useMemo(() => {
+    return search(query, selectedMuscleFilter);
+  }, [search, query, selectedMuscleFilter]);
+
+  const isLoading = allExercises.length === 0 && isSyncing;
 
   // Estados do formulário de criação / edição de músculos
   const [customName, setCustomName] = useState("");
@@ -61,34 +78,10 @@ export function ExerciseSelectorModal({
   const [secondaryMuscles, setSecondaryMuscles] = useState<MuscleGroup[]>([]);
   const [editingExercise, setEditingExercise] = useState<ListExercises200Item | null>(null);
 
-  // Carrega exercícios ao abrir e ao alterar o termo de busca
-  useEffect(() => {
-    if (!isOpen) return;
-
-    let isMounted = true;
-    const timer = setTimeout(async () => {
-      setIsLoading(true);
-      const res = await listExercisesAction(query.trim() || undefined);
-      if (isMounted) {
-        setIsLoading(false);
-        if (res.success) {
-          setExercises(res.data);
-        } else {
-          setErrorMessage(res.error);
-        }
-      }
-    }, 200);
-
-    return () => {
-      isMounted = false;
-      clearTimeout(timer);
-    };
-  }, [isOpen, query]);
-
   if (!isOpen) return null;
 
   const trimmedQuery = query.trim();
-  const hasExactMatch = exercises.some(
+  const hasExactMatch = allExercises.some(
     (ex) => ex.name.toLowerCase() === trimmedQuery.toLowerCase(),
   );
 
@@ -99,6 +92,7 @@ export function ExerciseSelectorModal({
     setSecondaryMuscles([]);
     setEditingExercise(null);
     setErrorMessage(null);
+    setSelectedMuscleFilter("");
   };
 
   const handleClose = () => {
@@ -186,6 +180,15 @@ export function ExerciseSelectorModal({
         return;
       }
 
+      addCustomExercise({
+        id: createRes.data.id,
+        name: createRes.data.name,
+        ownerUserId: createRes.data.ownerUserId,
+        isUnilateral: createRes.data.isUnilateral,
+        hasMedia: false,
+        muscles: createRes.data.muscles,
+      });
+
       try {
         await onSelectExercise(createRes.data.id);
         handleClose();
@@ -219,14 +222,11 @@ export function ExerciseSelectorModal({
         return;
       }
 
-      // Atualiza na lista local de exercícios
-      setExercises((prev) =>
-        prev.map((ex) =>
-          ex.id === editingExercise.id
-            ? { ...ex, muscles: updateRes.data.muscles }
-            : ex,
-        ),
-      );
+      // Atualiza no cache local de exercícios
+      updateExerciseInCache({
+        ...editingExercise,
+        muscles: updateRes.data.muscles,
+      });
 
       resetForm();
       setView("LIST");
@@ -258,6 +258,12 @@ export function ExerciseSelectorModal({
                 >
                   Adicionar Exercício
                 </h2>
+                {isSyncing && (
+                  <span className="flex items-center gap-1 text-[10px] text-muted-foreground ml-1">
+                    <Loader2 className="size-3 animate-spin text-primary" />
+                    <span className="hidden sm:inline">Atualizando...</span>
+                  </span>
+                )}
               </div>
               <button
                 type="button"
@@ -269,6 +275,21 @@ export function ExerciseSelectorModal({
                 <span className="sr-only">Fechar</span>
               </button>
             </div>
+
+            {/* Aviso de catálogo atualizado em segundo plano */}
+            {hasNewUpdate && (
+              <div className="flex items-center justify-between rounded-xl bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 text-[11px] font-heading font-medium text-emerald-500 animate-in fade-in">
+                <span>✨ Catálogo de exercícios atualizado</span>
+                <button
+                  type="button"
+                  onClick={dismissUpdateNotice}
+                  className="rounded p-0.5 hover:bg-emerald-500/20"
+                >
+                  <X className="size-3.5" />
+                  <span className="sr-only">Fechar aviso</span>
+                </button>
+              </div>
+            )}
 
             {/* Input de Busca */}
             <div className="relative">
@@ -291,6 +312,39 @@ export function ExerciseSelectorModal({
                   <span className="sr-only">Limpar busca</span>
                 </button>
               )}
+            </div>
+
+            {/* Chips Rápidos de Filtro por Grupo Muscular */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs scrollbar-none">
+              <button
+                type="button"
+                onClick={() => setSelectedMuscleFilter("")}
+                className={`rounded-lg px-2.5 py-1 text-[11px] font-heading font-semibold transition shrink-0 cursor-pointer ${
+                  selectedMuscleFilter === ""
+                    ? "bg-primary text-primary-foreground shadow-xs"
+                    : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
+                }`}
+              >
+                Todos
+              </button>
+              {ALL_MUSCLE_GROUPS.map((mg) => (
+                <button
+                  key={mg.value}
+                  type="button"
+                  onClick={() =>
+                    setSelectedMuscleFilter(
+                      selectedMuscleFilter === mg.value ? "" : mg.value,
+                    )
+                  }
+                  className={`rounded-lg px-2.5 py-1 text-[11px] font-heading font-semibold transition shrink-0 cursor-pointer ${
+                    selectedMuscleFilter === mg.value
+                      ? "bg-primary text-primary-foreground shadow-xs"
+                      : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
+                  }`}
+                >
+                  {mg.label}
+                </button>
+              ))}
             </div>
 
             {/* Mensagem de Erro Inline */}

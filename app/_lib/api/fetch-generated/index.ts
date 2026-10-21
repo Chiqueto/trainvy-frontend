@@ -7250,6 +7250,27 @@ export type CancelManualSubscription500 = {
   code: string;
 };
 
+export type GetExerciseCatalogVersion200 = {
+  version: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  count: number;
+  /** @nullable */
+  lastUpdatedAt: string | null;
+};
+
+export type GetExerciseCatalogVersion401 = {
+  error: string;
+  code: string;
+};
+
+export type GetExerciseCatalogVersion500 = {
+  error: string;
+  code: string;
+};
+
 export type ListExercisesParams = {
   q?: string;
   onlyWithHistory?: string;
@@ -7299,6 +7320,16 @@ export type ListExercises200Item = {
   hasMedia: boolean;
   muscles: ListExercises200ItemMusclesItem[];
 };
+
+/**
+ * Not Modified
+ * @nullable
+ */
+export type ListExercises304 =
+  | (typeof ListExercises304)[keyof typeof ListExercises304]
+  | null;
+
+export const ListExercises304 = {} as const;
 
 export type ListExercises401 = {
   error: string;
@@ -15515,11 +15546,65 @@ export const cancelManualSubscription = async (
 };
 
 /**
+ * @summary Get the current version and timestamp of the exercise catalog for caching
+ */
+export type getExerciseCatalogVersionResponse200 = {
+  data: GetExerciseCatalogVersion200;
+  status: 200;
+};
+
+export type getExerciseCatalogVersionResponse401 = {
+  data: GetExerciseCatalogVersion401;
+  status: 401;
+};
+
+export type getExerciseCatalogVersionResponse500 = {
+  data: GetExerciseCatalogVersion500;
+  status: 500;
+};
+
+export type getExerciseCatalogVersionResponseSuccess =
+  getExerciseCatalogVersionResponse200 & {
+    headers: Headers;
+  };
+export type getExerciseCatalogVersionResponseError = (
+  | getExerciseCatalogVersionResponse401
+  | getExerciseCatalogVersionResponse500
+) & {
+  headers: Headers;
+};
+
+export type getExerciseCatalogVersionResponse =
+  | getExerciseCatalogVersionResponseSuccess
+  | getExerciseCatalogVersionResponseError;
+
+export const getGetExerciseCatalogVersionUrl = () => {
+  return `/exercises/version`;
+};
+
+export const getExerciseCatalogVersion = async (
+  options?: RequestInit,
+): Promise<getExerciseCatalogVersionResponse> => {
+  return customFetch<getExerciseCatalogVersionResponse>(
+    getGetExerciseCatalogVersionUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
  * @summary List global exercises and user custom exercises with optional search query
  */
 export type listExercisesResponse200 = {
   data: ListExercises200Item[];
   status: 200;
+};
+
+export type listExercisesResponse304 = {
+  data: ListExercises304;
+  status: 304;
 };
 
 export type listExercisesResponse401 = {
@@ -15536,6 +15621,7 @@ export type listExercisesResponseSuccess = listExercisesResponse200 & {
   headers: Headers;
 };
 export type listExercisesResponseError = (
+  | listExercisesResponse304
   | listExercisesResponse401
   | listExercisesResponse500
 ) & {

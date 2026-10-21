@@ -155,8 +155,8 @@ describe("Task 3.1C - Grupos Musculares no Frontend", () => {
       });
 
       // Músculo primário "Peito" e secundário "Tríceps"
-      expect(screen.getByText("Peito")).toBeTruthy();
-      expect(screen.getByText(/Tríceps/)).toBeTruthy();
+      expect(screen.getAllByText("Peito").length).toBeGreaterThan(0);
+      expect(screen.getAllByText(/Tríceps/).length).toBeGreaterThan(0);
 
       const classify = screen.getByRole("button", {
         name: "Definir grupo muscular",
