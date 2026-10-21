@@ -2002,7 +2002,6 @@
                           "exerciseId",
                           "exerciseNameSnapshot",
                           "order",
-                          "wasSubstituted",
                           "plannedSets",
                           "plannedReps",
                           "plannedRestTimeInSeconds"
@@ -15760,7 +15759,6 @@
                           "exerciseNameSnapshot",
                           "order",
                           "notes",
-                          "wasSubstituted",
                           "planned",
                           "performed",
                           "sets"
@@ -15962,6 +15960,10 @@
                       "ownerUserId": {
                         "nullable": true,
                         "type": "string"
+                      },
+                      "isUnilateral": {
+                        "default": false,
+                        "type": "boolean"
                       },
                       "hasMedia": {
                         "default": false,
@@ -21292,6 +21294,10 @@
                         "nullable": true,
                         "type": "string"
                       },
+                      "isUnilateral": {
+                        "default": false,
+                        "type": "boolean"
+                      },
                       "hasMedia": {
                         "default": false,
                         "type": "boolean"
@@ -21420,6 +21426,10 @@
                     "type": "string",
                     "minLength": 1
                   },
+                  "isUnilateral": {
+                    "default": false,
+                    "type": "boolean"
+                  },
                   "primaryMuscleGroups": {
                     "type": "array",
                     "items": {
@@ -21489,6 +21499,10 @@
                     "ownerUserId": {
                       "nullable": true,
                       "type": "string"
+                    },
+                    "isUnilateral": {
+                      "default": false,
+                      "type": "boolean"
                     },
                     "hasMedia": {
                       "default": false,
@@ -21743,6 +21757,10 @@
                     "ownerUserId": {
                       "nullable": true,
                       "type": "string"
+                    },
+                    "isUnilateral": {
+                      "default": false,
+                      "type": "boolean"
                     },
                     "hasMedia": {
                       "default": false,
@@ -22226,6 +22244,9 @@
                             "nullable": true,
                             "type": "string"
                           },
+                          "isUnilateral": {
+                            "type": "boolean"
+                          },
                           "sets": {
                             "type": "array",
                             "items": {
@@ -22300,7 +22321,6 @@
                           "id",
                           "exerciseNameSnapshot",
                           "order",
-                          "wasSubstituted",
                           "plannedSets",
                           "plannedReps",
                           "plannedRestTimeInSeconds",
@@ -22554,6 +22574,9 @@
                             "nullable": true,
                             "type": "string"
                           },
+                          "isUnilateral": {
+                            "type": "boolean"
+                          },
                           "sets": {
                             "type": "array",
                             "items": {
@@ -22628,7 +22651,6 @@
                           "id",
                           "exerciseNameSnapshot",
                           "order",
-                          "wasSubstituted",
                           "plannedSets",
                           "plannedReps",
                           "plannedRestTimeInSeconds",
@@ -22891,6 +22913,22 @@
         "tags": [
           "Workout Session"
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "nullable": true,
+                "type": "object",
+                "properties": {
+                  "forceComplete": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
         "parameters": [
           {
             "schema": {
@@ -23982,6 +24020,9 @@
                       "nullable": true,
                       "type": "string"
                     },
+                    "isUnilateral": {
+                      "type": "boolean"
+                    },
                     "sets": {
                       "type": "array",
                       "items": {
@@ -24056,7 +24097,6 @@
                     "id",
                     "exerciseNameSnapshot",
                     "order",
-                    "wasSubstituted",
                     "plannedSets",
                     "plannedReps",
                     "plannedRestTimeInSeconds",
@@ -24488,6 +24528,9 @@
                       "nullable": true,
                       "type": "string"
                     },
+                    "isUnilateral": {
+                      "type": "boolean"
+                    },
                     "sets": {
                       "type": "array",
                       "items": {
@@ -24562,7 +24605,6 @@
                     "id",
                     "exerciseNameSnapshot",
                     "order",
-                    "wasSubstituted",
                     "plannedSets",
                     "plannedReps",
                     "plannedRestTimeInSeconds",
@@ -25621,7 +25663,6 @@
                           "exerciseNameSnapshot",
                           "order",
                           "notes",
-                          "wasSubstituted",
                           "planned",
                           "performed",
                           "sets"

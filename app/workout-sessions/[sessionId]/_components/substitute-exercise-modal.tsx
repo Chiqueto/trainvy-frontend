@@ -106,11 +106,11 @@ export function SubstituteExerciseModal({
       role="dialog"
       aria-modal="true"
       aria-labelledby="substitute-modal-title"
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-background/80 backdrop-blur-sm animate-in fade-in"
+      className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-background/80 backdrop-blur-sm animate-in fade-in"
       onClick={handleClose}
     >
       <div
-        className="w-full max-w-lg rounded-t-3xl sm:rounded-3xl border border-border bg-card p-5 shadow-2xl flex flex-col gap-4 max-h-[90vh] animate-in slide-in-from-bottom-4 sm:zoom-in-95"
+        className="w-full max-w-lg rounded-t-3xl sm:rounded-3xl border border-border bg-card p-5 shadow-2xl flex flex-col gap-4 max-h-[90vh] pb-[max(1.25rem,calc(0.75rem+env(safe-area-inset-bottom,0px)))] sm:pb-5 animate-in slide-in-from-bottom-4 sm:zoom-in-95"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}

@@ -7,6 +7,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Chat } from "@/app/_components/chat";
 import { PwaProvider } from "@/app/_components/pwa/pwa-provider";
 import { PwaInstallPrompt } from "@/app/_components/pwa/pwa-install-prompt";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -87,6 +88,7 @@ export default function RootLayout({
             </Suspense>
           </NuqsAdapter>
         </PwaProvider>
+        <Toaster />
         <Analytics />
         <SpeedInsights />
       </body>

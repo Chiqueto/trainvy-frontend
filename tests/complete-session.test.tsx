@@ -11,6 +11,14 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 const router = vi.hoisted(() => ({ push: vi.fn() }));
 vi.mock("next/navigation", () => ({ useRouter: () => router }));
 
+const mockToast = vi.hoisted(() => ({
+  error: vi.fn(),
+  success: vi.fn(),
+}));
+vi.mock("sonner", () => ({
+  toast: mockToast,
+}));
+
 // Mock next/cache
 vi.mock("next/cache", () => ({
   revalidatePath: vi.fn(),
@@ -32,12 +40,7 @@ import { completeWorkoutSessionAction } from "@/app/workout-sessions/[sessionId]
 import { WorkoutSessionTracker } from "@/app/workout-sessions/[sessionId]/_components/workout-session-tracker";
 
 describe("Task 1.7 — Finalização Segura da WorkoutSession", () => {
-  afterEach(() => {
-    cleanup();
-    vi.clearAllMocks();
-  });
-
-  const baseSession: api.GetWorkoutSession200 = {
+  const initialBaseSession: api.GetWorkoutSession200 = {
     id: "session-123",
     workoutDayId: "day-456",
     startedAt: "2026-09-29T10:00:00.000Z",
@@ -67,6 +70,14 @@ describe("Task 1.7 — Finalização Segura da WorkoutSession", () => {
       },
     ],
   };
+
+  const getBaseSession = (): api.GetWorkoutSession200 =>
+    structuredClone(initialBaseSession);
+
+  afterEach(() => {
+    cleanup();
+    vi.resetAllMocks();
+  });
 
   describe("1. Server Action: completeWorkoutSessionAction", () => {
     it("conclui sessão com sucesso (200) e invalida cache das rotas", async () => {
@@ -112,7 +123,7 @@ describe("Task 1.7 — Finalização Segura da WorkoutSession", () => {
 
   describe("Cancelamento e tela de conclusão — integração da main", () => {
     it("exige confirmação explícita e Voltar não exclui a sessão", () => {
-      render(<WorkoutSessionTracker session={baseSession} />);
+      render(<WorkoutSessionTracker session={getBaseSession()} />);
       fireEvent.click(screen.getByRole("button", { name: "Cancelar treino" }));
       const modal = screen.getByRole("dialog", {
         name: "Cancelar este treino?",
@@ -127,10 +138,10 @@ describe("Task 1.7 — Finalização Segura da WorkoutSession", () => {
     it("usa Orval e navega ao início só depois de confirmar o cancelamento", async () => {
       vi.mocked(api.cancelWorkoutSession).mockResolvedValueOnce({
         status: 200,
-        data: { success: true, sessionId: baseSession.id },
+        data: { success: true, sessionId: "session-123" },
         headers: new Headers(),
       });
-      render(<WorkoutSessionTracker session={baseSession} />);
+      render(<WorkoutSessionTracker session={getBaseSession()} />);
       fireEvent.click(screen.getByRole("button", { name: "Cancelar treino" }));
       const modal = screen.getByRole("dialog", {
         name: "Cancelar este treino?",
@@ -140,7 +151,7 @@ describe("Task 1.7 — Finalização Segura da WorkoutSession", () => {
       );
       await waitFor(() => expect(router.push).toHaveBeenCalledWith("/"));
       expect(api.cancelWorkoutSession).toHaveBeenCalledExactlyOnceWith(
-        baseSession.id,
+        "session-123",
       );
     });
 
@@ -148,14 +159,16 @@ describe("Task 1.7 — Finalização Segura da WorkoutSession", () => {
       vi.mocked(api.cancelWorkoutSession).mockRejectedValueOnce(
         new Error("Servidor indisponível"),
       );
-      render(<WorkoutSessionTracker session={baseSession} />);
+      render(<WorkoutSessionTracker session={getBaseSession()} />);
       fireEvent.click(screen.getByRole("button", { name: "Cancelar treino" }));
       fireEvent.click(
         within(screen.getByRole("dialog")).getByRole("button", {
           name: "Sim, cancelar treino",
         }),
       );
-      expect(await screen.findByText("Servidor indisponível")).toBeDefined();
+      await waitFor(() => {
+        expect(mockToast.error).toHaveBeenCalledWith("Servidor indisponível");
+      });
       expect(router.push).not.toHaveBeenCalled();
       expect(screen.getByText("Supino Reto")).toBeDefined();
       expect(screen.getByDisplayValue("40")).toBeDefined();
@@ -164,7 +177,7 @@ describe("Task 1.7 — Finalização Segura da WorkoutSession", () => {
 
   describe("2. UI e Fluxo de Finalização no WorkoutSessionTracker", () => {
     it("botão 'Finalizar treino' aparece em sessão ativa (completedAt === null)", () => {
-      render(<WorkoutSessionTracker session={baseSession} />);
+      render(<WorkoutSessionTracker session={getBaseSession()} />);
 
       const finishButton = screen.getByRole("button", {
         name: /finalizar treino/i,
@@ -175,7 +188,7 @@ describe("Task 1.7 — Finalização Segura da WorkoutSession", () => {
 
     it("sessão concluída NÃO mostra botão de finalizar treino e exibe estado read-only", () => {
       const completedSession: api.GetWorkoutSession200 = {
-        ...baseSession,
+        ...getBaseSession(),
         completedAt: "2026-09-29T11:00:00.000Z",
       };
 
@@ -193,7 +206,7 @@ describe("Task 1.7 — Finalização Segura da WorkoutSession", () => {
     });
 
     it("confirmação funciona: abre modal com mensagem não-alarmista e botão cancelar fecha", () => {
-      render(<WorkoutSessionTracker session={baseSession} />);
+      render(<WorkoutSessionTracker session={getBaseSession()} />);
 
       const finishBtn = screen.getByRole("button", {
         name: /finalizar treino/i,
@@ -232,7 +245,7 @@ describe("Task 1.7 — Finalização Segura da WorkoutSession", () => {
         headers: new Headers(),
       });
 
-      render(<WorkoutSessionTracker session={baseSession} />);
+      render(<WorkoutSessionTracker session={getBaseSession()} />);
 
       // Abre modal
       fireEvent.click(
@@ -260,7 +273,7 @@ describe("Task 1.7 — Finalização Segura da WorkoutSession", () => {
       );
     });
 
-    it("erro de séries pendentes é exibido no banner e não conclui a sessão", async () => {
+    it("erro de séries pendentes abre modal com 'Finalizar todas e concluir o treino'", async () => {
       vi.mocked(api.completeWorkoutSession).mockResolvedValueOnce({
         status: 400,
         data: {
@@ -271,7 +284,7 @@ describe("Task 1.7 — Finalização Segura da WorkoutSession", () => {
         headers: new Headers(),
       });
 
-      render(<WorkoutSessionTracker session={baseSession} />);
+      render(<WorkoutSessionTracker session={getBaseSession()} />);
 
       // Abre modal e confirma
       fireEvent.click(
@@ -284,27 +297,39 @@ describe("Task 1.7 — Finalização Segura da WorkoutSession", () => {
       fireEvent.click(confirmBtn);
 
       await waitFor(() => {
-        expect(screen.getByRole("alert")).toBeDefined();
+        expect(screen.getByText("Séries pendentes")).toBeDefined();
         expect(
-          screen.getByText(/existem 1 série\(s\) pendente\(s\)/i),
+          screen.getByRole("button", { name: /finalizar todas e concluir o treino/i }),
         ).toBeDefined();
+        expect(screen.getByRole("button", { name: "OK" })).toBeDefined();
       });
 
       // Sessão continua ativa
       expect(screen.getByText("Em Andamento")).toBeDefined();
     });
 
-    it("falha da API não perde dados digitados na tela", async () => {
-      vi.mocked(api.completeWorkoutSession).mockResolvedValueOnce({
-        status: 500,
-        data: {
-          error: "Internal server error",
-          code: "INTERNAL_SERVER_ERROR",
-        },
-        headers: new Headers(),
-      });
+    it("clicar em 'Finalizar todas e concluir o treino' no modal chama API com forceComplete: true", async () => {
+      vi.mocked(api.completeWorkoutSession)
+        .mockResolvedValueOnce({
+          status: 400,
+          data: {
+            error: "Existem 1 série(s) pendente(s) nesta sessão.",
+            code: "PENDING_WORKOUT_SETS",
+          },
+          headers: new Headers(),
+        })
+        .mockResolvedValueOnce({
+          status: 200,
+          data: {
+            id: "session-123",
+            workoutDayId: "day-456",
+            startedAt: "2026-09-29T10:00:00.000Z",
+            completedAt: "2026-09-29T11:00:00.000Z",
+          },
+          headers: new Headers(),
+        });
 
-      render(<WorkoutSessionTracker session={baseSession} />);
+      render(<WorkoutSessionTracker session={getBaseSession()} />);
 
       fireEvent.click(
         screen.getByRole("button", { name: /finalizar treino/i }),
@@ -316,7 +341,48 @@ describe("Task 1.7 — Finalização Segura da WorkoutSession", () => {
       fireEvent.click(confirmBtn);
 
       await waitFor(() => {
-        expect(screen.getByRole("alert")).toBeDefined();
+        expect(screen.getByText("Séries pendentes")).toBeDefined();
+      });
+
+      const forceCompleteBtn = await screen.findByRole("button", {
+        name: /finalizar todas e concluir o treino/i,
+      });
+      fireEvent.click(forceCompleteBtn);
+
+      await waitFor(() => {
+        expect(api.completeWorkoutSession).toHaveBeenLastCalledWith(
+          "session-123",
+          { forceComplete: true },
+        );
+        expect(router.push).toHaveBeenCalledWith(
+          "/workout-sessions/session-123/summary",
+        );
+      });
+    });
+
+    it("falha da API emite toast.error e não perde dados digitados na tela", async () => {
+      vi.mocked(api.completeWorkoutSession).mockResolvedValueOnce({
+        status: 500,
+        data: {
+          error: "Internal server error",
+          code: "INTERNAL_SERVER_ERROR",
+        },
+        headers: new Headers(),
+      });
+
+      render(<WorkoutSessionTracker session={getBaseSession()} />);
+
+      fireEvent.click(
+        screen.getByRole("button", { name: /finalizar treino/i }),
+      );
+      const modal = screen.getByRole("dialog");
+      const confirmBtn = within(modal).getByRole("button", {
+        name: /^finalizar treino$/i,
+      });
+      fireEvent.click(confirmBtn);
+
+      await waitFor(() => {
+        expect(mockToast.error).toHaveBeenCalledWith("Internal server error");
       });
 
       // Dados do exercício e série continuam presentes
@@ -325,7 +391,7 @@ describe("Task 1.7 — Finalização Segura da WorkoutSession", () => {
     });
 
     it("draft pendente: desfoca elemento ativo ao abrir modal de finalização", () => {
-      render(<WorkoutSessionTracker session={baseSession} />);
+      render(<WorkoutSessionTracker session={getBaseSession()} />);
 
       const repsInput = screen.getByDisplayValue("10");
       repsInput.focus();
@@ -354,7 +420,7 @@ describe("Task 1.7 — Finalização Segura da WorkoutSession", () => {
 
       vi.mocked(api.updateWorkoutSet).mockReturnValueOnce(pendingPromise);
 
-      render(<WorkoutSessionTracker session={baseSession} />);
+      render(<WorkoutSessionTracker session={getBaseSession()} />);
 
       const repsInput = screen.getByDisplayValue("10");
       fireEvent.change(repsInput, { target: { value: "12" } });

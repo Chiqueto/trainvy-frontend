@@ -26,6 +26,7 @@ import {
 } from "@/app/_lib/muscle-labels";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 
 import {
   createExerciseAction,
@@ -55,6 +56,7 @@ export function ExerciseSelectorModal({
 
   // Estados do formulário de criação / edição de músculos
   const [customName, setCustomName] = useState("");
+  const [isUnilateral, setIsUnilateral] = useState(false);
   const [primaryMuscle, setPrimaryMuscle] = useState<MuscleGroup | "">("");
   const [secondaryMuscles, setSecondaryMuscles] = useState<MuscleGroup[]>([]);
   const [editingExercise, setEditingExercise] = useState<ListExercises200Item | null>(null);
@@ -92,6 +94,7 @@ export function ExerciseSelectorModal({
 
   const resetForm = () => {
     setCustomName("");
+    setIsUnilateral(false);
     setPrimaryMuscle("");
     setSecondaryMuscles([]);
     setEditingExercise(null);
@@ -168,6 +171,7 @@ export function ExerciseSelectorModal({
     startSubmittingTransition(async () => {
       const createRes = await createExerciseAction({
         name: trimmed,
+        isUnilateral,
         primaryMuscleGroups: [
           primaryMuscle as CreateExerciseBodyPrimaryMuscleGroupsItem,
         ],
@@ -234,11 +238,11 @@ export function ExerciseSelectorModal({
       role="dialog"
       aria-modal="true"
       aria-labelledby="exercise-selector-title"
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-background/80 backdrop-blur-sm animate-in fade-in"
+      className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-background/80 backdrop-blur-sm animate-in fade-in"
       onClick={handleClose}
     >
       <div
-        className="w-full max-w-md rounded-t-3xl sm:rounded-3xl border border-border bg-card p-5 shadow-2xl flex flex-col gap-4 max-h-[90vh] animate-in slide-in-from-bottom-4 sm:zoom-in-95"
+        className="w-full max-w-md rounded-t-3xl sm:rounded-3xl border border-border bg-card p-5 shadow-2xl flex flex-col gap-4 max-h-[90vh] pb-[max(1.25rem,calc(0.75rem+env(safe-area-inset-bottom,0px)))] sm:pb-5 animate-in slide-in-from-bottom-4 sm:zoom-in-95"
         onClick={(e) => e.stopPropagation()}
       >
         {/* ===================== VIEW: LISTA ===================== */}
@@ -413,6 +417,12 @@ export function ExerciseSelectorModal({
                             </span>
                           )}
 
+                          {exercise.isUnilateral && (
+                            <span className="rounded-full bg-primary/10 text-primary border border-primary/20 px-1.5 py-0.5 text-[9px] font-semibold">
+                              Unilateral
+                            </span>
+                          )}
+
                           {exercise.hasMedia && (
                             <span
                               title="Demonstração visual disponível"
@@ -458,7 +468,7 @@ export function ExerciseSelectorModal({
 
         {/* ===================== VIEW: CRIAR PERSONALIZADO ===================== */}
         {view === "CREATE_CUSTOM" && (
-          <form onSubmit={handleCreateSubmit} className="flex flex-col gap-4">
+          <form onSubmit={handleCreateSubmit} className="flex flex-col gap-4 overflow-y-auto max-h-[calc(85vh-5rem)] pr-1">
             {/* Header */}
             <div className="flex items-center justify-between border-b border-border/60 pb-3">
               <div className="flex items-center gap-2">
@@ -583,6 +593,22 @@ export function ExerciseSelectorModal({
                   );
                 })}
               </div>
+            </div>
+
+            {/* Campo Exercício Unilateral */}
+            <div className="flex items-center justify-between p-3 rounded-xl border border-border/60 bg-muted/20">
+              <div className="flex flex-col gap-0.5">
+                <span className="font-heading text-xs font-semibold text-foreground">
+                  Exercício unilateral
+                </span>
+                <span className="text-[10px] text-muted-foreground">
+                  Executado um lado por vez (volume ×2)
+                </span>
+              </div>
+              <Switch
+                checked={isUnilateral}
+                onCheckedChange={setIsUnilateral}
+              />
             </div>
 
             {/* Botões de Ação */}

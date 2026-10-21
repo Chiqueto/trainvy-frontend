@@ -668,7 +668,7 @@ export type StartWorkoutSession201ExercisesItem = {
   alternative2ExerciseId?: string | null;
   /** @nullable */
   alternative2ExerciseNameSnapshot?: string | null;
-  wasSubstituted: boolean;
+  wasSubstituted?: boolean;
   /** @nullable */
   substitutedAt?: string | null;
   /** @nullable */
@@ -5030,7 +5030,7 @@ export type GetCoachAthleteProgressSessionDetail200ExercisesItem = {
   alternative2ExerciseId?: string | null;
   /** @nullable */
   alternative2ExerciseNameSnapshot?: string | null;
-  wasSubstituted: boolean;
+  wasSubstituted?: boolean;
   /** @nullable */
   substitutedAt?: string | null;
   planned: GetCoachAthleteProgressSessionDetail200ExercisesItemPlanned;
@@ -5140,6 +5140,7 @@ export type ListCoachAthleteProgressExercises200Item = {
   name: string;
   /** @nullable */
   ownerUserId: string | null;
+  isUnilateral?: boolean;
   hasMedia: boolean;
   muscles: ListCoachAthleteProgressExercises200ItemMusclesItem[];
 };
@@ -7224,6 +7225,7 @@ export type ListExercises200Item = {
   name: string;
   /** @nullable */
   ownerUserId: string | null;
+  isUnilateral?: boolean;
   hasMedia: boolean;
   muscles: ListExercises200ItemMusclesItem[];
 };
@@ -7279,6 +7281,7 @@ export const CreateExerciseBodySecondaryMuscleGroupsItem = {
 export type CreateExerciseBody = {
   /** @minLength 1 */
   name: string;
+  isUnilateral?: boolean;
   primaryMuscleGroups?: CreateExerciseBodyPrimaryMuscleGroupsItem[];
   secondaryMuscleGroups?: CreateExerciseBodySecondaryMuscleGroupsItem[];
 };
@@ -7323,6 +7326,7 @@ export type CreateExercise201 = {
   name: string;
   /** @nullable */
   ownerUserId: string | null;
+  isUnilateral?: boolean;
   hasMedia: boolean;
   muscles: CreateExercise201MusclesItem[];
 };
@@ -7431,6 +7435,7 @@ export type UpdateExerciseMuscles200 = {
   name: string;
   /** @nullable */
   ownerUserId: string | null;
+  isUnilateral?: boolean;
   hasMedia: boolean;
   muscles: UpdateExerciseMuscles200MusclesItem[];
 };
@@ -7604,7 +7609,7 @@ export type GetActiveWorkoutSession200SessionExercisesItem = {
   alternative2ExerciseId?: string | null;
   /** @nullable */
   alternative2ExerciseNameSnapshot?: string | null;
-  wasSubstituted: boolean;
+  wasSubstituted?: boolean;
   /** @nullable */
   substitutedAt?: string | null;
   /**
@@ -7633,6 +7638,7 @@ export type GetActiveWorkoutSession200SessionExercisesItem = {
   plannedRestTimeInSeconds: number | null;
   /** @nullable */
   notes: string | null;
+  isUnilateral?: boolean;
   sets: GetActiveWorkoutSession200SessionExercisesItemSetsItem[];
 };
 
@@ -7766,7 +7772,7 @@ export type GetWorkoutSession200SessionExercisesItem = {
   alternative2ExerciseId?: string | null;
   /** @nullable */
   alternative2ExerciseNameSnapshot?: string | null;
-  wasSubstituted: boolean;
+  wasSubstituted?: boolean;
   /** @nullable */
   substitutedAt?: string | null;
   /**
@@ -7795,6 +7801,7 @@ export type GetWorkoutSession200SessionExercisesItem = {
   plannedRestTimeInSeconds: number | null;
   /** @nullable */
   notes: string | null;
+  isUnilateral?: boolean;
   sets: GetWorkoutSession200SessionExercisesItemSetsItem[];
 };
 
@@ -7867,6 +7874,13 @@ export type CancelWorkoutSession500 = {
   error: string;
   code: string;
 };
+
+/**
+ * @nullable
+ */
+export type CompleteWorkoutSessionBody = {
+  forceComplete?: boolean;
+} | null;
 
 export type CompleteWorkoutSession200 = {
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
@@ -8292,7 +8306,7 @@ export type AddExerciseToWorkoutSession201 = {
   alternative2ExerciseId?: string | null;
   /** @nullable */
   alternative2ExerciseNameSnapshot?: string | null;
-  wasSubstituted: boolean;
+  wasSubstituted?: boolean;
   /** @nullable */
   substitutedAt?: string | null;
   /**
@@ -8321,6 +8335,7 @@ export type AddExerciseToWorkoutSession201 = {
   plannedRestTimeInSeconds: number | null;
   /** @nullable */
   notes: string | null;
+  isUnilateral?: boolean;
   sets: AddExerciseToWorkoutSession201SetsItem[];
 };
 
@@ -8466,7 +8481,7 @@ export type SubstituteSessionExercise200 = {
   alternative2ExerciseId?: string | null;
   /** @nullable */
   alternative2ExerciseNameSnapshot?: string | null;
-  wasSubstituted: boolean;
+  wasSubstituted?: boolean;
   /** @nullable */
   substitutedAt?: string | null;
   /**
@@ -8495,6 +8510,7 @@ export type SubstituteSessionExercise200 = {
   plannedRestTimeInSeconds: number | null;
   /** @nullable */
   notes: string | null;
+  isUnilateral?: boolean;
   sets: SubstituteSessionExercise200SetsItem[];
 };
 
@@ -8921,7 +8937,7 @@ export type GetWorkoutHistorySession200ExercisesItem = {
   alternative2ExerciseId?: string | null;
   /** @nullable */
   alternative2ExerciseNameSnapshot?: string | null;
-  wasSubstituted: boolean;
+  wasSubstituted?: boolean;
   /** @nullable */
   substitutedAt?: string | null;
   planned: GetWorkoutHistorySession200ExercisesItemPlanned;
@@ -15101,6 +15117,7 @@ export const getCompleteWorkoutSessionUrl = (sessionId: string) => {
 
 export const completeWorkoutSession = async (
   sessionId: string,
+  completeWorkoutSessionBody: CompleteWorkoutSessionBody,
   options?: RequestInit,
 ): Promise<completeWorkoutSessionResponse> => {
   return customFetch<completeWorkoutSessionResponse>(
@@ -15108,6 +15125,8 @@ export const completeWorkoutSession = async (
     {
       ...options,
       method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(completeWorkoutSessionBody),
     },
   );
 };
