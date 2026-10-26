@@ -357,7 +357,7 @@ export function SubstituteExerciseModal({
                         <span className="font-heading text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">
                           {item.name}
                         </span>
-                        {getExerciseAnimation(item.id) !== null && (
+                        {getExerciseAnimation(item.id, item.name) !== null && (
                           <span
                             title="Demonstração 3D disponível"
                             className="inline-flex items-center gap-1 rounded-full bg-orange-500/15 text-orange-600 dark:text-orange-400 border border-orange-500/30 px-1.5 py-0.2 text-[9px] font-bold"

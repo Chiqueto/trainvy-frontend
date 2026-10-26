@@ -191,7 +191,7 @@ export function ExerciseExecutionDialog({
 
   if (!isOpen) return null;
 
-  const animation = getExerciseAnimation(exerciseId);
+  const animation = getExerciseAnimation(exerciseId, exerciseName);
   const instructions =
     data?.instructions ??
     (animation ? FALLBACK_3D_INSTRUCTIONS[animation] : undefined);

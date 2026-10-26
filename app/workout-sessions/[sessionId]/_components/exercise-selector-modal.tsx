@@ -77,7 +77,7 @@ export function ExerciseSelectorModal({
   const exercises = useMemo(() => {
     const list = search(query, selectedMuscleFilter);
     if (only3D) {
-      return list.filter((ex) => getExerciseAnimation(ex.id) !== null);
+      return list.filter((ex) => getExerciseAnimation(ex.id, ex.name) !== null);
     }
     return list;
   }, [search, query, selectedMuscleFilter, only3D]);
@@ -506,7 +506,7 @@ export function ExerciseSelectorModal({
                             </span>
                           )}
 
-                          {getExerciseAnimation(exercise.id) !== null ? (
+                          {getExerciseAnimation(exercise.id, exercise.name) !== null ? (
                             <span
                               title="Demonstração 3D interativa disponível"
                               className="inline-flex items-center gap-1 rounded-full bg-orange-500/15 text-orange-600 dark:text-orange-400 border border-orange-500/30 px-1.5 py-0.5 text-[9px] font-bold"
@@ -530,21 +530,21 @@ export function ExerciseSelectorModal({
                         {/* Botão de Ver Execução / 3D direto do catálogo */}
                         <button
                           type="button"
-                          title={getExerciseAnimation(exercise.id) !== null ? "Ver demonstração 3D" : "Ver demonstração"}
-                          aria-label={getExerciseAnimation(exercise.id) !== null ? "Ver demonstração 3D" : "Ver demonstração"}
+                          title={getExerciseAnimation(exercise.id, exercise.name) !== null ? "Ver demonstração 3D" : "Ver demonstração"}
+                          aria-label={getExerciseAnimation(exercise.id, exercise.name) !== null ? "Ver demonstração 3D" : "Ver demonstração"}
                           onClick={(e) => {
                             e.stopPropagation();
                             setPreviewExercise({ id: exercise.id, name: exercise.name });
                           }}
                           className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-heading font-medium text-muted-foreground hover:text-foreground hover:bg-muted border border-border/50 transition-colors cursor-pointer"
                         >
-                          {getExerciseAnimation(exercise.id) !== null ? (
+                          {getExerciseAnimation(exercise.id, exercise.name) !== null ? (
                             <Box className="size-3 text-orange-500" />
                           ) : (
                             <Eye className="size-3" />
                           )}
                           <span className="hidden sm:inline">
-                            {getExerciseAnimation(exercise.id) !== null ? "Ver 3D" : "Ver guia"}
+                            {getExerciseAnimation(exercise.id, exercise.name) !== null ? "Ver 3D" : "Ver guia"}
                           </span>
                         </button>
 

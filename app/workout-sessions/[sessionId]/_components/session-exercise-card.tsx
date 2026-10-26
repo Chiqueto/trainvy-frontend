@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState, useTransition } from "react";
-import { ArrowRightLeft, ChevronDown, Dumbbell, Info, Loader2, Plus, Sparkles, Trash2, Zap } from "lucide-react";
+import { ArrowRightLeft, Box, ChevronDown, Dumbbell, Info, Loader2, Plus, Sparkles, Trash2, Zap } from "lucide-react";
 
+import { getExerciseAnimation } from "@/app/_components/exercise-3d/exercises";
 import { ExerciseExecutionDialog } from "@/app/_components/exercise-media";
 import type {
   GetWorkoutSession200SessionExercisesItem,
@@ -208,16 +209,29 @@ export function SessionExerciseCard({
               </span>
             )}
 
-            <button
-              type="button"
-              onClick={() => setIsMediaOpen(true)}
-              title="Ver execução do exercício"
-              aria-label={`Ver execução de ${exercise.exerciseNameSnapshot}`}
-              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-heading font-medium text-primary bg-primary/10 hover:bg-primary/20 border border-primary/20 transition-colors cursor-pointer"
-            >
-              <Info className="size-3 text-primary" />
-              <span>Ver execução</span>
-            </button>
+            {(() => {
+              const has3D =
+                getExerciseAnimation(
+                  exercise.exerciseId,
+                  exercise.exerciseNameSnapshot,
+                ) !== null;
+              return (
+                <button
+                  type="button"
+                  onClick={() => setIsMediaOpen(true)}
+                  title={has3D ? "Ver execução 3D" : "Ver execução do exercício"}
+                  aria-label={`Ver execução de ${exercise.exerciseNameSnapshot}`}
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-heading font-medium text-primary bg-primary/10 hover:bg-primary/20 border border-primary/20 transition-colors cursor-pointer"
+                >
+                  {has3D ? (
+                    <Box className="size-3 text-orange-500" />
+                  ) : (
+                    <Info className="size-3 text-primary" />
+                  )}
+                  <span>{has3D ? "Ver 3D" : "Ver execução"}</span>
+                </button>
+              );
+            })()}
 
             {/* Botão de Substituir (Apenas em treino planejado) */}
             {!isReadOnly && !isFreeWorkout && onSubstituteExercise && (

@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { CircleHelp, Info, Zap } from "lucide-react";
+import { Box, CircleHelp, Info, Zap } from "lucide-react";
 import { useQueryStates, parseAsBoolean, parseAsString } from "nuqs";
 
 import { ExerciseExecutionDialog } from "@/app/_components/exercise-media";
+import { getExerciseAnimation } from "@/app/_components/exercise-3d/exercises";
 import type { GetWorkoutDay200ExercisesItem } from "@/app/_lib/api/fetch-generated";
 import { Button } from "@/components/ui/button";
 
@@ -27,6 +28,7 @@ export function ExerciseCard({ exercise }: ExerciseCardProps) {
   };
 
   const warmup = exercise.warmupSets ?? 0;
+  const has3D = getExerciseAnimation(exercise.exerciseId, exercise.name) !== null;
 
   return (
     <div className="flex flex-col gap-3 rounded-xl border border-border p-5">
@@ -38,12 +40,16 @@ export function ExerciseCard({ exercise }: ExerciseCardProps) {
           <button
             type="button"
             onClick={() => setIsMediaOpen(true)}
-            title="Ver execução do exercício"
-            aria-label={`Ver execução de ${exercise.name}`}
+            title={has3D ? "Ver execução 3D" : "Ver execução do exercício"}
+            aria-label={has3D ? `Ver execução 3D de ${exercise.name}` : `Ver execução de ${exercise.name}`}
             className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-heading font-medium text-primary bg-primary/10 hover:bg-primary/20 border border-primary/20 transition-colors cursor-pointer"
           >
-            <Info className="size-3 text-primary" />
-            <span>Ver execução</span>
+            {has3D ? (
+              <Box className="size-3 text-orange-500" />
+            ) : (
+              <Info className="size-3 text-primary" />
+            )}
+            <span>{has3D ? "Ver 3D" : "Ver execução"}</span>
           </button>
         </div>
         <Button variant="ghost" size="icon" onClick={handleHelp} title="Perguntar para IA">

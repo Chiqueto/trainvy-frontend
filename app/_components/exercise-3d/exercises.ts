@@ -19,10 +19,21 @@ export const EXERCISE_ANIMATIONS = {
   },
 } satisfies Record<ExerciseAnimation, ExerciseDefinition>;
 
-// Deliberately match canonical IDs only: an incline press or custom exercise
-// with a similar name must never receive the wrong demonstration.
+// Conhecidos IDs legados de exercícios antes do catálogo canônico global
+const LEGACY_SQUAT_IDS = new Set([
+  "f5ab1b54-2261-4817-80b2-304f4824135b",
+  "caa95df0-cb8e-4bfd-ba76-e8b3008b27dc",
+]);
+
+const LEGACY_BENCH_IDS = new Set([
+  "f5eff850-07da-4ae9-b7d1-df8ec8137a5e",
+]);
+
+// Retorna animação correspondente por ID canônico ou nome normalizado do exercício.
+// Preserva a regra estrita de não associar variantes não suportadas (ex: supino inclinado).
 export function getExerciseAnimation(
   id?: string | null,
+  name?: string | null,
 ): ExerciseAnimation | null {
   if (id === EXERCISE_ANIMATIONS.squat.id) return "squat";
   if (
@@ -30,5 +41,34 @@ export function getExerciseAnimation(
     id === "00000000-0000-4000-8000-000000000102"
   )
     return "bench-press";
+
+  if (id && LEGACY_SQUAT_IDS.has(id)) return "squat";
+  if (id && LEGACY_BENCH_IDS.has(id)) return "bench-press";
+
+  if (name) {
+    const normalized = name
+      .trim()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+
+    if (
+      normalized === "agachamento livre" ||
+      normalized === "agachamento" ||
+      normalized === "agachamento com barra"
+    ) {
+      return "squat";
+    }
+
+    if (
+      normalized === "supino reto" ||
+      normalized === "supino reto com barra" ||
+      normalized === "supino reto barra" ||
+      normalized === "supino com barra"
+    ) {
+      return "bench-press";
+    }
+  }
+
   return null;
 }
