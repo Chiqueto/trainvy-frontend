@@ -5,6 +5,7 @@ import { authClient } from "@/app/_lib/auth-client";
 import { headers } from "next/headers";
 import {
   getActiveWorkoutSession,
+  getCommercialContext,
   getHomeData,
   GetHomeData200TodayWorkoutDay,
   getUserTrainData,
@@ -49,7 +50,13 @@ export default async function Home() {
 
   const needsOnboarding =
     (trainData.status === 200 && !trainData.data) || trainData.status === 404;
-  if (needsOnboarding) redirect("/onboarding");
+  if (needsOnboarding) {
+    const commercialRes = await getCommercialContext({ cache: "no-store" }).catch(() => null);
+    if (commercialRes?.status === 200 && commercialRes.data.accountType === "COACH") {
+      redirect("/personal");
+    }
+    redirect("/onboarding");
+  }
 
   const userTrainData = trainData.status === 200 ? trainData.data : null;
 

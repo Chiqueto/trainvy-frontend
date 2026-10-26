@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { requireAccountSetup } from "@/app/_lib/require-account-setup";
 import { headers } from "next/headers";
 import { authClient } from "@/app/_lib/auth-client";
-import { getUserTrainData } from "@/app/_lib/api/fetch-generated";
+import { getCommercialContext, getUserTrainData } from "@/app/_lib/api/fetch-generated";
 import { readReturnToCookie } from "@/app/_lib/auth-return-to";
 import { Chat } from "@/app/_components/chat";
 
@@ -17,6 +17,12 @@ export default async function OnboardingPage() {
 
   if (!session.data?.user) redirect("/auth");
   await requireAccountSetup();
+
+  // Personal Trainers (COACH) não fazem onboarding de aluno iniciante
+  const commercialRes = await getCommercialContext({ cache: "no-store" }).catch(() => null);
+  if (commercialRes?.status === 200 && commercialRes.data.accountType === "COACH") {
+    redirect("/auth/welcome");
+  }
 
   const returnTo = await readReturnToCookie();
 

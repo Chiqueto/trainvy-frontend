@@ -7,6 +7,7 @@ import {
 } from "@/app/_lib/api/fetch-generated";
 import { requireAccountSetup } from "@/app/_lib/require-account-setup";
 import { AthletesList } from "./_components/athletes-list";
+import { CoachFirstStepsCard } from "./_components/coach-first-steps-card";
 import { CoachPendingSubscriptionCard } from "./_components/coach-pending-subscription-card";
 import { InvitationsList } from "./_components/invitations-list";
 import { InviteStudentModal } from "./_components/invite-student-modal";
@@ -64,6 +65,10 @@ export default async function PersonalPage() {
     <div className="flex min-h-svh flex-col bg-background pb-24">
       <main className="mx-auto w-full max-w-lg px-5 py-4 flex flex-col gap-5">
         <PersonalHeader />
+
+        {activeCount === 0 && invitations.length === 0 && (
+          <CoachFirstStepsCard isFull={isFull} />
+        )}
 
         <PersonalQuotaCard activeCount={activeCount} limit={limit} />
 

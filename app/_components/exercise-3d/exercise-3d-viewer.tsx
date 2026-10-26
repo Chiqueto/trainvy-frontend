@@ -12,13 +12,9 @@ import {
 import {
   Box,
   Compass,
-  Gauge,
   Info,
   Layers,
   Maximize2,
-  Pause,
-  Play,
-  RotateCcw,
   Sparkles,
 } from "lucide-react";
 import { EXERCISE_ANIMATIONS, type ExerciseAnimation } from "./exercises";
@@ -99,9 +95,7 @@ function Viewer({
   inDialog?: boolean;
 }) {
   const playback = useRef({ phase: 0, playing: false, speed: 1 });
-  const slider = useRef<HTMLInputElement>(null);
   const [playing, setPlaying] = useState(false);
-  const [speed, setSpeed] = useState(1);
   const [view, setView] = useState<"perspective" | "front" | "side">(
     "perspective",
   );
@@ -109,7 +103,7 @@ function Viewer({
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
   // A revision invalidates a paused Canvas after scrubbing without remounting it.
-  const [revision, setRevision] = useState(0);
+  const [revision] = useState(0);
 
   const onError = useCallback(() => {
     setFailed(true);
@@ -137,9 +131,6 @@ function Viewer({
       state.phase =
         (state.phase + (Math.min(delta, 0.05) * state.speed) / 4) % 1;
     }
-    if (slider.current) {
-      slider.current.value = String(Math.round(state.phase * 100));
-    }
     setCurrentPhase(state.phase);
     return state.phase;
   }, []);
@@ -163,13 +154,6 @@ function Viewer({
     };
   }, [play]);
 
-  const reset = () => {
-    playback.current.phase = 0;
-    setCurrentPhase(0);
-    if (slider.current) slider.current.value = "0";
-    setRevision((n) => n + 1);
-  };
-
   const isSquat = exercise === "squat";
   const phaseInfo = getPhaseLabel(currentPhase);
   const exerciseName = EXERCISE_ANIMATIONS[exercise].name;
@@ -180,13 +164,18 @@ function Viewer({
   return (
     <section
       aria-label={`Demonstração 3D: ${exerciseName}`}
-      className="relative flex flex-col overflow-hidden rounded-2xl border border-border/80 bg-[#070b12] text-white shadow-lg transition-all"
+      className="relative flex flex-col rounded-2xl sm:rounded-3xl border border-border/80 bg-[#070b12] text-white shadow-lg overflow-hidden isolate"
+      style={{
+        borderRadius: "1rem",
+        WebkitMaskImage: "-webkit-radial-gradient(white, black)",
+        transform: "translateZ(0)",
+      }}
     >
       {/* 1. Header Overlay de Informações Anatômicas (oculto quando em modal, pois o modal já possui cabeçalho) */}
       {!inDialog && (
         <div className="flex flex-wrap items-center justify-between gap-2.5 border-b border-white/10 bg-slate-950/70 px-4 py-3 backdrop-blur-md">
           <div className="flex items-center gap-2">
-            <span className="flex size-6 items-center justify-center rounded-lg bg-orange-500/20 text-orange-400">
+            <span className="flex size-6 items-center justify-center rounded-lg bg-blue-500/20 text-blue-400">
               <Box className="size-3.5" />
             </span>
             <div>
@@ -194,7 +183,7 @@ function Viewer({
                 <span className="font-heading text-xs font-bold text-white tracking-wide">
                   {exerciseName}
                 </span>
-                <span className="inline-flex items-center gap-1 rounded-full bg-orange-500/15 border border-orange-500/30 px-2 py-0.5 text-[9px] font-bold text-orange-400 uppercase tracking-wider">
+                <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/15 border border-blue-500/30 px-2 py-0.5 text-[9px] font-bold text-blue-400 uppercase tracking-wider">
                   <Sparkles className="size-2.5" /> 3D Interativo
                 </span>
               </div>
@@ -203,18 +192,18 @@ function Viewer({
 
           {/* Grupo Muscular em Destaque */}
           <div className="flex items-center gap-1.5 rounded-full bg-white/5 border border-white/10 px-2.5 py-1 text-[11px] text-slate-300">
-            <span className="size-2 rounded-full bg-orange-500 animate-pulse" />
+            <span className="size-2 rounded-full bg-blue-500 animate-pulse" />
             <span className="font-medium text-slate-400">Em destaque:</span>
-            <strong className="font-semibold text-orange-200">
+            <strong className="font-semibold text-blue-200">
               {targetMuscles}
             </strong>
           </div>
         </div>
       )}
 
-      {/* 2. Canvas 3D Interativo com overlays de câmera e HUD */}
+      {/* 2. Canvas 3D Interativo com overlays de câmera e HUD não-colidentes */}
       <div
-        className={`relative w-full ${inDialog ? "h-[200px] sm:h-[240px]" : compact ? "h-[300px] sm:h-[360px]" : "h-[360px] sm:h-[430px]"}`}
+        className={`relative w-full ${inDialog ? "h-[220px] sm:h-[260px]" : compact ? "h-[300px] sm:h-[360px]" : "h-[360px] sm:h-[430px]"}`}
         data-pose-revision={revision}
       >
         <SceneBoundary>
@@ -242,7 +231,7 @@ function Viewer({
                   role="status"
                   className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-3 bg-slate-950/80 backdrop-blur-sm text-slate-200"
                 >
-                  <div className="size-8 rounded-full border-2 border-orange-500 border-t-transparent animate-spin" />
+                  <div className="size-8 rounded-full border-2 border-blue-500 border-t-transparent animate-spin" />
                   <p className="text-xs font-heading font-medium tracking-wide">
                     Renderizando modelo anatômico 3D...
                   </p>
@@ -252,13 +241,13 @@ function Viewer({
           )}
         </SceneBoundary>
 
-        {/* HUD: Indicador Dinâmico da Fase do Movimento */}
+        {/* HUD: Indicador Dinâmico da Fase do Movimento (Canto Superior Esquerdo - sem sobreposição) */}
         {loaded && !failed && (
-          <div className="pointer-events-none absolute left-3 top-3 flex items-center gap-2 rounded-xl bg-slate-950/80 border border-white/10 px-3 py-1.5 shadow-lg backdrop-blur-md">
-            <span className="size-2 rounded-full bg-emerald-400" />
-            <div className="flex flex-col">
+          <div className="pointer-events-none absolute left-3 top-3 flex items-center gap-2 rounded-full bg-slate-950/85 border border-white/10 px-3 py-1.5 shadow-md backdrop-blur-md">
+            <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
+            <div className="flex items-center gap-1.5">
               <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
-                Fase · {phaseInfo.tag}
+                {phaseInfo.tag} ·
               </span>
               <span className="font-heading text-xs font-semibold text-white">
                 {phaseInfo.name}
@@ -267,10 +256,19 @@ function Viewer({
           </div>
         )}
 
-        {/* Seletor Flutuante de Câmera no Canto Superior Direito */}
+        {/* HUD: Grupo Muscular em Destaque (Canto Inferior Esquerdo) */}
+        {loaded && !failed && (
+          <div className="pointer-events-none absolute left-3 bottom-3 flex items-center gap-1.5 rounded-full bg-slate-950/85 border border-white/10 px-2.5 py-1 text-[10px] text-slate-300 shadow-md backdrop-blur-md">
+            <span className="size-1.5 rounded-full bg-blue-500 animate-pulse" />
+            <span className="font-medium text-slate-400">Destaque:</span>
+            <strong className="font-semibold text-blue-200">{targetMuscles}</strong>
+          </div>
+        )}
+
+        {/* Seletor Flutuante de Câmera (Canto Inferior Direito - totalmente separado do topo) */}
         {loaded && !failed && (
           <div
-            className="absolute right-3 top-3 flex items-center gap-1 rounded-xl bg-slate-950/80 border border-white/10 p-1 shadow-lg backdrop-blur-md"
+            className="absolute right-3 bottom-3 flex items-center gap-1 rounded-full bg-slate-950/85 border border-white/10 p-1 shadow-lg backdrop-blur-md z-10"
             aria-label="Ângulo da câmera"
           >
             {(
@@ -286,9 +284,9 @@ function Viewer({
                 aria-pressed={view === val}
                 onClick={() => setView(val)}
                 title={`Mudar para vista ${label}`}
-                className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-[11px] font-heading font-semibold transition-all ${
+                className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-heading font-semibold transition-all cursor-pointer ${
                   view === val
-                    ? "bg-orange-500 text-slate-950 shadow-sm"
+                    ? "bg-blue-600 text-white shadow-sm shadow-blue-500/30 font-bold"
                     : "text-slate-300 hover:bg-white/10 hover:text-white"
                 }`}
               >
@@ -299,130 +297,38 @@ function Viewer({
           </div>
         )}
 
-        {/* HUD: Grupo Muscular em Destaque (quando inDialog) */}
-        {inDialog && loaded && !failed && (
-          <div className="pointer-events-none absolute left-3 bottom-2 flex items-center gap-1.5 rounded-full bg-slate-950/80 border border-white/10 px-2.5 py-1 text-[10px] text-slate-300 shadow-md backdrop-blur-md">
-            <span className="size-1.5 rounded-full bg-orange-500 animate-pulse" />
-            <span className="font-medium text-slate-400">Destaque:</span>
-            <strong className="font-semibold text-orange-200">{targetMuscles}</strong>
-          </div>
-        )}
-
-        {/* Dica de Interação no rodapé da viewport */}
+        {/* Dica de Interação sutil no centro */}
         {!inDialog && (
-          <div className="pointer-events-none absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-slate-950/70 border border-white/10 px-3 py-0.5 text-[10px] text-slate-400 backdrop-blur-sm hidden sm:block">
-            Arraste para girar em 360° · Scroll para zoom
+          <div className="pointer-events-none absolute top-3 right-3 rounded-full bg-slate-950/70 border border-white/10 px-3 py-1 text-[10px] text-slate-400 backdrop-blur-sm hidden sm:block">
+            Arraste 360° · Scroll zoom
           </div>
         )}
       </div>
 
-      {/* 3. Barra de Controles e Scrubbing */}
-      <div className={`space-y-2.5 border-t border-white/10 bg-slate-950/90 ${inDialog ? "p-3 sm:p-3.5" : "p-3.5 sm:p-4"} backdrop-blur-md`}>
-        {/* Slider de scrub da repetição com preenchimento visual */}
-        <div className="space-y-1">
-          <div className="flex items-center justify-between text-[11px] font-heading text-slate-400">
-            <span>Posição da repetição</span>
-            <span className="font-mono text-orange-300">
-              {Math.round(currentPhase * 100)}%
-            </span>
-          </div>
+      {/* 3. Linha Sutil de Progresso da Repetição */}
+      <div className="h-0.5 w-full bg-slate-800/80 overflow-hidden">
+        <div
+          className="h-full bg-blue-500 transition-[width] duration-75"
+          style={{ width: `${Math.round(currentPhase * 100)}%` }}
+        />
+      </div>
 
-          <div className="relative flex items-center">
-            <input
-              ref={slider}
-              type="range"
-              min="0"
-              max="100"
-              defaultValue="0"
-              aria-label="Posição no movimento"
-              className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-slate-800 accent-orange-500 hover:bg-slate-700 transition"
-              onChange={(e) => {
-                play(false);
-                const nextPhase = Number(e.target.value) / 100;
-                playback.current.phase = nextPhase;
-                setCurrentPhase(nextPhase);
-                setRevision((n) => n + 1);
-              }}
-            />
-          </div>
+      {/* 4. Rodapé Informativo Clean com Bordas Arredondadas */}
+      <div className="flex items-center justify-between px-3.5 py-2.5 bg-slate-950 text-[11px] text-slate-400 border-t border-white/5 rounded-b-2xl sm:rounded-b-3xl">
+        <div className="flex items-center gap-1.5 text-slate-400">
+          <Info className="size-3 text-blue-400 shrink-0" />
+          <span className="text-[11px]">
+            Movimento anatômico ilustrativo com descida controlada e pausa.
+          </span>
         </div>
-
-        {/* Ações: Play/Pause, Reset, Velocidade */}
-        <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              disabled={failed}
-              onClick={() => play(!playing)}
-              className="inline-flex min-h-9 items-center gap-2 rounded-xl bg-orange-500 px-4 text-xs font-heading font-bold text-slate-950 shadow-md shadow-orange-500/20 hover:bg-orange-400 active:scale-95 transition disabled:opacity-50 cursor-pointer"
-            >
-              {playing ? (
-                <>
-                  <Pause className="size-3.5 fill-current" />
-                  <span>Pausar</span>
-                </>
-              ) : (
-                <>
-                  <Play className="size-3.5 fill-current" />
-                  <span>Reproduzir</span>
-                </>
-              )}
-            </button>
-
-            <button
-              type="button"
-              onClick={reset}
-              aria-label="Reiniciar animação"
-              title="Reiniciar animação para o início"
-              className="grid size-9 place-items-center rounded-xl bg-white/10 text-slate-300 hover:bg-white/15 hover:text-white transition active:scale-95 cursor-pointer"
-            >
-              <RotateCcw className="size-3.5" />
-            </button>
-          </div>
-
-          {/* Seletor de Velocidade via Pills Modernas */}
-          <div className="flex items-center gap-1 text-xs">
-            <span className="text-[11px] text-slate-400 mr-1 flex items-center gap-1">
-              <Gauge className="size-3" />
-              <span>Velocidade:</span>
-            </span>
-            {[0.5, 1, 1.5].map((val) => (
-              <button
-                key={val}
-                type="button"
-                onClick={() => {
-                  playback.current.speed = val;
-                  setSpeed(val);
-                }}
-                className={`rounded-lg px-2 py-1 text-[11px] font-heading font-semibold transition ${
-                  speed === val
-                    ? "bg-white/20 text-white border border-white/20"
-                    : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
-                }`}
-              >
-                {val === 1 ? "1×" : `${String(val).replace(".", ",")}×`}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* 4. Rodapé Informativo e Atribuição Obrigatória */}
-        <div className="pt-2 border-t border-white/5 flex flex-wrap items-center justify-between gap-1 text-[11px] text-slate-400">
-          <p className="flex items-center gap-1">
-            <Info className="size-3 text-orange-400 shrink-0" />
-            <span>
-              Movimento anatômico ilustrativo com descida controlada e pausa. Não representa medição de EMG.
-            </span>
-          </p>
-          <a
-            href="/models/exercise-3d/ATTRIBUTION.md"
-            target="_blank"
-            rel="noreferrer"
-            className="text-orange-400 hover:underline hover:text-orange-300 transition"
-          >
-            Créditos do modelo CC0
-          </a>
-        </div>
+        <a
+          href="/models/exercise-3d/ATTRIBUTION.md"
+          target="_blank"
+          rel="noreferrer"
+          className="text-[10px] font-mono text-blue-400 hover:text-blue-300 hover:underline shrink-0 ml-2"
+        >
+          Créditos CC0
+        </a>
       </div>
     </section>
   );

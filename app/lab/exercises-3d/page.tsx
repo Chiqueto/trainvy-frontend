@@ -115,7 +115,7 @@ export default function Exercise3DLab() {
           <span>Voltar ao Trainvy</span>
         </Link>
 
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/25 px-3 py-1 text-xs font-heading font-bold">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/25 px-3 py-1 text-xs font-heading font-bold">
           <Sparkles className="size-3.5" />
           <span>Laboratório 3D Biomecânico</span>
         </span>
@@ -157,7 +157,7 @@ export default function Exercise3DLab() {
               onClick={() => setExercise(key)}
               className={`relative flex flex-col justify-between rounded-2xl border p-5 text-left transition-all cursor-pointer ${
                 isSelected
-                  ? "border-orange-500 bg-orange-500/10 shadow-lg shadow-orange-500/10 ring-1 ring-orange-500/30"
+                  ? "border-blue-600 bg-blue-500/10 shadow-lg shadow-blue-500/10 ring-1 ring-blue-500/30"
                   : "border-border bg-card hover:bg-muted/40 hover:border-border/80"
               }`}
             >
@@ -175,7 +175,7 @@ export default function Exercise3DLab() {
                 <span
                   className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-heading font-bold ${
                     isSelected
-                      ? "bg-orange-500 text-slate-950"
+                      ? "bg-blue-600 text-white shadow-xs"
                       : "bg-muted text-muted-foreground"
                   }`}
                 >
@@ -199,7 +199,7 @@ export default function Exercise3DLab() {
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="font-heading text-sm font-bold text-foreground flex items-center gap-2">
-            <Box className="size-4 text-orange-500" />
+            <Box className="size-4 text-blue-600 dark:text-blue-400" />
             <span>Simulação em Tempo Real</span>
           </h2>
 
@@ -223,12 +223,12 @@ export default function Exercise3DLab() {
         {/* Grupos Musculares */}
         <div className="rounded-2xl border border-border/80 bg-card p-5 space-y-3">
           <div className="flex items-center gap-2 text-xs font-heading font-bold text-foreground">
-            <Layers className="size-4 text-orange-500" />
+            <Layers className="size-4 text-blue-600 dark:text-blue-400" />
             <span>Músculos em Foco Anatômico</span>
           </div>
           <div className="space-y-2 text-xs">
-            <div className="rounded-xl bg-orange-500/10 border border-orange-500/20 p-3">
-              <span className="block font-mono text-[10px] uppercase text-orange-600 dark:text-orange-400 font-bold">
+            <div className="rounded-xl bg-blue-500/10 border border-blue-500/20 p-3">
+              <span className="block font-mono text-[10px] uppercase text-blue-600 dark:text-blue-400 font-bold">
                 Músculos Principais (Destaque em Cor)
               </span>
               <p className="mt-0.5 font-heading font-semibold text-foreground">

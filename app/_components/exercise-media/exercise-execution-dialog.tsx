@@ -33,7 +33,7 @@ const Exercise3DViewer = dynamic(
     loading: () => (
       <div className="flex h-72 items-center justify-center rounded-2xl bg-slate-950/80 text-muted-foreground border border-white/10">
         <div className="flex items-center gap-2 text-xs font-heading font-medium text-slate-300">
-          <Loader2 className="size-4 animate-spin text-orange-500" />
+          <Loader2 className="size-4 animate-spin text-blue-500" />
           <span>Carregando estúdio 3D...</span>
         </div>
       </div>
@@ -198,13 +198,13 @@ export function ExerciseExecutionDialog({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-background/80 backdrop-blur-md animate-in fade-in-0 duration-200"
+      className="fixed inset-0 z-[70] flex items-center justify-center p-3 pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))] sm:p-4 bg-background/80 backdrop-blur-md animate-in fade-in-0 duration-200"
       onClick={onClose}
     >
       <div
         ref={dialogRef}
         className={cn(
-          "w-full max-h-[92vh] flex flex-col bg-card border border-border/80 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 transition-all",
+          "w-full max-h-[88vh] sm:max-h-[92vh] flex flex-col bg-card border border-border/80 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 transition-all",
           animation ? "max-w-2xl sm:max-w-3xl" : "max-w-lg",
         )}
         onClick={(e) => e.stopPropagation()}
@@ -226,7 +226,7 @@ export function ExerciseExecutionDialog({
                 {exerciseName}
               </h2>
               {animation && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-orange-500/15 text-orange-600 dark:text-orange-400 border border-orange-500/30 px-2 py-0.5 text-[10px] font-bold">
+                <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/15 text-blue-600 dark:text-blue-400 border border-blue-500/30 px-2 py-0.5 text-[10px] font-bold">
                   <Box className="size-3" /> 3D
                 </span>
               )}
@@ -304,9 +304,9 @@ export function ExerciseExecutionDialog({
                         : "text-muted-foreground hover:text-foreground",
                     )}
                   >
-                    <Box className="size-3.5 text-orange-500" />
+                    <Box className="size-3.5 text-blue-600 dark:text-blue-400" />
                     <span>Simulação 3D</span>
-                    <span className="rounded-full bg-orange-500/15 text-orange-600 dark:text-orange-400 text-[9px] px-1.5 py-0.2 font-mono">
+                    <span className="rounded-full bg-blue-500/15 text-blue-600 dark:text-blue-400 text-[9px] px-1.5 py-0.2 font-mono">
                       Interativo
                     </span>
                   </button>
@@ -357,7 +357,7 @@ export function ExerciseExecutionDialog({
                     onClick={() => setMediaTab("3d")}
                     className="mt-1 text-xs"
                   >
-                    <Box className="size-3.5 text-orange-500 mr-1.5" />
+                    <Box className="size-3.5 text-blue-600 dark:text-blue-400 mr-1.5" />
                     Ver Simulação 3D
                   </Button>
                 </div>
@@ -383,7 +383,7 @@ export function ExerciseExecutionDialog({
                   {instructions.setup && (
                     <div className="p-3.5 rounded-xl border border-border/60 bg-muted/25 space-y-1">
                       <div className="flex items-center gap-1.5 text-xs font-heading font-semibold text-foreground">
-                        <CheckCircle2 className="size-3.5 text-amber-500" />
+                        <CheckCircle2 className="size-3.5 text-blue-500" />
                         <span>Posicionamento Inicial</span>
                       </div>
                       <p className="text-xs text-muted-foreground leading-relaxed">
