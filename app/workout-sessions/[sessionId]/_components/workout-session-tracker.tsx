@@ -16,9 +16,9 @@ import {
 } from "lucide-react";
 import dayjs from "dayjs";
 
-import type {
-  GetWorkoutSession200,
-  GetWorkoutSession200SessionExercisesItem,
+import {
+  type GetWorkoutSession200,
+  type GetWorkoutSession200SessionExercisesItem,
 } from "@/app/_lib/api/fetch-generated";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -33,18 +33,27 @@ import {
 import { useExerciseCatalog } from "@/app/_lib/hooks/use-exercise-catalog";
 import { ExerciseSelectorModal } from "./exercise-selector-modal";
 import { SessionAiAssistantDrawer } from "./session-ai-assistant-drawer";
+import { SessionCoachFloatingButton } from "./session-coach-floating-button";
 import { SessionExerciseCard } from "./session-exercise-card";
 
 interface WorkoutSessionTrackerProps {
   session: GetWorkoutSession200;
+  coachInfo?: {
+    name?: string | null;
+    image?: string | null;
+  } | null;
 }
 
-export function WorkoutSessionTracker({ session }: WorkoutSessionTrackerProps) {
+export function WorkoutSessionTracker({
+  session,
+  coachInfo: initialCoachInfo,
+}: WorkoutSessionTrackerProps) {
   // Prefetch and sync the exercise catalog in background so search is instant when opening modals
   useExerciseCatalog({ autoSync: true });
 
   const router = useRouter();
   const [sessionData, setSessionData] = useState(() => session);
+  const coachInfo = initialCoachInfo ?? {};
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showPendingSetsModal, setShowPendingSetsModal] = useState(false);
@@ -732,6 +741,15 @@ export function WorkoutSessionTracker({ session }: WorkoutSessionTrackerProps) {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Botão Flutuante (FAB) com a cara do Coach */}
+      {!isReadOnly && !showAiDrawer && (
+        <SessionCoachFloatingButton
+          onClick={() => handleOpenAiDrawer()}
+          coachImage={coachInfo.image}
+          coachName={coachInfo.name}
+        />
       )}
 
       {/* Modal de Seleção de Exercícios */}

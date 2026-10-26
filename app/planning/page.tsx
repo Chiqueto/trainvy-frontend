@@ -3,7 +3,9 @@ import { headers } from "next/headers";
 import Link from "next/link";
 import {
   AlertCircle,
+  ArrowRight,
   RotateCcw,
+  Sparkles,
 } from "lucide-react";
 
 import { authClient } from "@/app/_lib/auth-client";
@@ -119,6 +121,32 @@ export default async function PlanningPage() {
 
       <main className="flex flex-col gap-6 p-5">
         <ReceivedPrescriptionsCard prescriptions={athletePrescriptions} />
+
+        {/* Banner Criar com IA ou Ficha PDF */}
+        <Link
+          href="/planning/plans/new?ai=true"
+          className="group relative flex items-center justify-between gap-4 p-4 rounded-3xl border border-primary/30 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent hover:border-primary/50 transition-all shadow-xs"
+        >
+          <div className="flex items-center gap-3.5">
+            <div className="flex size-11 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-md shadow-primary/20 shrink-0 group-hover:scale-105 transition-transform">
+              <Sparkles className="size-5.5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-heading text-xs font-bold text-foreground">
+                  Montar com o Coach IA ou Importar Ficha
+                </span>
+                <span className="rounded-full bg-primary/20 px-2 py-0.5 text-[9px] font-bold text-primary uppercase">
+                  Novo
+                </span>
+              </div>
+              <p className="text-[11px] text-muted-foreground mt-0.5">
+                Gere sua divisão completa por voz ou anexando o PDF/foto da sua ficha antiga
+              </p>
+            </div>
+          </div>
+          <ArrowRight className="size-4 text-primary shrink-0 group-hover:translate-x-1 transition-transform" />
+        </Link>
 
         <PlanningHub
           activeContext={activeContext}

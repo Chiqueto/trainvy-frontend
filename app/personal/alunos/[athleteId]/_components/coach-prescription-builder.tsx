@@ -9,6 +9,7 @@ import {
   LoaderCircle,
   Plus,
   Send,
+  Sparkles,
   Trash2,
 } from "lucide-react";
 
@@ -28,6 +29,7 @@ import {
 } from "@/app/planning/_lib/workout-plan-builder";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { CoachAiPrescriptionModal } from "./coach-ai-prescription-modal";
 
 export interface InitialPrescriptionData {
   id?: string;
@@ -93,6 +95,7 @@ export function CoachPrescriptionBuilder({
   });
 
   const [error, setError] = useState<string | null>(null);
+  const [isAiModalOpen, setIsAiModalOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   function updateDay(index: number, patch: Partial<WorkoutPlanDraftDay>) {
@@ -260,6 +263,36 @@ export function CoachPrescriptionBuilder({
         </div>
       )}
 
+      {/* Banner de Prescrição Assistida por IA */}
+      <section className="relative overflow-hidden rounded-3xl border border-primary/20 bg-linear-to-r from-primary/10 via-primary/5 to-transparent p-5 shadow-xs">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex size-7 items-center justify-center rounded-xl bg-primary/20 text-primary">
+                <Sparkles className="size-4" />
+              </span>
+              <h2 className="font-heading text-sm font-bold text-foreground">
+                Prescrição Assistida por IA
+              </h2>
+            </div>
+            <p className="text-xs text-muted-foreground max-w-xl">
+              Monte divisões e selecione exercícios canônicos ditando por voz, enviando uma ficha em PDF/foto ou descrevendo a estratégia para {athleteName}.
+            </p>
+          </div>
+
+          <Button
+            type="button"
+            variant="default"
+            size="sm"
+            onClick={() => setIsAiModalOpen(true)}
+            className="h-10 rounded-xl font-heading text-xs font-bold gap-2 shadow-xs shrink-0"
+          >
+            <Sparkles className="size-3.5" />
+            <span>Prescrever com IA</span>
+          </Button>
+        </div>
+      </section>
+
       {/* Card de Configurações Básicas da Prescrição */}
       <section className="rounded-3xl border border-border/80 bg-card p-5 shadow-xs flex flex-col gap-4">
         <div className="space-y-1">
@@ -318,16 +351,28 @@ export function CoachPrescriptionBuilder({
             </p>
           </div>
 
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={addWorkout}
-            className="h-9 rounded-xl font-heading text-xs font-semibold gap-1.5 border-border/80"
-          >
-            <Plus className="size-3.5 text-primary" />
-            <span>Adicionar Dia</span>
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setIsAiModalOpen(true)}
+              className="h-9 rounded-xl font-heading text-xs font-semibold gap-1.5 border-primary/30 text-primary hover:bg-primary/10"
+            >
+              <Sparkles className="size-3.5" />
+              <span>Gerar com IA</span>
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={addWorkout}
+              className="h-9 rounded-xl font-heading text-xs font-semibold gap-1.5 border-border/80"
+            >
+              <Plus className="size-3.5 text-primary" />
+              <span>Adicionar Dia</span>
+            </Button>
+          </div>
         </div>
 
         <div className="space-y-4">
@@ -669,6 +714,21 @@ export function CoachPrescriptionBuilder({
           <span>Salvar e Enviar ao Aluno</span>
         </Button>
       </div>
+
+      <CoachAiPrescriptionModal
+        athleteId={athleteId}
+        athleteName={athleteName}
+        isOpen={isAiModalOpen}
+        onClose={() => setIsAiModalOpen(false)}
+        onApplyPrescription={(generated) => {
+          setName(generated.name);
+          if (generated.notes) {
+            setNotes(generated.notes);
+          }
+          setDays(generated.workoutDays);
+          setIsAiModalOpen(false);
+        }}
+      />
     </div>
   );
 }

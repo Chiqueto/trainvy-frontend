@@ -17,6 +17,7 @@ import {
   deletePeriodization,
   deleteWorkoutPlan,
   duplicateWorkoutPlan,
+  generateWorkoutPlanDraftWithAi,
   removeWorkoutPlanFromPeriodization,
   reorderPeriodizationPlans,
   updatePeriodization,
@@ -33,6 +34,7 @@ import {
   type CreateWorkoutPlanBody,
   type CreateWorkoutPlanInPeriodization201,
   type CreateWorkoutPlanInPeriodizationBody,
+  type GenerateWorkoutPlanDraftWithAi200,
   type DeletePeriodization200,
   type DeleteWorkoutPlan200,
   type DeactivatePeriodization200,
@@ -521,3 +523,28 @@ export async function declinePrescriptionAction(
     return connectionError(error);
   }
 }
+
+export async function generateWorkoutPlanWithAiAction(body: {
+  prompt: string;
+  fileUrl?: string;
+  mediaType?: string;
+  filename?: string;
+}): Promise<PlanningActionResult<GenerateWorkoutPlanDraftWithAi200>> {
+  try {
+    const res = await generateWorkoutPlanDraftWithAi(body, {
+      cache: "no-store",
+    });
+
+    if (res.status === 200) {
+      return { success: true, data: res.data };
+    }
+
+    const err =
+      (res.data as { error?: string })?.error ??
+      "Erro ao gerar plano de treino com IA.";
+    return { success: false, error: err };
+  } catch (error) {
+    return connectionError(error);
+  }
+}
+

@@ -4,7 +4,10 @@ import { redirect } from "next/navigation";
 import { AlertCircle } from "lucide-react";
 
 import { BottomNav } from "@/app/_components/bottom-nav";
-import { getWorkoutSession } from "@/app/_lib/api/fetch-generated";
+import {
+  getAthleteCoachRelationship,
+  getWorkoutSession,
+} from "@/app/_lib/api/fetch-generated";
 import { authClient } from "@/app/_lib/auth-client";
 import { Button } from "@/components/ui/button";
 
@@ -32,7 +35,10 @@ export default async function WorkoutSessionPage({
   }
 
   const { sessionId } = await params;
-  const sessionResponse = await getWorkoutSession(sessionId);
+  const [sessionResponse, coachRelResponse] = await Promise.all([
+    getWorkoutSession(sessionId),
+    getAthleteCoachRelationship({ cache: "no-store" }).catch(() => null),
+  ]);
 
   if (sessionResponse.status === 401) {
     redirect("/auth");
@@ -102,6 +108,17 @@ export default async function WorkoutSessionPage({
     );
   }
 
+  const coachInfo =
+    coachRelResponse &&
+    coachRelResponse.status === 200 &&
+    coachRelResponse.data.hasCoach &&
+    coachRelResponse.data.relationship
+      ? {
+          name: coachRelResponse.data.relationship.coachName,
+          image: coachRelResponse.data.relationship.coachImage,
+        }
+      : null;
+
   return (
     <div className="flex min-h-svh flex-col bg-background pb-24">
       {/* Top Header */}
@@ -114,7 +131,10 @@ export default async function WorkoutSessionPage({
       </div>
 
       {/* Tracker Interativo */}
-      <WorkoutSessionTracker session={sessionResponse.data} />
+      <WorkoutSessionTracker
+        session={sessionResponse.data}
+        coachInfo={coachInfo}
+      />
 
       <BottomNav />
     </div>

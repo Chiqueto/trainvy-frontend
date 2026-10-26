@@ -275,12 +275,14 @@ describe("Task 6.5B — Forgotten Workout Recovery (Frontend)", () => {
         origin: "FREE",
         startedAt: "2026-10-15T15:00:00.000Z",
         completedAt: "2026-10-15T15:00:00.000Z",
+        workoutPlanId: null,
         workoutPlanNameSnapshot: null,
         workoutDayNameSnapshot: null,
         exercisesCount: 1,
         workingSetsCount: 3,
         warmupSetsCount: 0,
         totalLoadVolumeKg: 1800,
+        totalLoadVolumeGrams: 1800000,
         durationInSeconds: null,
       };
 
@@ -300,15 +302,16 @@ describe("Task 6.5B — Forgotten Workout Recovery (Frontend)", () => {
         origin: "FREE",
         startedAt: "2026-10-15T15:00:00.000Z",
         completedAt: "2026-10-15T15:00:00.000Z",
+        workoutPlanId: null,
         workoutPlanNameSnapshot: null,
         workoutDayNameSnapshot: null,
-        workoutDayId: null,
         durationInSeconds: null,
         summary: {
           exercisesCount: 1,
           workingSetsCount: 3,
           warmupSetsCount: 0,
           totalLoadVolumeKg: 1800,
+          totalLoadVolumeGrams: 1800000,
         },
         exercises: [],
       };

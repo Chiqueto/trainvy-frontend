@@ -16,6 +16,9 @@ import {
   Scale,
   Shield,
   ShieldAlert,
+  Sparkles,
+  Brain,
+  ArrowRight,
 } from "lucide-react";
 import type {
   GetCoachAthleteProgressOverview200,
@@ -42,13 +45,14 @@ import {
 } from "@/app/personal/alunos/[athleteId]/_actions";
 import { CoachProgressSessionModal } from "./coach-progress-session-modal";
 import { CoachProgressExerciseView } from "./coach-progress-exercise-view";
+import { CoachAthleteAiInsightsView } from "./coach-athlete-ai-insights-view";
 
 interface CoachAthleteEvolutionDashboardProps {
   athleteId: string;
   athleteName: string;
 }
 
-type EvolutionSubTab = "overview" | "sessions" | "exercises";
+type EvolutionSubTab = "overview" | "insights" | "sessions" | "exercises";
 
 export function CoachAthleteEvolutionDashboard({
   athleteId,
@@ -296,7 +300,7 @@ export function CoachAthleteEvolutionDashboard({
     <div className="space-y-5">
       {/* Sub-navegação interna de Evolução */}
       <div
-        className="grid grid-cols-3 p-1 rounded-2xl bg-muted/60 border border-border/60"
+        className="grid grid-cols-2 sm:grid-cols-4 gap-1 p-1 rounded-2xl bg-muted/60 border border-border/60"
         aria-label={`Sub-navegação de evolução de ${athleteName}`}
       >
         <button
@@ -310,6 +314,19 @@ export function CoachAthleteEvolutionDashboard({
         >
           <LineChart className="size-3.5" />
           <span>Resumo</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setSubTab("insights")}
+          className={`h-8 rounded-xl font-heading text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
+            subTab === "insights"
+              ? "bg-card text-foreground shadow-xs"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Sparkles className="size-3.5 text-primary" />
+          <span>Diagnóstico IA</span>
         </button>
 
         <button
@@ -438,6 +455,32 @@ export function CoachAthleteEvolutionDashboard({
             </div>
           </div>
 
+          {/* Banner de Acesso Rápido ao Diagnóstico com IA */}
+          <button
+            type="button"
+            onClick={() => setSubTab("insights")}
+            className="w-full text-left rounded-3xl border border-primary/30 bg-gradient-to-r from-primary/10 via-card to-card p-4 shadow-xs hover:border-primary/50 transition-all group flex items-center justify-between gap-3"
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex size-10 items-center justify-center rounded-2xl bg-primary/20 text-primary group-hover:scale-105 transition-transform shrink-0">
+                <Brain className="size-5" />
+              </div>
+              <div>
+                <p className="font-heading text-xs font-bold text-foreground flex items-center gap-1.5">
+                  <span>Diagnóstico Inteligente com IA</span>
+                  <Sparkles className="size-3.5 text-primary" />
+                </p>
+                <p className="text-[11px] text-muted-foreground">
+                  Identifique desequilíbrios musculares, platôs e recomendações para a próxima prescrição
+                </p>
+              </div>
+            </div>
+            <span className="text-xs font-semibold text-primary flex items-center gap-1 shrink-0 group-hover:translate-x-0.5 transition-transform">
+              <span>Ver Análise</span>
+              <ArrowRight className="size-3.5" />
+            </span>
+          </button>
+
           {/* Gráfico 1: Volume Semanal */}
           <div className="rounded-3xl border border-border bg-card p-1 shadow-xs overflow-hidden">
             <WeeklyVolumeChart
@@ -454,7 +497,17 @@ export function CoachAthleteEvolutionDashboard({
         </div>
       )}
 
-      {/* SUB-VIEW 2: SESSÕES CONCLUÍDAS */}
+      {/* SUB-VIEW 2: DIAGNÓSTICO E INSIGHTS COM IA */}
+      {subTab === "insights" && (
+        <CoachAthleteAiInsightsView
+          athleteId={athleteId}
+          athleteName={athleteName}
+          weeksCount={weeksCount}
+          onSelectWeeksCount={setWeeksCount}
+        />
+      )}
+
+      {/* SUB-VIEW 3: SESSÕES CONCLUÍDAS */}
       {subTab === "sessions" && (
         <div className="space-y-4 animate-in fade-in duration-200">
           {/* Filtros de Origem */}

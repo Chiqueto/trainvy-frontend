@@ -17,6 +17,8 @@ import type { GetExerciseMedia200 } from "@/app/_lib/api/fetch-generated";
 import { Button } from "@/components/ui/button";
 
 import { ExerciseMediaPreview } from "./exercise-media-preview";
+import { Exercise3DPreview } from "../exercise-3d/exercise-3d-preview";
+import { getExerciseAnimation } from "../exercise-3d/exercises";
 
 interface ExerciseExecutionDialogProps {
   isOpen: boolean;
@@ -139,6 +141,7 @@ export function ExerciseExecutionDialog({
   if (!isOpen) return null;
 
   const instructions = data?.instructions;
+  const animation = getExerciseAnimation(exerciseId);
 
   return (
     <div
@@ -179,6 +182,7 @@ export function ExerciseExecutionDialog({
 
         {/* Corpo com Scroll */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-5">
+          {animation && <Exercise3DPreview key={dialogKey} exercise={animation} />}
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-16 text-muted-foreground space-y-3">
               <Loader2 className="size-7 animate-spin text-primary" />

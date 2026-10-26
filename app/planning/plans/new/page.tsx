@@ -1,16 +1,26 @@
 import Link from "next/link";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 import { ArrowLeft } from "lucide-react";
 
 import { authClient } from "@/app/_lib/auth-client";
 import { WorkoutPlanBuilder } from "../../_components/workout-plan-builder";
 
-export default async function NewStandalonePlanPage() {
+interface NewStandalonePlanPageProps {
+  searchParams?: Promise<{ ai?: string }>;
+}
+
+export default async function NewStandalonePlanPage({
+  searchParams,
+}: NewStandalonePlanPageProps) {
   const session = await authClient.getSession({
     fetchOptions: { headers: await headers() },
   });
   if (!session.data?.user) redirect("/auth");
+
+  const resolvedParams = searchParams ? await searchParams : undefined;
+  const initialOpenAi = resolvedParams?.ai === "true";
 
   return (
     <div className="min-h-svh bg-background pb-12">
@@ -31,7 +41,9 @@ export default async function NewStandalonePlanPage() {
             plano.
           </p>
         </div>
-        <WorkoutPlanBuilder mode="standalone" />
+        <Suspense fallback={<div className="h-40 flex items-center justify-center text-xs text-muted-foreground">Carregando construtor...</div>}>
+          <WorkoutPlanBuilder mode="standalone" initialOpenAi={initialOpenAi} />
+        </Suspense>
       </main>
     </div>
   );

@@ -33,3 +33,11 @@ Este arquivo é o ponto de entrada obrigatório para qualquer agente que trabalh
 - Metodologia de treino não deve ficar hardcoded no prompt quando puder vir das fontes selecionadas.
 - Treinos gerados por IA devem permanecer editáveis.
 - Não fazer reescrita geral do projeto sem necessidade real.
+
+## Regra obrigatória para animações de exercícios 3D
+
+- Destacar exclusivamente os grupos musculares principais e secundários definidos para aquele exercício. Todo o restante da anatomia deve permanecer em cor neutra.
+- Mapear músculos por exercício explicitamente; nunca reutilizar o mapa de ativação de outro movimento.
+- Legendas descrevem apenas grupos musculares ilustrativos. Nunca apresentar a cor como ativação medida, EMG ou intensidade real de esforço.
+- Aplicar uma descida controlada, pausa breve na amplitude baixa e subida suave, mantendo apoios estáveis e comprimentos anatômicos.
+- Validar que exercícios distintos destacam grupos distintos, preservar a silhueta/anatomia e revisar a pose em todas as etapas antes de publicar.

@@ -2,27 +2,37 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport } from "ai";
+import { DefaultChatTransport, type FileUIPart } from "ai";
 import {
   AlertCircle,
   ArrowUp,
   Bot,
   Check,
   Dumbbell,
+  FileText,
   History,
   Loader2,
   Lock,
+  Mic,
+  Paperclip,
   Sparkles,
+  Square,
+  Trash2,
   X,
 } from "lucide-react";
 import { Streamdown } from "streamdown";
 import "streamdown/styles.css";
+import { toast } from "sonner";
 
 import type {
   ConfirmWorkoutSetProposal200CreatedSetsItem,
   ListWorkoutSetProposals200ProposalsItem,
 } from "@/app/_lib/api/fetch-generated";
 import { Button } from "@/components/ui/button";
+import {
+  formatRecordingTime,
+  useVoiceRecorder,
+} from "@/app/_hooks/use-voice-recorder";
 
 import {
   getAiConsentAction,
@@ -30,6 +40,14 @@ import {
   updateAiConsentAction,
 } from "../_actions";
 import { SetProposalCard } from "./set-proposal-card";
+
+interface AttachedFileItem {
+  file: File;
+  dataUrl: string;
+  mediaType: string;
+  filename: string;
+  size: number;
+}
 
 interface SessionAiAssistantDrawerProps {
   isOpen: boolean;
@@ -56,9 +74,14 @@ export function SessionAiAssistantDrawer({
   const [isUpdatingConsent, setIsUpdatingConsent] = useState(false);
   const [showConsentInfo, setShowConsentInfo] = useState(false);
   const [inputMessage, setInputMessage] = useState("");
+  const [pendingFiles, setPendingFiles] = useState<AttachedFileItem[]>([]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const activeConversationIdRef = useRef<string | null>(null);
+
+  const voiceRecorder = useVoiceRecorder();
 
   // Carrega propostas ativas da sessão
   const loadProposals = useCallback(async () => {
@@ -68,31 +91,61 @@ export function SessionAiAssistantDrawer({
     }
   }, [sessionId]);
 
-  // Carrega consentimento LGPD inicial
-  useEffect(() => {
-    if (isOpen) {
-      getAiConsentAction().then((res) => {
-        if (res.success) {
-          setHasHistoryConsent(res.data.aiTrainingHistoryAccess);
+  // Carrega histórico pré-existente da conversa desta sessão de treino
+  const loadSessionConversation = useCallback(async (setMessagesFn: (msgs: any[]) => void) => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/ai/conversations?workoutSessionId=${sessionId}`,
+        { credentials: "include" },
+      );
+      if (res.ok) {
+        const data = await res.json();
+        const convList = data.conversations || [];
+        if (convList.length > 0) {
+          const convId = convList[0].id;
+          activeConversationIdRef.current = convId;
+          const convRes = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/ai/conversations/${convId}`,
+            { credentials: "include" },
+          );
+          if (convRes.ok) {
+            const convData = await convRes.json();
+            if (Array.isArray(convData.messages) && convData.messages.length > 0) {
+              setMessagesFn(convData.messages);
+            }
+          }
         }
-      });
-      loadProposals();
+      }
+    } catch {
+      // Ignora erro de rede silenciosamente
     }
-  }, [isOpen, loadProposals]);
+  }, [sessionId]);
 
   // Configuração do useChat com transporte contextualizado à sessão
   const {
     messages,
     sendMessage,
+    setMessages,
     status,
   } = useChat({
     transport: new DefaultChatTransport({
       api: `${process.env.NEXT_PUBLIC_API_URL}/ai`,
       credentials: "include",
+      fetch: async (input, init) => {
+        const response = await fetch(input, init);
+        const newConvId = response.headers.get("x-conversation-id");
+        if (newConvId) {
+          activeConversationIdRef.current = newConvId;
+        }
+        return response;
+      },
       body: () => {
         const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         return {
           workoutSessionId: sessionId,
+          ...(activeConversationIdRef.current
+            ? { conversationId: activeConversationIdRef.current }
+            : {}),
           ...(selectedExerciseId ? { sessionExerciseId: selectedExerciseId } : {}),
           ...(timezone ? { timezone } : {}),
         };
@@ -103,6 +156,19 @@ export function SessionAiAssistantDrawer({
       loadProposals();
     },
   });
+
+  // Carrega consentimento LGPD inicial e conversa da sessão
+  useEffect(() => {
+    if (isOpen) {
+      getAiConsentAction().then((res) => {
+        if (res.success) {
+          setHasHistoryConsent(res.data.aiTrainingHistoryAccess);
+        }
+      });
+      loadProposals();
+      loadSessionConversation(setMessages);
+    }
+  }, [isOpen, loadProposals, loadSessionConversation, setMessages]);
 
   const isLoading = status === "submitted" || status === "streaming";
 
@@ -132,16 +198,103 @@ export function SessionAiAssistantDrawer({
 
   const handleSendMessage = (textToSend?: string) => {
     const text = (textToSend ?? inputMessage).trim();
-    if (!text || isLoading) return;
+    if ((!text && pendingFiles.length === 0) || isLoading) return;
 
-    sendMessage({ text });
+    const fileParts: FileUIPart[] = pendingFiles.map((f) => ({
+      type: "file",
+      mediaType: f.mediaType,
+      filename: f.filename,
+      url: f.dataUrl,
+    }));
+
+    if (fileParts.length > 0) {
+      sendMessage({
+        text: text || "Anexo para o treino",
+        files: fileParts,
+      });
+    } else {
+      sendMessage({ text });
+    }
+
     setInputMessage("");
+    setPendingFiles([]);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
+    }
+  };
+
+  // Upload de arquivos (PDFs, imagens, áudios)
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const MAX_SIZE = 15 * 1024 * 1024; // 15MB
+    const newItems: AttachedFileItem[] = [];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (file.size > MAX_SIZE) {
+        toast.error(`Arquivo ${file.name} excede o limite máximo de 15MB.`);
+        continue;
+      }
+
+      const reader = new FileReader();
+      const readPromise = new Promise<void>((resolve) => {
+        reader.onloadend = () => {
+          newItems.push({
+            file,
+            dataUrl: reader.result as string,
+            mediaType: file.type || "application/octet-stream",
+            filename: file.name,
+            size: file.size,
+          });
+          resolve();
+        };
+      });
+      reader.readAsDataURL(file);
+      await readPromise;
+    }
+
+    setPendingFiles((prev) => [...prev, ...newItems]);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const removePendingFile = (idx: number) => {
+    setPendingFiles((prev) => prev.filter((_, i) => i !== idx));
+  };
+
+  // Gravação de voz em tempo real
+  const handleToggleVoiceRecord = async () => {
+    if (voiceRecorder.isRecording) {
+      try {
+        const recorded = await voiceRecorder.stopRecording();
+        if (recorded) {
+          // Envia o áudio imediatamente como comando de voz para a sessão
+          const filePart: FileUIPart = {
+            type: "file",
+            mediaType: recorded.mediaType,
+            filename: recorded.filename,
+            url: recorded.dataUrl,
+          };
+          sendMessage({
+            text: "Comando de voz para a sessão",
+            files: [filePart],
+          });
+          toast.success("Comando de voz enviado para o assistente!");
+        }
+      } catch (err) {
+        toast.error("Erro ao processar gravação de áudio.");
+      }
+    } else {
+      try {
+        await voiceRecorder.startRecording();
+      } catch {
+        toast.error("Permissão de microfone negada ou indisponível.");
+      }
     }
   };
 
@@ -330,28 +483,83 @@ export function SessionAiAssistantDrawer({
                   }`}
                 >
                   {isUser ? (
-                    <div className="whitespace-pre-wrap">
-                      {m.parts?.map((part, idx) =>
-                        part.type === "text" ? (
-                          <span key={idx}>{part.text}</span>
-                        ) : null,
-                      )}
+                    <div className="space-y-1.5">
+                      {m.parts?.map((part: any, idx) => {
+                        if (part.type === "text" && part.text) {
+                          return (
+                            <div key={idx} className="whitespace-pre-wrap">
+                              {part.text}
+                            </div>
+                          );
+                        }
+                        if (part.type === "file") {
+                          if (part.mediaType?.startsWith("audio/")) {
+                            return (
+                              <div
+                                key={idx}
+                                className="my-1 rounded-xl bg-primary-foreground/10 p-2 text-primary-foreground"
+                              >
+                                <div className="mb-1 flex items-center gap-1.5 text-[11px] font-semibold">
+                                  <Mic className="size-3.5" />
+                                  <span>{part.filename || "Comando de voz"}</span>
+                                </div>
+                                <audio
+                                  controls
+                                  src={part.url}
+                                  className="h-7 w-full max-w-[200px]"
+                                />
+                              </div>
+                            );
+                          }
+                          if (part.mediaType === "application/pdf") {
+                            return (
+                              <div
+                                key={idx}
+                                className="my-1 flex items-center gap-2 rounded-xl bg-primary-foreground/10 p-2 text-primary-foreground"
+                              >
+                                <FileText className="size-4 shrink-0" />
+                                <span className="truncate text-xs font-medium">
+                                  {part.filename || "documento.pdf"}
+                                </span>
+                              </div>
+                            );
+                          }
+                          if (part.mediaType?.startsWith("image/")) {
+                            return (
+                              <div
+                                key={idx}
+                                className="my-1 max-w-[200px] overflow-hidden rounded-xl border border-primary-foreground/20"
+                              >
+                                <img
+                                  src={part.url}
+                                  alt={part.filename || "Anexo"}
+                                  className="max-h-40 w-auto object-cover"
+                                />
+                              </div>
+                            );
+                          }
+                        }
+                        return null;
+                      })}
                     </div>
                   ) : (
                     <div className="prose prose-xs dark:prose-invert max-w-none text-xs">
-                      {m.parts?.map((part, idx) =>
-                        part.type === "text" ? (
-                          <Streamdown
-                            key={idx}
-                            isAnimating={
-                              isLoading &&
-                              messages[messages.length - 1]?.id === m.id
-                            }
-                          >
-                            {part.text}
-                          </Streamdown>
-                        ) : null,
-                      )}
+                      {m.parts?.map((part: any, idx) => {
+                        if (part.type === "text") {
+                          return (
+                            <Streamdown
+                              key={idx}
+                              isAnimating={
+                                isLoading &&
+                                messages[messages.length - 1]?.id === m.id
+                              }
+                            >
+                              {part.text}
+                            </Streamdown>
+                          );
+                        }
+                        return null;
+                      })}
                     </div>
                   )}
                 </div>
@@ -369,36 +577,134 @@ export function SessionAiAssistantDrawer({
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Barra de Entrada / Envio */}
-        <div className="border-t border-border bg-card p-3">
-          <div className="flex items-center gap-2 rounded-2xl border border-border bg-background px-3 py-1.5 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/20">
-            <input
-              type="text"
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder={
-                selectedExerciseName
-                  ? `Pergunte ou peça séries para ${selectedExerciseName}...`
-                  : "Converse com o assistente do treino..."
-              }
-              className="flex-1 bg-transparent text-xs text-foreground placeholder:text-muted-foreground focus:outline-none"
-            />
-            <Button
-              type="button"
-              size="sm"
-              disabled={!inputMessage.trim() || isLoading}
-              onClick={() => handleSendMessage()}
-              className="size-7 rounded-xl p-0 shrink-0"
-            >
-              {isLoading ? (
-                <Loader2 className="size-3.5 animate-spin" />
-              ) : (
-                <ArrowUp className="size-3.5" />
-              )}
-              <span className="sr-only">Enviar</span>
-            </Button>
+        {/* Pré-visualização de Arquivos Anexados */}
+        {pendingFiles.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 border-t border-border bg-card px-3 pt-2">
+            {pendingFiles.map((pf, idx) => (
+              <div
+                key={idx}
+                className="flex items-center gap-1.5 rounded-lg border border-border bg-background px-2 py-1 text-[11px] text-foreground"
+              >
+                {pf.mediaType === "application/pdf" ? (
+                  <FileText className="size-3.5 text-red-500" />
+                ) : pf.mediaType.startsWith("audio/") ? (
+                  <Mic className="size-3.5 text-primary" />
+                ) : (
+                  <FileText className="size-3.5 text-primary" />
+                )}
+                <span className="max-w-[120px] truncate">{pf.filename}</span>
+                <button
+                  type="button"
+                  onClick={() => removePendingFile(idx)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <X className="size-3" />
+                </button>
+              </div>
+            ))}
           </div>
+        )}
+
+        {/* Barra de Entrada / Envio e Gravação de Voz */}
+        <div className="border-t border-border bg-card p-3">
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileSelect}
+            accept="application/pdf,image/*,audio/*,text/plain"
+            multiple
+            className="hidden"
+          />
+
+          {voiceRecorder.isRecording ? (
+            <div className="flex items-center justify-between rounded-2xl border border-red-500/40 bg-red-500/10 px-3 py-2 animate-in fade-in">
+              <div className="flex items-center gap-2">
+                <span className="relative flex size-2.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75" />
+                  <span className="relative inline-flex size-2.5 rounded-full bg-red-500" />
+                </span>
+                <span className="font-heading text-xs font-semibold text-red-500">
+                  Gravando comando de voz...
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {formatRecordingTime(voiceRecorder.recordingSeconds)}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-1.5">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={voiceRecorder.cancelRecording}
+                  title="Cancelar gravação"
+                  className="size-7 text-muted-foreground hover:text-destructive"
+                >
+                  <Trash2 className="size-3.5" />
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={handleToggleVoiceRecord}
+                  className="h-7 gap-1 bg-red-600 px-2.5 text-xs text-white hover:bg-red-700"
+                >
+                  <Square className="size-3 fill-current" />
+                  <span>Enviar</span>
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 rounded-2xl border border-border bg-background px-3 py-1.5 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/20">
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                title="Anexar arquivo ou ficha (PDF/Foto)"
+                className="text-muted-foreground hover:text-foreground transition-colors p-1"
+              >
+                <Paperclip className="size-4" />
+              </button>
+
+              <button
+                type="button"
+                onClick={handleToggleVoiceRecord}
+                title="Gravar comando de voz"
+                className="text-muted-foreground hover:text-primary transition-colors p-1"
+              >
+                <Mic className="size-4" />
+              </button>
+
+              <input
+                type="text"
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder={
+                  selectedExerciseName
+                    ? `Pergunte ou peça séries para ${selectedExerciseName}...`
+                    : "Converse com o assistente do treino..."
+                }
+                className="flex-1 bg-transparent text-xs text-foreground placeholder:text-muted-foreground focus:outline-none"
+              />
+
+              <Button
+                type="button"
+                size="sm"
+                disabled={
+                  (!inputMessage.trim() && pendingFiles.length === 0) ||
+                  isLoading
+                }
+                onClick={() => handleSendMessage()}
+                className="size-7 rounded-xl p-0 shrink-0"
+              >
+                {isLoading ? (
+                  <Loader2 className="size-3.5 animate-spin" />
+                ) : (
+                  <ArrowUp className="size-3.5" />
+                )}
+                <span className="sr-only">Enviar</span>
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>

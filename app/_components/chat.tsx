@@ -5,6 +5,7 @@ import { useChat } from "@ai-sdk/react";
 import {
   DefaultChatTransport,
   lastAssistantMessageIsCompleteWithApprovalResponses,
+  type FileUIPart,
 } from "ai";
 import { useQueryStates, parseAsBoolean, parseAsString } from "nuqs";
 import {
@@ -18,18 +19,35 @@ import {
   Trash2,
   MessageSquare,
   Dumbbell,
+  Mic,
+  Paperclip,
+  FileText,
+  Square,
 } from "lucide-react";
 import { Streamdown } from "streamdown";
 import "streamdown/styles.css";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ForgottenWorkoutRecoveryModal } from "@/app/history/_components/forgotten-workout-recovery-modal";
+import {
+  formatRecordingTime,
+  useVoiceRecorder,
+} from "@/app/_hooks/use-voice-recorder";
+
+interface AttachedFileItem {
+  file: File;
+  dataUrl: string;
+  mediaType: string;
+  filename: string;
+  size: number;
+}
 
 const SUGGESTED_MESSAGES = [
   "Monte um plano de treino para mim",
@@ -79,7 +97,7 @@ export function formatRelativeDate(isoDateString: string): string {
 }
 
 const chatFormSchema = z.object({
-  message: z.string().min(1),
+  message: z.string(),
 });
 
 type ChatFormValues = z.infer<typeof chatFormSchema>;
@@ -313,6 +331,9 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
   const [activeRecoveryDraftId, setActiveRecoveryDraftId] = useState<
     string | null
   >(null);
+  const [pendingAttachments, setPendingAttachments] = useState<AttachedFileItem[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const voiceRecorder = useVoiceRecorder();
 
   const activeConversationIdRef = useRef<string | null>(null);
   activeConversationIdRef.current = activeConversationId;
@@ -331,11 +352,13 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
         const convList: ConversationItem[] = data.conversations || [];
         setConversations(convList);
 
-        // Se acabamos de criar a primeira conversa sem ID ativo, vincula com a mais recente
-        if (!activeConversationIdRef.current && convList.length > 0) {
-          activeConversationIdRef.current = convList[0].id;
-          setActiveConversationId(convList[0].id);
-          setActiveConversationTitle(convList[0].title);
+        if (activeConversationIdRef.current) {
+          const currentConv = convList.find(
+            (c) => c.id === activeConversationIdRef.current,
+          );
+          if (currentConv) {
+            setActiveConversationTitle(currentConv.title);
+          }
         }
       }
     } catch {
@@ -359,6 +382,15 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
     transport: new DefaultChatTransport({
       api: `${process.env.NEXT_PUBLIC_API_URL}/ai`,
       credentials: "include",
+      fetch: async (input, init) => {
+        const response = await fetch(input, init);
+        const newConvId = response.headers.get("x-conversation-id");
+        if (newConvId && !activeConversationIdRef.current) {
+          activeConversationIdRef.current = newConvId;
+          setActiveConversationId(newConvId);
+        }
+        return response;
+      },
       body: () => getChatRequestBody(activeConversationIdRef.current),
     }),
     onFinish: () => {
@@ -462,11 +494,99 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
     setChatParams({ chat_open: false, chat_initial_message: null });
   };
 
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const MAX_SIZE = 15 * 1024 * 1024; // 15MB
+    const newItems: AttachedFileItem[] = [];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (file.size > MAX_SIZE) {
+        toast.error(`Arquivo ${file.name} excede o limite máximo de 15MB.`);
+        continue;
+      }
+
+      const reader = new FileReader();
+      const readPromise = new Promise<void>((resolve) => {
+        reader.onloadend = () => {
+          newItems.push({
+            file,
+            dataUrl: reader.result as string,
+            mediaType: file.type || "application/octet-stream",
+            filename: file.name,
+            size: file.size,
+          });
+          resolve();
+        };
+      });
+      reader.readAsDataURL(file);
+      await readPromise;
+    }
+
+    setPendingAttachments((prev) => [...prev, ...newItems]);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const removePendingAttachment = (idx: number) => {
+    setPendingAttachments((prev) => prev.filter((_, i) => i !== idx));
+  };
+
+  const handleToggleVoiceRecord = async () => {
+    if (voiceRecorder.isRecording) {
+      try {
+        const recorded = await voiceRecorder.stopRecording();
+        if (recorded) {
+          const filePart: FileUIPart = {
+            type: "file",
+            mediaType: recorded.mediaType,
+            filename: recorded.filename,
+            url: recorded.dataUrl,
+          };
+          sendMessage({
+            text: "Mensagem de voz",
+            files: [filePart],
+          });
+          toast.success("Mensagem de voz enviada para o Coach!");
+        }
+      } catch {
+        toast.error("Erro ao processar gravação de voz.");
+      }
+    } else {
+      try {
+        await voiceRecorder.startRecording();
+      } catch {
+        toast.error("Permissão de microfone negada ou indisponível.");
+      }
+    }
+  };
+
   const onSubmit = (values: ChatFormValues) => {
-    pendingMessageRef.current = values.message;
+    const text = values.message.trim();
+    if (!text && pendingAttachments.length === 0) return;
+
+    pendingMessageRef.current = text;
     setQuotaErrorMessage(null);
-    sendMessage({ text: values.message });
+
+    const fileParts: FileUIPart[] = pendingAttachments.map((att) => ({
+      type: "file",
+      mediaType: att.mediaType,
+      filename: att.filename,
+      url: att.dataUrl,
+    }));
+
+    if (fileParts.length > 0) {
+      sendMessage({
+        text: text || "Arquivo anexado para análise",
+        files: fileParts,
+      });
+    } else {
+      sendMessage({ text });
+    }
+
     form.reset();
+    setPendingAttachments([]);
   };
 
   const handleSuggestion = (text: string) => {
@@ -961,14 +1081,65 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
                   })}
                 </>
               ) : (
-                <p className="font-heading text-sm leading-relaxed text-primary-foreground">
-                  {message.parts
-                    .filter((part) => part.type === "text")
-                    .map(
-                      (part) => (part as { type: "text"; text: string }).text,
-                    )
-                    .join("")}
-                </p>
+                <div className="space-y-2 font-heading text-sm leading-relaxed text-primary-foreground">
+                  {message.parts.map((part: any, index) => {
+                    if (part.type === "text" && part.text) {
+                      return (
+                        <p key={index} className="whitespace-pre-wrap">
+                          {part.text}
+                        </p>
+                      );
+                    }
+                    if (part.type === "file") {
+                      if (part.mediaType?.startsWith("audio/")) {
+                        return (
+                          <div
+                            key={index}
+                            className="my-1.5 rounded-xl bg-primary-foreground/15 p-2.5 text-primary-foreground"
+                          >
+                            <div className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold">
+                              <Mic className="size-3.5" />
+                              <span>{part.filename || "Mensagem de voz"}</span>
+                            </div>
+                            <audio
+                              controls
+                              src={part.url}
+                              className="h-7 w-full max-w-[240px]"
+                            />
+                          </div>
+                        );
+                      }
+                      if (part.mediaType === "application/pdf") {
+                        return (
+                          <div
+                            key={index}
+                            className="my-1.5 flex items-center gap-2 rounded-xl bg-primary-foreground/15 p-2.5 text-primary-foreground"
+                          >
+                            <FileText className="size-4 shrink-0" />
+                            <span className="truncate text-xs font-medium">
+                              {part.filename || "documento.pdf"}
+                            </span>
+                          </div>
+                        );
+                      }
+                      if (part.mediaType?.startsWith("image/")) {
+                        return (
+                          <div
+                            key={index}
+                            className="my-1.5 max-w-[260px] overflow-hidden rounded-xl border border-primary-foreground/20"
+                          >
+                            <img
+                              src={part.url}
+                              alt={part.filename || "Anexo"}
+                              className="max-h-52 w-auto object-cover"
+                            />
+                          </div>
+                        );
+                      }
+                    }
+                    return null;
+                  })}
+                </div>
               )}
             </div>
           </div>
@@ -1022,36 +1193,147 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
           </div>
         )}
 
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex items-center gap-2 border-t border-border p-4 sm:p-5"
-          >
-            <FormField
-              control={form.control}
-              name="message"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="Digite sua mensagem"
-                      className="rounded-full border-border bg-secondary px-4 py-3 font-heading text-sm text-foreground placeholder:text-muted-foreground"
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <Button
-              type="submit"
-              disabled={!form.watch("message").trim() || isLoading}
-              size="icon"
-              className="size-[42px] shrink-0 rounded-full"
+        {/* Input de arquivo oculto */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileSelect}
+          accept="application/pdf,image/*,audio/*,text/plain"
+          multiple
+          className="hidden"
+        />
+
+        {/* Anexos pendentes para envio */}
+        {pendingAttachments.length > 0 && (
+          <div className="flex flex-wrap gap-2 px-5">
+            {pendingAttachments.map((att, idx) => (
+              <div
+                key={idx}
+                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1 text-xs text-foreground shadow-xs"
+              >
+                {att.mediaType.startsWith("audio/") ? (
+                  <Mic className="size-3 text-primary" />
+                ) : att.mediaType === "application/pdf" ? (
+                  <FileText className="size-3 text-primary" />
+                ) : (
+                  <Paperclip className="size-3 text-primary" />
+                )}
+                <span className="max-w-[140px] truncate font-medium">
+                  {att.filename}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => removePendingAttachment(idx)}
+                  className="rounded-full p-0.5 hover:bg-muted text-muted-foreground hover:text-foreground"
+                >
+                  <X className="size-3" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Barra de gravação de voz ativa */}
+        {voiceRecorder.isRecording ? (
+          <div className="mx-5 mb-3 flex items-center justify-between rounded-2xl border border-primary/30 bg-primary/10 p-3 animate-in fade-in">
+            <div className="flex items-center gap-2.5">
+              <span className="relative flex size-3">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75" />
+                <span className="relative inline-flex size-3 rounded-full bg-red-500" />
+              </span>
+              <span className="font-mono text-sm font-semibold text-foreground">
+                {formatRecordingTime(voiceRecorder.recordingSeconds)}
+              </span>
+              <span className="hidden text-xs text-muted-foreground sm:inline">
+                Gravando áudio para o Coach...
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={voiceRecorder.cancelRecording}
+                className="h-8 text-xs text-muted-foreground hover:text-foreground"
+              >
+                Cancelar
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                onClick={handleToggleVoiceRecord}
+                className="h-8 gap-1.5 text-xs font-semibold"
+              >
+                <Square className="size-3 fill-current" />
+                <span>Enviar Áudio</span>
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="flex items-center gap-2 border-t border-border p-4 sm:p-5"
             >
-              <ArrowUp className="size-5" />
-            </Button>
-          </form>
-        </Form>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                disabled={isLoading}
+                onClick={() => fileInputRef.current?.click()}
+                className="size-[42px] shrink-0 rounded-full text-muted-foreground hover:bg-secondary hover:text-foreground"
+                title="Anexar documento ou imagem"
+              >
+                <Paperclip className="size-4" />
+              </Button>
+
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                disabled={isLoading}
+                onClick={handleToggleVoiceRecord}
+                className="size-[42px] shrink-0 rounded-full text-muted-foreground hover:bg-secondary hover:text-foreground"
+                title="Gravar mensagem de voz"
+              >
+                <Mic className="size-4" />
+              </Button>
+
+              <FormField
+                control={form.control}
+                name="message"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder={
+                          pendingAttachments.length > 0
+                            ? "Adicione uma instrução para o anexo..."
+                            : "Digite sua mensagem ou envie um áudio/documento"
+                        }
+                        className="rounded-full border-border bg-secondary px-4 py-3 font-heading text-sm text-foreground placeholder:text-muted-foreground"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <Button
+                type="submit"
+                disabled={
+                  (!form.watch("message").trim() &&
+                    pendingAttachments.length === 0) ||
+                  isLoading
+                }
+                size="icon"
+                className="size-[42px] shrink-0 rounded-full"
+              >
+                <ArrowUp className="size-5" />
+              </Button>
+            </form>
+          </Form>
+        )}
       </div>
     </div>
   );

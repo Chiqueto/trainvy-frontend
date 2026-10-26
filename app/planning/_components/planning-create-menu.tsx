@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { CalendarRange, Dumbbell, Plus } from "lucide-react";
+import { CalendarRange, Dumbbell, Plus, Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -32,8 +32,30 @@ export function PlanningCreateMenu() {
           />
           <div
             role="menu"
-            className="absolute right-0 top-full z-50 mt-2 w-56 rounded-2xl border border-border bg-popover p-1.5 shadow-lg"
+            className="absolute right-0 top-full z-50 mt-2 w-64 rounded-2xl border border-border bg-popover p-1.5 shadow-lg"
           >
+            <Link
+              role="menuitem"
+              href="/planning/plans/new?ai=true"
+              onClick={() => setIsOpen(false)}
+              className="flex min-h-12 items-center gap-2.5 rounded-xl px-3 text-left font-heading text-xs font-medium transition hover:bg-accent border border-primary/20 bg-primary/5 mb-1"
+            >
+              <span className="flex size-8 items-center justify-center rounded-lg bg-primary/20 text-primary">
+                <Sparkles className="size-4" />
+              </span>
+              <span className="flex-1">
+                <span className="flex items-center gap-1.5 font-bold text-foreground">
+                  <span>Criar com IA / Ficha</span>
+                  <span className="rounded-full bg-primary/20 px-1.5 py-0.2 text-[9px] font-bold text-primary uppercase">
+                    Novo
+                  </span>
+                </span>
+                <span className="text-[10px] text-muted-foreground">
+                  Por voz ou ficha PDF
+                </span>
+              </span>
+            </Link>
+
             <Link
               role="menuitem"
               href="/planning/plans/new"

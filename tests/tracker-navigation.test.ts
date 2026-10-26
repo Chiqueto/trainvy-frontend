@@ -44,6 +44,7 @@ vi.mock("@/app/_lib/api/fetch-generated", () => ({
   getActiveWorkoutSession: vi.fn(),
   getHomeData: vi.fn(),
   getUserTrainData: vi.fn(),
+  getAthleteCoachRelationship: vi.fn().mockResolvedValue({ status: 200, data: { hasCoach: false } }),
 }));
 
 import * as api from "@/app/_lib/api/fetch-generated";

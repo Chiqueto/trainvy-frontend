@@ -1880,6 +1880,64 @@ export type GetPlanningOverview500 = {
   code: string;
 };
 
+export type GenerateWorkoutPlanDraftWithAiBody = {
+  /** @minLength 2 */
+  prompt: string;
+  fileUrl?: string;
+  mediaType?: string;
+  filename?: string;
+};
+
+export type GenerateWorkoutPlanDraftWithAi200WorkoutDaysItemWeekDay =
+  (typeof GenerateWorkoutPlanDraftWithAi200WorkoutDaysItemWeekDay)[keyof typeof GenerateWorkoutPlanDraftWithAi200WorkoutDaysItemWeekDay];
+
+export const GenerateWorkoutPlanDraftWithAi200WorkoutDaysItemWeekDay = {
+  MONDAY: "MONDAY",
+  TUESDAY: "TUESDAY",
+  WEDNESDAY: "WEDNESDAY",
+  THURSDAY: "THURSDAY",
+  FRIDAY: "FRIDAY",
+  SATURDAY: "SATURDAY",
+  SUNDAY: "SUNDAY",
+} as const;
+
+export type GenerateWorkoutPlanDraftWithAi200WorkoutDaysItemExercisesItem = {
+  name: string;
+  sets: number;
+  warmupSets: number;
+  reps: number;
+  restTimeInSeconds: number;
+  /** @nullable */
+  alternative1Name?: string | null;
+  /** @nullable */
+  alternative2Name?: string | null;
+};
+
+export type GenerateWorkoutPlanDraftWithAi200WorkoutDaysItem = {
+  name: string;
+  weekDay: GenerateWorkoutPlanDraftWithAi200WorkoutDaysItemWeekDay;
+  isRest: boolean;
+  estimatedDurationInMinutes: number;
+  exercises: GenerateWorkoutPlanDraftWithAi200WorkoutDaysItemExercisesItem[];
+};
+
+export type GenerateWorkoutPlanDraftWithAi200 = {
+  name: string;
+  /** @nullable */
+  notes?: string | null;
+  workoutDays: GenerateWorkoutPlanDraftWithAi200WorkoutDaysItem[];
+};
+
+export type GenerateWorkoutPlanDraftWithAi401 = {
+  error: string;
+  code: string;
+};
+
+export type GenerateWorkoutPlanDraftWithAi500 = {
+  error: string;
+  code: string;
+};
+
 export type GetHomeDataParams = {
   /**
    * @minimum -9007199254740991
@@ -2204,10 +2262,22 @@ export type PostAiBody = {
   sessionExerciseId?: string;
 };
 
+export type GetAiConversationsParams = {
+  /**
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutSessionId?: string;
+};
+
 export type GetAiConversations200ConversationsItem = {
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
   title: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutSessionId?: string | null;
   createdAt: string;
   updatedAt: string;
   /**
@@ -2222,6 +2292,11 @@ export type GetAiConversations200 = {
 };
 
 export type GetAiConversations401 = {
+  error: string;
+  code: string;
+};
+
+export type GetAiConversations404 = {
   error: string;
   code: string;
 };
@@ -2258,6 +2333,11 @@ export type GetAiConversationsId200 = {
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
   title: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  workoutSessionId?: string | null;
   createdAt: string;
   updatedAt: string;
   messages: unknown[];
@@ -2748,6 +2828,16 @@ export type CancelCoachInvitation500 = {
   code: string;
 };
 
+/**
+ * @nullable
+ */
+export type ListCoachAthletes200AthletesItemActivePrescription = {
+  id: string;
+  status: "DRAFT" | "SENT" | "ACCEPTED" | "DECLINED" | "CANCELLED";
+  name: string;
+  updatedAt: string;
+} | null;
+
 export type ListCoachAthletes200AthletesItem = {
   linkId: string;
   athleteId: string;
@@ -2756,6 +2846,52 @@ export type ListCoachAthletes200AthletesItem = {
   /** @nullable */
   image: string | null;
   acceptedAt: string;
+  evolutionShared: boolean;
+  /** @nullable */
+  lastWorkoutSessionAt?: string | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  workoutsThisWeekCount: number;
+  hasActiveWorkoutPlan: boolean;
+  /** @nullable */
+  activeWorkoutPlanName?: string | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  pendingPrescriptionsCount: number;
+  /** @nullable */
+  activePrescription?: ListCoachAthletes200AthletesItemActivePrescription;
+};
+
+export type ListCoachAthletes200Summary = {
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  totalAthletes: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  activeThisWeekCount: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  atRiskCount: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  pendingPrescriptionsCount: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  withoutPlanCount: number;
 };
 
 export type ListCoachAthletes200 = {
@@ -2771,6 +2907,7 @@ export type ListCoachAthletes200 = {
    * @nullable
    */
   limit: number | null;
+  summary?: ListCoachAthletes200Summary;
 };
 
 export type ListCoachAthletes400 = {
@@ -4545,6 +4682,86 @@ export type DeclineWorkoutPrescription500 = {
   code: string;
 };
 
+export type GenerateCoachPrescriptionDraftWithAiBody = {
+  athleteId: string;
+  /** @minLength 2 */
+  prompt: string;
+  fileUrl?: string;
+  mediaType?: string;
+  filename?: string;
+};
+
+export type GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemWeekDay =
+  (typeof GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemWeekDay)[keyof typeof GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemWeekDay];
+
+export const GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemWeekDay = {
+  MONDAY: "MONDAY",
+  TUESDAY: "TUESDAY",
+  WEDNESDAY: "WEDNESDAY",
+  THURSDAY: "THURSDAY",
+  FRIDAY: "FRIDAY",
+  SATURDAY: "SATURDAY",
+  SUNDAY: "SUNDAY",
+} as const;
+
+export type GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItem =
+  {
+    name: string;
+    sets: number;
+    warmupSets: number;
+    reps: number;
+    restTimeInSeconds: number;
+    /** @nullable */
+    alternative1Name?: string | null;
+    /** @nullable */
+    alternative2Name?: string | null;
+  };
+
+export type GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItem = {
+  name: string;
+  weekDay: GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemWeekDay;
+  isRest: boolean;
+  estimatedDurationInMinutes: number;
+  exercises: GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItem[];
+};
+
+export type GenerateCoachPrescriptionDraftWithAi200 = {
+  name: string;
+  /** @nullable */
+  notes?: string | null;
+  workoutDays: GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItem[];
+};
+
+export type GenerateCoachPrescriptionDraftWithAi400 = {
+  error: string;
+  code: string;
+};
+
+export type GenerateCoachPrescriptionDraftWithAi401 = {
+  error: string;
+  code: string;
+};
+
+export type GenerateCoachPrescriptionDraftWithAi403 = {
+  error: string;
+  code: string;
+};
+
+export type GenerateCoachPrescriptionDraftWithAi404 = {
+  error: string;
+  code: string;
+};
+
+export type GenerateCoachPrescriptionDraftWithAi409 = {
+  error: string;
+  code: string;
+};
+
+export type GenerateCoachPrescriptionDraftWithAi500 = {
+  error: string;
+  code: string;
+};
+
 /**
  * @nullable
  */
@@ -5496,6 +5713,71 @@ export type GetCoachAthleteProgressExerciseEvolution404 = {
 };
 
 export type GetCoachAthleteProgressExerciseEvolution500 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachAthleteProgressInsightsParams = {
+  tz?: string;
+  /**
+   * @minimum 1
+   * @maximum 52
+   */
+  weeksCount?: number;
+};
+
+export type GetCoachAthleteProgressInsights200MuscleBalanceInsightsItemStatus =
+  (typeof GetCoachAthleteProgressInsights200MuscleBalanceInsightsItemStatus)[keyof typeof GetCoachAthleteProgressInsights200MuscleBalanceInsightsItemStatus];
+
+export const GetCoachAthleteProgressInsights200MuscleBalanceInsightsItemStatus =
+  {
+    BALANCED: "BALANCED",
+    OVERTRAINED: "OVERTRAINED",
+    UNDERTRAINED: "UNDERTRAINED",
+    ATTENTION: "ATTENTION",
+  } as const;
+
+export type GetCoachAthleteProgressInsights200MuscleBalanceInsightsItem = {
+  muscleGroup: string;
+  status: GetCoachAthleteProgressInsights200MuscleBalanceInsightsItemStatus;
+  observation: string;
+};
+
+export type GetCoachAthleteProgressInsights200 = {
+  athleteId: string;
+  athleteName: string;
+  periodWeeks: number;
+  summary: string;
+  consistencyAssessment: string;
+  highlights: string[];
+  warnings: string[];
+  muscleBalanceInsights: GetCoachAthleteProgressInsights200MuscleBalanceInsightsItem[];
+  recommendations: string[];
+  suggestedFocusForNextPrescription: string;
+  generatedAt: string;
+};
+
+export type GetCoachAthleteProgressInsights400 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachAthleteProgressInsights401 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachAthleteProgressInsights403 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachAthleteProgressInsights404 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachAthleteProgressInsights500 = {
   error: string;
   code: string;
 };
@@ -12764,6 +13046,58 @@ export const getPlanningOverview = async (
 };
 
 /**
+ * @summary Generate workout plan draft with AI using text prompt, voice audio or PDF document
+ */
+export type generateWorkoutPlanDraftWithAiResponse200 = {
+  data: GenerateWorkoutPlanDraftWithAi200;
+  status: 200;
+};
+
+export type generateWorkoutPlanDraftWithAiResponse401 = {
+  data: GenerateWorkoutPlanDraftWithAi401;
+  status: 401;
+};
+
+export type generateWorkoutPlanDraftWithAiResponse500 = {
+  data: GenerateWorkoutPlanDraftWithAi500;
+  status: 500;
+};
+
+export type generateWorkoutPlanDraftWithAiResponseSuccess =
+  generateWorkoutPlanDraftWithAiResponse200 & {
+    headers: Headers;
+  };
+export type generateWorkoutPlanDraftWithAiResponseError = (
+  | generateWorkoutPlanDraftWithAiResponse401
+  | generateWorkoutPlanDraftWithAiResponse500
+) & {
+  headers: Headers;
+};
+
+export type generateWorkoutPlanDraftWithAiResponse =
+  | generateWorkoutPlanDraftWithAiResponseSuccess
+  | generateWorkoutPlanDraftWithAiResponseError;
+
+export const getGenerateWorkoutPlanDraftWithAiUrl = () => {
+  return `/planning/ai-generate`;
+};
+
+export const generateWorkoutPlanDraftWithAi = async (
+  generateWorkoutPlanDraftWithAiBody: GenerateWorkoutPlanDraftWithAiBody,
+  options?: RequestInit,
+): Promise<generateWorkoutPlanDraftWithAiResponse> => {
+  return customFetch<generateWorkoutPlanDraftWithAiResponse>(
+    getGenerateWorkoutPlanDraftWithAiUrl(),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(generateWorkoutPlanDraftWithAiBody),
+    },
+  );
+};
+
+/**
  * @summary Get home page data
  */
 export type getHomeDataResponse200 = {
@@ -13138,6 +13472,11 @@ export type getAiConversationsResponse401 = {
   status: 401;
 };
 
+export type getAiConversationsResponse404 = {
+  data: GetAiConversations404;
+  status: 404;
+};
+
 export type getAiConversationsResponse500 = {
   data: GetAiConversations500;
   status: 500;
@@ -13149,6 +13488,7 @@ export type getAiConversationsResponseSuccess =
   };
 export type getAiConversationsResponseError = (
   | getAiConversationsResponse401
+  | getAiConversationsResponse404
   | getAiConversationsResponse500
 ) & {
   headers: Headers;
@@ -13158,17 +13498,33 @@ export type getAiConversationsResponse =
   | getAiConversationsResponseSuccess
   | getAiConversationsResponseError;
 
-export const getGetAiConversationsUrl = () => {
-  return `/ai/conversations`;
+export const getGetAiConversationsUrl = (params?: GetAiConversationsParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/ai/conversations?${stringifiedParams}`
+    : `/ai/conversations`;
 };
 
 export const getAiConversations = async (
+  params?: GetAiConversationsParams,
   options?: RequestInit,
 ): Promise<getAiConversationsResponse> => {
-  return customFetch<getAiConversationsResponse>(getGetAiConversationsUrl(), {
-    ...options,
-    method: "GET",
-  });
+  return customFetch<getAiConversationsResponse>(
+    getGetAiConversationsUrl(params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
 };
 
 /**
@@ -15183,6 +15539,82 @@ export const declineWorkoutPrescription = async (
 };
 
 /**
+ * @summary Gerar rascunho de prescrição de treino com IA a partir de texto, voz ou documento
+ */
+export type generateCoachPrescriptionDraftWithAiResponse200 = {
+  data: GenerateCoachPrescriptionDraftWithAi200;
+  status: 200;
+};
+
+export type generateCoachPrescriptionDraftWithAiResponse400 = {
+  data: GenerateCoachPrescriptionDraftWithAi400;
+  status: 400;
+};
+
+export type generateCoachPrescriptionDraftWithAiResponse401 = {
+  data: GenerateCoachPrescriptionDraftWithAi401;
+  status: 401;
+};
+
+export type generateCoachPrescriptionDraftWithAiResponse403 = {
+  data: GenerateCoachPrescriptionDraftWithAi403;
+  status: 403;
+};
+
+export type generateCoachPrescriptionDraftWithAiResponse404 = {
+  data: GenerateCoachPrescriptionDraftWithAi404;
+  status: 404;
+};
+
+export type generateCoachPrescriptionDraftWithAiResponse409 = {
+  data: GenerateCoachPrescriptionDraftWithAi409;
+  status: 409;
+};
+
+export type generateCoachPrescriptionDraftWithAiResponse500 = {
+  data: GenerateCoachPrescriptionDraftWithAi500;
+  status: 500;
+};
+
+export type generateCoachPrescriptionDraftWithAiResponseSuccess =
+  generateCoachPrescriptionDraftWithAiResponse200 & {
+    headers: Headers;
+  };
+export type generateCoachPrescriptionDraftWithAiResponseError = (
+  | generateCoachPrescriptionDraftWithAiResponse400
+  | generateCoachPrescriptionDraftWithAiResponse401
+  | generateCoachPrescriptionDraftWithAiResponse403
+  | generateCoachPrescriptionDraftWithAiResponse404
+  | generateCoachPrescriptionDraftWithAiResponse409
+  | generateCoachPrescriptionDraftWithAiResponse500
+) & {
+  headers: Headers;
+};
+
+export type generateCoachPrescriptionDraftWithAiResponse =
+  | generateCoachPrescriptionDraftWithAiResponseSuccess
+  | generateCoachPrescriptionDraftWithAiResponseError;
+
+export const getGenerateCoachPrescriptionDraftWithAiUrl = () => {
+  return `/coach/prescriptions/ai-generate`;
+};
+
+export const generateCoachPrescriptionDraftWithAi = async (
+  generateCoachPrescriptionDraftWithAiBody: GenerateCoachPrescriptionDraftWithAiBody,
+  options?: RequestInit,
+): Promise<generateCoachPrescriptionDraftWithAiResponse> => {
+  return customFetch<generateCoachPrescriptionDraftWithAiResponse>(
+    getGenerateCoachPrescriptionDraftWithAiUrl(),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(generateCoachPrescriptionDraftWithAiBody),
+    },
+  );
+};
+
+/**
  * @summary Consultar consentimento e escopo de compartilhamento de evolução
  */
 export type getAthleteCoachProgressSharingResponse200 = {
@@ -15726,6 +16158,90 @@ export const getCoachAthleteProgressExerciseEvolution = async (
       exerciseId,
       params,
     ),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Consultar diagnóstico analítico e insights de evolução com IA para o aluno
+ */
+export type getCoachAthleteProgressInsightsResponse200 = {
+  data: GetCoachAthleteProgressInsights200;
+  status: 200;
+};
+
+export type getCoachAthleteProgressInsightsResponse400 = {
+  data: GetCoachAthleteProgressInsights400;
+  status: 400;
+};
+
+export type getCoachAthleteProgressInsightsResponse401 = {
+  data: GetCoachAthleteProgressInsights401;
+  status: 401;
+};
+
+export type getCoachAthleteProgressInsightsResponse403 = {
+  data: GetCoachAthleteProgressInsights403;
+  status: 403;
+};
+
+export type getCoachAthleteProgressInsightsResponse404 = {
+  data: GetCoachAthleteProgressInsights404;
+  status: 404;
+};
+
+export type getCoachAthleteProgressInsightsResponse500 = {
+  data: GetCoachAthleteProgressInsights500;
+  status: 500;
+};
+
+export type getCoachAthleteProgressInsightsResponseSuccess =
+  getCoachAthleteProgressInsightsResponse200 & {
+    headers: Headers;
+  };
+export type getCoachAthleteProgressInsightsResponseError = (
+  | getCoachAthleteProgressInsightsResponse400
+  | getCoachAthleteProgressInsightsResponse401
+  | getCoachAthleteProgressInsightsResponse403
+  | getCoachAthleteProgressInsightsResponse404
+  | getCoachAthleteProgressInsightsResponse500
+) & {
+  headers: Headers;
+};
+
+export type getCoachAthleteProgressInsightsResponse =
+  | getCoachAthleteProgressInsightsResponseSuccess
+  | getCoachAthleteProgressInsightsResponseError;
+
+export const getGetCoachAthleteProgressInsightsUrl = (
+  athleteId: string,
+  params?: GetCoachAthleteProgressInsightsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/coach/athletes/${athleteId}/progress/insights?${stringifiedParams}`
+    : `/coach/athletes/${athleteId}/progress/insights`;
+};
+
+export const getCoachAthleteProgressInsights = async (
+  athleteId: string,
+  params?: GetCoachAthleteProgressInsightsParams,
+  options?: RequestInit,
+): Promise<getCoachAthleteProgressInsightsResponse> => {
+  return customFetch<getCoachAthleteProgressInsightsResponse>(
+    getGetCoachAthleteProgressInsightsUrl(athleteId, params),
     {
       ...options,
       method: "GET",

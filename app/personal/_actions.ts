@@ -6,6 +6,7 @@ import {
   cancelWorkoutPrescription,
   createCoachInvitation,
   createWorkoutPrescriptionDraft,
+  generateCoachPrescriptionDraftWithAi,
   revokeCoachAthleteLink,
   sendWorkoutPrescription,
   updateWorkoutPrescriptionDraft,
@@ -213,3 +214,35 @@ export async function cancelPrescriptionAction({
     };
   }
 }
+
+export async function generateCoachPrescriptionWithAiAction(body: {
+  athleteId: string;
+  prompt: string;
+  fileUrl?: string;
+  mediaType?: string;
+  filename?: string;
+}) {
+  try {
+    const res = await generateCoachPrescriptionDraftWithAi(body, {
+      cache: "no-store",
+    });
+
+    if (res.status === 200) {
+      return { success: true as const, data: res.data };
+    }
+
+    const errorMsg =
+      res.data && typeof res.data === "object" && "error" in res.data
+        ? (res.data.error as string)
+        : "Erro ao gerar rascunho de prescrição com IA.";
+
+    return { success: false as const, error: errorMsg };
+  } catch (error) {
+    console.error("generateCoachPrescriptionWithAiAction error:", error);
+    return {
+      success: false as const,
+      error: "Falha na comunicação com o servidor.",
+    };
+  }
+}
+

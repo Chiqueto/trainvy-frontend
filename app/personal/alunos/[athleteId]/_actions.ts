@@ -6,11 +6,13 @@ import {
   getCoachAthleteProgressSessionDetail,
   listCoachAthleteProgressExercises,
   getCoachAthleteProgressExerciseEvolution,
+  getCoachAthleteProgressInsights,
   type GetCoachAthleteProgressOverview200,
   type ListCoachAthleteProgressSessions200,
   type GetCoachAthleteProgressSessionDetail200,
   type ListCoachAthleteProgressExercises200Item,
   type GetCoachAthleteProgressExerciseEvolution200,
+  type GetCoachAthleteProgressInsights200,
 } from "@/app/_lib/api/fetch-generated";
 
 export type EvolutionRange = 4 | 8 | 12;
@@ -209,3 +211,42 @@ export async function fetchCoachAthleteProgressExerciseEvolutionAction(input: {
     };
   }
 }
+
+export async function fetchCoachAthleteProgressInsightsAction(input: {
+  athleteId: string;
+  weeksCount?: number;
+  tz?: string;
+}): Promise<ActionResult<GetCoachAthleteProgressInsights200>> {
+  try {
+    const res = await getCoachAthleteProgressInsights(
+      input.athleteId,
+      {
+        weeksCount: input.weeksCount ?? 4,
+        tz: input.tz,
+      },
+      { cache: "no-store" },
+    );
+
+    if (res.status === 200) {
+      return { success: true, status: 200, data: res.data };
+    }
+
+    const errorPayload = res.data as { code?: string; error?: string } | null;
+    return {
+      success: false,
+      status: res.status,
+      code: errorPayload?.code,
+      error:
+        errorPayload?.error ??
+        "Não foi possível gerar os insights de evolução do aluno.",
+    };
+  } catch (error) {
+    console.error("fetchCoachAthleteProgressInsightsAction error:", error);
+    return {
+      success: false,
+      status: 500,
+      error: "Falha na comunicação com o servidor.",
+    };
+  }
+}
+

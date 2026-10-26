@@ -55,6 +55,7 @@ export default async function PersonalPage() {
   const athletes = athletesRes.status === 200 ? athletesRes.data.athletes : [];
   const activeCount = athletesRes.status === 200 ? athletesRes.data.activeCount : 0;
   const limit = athletesRes.status === 200 ? athletesRes.data.limit : null;
+  const summary = athletesRes.status === 200 ? athletesRes.data.summary : undefined;
   const invitations = invitationsRes.status === 200 ? invitationsRes.data : [];
 
   const isFull = limit !== null && activeCount >= limit;
@@ -70,7 +71,12 @@ export default async function PersonalPage() {
 
         <InvitationsList invitations={invitations} />
 
-        <AthletesList athletes={athletes} />
+        <AthletesList
+          athletes={athletes}
+          summary={summary}
+          activeCount={activeCount}
+          limit={limit}
+        />
       </main>
 
       <BottomNav activePage="profile" />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowDown,
@@ -8,6 +8,7 @@ import {
   Dumbbell,
   LoaderCircle,
   Plus,
+  Sparkles,
   Trash2,
 } from "lucide-react";
 
@@ -26,15 +27,18 @@ import {
 } from "@/app/planning/_lib/workout-plan-builder";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { AthleteAiWorkoutPlanModal } from "./athlete-ai-workout-plan-modal";
 
 interface WorkoutPlanBuilderProps {
   mode: "standalone" | "periodization";
   periodizationId?: string;
+  initialOpenAi?: boolean;
 }
 
 export function WorkoutPlanBuilder({
   mode,
   periodizationId,
+  initialOpenAi = false,
 }: WorkoutPlanBuilderProps) {
   const router = useRouter();
   const [name, setName] = useState("");
@@ -45,6 +49,18 @@ export function WorkoutPlanBuilder({
   const [days, setDays] = useState(createInitialWorkoutDays);
   const [error, setError] = useState<string>();
   const [isPending, startTransition] = useTransition();
+  const [isAiModalOpen, setIsAiModalOpen] = useState(initialOpenAi);
+
+  useEffect(() => {
+    if (initialOpenAi) {
+      setIsAiModalOpen(true);
+    } else if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("ai") === "true") {
+        setIsAiModalOpen(true);
+      }
+    }
+  }, [initialOpenAi]);
 
   function updateDay(index: number, patch: Partial<WorkoutPlanDraftDay>) {
     setDays((current) =>
@@ -152,6 +168,32 @@ export function WorkoutPlanBuilder({
 
   return (
     <div className="flex flex-col gap-6">
+      {/* Banner de Geração com IA / Importação de Ficha */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-2xl border border-primary/30 bg-primary/5 shadow-xs">
+        <div className="flex items-center gap-3">
+          <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary shrink-0">
+            <Sparkles className="size-5" />
+          </div>
+          <div>
+            <h4 className="font-heading text-xs font-bold text-foreground">
+              Quer acelerar? Monte seu treino com o Coach IA
+            </h4>
+            <p className="text-[11px] text-muted-foreground">
+              Fale por voz ou anexe o PDF/foto da sua ficha antiga da academia
+            </p>
+          </div>
+        </div>
+        <Button
+          type="button"
+          size="sm"
+          onClick={() => setIsAiModalOpen(true)}
+          className="h-8 px-3 rounded-xl font-heading text-xs font-bold gap-1.5 shadow-sm"
+        >
+          <Sparkles className="size-3.5" />
+          <span>Gerar com IA</span>
+        </Button>
+      </div>
+
       <section className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-5">
         <label className="flex flex-col gap-2 text-sm font-medium">
           Nome do plano *
@@ -223,17 +265,29 @@ export function WorkoutPlanBuilder({
               Configure os treinos da sua divisão. O próximo treino será sugerido automaticamente com base no último realizado.
             </p>
           </div>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={addWorkout}
-            disabled={isPending}
-            className="gap-1.5 rounded-full font-heading text-xs"
-          >
-            <Plus className="size-3.5" />
-            Adicionar Treino
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setIsAiModalOpen(true)}
+              className="gap-1.5 rounded-full font-heading text-xs text-primary border-primary/30 hover:bg-primary/10"
+            >
+              <Sparkles className="size-3.5" />
+              <span>Gerar com IA</span>
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={addWorkout}
+              disabled={isPending}
+              className="gap-1.5 rounded-full font-heading text-xs"
+            >
+              <Plus className="size-3.5" />
+              Adicionar Treino
+            </Button>
+          </div>
         </div>
 
         {days.map((day, dayIndex) => (
@@ -526,6 +580,16 @@ export function WorkoutPlanBuilder({
             ? "Criar plano"
             : "Criar plano e adicionar etapa"}
       </Button>
+
+      <AthleteAiWorkoutPlanModal
+        isOpen={isAiModalOpen}
+        onClose={() => setIsAiModalOpen(false)}
+        onApplyPlan={(data) => {
+          if (data.name) setName(data.name);
+          if (data.notes) setNotes(data.notes);
+          if (data.workoutDays?.length) setDays(data.workoutDays);
+        }}
+      />
     </div>
   );
 }
