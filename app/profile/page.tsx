@@ -158,7 +158,7 @@ export default async function ProfilePage() {
 
       </div>
 
-      <BottomNav activePage="profile" />
+      <BottomNav isCoach={isCoach} activePage="profile" />
     </div>
   );
 }

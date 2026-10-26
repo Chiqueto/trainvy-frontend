@@ -119,7 +119,7 @@ export default async function AthleteDetailsPage({
             </Button>
           </Link>
         </main>
-        <BottomNav activePage="profile" />
+        <BottomNav isCoach={true} activePage="athletes" />
       </div>
     );
   }
@@ -151,7 +151,7 @@ export default async function AthleteDetailsPage({
             </Link>
           </div>
         </main>
-        <BottomNav activePage="profile" />
+        <BottomNav isCoach={true} activePage="athletes" />
       </div>
     );
   }
@@ -365,7 +365,7 @@ export default async function AthleteDetailsPage({
         )}
       </main>
 
-      <BottomNav activePage="profile" />
+      <BottomNav isCoach={true} activePage="athletes" />
     </div>
   );
 }

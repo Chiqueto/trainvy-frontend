@@ -89,7 +89,7 @@ export default async function PrescribeWorkoutPage({
         />
       </main>
 
-      <BottomNav activePage="profile" />
+      <BottomNav isCoach={true} activePage="prescriptions" />
     </div>
   );
 }

@@ -120,4 +120,41 @@ describe("BottomNav — Task 2.8.2 Mobile Polish & Route-derived State", () => {
     expect(perfilLink.className).toContain("text-primary");
     expect(perfilLink.className).toContain("bg-primary/10");
   });
+
+  describe("Navegação do Personal Trainer (isCoach / /personal)", () => {
+    it("renderiza as abas específicas de Personal Trainer quando isCoach=true", () => {
+      render(<BottomNav isCoach={true} />);
+
+      expect(screen.getByText("Alunos")).toBeDefined();
+      expect(screen.getByText("Prescrições")).toBeDefined();
+      expect(screen.getByText("Coach")).toBeDefined();
+      expect(screen.getByText("Meu Treino")).toBeDefined();
+      expect(screen.getByText("Perfil")).toBeDefined();
+
+      const alunosLink = screen.getByRole("link", { name: /Alunos/i });
+      expect(alunosLink.getAttribute("href")).toBe("/personal");
+
+      const meuTreinoLink = screen.getByRole("link", { name: /Meu Treino/i });
+      expect(meuTreinoLink.getAttribute("href")).toBe("/");
+    });
+
+    it("ativa 'Alunos' quando na rota /personal e infere automaticamente modo coach", () => {
+      mockPathname = "/personal";
+      render(<BottomNav />);
+
+      const alunosLink = screen.getByRole("link", { name: /Alunos/i });
+      expect(alunosLink.className).toContain("text-primary");
+      expect(alunosLink.className).toContain("bg-primary/10");
+    });
+
+    it("marca 'Meu Treino' como ativo na rota '/' quando no modo coach", () => {
+      mockPathname = "/";
+      render(<BottomNav isCoach={true} />);
+
+      const meuTreinoLink = screen.getByRole("link", { name: /Meu Treino/i });
+      expect(meuTreinoLink.className).toContain("text-primary");
+      expect(meuTreinoLink.className).toContain("bg-primary/10");
+    });
+  });
 });
+

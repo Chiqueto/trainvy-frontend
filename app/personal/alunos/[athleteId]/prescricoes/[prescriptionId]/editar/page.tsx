@@ -106,7 +106,7 @@ export default async function EditPrescriptionPage({
         />
       </main>
 
-      <BottomNav activePage="profile" />
+      <BottomNav isCoach={true} activePage="prescriptions" />
     </div>
   );
 }

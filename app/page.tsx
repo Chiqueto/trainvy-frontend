@@ -20,6 +20,8 @@ import { StartFreeWorkoutButton } from "./_components/start-free-workout-button"
 import { WorkoutDayCard } from "./_components/workout-day-card";
 import { Logo } from "./_components/logo";
 import { HomeBodyMetricsCard } from "./_components/home-body-metrics-card";
+import { CoachPerspectiveSwitcher } from "./_components/coach-perspective-switcher";
+import { CoachPersonalWorkoutWelcome } from "./_components/coach-personal-workout-welcome";
 
 export default async function Home() {
   const session = await authClient.getSession({
@@ -48,13 +50,12 @@ export default async function Home() {
   const activeSession =
     activeSessionResponse?.status === 200 ? activeSessionResponse.data : null;
 
+  const commercialRes = await getCommercialContext({ cache: "no-store" }).catch(() => null);
+  const isCoach = commercialRes?.status === 200 && commercialRes.data.accountType === "COACH";
+
   const needsOnboarding =
-    (trainData.status === 200 && !trainData.data) || trainData.status === 404;
+    !isCoach && ((trainData.status === 200 && !trainData.data) || trainData.status === 404);
   if (needsOnboarding) {
-    const commercialRes = await getCommercialContext({ cache: "no-store" }).catch(() => null);
-    if (commercialRes?.status === 200 && commercialRes.data.accountType === "COACH") {
-      redirect("/personal");
-    }
     redirect("/onboarding");
   }
 
@@ -151,6 +152,18 @@ export default async function Home() {
           )}
         </div>
       </div>
+
+      {isCoach && (
+        <div className="px-5 pt-4">
+          <CoachPerspectiveSwitcher currentPerspective="athlete" />
+        </div>
+      )}
+
+      {isCoach && !activeWorkoutPlanId && !todayWorkoutDay && (!trainData.data || trainData.status === 404) && (
+        <div className="px-5 pt-4">
+          <CoachPersonalWorkoutWelcome />
+        </div>
+      )}
 
       {activeSession && (
         <div className="px-5 pt-5">
@@ -307,7 +320,7 @@ export default async function Home() {
         bodyFatDiff={userTrainData?.bodyFatDiff}
       />
 
-      <BottomNav />
+      <BottomNav isCoach={isCoach} />
     </div>
   );
 }
