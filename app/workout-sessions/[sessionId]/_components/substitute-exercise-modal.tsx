@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import {
   AlertCircle,
   ArrowRightLeft,
@@ -55,6 +55,33 @@ export function SubstituteExerciseModal({
 
   const [selectedMuscleFilter, setSelectedMuscleFilter] = useState<MuscleGroup | "">("");
 
+  const [viewportHeight, setViewportHeight] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen || typeof window === "undefined") return;
+
+    const checkViewport = () => {
+      setIsMobile(window.innerWidth < 640);
+      if (window.visualViewport) {
+        setViewportHeight(window.visualViewport.height);
+      } else {
+        setViewportHeight(window.innerHeight);
+      }
+    };
+
+    checkViewport();
+    window.addEventListener("resize", checkViewport);
+    window.visualViewport?.addEventListener("resize", checkViewport);
+    window.visualViewport?.addEventListener("scroll", checkViewport);
+
+    return () => {
+      window.removeEventListener("resize", checkViewport);
+      window.visualViewport?.removeEventListener("resize", checkViewport);
+      window.visualViewport?.removeEventListener("scroll", checkViewport);
+    };
+  }, [isOpen]);
+
   // Busca instantânea em memória (0 ms)
   const filteredCatalog = useMemo(() => {
     const list = search(query, selectedMuscleFilter);
@@ -100,13 +127,23 @@ export function SubstituteExerciseModal({
       role="dialog"
       aria-modal="true"
       aria-labelledby="substitute-modal-title"
-      className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-background/80 backdrop-blur-sm animate-in fade-in"
+      className="fixed inset-0 z-[60] flex items-start sm:items-center justify-center p-0 sm:p-4 bg-background/80 backdrop-blur-sm animate-in fade-in overflow-hidden"
       onClick={handleClose}
     >
       <div
-        className="w-full max-w-lg rounded-t-3xl sm:rounded-3xl border border-border bg-card p-5 shadow-2xl flex flex-col gap-4 max-h-[90vh] pb-[max(1.25rem,calc(0.75rem+env(safe-area-inset-bottom,0px)))] sm:pb-5 animate-in slide-in-from-bottom-4 sm:zoom-in-95"
+        style={
+          isMobile && viewportHeight
+            ? {
+                height: `${viewportHeight}px`,
+                maxHeight: `${viewportHeight}px`,
+              }
+            : undefined
+        }
+        className="w-full max-w-lg h-full sm:h-auto sm:max-h-[90vh] rounded-none sm:rounded-3xl border-0 sm:border border-border bg-card p-4 sm:p-5 shadow-2xl flex flex-col gap-3 sm:gap-4 overflow-hidden animate-in slide-in-from-bottom-4 sm:zoom-in-95 pt-[max(0.75rem,env(safe-area-inset-top,0px))] sm:pt-5 pb-[max(0.75rem,calc(0.5rem+env(safe-area-inset-bottom,0px)))] sm:pb-5"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Barra de arraste (handle) no topo para visual nativo no mobile */}
+        <div className="mx-auto w-10 h-1 rounded-full bg-muted-foreground/30 sm:hidden -mt-0.5 mb-0.5 shrink-0" />
         {/* Header */}
         <div className="flex items-start justify-between border-b border-border/60 pb-3">
           <div className="flex items-center gap-2.5">
@@ -320,7 +357,7 @@ export function SubstituteExerciseModal({
           </div>
 
           {/* Lista de Exercícios */}
-          <div className="flex flex-col gap-1.5 overflow-y-auto max-h-56 sm:max-h-64 pr-1">
+          <div className="flex-1 min-h-0 flex flex-col gap-1.5 overflow-y-auto sm:max-h-72 pr-1 overscroll-contain">
             {isLoadingCatalog ? (
               <div className="flex flex-col items-center justify-center py-8 gap-2 text-muted-foreground">
                 <Loader2 className="size-5 animate-spin text-primary" />

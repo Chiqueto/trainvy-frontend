@@ -56,11 +56,20 @@ class SceneBoundary extends Component<
 export function Exercise3DViewer({
   exercise,
   compact = false,
+  inDialog = false,
 }: {
   exercise: ExerciseAnimation;
   compact?: boolean;
+  inDialog?: boolean;
 }) {
-  return <Viewer key={exercise} exercise={exercise} compact={compact} />;
+  return (
+    <Viewer
+      key={exercise}
+      exercise={exercise}
+      compact={compact}
+      inDialog={inDialog}
+    />
+  );
 }
 
 function getPhaseLabel(phase: number): { name: string; tag: string } {
@@ -83,9 +92,11 @@ function getPhaseLabel(phase: number): { name: string; tag: string } {
 function Viewer({
   exercise,
   compact = false,
+  inDialog = false,
 }: {
   exercise: ExerciseAnimation;
   compact?: boolean;
+  inDialog?: boolean;
 }) {
   const playback = useRef({ phase: 0, playing: false, speed: 1 });
   const slider = useRef<HTMLInputElement>(null);
@@ -169,39 +180,41 @@ function Viewer({
   return (
     <section
       aria-label={`Demonstração 3D: ${exerciseName}`}
-      className="relative flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#070b12] text-white shadow-2xl transition-all"
+      className="relative flex flex-col overflow-hidden rounded-2xl border border-border/80 bg-[#070b12] text-white shadow-lg transition-all"
     >
-      {/* 1. Header Overlay de Informações Anatômicas */}
-      <div className="flex flex-wrap items-center justify-between gap-2.5 border-b border-white/10 bg-slate-950/70 px-4 py-3 backdrop-blur-md">
-        <div className="flex items-center gap-2">
-          <span className="flex size-6 items-center justify-center rounded-lg bg-orange-500/20 text-orange-400">
-            <Box className="size-3.5" />
-          </span>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-heading text-xs font-bold text-white tracking-wide">
-                {exerciseName}
-              </span>
-              <span className="inline-flex items-center gap-1 rounded-full bg-orange-500/15 border border-orange-500/30 px-2 py-0.5 text-[9px] font-bold text-orange-400 uppercase tracking-wider">
-                <Sparkles className="size-2.5" /> 3D Interativo
-              </span>
+      {/* 1. Header Overlay de Informações Anatômicas (oculto quando em modal, pois o modal já possui cabeçalho) */}
+      {!inDialog && (
+        <div className="flex flex-wrap items-center justify-between gap-2.5 border-b border-white/10 bg-slate-950/70 px-4 py-3 backdrop-blur-md">
+          <div className="flex items-center gap-2">
+            <span className="flex size-6 items-center justify-center rounded-lg bg-orange-500/20 text-orange-400">
+              <Box className="size-3.5" />
+            </span>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-heading text-xs font-bold text-white tracking-wide">
+                  {exerciseName}
+                </span>
+                <span className="inline-flex items-center gap-1 rounded-full bg-orange-500/15 border border-orange-500/30 px-2 py-0.5 text-[9px] font-bold text-orange-400 uppercase tracking-wider">
+                  <Sparkles className="size-2.5" /> 3D Interativo
+                </span>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Grupo Muscular em Destaque */}
-        <div className="flex items-center gap-1.5 rounded-full bg-white/5 border border-white/10 px-2.5 py-1 text-[11px] text-slate-300">
-          <span className="size-2 rounded-full bg-orange-500 animate-pulse" />
-          <span className="font-medium text-slate-400">Em destaque:</span>
-          <strong className="font-semibold text-orange-200">
-            {targetMuscles}
-          </strong>
+          {/* Grupo Muscular em Destaque */}
+          <div className="flex items-center gap-1.5 rounded-full bg-white/5 border border-white/10 px-2.5 py-1 text-[11px] text-slate-300">
+            <span className="size-2 rounded-full bg-orange-500 animate-pulse" />
+            <span className="font-medium text-slate-400">Em destaque:</span>
+            <strong className="font-semibold text-orange-200">
+              {targetMuscles}
+            </strong>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* 2. Canvas 3D Interativo com overlays de câmera e HUD */}
       <div
-        className={`relative w-full ${compact ? "h-[320px] sm:h-[380px]" : "h-[360px] sm:h-[430px]"}`}
+        className={`relative w-full ${inDialog ? "h-[200px] sm:h-[240px]" : compact ? "h-[300px] sm:h-[360px]" : "h-[360px] sm:h-[430px]"}`}
         data-pose-revision={revision}
       >
         <SceneBoundary>
@@ -286,14 +299,25 @@ function Viewer({
           </div>
         )}
 
+        {/* HUD: Grupo Muscular em Destaque (quando inDialog) */}
+        {inDialog && loaded && !failed && (
+          <div className="pointer-events-none absolute left-3 bottom-2 flex items-center gap-1.5 rounded-full bg-slate-950/80 border border-white/10 px-2.5 py-1 text-[10px] text-slate-300 shadow-md backdrop-blur-md">
+            <span className="size-1.5 rounded-full bg-orange-500 animate-pulse" />
+            <span className="font-medium text-slate-400">Destaque:</span>
+            <strong className="font-semibold text-orange-200">{targetMuscles}</strong>
+          </div>
+        )}
+
         {/* Dica de Interação no rodapé da viewport */}
-        <div className="pointer-events-none absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-slate-950/70 border border-white/10 px-3 py-0.5 text-[10px] text-slate-400 backdrop-blur-sm hidden sm:block">
-          Arraste para girar em 360° · Scroll para zoom
-        </div>
+        {!inDialog && (
+          <div className="pointer-events-none absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-slate-950/70 border border-white/10 px-3 py-0.5 text-[10px] text-slate-400 backdrop-blur-sm hidden sm:block">
+            Arraste para girar em 360° · Scroll para zoom
+          </div>
+        )}
       </div>
 
       {/* 3. Barra de Controles e Scrubbing */}
-      <div className="space-y-3 border-t border-white/10 bg-slate-950/90 p-3.5 sm:p-4 backdrop-blur-md">
+      <div className={`space-y-2.5 border-t border-white/10 bg-slate-950/90 ${inDialog ? "p-3 sm:p-3.5" : "p-3.5 sm:p-4"} backdrop-blur-md`}>
         {/* Slider de scrub da repetição com preenchimento visual */}
         <div className="space-y-1">
           <div className="flex items-center justify-between text-[11px] font-heading text-slate-400">

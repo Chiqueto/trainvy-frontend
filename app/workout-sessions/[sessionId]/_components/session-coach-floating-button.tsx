@@ -30,7 +30,7 @@ export function SessionCoachFloatingButton({
   const displayName = coachName ? coachName.split(" ")[0] : "Coach";
 
   return (
-    <div className="fixed right-4 sm:right-6 bottom-6 sm:bottom-8 z-40 flex items-center gap-2 select-none">
+    <div className="fixed right-4 sm:right-6 bottom-[calc(5rem+env(safe-area-inset-bottom,0px))] sm:bottom-8 z-40 flex items-center gap-2 select-none">
       {/* Tooltip flutuante discreto */}
       {showTooltip && (
         <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-card/95 border border-primary/30 text-[11px] font-heading font-semibold text-foreground shadow-lg backdrop-blur-md animate-in fade-in slide-in-from-right-2 duration-300">

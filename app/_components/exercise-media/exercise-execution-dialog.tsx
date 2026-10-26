@@ -244,7 +244,7 @@ export function ExerciseExecutionDialog({
         </div>
 
         {/* Corpo com Scroll */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
+        <div className={cn("flex-1 overflow-y-auto", animation ? "p-3.5 sm:p-4 space-y-3" : "p-4 sm:p-5 space-y-4")}>
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-16 text-muted-foreground space-y-3">
               <Loader2 className="size-7 animate-spin text-primary" />
@@ -329,7 +329,12 @@ export function ExerciseExecutionDialog({
 
               {/* Visualização Ativa: 3D ou Sequência 2D */}
               {animation && mediaTab === "3d" ? (
-                <Exercise3DViewer key={dialogKey} exercise={animation} />
+                <Exercise3DViewer
+                  key={dialogKey}
+                  exercise={animation}
+                  inDialog={true}
+                  compact={true}
+                />
               ) : data ? (
                 <ExerciseMediaPreview
                   media={data}
