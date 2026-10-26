@@ -20,8 +20,6 @@ import { StartFreeWorkoutButton } from "./_components/start-free-workout-button"
 import { WorkoutDayCard } from "./_components/workout-day-card";
 import { Logo } from "./_components/logo";
 import { HomeBodyMetricsCard } from "./_components/home-body-metrics-card";
-import { CoachPerspectiveSwitcher } from "./_components/coach-perspective-switcher";
-import { CoachPersonalWorkoutWelcome } from "./_components/coach-personal-workout-welcome";
 
 export default async function Home() {
   const session = await authClient.getSession({
@@ -153,17 +151,6 @@ export default async function Home() {
         </div>
       </div>
 
-      {isCoach && (
-        <div className="px-5 pt-4">
-          <CoachPerspectiveSwitcher currentPerspective="athlete" />
-        </div>
-      )}
-
-      {isCoach && !activeWorkoutPlanId && !todayWorkoutDay && (!trainData.data || trainData.status === 404) && (
-        <div className="px-5 pt-4">
-          <CoachPersonalWorkoutWelcome />
-        </div>
-      )}
 
       {activeSession && (
         <div className="px-5 pt-5">

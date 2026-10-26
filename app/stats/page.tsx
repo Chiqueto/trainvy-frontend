@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { authClient } from "@/app/_lib/auth-client";
 import { headers } from "next/headers";
 import {
+  getCommercialContext,
   getStats,
   getUserMetricsHistory,
   getUserTrainData,
@@ -39,14 +40,19 @@ export default async function StatsPage() {
     .format("YYYY-MM-DD");
   const to = today.endOf("month").add(7, "day").format("YYYY-MM-DD");
 
-  const [statsResponse, trainData, metricsHistoryResponse] = await Promise.all([
+  const [statsResponse, trainData, metricsHistoryResponse, commercialRes] = await Promise.all([
     getStats({ from, to, timezoneOffset: today.utcOffset() }),
     getUserTrainData(),
     getUserMetricsHistory().catch(() => null),
+    getCommercialContext({ cache: "no-store" }).catch(() => null),
   ]);
 
+  const isCoach =
+    commercialRes?.status === 200 && commercialRes.data.accountType === "COACH";
+
   const needsOnboarding =
-    (trainData.status === 200 && !trainData.data) || trainData.status === 404;
+    !isCoach &&
+    ((trainData.status === 200 && !trainData.data) || trainData.status === 404);
   if (needsOnboarding) redirect("/onboarding");
 
   const userTrainData = trainData.status === 200 ? trainData.data : null;
@@ -139,7 +145,7 @@ export default async function StatsPage() {
         </section>
       </main>
 
-      <BottomNav activePage="stats" />
+      <BottomNav isCoach={isCoach} activePage="stats" />
     </div>
   );
 }

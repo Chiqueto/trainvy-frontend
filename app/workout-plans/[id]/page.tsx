@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { authClient } from "@/app/_lib/auth-client";
 import { headers } from "next/headers";
 import {
+  getCommercialContext,
   getWorkoutPlan,
   getUserTrainData,
 } from "@/app/_lib/api/fetch-generated";
@@ -37,13 +38,18 @@ export default async function WorkoutPlanPage({
   if (!session.data?.user) redirect("/auth");
 
   const { id } = await params;
-  const [workoutPlanData, trainData] = await Promise.all([
+  const [workoutPlanData, trainData, commercialRes] = await Promise.all([
     getWorkoutPlan(id),
     getUserTrainData(),
+    getCommercialContext({ cache: "no-store" }).catch(() => null),
   ]);
 
+  const isCoach =
+    commercialRes?.status === 200 && commercialRes.data.accountType === "COACH";
+
   const needsOnboarding =
-    (trainData.status === 200 && !trainData.data) || trainData.status === 404;
+    !isCoach &&
+    ((trainData.status === 200 && !trainData.data) || trainData.status === 404);
   if (needsOnboarding) redirect("/onboarding");
 
   if (workoutPlanData.status !== 200) redirect("/");
@@ -119,7 +125,7 @@ export default async function WorkoutPlanPage({
         })}
       </div>
 
-      <BottomNav activePage="planning" />
+      <BottomNav isCoach={isCoach} activePage="planning" />
     </div>
   );
 }

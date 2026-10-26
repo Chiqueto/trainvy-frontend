@@ -21,7 +21,7 @@ export default async function OnboardingPage() {
   // Personal Trainers (COACH) não fazem onboarding de aluno iniciante
   const commercialRes = await getCommercialContext({ cache: "no-store" }).catch(() => null);
   if (commercialRes?.status === 200 && commercialRes.data.accountType === "COACH") {
-    redirect("/auth/welcome");
+    redirect("/personal");
   }
 
   const returnTo = await readReturnToCookie();

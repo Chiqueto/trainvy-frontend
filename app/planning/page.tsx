@@ -11,6 +11,7 @@ import {
 
 import { authClient } from "@/app/_lib/auth-client";
 import {
+  getCommercialContext,
   getPlanningOverview,
   getUserTrainData,
   listAthletePrescriptions,
@@ -35,7 +36,7 @@ export default async function PlanningPage() {
 
   if (!session.data?.user) redirect("/auth");
 
-  const [overviewResponse, trainData, prescriptionsResponse] =
+  const [overviewResponse, trainData, prescriptionsResponse, commercialRes] =
     await Promise.all([
       getPlanningOverview().catch((err) => {
         console.error("Failed to fetch planning overview:", err);
@@ -43,10 +44,15 @@ export default async function PlanningPage() {
       }),
       getUserTrainData(),
       listAthletePrescriptions().catch(() => null),
+      getCommercialContext({ cache: "no-store" }).catch(() => null),
     ]);
 
+  const isCoach =
+    commercialRes?.status === 200 && commercialRes.data.accountType === "COACH";
+
   const needsOnboarding =
-    (trainData.status === 200 && !trainData.data) || trainData.status === 404;
+    !isCoach &&
+    ((trainData.status === 200 && !trainData.data) || trainData.status === 404);
   if (needsOnboarding) redirect("/onboarding");
 
   // Tratamento amigável para erro de visão geral ou INCONSISTENT_PLANNING_STATE
@@ -89,7 +95,7 @@ export default async function PlanningPage() {
           </div>
         </div>
 
-        <BottomNav activePage="planning" />
+        <BottomNav isCoach={isCoach} activePage="planning" />
       </div>
     );
   }
@@ -182,7 +188,7 @@ export default async function PlanningPage() {
         />
       </main>
 
-      <BottomNav activePage="planning" />
+      <BottomNav isCoach={isCoach} activePage="planning" />
     </div>
   );
 }

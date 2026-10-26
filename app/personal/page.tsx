@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { BottomNav } from "@/app/_components/bottom-nav";
-import { CoachPerspectiveSwitcher } from "@/app/_components/coach-perspective-switcher";
+
 import {
   getCommercialContext,
   listCoachAthletes,
@@ -38,7 +38,6 @@ export default async function PersonalPage() {
     return (
       <div className="flex min-h-svh flex-col bg-background pb-24">
         <main className="mx-auto w-full max-w-lg px-5 py-4 flex flex-col gap-5">
-          <CoachPerspectiveSwitcher currentPerspective="coach" />
           <PersonalHeader />
           <CoachPendingSubscriptionCard
             planName={plan?.name}
@@ -66,7 +65,6 @@ export default async function PersonalPage() {
   return (
     <div className="flex min-h-svh flex-col bg-background pb-24">
       <main className="mx-auto w-full max-w-lg px-5 py-4 flex flex-col gap-5">
-        <CoachPerspectiveSwitcher currentPerspective="coach" />
         <PersonalHeader />
 
         {activeCount === 0 && invitations.length === 0 && (
