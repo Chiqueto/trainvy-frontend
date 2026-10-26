@@ -4,6 +4,7 @@ import { useMemo, useState, useTransition } from "react";
 import {
   AlertCircle,
   ArrowRightLeft,
+  Box,
   Dumbbell,
   Loader2,
   RotateCcw,
@@ -11,6 +12,8 @@ import {
   X,
   Zap,
 } from "lucide-react";
+
+import { getExerciseAnimation } from "@/app/_components/exercise-3d/exercises";
 
 import type {
   GetWorkoutSession200SessionExercisesItem,
@@ -350,9 +353,20 @@ export function SubstituteExerciseModal({
                     className="flex items-center justify-between gap-3 rounded-xl border border-border/60 bg-card hover:bg-muted/40 hover:border-primary/30 p-2.5 transition-all text-left cursor-pointer group disabled:opacity-50"
                   >
                     <div className="flex flex-col min-w-0">
-                      <span className="font-heading text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">
-                        {item.name}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="font-heading text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">
+                          {item.name}
+                        </span>
+                        {getExerciseAnimation(item.id) !== null && (
+                          <span
+                            title="Demonstração 3D disponível"
+                            className="inline-flex items-center gap-1 rounded-full bg-orange-500/15 text-orange-600 dark:text-orange-400 border border-orange-500/30 px-1.5 py-0.2 text-[9px] font-bold"
+                          >
+                            <Box className="size-2.5" />
+                            <span>3D</span>
+                          </span>
+                        )}
+                      </div>
                       {primaryMuscle && (
                         <span className="font-heading text-[11px] text-muted-foreground">
                           {getMuscleGroupLabel(

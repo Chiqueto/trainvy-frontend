@@ -4,6 +4,7 @@ import Link from "next/link";
 import {
   AlertCircle,
   ArrowRight,
+  Box,
   RotateCcw,
   Sparkles,
 } from "lucide-react";
@@ -146,6 +147,32 @@ export default async function PlanningPage() {
             </div>
           </div>
           <ArrowRight className="size-4 text-primary shrink-0 group-hover:translate-x-1 transition-transform" />
+        </Link>
+
+        {/* Banner Catálogo & Modelagem 3D */}
+        <Link
+          href="/lab/exercises-3d"
+          className="group relative flex items-center justify-between gap-4 p-4 rounded-3xl border border-orange-500/25 bg-gradient-to-r from-orange-500/10 via-orange-500/5 to-transparent hover:border-orange-500/40 transition-all shadow-xs"
+        >
+          <div className="flex items-center gap-3.5">
+            <div className="flex size-11 items-center justify-center rounded-2xl bg-orange-500 text-slate-950 shadow-md shadow-orange-500/20 shrink-0 group-hover:scale-105 transition-transform">
+              <Box className="size-5.5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-heading text-xs font-bold text-foreground">
+                  Catálogo & Modelagem 3D dos Exercícios
+                </span>
+                <span className="rounded-full bg-orange-500/20 px-2 py-0.5 text-[9px] font-bold text-orange-600 dark:text-orange-400 uppercase">
+                  3D Interativo
+                </span>
+              </div>
+              <p className="text-[11px] text-muted-foreground mt-0.5">
+                Veja o agachamento e supino em 360°, cadência controlada e grupos musculares destacados
+              </p>
+            </div>
+          </div>
+          <ArrowRight className="size-4 text-orange-500 shrink-0 group-hover:translate-x-1 transition-transform" />
         </Link>
 
         <PlanningHub

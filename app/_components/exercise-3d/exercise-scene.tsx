@@ -22,35 +22,49 @@ interface SceneProps {
 function Barbell() {
   return (
     <group>
+      {/* Barra Olímpica cromada */}
       <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
-        <cylinderGeometry args={[0.014, 0.014, 2.1, 20]} />
+        <cylinderGeometry args={[0.014, 0.014, 2.2, 24]} />
         <meshStandardMaterial
-          color="#c7d0db"
-          metalness={0.8}
-          roughness={0.28}
+          color="#d1d9e2"
+          metalness={0.88}
+          roughness={0.22}
         />
       </mesh>
+      {/* Mangas e Anilhas de cada lado */}
       {[-1, 1].map((side) => (
-        <group key={side} position={[side * 0.77, 0, 0]}>
+        <group key={side} position={[side * 0.78, 0, 0]}>
+          {/* Anilha Principal Olímpica (Laranja Trainvy) */}
           <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
-            <cylinderGeometry args={[0.19, 0.19, 0.07, 40]} />
+            <cylinderGeometry args={[0.2, 0.2, 0.06, 44]} />
             <meshStandardMaterial
-              color="#ed7044"
-              roughness={0.65}
+              color="#f97316"
+              roughness={0.5}
+              metalness={0.2}
+            />
+          </mesh>
+          {/* Relevo central da anilha */}
+          <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
+            <cylinderGeometry args={[0.13, 0.13, 0.065, 36]} />
+            <meshStandardMaterial
+              color="#ea580c"
+              roughness={0.6}
               metalness={0.15}
             />
           </mesh>
+          {/* Anel central de aço */}
           <mesh rotation={[0, 0, Math.PI / 2]}>
-            <cylinderGeometry args={[0.045, 0.045, 0.09, 24]} />
+            <cylinderGeometry args={[0.048, 0.048, 0.075, 24]} />
             <meshStandardMaterial
-              color="#bcc8d8"
-              metalness={0.8}
-              roughness={0.25}
+              color="#cbd5e1"
+              metalness={0.85}
+              roughness={0.2}
             />
           </mesh>
-          <mesh position={[side * 0.065, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-            <cylinderGeometry args={[0.032, 0.032, 0.04, 16]} />
-            <meshStandardMaterial color="#202733" />
+          {/* Presilha / Colarinho */}
+          <mesh position={[side * 0.055, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.03, 0.03, 0.035, 20]} />
+            <meshStandardMaterial color="#1e293b" metalness={0.7} roughness={0.3} />
           </mesh>
         </group>
       ))}
@@ -61,26 +75,85 @@ function Barbell() {
 function Bench() {
   return (
     <group>
-      <mesh position={[0, 0.4, 0.08]} castShadow receiveShadow>
-        <boxGeometry args={[0.29, 0.09, 1.23]} />
-        <meshStandardMaterial color="#263245" roughness={0.9} />
+      {/* Estofamento do Banco (Couro sintético esportivo premium) */}
+      <mesh position={[0, 0.42, 0.08]} castShadow receiveShadow>
+        <boxGeometry args={[0.3, 0.08, 1.25]} />
+        <meshStandardMaterial color="#182232" roughness={0.75} metalness={0.08} />
       </mesh>
-      {[-0.36, 0.48].map((z) => (
+      {/* Friso estético central do estofado */}
+      <mesh position={[0, 0.461, 0.08]}>
+        <boxGeometry args={[0.015, 0.002, 1.2]} />
+        <meshStandardMaterial color="#f97316" roughness={0.4} />
+      </mesh>
+
+      {/* Estrutura metálica de suporte */}
+      {[-0.38, 0.5].map((z) => (
         <group key={z}>
-          <mesh position={[0, 0.2, z]} castShadow>
-            <boxGeometry args={[0.08, 0.36, 0.08]} />
+          {/* Coluna vertical */}
+          <mesh position={[0, 0.21, z]} castShadow>
+            <boxGeometry args={[0.08, 0.38, 0.08]} />
             <meshStandardMaterial
-              color="#77859a"
-              metalness={0.65}
-              roughness={0.35}
+              color="#334155"
+              metalness={0.75}
+              roughness={0.28}
             />
           </mesh>
+          {/* Pés transversais com sapatas de borracha */}
           <mesh position={[0, 0.035, z]} castShadow>
-            <boxGeometry args={[0.55, 0.07, 0.16]} />
-            <meshStandardMaterial color="#303b4b" />
+            <boxGeometry args={[0.56, 0.07, 0.12]} />
+            <meshStandardMaterial color="#1e293b" metalness={0.6} roughness={0.4} />
           </mesh>
+          {/* Sapatas antiderrapantes nos extremos */}
+          {[-0.26, 0.26].map((x) => (
+            <mesh key={x} position={[x, 0.01, z]}>
+              <boxGeometry args={[0.06, 0.02, 0.13]} />
+              <meshStandardMaterial color="#0b0f17" roughness={0.9} />
+            </mesh>
+          ))}
         </group>
       ))}
+
+      {/* Barra transversal de reforço */}
+      <mesh position={[0, 0.12, 0.06]} castShadow>
+        <boxGeometry args={[0.06, 0.06, 0.86]} />
+        <meshStandardMaterial color="#334155" metalness={0.75} roughness={0.3} />
+      </mesh>
+    </group>
+  );
+}
+
+function StudioPlatform() {
+  return (
+    <group position={[0, 0, 0]}>
+      {/* Base elevada do pódio esportivo */}
+      <mesh position={[0, -0.015, 0]} receiveShadow>
+        <cylinderGeometry args={[2.0, 2.05, 0.03, 64]} />
+        <meshStandardMaterial color="#0f172a" roughness={0.8} metalness={0.2} />
+      </mesh>
+
+      {/* Plataforma de treino emborrachada antiderrapante */}
+      <mesh position={[0, 0.001, 0]} receiveShadow>
+        <cylinderGeometry args={[1.92, 1.92, 0.005, 64]} />
+        <meshStandardMaterial color="#111827" roughness={0.9} metalness={0.05} />
+      </mesh>
+
+      {/* Anel de destaque neon sutil (Laranja Trainvy) */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.004, 0]}>
+        <ringGeometry args={[1.88, 1.91, 64]} />
+        <meshBasicMaterial color="#f97316" transparent opacity={0.65} />
+      </mesh>
+
+      {/* Anel interno de referência de postura */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.003, 0]}>
+        <ringGeometry args={[1.2, 1.215, 64]} />
+        <meshBasicMaterial color="#334155" transparent opacity={0.4} />
+      </mesh>
+
+      {/* Piso exterior suave e escurecido */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.025, 0]} receiveShadow>
+        <circleGeometry args={[6, 48]} />
+        <meshStandardMaterial color="#080c14" roughness={1} />
+      </mesh>
     </group>
   );
 }
@@ -149,6 +222,41 @@ function ContextMonitor({ onError }: { onError: () => void }) {
   return null;
 }
 
+function getCameraParams(
+  exercise: ExerciseAnimation,
+  view: "perspective" | "front" | "side",
+): { position: [number, number, number]; target: [number, number, number] } {
+  const squat = exercise === "squat";
+
+  if (squat) {
+    const target: [number, number, number] = [0, 0.82, 0];
+    switch (view) {
+      case "front":
+        return { position: [0, 0.95, 2.55], target };
+      case "side":
+        return { position: [2.65, 0.9, 0], target };
+      case "perspective":
+      default:
+        return { position: [1.85, 1.25, 2.2], target };
+    }
+  }
+
+  // Supino reto: foco central no tórax e trajetória da barra
+  const target: [number, number, number] = [0, 0.6, 0.05];
+  switch (view) {
+    case "front":
+      // Vista frontal elevada em direção ao peitoral
+      return { position: [0, 1.25, 2.15], target };
+    case "side":
+      // Vista lateral pura para avaliar trajetória vertical da barra
+      return { position: [2.35, 0.78, 0.05], target };
+    case "perspective":
+    default:
+      // Vista 3/4 dinâmica destacando peitoral e braços
+      return { position: [1.75, 1.3, 1.65], target };
+  }
+}
+
 function CameraView({
   view,
   exercise,
@@ -156,16 +264,9 @@ function CameraView({
 }: Pick<SceneProps, "view" | "exercise" | "revision">) {
   const { camera, invalidate } = useThree();
   useEffect(() => {
-    camera.position.set(
-      ...((view === "front"
-        ? exercise === "bench-press"
-          ? [0, 3.8, 0]
-          : [0, 1.1, 3.8]
-        : view === "side"
-          ? [3.8, 1.2, 0]
-          : [2.8, 1.9, 3.3]) as [number, number, number]),
-    );
-    camera.lookAt(0, exercise === "squat" ? 0.85 : 0.6, 0);
+    const { position, target } = getCameraParams(exercise, view);
+    camera.position.set(...position);
+    camera.lookAt(...target);
     invalidate();
   }, [camera, exercise, view, invalidate]);
   useEffect(() => {
@@ -175,23 +276,15 @@ function CameraView({
 }
 
 export default function ExerciseScene(props: SceneProps) {
-  const squat = props.exercise === "squat";
   const benchPress = props.exercise === "bench-press";
-  const target: [number, number, number] = [0, squat ? 0.85 : 0.6, 0];
-  const position: [number, number, number] =
-    props.view === "front"
-      ? squat
-        ? [0, 1.1, 3.8]
-        : [0, 3.8, 0]
-      : props.view === "side"
-        ? [3.8, 1.2, 0]
-        : [2.8, 1.9, 3.3];
+  const { position, target } = getCameraParams(props.exercise, props.view);
+
   return (
     <Canvas
       shadows
       dpr={[1, 1.5]}
       frameloop={props.playing ? "always" : "demand"}
-      camera={{ position, fov: 38, near: 0.1, far: 30 }}
+      camera={{ position, fov: 36, near: 0.1, far: 30 }}
       gl={{ antialias: true, powerPreference: "low-power" }}
       fallback={
         <p className="p-6 text-sm text-white">
@@ -199,43 +292,60 @@ export default function ExerciseScene(props: SceneProps) {
         </p>
       }
     >
-      <color attach="background" args={["#101722"]} />
-      <hemisphereLight args={["#e2ecff", "#536277", 2]} />
+      {/* Fundo do estúdio em tom escuro profundo de alto contraste */}
+      <color attach="background" args={["#0b0f17"]} />
+
+      {/* Iluminação ambiente equilibrada com luz de estúdio */}
+      <hemisphereLight args={["#e2ecff", "#1e293b", 1.8]} />
+
+      {/* Luz Principal Direcional (Key Light) com projeção de sombras refinadas */}
       <directionalLight
-        position={[3, 5, 4]}
-        intensity={3}
+        position={[2.5, 4.5, 3.2]}
+        intensity={2.8}
         castShadow
         shadow-mapSize={[1024, 1024]}
-        shadow-camera-left={-2}
-        shadow-camera-right={2}
-        shadow-camera-top={3}
-        shadow-camera-bottom={-2}
-        shadow-bias={-0.0005}
+        shadow-camera-left={-2.2}
+        shadow-camera-right={2.2}
+        shadow-camera-top={2.8}
+        shadow-camera-bottom={-1.8}
+        shadow-bias={-0.0004}
       />
-      <directionalLight position={[-3, 3, -2]} intensity={2} color="#b0cfff" />
-      <mesh
-        rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, -0.005, 0]}
-        receiveShadow
-      >
-        <circleGeometry args={[4, 64]} />
-        <meshStandardMaterial color="#192333" roughness={1} />
-      </mesh>
-      <gridHelper
-        args={[8, 32, "#303f53", "#202d40"]}
-        position={[0, 0.001, 0]}
+
+      {/* Luz de Contorno (Rim Light / Backlight) dourada/âmbar para destacar fibras musculares */}
+      <directionalLight
+        position={[-2.8, 3.2, -2.6]}
+        intensity={2.2}
+        color="#fed7aa"
       />
+
+      {/* Luz de Preenchimento Suave Frontal (Soft Fill) */}
+      <directionalLight
+        position={[0, 1.4, 3.0]}
+        intensity={0.9}
+        color="#bfdbfe"
+      />
+
+      {/* Palco esportivo / Pódio de treino com iluminação */}
+      <StudioPlatform />
+
+      {/* Banco olímpico exclusivo para supino reto */}
       {benchPress && <Bench />}
+
       <Suspense fallback={null}>
         <Athlete {...props} />
       </Suspense>
+
       <OrbitControls
-        key={props.view}
+        key={`${props.exercise}-${props.view}`}
         target={target}
         enablePan={false}
-        minDistance={2}
-        maxDistance={6}
-        maxPolarAngle={Math.PI / 2 - 0.03}
+        enableDamping
+        dampingFactor={0.07}
+        rotateSpeed={0.85}
+        minDistance={1.3}
+        maxDistance={4.5}
+        maxPolarAngle={Math.PI / 2 - 0.02}
+        minPolarAngle={0.15}
       />
       <ContextMonitor onError={props.onError} />
       <CameraView

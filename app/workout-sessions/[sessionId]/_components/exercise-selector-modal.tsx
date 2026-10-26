@@ -4,6 +4,7 @@ import { useMemo, useState, useTransition } from "react";
 import {
   AlertCircle,
   ArrowLeft,
+  Box,
   Check,
   Dumbbell,
   Eye,
@@ -13,6 +14,9 @@ import {
   Tag,
   X,
 } from "lucide-react";
+
+import { getExerciseAnimation } from "@/app/_components/exercise-3d/exercises";
+import { ExerciseExecutionDialog } from "@/app/_components/exercise-media";
 
 import type {
   CreateExerciseBodyPrimaryMuscleGroupsItem,
@@ -63,11 +67,20 @@ export function ExerciseSelectorModal({
   } = useExerciseCatalog({ autoSync: isOpen });
 
   const [selectedMuscleFilter, setSelectedMuscleFilter] = useState<MuscleGroup | "">("");
+  const [only3D, setOnly3D] = useState(false);
+  const [previewExercise, setPreviewExercise] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   // Busca instantânea em memória (0 ms)
   const exercises = useMemo(() => {
-    return search(query, selectedMuscleFilter);
-  }, [search, query, selectedMuscleFilter]);
+    const list = search(query, selectedMuscleFilter);
+    if (only3D) {
+      return list.filter((ex) => getExerciseAnimation(ex.id) !== null);
+    }
+    return list;
+  }, [search, query, selectedMuscleFilter, only3D]);
 
   const isLoading = allExercises.length === 0 && isSyncing;
 
@@ -314,30 +327,46 @@ export function ExerciseSelectorModal({
               )}
             </div>
 
-            {/* Chips Rápidos de Filtro por Grupo Muscular */}
+            {/* Chips Rápidos de Filtro por Grupo Muscular e 3D */}
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs scrollbar-none">
               <button
                 type="button"
-                onClick={() => setSelectedMuscleFilter("")}
+                onClick={() => {
+                  setSelectedMuscleFilter("");
+                  setOnly3D(false);
+                }}
                 className={`rounded-lg px-2.5 py-1 text-[11px] font-heading font-semibold transition shrink-0 cursor-pointer ${
-                  selectedMuscleFilter === ""
+                  selectedMuscleFilter === "" && !only3D
                     ? "bg-primary text-primary-foreground shadow-xs"
                     : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
                 }`}
               >
                 Todos
               </button>
+              <button
+                type="button"
+                onClick={() => setOnly3D(!only3D)}
+                className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-[11px] font-heading font-semibold transition shrink-0 cursor-pointer ${
+                  only3D
+                    ? "bg-orange-500 text-slate-950 shadow-xs font-bold"
+                    : "bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/25 hover:bg-orange-500/20"
+                }`}
+              >
+                <Box className="size-3" />
+                <span>Com 3D</span>
+              </button>
               {ALL_MUSCLE_GROUPS.map((mg) => (
                 <button
                   key={mg.value}
                   type="button"
-                  onClick={() =>
+                  onClick={() => {
                     setSelectedMuscleFilter(
                       selectedMuscleFilter === mg.value ? "" : mg.value,
-                    )
-                  }
+                    );
+                    setOnly3D(false);
+                  }}
                   className={`rounded-lg px-2.5 py-1 text-[11px] font-heading font-semibold transition shrink-0 cursor-pointer ${
-                    selectedMuscleFilter === mg.value
+                    selectedMuscleFilter === mg.value && !only3D
                       ? "bg-primary text-primary-foreground shadow-xs"
                       : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
                   }`}
@@ -477,7 +506,15 @@ export function ExerciseSelectorModal({
                             </span>
                           )}
 
-                          {exercise.hasMedia && (
+                          {getExerciseAnimation(exercise.id) !== null ? (
+                            <span
+                              title="Demonstração 3D interativa disponível"
+                              className="inline-flex items-center gap-1 rounded-full bg-orange-500/15 text-orange-600 dark:text-orange-400 border border-orange-500/30 px-1.5 py-0.5 text-[9px] font-bold"
+                            >
+                              <Box className="size-2.5" />
+                              <span>3D</span>
+                            </span>
+                          ) : exercise.hasMedia ? (
                             <span
                               title="Demonstração visual disponível"
                               className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 px-1.5 py-0.5 text-[9px] font-medium"
@@ -485,11 +522,32 @@ export function ExerciseSelectorModal({
                               <Eye className="size-2.5" />
                               <span>Demo</span>
                             </span>
-                          )}
+                          ) : null}
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-1 shrink-0">
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        {/* Botão de Ver Execução / 3D direto do catálogo */}
+                        <button
+                          type="button"
+                          title={getExerciseAnimation(exercise.id) !== null ? "Ver demonstração 3D" : "Ver demonstração"}
+                          aria-label={getExerciseAnimation(exercise.id) !== null ? "Ver demonstração 3D" : "Ver demonstração"}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setPreviewExercise({ id: exercise.id, name: exercise.name });
+                          }}
+                          className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-heading font-medium text-muted-foreground hover:text-foreground hover:bg-muted border border-border/50 transition-colors cursor-pointer"
+                        >
+                          {getExerciseAnimation(exercise.id) !== null ? (
+                            <Box className="size-3 text-orange-500" />
+                          ) : (
+                            <Eye className="size-3" />
+                          )}
+                          <span className="hidden sm:inline">
+                            {getExerciseAnimation(exercise.id) !== null ? "Ver 3D" : "Ver guia"}
+                          </span>
+                        </button>
+
                         {isCustom && hasMuscles && (
                           <span
                             role="button"
@@ -507,6 +565,7 @@ export function ExerciseSelectorModal({
                           size="icon"
                           variant="ghost"
                           disabled={isSubmitting}
+                          title="Adicionar ao treino"
                           className="size-8 rounded-full text-muted-foreground group-hover:text-primary"
                         >
                           <Plus className="size-4" />
@@ -843,6 +902,14 @@ export function ExerciseSelectorModal({
           </form>
         )}
       </div>
+
+      {/* Diálogo de Prévia de Execução e 3D acionado do catálogo */}
+      <ExerciseExecutionDialog
+        isOpen={previewExercise !== null}
+        onClose={() => setPreviewExercise(null)}
+        exerciseId={previewExercise?.id}
+        exerciseName={previewExercise?.name ?? ""}
+      />
     </div>
   );
 }
