@@ -19,7 +19,7 @@ const links = [
   { href: "/admin/audit", label: "Auditoria", icon: History },
 ];
 
-export default async function AdminLayout({
+export async function AdminDashboardLayout({
   children,
 }: {
   children: React.ReactNode;

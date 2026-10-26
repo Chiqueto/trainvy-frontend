@@ -1,6 +1,7 @@
 import { getAdminUser, listAdminPlans } from "@/app/_lib/api/fetch-generated";
 import { readAdmin } from "@/app/admin/_lib/server";
 import { UserDetail } from "@/app/admin/_components/user-detail";
+import { AdminDashboardLayout } from "@/app/admin/_components/admin-dashboard-layout";
 
 export default async function UserPage({
   params,
@@ -13,10 +14,12 @@ export default async function UserPage({
     readAdmin(listAdminPlans({ cache: "no-store" })),
   ]);
   return (
-    <UserDetail
-      key={`${user.id}-${user.subscription?.updatedAt}`}
-      user={user}
-      plans={plans}
-    />
+    <AdminDashboardLayout>
+      <UserDetail
+        key={`${user.id}-${user.subscription?.updatedAt}`}
+        user={user}
+        plans={plans}
+      />
+    </AdminDashboardLayout>
   );
 }
