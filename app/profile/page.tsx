@@ -18,6 +18,7 @@ import { Logo } from "@/app/_components/logo";
 import { ProfileMetricsSection } from "./_components/profile-metrics-section";
 import { CoachAreaLinkCard } from "./_components/coach-area-link-card";
 import { MyCoachSection } from "./_components/my-coach-section";
+import { ArrowRight, Shield } from "lucide-react";
 
 
 export default async function ProfilePage() {
@@ -40,6 +41,7 @@ export default async function ProfilePage() {
 
   const commercialData = commercialRes.status === 200 ? commercialRes.data : null;
   const isCoach = commercialData?.accountType === "COACH";
+  const isAdmin = commercialData?.systemRole === "ADMIN";
 
   const needsOnboarding =
     !isCoach &&
@@ -86,6 +88,34 @@ export default async function ProfilePage() {
             </div>
           </div>
         </div>
+
+        {/* Acesso rápido ao console para Administradores */}
+        {isAdmin && (
+          <Link
+            href="/admin"
+            className="flex w-full items-center justify-between rounded-2xl border border-primary/30 bg-primary/10 p-4 transition-all hover:bg-primary/15 shadow-xs"
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
+                <Shield className="size-5" />
+              </div>
+              <div className="flex flex-col text-left">
+                <div className="flex items-center gap-2">
+                  <span className="font-heading text-xs font-bold text-foreground">
+                    Painel do Administrador
+                  </span>
+                  <span className="rounded-full bg-primary/20 px-2 py-0.5 text-[9px] font-mono font-bold text-primary uppercase">
+                    Admin
+                  </span>
+                </div>
+                <span className="text-[11px] text-muted-foreground">
+                  Visão geral, gestão de usuários e assinaturas
+                </span>
+              </div>
+            </div>
+            <ArrowRight className="size-4 text-primary shrink-0" />
+          </Link>
+        )}
 
         {/* Acesso rápido exclusivo para Personal Trainer */}
         {isCoach && <CoachAreaLinkCard />}
