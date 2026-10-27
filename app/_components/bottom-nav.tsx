@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -29,6 +29,23 @@ export interface BottomNavProps {
   isCoach?: boolean;
 }
 
+function subscribeCoachPreference(onChange: () => void) {
+  window.addEventListener("storage", onChange);
+  window.addEventListener("trainvy-coach-change", onChange);
+  return () => {
+    window.removeEventListener("storage", onChange);
+    window.removeEventListener("trainvy-coach-change", onChange);
+  };
+}
+
+function readCoachPreference() {
+  try {
+    return localStorage.getItem("trainvy_is_coach") === "true";
+  } catch {
+    return false;
+  }
+}
+
 export function BottomNav({ activePage, isCoach }: BottomNavProps) {
   const pathname = usePathname();
 
@@ -36,29 +53,24 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
     pathname && (pathname === "/personal" || pathname.startsWith("/personal/")),
   );
 
-  const [clientIsCoach, setClientIsCoach] = useState<boolean>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        return localStorage.getItem("trainvy_is_coach") === "true";
-      } catch {
-        return false;
-      }
-    }
-    return false;
-  });
+  const clientIsCoach = useSyncExternalStore(
+    subscribeCoachPreference,
+    readCoachPreference,
+    () => false,
+  );
 
   useEffect(() => {
     if (isCoach !== undefined) {
-      setClientIsCoach(isCoach);
       try {
         localStorage.setItem("trainvy_is_coach", isCoach ? "true" : "false");
+        window.dispatchEvent(new Event("trainvy-coach-change"));
       } catch {
         // ignore storage errors
       }
     } else if (isPersonalRoute) {
-      setClientIsCoach(true);
       try {
         localStorage.setItem("trainvy_is_coach", "true");
+        window.dispatchEvent(new Event("trainvy-coach-change"));
       } catch {
         // ignore storage errors
       }
@@ -78,37 +90,37 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
       activePage === "prescriptions"
     : Boolean(
         pathname &&
-          (pathname === "/planning" ||
-            pathname.startsWith("/planning/") ||
-            pathname === "/workout-plans" ||
-            pathname.startsWith("/workout-plans/")),
+        (pathname === "/planning" ||
+          pathname.startsWith("/planning/") ||
+          pathname === "/workout-plans" ||
+          pathname.startsWith("/workout-plans/")),
       );
 
   const isEvolutionActive = activePage
     ? activePage === "stats" || activePage === "evolution"
     : Boolean(
         pathname &&
-          (pathname === "/stats" ||
-            pathname.startsWith("/stats/") ||
-            pathname === "/history" ||
-            pathname.startsWith("/history/")),
+        (pathname === "/stats" ||
+          pathname.startsWith("/stats/") ||
+          pathname === "/history" ||
+          pathname.startsWith("/history/")),
       );
 
   const isProfileActive = activePage
     ? activePage === "profile"
     : Boolean(
         pathname &&
-          (pathname === "/profile" || pathname.startsWith("/profile/")),
+        (pathname === "/profile" || pathname.startsWith("/profile/")),
       );
 
   const isHomeActive = activePage
     ? activePage === "home" || activePage === "my-workout"
     : Boolean(
         pathname === "/" ||
-          (!isPlanningActive &&
-            !isEvolutionActive &&
-            !isProfileActive &&
-            !isAthletesActive),
+        (!isPlanningActive &&
+          !isEvolutionActive &&
+          !isProfileActive &&
+          !isAthletesActive),
       );
 
   const [optimisticTab, setOptimisticTab] = useState<string | null>(null);
@@ -141,13 +153,28 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 rounded-t-[20px] border-t border-border bg-background/95 px-3 pt-2 shadow-lg backdrop-blur-md"
+      className="app-navigation fixed bottom-0 left-0 right-0 z-50 rounded-t-[20px] border-t border-border bg-background/95 px-3 pt-2 shadow-lg backdrop-blur-md"
       style={{
         paddingBottom:
           "max(0.75rem, calc(0.5rem + env(safe-area-inset-bottom, 0px)))",
       }}
-      aria-label="Navegação inferior"
+      aria-label="Navegação principal"
     >
+      <Link
+        href={effectiveIsCoach ? "/personal" : "/"}
+        className="hidden lg:flex items-center gap-3 px-3 pb-8 pt-2"
+        aria-label="Trainvy"
+      >
+        <span className="flex size-10 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
+          <Dumbbell className="size-5" />
+        </span>
+        <span className="font-heading text-xl font-bold tracking-tight">
+          trainvy
+          <span className="block text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+            {effectiveIsCoach ? "Área do personal" : "Seu treino, sua evolução"}
+          </span>
+        </span>
+      </Link>
       <div className="mx-auto grid max-w-lg grid-cols-5 items-end justify-items-center">
         {effectiveIsCoach ? (
           <>
@@ -163,12 +190,13 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
                   : "font-medium text-muted-foreground hover:text-foreground",
               )}
               aria-label="Alunos"
+              aria-current={effectiveAthletesActive ? "page" : undefined}
             >
               <Users
                 className={cn(
                   "size-5 transition-transform duration-150 group-active:scale-90",
                   effectiveAthletesActive
-                    ? "text-primary text-foreground"
+                    ? "text-primary"
                     : "text-muted-foreground",
                 )}
               />
@@ -192,12 +220,13 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
                   : "font-medium text-muted-foreground hover:text-foreground",
               )}
               aria-label="Prescrições"
+              aria-current={effectivePlanningActive ? "page" : undefined}
             >
               <ClipboardList
                 className={cn(
                   "size-5 transition-transform duration-150 group-active:scale-90",
                   effectivePlanningActive
-                    ? "text-primary text-foreground"
+                    ? "text-primary"
                     : "text-muted-foreground",
                 )}
               />
@@ -235,12 +264,13 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
                   : "font-medium text-muted-foreground hover:text-foreground",
               )}
               aria-label="Meu Treino"
+              aria-current={effectiveHomeActive ? "page" : undefined}
             >
               <Dumbbell
                 className={cn(
                   "size-5 transition-transform duration-150 group-active:scale-90",
                   effectiveHomeActive
-                    ? "text-primary text-foreground"
+                    ? "text-primary"
                     : "text-muted-foreground",
                 )}
               />
@@ -264,12 +294,13 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
                   : "font-medium text-muted-foreground hover:text-foreground",
               )}
               aria-label="Perfil"
+              aria-current={effectiveProfileActive ? "page" : undefined}
             >
               <UserRound
                 className={cn(
                   "size-5 transition-transform duration-150 group-active:scale-90",
                   effectiveProfileActive
-                    ? "text-primary text-foreground"
+                    ? "text-primary"
                     : "text-muted-foreground",
                 )}
               />
@@ -296,12 +327,13 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
                   : "font-medium text-muted-foreground hover:text-foreground",
               )}
               aria-label="Início"
+              aria-current={effectiveHomeActive ? "page" : undefined}
             >
               <House
                 className={cn(
                   "size-5 transition-transform duration-150 group-active:scale-90",
                   effectiveHomeActive
-                    ? "text-primary text-foreground"
+                    ? "text-primary"
                     : "text-muted-foreground",
                 )}
               />
@@ -325,12 +357,13 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
                   : "font-medium text-muted-foreground hover:text-foreground",
               )}
               aria-label="Treinos"
+              aria-current={effectivePlanningActive ? "page" : undefined}
             >
               <Dumbbell
                 className={cn(
                   "size-5 transition-transform duration-150 group-active:scale-90",
                   effectivePlanningActive
-                    ? "text-primary text-foreground"
+                    ? "text-primary"
                     : "text-muted-foreground",
                 )}
               />
@@ -368,12 +401,13 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
                   : "font-medium text-muted-foreground hover:text-foreground",
               )}
               aria-label="Evolução"
+              aria-current={effectiveEvolutionActive ? "page" : undefined}
             >
               <TrendingUp
                 className={cn(
                   "size-5 transition-transform duration-150 group-active:scale-90",
                   effectiveEvolutionActive
-                    ? "text-primary text-foreground"
+                    ? "text-primary"
                     : "text-muted-foreground",
                 )}
               />
@@ -397,12 +431,13 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
                   : "font-medium text-muted-foreground hover:text-foreground",
               )}
               aria-label="Perfil"
+              aria-current={effectiveProfileActive ? "page" : undefined}
             >
               <UserRound
                 className={cn(
                   "size-5 transition-transform duration-150 group-active:scale-90",
                   effectiveProfileActive
-                    ? "text-primary text-foreground"
+                    ? "text-primary"
                     : "text-muted-foreground",
                 )}
               />
@@ -419,4 +454,3 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
     </nav>
   );
 }
-

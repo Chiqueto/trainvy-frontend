@@ -67,7 +67,7 @@ export default async function EditPrescriptionPage({
   }
 
   return (
-    <div className="flex min-h-svh flex-col bg-background pb-24">
+    <div className="personal-workspace flex min-h-svh min-w-0 flex-col bg-background pb-24 lg:pb-8">
       <main className="mx-auto w-full max-w-lg px-5 py-4 flex flex-col gap-5">
         {/* Header com Navegação */}
         <div className="flex items-center justify-between">
@@ -101,6 +101,7 @@ export default async function EditPrescriptionPage({
             id: prescriptionData.id,
             name: prescriptionData.name,
             notes: prescriptionData.notes,
+            version: prescriptionData.version,
             workoutDays: prescriptionData.payload?.workoutDays,
           }}
         />

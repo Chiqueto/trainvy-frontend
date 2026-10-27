@@ -98,7 +98,7 @@ export default async function AthleteDetailsPage({
   // 2. 403: Acesso não permitido
   if (fetchErrorStatus === 403) {
     return (
-      <div className="flex min-h-svh flex-col bg-background pb-24">
+      <div className="personal-workspace flex min-h-svh min-w-0 flex-col bg-background pb-24 lg:pb-8">
         <main className="mx-auto w-full max-w-lg px-5 py-16 flex flex-col items-center text-center gap-4">
           <div className="flex size-14 items-center justify-center rounded-2xl bg-destructive/10 text-destructive mb-2">
             <ShieldAlert className="size-7" />
@@ -127,7 +127,7 @@ export default async function AthleteDetailsPage({
   // 3. 5xx ou Erro de Rede: renderiza estado de erro com RetryButton
   if (!athleteData || (fetchErrorStatus && fetchErrorStatus >= 500)) {
     return (
-      <div className="flex min-h-svh flex-col bg-background pb-24">
+      <div className="personal-workspace flex min-h-svh min-w-0 flex-col bg-background pb-24 lg:pb-8">
         <main className="mx-auto w-full max-w-lg px-5 py-16 flex flex-col items-center text-center gap-4">
           <div className="flex size-14 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-500 mb-2">
             <AlertCircle className="size-7" />
@@ -179,7 +179,7 @@ export default async function AthleteDetailsPage({
   );
 
   return (
-    <div className="flex min-h-svh flex-col bg-background pb-24">
+    <div className="personal-workspace flex min-h-svh min-w-0 flex-col bg-background pb-24 lg:pb-8">
       <main className="mx-auto w-full max-w-lg px-5 py-4 flex flex-col gap-5">
         {/* Header com Navegação de Retorno */}
         <div className="flex items-center justify-between">
@@ -249,7 +249,7 @@ export default async function AthleteDetailsPage({
             athleteName={athleteData.name}
           />
         ) : (
-          <>
+          <div className="grid gap-5 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:items-start">
             {/* Hero Card do Aluno */}
             <section className="rounded-3xl border border-border bg-card p-6 shadow-md flex flex-col items-center text-center gap-4 relative overflow-hidden">
               <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-primary/40 via-primary to-primary/40" />
@@ -348,20 +348,20 @@ export default async function AthleteDetailsPage({
             </section>
 
             {/* Informações de Privacidade */}
-            <section className="rounded-2xl border border-border/80 bg-muted/20 p-4 space-y-2.5">
+            <section className="rounded-2xl border border-border/80 bg-muted/20 p-4 space-y-2.5 lg:col-span-2">
               <div className="flex items-center gap-2 font-heading font-semibold text-xs text-foreground">
                 <Shield className="size-4 text-primary shrink-0" />
                 <span>Privacidade e Posse de Dados</span>
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 Você pode criar e prescrever treinos personalizados para este
-                aluno. O aluno mantém a posse de seus registros e histórico.
-                O acesso à evolução requer consentimento explícito e ativo
+                aluno. O aluno mantém a posse de seus registros e histórico. O
+                acesso à evolução requer consentimento explícito e ativo
                 concedido pelo atleta em seu perfil. Métricas corporais e dados
                 privados permanecem estritamente sob controle do aluno.
               </p>
             </section>
-          </>
+          </div>
         )}
       </main>
 

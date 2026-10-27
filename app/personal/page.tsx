@@ -36,7 +36,7 @@ export default async function PersonalPage() {
 
   if (!hasManageAthletes) {
     return (
-      <div className="flex min-h-svh flex-col bg-background pb-24">
+      <div className="personal-workspace flex min-h-svh min-w-0 flex-col bg-background pb-24 lg:pb-8">
         <main className="mx-auto w-full max-w-lg px-5 py-4 flex flex-col gap-5">
           <PersonalHeader />
           <CoachPendingSubscriptionCard
@@ -55,15 +55,17 @@ export default async function PersonalPage() {
   ]);
 
   const athletes = athletesRes.status === 200 ? athletesRes.data.athletes : [];
-  const activeCount = athletesRes.status === 200 ? athletesRes.data.activeCount : 0;
+  const activeCount =
+    athletesRes.status === 200 ? athletesRes.data.activeCount : 0;
   const limit = athletesRes.status === 200 ? athletesRes.data.limit : null;
-  const summary = athletesRes.status === 200 ? athletesRes.data.summary : undefined;
+  const summary =
+    athletesRes.status === 200 ? athletesRes.data.summary : undefined;
   const invitations = invitationsRes.status === 200 ? invitationsRes.data : [];
 
   const isFull = limit !== null && activeCount >= limit;
 
   return (
-    <div className="flex min-h-svh flex-col bg-background pb-24">
+    <div className="personal-workspace flex min-h-svh min-w-0 flex-col bg-background pb-24 lg:pb-8">
       <main className="mx-auto w-full max-w-lg px-5 py-4 flex flex-col gap-5">
         <PersonalHeader />
 
@@ -71,11 +73,21 @@ export default async function PersonalPage() {
           <CoachFirstStepsCard isFull={isFull} />
         )}
 
-        <PersonalQuotaCard activeCount={activeCount} limit={limit} />
-
-        <InviteStudentModal isFull={isFull} />
-
-        <InvitationsList invitations={invitations} />
+        <div className="grid gap-5 lg:grid-cols-[1fr_22rem] lg:items-start">
+          <PersonalQuotaCard activeCount={activeCount} limit={limit} />
+          <div className="rounded-3xl border border-border/70 bg-card p-5 shadow-xs space-y-4">
+            <div>
+              <h2 className="font-heading text-base font-semibold">
+                Expanda sua assessoria
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Convide alunos e centralize o acompanhamento.
+              </p>
+            </div>
+            <InviteStudentModal isFull={isFull} />
+            <InvitationsList invitations={invitations} />
+          </div>
+        </div>
 
         <AthletesList
           athletes={athletes}

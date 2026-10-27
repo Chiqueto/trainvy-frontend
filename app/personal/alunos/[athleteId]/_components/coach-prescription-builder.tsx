@@ -2,8 +2,8 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
-  AlertCircle,
   ArrowDown,
   ArrowUp,
   LoaderCircle,
@@ -94,7 +94,10 @@ export function CoachPrescriptionBuilder({
     return createInitialWorkoutDays();
   });
 
-  const [error, setError] = useState<string | null>(null);
+  const [savedDraft, setSavedDraft] = useState({
+    id: initialData?.id,
+    version: initialData?.version,
+  });
   const [isAiModalOpen, setIsAiModalOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
@@ -175,16 +178,16 @@ export function CoachPrescriptionBuilder({
       isRest: day.isRest,
       estimatedDurationInSeconds: day.isRest
         ? 0
-        : Math.max(1, day.estimatedDurationInMinutes) * 60,
+        : Math.round(day.estimatedDurationInMinutes * 60),
       exercises: day.isRest
         ? []
         : day.exercises.map((exercise, exerciseIndex) => ({
             name: exercise.name.trim(),
             order: exerciseIndex,
-            sets: Number(exercise.sets) || 1,
-            warmupSets: Number(exercise.warmupSets) || 0,
-            reps: Number(exercise.reps) || 1,
-            restTimeInSeconds: Number(exercise.restTimeInSeconds) || 60,
+            sets: exercise.sets,
+            warmupSets: exercise.warmupSets ?? 0,
+            reps: exercise.reps,
+            restTimeInSeconds: exercise.restTimeInSeconds,
             alternative1ExerciseName: exercise.alternative1Name?.trim() || null,
             alternative2ExerciseName: exercise.alternative2Name?.trim() || null,
           })),
@@ -192,77 +195,101 @@ export function CoachPrescriptionBuilder({
   }
 
   async function handleSave(sendImmediately: boolean = false) {
-    const validationError = validateWorkoutPlanDraft(name, days);
+    if (isPending) return;
+    const validationError =
+      validateWorkoutPlanDraft(name, days) ||
+      (name.trim().length > 100
+        ? "O nome deve ter no máximo 100 caracteres."
+        : null) ||
+      (notes.trim().length > 1000
+        ? "As orientações devem ter no máximo 1000 caracteres."
+        : null) ||
+      (sendImmediately &&
+      !days.some((day) => !day.isRest && day.exercises.length > 0)
+        ? "Adicione um dia de treino com exercícios antes de enviar."
+        : null);
     if (validationError) {
-      setError(validationError);
+      toast.error(validationError);
       return;
     }
 
-    setError(null);
     startTransition(async () => {
-      const serializedWorkoutDays = serializeDaysForApi();
+      try {
+        const serializedWorkoutDays = serializeDaysForApi();
 
-      let savedPrescriptionId = initialData?.id;
+        let savedPrescriptionId = savedDraft.id;
 
-      if (initialData?.id) {
-        // Atualiza rascunho existente
-        const updateRes = await updatePrescriptionDraftAction({
-          id: initialData.id,
-          athleteId,
-          body: {
+        if (savedDraft.id) {
+          // Atualiza rascunho existente
+          const updateRes = await updatePrescriptionDraftAction({
+            id: savedDraft.id,
+            athleteId,
+            body: {
+              name: name.trim(),
+              notes: notes.trim() || null,
+              workoutDays: serializedWorkoutDays,
+              version: savedDraft.version,
+            },
+          });
+
+          if (!updateRes.success) {
+            toast.error(updateRes.error);
+            return;
+          }
+          setSavedDraft({
+            id: updateRes.data.id,
+            version: updateRes.data.version,
+          });
+        } else {
+          // Cria novo rascunho
+          const createRes = await createPrescriptionDraftAction({
+            athleteId,
             name: name.trim(),
             notes: notes.trim() || null,
             workoutDays: serializedWorkoutDays,
-            version: initialData.version,
-          },
-        });
+          });
 
-        if (!updateRes.success) {
-          setError(updateRes.error);
-          return;
+          if (!createRes.success) {
+            toast.error(createRes.error);
+            return;
+          }
+          savedPrescriptionId = createRes.data.id;
+          setSavedDraft({
+            id: createRes.data.id,
+            version: createRes.data.version,
+          });
         }
-      } else {
-        // Cria novo rascunho
-        const createRes = await createPrescriptionDraftAction({
-          athleteId,
-          name: name.trim(),
-          notes: notes.trim() || null,
-          workoutDays: serializedWorkoutDays,
-        });
 
-        if (!createRes.success) {
-          setError(createRes.error);
-          return;
+        // Se solicitado envio imediato
+        if (sendImmediately && savedPrescriptionId) {
+          const sendRes = await sendPrescriptionAction({
+            id: savedPrescriptionId,
+            athleteId,
+          });
+          if (!sendRes.success) {
+            toast.error(`Rascunho salvo. ${sendRes.error}`);
+            return;
+          }
         }
-        savedPrescriptionId = createRes.data?.id;
+
+        toast.success(
+          sendImmediately
+            ? "Prescrição enviada ao aluno!"
+            : "Rascunho salvo com sucesso!",
+        );
+        router.push(`/personal/alunos/${athleteId}?tab=prescriptions`);
+        router.refresh();
+      } catch {
+        toast.error("Não foi possível concluir a operação. Tente novamente.");
       }
-
-      // Se solicitado envio imediato
-      if (sendImmediately && savedPrescriptionId) {
-        const sendRes = await sendPrescriptionAction({
-          id: savedPrescriptionId,
-          athleteId,
-        });
-        if (!sendRes.success) {
-          setError(sendRes.error);
-          return;
-        }
-      }
-
-      router.push(`/personal/alunos/${athleteId}?tab=prescriptions`);
-      router.refresh();
     });
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      {error && (
-        <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-4 text-xs text-destructive flex items-center gap-2.5 shadow-xs">
-          <AlertCircle className="size-4 shrink-0" />
-          <span>{error}</span>
-        </div>
-      )}
-
+    <fieldset
+      disabled={isPending}
+      className="flex min-w-0 flex-col gap-6 disabled:opacity-80"
+    >
       {/* Banner de Prescrição Assistida por IA */}
       <section className="relative overflow-hidden rounded-3xl border border-primary/20 bg-linear-to-r from-primary/10 via-primary/5 to-transparent p-5 shadow-xs">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -276,7 +303,9 @@ export function CoachPrescriptionBuilder({
               </h2>
             </div>
             <p className="text-xs text-muted-foreground max-w-xl">
-              Monte divisões e selecione exercícios canônicos ditando por voz, enviando uma ficha em PDF/foto ou descrevendo a estratégia para {athleteName}.
+              Monte divisões e selecione exercícios canônicos ditando por voz,
+              enviando uma ficha em PDF/foto ou descrevendo a estratégia para{" "}
+              {athleteName}.
             </p>
           </div>
 
@@ -304,7 +333,7 @@ export function CoachPrescriptionBuilder({
           </p>
         </div>
 
-        <div className="space-y-3">
+        <div className="grid gap-4 lg:grid-cols-2">
           <div className="space-y-1.5">
             <label
               htmlFor="prescription-name"
@@ -314,6 +343,7 @@ export function CoachPrescriptionBuilder({
             </label>
             <Input
               id="prescription-name"
+              maxLength={100}
               placeholder="Ex: Hipertrofia ABCD - Foco em Superiores"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -330,9 +360,12 @@ export function CoachPrescriptionBuilder({
             </label>
             <textarea
               id="prescription-notes"
+              maxLength={1000}
               placeholder="Instruções sobre descanso, cadência, progressão de carga ou metas..."
               value={notes}
-              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNotes(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                setNotes(e.target.value)
+              }
               className="w-full rounded-xl border border-input bg-background p-3 text-xs placeholder:text-muted-foreground focus:outline-hidden focus:ring-1 focus:ring-primary resize-none min-h-[75px]"
             />
           </div>
@@ -341,7 +374,7 @@ export function CoachPrescriptionBuilder({
 
       {/* Seção de Dias de Treino */}
       <section className="space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="space-y-0.5">
             <h2 className="font-heading text-sm font-bold text-foreground">
               Estrutura Semanal
@@ -375,7 +408,7 @@ export function CoachPrescriptionBuilder({
           </div>
         </div>
 
-        <div className="space-y-4">
+        <div className="grid items-start gap-5 xl:grid-cols-2">
           {days.map((day, dayIndex) => {
             return (
               <div
@@ -577,7 +610,7 @@ export function CoachPrescriptionBuilder({
                           </div>
 
                           {/* Séries de Aquecimento, Séries, Repetições e Descanso */}
-                          <div className="grid grid-cols-4 gap-2 pt-1">
+                          <div className="grid grid-cols-2 gap-3 pt-1 sm:grid-cols-4">
                             <div className="space-y-0.5">
                               <label className="text-[10px] font-heading font-medium text-amber-500 uppercase">
                                 Aquecimento
@@ -687,7 +720,7 @@ export function CoachPrescriptionBuilder({
       </section>
 
       {/* Rodapé Fixo / Ações de Envio e Rascunho */}
-      <div className="sticky bottom-4 z-20 flex flex-col sm:flex-row items-center gap-2.5 rounded-2xl border border-border/80 bg-background/95 p-3.5 shadow-lg backdrop-blur-md">
+      <div className="sticky bottom-24 lg:bottom-6 z-20 flex flex-col sm:flex-row items-center gap-2.5 rounded-2xl border border-border/80 bg-background/95 p-3.5 shadow-lg backdrop-blur-md">
         <Button
           type="button"
           variant="outline"
@@ -695,7 +728,9 @@ export function CoachPrescriptionBuilder({
           onClick={() => handleSave(false)}
           className="w-full sm:flex-1 h-11 rounded-xl font-heading text-xs font-semibold border-border/80"
         >
-          {isPending && <LoaderCircle className="size-3.5 animate-spin mr-1.5" />}
+          {isPending && (
+            <LoaderCircle className="size-3.5 animate-spin mr-1.5" />
+          )}
           <span>Salvar Rascunho</span>
         </Button>
 
@@ -729,6 +764,6 @@ export function CoachPrescriptionBuilder({
           setIsAiModalOpen(false);
         }}
       />
-    </div>
+    </fieldset>
   );
 }

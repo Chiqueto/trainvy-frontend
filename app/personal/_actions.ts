@@ -14,6 +14,17 @@ import {
   type UpdateWorkoutPrescriptionDraftBody,
 } from "@/app/_lib/api/fetch-generated";
 
+function getActionError(data: unknown, fallback: string): string {
+  if (!data || typeof data !== "object") return fallback;
+  const result = data as { error?: unknown; message?: unknown };
+  // Fastify validation responses contain both a generic error and a useful message.
+  if (typeof result.message === "string" && result.message.trim())
+    return result.message;
+  if (typeof result.error === "string" && result.error !== "Bad Request")
+    return result.error;
+  return fallback;
+}
+
 export async function createInvitationAction(expiresInDays: number = 7) {
   try {
     const res = await createCoachInvitation(
@@ -28,10 +39,7 @@ export async function createInvitationAction(expiresInDays: number = 7) {
       };
     }
 
-    const errorMsg =
-      res.data && typeof res.data === "object" && "error" in res.data
-        ? (res.data.error as string)
-        : "Erro ao gerar convite.";
+    const errorMsg = getActionError(res.data, "Erro ao gerar convite.");
 
     return {
       success: false as const,
@@ -47,17 +55,16 @@ export async function createInvitationAction(expiresInDays: number = 7) {
 
 export async function cancelInvitationAction(invitationId: string) {
   try {
-    const res = await cancelCoachInvitation(invitationId, { cache: "no-store" });
+    const res = await cancelCoachInvitation(invitationId, {
+      cache: "no-store",
+    });
 
     if (res.status === 200) {
       revalidatePath("/personal");
       return { success: true as const };
     }
 
-    const errorMsg =
-      res.data && typeof res.data === "object" && "error" in res.data
-        ? (res.data.error as string)
-        : "Erro ao cancelar convite.";
+    const errorMsg = getActionError(res.data, "Erro ao cancelar convite.");
 
     return {
       success: false as const,
@@ -80,10 +87,10 @@ export async function revokeStudentAction(linkId: string) {
       return { success: true as const };
     }
 
-    const errorMsg =
-      res.data && typeof res.data === "object" && "error" in res.data
-        ? (res.data.error as string)
-        : "Erro ao encerrar vínculo com o aluno.";
+    const errorMsg = getActionError(
+      res.data,
+      "Erro ao encerrar vínculo com o aluno.",
+    );
 
     return {
       success: false as const,
@@ -110,10 +117,10 @@ export async function createPrescriptionDraftAction(
       return { success: true as const, data: res.data };
     }
 
-    const errorMsg =
-      res.data && typeof res.data === "object" && "error" in res.data
-        ? (res.data.error as string)
-        : "Erro ao criar rascunho de prescrição.";
+    const errorMsg = getActionError(
+      res.data,
+      "Erro ao criar rascunho de prescrição.",
+    );
 
     return { success: false as const, error: errorMsg };
   } catch {
@@ -143,10 +150,10 @@ export async function updatePrescriptionDraftAction({
       return { success: true as const, data: res.data };
     }
 
-    const errorMsg =
-      res.data && typeof res.data === "object" && "error" in res.data
-        ? (res.data.error as string)
-        : "Erro ao atualizar rascunho de prescrição.";
+    const errorMsg = getActionError(
+      res.data,
+      "Erro ao atualizar rascunho de prescrição.",
+    );
 
     return { success: false as const, error: errorMsg };
   } catch {
@@ -172,10 +179,10 @@ export async function sendPrescriptionAction({
       return { success: true as const, data: res.data };
     }
 
-    const errorMsg =
-      res.data && typeof res.data === "object" && "error" in res.data
-        ? (res.data.error as string)
-        : "Erro ao enviar prescrição ao aluno.";
+    const errorMsg = getActionError(
+      res.data,
+      "Erro ao enviar prescrição ao aluno.",
+    );
 
     return { success: false as const, error: errorMsg };
   } catch {
@@ -201,10 +208,7 @@ export async function cancelPrescriptionAction({
       return { success: true as const, data: res.data };
     }
 
-    const errorMsg =
-      res.data && typeof res.data === "object" && "error" in res.data
-        ? (res.data.error as string)
-        : "Erro ao cancelar prescrição.";
+    const errorMsg = getActionError(res.data, "Erro ao cancelar prescrição.");
 
     return { success: false as const, error: errorMsg };
   } catch {
@@ -231,10 +235,10 @@ export async function generateCoachPrescriptionWithAiAction(body: {
       return { success: true as const, data: res.data };
     }
 
-    const errorMsg =
-      res.data && typeof res.data === "object" && "error" in res.data
-        ? (res.data.error as string)
-        : "Erro ao gerar rascunho de prescrição com IA.";
+    const errorMsg = getActionError(
+      res.data,
+      "Erro ao gerar rascunho de prescrição com IA.",
+    );
 
     return { success: false as const, error: errorMsg };
   } catch (error) {
@@ -245,4 +249,3 @@ export async function generateCoachPrescriptionWithAiAction(body: {
     };
   }
 }
-

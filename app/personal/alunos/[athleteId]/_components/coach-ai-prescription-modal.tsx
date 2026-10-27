@@ -2,9 +2,6 @@
 
 import { useRef, useState } from "react";
 import {
-  AlertCircle,
-  ArrowRight,
-  Brain,
   Check,
   Dumbbell,
   FileText,
@@ -57,7 +54,6 @@ export function CoachAiPrescriptionModal({
 }: CoachAiPrescriptionModalProps) {
   const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   // Anexo de arquivo (PDF ou imagem de ficha antiga)
   const [attachedFile, setAttachedFile] = useState<{
@@ -132,12 +128,13 @@ export function CoachAiPrescriptionModal({
         : "");
 
     if (!effectivePrompt && !attachedFile) {
-      setError("Por favor, digite uma instrução, grave um áudio ou anexe um arquivo.");
+      toast.error(
+        "Por favor, digite uma instrução, grave um áudio ou anexe um arquivo.",
+      );
       return;
     }
 
     setIsGenerating(true);
-    setError(null);
 
     const res = await generateCoachPrescriptionWithAiAction({
       athleteId,
@@ -151,7 +148,7 @@ export function CoachAiPrescriptionModal({
       setGeneratedDraft(res.data);
       toast.success("Prescrição gerada pelo Coach AI!");
     } else {
-      setError(res.error || "Não foi possível gerar a prescrição com IA.");
+      toast.error(res.error || "Não foi possível gerar a prescrição com IA.");
     }
     setIsGenerating(false);
   };
@@ -164,7 +161,8 @@ export function CoachAiPrescriptionModal({
         name: d.name,
         weekDay: d.weekDay,
         isRest: d.isRest,
-        estimatedDurationInMinutes: d.estimatedDurationInMinutes || (d.isRest ? 0 : 60),
+        estimatedDurationInMinutes:
+          d.estimatedDurationInMinutes || (d.isRest ? 0 : 60),
         exercises: (d.exercises || []).map((e) => ({
           name: e.name,
           sets: e.sets || 3,
@@ -202,12 +200,16 @@ export function CoachAiPrescriptionModal({
             <div>
               <h3 className="font-heading text-sm font-bold text-foreground flex items-center gap-1.5">
                 <span>Prescrever com Coach AI</span>
-                <Badge variant="secondary" className="text-[10px] bg-primary/15 text-primary border-none">
+                <Badge
+                  variant="secondary"
+                  className="text-[10px] bg-primary/15 text-primary border-none"
+                >
                   Assistente
                 </Badge>
               </h3>
               <p className="text-[11px] text-muted-foreground">
-                Para o aluno: <strong className="text-foreground">{athleteName}</strong>
+                Para o aluno:{" "}
+                <strong className="text-foreground">{athleteName}</strong>
               </p>
             </div>
           </div>
@@ -356,12 +358,6 @@ export function CoachAiPrescriptionModal({
               )}
 
               {/* Mensagem de Erro */}
-              {error && (
-                <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-3 text-xs text-destructive flex items-center gap-2">
-                  <AlertCircle className="size-4 shrink-0" />
-                  <span>{error}</span>
-                </div>
-              )}
             </>
           ) : (
             /* Visualização da Prescrição Gerada */

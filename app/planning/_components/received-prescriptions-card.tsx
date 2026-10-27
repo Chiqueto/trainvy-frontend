@@ -1,5 +1,7 @@
 "use client";
 
+import { toast } from "sonner";
+
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -97,7 +99,6 @@ export function ReceivedPrescriptionsCard({
   } | null>(null);
 
   const [isPending, startTransition] = useTransition();
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   // Filtra prescrições pendentes de ação (SENT)
   const pendingPrescriptions = prescriptions.filter((p) => p.status === "SENT");
@@ -107,15 +108,15 @@ export function ReceivedPrescriptionsCard({
   }
 
   function handleAccept(prescriptionId: string) {
-    setErrorMsg(null);
     startTransition(async () => {
       const res = await acceptPrescriptionAction(prescriptionId);
       if (!res.success) {
-        setErrorMsg(res.error);
+        toast.error(res.error);
         router.refresh();
         return;
       }
 
+      toast.success("Prescrição aceita com sucesso!");
       setAcceptedSuccess({
         planId: res.data.workoutPlanId,
         planName: res.data.workoutPlanName,
@@ -126,14 +127,14 @@ export function ReceivedPrescriptionsCard({
 
   function handleDeclineConfirm() {
     if (!declineTarget) return;
-    setErrorMsg(null);
     startTransition(async () => {
       const res = await declinePrescriptionAction(declineTarget.id);
       if (!res.success) {
-        setErrorMsg(res.error);
+        toast.error(res.error);
         router.refresh();
         return;
       }
+      toast.success("Prescrição recusada.");
       setDeclineTarget(null);
       setIsDetailOpen(false);
       setSelectedPrescription(null);
@@ -145,8 +146,7 @@ export function ReceivedPrescriptionsCard({
     <section className="space-y-3">
       {/* Banner de Prescrição Pendente em Destaque */}
       {pendingPrescriptions.map((item) => {
-        const coachName =
-          item.coach?.name ?? item.coachName ?? "Seu Personal";
+        const coachName = item.coach?.name ?? item.coachName ?? "Seu Personal";
         const formattedDate = item.sentAt
           ? new Date(item.sentAt).toLocaleDateString("pt-BR", {
               day: "2-digit",
@@ -183,7 +183,8 @@ export function ReceivedPrescriptionsCard({
                   {item.name}
                 </h3>
                 <p className="text-xs text-muted-foreground truncate">
-                  Elaborado por <strong className="text-foreground">{coachName}</strong>
+                  Elaborado por{" "}
+                  <strong className="text-foreground">{coachName}</strong>
                 </p>
                 {item.notes && (
                   <p className="text-xs text-muted-foreground line-clamp-1 italic pt-0.5">
@@ -192,13 +193,6 @@ export function ReceivedPrescriptionsCard({
                 )}
               </div>
             </div>
-
-            {errorMsg && (
-              <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-2.5 text-xs text-destructive flex items-center gap-2">
-                <AlertCircle className="size-3.5 shrink-0" />
-                <span>{errorMsg}</span>
-              </div>
-            )}
 
             <div className="flex flex-col sm:flex-row items-center gap-2 pt-1 border-t border-border/50">
               <Button
@@ -273,7 +267,6 @@ export function ReceivedPrescriptionsCard({
                 onClick={() => {
                   setIsDetailOpen(false);
                   setAcceptedSuccess(null);
-                  setErrorMsg(null);
                 }}
                 className="text-muted-foreground hover:text-foreground p-1 rounded-lg"
               >
@@ -299,7 +292,9 @@ export function ReceivedPrescriptionsCard({
                     Prescrição Aceita com Sucesso!
                   </h3>
                   <p className="text-xs text-muted-foreground max-w-xs leading-relaxed">
-                    O planejamento foi adicionado à sua conta como <strong>inativo</strong>. Seu treino atual permanece intocado até que você decida ativá-lo.
+                    O planejamento foi adicionado à sua conta como{" "}
+                    <strong>inativo</strong>. Seu treino atual permanece
+                    intocado até que você decida ativá-lo.
                   </p>
                 </div>
 
@@ -349,8 +344,8 @@ export function ReceivedPrescriptionsCard({
                   <Dumbbell className="size-4 text-primary shrink-0 mt-0.5" />
                   <p className="leading-relaxed">
                     Ao aceitar, este planejamento passará a ser seu e ficará
-                    armazenado na sua conta como inativo. Você poderá
-                    ativá-lo voluntariamente a qualquer momento.
+                    armazenado na sua conta como inativo. Você poderá ativá-lo
+                    voluntariamente a qualquer momento.
                   </p>
                 </div>
 
@@ -409,29 +404,29 @@ export function ReceivedPrescriptionsCard({
                                     <span className="font-medium text-foreground">
                                       {exName}
                                     </span>
-                                  <span className="font-mono text-muted-foreground text-[11px]">
-                                    {warmup > 0 && (
-                                      <span className="text-amber-500 font-medium mr-1.5">
-                                        {warmup}aq +
-                                      </span>
-                                    )}
-                                    {ex.sets}x{ex.reps} • {restTime}s
-                                  </span>
+                                    <span className="font-mono text-muted-foreground text-[11px]">
+                                      {warmup > 0 && (
+                                        <span className="text-amber-500 font-medium mr-1.5">
+                                          {warmup}aq +
+                                        </span>
+                                      )}
+                                      {ex.sets}x{ex.reps} • {restTime}s
+                                    </span>
+                                  </div>
+                                  {(ex.alternative1ExerciseName ||
+                                    ex.alternative2ExerciseName) && (
+                                    <p className="text-[10px] text-muted-foreground">
+                                      Alt:{" "}
+                                      {[
+                                        ex.alternative1ExerciseName,
+                                        ex.alternative2ExerciseName,
+                                      ]
+                                        .filter(Boolean)
+                                        .join(" • ")}
+                                    </p>
+                                  )}
                                 </div>
-                                {(ex.alternative1ExerciseName ||
-                                  ex.alternative2ExerciseName) && (
-                                  <p className="text-[10px] text-muted-foreground">
-                                    Alt:{" "}
-                                    {[
-                                      ex.alternative1ExerciseName,
-                                      ex.alternative2ExerciseName,
-                                    ]
-                                      .filter(Boolean)
-                                      .join(" • ")}
-                                  </p>
-                                )}
-                              </div>
-                            );
+                              );
                             })}
                           </div>
                         )}
@@ -439,13 +434,6 @@ export function ReceivedPrescriptionsCard({
                     );
                   })}
                 </div>
-
-                {errorMsg && (
-                  <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-xs text-destructive flex items-center gap-2">
-                    <AlertCircle className="size-4 shrink-0" />
-                    <span>{errorMsg}</span>
-                  </div>
-                )}
 
                 {selectedPrescription.status === "SENT" && (
                   <div className="flex flex-col sm:flex-row gap-2 pt-2 border-t border-border/40">

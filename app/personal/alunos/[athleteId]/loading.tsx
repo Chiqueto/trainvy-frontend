@@ -4,7 +4,7 @@ import { BottomNav } from "@/app/_components/bottom-nav";
 
 export default function AthleteDetailsLoading() {
   return (
-    <div className="flex min-h-svh flex-col bg-background pb-24">
+    <div className="personal-workspace flex min-h-svh min-w-0 flex-col bg-background pb-24 lg:pb-8">
       <main className="mx-auto w-full max-w-lg px-5 py-4 flex flex-col gap-5">
         <div className="flex items-center justify-between">
           <Link
@@ -44,7 +44,7 @@ export default function AthleteDetailsLoading() {
         <div className="h-24 bg-muted/20 border border-border/60 rounded-2xl animate-pulse" />
       </main>
 
-      <BottomNav activePage="profile" />
+      <BottomNav isCoach={true} activePage="athletes" />
     </div>
   );
 }

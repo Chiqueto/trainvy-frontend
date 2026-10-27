@@ -1,5 +1,7 @@
 "use client";
 
+import { toast } from "sonner";
+
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { AlertTriangle, Loader2, ShieldAlert, UserX, X } from "lucide-react";
@@ -18,10 +20,8 @@ export function RevokeAthleteModal({
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleOpen = () => {
-    setErrorMessage(null);
     setIsOpen(true);
   };
 
@@ -31,12 +31,12 @@ export function RevokeAthleteModal({
   };
 
   const handleConfirmRevoke = () => {
-    setErrorMessage(null);
     startTransition(async () => {
       const res = await revokeStudentAction(linkId);
       if (!res.success) {
-        setErrorMessage(res.error);
+        toast.error(res.error);
       } else {
+        toast.success("Vínculo encerrado com sucesso.");
         setIsOpen(false);
         router.push("/personal");
         router.refresh();
@@ -89,17 +89,12 @@ export function RevokeAthleteModal({
               <div className="rounded-xl border border-destructive/20 bg-destructive/5 p-3 flex items-start gap-2 text-foreground/90">
                 <AlertTriangle className="size-4 text-destructive shrink-0 mt-0.5" />
                 <span>
-                  O acesso às informações deste aluno será invalidado imediatamente.
-                  O aluno manterá a posse de todos os seus treinos e histórico.
+                  O acesso às informações deste aluno será invalidado
+                  imediatamente. O aluno manterá a posse de todos os seus
+                  treinos e histórico.
                 </span>
               </div>
             </div>
-
-            {errorMessage && (
-              <div className="rounded-xl border border-destructive/20 bg-destructive/10 p-3 text-xs text-destructive font-medium">
-                {errorMessage}
-              </div>
-            )}
 
             <div className="flex flex-col gap-2 pt-1">
               <Button

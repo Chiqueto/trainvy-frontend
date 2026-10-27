@@ -1,5 +1,7 @@
 "use client";
 
+import { toast } from "sonner";
+
 import { useState, useTransition } from "react";
 import {
   Check,
@@ -23,13 +25,11 @@ export function InviteStudentModal({ isFull }: InviteStudentModalProps) {
   const [generatedToken, setGeneratedToken] = useState<string | null>(null);
   const [expiresAt, setExpiresAt] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleOpen = () => {
     setGeneratedToken(null);
     setExpiresAt(null);
     setCopied(false);
-    setErrorMessage(null);
     setIsOpen(true);
   };
 
@@ -38,12 +38,12 @@ export function InviteStudentModal({ isFull }: InviteStudentModalProps) {
   };
 
   const handleGenerate = () => {
-    setErrorMessage(null);
     startTransition(async () => {
       const res = await createInvitationAction(7);
       if (!res.success) {
-        setErrorMessage(res.error);
+        toast.error(res.error);
       } else {
+        toast.success("Convite gerado com sucesso!");
         setGeneratedToken(res.data.token);
         setExpiresAt(res.data.expiresAt);
       }
@@ -59,10 +59,13 @@ export function InviteStudentModal({ isFull }: InviteStudentModalProps) {
     if (!inviteUrl) return;
     try {
       await navigator.clipboard.writeText(inviteUrl);
+      toast.success("Link copiado!");
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
     } catch {
-      // fallback
+      toast.error(
+        "Não foi possível copiar o link. Copie o endereço manualmente.",
+      );
     }
   };
 
@@ -104,22 +107,18 @@ export function InviteStudentModal({ isFull }: InviteStudentModalProps) {
               </button>
             </div>
 
-            {errorMessage && (
-              <div className="rounded-xl border border-destructive/20 bg-destructive/10 p-3 text-xs text-destructive font-medium">
-                {errorMessage}
-              </div>
-            )}
-
             {!generatedToken ? (
               <div className="flex flex-col gap-4">
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  Gere um link seguro e exclusivo para enviar ao seu atleta.
-                  Ao clicar, ele poderá aceitar a assessoria mantendo total
+                  Gere um link seguro e exclusivo para enviar ao seu atleta. Ao
+                  clicar, ele poderá aceitar a assessoria mantendo total
                   controle e propriedade sobre a sua própria conta.
                 </p>
 
                 <div className="rounded-xl border border-border/60 bg-muted/30 p-3 text-xs text-foreground/80 space-y-1">
-                  <div className="font-semibold text-foreground">Informações do convite:</div>
+                  <div className="font-semibold text-foreground">
+                    Informações do convite:
+                  </div>
                   <div>• Validade de 7 dias a partir da criação</div>
                   <div>• Uso único e intransferível</div>
                   <div>• O atleta deve aceitar explicitamente</div>
@@ -144,7 +143,7 @@ export function InviteStudentModal({ isFull }: InviteStudentModalProps) {
               <div className="flex flex-col gap-4">
                 <div className="rounded-xl border border-primary/20 bg-primary/5 p-3.5 space-y-2">
                   <span className="font-heading text-xs font-semibold uppercase text-primary block">
-                    Link de convite gerado com sucesso
+                    Link de convite
                   </span>
                   <div className="flex items-center gap-2 bg-background border border-border/80 rounded-lg p-2">
                     <input
@@ -174,7 +173,8 @@ export function InviteStudentModal({ isFull }: InviteStudentModalProps) {
                   </div>
                   {expiresAt && (
                     <span className="text-[11px] text-muted-foreground block">
-                      Válido até: {new Date(expiresAt).toLocaleDateString("pt-BR")}
+                      Válido até:{" "}
+                      {new Date(expiresAt).toLocaleDateString("pt-BR")}
                     </span>
                   )}
                 </div>

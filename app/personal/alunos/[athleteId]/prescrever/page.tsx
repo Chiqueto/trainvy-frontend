@@ -57,7 +57,7 @@ export default async function PrescribeWorkoutPage({
   }
 
   return (
-    <div className="flex min-h-svh flex-col bg-background pb-24">
+    <div className="personal-workspace flex min-h-svh min-w-0 flex-col bg-background pb-24 lg:pb-8">
       <main className="mx-auto w-full max-w-lg px-5 py-4 flex flex-col gap-5">
         {/* Header com Navegação */}
         <div className="flex items-center justify-between">
@@ -79,7 +79,8 @@ export default async function PrescribeWorkoutPage({
             Prescrever Treino
           </h1>
           <p className="text-xs text-muted-foreground">
-            Elabore um planejamento estruturado para <strong>{athleteData.name}</strong>
+            Elabore um planejamento estruturado para{" "}
+            <strong>{athleteData.name}</strong>
           </p>
         </div>
 

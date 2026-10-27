@@ -1,5 +1,7 @@
 "use client";
 
+import { toast } from "sonner";
+
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -91,33 +93,34 @@ export function CoachPrescriptionsList({
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [cancelTargetId, setCancelTargetId] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
-  const [actionError, setActionError] = useState<string | null>(null);
 
   function handleSend(prescriptionId: string) {
-    setActionError(null);
     startTransition(async () => {
       const res = await sendPrescriptionAction({
         id: prescriptionId,
         athleteId,
       });
       if (!res.success) {
-        setActionError(res.error);
+        toast.error(res.error);
+        return;
       }
+      toast.success("Prescrição enviada ao aluno!");
       router.refresh();
     });
   }
 
   function handleCancelConfirm() {
     if (!cancelTargetId) return;
-    setActionError(null);
     startTransition(async () => {
       const res = await cancelPrescriptionAction({
         id: cancelTargetId,
         athleteId,
       });
       if (!res.success) {
-        setActionError(res.error);
+        toast.error(res.error);
+        return;
       }
+      toast.success("Prescrição cancelada.");
       setCancelTargetId(null);
       router.refresh();
     });
@@ -199,13 +202,6 @@ export function CoachPrescriptionsList({
         </Link>
       </div>
 
-      {actionError && (
-        <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-xs text-destructive flex items-center gap-2">
-          <AlertCircle className="size-4 shrink-0" />
-          <span>{actionError}</span>
-        </div>
-      )}
-
       {/* Lista de Prescrições */}
       {prescriptions.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-border/80 bg-card/40 p-8 text-center flex flex-col items-center justify-center gap-3">
@@ -221,7 +217,10 @@ export function CoachPrescriptionsList({
               séries para enviar a {athleteName}.
             </p>
           </div>
-          <Link href={`/personal/alunos/${athleteId}/prescrever`} className="mt-1">
+          <Link
+            href={`/personal/alunos/${athleteId}/prescrever`}
+            className="mt-1"
+          >
             <Button
               size="sm"
               variant="outline"
@@ -233,7 +232,7 @@ export function CoachPrescriptionsList({
           </Link>
         </div>
       ) : (
-        <div className="flex flex-col gap-3">
+        <div className="grid gap-4 xl:grid-cols-2">
           {prescriptions.map((item) => {
             const workoutDays: PrescriptionDay[] =
               item.payload?.days ?? item.payload?.workoutDays ?? [];
@@ -284,7 +283,9 @@ export function CoachPrescriptionsList({
                     <strong className="text-foreground font-semibold">
                       {activeDays.length}
                     </strong>{" "}
-                    {activeDays.length === 1 ? "dia de treino" : "dias de treino"}
+                    {activeDays.length === 1
+                      ? "dia de treino"
+                      : "dias de treino"}
                   </span>
                   <span>•</span>
                   <span className="font-heading">
@@ -412,9 +413,7 @@ export function CoachPrescriptionsList({
                 <span className="font-heading font-bold uppercase tracking-wider text-[10px] text-muted-foreground block">
                   Orientações do Treinador:
                 </span>
-                <p className="leading-relaxed">
-                  {selectedPrescription.notes}
-                </p>
+                <p className="leading-relaxed">{selectedPrescription.notes}</p>
               </div>
             )}
 
@@ -567,7 +566,9 @@ export function CoachPrescriptionsList({
                 onClick={handleCancelConfirm}
                 className="flex-1 gap-1.5"
               >
-                {isPending && <LoaderCircle className="size-3.5 animate-spin" />}
+                {isPending && (
+                  <LoaderCircle className="size-3.5 animate-spin" />
+                )}
                 <span>Cancelar Prescrição</span>
               </Button>
             </div>

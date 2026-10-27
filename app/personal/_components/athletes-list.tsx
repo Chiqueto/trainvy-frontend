@@ -1,11 +1,12 @@
 "use client";
 
+import { toast } from "sonner";
+
 import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import {
   AlertTriangle,
   ArrowRight,
-  CheckCircle2,
   ChevronRight,
   Dumbbell,
   FileEdit,
@@ -81,11 +82,11 @@ export function AthletesList({
   activeCount = 0,
   limit = null,
 }: AthletesListProps) {
+  const [referenceTime] = useState(() => Date.now());
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
   const [confirmingLinkId, setConfirmingLinkId] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Modal de Incentivo / WhatsApp
   const [incentiveAthlete, setIncentiveAthlete] =
@@ -102,7 +103,7 @@ export function AthletesList({
         if (!ath.evolutionShared) return false;
         if (!ath.lastWorkoutSessionAt) return true;
         const diffDays = Math.floor(
-          (Date.now() - new Date(ath.lastWorkoutSessionAt).getTime()) /
+          (referenceTime - new Date(ath.lastWorkoutSessionAt).getTime()) /
             (1000 * 60 * 60 * 24),
         );
         return diffDays >= 4;
@@ -126,16 +127,16 @@ export function AthletesList({
         ath.name.toLowerCase().includes(q) ||
         ath.email.toLowerCase().includes(q),
     );
-  }, [athletes, searchQuery, activeFilter]);
+  }, [athletes, searchQuery, activeFilter, referenceTime]);
 
   const handleRevoke = (linkId: string) => {
-    setErrorMessage(null);
     startTransition(async () => {
       const res = await revokeStudentAction(linkId);
       if (!res.success) {
-        setErrorMessage(res.error);
+        toast.error(res.error);
         setConfirmingLinkId(null);
       } else {
+        toast.success("Vínculo encerrado com sucesso.");
         setConfirmingLinkId(null);
       }
     });
@@ -152,7 +153,8 @@ export function AthletesList({
             Nenhum aluno ativo
           </h3>
           <p className="text-xs text-muted-foreground max-w-xs mx-auto leading-relaxed">
-            Seus alunos vinculados aparecerão aqui assim que aceitarem o link de convite.
+            Seus alunos vinculados aparecerão aqui assim que aceitarem o link de
+            convite.
           </p>
         </div>
       </div>
@@ -277,19 +279,14 @@ export function AthletesList({
         </div>
       </div>
 
-      {errorMessage && (
-        <div className="rounded-xl border border-destructive/20 bg-destructive/10 p-3 text-xs text-destructive font-medium">
-          {errorMessage}
-        </div>
-      )}
-
       {/* Lista de Alunos Filtrados */}
       {filteredAthletes.length === 0 ? (
         <div className="rounded-xl border border-border/60 bg-card/40 p-6 text-center flex flex-col items-center gap-2">
           <p className="font-heading text-xs text-muted-foreground">
             {searchQuery ? (
               <>
-                Nenhum aluno encontrado para &quot;<strong>{searchQuery}</strong>&quot;
+                Nenhum aluno encontrado para &quot;
+                <strong>{searchQuery}</strong>&quot;
               </>
             ) : (
               "Nenhum aluno encontrado com os filtros selecionados."
@@ -308,7 +305,7 @@ export function AthletesList({
           </Button>
         </div>
       ) : (
-        <div className="flex flex-col gap-3">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {filteredAthletes.map((ath) => {
             const isConfirming = confirmingLinkId === ath.linkId;
 
@@ -316,7 +313,7 @@ export function AthletesList({
             let lastWorkoutDays: number | null = null;
             if (ath.lastWorkoutSessionAt) {
               const diffMs =
-                Date.now() - new Date(ath.lastWorkoutSessionAt).getTime();
+                referenceTime - new Date(ath.lastWorkoutSessionAt).getTime();
               lastWorkoutDays = Math.max(
                 0,
                 Math.floor(diffMs / (1000 * 60 * 60 * 24)),
@@ -580,7 +577,8 @@ export function AthletesList({
                           email: ath.email,
                           workoutsThisWeekCount: ath.workoutsThisWeekCount ?? 0,
                           lastWorkoutSessionAt: ath.lastWorkoutSessionAt,
-                          hasActiveWorkoutPlan: ath.hasActiveWorkoutPlan ?? false,
+                          hasActiveWorkoutPlan:
+                            ath.hasActiveWorkoutPlan ?? false,
                           activeWorkoutPlanName: ath.activeWorkoutPlanName,
                           pendingPrescriptionsCount:
                             ath.pendingPrescriptionsCount ?? 0,

@@ -87,10 +87,13 @@ export function validateWorkoutPlanDraft(
 
   for (let i = 0; i < days.length; i++) {
     const day = days[i];
-    if (day.isRest) continue;
     const dayLabel = day.name.trim() || `Treino ${i + 1}`;
     if (!day.name.trim()) return `Informe o nome do treino ${i + 1}.`;
-    if (day.estimatedDurationInMinutes < 1) {
+    if (day.isRest) continue;
+    if (
+      !Number.isFinite(day.estimatedDurationInMinutes) ||
+      day.estimatedDurationInMinutes < 1
+    ) {
       return `Informe uma duração válida para ${dayLabel}.`;
     }
     if (day.exercises.length === 0) {
@@ -102,9 +105,13 @@ export function validateWorkoutPlanDraft(
       }
       if (
         (exercise.warmupSets !== undefined &&
-          (exercise.warmupSets < 0 || !Number.isInteger(exercise.warmupSets))) ||
+          (exercise.warmupSets < 0 ||
+            !Number.isInteger(exercise.warmupSets))) ||
+        !Number.isInteger(exercise.sets) ||
         exercise.sets < 1 ||
+        !Number.isInteger(exercise.reps) ||
         exercise.reps < 1 ||
+        !Number.isInteger(exercise.restTimeInSeconds) ||
         exercise.restTimeInSeconds < 1
       ) {
         return `Revise aquecimento, séries, repetições e descanso em ${dayLabel}.`;

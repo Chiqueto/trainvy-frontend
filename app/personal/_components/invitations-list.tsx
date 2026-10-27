@@ -1,5 +1,7 @@
 "use client";
 
+import { toast } from "sonner";
+
 import { useState, useTransition } from "react";
 import { Clock, Loader2, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -23,7 +25,9 @@ export function InvitationsList({ invitations }: InvitationsListProps) {
   const [confirmingId, setConfirmingId] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  const pendingInvitations = invitations.filter((inv) => inv.status === "PENDING");
+  const pendingInvitations = invitations.filter(
+    (inv) => inv.status === "PENDING",
+  );
 
   if (pendingInvitations.length === 0) {
     return null;
@@ -31,7 +35,12 @@ export function InvitationsList({ invitations }: InvitationsListProps) {
 
   const handleCancel = (id: string) => {
     startTransition(async () => {
-      await cancelInvitationAction(id);
+      const res = await cancelInvitationAction(id);
+      if (!res.success) {
+        toast.error(res.error);
+        return;
+      }
+      toast.success("Convite cancelado.");
       setConfirmingId(null);
     });
   };
@@ -48,7 +57,9 @@ export function InvitationsList({ invitations }: InvitationsListProps) {
       <div className="flex flex-col gap-2">
         {pendingInvitations.map((inv) => {
           const isConfirming = confirmingId === inv.id;
-          const expiresDate = new Date(inv.expiresAt).toLocaleDateString("pt-BR");
+          const expiresDate = new Date(inv.expiresAt).toLocaleDateString(
+            "pt-BR",
+          );
 
           return (
             <div
@@ -57,7 +68,10 @@ export function InvitationsList({ invitations }: InvitationsListProps) {
             >
               <div className="flex flex-col gap-0.5">
                 <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="font-heading text-[10px] uppercase font-semibold text-amber-500 border-amber-500/20 bg-amber-500/10">
+                  <Badge
+                    variant="outline"
+                    className="font-heading text-[10px] uppercase font-semibold text-amber-500 border-amber-500/20 bg-amber-500/10"
+                  >
                     Aguardando Aceite
                   </Badge>
                 </div>

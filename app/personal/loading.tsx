@@ -2,7 +2,7 @@ import { BottomNav } from "@/app/_components/bottom-nav";
 
 export default function PersonalLoading() {
   return (
-    <div className="flex min-h-svh flex-col bg-background pb-24 animate-pulse">
+    <div className="personal-workspace flex min-h-svh min-w-0 flex-col bg-background pb-24 lg:pb-8 animate-pulse">
       <main className="mx-auto w-full max-w-lg px-5 py-4 flex flex-col gap-5">
         <div className="flex flex-col gap-3 pt-2">
           <div className="flex items-center justify-between">
@@ -56,7 +56,7 @@ export default function PersonalLoading() {
         </div>
       </main>
 
-      <BottomNav activePage="profile" />
+      <BottomNav isCoach={true} activePage="athletes" />
     </div>
   );
 }

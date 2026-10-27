@@ -135,3 +135,89 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* A single navigation tree keeps the same destinations on every screen. */
+@media (min-width: 768px) {
+  .personal-workspace main {
+    max-width: 80rem;
+    padding: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  body:has(.app-navigation) {
+    padding-left: 15rem;
+  }
+  .app-navigation {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: auto;
+    width: 15rem;
+    display: flex;
+    flex-direction: column;
+    border-radius: 0;
+    border-top: 0;
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 1rem;
+    box-shadow: none;
+    background: var(--card);
+  }
+  .app-navigation > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    align-items: stretch;
+  }
+  .app-navigation > div > a,
+  .app-navigation > div > button {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 0.875rem;
+    min-height: 3.25rem;
+    padding: 0.875rem 1rem;
+    margin-top: 0;
+  }
+  .app-navigation a:focus-visible,
+  .app-navigation button:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+  }
+  .app-navigation > div > a > span:not(:last-child),
+  .app-navigation > div > a > span:first-of-type,
+  .app-navigation > div > button > span:first-of-type {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+  .app-navigation > div > a > span:last-child:not(:first-of-type),
+  .app-navigation > div > button > span:last-child:not(:first-of-type) {
+    display: none;
+  }
+  .app-navigation > div > button > div {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: none;
+  }
+  .personal-workspace {
+    background: radial-gradient(
+        ellipse at top right,
+        color-mix(in oklch, var(--primary) 5%, transparent),
+        transparent 50%
+      )
+      var(--background);
+  }
+  .personal-workspace main {
+    max-width: 80rem;
+    padding: 2.5rem 2rem 3rem;
+    gap: 1.75rem;
+  }
+  .personal-workspace main h1 {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+  .personal-workspace main > section {
+    padding: 1.75rem;
+  }
+}
