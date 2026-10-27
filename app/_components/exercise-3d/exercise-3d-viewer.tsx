@@ -9,18 +9,25 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import {
-  Box,
-  Compass,
-  Info,
-  Layers,
-  Maximize2,
-  Sparkles,
-} from "lucide-react";
+import { RotateCcw, Expand, Pause, Play, Rotate3D } from "lucide-react";
+import { toast } from "sonner";
 import { EXERCISE_ANIMATIONS, type ExerciseAnimation } from "./exercises";
+import { ANATOMY_COLORS } from "./anatomy-material";
 
 const Scene = dynamic(() => import("./exercise-scene"), { ssr: false });
+type View = "perspective" | "front" | "side" | "back";
 
+function Fallback() {
+  return (
+    <div
+      role="alert"
+      className="flex h-full min-h-64 items-center justify-center px-8 text-center text-sm leading-relaxed text-slate-300"
+    >
+      Não foi possível abrir a visualização 3D. As ilustrações e as instruções
+      do exercício continuam disponíveis.
+    </div>
+  );
+}
 class SceneBoundary extends Component<
   { children: ReactNode },
   { failed: boolean }
@@ -30,59 +37,23 @@ class SceneBoundary extends Component<
     return { failed: true };
   }
   render() {
-    return this.state.failed ? (
-      <div
-        role="alert"
-        className="flex h-full min-h-[320px] flex-col items-center justify-center p-6 text-center text-slate-300 space-y-2 bg-slate-950/60 rounded-2xl"
-      >
-        <p className="text-sm font-semibold text-white">
-          Não foi possível carregar a visualização 3D neste momento.
-        </p>
-        <p className="text-xs text-slate-400 max-w-sm">
-          Seu navegador ou dispositivo pode estar com recursos WebGL limitados.
-          Você pode consultar as ilustrações completas do exercício.
-        </p>
-      </div>
-    ) : (
-      this.props.children
-    );
+    return this.state.failed ? <Fallback /> : this.props.children;
   }
 }
 
-export function Exercise3DViewer({
-  exercise,
-  compact = false,
-  inDialog = false,
-}: {
+export function Exercise3DViewer(props: {
   exercise: ExerciseAnimation;
   compact?: boolean;
   inDialog?: boolean;
 }) {
-  return (
-    <Viewer
-      key={exercise}
-      exercise={exercise}
-      compact={compact}
-      inDialog={inDialog}
-    />
-  );
+  return <Viewer key={props.exercise} {...props} />;
 }
 
-function getPhaseLabel(phase: number): { name: string; tag: string } {
-  const p = ((phase % 1) + 1) % 1;
-  if (p < 0.04) {
-    return { name: "Extensão Completa", tag: "Lockout" };
-  }
-  if (p < 0.48) {
-    return { name: "Descida Controlada", tag: "Excêntrica" };
-  }
-  if (p < 0.54) {
-    return { name: "Pausa no Ponto Baixo", tag: "Isometria" };
-  }
-  if (p < 0.96) {
-    return { name: "Subida Firme", tag: "Concêntrica" };
-  }
-  return { name: "Extensão Completa", tag: "Lockout" };
+function phaseLabel(phase: number) {
+  if (phase < 0.04 || phase >= 0.99) return "Posição inicial";
+  if (phase < 0.48) return "Descida controlada";
+  if (phase < 0.54) return "Pausa no ponto baixo";
+  return "Subida controlada";
 }
 
 function Viewer({
@@ -94,51 +65,52 @@ function Viewer({
   compact?: boolean;
   inDialog?: boolean;
 }) {
-  const playback = useRef({ phase: 0, playing: false, speed: 1 });
+  const container = useRef<HTMLElement>(null);
+  const playback = useRef({
+    phase: 0,
+    playing: false,
+    speed: 1,
+    displayStep: -1,
+  });
   const [playing, setPlaying] = useState(false);
-  const [view, setView] = useState<"perspective" | "front" | "side">(
-    "perspective",
-  );
-  const [currentPhase, setCurrentPhase] = useState(0);
+  const [view, setView] = useState<View>("perspective");
+  const [highlighted, setHighlighted] = useState(true);
+  const [phase, setPhase] = useState(0);
+  const [speed, setSpeed] = useState(1);
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
-  // A revision invalidates a paused Canvas after scrubbing without remounting it.
-  const [revision] = useState(0);
-
-  const onError = useCallback(() => {
-    setFailed(true);
-    setPlaying(false);
-    playback.current.playing = false;
-  }, []);
+  const [revision, setRevision] = useState(0);
+  const definition = EXERCISE_ANIMATIONS[exercise];
 
   const play = useCallback((value: boolean) => {
     playback.current.playing = value;
     setPlaying(value);
   }, []);
-
+  const onError = useCallback(() => {
+    setFailed(true);
+    play(false);
+  }, [play]);
   const onReady = useCallback(() => {
     setLoaded(true);
-    const prefersReducedMotion =
-      typeof window !== "undefined" &&
+    const reduced =
       typeof window.matchMedia === "function" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    play(!prefersReducedMotion && !document.hidden);
+    play(!reduced && !document.hidden);
   }, [play]);
-
   const tick = useCallback((delta: number) => {
     const state = playback.current;
-    if (state.playing) {
+    if (state.playing)
       state.phase =
-        (state.phase + (Math.min(delta, 0.05) * state.speed) / 4) % 1;
+        (state.phase + (Math.min(delta, 0.05) * state.speed) / 5.5) % 1;
+    const step = Math.floor(state.phase * 100);
+    if (step !== state.displayStep) {
+      state.displayStep = step;
+      setPhase(state.phase);
     }
-    setCurrentPhase(state.phase);
     return state.phase;
   }, []);
-
   useEffect(() => {
-    if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
-      return;
-    }
+    if (typeof window.matchMedia !== "function") return;
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     const reduce = () => {
       if (media.matches) play(false);
@@ -154,66 +126,51 @@ function Viewer({
     };
   }, [play]);
 
-  const isSquat = exercise === "squat";
-  const phaseInfo = getPhaseLabel(currentPhase);
-  const exerciseName = EXERCISE_ANIMATIONS[exercise].name;
-  const targetMuscles = isSquat
-    ? "Quadríceps (ênfase primária)"
-    : "Peitoral, Tríceps e Deltoide Anterior";
+  function seek(value: number) {
+    play(false);
+    playback.current.phase = value;
+    playback.current.displayStep = -1;
+    setPhase(value);
+    setRevision((current) => current + 1);
+  }
+  async function fullscreen() {
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen();
+      else if (container.current?.requestFullscreen)
+        await container.current.requestFullscreen();
+      else toast.info("Amplie a visualização usando o zoom do navegador.");
+    } catch {
+      toast.error("Não foi possível ampliar a visualização.");
+    }
+  }
 
   return (
     <section
-      aria-label={`Demonstração 3D: ${exerciseName}`}
-      className="relative flex flex-col rounded-2xl sm:rounded-3xl border border-border/80 bg-[#070b12] text-white shadow-lg overflow-hidden isolate"
-      style={{
-        borderRadius: "1rem",
-        WebkitMaskImage: "-webkit-radial-gradient(white, black)",
-        transform: "translateZ(0)",
-      }}
+      ref={container}
+      aria-label={`Demonstração 3D: ${definition.name}`}
+      className="group/anatomy isolate flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#0b0f17] text-white shadow-xl [&:fullscreen]:justify-center [&:fullscreen]:rounded-none"
     >
-      {/* 1. Header Overlay de Informações Anatômicas (oculto quando em modal, pois o modal já possui cabeçalho) */}
       {!inDialog && (
-        <div className="flex flex-wrap items-center justify-between gap-2.5 border-b border-white/10 bg-slate-950/70 px-4 py-3 backdrop-blur-md">
-          <div className="flex items-center gap-2">
-            <span className="flex size-6 items-center justify-center rounded-lg bg-blue-500/20 text-blue-400">
-              <Box className="size-3.5" />
-            </span>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-heading text-xs font-bold text-white tracking-wide">
-                  {exerciseName}
-                </span>
-                <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/15 border border-blue-500/30 px-2 py-0.5 text-[9px] font-bold text-blue-400 uppercase tracking-wider">
-                  <Sparkles className="size-2.5" /> 3D Interativo
-                </span>
-              </div>
-            </div>
+        <header className="flex items-center justify-between gap-3 border-b border-white/8 px-5 py-4">
+          <div>
+            <p className="mb-1 text-[10px] font-medium uppercase tracking-[.22em] text-slate-500">
+              Trainvy · Anatomia em movimento
+            </p>
+            <h3 className="font-heading text-base font-semibold tracking-tight">
+              {definition.name}
+            </h3>
           </div>
-
-          {/* Grupo Muscular em Destaque */}
-          <div className="flex items-center gap-1.5 rounded-full bg-white/5 border border-white/10 px-2.5 py-1 text-[11px] text-slate-300">
-            <span className="size-2 rounded-full bg-blue-500 animate-pulse" />
-            <span className="font-medium text-slate-400">Em destaque:</span>
-            <strong className="font-semibold text-blue-200">
-              {targetMuscles}
-            </strong>
-          </div>
-        </div>
+          <Rotate3D className="size-5 text-slate-500" />
+        </header>
       )}
 
-      {/* 2. Canvas 3D Interativo com overlays de câmera e HUD não-colidentes */}
       <div
-        className={`relative w-full ${inDialog ? "h-[220px] sm:h-[260px]" : compact ? "h-[300px] sm:h-[360px]" : "h-[360px] sm:h-[430px]"}`}
+        className={`relative w-full ${inDialog ? "h-[320px] sm:h-[440px]" : compact ? "h-[380px] sm:h-[460px]" : "h-[430px] sm:h-[560px]"} group-[:fullscreen]/anatomy:h-[70vh]`}
         data-pose-revision={revision}
       >
         <SceneBoundary>
           {failed ? (
-            <div className="flex h-full items-center justify-center p-6 text-center text-sm text-slate-300">
-              <p>
-                A visualização 3D foi interrompida. Reabra a demonstração para
-                tentar novamente.
-              </p>
-            </div>
+            <Fallback />
           ) : (
             <>
               <Scene
@@ -221,114 +178,187 @@ function Viewer({
                 tick={tick}
                 playing={playing}
                 view={view}
+                highlighted={highlighted}
                 onReady={onReady}
                 onError={onError}
                 revision={revision}
               />
-
               {!loaded && (
                 <div
                   role="status"
-                  className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-3 bg-slate-950/80 backdrop-blur-sm text-slate-200"
+                  className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-4 bg-[#0b0f17]"
                 >
-                  <div className="size-8 rounded-full border-2 border-blue-500 border-t-transparent animate-spin" />
-                  <p className="text-xs font-heading font-medium tracking-wide">
-                    Renderizando modelo anatômico 3D...
+                  <span className="size-8 animate-spin rounded-full border border-stone-500 border-t-transparent" />
+                  <p className="text-xs text-stone-400">
+                    Preparando a visualização…
                   </p>
                 </div>
               )}
             </>
           )}
         </SceneBoundary>
-
-        {/* HUD: Indicador Dinâmico da Fase do Movimento (Canto Superior Esquerdo - sem sobreposição) */}
         {loaded && !failed && (
-          <div className="pointer-events-none absolute left-3 top-3 flex items-center gap-2 rounded-full bg-slate-950/85 border border-white/10 px-3 py-1.5 shadow-md backdrop-blur-md">
-            <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
-            <div className="flex items-center gap-1.5">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
-                {phaseInfo.tag} ·
-              </span>
-              <span className="font-heading text-xs font-semibold text-white">
-                {phaseInfo.name}
-              </span>
+          <>
+            <div className="pointer-events-none absolute left-4 top-4 flex items-center gap-2 rounded-full border border-white/8 bg-[#10151c]/80 px-3 py-1.5 text-[11px] text-slate-300 backdrop-blur-md">
+              <span
+                className={`size-1.5 rounded-full ${playing ? "bg-emerald-400" : "bg-slate-500"}`}
+              />
+              {phaseLabel(phase)}
             </div>
-          </div>
+            <button
+              type="button"
+              onClick={fullscreen}
+              aria-label="Ampliar visualização"
+              className="absolute right-4 top-4 rounded-xl border border-white/10 bg-[#10151c]/80 p-2 text-slate-300 transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-white"
+            >
+              <Expand className="size-4" />
+            </button>
+            <div className="pointer-events-none absolute bottom-4 left-0 right-0 text-center text-[10px] tracking-wide text-slate-500">
+              Arraste para girar · Aproxime para ver os detalhes
+            </div>
+          </>
         )}
+      </div>
 
-        {/* HUD: Grupo Muscular em Destaque (Canto Inferior Esquerdo) */}
-        {loaded && !failed && (
-          <div className="pointer-events-none absolute left-3 bottom-3 flex items-center gap-1.5 rounded-full bg-slate-950/85 border border-white/10 px-2.5 py-1 text-[10px] text-slate-300 shadow-md backdrop-blur-md">
-            <span className="size-1.5 rounded-full bg-blue-500 animate-pulse" />
-            <span className="font-medium text-slate-400">Destaque:</span>
-            <strong className="font-semibold text-blue-200">{targetMuscles}</strong>
+      <div className="space-y-4 border-t border-white/8 bg-[#10151c] px-4 py-4 sm:px-5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              disabled={!loaded || failed}
+              onClick={() => play(!playing)}
+              aria-label={playing ? "Pausar movimento" : "Reproduzir movimento"}
+              className="flex size-9 items-center justify-center rounded-full bg-stone-200 text-stone-900 transition hover:bg-white disabled:opacity-40"
+            >
+              {playing ? (
+                <Pause className="size-4" />
+              ) : (
+                <Play className="size-4" />
+              )}
+            </button>
+            <button
+              type="button"
+              disabled={!loaded || failed}
+              onClick={() => seek(0)}
+              aria-label="Reiniciar movimento"
+              className="rounded-lg p-2 text-slate-400 hover:bg-white/5 hover:text-white disabled:opacity-40"
+            >
+              <RotateCcw className="size-4" />
+            </button>
+            <select
+              aria-label="Velocidade do movimento"
+              value={speed}
+              onChange={(event) => {
+                const value = Number(event.target.value);
+                playback.current.speed = value;
+                setSpeed(value);
+              }}
+              className="rounded-lg border border-white/10 bg-[#161d26] px-2 py-1.5 text-xs text-slate-300"
+            >
+              <option value={0.5}>0,5×</option>
+              <option value={0.75}>0,75×</option>
+              <option value={1}>1×</option>
+            </select>
           </div>
-        )}
-
-        {/* Seletor Flutuante de Câmera (Canto Inferior Direito - totalmente separado do topo) */}
-        {loaded && !failed && (
           <div
-            className="absolute right-3 bottom-3 flex items-center gap-1 rounded-full bg-slate-950/85 border border-white/10 p-1 shadow-lg backdrop-blur-md z-10"
+            role="group"
             aria-label="Ângulo da câmera"
+            className="flex rounded-xl border border-white/8 bg-black/15 p-1"
           >
             {(
               [
-                ["perspective", "360°", Compass],
-                ["front", "Frente", Layers],
-                ["side", "Lateral", Maximize2],
+                ["perspective", "360°"],
+                ["front", "Frente"],
+                ["side", "Lateral"],
+                ["back", "Costas"],
               ] as const
-            ).map(([val, label, Icon]) => (
+            ).map(([value, label]) => (
               <button
-                key={val}
+                key={value}
                 type="button"
-                aria-pressed={view === val}
-                onClick={() => setView(val)}
-                title={`Mudar para vista ${label}`}
-                className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-heading font-semibold transition-all cursor-pointer ${
-                  view === val
-                    ? "bg-blue-600 text-white shadow-sm shadow-blue-500/30 font-bold"
-                    : "text-slate-300 hover:bg-white/10 hover:text-white"
-                }`}
+                aria-pressed={view === value}
+                onClick={() => setView(value)}
+                className={`rounded-lg px-2.5 py-1.5 text-[11px] transition ${view === value ? "bg-white/10 text-white shadow-sm" : "text-slate-500 hover:text-slate-200"}`}
               >
-                <Icon className="size-3" />
-                <span>{label}</span>
+                {label}
               </button>
             ))}
           </div>
-        )}
-
-        {/* Dica de Interação sutil no centro */}
-        {!inDialog && (
-          <div className="pointer-events-none absolute top-3 right-3 rounded-full bg-slate-950/70 border border-white/10 px-3 py-1 text-[10px] text-slate-400 backdrop-blur-sm hidden sm:block">
-            Arraste 360° · Scroll zoom
-          </div>
-        )}
-      </div>
-
-      {/* 3. Linha Sutil de Progresso da Repetição */}
-      <div className="h-0.5 w-full bg-slate-800/80 overflow-hidden">
-        <div
-          className="h-full bg-blue-500 transition-[width] duration-75"
-          style={{ width: `${Math.round(currentPhase * 100)}%` }}
-        />
-      </div>
-
-      {/* 4. Rodapé Informativo Clean com Bordas Arredondadas */}
-      <div className="flex items-center justify-between px-3.5 py-2.5 bg-slate-950 text-[11px] text-slate-400 border-t border-white/5 rounded-b-2xl sm:rounded-b-3xl">
-        <div className="flex items-center gap-1.5 text-slate-400">
-          <Info className="size-3 text-blue-400 shrink-0" />
-          <span className="text-[11px]">
-            Movimento anatômico ilustrativo com descida controlada e pausa.
-          </span>
         </div>
-        <a
-          href="/models/exercise-3d/ATTRIBUTION.md"
-          target="_blank"
-          rel="noreferrer"
-          className="text-[10px] font-mono text-blue-400 hover:text-blue-300 hover:underline shrink-0 ml-2"
-        >
-          Créditos CC0
-        </a>
+        <input
+          type="range"
+          aria-label="Posição do movimento"
+          min={0}
+          max={1000}
+          step={1}
+          value={Math.round(phase * 1000)}
+          onChange={(event) => seek(Number(event.target.value) / 1000)}
+          disabled={!loaded || failed}
+          className="block h-1 w-full cursor-pointer accent-stone-300 disabled:opacity-30"
+        />
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] text-slate-400">
+          <button
+            type="button"
+            onClick={() => setHighlighted((value) => !value)}
+            aria-pressed={highlighted}
+            className={`rounded-lg border px-2.5 py-1.5 transition ${highlighted ? "border-stone-500/40 bg-stone-500/10 text-stone-200" : "border-white/10 text-slate-400"}`}
+          >
+            {highlighted ? "Músculos do exercício" : "Anatomia neutra"}
+          </button>
+          {highlighted && (
+            <>
+              <span className="flex items-center gap-2">
+                <i
+                  className="size-2 rounded-full"
+                  style={{ background: ANATOMY_COLORS.primary }}
+                />
+                {definition.muscles.primary.join(" · ")}
+              </span>
+              <span className="flex items-center gap-2">
+                <i
+                  className="size-2 rounded-full"
+                  style={{ background: ANATOMY_COLORS.secondary }}
+                />
+                {definition.muscles.secondary.join(" · ")}
+              </span>
+            </>
+          )}
+        </div>
+        <details className="border-t border-white/6 pt-3 text-[10px] leading-relaxed text-slate-500">
+          <summary className="cursor-pointer select-none hover:text-slate-300">
+            Sobre esta visualização
+          </summary>
+          <p className="mt-2 max-w-2xl">
+            Visualização desenvolvida para o Trainvy. O vermelho identifica
+            grupos principais e o tom âmbar, grupos secundários. Os demais
+            músculos permanecem neutros. A representação é ilustrativa; as cores
+            não são uma medição de ativação muscular.
+          </p>
+          <p className="mt-2 max-w-2xl">
+            Anatomia adaptada de{" "}
+            <a
+              href="https://github.com/LluisV/Z-Anatomy"
+              target="_blank"
+              rel="noreferrer"
+              className="underline underline-offset-2"
+            >
+              Z-Anatomy
+            </a>
+            , por Gauthier Kervyn e Lluís Vinent Juanico, derivada de
+            BodyParts3D © The Database Center for Life Science / Kousaku Okubo.
+            Cabeça com base MakeHuman (CC0). Montagem, materiais e articulação:
+            Trainvy. Modelo sob{" "}
+            <a
+              href="https://creativecommons.org/licenses/by-sa/4.0/"
+              target="_blank"
+              rel="noreferrer"
+              className="underline underline-offset-2"
+            >
+              CC BY-SA 4.0
+            </a>
+            .
+          </p>
+        </details>
       </div>
     </section>
   );

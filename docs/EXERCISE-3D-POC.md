@@ -1,3 +1,50 @@
+# Visualização anatômica — versão atual, 26/10/2026
+
+O visualizador usa `public/models/exercise-3d/trainvy-athlete.glb`: superfícies musculares e
+suporte ósseo adaptados de Z-Anatomy/BodyParts3D, cabeça e shorts com base MakeHuman CC0,
+mãos fechadas e calçados próprios. Não se trata de uma escultura integralmente original,
+nem de um modelo clínico validado. A versão anterior está registrada no histórico abaixo.
+
+Foram selecionadas estruturas superficiais, exposto o reto abdominal, corrigidos reflexos
+de normais, ajustado o orçamento de polígonos e transferidas as superfícies para uma pose neutra.
+O rig tem 15 ossos, incluindo suportes de cotovelo. O manifesto
+`public/models/exercise-3d/model-manifest.json` registra estruturas, contagens e SHA-256.
+O GLB usa EXT_meshopt_compression com decoder local habilitado pelo Drei: não carrega
+modelos, texturas ou HDRIs de terceiros em runtime. A compressão preserva os buffers geométricos.
+
+Máscaras independentes: agachamento destaca quadríceps/glúteo máximo e adutores; supino
+destaca peitoral maior, tríceps e deltoide anterior. As cores são constantes durante a repetição
+e não representam EMG, intensidade ou ativação medida. Todo o restante permanece neutro.
+É possível desligar o destaque, observar pelas costas, pausar, reiniciar, mudar a velocidade,
+percorrer a repetição e ampliar a visualização. A interface de progresso atualiza no máximo
+100 vezes por ciclo, mantendo renderização sob demanda quando pausada.
+
+O link para um Markdown técnico foi substituído pela seção recolhida "Sobre esta visualização",
+com origem e licença legíveis. Créditos completos em `public/models/exercise-3d/ATTRIBUTION.md`;
+termos em `LICENSE-CC-BY-SA-4.0.txt` e `UPSTREAM-NOTICES.txt`. O GLB adaptado é CC BY-SA 4.0;
+isso não altera a licença do código da aplicação.
+
+## Reproduzir o asset
+
+Inputs licenciados preservados no projeto irmão `trainvy-3d-poc`:
+`assets/poc06/z_anatomy/{MuscularSystem100,SkeletalSystem100}.fbx` e
+`scenes/trainvy_bench_press_poc04.blend`. A aplicação não depende desse projeto em execução.
+
+```powershell
+node scripts/generate-anatomy-scaffold.mjs
+& 'C:/Program Files/Blender Foundation/Blender 5.2/blender.exe' --background --factory-startup --python-exit-code 1 --python scripts/build-anatomical-atlas.py
+node scripts/finalize-anatomical-atlas.mjs
+node scripts/anatomy-qa.mjs
+& 'C:/Program Files/Blender Foundation/Blender 5.2/blender.exe' --background --factory-startup --python-exit-code 1 --python scripts/render-anatomy-qa.py -- squat-0 squat-0.5 squat-1 bench-press-0 bench-press-0.5 bench-press-1
+```
+
+Intermediários e renders ficam em `.tmp/anatomy-qa`, ignorados pelo Git. Distribuir o GLB
+final e seu manifesto. O scaffold procedural contribui apenas mãos, calçados e esqueleto;
+seu tronco e sua cabeça experimentais não aparecem no asset final. As poses são ilustrativas;
+novos exercícios exigem revisão anatômica e de articulação específica.
+
+## Registro histórico — protótipo anterior
+
 # Teste de exercícios 3D
 
 Abrir `/lab/exercises-3d` com `npm run dev`. A página não consulta dados de treino nem exige uma sessão para visualizar o teste. O guia “Ver execução” oferece “Testar animação 3D” apenas para os IDs canônicos 101/102 (supino reto com barra) e 105 (agachamento livre). Nomes semelhantes e outros exercícios não recebem animações por aproximação.

@@ -163,15 +163,29 @@ export function CoachAiPrescriptionModal({
         isRest: d.isRest,
         estimatedDurationInMinutes:
           d.estimatedDurationInMinutes || (d.isRest ? 0 : 60),
-        exercises: (d.exercises || []).map((e) => ({
-          name: e.name,
-          sets: e.sets || 3,
-          warmupSets: e.warmupSets ?? 0,
-          reps: e.reps || 10,
-          restTimeInSeconds: e.restTimeInSeconds || 90,
-          alternative1Name: e.alternative1Name || "",
-          alternative2Name: e.alternative2Name || "",
-        })),
+        exercises: (d.exercises || []).map((e) => {
+          const name = e.name.trim();
+          let alt1 = e.alternative1Name?.trim() || "";
+          let alt2 = e.alternative2Name?.trim() || "";
+
+          if (alt1 && alt1.toLowerCase() === name.toLowerCase()) alt1 = "";
+          if (alt2 && alt2.toLowerCase() === name.toLowerCase()) alt2 = "";
+          if (alt1 && alt2 && alt1.toLowerCase() === alt2.toLowerCase()) alt2 = "";
+          if (!alt1 && alt2) {
+            alt1 = alt2;
+            alt2 = "";
+          }
+
+          return {
+            name,
+            sets: e.sets || 3,
+            warmupSets: e.warmupSets ?? 0,
+            reps: e.reps || 10,
+            restTimeInSeconds: e.restTimeInSeconds || 90,
+            alternative1Name: alt1,
+            alternative2Name: alt2,
+          };
+        }),
       }),
     );
 

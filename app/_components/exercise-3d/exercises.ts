@@ -4,6 +4,7 @@ export interface ExerciseDefinition {
   name: string;
   equipment: string;
   id: string;
+  muscles: { primary: readonly string[]; secondary: readonly string[] };
 }
 
 export const EXERCISE_ANIMATIONS = {
@@ -11,11 +12,16 @@ export const EXERCISE_ANIMATIONS = {
     name: "Agachamento livre",
     equipment: "Barra livre",
     id: "00000000-0000-4000-8000-000000000105",
+    muscles: { primary: ["Quadríceps", "Glúteos"], secondary: ["Adutores"] },
   },
   "bench-press": {
     name: "Supino reto",
     equipment: "Banco reto e barra",
     id: "00000000-0000-4000-8000-000000000101",
+    muscles: {
+      primary: ["Peitoral maior"],
+      secondary: ["Tríceps", "Deltoide anterior"],
+    },
   },
 } satisfies Record<ExerciseAnimation, ExerciseDefinition>;
 
@@ -25,9 +31,7 @@ const LEGACY_SQUAT_IDS = new Set([
   "caa95df0-cb8e-4bfd-ba76-e8b3008b27dc",
 ]);
 
-const LEGACY_BENCH_IDS = new Set([
-  "f5eff850-07da-4ae9-b7d1-df8ec8137a5e",
-]);
+const LEGACY_BENCH_IDS = new Set(["f5eff850-07da-4ae9-b7d1-df8ec8137a5e"]);
 
 // Retorna animação correspondente por ID canônico ou nome normalizado do exercício.
 // Preserva a regra estrita de não associar variantes não suportadas (ex: supino inclinado).

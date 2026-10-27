@@ -8,7 +8,6 @@ import {
   CheckCircle2,
   Dumbbell,
   Eye,
-  Info,
   Layers,
   Sparkles,
 } from "lucide-react";
@@ -80,9 +79,9 @@ export default function Exercise3DLab() {
     }
   > = {
     squat: {
-      primary: "Quadríceps (Vasto lateral, intermédio e medial)",
-      secondary: "Glúteo máximo, adutores e eretores da espinha",
-      cadence: "Descida controlada (3-4s), pausa de 1s no paralelo e subida explosiva.",
+      primary: "Quadríceps e glúteos",
+      secondary: "Adutores",
+      cadence: "Descida cadenciada, pausa breve e subida controlada.",
       cues: [
         "Pés afastados na largura dos ombros com pontas levemente para fora.",
         "Joelhos acompanhando a linha dos pés durante toda a flexão.",
@@ -92,7 +91,8 @@ export default function Exercise3DLab() {
     "bench-press": {
       primary: "Peitoral Maior (Porção esternal e clavicular)",
       secondary: "Tríceps braquial e Deltoide anterior",
-      cadence: "Descida cadenciada até a linha intermamilar, pausa breve e empurrão firme.",
+      cadence:
+        "Descida cadenciada até a linha intermamilar, pausa breve e empurrão firme.",
       cues: [
         "Pés 100% plantados no chão para transferir força (leg drive).",
         "Cotovelos em ângulo de aprox. 45° a 70° em relação ao tronco.",
@@ -117,7 +117,7 @@ export default function Exercise3DLab() {
 
         <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/25 px-3 py-1 text-xs font-heading font-bold">
           <Sparkles className="size-3.5" />
-          <span>Laboratório 3D Biomecânico</span>
+          <span>Estúdio de anatomia</span>
         </span>
       </div>
 
@@ -132,14 +132,17 @@ export default function Exercise3DLab() {
           </h1>
         </div>
         <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">
-          Modelagem interativa com React Three Fiber. Inspecione o agachamento livre
-          e o supino reto em qualquer ângulo (360°, frontal e lateral), controle a cadência
-          e analise os grupos musculares em contração.
+          Explore a anatomia do agachamento e do supino em qualquer ângulo.
+          Aproxime os detalhes, acompanhe cada fase e compare os grupos
+          musculares principais e secundários destacados em cada movimento.
         </p>
       </header>
 
       {/* Seletor de Exercícios */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" aria-label="Selecionar exercício">
+      <div
+        className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+        aria-label="Selecionar exercício"
+      >
         {(
           Object.entries(EXERCISE_ANIMATIONS) as [
             ExerciseAnimation,
@@ -186,7 +189,9 @@ export default function Exercise3DLab() {
 
               <div className="mt-4 pt-3 border-t border-border/40 text-xs text-muted-foreground space-y-1">
                 <p>
-                  <strong className="text-foreground font-semibold">Foco:</strong>{" "}
+                  <strong className="text-foreground font-semibold">
+                    Foco:
+                  </strong>{" "}
                   {info.primary}
                 </p>
               </div>
@@ -261,7 +266,9 @@ export default function Exercise3DLab() {
             ))}
           </ul>
           <div className="mt-2 rounded-xl bg-muted/30 p-2.5 text-[11px] text-muted-foreground border border-border/40">
-            <span className="font-semibold text-foreground">Cadência ilustrada:</span>{" "}
+            <span className="font-semibold text-foreground">
+              Cadência ilustrada:
+            </span>{" "}
             {details.cadence}
           </div>
         </div>

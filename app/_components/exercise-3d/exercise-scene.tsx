@@ -2,7 +2,13 @@
 
 import { Suspense, useEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { OrbitControls, useGLTF } from "@react-three/drei";
+import {
+  Environment,
+  Lightformer,
+  OrbitControls,
+  RoundedBox,
+  useGLTF,
+} from "@react-three/drei";
 import { Bone, Group, Skeleton, SkinnedMesh } from "three";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
 import { createTissueMaterial } from "./anatomy-material";
@@ -13,7 +19,8 @@ interface SceneProps {
   exercise: ExerciseAnimation;
   tick: (delta: number) => number;
   playing: boolean;
-  view: "perspective" | "front" | "side";
+  view: "perspective" | "front" | "side" | "back";
+  highlighted: boolean;
   onReady: () => void;
   onError: () => void;
   revision: number;
@@ -64,7 +71,11 @@ function Barbell() {
           {/* Presilha / Colarinho */}
           <mesh position={[side * 0.055, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
             <cylinderGeometry args={[0.03, 0.03, 0.035, 20]} />
-            <meshStandardMaterial color="#1e293b" metalness={0.7} roughness={0.3} />
+            <meshStandardMaterial
+              color="#1e293b"
+              metalness={0.7}
+              roughness={0.3}
+            />
           </mesh>
         </group>
       ))}
@@ -76,10 +87,20 @@ function Bench() {
   return (
     <group>
       {/* Estofamento do Banco (Couro sintético esportivo premium) */}
-      <mesh position={[0, 0.42, 0.08]} castShadow receiveShadow>
-        <boxGeometry args={[0.3, 0.08, 1.25]} />
-        <meshStandardMaterial color="#182232" roughness={0.75} metalness={0.08} />
-      </mesh>
+      <RoundedBox
+        args={[0.3, 0.08, 1.25]}
+        radius={0.025}
+        smoothness={4}
+        position={[0, 0.42, 0.08]}
+        castShadow
+        receiveShadow
+      >
+        <meshStandardMaterial
+          color="#182232"
+          roughness={0.75}
+          metalness={0.08}
+        />
+      </RoundedBox>
       {/* Friso estético central do estofado */}
       <mesh position={[0, 0.461, 0.08]}>
         <boxGeometry args={[0.015, 0.002, 1.2]} />
@@ -101,7 +122,11 @@ function Bench() {
           {/* Pés transversais com sapatas de borracha */}
           <mesh position={[0, 0.035, z]} castShadow>
             <boxGeometry args={[0.56, 0.07, 0.12]} />
-            <meshStandardMaterial color="#1e293b" metalness={0.6} roughness={0.4} />
+            <meshStandardMaterial
+              color="#1e293b"
+              metalness={0.6}
+              roughness={0.4}
+            />
           </mesh>
           {/* Sapatas antiderrapantes nos extremos */}
           {[-0.26, 0.26].map((x) => (
@@ -116,7 +141,11 @@ function Bench() {
       {/* Barra transversal de reforço */}
       <mesh position={[0, 0.12, 0.06]} castShadow>
         <boxGeometry args={[0.06, 0.06, 0.86]} />
-        <meshStandardMaterial color="#334155" metalness={0.75} roughness={0.3} />
+        <meshStandardMaterial
+          color="#334155"
+          metalness={0.75}
+          roughness={0.3}
+        />
       </mesh>
     </group>
   );
@@ -134,13 +163,17 @@ function StudioPlatform() {
       {/* Plataforma de treino emborrachada antiderrapante */}
       <mesh position={[0, 0.001, 0]} receiveShadow>
         <cylinderGeometry args={[1.92, 1.92, 0.005, 64]} />
-        <meshStandardMaterial color="#111827" roughness={0.9} metalness={0.05} />
+        <meshStandardMaterial
+          color="#111827"
+          roughness={0.9}
+          metalness={0.05}
+        />
       </mesh>
 
       {/* Anel de destaque neon sutil (Laranja Trainvy) */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.004, 0]}>
         <ringGeometry args={[1.88, 1.91, 64]} />
-        <meshBasicMaterial color="#f97316" transparent opacity={0.65} />
+        <meshBasicMaterial color="#8a979f" transparent opacity={0.1} />
       </mesh>
 
       {/* Anel interno de referência de postura */}
@@ -150,7 +183,11 @@ function StudioPlatform() {
       </mesh>
 
       {/* Piso exterior suave e escurecido */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.025, 0]} receiveShadow>
+      <mesh
+        rotation={[-Math.PI / 2, 0, 0]}
+        position={[0, -0.025, 0]}
+        receiveShadow
+      >
         <circleGeometry args={[6, 48]} />
         <meshStandardMaterial color="#080c14" roughness={1} />
       </mesh>
@@ -158,14 +195,17 @@ function StudioPlatform() {
   );
 }
 
-/** Adapted from first-app/AnatomicalAvatar: isolated bones/material per mount. */
+/** Keep the authored skeleton and tissue material isolated for each viewer. */
 function Athlete({
   exercise,
   tick,
   onReady,
-}: Pick<SceneProps, "exercise" | "tick" | "onReady">) {
+  highlighted,
+}: Pick<SceneProps, "exercise" | "tick" | "onReady" | "highlighted">) {
   const { scene: source } = useGLTF(
-    "/models/exercise-3d/anatomical-lifter.glb",
+    "/models/exercise-3d/trainvy-athlete.glb",
+    false,
+    true,
   );
   const bar = useRef<Group>(null);
   const rig = useMemo(() => {
@@ -182,9 +222,19 @@ function Athlete({
         skeletons.add(object.skeleton);
       }
     });
-    setAppearance("athlete", 0.5, false, exercise);
-    return { scene, material, skeletons, applyPose: createPoseDriver(bones) };
-  }, [source, exercise]);
+    return {
+      scene,
+      material,
+      setAppearance,
+      skeletons,
+      applyPose: createPoseDriver(bones),
+    };
+  }, [source]);
+  const invalidate = useThree((state) => state.invalidate);
+  useEffect(() => {
+    rig.setAppearance(exercise, highlighted);
+    invalidate();
+  }, [rig, exercise, highlighted, invalidate]);
   useEffect(() => {
     onReady();
     return () => {
@@ -224,7 +274,7 @@ function ContextMonitor({ onError }: { onError: () => void }) {
 
 function getCameraParams(
   exercise: ExerciseAnimation,
-  view: "perspective" | "front" | "side",
+  view: SceneProps["view"],
 ): { position: [number, number, number]; target: [number, number, number] } {
   const squat = exercise === "squat";
 
@@ -232,12 +282,14 @@ function getCameraParams(
     const target: [number, number, number] = [0, 0.82, 0];
     switch (view) {
       case "front":
-        return { position: [0, 0.95, 2.55], target };
+        return { position: [0, 1.05, 2.9], target };
       case "side":
-        return { position: [2.65, 0.9, 0], target };
+        return { position: [3.0, 1.0, 0], target };
+      case "back":
+        return { position: [-0.35, 1.3, -3.0], target };
       case "perspective":
       default:
-        return { position: [1.85, 1.25, 2.2], target };
+        return { position: [2.12, 1.4, 2.53], target };
     }
   }
 
@@ -246,14 +298,16 @@ function getCameraParams(
   switch (view) {
     case "front":
       // Vista frontal elevada em direção ao peitoral
-      return { position: [0, 1.25, 2.15], target };
+      return { position: [0, 1.6, 2.6], target };
     case "side":
       // Vista lateral pura para avaliar trajetória vertical da barra
-      return { position: [2.35, 0.78, 0.05], target };
+      return { position: [2.9, 1.0, 0.05], target };
+    case "back":
+      return { position: [-0.35, 1.9, -2.6], target };
     case "perspective":
     default:
       // Vista 3/4 dinâmica destacando peitoral e braços
-      return { position: [1.75, 1.3, 1.65], target };
+      return { position: [2.15, 1.6, 2.05], target };
   }
 }
 
@@ -262,13 +316,16 @@ function CameraView({
   exercise,
   revision,
 }: Pick<SceneProps, "view" | "exercise" | "revision">) {
-  const { camera, invalidate } = useThree();
+  const { camera, invalidate, size } = useThree();
   useEffect(() => {
     const { position, target } = getCameraParams(exercise, view);
+    const fit = Math.max(1, Math.min(1.6, size.height / size.width));
+    for (let i = 0; i < 3; i++)
+      position[i] = target[i] + (position[i] - target[i]) * fit;
     camera.position.set(...position);
     camera.lookAt(...target);
     invalidate();
-  }, [camera, exercise, view, invalidate]);
+  }, [camera, exercise, view, invalidate, size.width, size.height]);
   useEffect(() => {
     invalidate();
   }, [revision, invalidate]);
@@ -282,10 +339,10 @@ export default function ExerciseScene(props: SceneProps) {
   return (
     <Canvas
       shadows
-      dpr={[1, 1.5]}
+      dpr={[1, 1.75]}
       frameloop={props.playing ? "always" : "demand"}
       camera={{ position, fov: 36, near: 0.1, far: 30 }}
-      gl={{ antialias: true, powerPreference: "low-power" }}
+      gl={{ antialias: true, powerPreference: "high-performance" }}
       fallback={
         <p className="p-6 text-sm text-white">
           O navegador não oferece suporte a 3D. Use as ilustrações do exercício.
@@ -296,12 +353,12 @@ export default function ExerciseScene(props: SceneProps) {
       <color attach="background" args={["#0b0f17"]} />
 
       {/* Iluminação ambiente equilibrada com luz de estúdio */}
-      <hemisphereLight args={["#e2ecff", "#1e293b", 1.8]} />
+      <hemisphereLight args={["#e8e3dc", "#161c25", 0.55]} />
 
       {/* Luz Principal Direcional (Key Light) com projeção de sombras refinadas */}
       <directionalLight
         position={[2.5, 4.5, 3.2]}
-        intensity={2.8}
+        intensity={3.2}
         castShadow
         shadow-mapSize={[1024, 1024]}
         shadow-camera-left={-2.2}
@@ -314,16 +371,33 @@ export default function ExerciseScene(props: SceneProps) {
       {/* Luz de Contorno (Rim Light / Backlight) dourada/âmbar para destacar fibras musculares */}
       <directionalLight
         position={[-2.8, 3.2, -2.6]}
-        intensity={2.2}
-        color="#fed7aa"
+        intensity={2.5}
+        color="#d8e5f1"
       />
 
       {/* Luz de Preenchimento Suave Frontal (Soft Fill) */}
       <directionalLight
         position={[0, 1.4, 3.0]}
-        intensity={0.9}
-        color="#bfdbfe"
+        intensity={0.7}
+        color="#e5d9ca"
       />
+
+      <Environment resolution={128} environmentIntensity={0.35}>
+        <Lightformer
+          form="rect"
+          intensity={3}
+          position={[-3, 3, 2]}
+          scale={[3, 4, 1]}
+          rotation={[0, Math.PI / 4, 0]}
+        />
+        <Lightformer
+          form="rect"
+          intensity={1.5}
+          position={[3, 2, -2]}
+          scale={[2, 4, 1]}
+          rotation={[0, -Math.PI / 3, 0]}
+        />
+      </Environment>
 
       {/* Palco esportivo / Pódio de treino com iluminação */}
       <StudioPlatform />
@@ -343,7 +417,7 @@ export default function ExerciseScene(props: SceneProps) {
         dampingFactor={0.07}
         rotateSpeed={0.85}
         minDistance={1.3}
-        maxDistance={4.5}
+        maxDistance={5.5}
         maxPolarAngle={Math.PI / 2 - 0.02}
         minPolarAngle={0.15}
       />

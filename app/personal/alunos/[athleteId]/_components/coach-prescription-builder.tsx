@@ -181,16 +181,30 @@ export function CoachPrescriptionBuilder({
         : Math.round(day.estimatedDurationInMinutes * 60),
       exercises: day.isRest
         ? []
-        : day.exercises.map((exercise, exerciseIndex) => ({
-            name: exercise.name.trim(),
-            order: exerciseIndex,
-            sets: exercise.sets,
-            warmupSets: exercise.warmupSets ?? 0,
-            reps: exercise.reps,
-            restTimeInSeconds: exercise.restTimeInSeconds,
-            alternative1ExerciseName: exercise.alternative1Name?.trim() || null,
-            alternative2ExerciseName: exercise.alternative2Name?.trim() || null,
-          })),
+        : day.exercises.map((exercise, exerciseIndex) => {
+            const name = exercise.name.trim();
+            let alt1 = exercise.alternative1Name?.trim() || null;
+            let alt2 = exercise.alternative2Name?.trim() || null;
+
+            if (alt1 && alt1.toLowerCase() === name.toLowerCase()) alt1 = null;
+            if (alt2 && alt2.toLowerCase() === name.toLowerCase()) alt2 = null;
+            if (alt1 && alt2 && alt1.toLowerCase() === alt2.toLowerCase()) alt2 = null;
+            if (!alt1 && alt2) {
+              alt1 = alt2;
+              alt2 = null;
+            }
+
+            return {
+              name,
+              order: exerciseIndex,
+              sets: exercise.sets,
+              warmupSets: exercise.warmupSets ?? 0,
+              reps: exercise.reps,
+              restTimeInSeconds: exercise.restTimeInSeconds,
+              alternative1ExerciseName: alt1,
+              alternative2ExerciseName: alt2,
+            };
+          }),
     }));
   }
 

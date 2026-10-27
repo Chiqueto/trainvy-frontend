@@ -3,13 +3,13 @@ import type { ExerciseAnimation } from "./exercises";
 
 const v = (x: number, y: number, z: number) => new Vector3(x, y, z);
 const X = v(1, 0, 0);
-const restTilt = new Quaternion().setFromAxisAngle(X, -Math.PI / 4);
+const restTilt = new Quaternion();
 const hipLocal = v(0, -0.28, 0.08);
-const restOrigin = v(0, 1.142, -0.163);
+const restOrigin = v(0, 1.142, 0);
 const restWorld = (p: Vector3) =>
   p.clone().applyQuaternion(restTilt).add(restOrigin);
-export const ARM_LENGTH = v(0.139, -0.149, 0.099).length();
-export const FOREARM_LENGTH = v(-0.023, 0.275, -0.012).length();
+export const ARM_LENGTH = v(0.08, -0.284, -0.012).length();
+export const FOREARM_LENGTH = v(0.025, -0.265, 0.03).length();
 
 /** Controlled eccentric, short pause at the bottom and smooth concentric. */
 export function getExerciseDepth(phase: number) {
@@ -76,26 +76,16 @@ export function getExercisePose(exercise: ExerciseAnimation, depth: number) {
     const ankle = squat
       ? v(side * 0.2, 0.05, 0.04)
       : v(side * 0.25, 0.05, 0.83);
-    const knee = solveJoint(
-      hip,
-      ankle,
-      0.44,
-      0.42,
-      v(side * 0.12, 0.15, 1),
-    );
+    const knee = solveJoint(hip, ankle, 0.44, 0.42, v(side * 0.12, 0.15, 1));
     const shoulder = body(v(side * 0.215, 0.224, 0.132));
-    const grip = bar
-      .clone()
-      .add(v(side * (squat ? 0.39 : 0.4), 0, 0));
-    const wrist = grip.clone().add(v(0, -0.029, 0));
+    const grip = bar.clone().add(v(side * (squat ? 0.39 : 0.4), 0, 0));
+    const wrist = grip.clone().add(v(0, -0.004, -0.012));
     const elbow = solveJoint(
       shoulder,
       wrist,
       ARM_LENGTH,
       FOREARM_LENGTH,
-      squat
-        ? v(side, -0.7, -0.4)
-        : v(side, -0.5, 0.7),
+      squat ? v(side, -0.7, -0.4) : v(side, -0.5, 0.7),
     );
     return { side, hip, knee, ankle, shoulder, elbow, wrist, grip };
   });
@@ -131,26 +121,31 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
       segment(`shin_${suffix}`, knee, ankle, rest.get(`foot_${suffix}`)!);
       const foot = bones.get(`foot_${suffix}`)!;
       foot.position.copy(ankle);
-      // The original shoe was on the hack platform; bring its sole to the floor.
-      foot.quaternion.setFromAxisAngle(X, -Math.PI / 5.2);
+      foot.quaternion.identity();
       segment(
         `upperArm_${suffix}`,
         shoulder,
         elbow,
-        restWorld(v(side * 0.354, 0.075, 0.231)),
+        restWorld(v(side * 0.295, -0.06, 0.12)),
       );
       segment(
         `forearm_${suffix}`,
         elbow,
         wrist,
-        restWorld(v(side * 0.331, 0.35, 0.219)),
+        restWorld(v(side * 0.32, -0.325, 0.15)),
       );
+      // A bisector joint preserves the elbow's cross-section during deep flexion.
+      const elbowSupport = bones.get(`elbow_${suffix}`);
+      if (elbowSupport) {
+        elbowSupport.position.copy(elbow);
+        elbowSupport.quaternion
+          .copy(bones.get(`upperArm_${suffix}`)!.quaternion)
+          .slerp(bones.get(`forearm_${suffix}`)!.quaternion, 0.5);
+      }
       const hand = bones.get(`hand_${suffix}`)!;
       hand.position.copy(wrist);
-      // Original fingers wrap the local Z axis; now grip the horizontal bar.
-      hand.quaternion
-        .setFromAxisAngle(v(0, 1, 0), Math.PI / 2)
-        .multiply(restTilt.clone().invert());
+      // The new hands are sculpted around the horizontal bar in their bind pose.
+      hand.quaternion.identity();
     }
     return pose;
   };
