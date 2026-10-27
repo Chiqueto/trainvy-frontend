@@ -8,12 +8,14 @@ import {
   ArrowLeft,
   Shield,
   Dumbbell,
+  Sparkles,
 } from "lucide-react";
 import { requireAdminPage } from "@/app/admin/_lib/server";
 import { Logo } from "@/app/_components/logo";
 
 const links = [
   { href: "/admin", label: "Visão Geral", icon: LayoutDashboard },
+  { href: "/admin/ai-usage", label: "Consumo de IA", icon: Sparkles },
   { href: "/admin/exercises", label: "Exercícios", icon: Dumbbell },
   { href: "/admin/users", label: "Usuários", icon: Users },
   { href: "/admin/subscriptions", label: "Assinaturas", icon: CreditCard },

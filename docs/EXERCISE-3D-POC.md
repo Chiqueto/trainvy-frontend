@@ -1,5 +1,55 @@
 # Visualização anatômica — versão atual, 27/10/2026
 
+## Supino inclinado com halteres — versão 8
+
+O ID canônico `00000000-0000-4000-8000-000000000103` possui animação própria em
+`/lab/exercises-3d`, no guia de execução e na cobertura do admin. O nome genérico
+“Supino Inclinado”, versões com barra e versões no Smith continuam sem esse suporte.
+O registro real da animação retira automaticamente o ID 103 da fila 3D pendente;
+isso não grava um novo exercício nem altera produção sem deploy do frontend.
+
+Banco articulado com encosto a 45°, dois halteres independentes e convergência suave,
+punhos estáveis, pés fixos e cabeça, tronco e quadril apoiados durante a repetição.
+As posições usam IK com comprimentos anatômicos constantes, descida controlada,
+pausa breve e subida suave. Câmeras específicas enquadram o movimento completo.
+
+O canal Z de `_exercisemuscles` contém uma seleção independente: porção clavicular
+do peitoral maior como principal; tríceps e deltoide anterior como secundários.
+O restante permanece neutro, inclusive a porção esternocostal do peitoral. É uma
+seleção ilustrativa, sem quantificar ativação nem afirmar ausência de participação
+dos músculos neutros. Não há cópia do mapa de supino reto.
+
+A seleção usa componentes anatômicos intactos identificados por votação de pontos
+correspondentes no FBX original, com rótulos explícitos. O mapa reproduzível e seu
+checksum estão em `scripts/assets/incline-muscle-map.json` (CC BY-SA 4.0).
+A versão 8 preserva integralmente posições, normais, cores, UVs, pesos e índices
+de ossos da versão 7. A recompressão apenas permuta os índices de dois triângulos
+degenerados, sem alterar a superfície. Os canais X/Y continuam idênticos.
+
+Após reconstruir a versão 7 pelo procedimento abaixo, aplicar:
+
+```powershell
+node scripts/add-incline-muscle-mask.mjs --apply
+```
+
+Para recalcular a seleção sem modificar o GLB:
+
+```powershell
+node scripts/add-incline-muscle-mask.mjs .tmp/anatomy-qa/MuscularSystem100.fbx
+```
+
+O comando exige o checksum exato da versão 7. Não executar sobre a versão 8.
+Referências de execução: [Catalyst Athletics](https://www.catalystathletics.com/exercise/819/Dumbbell-Incline-Bench-Press/)
+e [NASM](https://www.nasm.org/resource-center/exercise-library/two-arm-incline-dumbbell-chest-press).
+São referências para a pose ilustrativa; textos, vídeos e imagens não foram copiados.
+
+Validação: 44 testes de cinemática, integridade do asset, visualizador, guia e fila
+administrativa passaram; TypeScript e lint do código 3D passaram. Chrome com WebGL
+em 1440 px e 390 px, com revisão de início, descida, pausa e subida nas vistas
+frontal, lateral, traseira e elevadas, sem erros de console ou assets 3D remotos.
+
+## Anatomia preservada — versão 7
+
 O visualizador usa `public/models/exercise-3d/trainvy-athlete.glb`: superfícies musculares e
 suporte ósseo adaptados de Z-Anatomy/BodyParts3D, cabeça com base MakeHuman CC0,
 mãos fechadas e calçados próprios. Não se trata de uma escultura integralmente original,

@@ -159,12 +159,16 @@ try {
       throw new Error(
         `${name} overflows horizontally: ${JSON.stringify(dimensions)}`,
       );
-    for (const exercise of ["squat", "bench"]) {
+    for (const exercise of (process.env.QA_EXERCISE ? [process.env.QA_EXERCISE] : ["squat", "bench", "incline"])) {
       console.log(`Reviewing ${name}: ${exercise}`);
       if (exercise === "bench") {
         await evaluate(
           `Array.from(document.querySelectorAll('button')).find(b=>b.textContent.includes('Supino reto')).click()`,
         );
+        await ready();
+      }
+      if (exercise === "incline") {
+        await evaluate(`Array.from(document.querySelectorAll('button')).find(b=>b.textContent.includes('Supino inclinado com halteres')).click()`);
         await ready();
       }
       await evaluate(

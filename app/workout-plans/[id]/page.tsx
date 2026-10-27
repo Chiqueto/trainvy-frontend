@@ -8,7 +8,7 @@ import {
 } from "@/app/_lib/api/fetch-generated";
 import { WorkoutCover } from "@/app/_components/workout-cover";
 import Link from "next/link";
-import { Goal } from "lucide-react";
+import { Goal, Pencil } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { BottomNav } from "@/app/_components/bottom-nav";
 import { WorkoutDayCard } from "@/app/_components/workout-day-card";
@@ -100,6 +100,9 @@ export default async function WorkoutPlanPage({
       </div>
 
       <div className="flex flex-col gap-3 p-5">
+        <Link href={`/planning/plans/${id}/edit`} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-border bg-card px-4 text-sm font-semibold">
+          <Pencil className="size-4" /> Editar plano
+        </Link>
         {trainingDays.map((day, index) => {
           const isNext = day.id === nextWorkoutDayId;
           const isLastCompleted = day.id === lastCompletedWorkoutDayId;

@@ -17,6 +17,7 @@ import {
   deletePeriodization,
   deleteWorkoutPlan,
   duplicateWorkoutPlan,
+  editWorkoutPlan,
   generateWorkoutPlanDraftWithAi,
   removeWorkoutPlanFromPeriodization,
   reorderPeriodizationPlans,
@@ -32,6 +33,7 @@ import {
   type CreatePeriodizationBody,
   type CreateWorkoutPlan201,
   type CreateWorkoutPlanBody,
+  type EditWorkoutPlanBody,
   type CreateWorkoutPlanInPeriodization201,
   type CreateWorkoutPlanInPeriodizationBody,
   type GenerateWorkoutPlanDraftWithAi200,
@@ -476,6 +478,19 @@ export async function createStandaloneWorkoutPlanAction(
   } catch (error) {
     return connectionError(error);
   }
+}
+
+export async function editWorkoutPlanAction(id: string, body: EditWorkoutPlanBody): Promise<PlanningActionResult<{ id: string; success: boolean }>> {
+  const planId = validId(id);
+  if (!planId) return invalidInput("Plano inválido.");
+  try {
+    const response = await editWorkoutPlan(planId, body);
+    if (response.status !== 200) return apiError(response.data);
+    revalidatePlanning(`/workout-plans/${planId}`);
+    revalidatePath(`/workout-plans/${planId}`, "layout");
+    revalidatePath(`/planning/plans/${planId}/edit`);
+    return { success: true, data: response.data };
+  } catch (error) { return connectionError(error); }
 }
 
 export async function acceptPrescriptionAction(

@@ -42,6 +42,15 @@ CC BY-SA 4.0, with original FBX SHA-256 hashes in its metadata; it is not loaded
 Build inputs are the licensed source assets retained
 in the sibling `trainvy-3d-poc` project; the application loads only the self-contained output GLB.
 
+## Version 8 — incline dumbbell press
+
+An independently selected mask highlights the clavicular heads of pectoralis major,
+anterior deltoids and triceps using named surfaces from the same Z-Anatomy muscular
+source. Vertex positions, normals and skin weights from version 7 remain unchanged.
+The semantic selection is preserved in `scripts/assets/incline-muscle-map.json`;
+the adapted GLB and selection remain CC BY-SA 4.0. Colours are illustrative, not
+measurements of muscle activation.
+
 ## Previous model — anatomical-lifter.glb
 
 The following notice is retained for the previous, source-derived prototype, which is no longer

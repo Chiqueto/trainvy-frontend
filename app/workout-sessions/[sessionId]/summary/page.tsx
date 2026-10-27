@@ -18,6 +18,7 @@ import {
   getHomeData,
   getUserTrainData,
   getWorkoutSession,
+  getSessionFeedback,
 } from "@/app/_lib/api/fetch-generated";
 import { authClient } from "@/app/_lib/auth-client";
 import { gramsToKg } from "@/app/_lib/weight";
@@ -40,12 +41,13 @@ export default async function WorkoutSummaryPage({
   const { sessionId } = await params;
   const today = dayjs();
 
-  const [sessionRes, homeDataRes, trainDataRes] = await Promise.all([
+  const [sessionRes, homeDataRes, trainDataRes, feedbackRes] = await Promise.all([
     getWorkoutSession(sessionId).catch(() => null),
     getHomeData(today.format("YYYY-MM-DD"), {
       timezoneOffset: today.utcOffset(),
     }).catch(() => null),
     getUserTrainData().catch(() => null),
+    getSessionFeedback(sessionId, { cache: "no-store" }).catch(() => null),
   ]);
 
   if (!sessionRes || sessionRes.status !== 200) {
@@ -53,6 +55,7 @@ export default async function WorkoutSummaryPage({
   }
 
   const workoutSession = sessionRes.data;
+  if (!workoutSession.completedAt) redirect(`/workout-sessions/${sessionId}`);
   const homeData = homeDataRes?.status === 200 ? homeDataRes.data : null;
   const userTheme =
     (trainDataRes?.status === 200 && trainDataRes.data?.gamificationTheme) ||
@@ -353,7 +356,8 @@ export default async function WorkoutSummaryPage({
         )}
 
         {/* Feedback da Sessão — telinha preparada para planos futuros */}
-        <SummaryFeedbackWidget />
+        <SummaryFeedbackWidget key={feedbackRes?.status === 200 ? feedbackRes.data?.updatedAt ?? "empty" : "error"}
+          sessionId={sessionId} initial={feedbackRes?.status === 200 ? feedbackRes.data : null} loadFailed={feedbackRes?.status !== 200} />
 
         {/* Ações de Navegação */}
         <div className="flex flex-col gap-3 pt-2">

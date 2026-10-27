@@ -13,7 +13,11 @@ import { Bone, Group, Skeleton, SkinnedMesh } from "three";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
 import modelManifest from "../../../public/models/exercise-3d/model-manifest.json";
 import { createTissueMaterial } from "./anatomy-material";
-import { createPoseDriver, getExerciseDepth } from "./kinematics";
+import {
+  createPoseDriver,
+  getExerciseDepth,
+  INCLINE_BENCH_ANGLE,
+} from "./kinematics";
 import type { ExerciseAnimation } from "./exercises";
 
 interface SceneProps {
@@ -152,6 +156,102 @@ function Bench() {
   );
 }
 
+function Dumbbell() {
+  return (
+    <group>
+      <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
+        <cylinderGeometry args={[0.013, 0.013, 0.25, 20]} />
+        <meshStandardMaterial
+          color="#cbd5e1"
+          metalness={0.85}
+          roughness={0.3}
+        />
+      </mesh>
+      {[-1, 1].map((side) => (
+        <group key={side} position={[side * 0.105, 0, 0]}>
+          <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
+            <cylinderGeometry args={[0.085, 0.085, 0.075, 6]} />
+            <meshStandardMaterial
+              color="#222c3c"
+              roughness={0.7}
+              metalness={0.15}
+            />
+          </mesh>
+          <mesh position={[side * 0.04, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.045, 0.045, 0.008, 6]} />
+            <meshStandardMaterial color="#f97316" roughness={0.6} />
+          </mesh>
+        </group>
+      ))}
+    </group>
+  );
+}
+
+function InclineBench() {
+  return (
+    <group>
+      <group position={[0, 0.4, 0.29]} rotation={[INCLINE_BENCH_ANGLE, 0, 0]}>
+        <RoundedBox
+          args={[0.3, 0.08, 0.92]}
+          radius={0.025}
+          smoothness={4}
+          position={[0, 0, -0.46]}
+          castShadow
+          receiveShadow
+        >
+          <meshStandardMaterial color="#182232" roughness={0.75} />
+        </RoundedBox>
+        <mesh position={[0, 0.041, -0.46]}>
+          <boxGeometry args={[0.015, 0.002, 0.87]} />
+          <meshStandardMaterial color="#f97316" />
+        </mesh>
+        <mesh position={[0, -0.075, -0.46]} castShadow>
+          <boxGeometry args={[0.08, 0.06, 0.85]} />
+          <meshStandardMaterial
+            color="#334155"
+            metalness={0.7}
+            roughness={0.3}
+          />
+        </mesh>
+      </group>
+      <RoundedBox
+        args={[0.3, 0.08, 0.34]}
+        radius={0.025}
+        smoothness={4}
+        position={[0, 0.42, 0.49]}
+        castShadow
+        receiveShadow
+      >
+        <meshStandardMaterial color="#182232" roughness={0.75} />
+      </RoundedBox>
+      {[-0.27, 0.52].map((z) => (
+        <group key={z}>
+          <mesh position={[0, 0.21, z]} castShadow>
+            <boxGeometry args={[0.08, 0.38, 0.08]} />
+            <meshStandardMaterial
+              color="#334155"
+              metalness={0.7}
+              roughness={0.3}
+            />
+          </mesh>
+          <mesh position={[0, 0.035, z]} castShadow>
+            <boxGeometry args={[0.6, 0.07, 0.13]} />
+            <meshStandardMaterial color="#1e293b" roughness={0.6} />
+          </mesh>
+        </group>
+      ))}
+      <mesh position={[0, 0.46, -0.21]} rotation={[0.48, 0, 0]} castShadow>
+        <boxGeometry args={[0.06, 0.75, 0.06]} />
+        <meshStandardMaterial color="#334155" metalness={0.7} roughness={0.3} />
+      </mesh>
+      <mesh position={[0, 0.12, 0.12]}>
+        <boxGeometry args={[0.08, 0.06, 0.86]} />
+        <meshStandardMaterial color="#334155" metalness={0.7} roughness={0.3} />
+      </mesh>
+    </group>
+  );
+}
+
 function StudioPlatform() {
   return (
     <group position={[0, 0, 0]}>
@@ -209,6 +309,8 @@ function Athlete({
     true,
   );
   const bar = useRef<Group>(null);
+  const leftDumbbell = useRef<Group>(null);
+  const rightDumbbell = useRef<Group>(null);
   const rig = useMemo(() => {
     const scene = clone(source);
     const { material, setAppearance } = createTissueMaterial();
@@ -248,14 +350,27 @@ function Athlete({
     const depth = getExerciseDepth(phase);
     const pose = rig.applyPose(exercise, depth);
     bar.current?.position.copy(pose.bar);
+    leftDumbbell.current?.position.copy(pose.limbs[0].grip);
+    rightDumbbell.current?.position.copy(pose.limbs[1].grip);
     rig.scene.updateMatrixWorld(true);
   });
   return (
     <>
       <primitive object={rig.scene} dispose={null} />
-      <group ref={bar}>
-        <Barbell />
-      </group>
+      {exercise === "incline-dumbbell-press" ? (
+        <>
+          <group ref={leftDumbbell}>
+            <Dumbbell />
+          </group>
+          <group ref={rightDumbbell}>
+            <Dumbbell />
+          </group>
+        </>
+      ) : (
+        <group ref={bar}>
+          <Barbell />
+        </group>
+      )}
     </>
   );
 }
@@ -291,6 +406,20 @@ function getCameraParams(
       case "perspective":
       default:
         return { position: [2.12, 1.4, 2.53], target };
+    }
+  }
+
+  if (exercise === "incline-dumbbell-press") {
+    const target: [number, number, number] = [0, 0.68, 0.12];
+    switch (view) {
+      case "front":
+        return { position: [0, 1.8, 3.6], target };
+      case "side":
+        return { position: [3.2, 1.1, 0.12], target };
+      case "back":
+        return { position: [-0.35, 2.0, -3.0], target };
+      default:
+        return { position: [2.6, 1.9, 2.6], target };
     }
   }
 
@@ -405,6 +534,7 @@ export default function ExerciseScene(props: SceneProps) {
 
       {/* Banco olímpico exclusivo para supino reto */}
       {benchPress && <Bench />}
+      {props.exercise === "incline-dumbbell-press" && <InclineBench />}
 
       <Suspense fallback={null}>
         <Athlete {...props} />

@@ -61,6 +61,17 @@ const LAB_MEDIA_DATA: Record<ExerciseAnimation, GetExerciseMedia200> = {
       tips: "Mantenha os cotovelos a aproximadamente 45° a 75° do tronco, evitando abri-los totalmente a 90°.",
     },
   },
+  "incline-dumbbell-press": {
+    exerciseId: EXERCISE_ANIMATIONS["incline-dumbbell-press"].id,
+    hasMedia: false,
+    mediaType: null,
+    startImagePath: null,
+    endImagePath: null,
+    motionPath: null,
+    attributionName: null,
+    attributionUrl: null,
+    instructions: null,
+  },
 };
 
 export default function Exercise3DLab() {
@@ -99,6 +110,17 @@ export default function Exercise3DLab() {
         "Escápulas retraídas e deprimidas fixadas no estofado do banco.",
       ],
     },
+    "incline-dumbbell-press": {
+      primary: "Peitoral maior — porção clavicular",
+      secondary: "Tríceps braquial e deltoide anterior",
+      cadence:
+        "Descida controlada, pausa breve e subida suave com halteres separados.",
+      cues: [
+        "Cabeça, costas e quadril apoiados no banco inclinado; pés firmes no solo.",
+        "Halteres ao lado da parte superior do peito, com punhos alinhados aos antebraços.",
+        "Suba com aproximação suave dos halteres, sem choque entre as cargas.",
+      ],
+    },
   };
 
   const details = exerciseDetails[exercise];
@@ -132,15 +154,16 @@ export default function Exercise3DLab() {
           </h1>
         </div>
         <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">
-          Explore a anatomia do agachamento e do supino em qualquer ângulo.
-          Aproxime os detalhes, acompanhe cada fase e compare os grupos
-          musculares principais e secundários destacados em cada movimento.
+          Explore a anatomia do agachamento, supino reto e supino inclinado com
+          halteres em qualquer ângulo. Aproxime os detalhes, acompanhe cada fase
+          e compare os grupos musculares principais e secundários destacados em
+          cada movimento.
         </p>
       </header>
 
       {/* Seletor de Exercícios */}
       <div
-        className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+        className="grid grid-cols-1 sm:grid-cols-3 gap-4"
         aria-label="Selecionar exercício"
       >
         {(

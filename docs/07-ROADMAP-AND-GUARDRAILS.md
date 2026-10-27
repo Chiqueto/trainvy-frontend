@@ -2,6 +2,10 @@
 
 # Roadmap
 
+## Prioridade atual — 27/10/2026
+
+Edição de treinos salvos, feedback pós-treino persistente e painel administrativo de tokens/custos estimados. RAG/biblioteca e cobrança automática ficam fora desta etapa; catálogo evolui separadamente. Detalhes: [escopo e implementação](15-PLAN-EDITING-FEEDBACK-AI-USAGE.md). As fases históricas abaixo precisam ser interpretadas considerando esta decisão.
+
 ## Fase 0 — Correções estruturais [CONCLUÍDA]
 
 - [x] Task 0.1: infraestrutura de testes (Vitest + Neon isolado via TEST_DATABASE_URL e guarda de segurança);

@@ -345,6 +345,140 @@ export type DeleteWorkoutPlan500 = {
   code: string;
 };
 
+export type EditWorkoutPlanBodyWorkoutDaysItemWeekDay =
+  (typeof EditWorkoutPlanBodyWorkoutDaysItemWeekDay)[keyof typeof EditWorkoutPlanBodyWorkoutDaysItemWeekDay];
+
+export const EditWorkoutPlanBodyWorkoutDaysItemWeekDay = {
+  MONDAY: "MONDAY",
+  TUESDAY: "TUESDAY",
+  WEDNESDAY: "WEDNESDAY",
+  THURSDAY: "THURSDAY",
+  FRIDAY: "FRIDAY",
+  SATURDAY: "SATURDAY",
+  SUNDAY: "SUNDAY",
+} as const;
+
+export type EditWorkoutPlanBodyWorkoutDaysItemExercisesItem = {
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  order: number;
+  /** @minLength 1 */
+  name: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative1ExerciseId?: string | null;
+  /**
+   * @minLength 1
+   * @nullable
+   */
+  alternative1Name?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative2ExerciseId?: string | null;
+  /**
+   * @minLength 1
+   * @nullable
+   */
+  alternative2Name?: string | null;
+  /**
+   * @minimum 1
+   * @maximum 100
+   */
+  sets: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  warmupSets?: number;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   */
+  reps: number;
+  /**
+   * @minimum 1
+   * @maximum 86400
+   */
+  restTimeInSeconds: number;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
+};
+
+export type EditWorkoutPlanBodyWorkoutDaysItem = {
+  /** @minLength 1 */
+  name: string;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  order?: number;
+  weekDay?: EditWorkoutPlanBodyWorkoutDaysItemWeekDay;
+  isRest?: boolean;
+  /** @minimum 0 */
+  estimatedDurationInSeconds: number;
+  /** @nullable */
+  coverImageUrl?: string | null;
+  /** @maxItems 100 */
+  exercises: EditWorkoutPlanBodyWorkoutDaysItemExercisesItem[];
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
+};
+
+export type EditWorkoutPlanBody = {
+  /**
+   * @minLength 1
+   * @maxLength 120
+   */
+  name: string;
+  /**
+   * @minItems 1
+   * @maxItems 50
+   */
+  workoutDays: EditWorkoutPlanBodyWorkoutDaysItem[];
+};
+
+export type EditWorkoutPlan200 = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  success: boolean;
+};
+
+export type EditWorkoutPlan400 = {
+  error: string;
+  code: string;
+};
+
+export type EditWorkoutPlan401 = {
+  error: string;
+  code: string;
+};
+
+export type EditWorkoutPlan404 = {
+  error: string;
+  code: string;
+};
+
+export type EditWorkoutPlan409 = {
+  error: string;
+  code: string;
+};
+
+export type EditWorkoutPlan500 = {
+  error: string;
+  code: string;
+};
+
 export type GetWorkoutDay200WeekDay =
   (typeof GetWorkoutDay200WeekDay)[keyof typeof GetWorkoutDay200WeekDay];
 
@@ -6576,6 +6710,122 @@ export type CreateCoachWorkoutPlanTemplateFromPlan500 = {
   code: string;
 };
 
+export type GetAdminAiUsageParams = {
+  /**
+   * @minimum 1
+   * @maximum 90
+   */
+  days?: number;
+  /**
+   * @minLength 1
+   * @maxLength 128
+   */
+  userId?: string;
+};
+
+export type GetAdminAiUsage200Totals = {
+  calls: number;
+  inputTokens: number;
+  outputTokens: number;
+  reasoningTokens: number;
+  cachedInputTokens: number;
+  estimatedCostUsd: number;
+  unpricedCalls: number;
+  errors: number;
+};
+
+export type GetAdminAiUsage200ByFeatureItem = {
+  calls: number;
+  inputTokens: number;
+  outputTokens: number;
+  reasoningTokens: number;
+  cachedInputTokens: number;
+  estimatedCostUsd: number;
+  unpricedCalls: number;
+  errors: number;
+  feature: string;
+  model: string;
+};
+
+export type GetAdminAiUsage200ByUserItem = {
+  calls: number;
+  inputTokens: number;
+  outputTokens: number;
+  reasoningTokens: number;
+  cachedInputTokens: number;
+  estimatedCostUsd: number;
+  unpricedCalls: number;
+  errors: number;
+  userId: string;
+  name: string;
+  email: string;
+};
+
+export type GetAdminAiUsage200DailyItem = {
+  date: string;
+  calls: number;
+  estimatedCostUsd: number;
+};
+
+export type GetAdminAiUsage200RecentItem = {
+  id: string;
+  userId: string;
+  feature: string;
+  model: string;
+  status: string;
+  /** @nullable */
+  inputTokens: number | null;
+  /** @nullable */
+  outputTokens: number | null;
+  /** @nullable */
+  estimatedCostUsd: number | null;
+  createdAt: string;
+};
+
+export type GetAdminAiUsage200 = {
+  from: string;
+  to: string;
+  /** @nullable */
+  trackingStartedAt: string | null;
+  pricingSource: string;
+  pricingVersion: string;
+  totals: GetAdminAiUsage200Totals;
+  byFeature: GetAdminAiUsage200ByFeatureItem[];
+  byUser: GetAdminAiUsage200ByUserItem[];
+  daily: GetAdminAiUsage200DailyItem[];
+  recent: GetAdminAiUsage200RecentItem[];
+};
+
+export type GetAdminAiUsage400 = {
+  error: string;
+  code: string;
+};
+
+export type GetAdminAiUsage401 = {
+  error: string;
+  code: string;
+};
+
+export type GetAdminAiUsage403 = {
+  error: string;
+  code: string;
+};
+
+export type GetAdminAiUsage404 = {
+  error: string;
+  code: string;
+};
+
+export type GetAdminAiUsage409 = {
+  error: string;
+  code: string;
+};
+
+export type GetAdminAiUsage500 = {
+  error: string;
+  code: string;
+};
+
 /**
  * @nullable
  */
@@ -11774,6 +12024,291 @@ export type ConfirmForgottenWorkoutRecovery500 = {
   code: string;
 };
 
+export type GetEditableWorkoutPlan200WorkoutDaysItemWeekDay =
+  (typeof GetEditableWorkoutPlan200WorkoutDaysItemWeekDay)[keyof typeof GetEditableWorkoutPlan200WorkoutDaysItemWeekDay];
+
+export const GetEditableWorkoutPlan200WorkoutDaysItemWeekDay = {
+  MONDAY: "MONDAY",
+  TUESDAY: "TUESDAY",
+  WEDNESDAY: "WEDNESDAY",
+  THURSDAY: "THURSDAY",
+  FRIDAY: "FRIDAY",
+  SATURDAY: "SATURDAY",
+  SUNDAY: "SUNDAY",
+} as const;
+
+export type GetEditableWorkoutPlan200WorkoutDaysItemExercisesItem = {
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  order: number;
+  /** @minLength 1 */
+  name: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative1ExerciseId?: string | null;
+  /**
+   * @minLength 1
+   * @nullable
+   */
+  alternative1Name?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative2ExerciseId?: string | null;
+  /**
+   * @minLength 1
+   * @nullable
+   */
+  alternative2Name?: string | null;
+  /**
+   * @minimum 1
+   * @maximum 100
+   */
+  sets: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  warmupSets: number;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   */
+  reps: number;
+  /**
+   * @minimum 1
+   * @maximum 86400
+   */
+  restTimeInSeconds: number;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
+};
+
+export type GetEditableWorkoutPlan200WorkoutDaysItem = {
+  /** @minLength 1 */
+  name: string;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  order: number;
+  weekDay: GetEditableWorkoutPlan200WorkoutDaysItemWeekDay;
+  isRest: boolean;
+  /** @minimum 0 */
+  estimatedDurationInSeconds: number;
+  /** @nullable */
+  coverImageUrl?: string | null;
+  /** @maxItems 100 */
+  exercises: GetEditableWorkoutPlan200WorkoutDaysItemExercisesItem[];
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
+};
+
+export type GetEditableWorkoutPlan200 = {
+  /**
+   * @minLength 1
+   * @maxLength 120
+   */
+  name: string;
+  /**
+   * @minItems 1
+   * @maxItems 50
+   */
+  workoutDays: GetEditableWorkoutPlan200WorkoutDaysItem[];
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  isActive: boolean;
+};
+
+export type GetEditableWorkoutPlan400 = {
+  error: string;
+  code: string;
+};
+
+export type GetEditableWorkoutPlan401 = {
+  error: string;
+  code: string;
+};
+
+export type GetEditableWorkoutPlan404 = {
+  error: string;
+  code: string;
+};
+
+export type GetEditableWorkoutPlan409 = {
+  error: string;
+  code: string;
+};
+
+export type GetEditableWorkoutPlan500 = {
+  error: string;
+  code: string;
+};
+
+/**
+ * @nullable
+ */
+export type GetSessionFeedback200 = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12} | 00000000-0000-0000-0000-000000000000 | ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  workoutSessionId: string;
+  feeling: "great" | "energized" | "intense" | "fatigued";
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  pain: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  fatigue: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  sleepQuality: number | null;
+  /** @nullable */
+  notes: string | null;
+  updatedAt: string;
+} | null;
+
+export type GetSessionFeedback400 = {
+  error: string;
+  code: string;
+};
+
+export type GetSessionFeedback401 = {
+  error: string;
+  code: string;
+};
+
+export type GetSessionFeedback404 = {
+  error: string;
+  code: string;
+};
+
+export type GetSessionFeedback409 = {
+  error: string;
+  code: string;
+};
+
+export type GetSessionFeedback500 = {
+  error: string;
+  code: string;
+};
+
+export type SaveSessionFeedbackBodyFeeling =
+  (typeof SaveSessionFeedbackBodyFeeling)[keyof typeof SaveSessionFeedbackBodyFeeling];
+
+export const SaveSessionFeedbackBodyFeeling = {
+  great: "great",
+  energized: "energized",
+  intense: "intense",
+  fatigued: "fatigued",
+} as const;
+
+export type SaveSessionFeedbackBody = {
+  feeling: SaveSessionFeedbackBodyFeeling;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  pain?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  fatigue?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  sleepQuality?: number | null;
+  /**
+   * @maxLength 2000
+   * @nullable
+   */
+  notes?: string | null;
+};
+
+export type SaveSessionFeedback200Feeling =
+  (typeof SaveSessionFeedback200Feeling)[keyof typeof SaveSessionFeedback200Feeling];
+
+export const SaveSessionFeedback200Feeling = {
+  great: "great",
+  energized: "energized",
+  intense: "intense",
+  fatigued: "fatigued",
+} as const;
+
+export type SaveSessionFeedback200 = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  workoutSessionId: string;
+  feeling: SaveSessionFeedback200Feeling;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  pain: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  fatigue: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  sleepQuality: number | null;
+  /** @nullable */
+  notes: string | null;
+  updatedAt: string;
+};
+
+export type SaveSessionFeedback400 = {
+  error: string;
+  code: string;
+};
+
+export type SaveSessionFeedback401 = {
+  error: string;
+  code: string;
+};
+
+export type SaveSessionFeedback404 = {
+  error: string;
+  code: string;
+};
+
+export type SaveSessionFeedback409 = {
+  error: string;
+  code: string;
+};
+
+export type SaveSessionFeedback500 = {
+  error: string;
+  code: string;
+};
+
 export type PostFeedbackBodyCategory =
   (typeof PostFeedbackBodyCategory)[keyof typeof PostFeedbackBodyCategory];
 
@@ -12748,6 +13283,73 @@ export const deleteWorkoutPlan = async (
   return customFetch<deleteWorkoutPlanResponse>(getDeleteWorkoutPlanUrl(id), {
     ...options,
     method: "DELETE",
+  });
+};
+
+/**
+ * @summary Edit owned plan without changing session snapshots or activation
+ */
+export type editWorkoutPlanResponse200 = {
+  data: EditWorkoutPlan200;
+  status: 200;
+};
+
+export type editWorkoutPlanResponse400 = {
+  data: EditWorkoutPlan400;
+  status: 400;
+};
+
+export type editWorkoutPlanResponse401 = {
+  data: EditWorkoutPlan401;
+  status: 401;
+};
+
+export type editWorkoutPlanResponse404 = {
+  data: EditWorkoutPlan404;
+  status: 404;
+};
+
+export type editWorkoutPlanResponse409 = {
+  data: EditWorkoutPlan409;
+  status: 409;
+};
+
+export type editWorkoutPlanResponse500 = {
+  data: EditWorkoutPlan500;
+  status: 500;
+};
+
+export type editWorkoutPlanResponseSuccess = editWorkoutPlanResponse200 & {
+  headers: Headers;
+};
+export type editWorkoutPlanResponseError = (
+  | editWorkoutPlanResponse400
+  | editWorkoutPlanResponse401
+  | editWorkoutPlanResponse404
+  | editWorkoutPlanResponse409
+  | editWorkoutPlanResponse500
+) & {
+  headers: Headers;
+};
+
+export type editWorkoutPlanResponse =
+  | editWorkoutPlanResponseSuccess
+  | editWorkoutPlanResponseError;
+
+export const getEditWorkoutPlanUrl = (id: string) => {
+  return `/workout-plans/${id}`;
+};
+
+export const editWorkoutPlan = async (
+  id: string,
+  editWorkoutPlanBody: EditWorkoutPlanBody,
+  options?: RequestInit,
+): Promise<editWorkoutPlanResponse> => {
+  return customFetch<editWorkoutPlanResponse>(getEditWorkoutPlanUrl(id), {
+    ...options,
+    method: "PUT",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(editWorkoutPlanBody),
   });
 };
 
@@ -17772,6 +18374,88 @@ export const createCoachWorkoutPlanTemplateFromPlan = async (
 };
 
 /**
+ * @summary Estimated AI token usage and provider costs
+ */
+export type getAdminAiUsageResponse200 = {
+  data: GetAdminAiUsage200;
+  status: 200;
+};
+
+export type getAdminAiUsageResponse400 = {
+  data: GetAdminAiUsage400;
+  status: 400;
+};
+
+export type getAdminAiUsageResponse401 = {
+  data: GetAdminAiUsage401;
+  status: 401;
+};
+
+export type getAdminAiUsageResponse403 = {
+  data: GetAdminAiUsage403;
+  status: 403;
+};
+
+export type getAdminAiUsageResponse404 = {
+  data: GetAdminAiUsage404;
+  status: 404;
+};
+
+export type getAdminAiUsageResponse409 = {
+  data: GetAdminAiUsage409;
+  status: 409;
+};
+
+export type getAdminAiUsageResponse500 = {
+  data: GetAdminAiUsage500;
+  status: 500;
+};
+
+export type getAdminAiUsageResponseSuccess = getAdminAiUsageResponse200 & {
+  headers: Headers;
+};
+export type getAdminAiUsageResponseError = (
+  | getAdminAiUsageResponse400
+  | getAdminAiUsageResponse401
+  | getAdminAiUsageResponse403
+  | getAdminAiUsageResponse404
+  | getAdminAiUsageResponse409
+  | getAdminAiUsageResponse500
+) & {
+  headers: Headers;
+};
+
+export type getAdminAiUsageResponse =
+  | getAdminAiUsageResponseSuccess
+  | getAdminAiUsageResponseError;
+
+export const getGetAdminAiUsageUrl = (params?: GetAdminAiUsageParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/admin/ai-usage?${stringifiedParams}`
+    : `/admin/ai-usage`;
+};
+
+export const getAdminAiUsage = async (
+  params?: GetAdminAiUsageParams,
+  options?: RequestInit,
+): Promise<getAdminAiUsageResponse> => {
+  return customFetch<getAdminAiUsageResponse>(getGetAdminAiUsageUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+/**
  * @summary List global exercise catalog and content coverage
  */
 export type listAdminExercisesResponse200 = {
@@ -20623,6 +21307,213 @@ export const confirmForgottenWorkoutRecovery = async (
       method: "POST",
       headers: { "Content-Type": "application/json", ...options?.headers },
       body: JSON.stringify(confirmForgottenWorkoutRecoveryBody),
+    },
+  );
+};
+
+/**
+ * @summary Get owned plan with editable days and exercises
+ */
+export type getEditableWorkoutPlanResponse200 = {
+  data: GetEditableWorkoutPlan200;
+  status: 200;
+};
+
+export type getEditableWorkoutPlanResponse400 = {
+  data: GetEditableWorkoutPlan400;
+  status: 400;
+};
+
+export type getEditableWorkoutPlanResponse401 = {
+  data: GetEditableWorkoutPlan401;
+  status: 401;
+};
+
+export type getEditableWorkoutPlanResponse404 = {
+  data: GetEditableWorkoutPlan404;
+  status: 404;
+};
+
+export type getEditableWorkoutPlanResponse409 = {
+  data: GetEditableWorkoutPlan409;
+  status: 409;
+};
+
+export type getEditableWorkoutPlanResponse500 = {
+  data: GetEditableWorkoutPlan500;
+  status: 500;
+};
+
+export type getEditableWorkoutPlanResponseSuccess =
+  getEditableWorkoutPlanResponse200 & {
+    headers: Headers;
+  };
+export type getEditableWorkoutPlanResponseError = (
+  | getEditableWorkoutPlanResponse400
+  | getEditableWorkoutPlanResponse401
+  | getEditableWorkoutPlanResponse404
+  | getEditableWorkoutPlanResponse409
+  | getEditableWorkoutPlanResponse500
+) & {
+  headers: Headers;
+};
+
+export type getEditableWorkoutPlanResponse =
+  | getEditableWorkoutPlanResponseSuccess
+  | getEditableWorkoutPlanResponseError;
+
+export const getGetEditableWorkoutPlanUrl = (id: string) => {
+  return `/workout-plans/${id}/edit`;
+};
+
+export const getEditableWorkoutPlan = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getEditableWorkoutPlanResponse> => {
+  return customFetch<getEditableWorkoutPlanResponse>(
+    getGetEditableWorkoutPlanUrl(id),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Get owned workout feedback
+ */
+export type getSessionFeedbackResponse200 = {
+  data: GetSessionFeedback200;
+  status: 200;
+};
+
+export type getSessionFeedbackResponse400 = {
+  data: GetSessionFeedback400;
+  status: 400;
+};
+
+export type getSessionFeedbackResponse401 = {
+  data: GetSessionFeedback401;
+  status: 401;
+};
+
+export type getSessionFeedbackResponse404 = {
+  data: GetSessionFeedback404;
+  status: 404;
+};
+
+export type getSessionFeedbackResponse409 = {
+  data: GetSessionFeedback409;
+  status: 409;
+};
+
+export type getSessionFeedbackResponse500 = {
+  data: GetSessionFeedback500;
+  status: 500;
+};
+
+export type getSessionFeedbackResponseSuccess =
+  getSessionFeedbackResponse200 & {
+    headers: Headers;
+  };
+export type getSessionFeedbackResponseError = (
+  | getSessionFeedbackResponse400
+  | getSessionFeedbackResponse401
+  | getSessionFeedbackResponse404
+  | getSessionFeedbackResponse409
+  | getSessionFeedbackResponse500
+) & {
+  headers: Headers;
+};
+
+export type getSessionFeedbackResponse =
+  | getSessionFeedbackResponseSuccess
+  | getSessionFeedbackResponseError;
+
+export const getGetSessionFeedbackUrl = (sessionId: string) => {
+  return `/workout-sessions/${sessionId}/feedback`;
+};
+
+export const getSessionFeedback = async (
+  sessionId: string,
+  options?: RequestInit,
+): Promise<getSessionFeedbackResponse> => {
+  return customFetch<getSessionFeedbackResponse>(
+    getGetSessionFeedbackUrl(sessionId),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Save or update feedback after completing an owned workout
+ */
+export type saveSessionFeedbackResponse200 = {
+  data: SaveSessionFeedback200;
+  status: 200;
+};
+
+export type saveSessionFeedbackResponse400 = {
+  data: SaveSessionFeedback400;
+  status: 400;
+};
+
+export type saveSessionFeedbackResponse401 = {
+  data: SaveSessionFeedback401;
+  status: 401;
+};
+
+export type saveSessionFeedbackResponse404 = {
+  data: SaveSessionFeedback404;
+  status: 404;
+};
+
+export type saveSessionFeedbackResponse409 = {
+  data: SaveSessionFeedback409;
+  status: 409;
+};
+
+export type saveSessionFeedbackResponse500 = {
+  data: SaveSessionFeedback500;
+  status: 500;
+};
+
+export type saveSessionFeedbackResponseSuccess =
+  saveSessionFeedbackResponse200 & {
+    headers: Headers;
+  };
+export type saveSessionFeedbackResponseError = (
+  | saveSessionFeedbackResponse400
+  | saveSessionFeedbackResponse401
+  | saveSessionFeedbackResponse404
+  | saveSessionFeedbackResponse409
+  | saveSessionFeedbackResponse500
+) & {
+  headers: Headers;
+};
+
+export type saveSessionFeedbackResponse =
+  | saveSessionFeedbackResponseSuccess
+  | saveSessionFeedbackResponseError;
+
+export const getSaveSessionFeedbackUrl = (sessionId: string) => {
+  return `/workout-sessions/${sessionId}/feedback`;
+};
+
+export const saveSessionFeedback = async (
+  sessionId: string,
+  saveSessionFeedbackBody: SaveSessionFeedbackBody,
+  options?: RequestInit,
+): Promise<saveSessionFeedbackResponse> => {
+  return customFetch<saveSessionFeedbackResponse>(
+    getSaveSessionFeedbackUrl(sessionId),
+    {
+      ...options,
+      method: "PUT",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(saveSessionFeedbackBody),
     },
   );
 };

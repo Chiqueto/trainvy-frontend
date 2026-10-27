@@ -1,4 +1,7 @@
-export type ExerciseAnimation = "squat" | "bench-press";
+export type ExerciseAnimation =
+  | "squat"
+  | "bench-press"
+  | "incline-dumbbell-press";
 
 export interface ExerciseDefinition {
   name: string;
@@ -23,6 +26,15 @@ export const EXERCISE_ANIMATIONS = {
       secondary: ["Tríceps", "Deltoide anterior"],
     },
   },
+  "incline-dumbbell-press": {
+    name: "Supino inclinado com halteres",
+    equipment: "Banco inclinado a 45° e dois halteres",
+    id: "00000000-0000-4000-8000-000000000103",
+    muscles: {
+      primary: ["Peitoral maior — porção clavicular"],
+      secondary: ["Tríceps", "Deltoide anterior"],
+    },
+  },
 } satisfies Record<ExerciseAnimation, ExerciseDefinition>;
 
 // Conhecidos IDs legados de exercícios antes do catálogo canônico global
@@ -34,12 +46,14 @@ const LEGACY_SQUAT_IDS = new Set([
 const LEGACY_BENCH_IDS = new Set(["f5eff850-07da-4ae9-b7d1-df8ec8137a5e"]);
 
 // Retorna animação correspondente por ID canônico ou nome normalizado do exercício.
-// Preserva a regra estrita de não associar variantes não suportadas (ex: supino inclinado).
+// Variantes de banco e equipamento só recebem a própria animação explicitamente suportada.
 export function getExerciseAnimation(
   id?: string | null,
   name?: string | null,
 ): ExerciseAnimation | null {
   if (id === EXERCISE_ANIMATIONS.squat.id) return "squat";
+  if (id === EXERCISE_ANIMATIONS["incline-dumbbell-press"].id)
+    return "incline-dumbbell-press";
   if (
     id === EXERCISE_ANIMATIONS["bench-press"].id ||
     id === "00000000-0000-4000-8000-000000000102"
@@ -55,6 +69,9 @@ export function getExerciseAnimation(
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
+
+    if (normalized === "supino inclinado com halteres")
+      return "incline-dumbbell-press";
 
     if (
       normalized === "agachamento livre" ||

@@ -66,7 +66,8 @@ export function createTissueMaterial() {
         float fibreVisibility = 1.0 - smoothstep(0.65, 2.0, fwidth(vFibre.x));
         float strand = sin(vFibre.x + 0.26 * sin(vFibre.x * 0.17));
         float fascicle = sin(vFibre.x * 0.127 + sin(vFibre.x * 0.019));
-        float mask = exerciseMode < 0.5 ? vExerciseMuscles.x : vExerciseMuscles.y;
+        float mask = exerciseMode < 0.5 ? vExerciseMuscles.x
+          : exerciseMode < 1.5 ? vExerciseMuscles.y : vExerciseMuscles.z;
         float selected = smoothstep(0.12, 0.40, mask) * highlightMuscles;
         float primary = smoothstep(0.72, 0.93, mask);
         // Constant categorical colours, never a measurement of activation.
@@ -98,9 +99,13 @@ export function createTissueMaterial() {
           + (1.0-tissue) * (1.0-smoothstep(0.02,0.12,dot(diffuseColor.rgb,vec3(0.333)))) * 0.28, 0.38, 0.88);`,
       );
   };
-  material.customProgramCacheKey = () => "trainvy-atelier-tissue-v2";
+  material.customProgramCacheKey = () => "trainvy-atelier-tissue-v3";
   const setAppearance = (exercise: ExerciseAnimation, highlighted = true) => {
-    uniforms.exerciseMode.value = exercise === "bench-press" ? 1 : 0;
+    uniforms.exerciseMode.value = {
+      squat: 0,
+      "bench-press": 1,
+      "incline-dumbbell-press": 2,
+    }[exercise];
     uniforms.highlightMuscles.value = highlighted ? 1 : 0;
   };
   return { material, setAppearance };

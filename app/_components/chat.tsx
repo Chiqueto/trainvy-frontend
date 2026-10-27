@@ -115,6 +115,7 @@ const READ_TOOL_NAMES = new Set([
   "getPeriodization",
   "getUserTrainData",
   "getRecentTrainingHistory",
+  "getRecentTrainingFeedback",
   "getWorkoutHistorySession",
   "searchExercises",
   "getExerciseEvolution",
@@ -180,6 +181,7 @@ export function getReadToolStatusLabel(part: any): string | null {
   }
 
   const name = getAiToolName(part);
+  if (name === "getRecentTrainingFeedback") return "Consultando recuperação...";
   if (
     name === "getRecentTrainingHistory" ||
     name === "getWorkoutHistorySession"

@@ -89,7 +89,7 @@ describe("Trainvy anatomical athlete", () => {
       EXERCISE_ANIMATIONS["bench-press"].muscles.primary,
     );
   });
-  it.each(["squat", "bench-press"] as const)(
+  it.each(["squat", "bench-press", "incline-dumbbell-press"] as const)(
     "keeps both arm segments in one bend plane without roll flips in %s",
     (exercise) => {
       const bones = new Map(mesh.skeleton.bones.map((b) => [b.name, b]));
@@ -338,7 +338,7 @@ describe("Trainvy anatomical athlete", () => {
     expect(rootedGluteal).toBeGreaterThan(30);
     expect(supportedGluteal).toBeGreaterThan(100);
   });
-  it.each(["squat", "bench-press"] as const)(
+  it.each(["squat", "bench-press", "incline-dumbbell-press"] as const)(
     "keeps the closed hands rigid and attached to the bar throughout %s",
     (exercise) => {
       const g = mesh.geometry;
@@ -380,7 +380,7 @@ describe("Trainvy anatomical athlete", () => {
       }
     },
   );
-  it.each(["squat", "bench-press"] as const)(
+  it.each(["squat", "bench-press", "incline-dumbbell-press"] as const)(
     "keeps every sampled vertex finite through %s",
     (exercise) => {
       const p = new Vector3();
@@ -408,9 +408,32 @@ describe("Trainvy anatomical athlete", () => {
     const { material, setAppearance } = createTissueMaterial();
     setAppearance("squat", false);
     setAppearance("bench-press", true);
+    setAppearance("incline-dumbbell-press", true);
     expect(material.map).toBeNull();
     expect(material.normalMap).toBeNull();
     expect(material.vertexColors).toBe(true);
     material.dispose();
+  });
+  it("uses a dedicated clavicular-pectoral mask for incline without colouring the lower chest, legs or head", () => {
+    const masks = mesh.geometry.getAttribute("_exercisemuscles");
+    const positions = mesh.geometry.attributes.position;
+    let primary = 0,
+      secondary = 0,
+      differs = 0;
+    for (let i = 0; i < masks.count; i++) {
+      const z = masks.getZ(i);
+      if (z > 0.9) primary++;
+      else if (z > 0.2) secondary++;
+      if (z !== masks.getY(i)) differs++;
+      if (positions.getY(i) < 0.98 || positions.getY(i) > 1.49)
+        expect(z).toBe(0);
+      if (z > 0) expect(mesh.geometry.attributes.uv.getY(i)).toBe(1);
+    }
+    expect(primary).toBe(850);
+    expect(secondary).toBe(4488);
+    expect(differs).toBeGreaterThan(1000);
+    expect(
+      EXERCISE_ANIMATIONS["incline-dumbbell-press"].muscles.primary,
+    ).not.toEqual(EXERCISE_ANIMATIONS["bench-press"].muscles.primary);
   });
 });

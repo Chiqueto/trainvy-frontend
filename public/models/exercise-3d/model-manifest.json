@@ -1,10 +1,10 @@
 {
-  "version": 7,
+  "version": 8,
   "asset": "trainvy-athlete.glb",
-  "sha256": "be63fbfc81394055b10002aa6db7ca37ac8a17164778bafecf1329b99aa57db8",
+  "sha256": "323df2cbdb70a8875ebc1a9a8cc03b983a379f1c02789181254177f4ae4e1a0c",
   "vertices": 303153,
   "triangles": 578599,
-  "bytes": 8590140,
+  "bytes": 8590880,
   "bones": [
     "sled",
     "thigh_L",
@@ -259,10 +259,76 @@
   "assetLicense": "CC-BY-SA-4.0",
   "headSource": "MakeHuman hm08",
   "headLicense": "CC0",
-  "changes": "Preserved native pelvis and supported gluteal attachments; calibrated MakeHuman head to the cervical axis, continuous jaw-to-neck join sampled from native muscles; stable forearm twist and closed grips",
+  "changes": "Preserved native pelvis and supported gluteal attachments; calibrated MakeHuman head to the cervical axis, continuous jaw-to-neck join sampled from native muscles; stable forearm twist and closed grips; independent incline dumbbell press mask from named clavicular pectoralis, anterior deltoid and triceps surfaces",
   "recoverySources": {
     "v4": "4ea1a28cee208db49f7fd5e733f88d8ea43e662042cb92332088a24183a24527",
     "v3": "b2fb045c8c57539fc6eb27032a040d66287bf8f7787716a005105675df7c074d",
     "connections": "3c8693b3ab63cf17304bec5068b087fe4f11a1b495c28bef929ae3e673ddd426"
+  },
+  "inclineMask": {
+    "channel": "z",
+    "sourceSha256": "4c19df534d5d84aabbce08604306aa0485b43e8a2483c72a95b569e1dfea2279",
+    "selections": [
+      {
+        "name": "Clavicular_head_of_pectoralis_major_musclel",
+        "role": 1,
+        "confidence": 1,
+        "vertices": 425
+      },
+      {
+        "name": "Clavicular_head_of_pectoralis_major_muscler",
+        "role": 1,
+        "confidence": 1,
+        "vertices": 425
+      },
+      {
+        "name": "Clavicular_part_of_deltoid_musclel",
+        "role": 0.5,
+        "confidence": 0.975,
+        "vertices": 495
+      },
+      {
+        "name": "Clavicular_part_of_deltoid_muscler",
+        "role": 0.5,
+        "confidence": 0.975,
+        "vertices": 495
+      },
+      {
+        "name": "Lateral_head_of_triceps_brachiil",
+        "role": 0.5,
+        "confidence": 0.9,
+        "vertices": 618
+      },
+      {
+        "name": "Lateral_head_of_triceps_brachiir",
+        "role": 0.5,
+        "confidence": 0.9,
+        "vertices": 618
+      },
+      {
+        "name": "Long_head_of_triceps_brachiil",
+        "role": 0.5,
+        "confidence": 0.875,
+        "vertices": 673
+      },
+      {
+        "name": "Long_head_of_triceps_brachiir",
+        "role": 0.5,
+        "confidence": 0.875,
+        "vertices": 673
+      },
+      {
+        "name": "Medial_head_of_triceps_brachiil",
+        "role": 0.5,
+        "confidence": 1,
+        "vertices": 458
+      },
+      {
+        "name": "Medial_head_of_triceps_brachiir",
+        "role": 0.5,
+        "confidence": 1,
+        "vertices": 458
+      }
+    ]
   }
 }

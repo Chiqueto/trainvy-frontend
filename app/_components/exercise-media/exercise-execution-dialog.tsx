@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 import { ExerciseMediaPreview } from "./exercise-media-preview";
-import { getExerciseAnimation } from "../exercise-3d/exercises";
+import { getExerciseAnimation, type ExerciseAnimation } from "../exercise-3d/exercises";
 
 const Exercise3DViewer = dynamic(
   () =>
@@ -50,7 +50,7 @@ interface ExerciseExecutionDialogProps {
 }
 
 const FALLBACK_3D_INSTRUCTIONS: Record<
-  "squat" | "bench-press",
+  ExerciseAnimation,
   NonNullable<GetExerciseMedia200["instructions"]>
 > = {
   squat: {
@@ -70,6 +70,12 @@ const FALLBACK_3D_INSTRUCTIONS: Record<
     execution:
       "Tire a barra do suporte, desça de forma controlada até o terço inferior do esterno e empurre de volta à posição inicial sem hiperestender os cotovelos.",
     tips: "Mantenha os cotovelos a aproximadamente 45° a 75° do tronco, evitando abri-los totalmente a 90°.",
+  },
+  "incline-dumbbell-press": {
+    description: "Movimento de empurrar com dois halteres no banco inclinado. A ilustração destaca a porção clavicular do peitoral, tríceps e deltoide anterior.",
+    setup: "Apoie costas e cabeça no encosto inclinado a 45°, mantenha os pés firmes no chão e um halter em cada mão, com punhos alinhados aos antebraços.",
+    execution: "Desça os halteres com controle ao lado da parte superior do peito, mantendo os cotovelos abaixo das mãos. Após uma pausa breve, empurre para cima com uma aproximação suave, sem bater os halteres.",
+    tips: "Mantenha o apoio das escápulas e do quadril, evite abrir excessivamente os cotovelos e não force a extensão dos punhos. O ângulo e a amplitude mostrados são ilustrativos.",
   },
 };
 

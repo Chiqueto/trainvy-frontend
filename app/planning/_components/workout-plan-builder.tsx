@@ -15,11 +15,13 @@ import {
 import {
   createStandaloneWorkoutPlanAction,
   createWorkoutPlanInPeriodizationAction,
+  editWorkoutPlanAction,
 } from "@/app/planning/_actions";
 import {
   createDraftExercise,
   createDraftWorkoutDay,
   createInitialWorkoutDays,
+  deserializeWorkoutDays,
   serializeWorkoutDays,
   validateWorkoutPlanDraft,
   type WorkoutPlanDraftDay,
@@ -28,9 +30,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AthleteAiWorkoutPlanModal } from "./athlete-ai-workout-plan-modal";
+import type { GetEditableWorkoutPlan200 } from "@/app/_lib/api/fetch-generated";
 
 interface WorkoutPlanBuilderProps {
-  mode: "standalone" | "periodization";
+  mode: "standalone" | "periodization" | "edit";
+  initialPlan?: GetEditableWorkoutPlan200;
   periodizationId?: string;
   initialOpenAi?: boolean;
 }
@@ -39,14 +43,15 @@ export function WorkoutPlanBuilder({
   mode,
   periodizationId,
   initialOpenAi = false,
+  initialPlan,
 }: WorkoutPlanBuilderProps) {
   const router = useRouter();
-  const [name, setName] = useState("");
+  const [name, setName] = useState(initialPlan?.name ?? "");
   const [activate, setActivate] = useState(false);
   const [plannedStartDate, setPlannedStartDate] = useState("");
   const [plannedEndDate, setPlannedEndDate] = useState("");
   const [notes, setNotes] = useState("");
-  const [days, setDays] = useState(createInitialWorkoutDays);
+  const [days, setDays] = useState(() => initialPlan ? deserializeWorkoutDays(initialPlan) : createInitialWorkoutDays());
   const [error, setError] = useState<string>();
   const [isPending, startTransition] = useTransition();
   const [isAiModalOpen, setIsAiModalOpen] = useState(initialOpenAi);
@@ -95,6 +100,9 @@ export function WorkoutPlanBuilder({
     exerciseIndex: number,
     patch: Partial<WorkoutPlanDraftExercise>,
   ) {
+    if (patch.name !== undefined) patch.exerciseId = null;
+    if (patch.alternative1Name !== undefined) patch.alternative1ExerciseId = null;
+    if (patch.alternative2Name !== undefined) patch.alternative2ExerciseId = null;
     updateDay(dayIndex, {
       exercises: days[dayIndex].exercises.map((exercise, index) =>
         index === exerciseIndex ? { ...exercise, ...patch } : exercise,
@@ -138,7 +146,9 @@ export function WorkoutPlanBuilder({
     startTransition(async () => {
       const workoutDays = serializeWorkoutDays(days);
       const result =
-        mode === "standalone"
+        mode === "edit" && initialPlan
+          ? await editWorkoutPlanAction(initialPlan.id, { name: name.trim(), workoutDays })
+          : mode === "standalone"
           ? await createStandaloneWorkoutPlanAction({
               name: name.trim(),
               workoutDays,
@@ -158,7 +168,9 @@ export function WorkoutPlanBuilder({
       }
 
       const destination =
-        mode === "standalone"
+        mode === "edit" && initialPlan
+          ? `/workout-plans/${initialPlan.id}`
+          : mode === "standalone"
           ? "/planning"
           : `/planning/periodizations/${periodizationId}`;
       router.push(destination);
@@ -215,7 +227,7 @@ export function WorkoutPlanBuilder({
             />
             Tornar este meu plano atual
           </label>
-        ) : (
+        ) : mode === "periodization" ? (
           <>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <label className="flex flex-col gap-2 text-sm font-medium">
@@ -246,7 +258,7 @@ export function WorkoutPlanBuilder({
               />
             </label>
           </>
-        )}
+        ) : <p className="text-sm text-muted-foreground">As alterações valem para os próximos treinos. As sessões já registradas serão preservadas.</p>}
       </section>
 
       <section
@@ -292,7 +304,7 @@ export function WorkoutPlanBuilder({
 
         {days.map((day, dayIndex) => (
           <article
-            key={dayIndex}
+            key={day.id ?? dayIndex}
             className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-4"
           >
             <div className="flex items-center justify-between gap-3">
@@ -354,6 +366,7 @@ export function WorkoutPlanBuilder({
                   type="number"
                   inputMode="numeric"
                   min={1}
+                  disabled={day.isRest}
                   value={day.estimatedDurationInMinutes}
                   onChange={(event) =>
                     updateDay(dayIndex, {
@@ -366,7 +379,14 @@ export function WorkoutPlanBuilder({
               </label>
             </div>
 
-                <div className="flex flex-col gap-3">
+            <label className="flex items-center gap-2 text-sm">
+              <input type="checkbox" checked={day.isRest} disabled={isPending}
+                onChange={event => updateDay(dayIndex, { isRest: event.target.checked,
+                  estimatedDurationInMinutes: event.target.checked ? 0 : day.estimatedDurationInMinutes || 60 })} />
+              Dia de descanso
+            </label>
+
+                {!day.isRest && <div className="flex flex-col gap-3">
                   {day.exercises.map((exercise, exerciseIndex) => (
                     <div
                       key={`${day.weekDay}-${exerciseIndex}`}
@@ -542,7 +562,7 @@ export function WorkoutPlanBuilder({
                     <Plus className="size-3.5" />
                     Adicionar exercício
                   </Button>
-                </div>
+                </div>}
           </article>
         ))}
 
@@ -575,8 +595,8 @@ export function WorkoutPlanBuilder({
       >
         {isPending && <LoaderCircle className="animate-spin" />}
         {isPending
-          ? "Criando..."
-          : mode === "standalone"
+          ? mode === "edit" ? "Salvando..." : "Criando..."
+          : mode === "edit" ? "Salvar alterações" : mode === "standalone"
             ? "Criar plano"
             : "Criar plano e adicionar etapa"}
       </Button>

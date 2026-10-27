@@ -19,3 +19,12 @@ This is an offline build input. The application loads only the final compressed 
 
 Complete credits: [model attribution](../../public/models/exercise-3d/ATTRIBUTION.md).
 Full license: [CC BY-SA 4.0](../../public/models/exercise-3d/LICENSE-CC-BY-SA-4.0.txt).
+
+`incline-muscle-map.json` is a CC BY-SA 4.0 semantic selection derived from the same
+Z-Anatomy / BodyParts3D muscular source. It identifies bilateral clavicular heads
+of pectoralis major, clavicular deltoid parts and all three triceps heads by source
+labels and corresponding connected surfaces. The source checksum, match confidence
+and checksum-bound v7 vertex membership are preserved in the file. This is a build
+input; it is not an activation measurement or a map copied from another exercise.
+`node scripts/add-incline-muscle-mask.mjs --apply` adds the Z mask while retaining
+the original anatomical geometry and X/Y masks.

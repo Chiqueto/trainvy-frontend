@@ -7,6 +7,7 @@ const restTilt = new Quaternion();
 const hipLocal = v(0, -0.28, 0.08);
 export const ARM_LENGTH = v(0.08, -0.284, -0.012).length();
 export const FOREARM_LENGTH = v(0.025, -0.265, 0.03).length();
+export const INCLINE_BENCH_ANGLE = Math.PI / 4;
 
 /** Controlled eccentric, short pause at the bottom and smooth concentric. */
 export function getExerciseDepth(phase: number) {
@@ -56,9 +57,10 @@ export function solveJoint(
 export function getExercisePose(exercise: ExerciseAnimation, depth: number) {
   const p = MathUtils.clamp(depth, 0, 1);
   const squat = exercise === "squat";
+  const incline = exercise === "incline-dumbbell-press";
   const tilt = new Quaternion().setFromAxisAngle(
     X,
-    squat ? 0.1 + 0.48 * p : -Math.PI / 2,
+    squat ? 0.1 + 0.48 * p : -Math.PI / 2 + (incline ? INCLINE_BENCH_ANGLE : 0),
   );
   const hipCenter = squat
     ? v(0, 0.895 - 0.38 * p, -0.03 - 0.25 * p)
@@ -75,14 +77,30 @@ export function getExercisePose(exercise: ExerciseAnimation, depth: number) {
       : v(side * 0.25, 0.05, 0.83);
     const knee = solveJoint(hip, ankle, 0.44, 0.42, v(side * 0.12, 0.15, 1));
     const shoulder = body(v(side * 0.215, 0.224, 0.132));
-    const grip = bar.clone().add(v(side * (squat ? 0.39 : 0.4), 0, 0));
+    // Each dumbbell follows its own converging path. At the bottom the
+    // forearms stay close to vertical; at the top the weights remain separated.
+    const grip = incline
+      ? shoulder
+          .clone()
+          .add(
+            v(
+              side * MathUtils.lerp(-0.025, 0.24, p),
+              MathUtils.lerp(0.526, 0.046, p),
+              MathUtils.lerp(0.012, 0.102, p),
+            ),
+          )
+      : bar.clone().add(v(side * (squat ? 0.39 : 0.4), 0, 0));
     const wrist = grip.clone().add(v(0, -0.004, -0.012));
     const elbow = solveJoint(
       shoulder,
       wrist,
       ARM_LENGTH,
       FOREARM_LENGTH,
-      squat ? v(side, -0.7, -0.4) : v(side, -0.5, 0.7),
+      squat
+        ? v(side, -0.7, -0.4)
+        : incline
+          ? v(side, -0.6, 0.45)
+          : v(side, -0.5, 0.7),
     );
     return { side, hip, knee, ankle, shoulder, elbow, wrist, grip };
   });

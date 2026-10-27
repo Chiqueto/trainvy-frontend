@@ -48,7 +48,7 @@ const rows = [
     1,
   ),
   exercise("second", "Cadeira Extensora", 1, 3),
-  exercise("first", "Supino Inclinado com Halteres", 1, 2),
+  exercise("first", "Supino Declinado com Halteres", 1, 2),
   exercise("third", "Power Clean", 4, 4),
 ];
 afterEach(cleanup);
@@ -62,12 +62,23 @@ describe("3D implementation queue", () => {
       ["third", 3],
     ]);
     expect(implementationQueue([...rows].reverse())).toEqual(queue);
+    expect(
+      implementationQueue([
+        ...rows,
+        exercise(
+          "00000000-0000-4000-8000-000000000103",
+          "Supino Inclinado com Halteres",
+          1,
+          2,
+        ),
+      ]).has("00000000-0000-4000-8000-000000000103"),
+    ).toBe(false);
   });
   it("preserves global queue positions when filtering and allows switching to alphabetical order", () => {
     render(<ExercisesCatalog exercises={rows} />);
     const table = screen.getByRole("table");
     expect(within(table).getAllByRole("row")[1].textContent).toContain(
-      "Supino Inclinado com Halteres",
+      "Supino Declinado com Halteres",
     );
     fireEvent.change(screen.getByLabelText("Prioridade 3D"), {
       target: { value: "4" },
