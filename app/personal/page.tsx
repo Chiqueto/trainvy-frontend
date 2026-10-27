@@ -1,4 +1,6 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
+import { Layers, Dumbbell, ArrowRight } from "lucide-react";
 import { BottomNav } from "@/app/_components/bottom-nav";
 
 import {

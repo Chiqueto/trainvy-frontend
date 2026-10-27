@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { BottomNav } from "@/app/_components/bottom-nav";
 import { WorkoutDayCard } from "@/app/_components/workout-day-card";
 import { Logo } from "@/app/_components/logo";
+import { SavePlanAsTemplateButton } from "./_components/save-plan-as-template-button";
 
 const WEEKDAY_ORDER = [
   "MONDAY",
@@ -92,6 +93,9 @@ export default async function WorkoutPlanPage({
               Rotina de Treinos
             </h1>
           </div>
+          {isCoach && (
+            <SavePlanAsTemplateButton planId={id} planName={name} />
+          )}
         </div>
       </div>
 

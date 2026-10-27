@@ -5782,6 +5782,800 @@ export type GetCoachAthleteProgressInsights500 = {
   code: string;
 };
 
+export type ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemWeekDay =
+  (typeof ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemWeekDay)[keyof typeof ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemWeekDay];
+
+export const ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemWeekDay =
+  {
+    MONDAY: "MONDAY",
+    TUESDAY: "TUESDAY",
+    WEDNESDAY: "WEDNESDAY",
+    THURSDAY: "THURSDAY",
+    FRIDAY: "FRIDAY",
+    SATURDAY: "SATURDAY",
+    SUNDAY: "SUNDAY",
+  } as const;
+
+export type ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItem =
+  {
+    name: string;
+    order: number;
+    /** @nullable */
+    exerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseName?: string | null;
+    /** @nullable */
+    alternative2ExerciseId?: string | null;
+    /** @nullable */
+    alternative2ExerciseName?: string | null;
+    sets: number;
+    warmupSets: number;
+    reps: number;
+    restTimeInSeconds: number;
+  };
+
+export type ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItem = {
+  name: string;
+  order: number;
+  weekDay: ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemWeekDay;
+  isRest: boolean;
+  estimatedDurationInSeconds: number;
+  /** @nullable */
+  coverImageUrl?: string | null;
+  exercises: ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItem[];
+};
+
+export type ListCoachWorkoutPlanTemplates200ItemPayload = {
+  workoutDays: ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItem[];
+};
+
+export type ListCoachWorkoutPlanTemplates200Item = {
+  id: string;
+  coachId: string;
+  name: string;
+  /** @nullable */
+  description: string | null;
+  payload: ListCoachWorkoutPlanTemplates200ItemPayload;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ListCoachWorkoutPlanTemplates400 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachWorkoutPlanTemplates401 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachWorkoutPlanTemplates403 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachWorkoutPlanTemplates404 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachWorkoutPlanTemplates500 = {
+  error: string;
+  code: string;
+};
+
+export type CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemWeekDay =
+  (typeof CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemWeekDay)[keyof typeof CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemWeekDay];
+
+export const CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemWeekDay = {
+  MONDAY: "MONDAY",
+  TUESDAY: "TUESDAY",
+  WEDNESDAY: "WEDNESDAY",
+  THURSDAY: "THURSDAY",
+  FRIDAY: "FRIDAY",
+  SATURDAY: "SATURDAY",
+  SUNDAY: "SUNDAY",
+} as const;
+
+export type CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItem = {
+  /** @minLength 1 */
+  name: string;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  order: number;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative1ExerciseId?: string | null;
+  /** @nullable */
+  alternative1ExerciseName?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative2ExerciseId?: string | null;
+  /** @nullable */
+  alternative2ExerciseName?: string | null;
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  sets: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  warmupSets?: number;
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  reps: number;
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  restTimeInSeconds: number;
+};
+
+export type CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItem = {
+  /** @minLength 1 */
+  name: string;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  order?: number;
+  weekDay?: CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemWeekDay;
+  isRest?: boolean;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  estimatedDurationInSeconds: number;
+  /** @nullable */
+  coverImageUrl?: string | null;
+  exercises: CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItem[];
+};
+
+export type CreateCoachWorkoutPlanTemplateBody = {
+  /**
+   * @minLength 1
+   * @maxLength 100
+   */
+  name: string;
+  /**
+   * @maxLength 1000
+   * @nullable
+   */
+  description?: string | null;
+  /** @minItems 1 */
+  workoutDays: CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItem[];
+};
+
+export type CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemWeekDay =
+  (typeof CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemWeekDay)[keyof typeof CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemWeekDay];
+
+export const CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemWeekDay = {
+  MONDAY: "MONDAY",
+  TUESDAY: "TUESDAY",
+  WEDNESDAY: "WEDNESDAY",
+  THURSDAY: "THURSDAY",
+  FRIDAY: "FRIDAY",
+  SATURDAY: "SATURDAY",
+  SUNDAY: "SUNDAY",
+} as const;
+
+export type CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItem =
+  {
+    name: string;
+    order: number;
+    /** @nullable */
+    exerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseName?: string | null;
+    /** @nullable */
+    alternative2ExerciseId?: string | null;
+    /** @nullable */
+    alternative2ExerciseName?: string | null;
+    sets: number;
+    warmupSets: number;
+    reps: number;
+    restTimeInSeconds: number;
+  };
+
+export type CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItem = {
+  name: string;
+  order: number;
+  weekDay: CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemWeekDay;
+  isRest: boolean;
+  estimatedDurationInSeconds: number;
+  /** @nullable */
+  coverImageUrl?: string | null;
+  exercises: CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItem[];
+};
+
+export type CreateCoachWorkoutPlanTemplate201Payload = {
+  workoutDays: CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItem[];
+};
+
+export type CreateCoachWorkoutPlanTemplate201 = {
+  id: string;
+  coachId: string;
+  name: string;
+  /** @nullable */
+  description: string | null;
+  payload: CreateCoachWorkoutPlanTemplate201Payload;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CreateCoachWorkoutPlanTemplate400 = {
+  error: string;
+  code: string;
+};
+
+export type CreateCoachWorkoutPlanTemplate401 = {
+  error: string;
+  code: string;
+};
+
+export type CreateCoachWorkoutPlanTemplate403 = {
+  error: string;
+  code: string;
+};
+
+export type CreateCoachWorkoutPlanTemplate404 = {
+  error: string;
+  code: string;
+};
+
+export type CreateCoachWorkoutPlanTemplate500 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemWeekDay =
+  (typeof GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemWeekDay)[keyof typeof GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemWeekDay];
+
+export const GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemWeekDay = {
+  MONDAY: "MONDAY",
+  TUESDAY: "TUESDAY",
+  WEDNESDAY: "WEDNESDAY",
+  THURSDAY: "THURSDAY",
+  FRIDAY: "FRIDAY",
+  SATURDAY: "SATURDAY",
+  SUNDAY: "SUNDAY",
+} as const;
+
+export type GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItem =
+  {
+    name: string;
+    order: number;
+    /** @nullable */
+    exerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseName?: string | null;
+    /** @nullable */
+    alternative2ExerciseId?: string | null;
+    /** @nullable */
+    alternative2ExerciseName?: string | null;
+    sets: number;
+    warmupSets: number;
+    reps: number;
+    restTimeInSeconds: number;
+  };
+
+export type GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItem = {
+  name: string;
+  order: number;
+  weekDay: GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemWeekDay;
+  isRest: boolean;
+  estimatedDurationInSeconds: number;
+  /** @nullable */
+  coverImageUrl?: string | null;
+  exercises: GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItem[];
+};
+
+export type GetCoachWorkoutPlanTemplate200Payload = {
+  workoutDays: GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItem[];
+};
+
+export type GetCoachWorkoutPlanTemplate200 = {
+  id: string;
+  coachId: string;
+  name: string;
+  /** @nullable */
+  description: string | null;
+  payload: GetCoachWorkoutPlanTemplate200Payload;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type GetCoachWorkoutPlanTemplate400 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachWorkoutPlanTemplate401 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachWorkoutPlanTemplate403 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachWorkoutPlanTemplate404 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachWorkoutPlanTemplate500 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemWeekDay =
+  (typeof UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemWeekDay)[keyof typeof UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemWeekDay];
+
+export const UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemWeekDay = {
+  MONDAY: "MONDAY",
+  TUESDAY: "TUESDAY",
+  WEDNESDAY: "WEDNESDAY",
+  THURSDAY: "THURSDAY",
+  FRIDAY: "FRIDAY",
+  SATURDAY: "SATURDAY",
+  SUNDAY: "SUNDAY",
+} as const;
+
+export type UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItem = {
+  /** @minLength 1 */
+  name: string;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  order: number;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative1ExerciseId?: string | null;
+  /** @nullable */
+  alternative1ExerciseName?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative2ExerciseId?: string | null;
+  /** @nullable */
+  alternative2ExerciseName?: string | null;
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  sets: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  warmupSets?: number;
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  reps: number;
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  restTimeInSeconds: number;
+};
+
+export type UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItem = {
+  /** @minLength 1 */
+  name: string;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  order?: number;
+  weekDay?: UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemWeekDay;
+  isRest?: boolean;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  estimatedDurationInSeconds: number;
+  /** @nullable */
+  coverImageUrl?: string | null;
+  exercises: UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItem[];
+};
+
+export type UpdateCoachWorkoutPlanTemplateBody = {
+  /**
+   * @minLength 1
+   * @maxLength 100
+   */
+  name: string;
+  /**
+   * @maxLength 1000
+   * @nullable
+   */
+  description?: string | null;
+  /** @minItems 1 */
+  workoutDays: UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItem[];
+};
+
+export type UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemWeekDay =
+  (typeof UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemWeekDay)[keyof typeof UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemWeekDay];
+
+export const UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemWeekDay = {
+  MONDAY: "MONDAY",
+  TUESDAY: "TUESDAY",
+  WEDNESDAY: "WEDNESDAY",
+  THURSDAY: "THURSDAY",
+  FRIDAY: "FRIDAY",
+  SATURDAY: "SATURDAY",
+  SUNDAY: "SUNDAY",
+} as const;
+
+export type UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItem =
+  {
+    name: string;
+    order: number;
+    /** @nullable */
+    exerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseName?: string | null;
+    /** @nullable */
+    alternative2ExerciseId?: string | null;
+    /** @nullable */
+    alternative2ExerciseName?: string | null;
+    sets: number;
+    warmupSets: number;
+    reps: number;
+    restTimeInSeconds: number;
+  };
+
+export type UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItem = {
+  name: string;
+  order: number;
+  weekDay: UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemWeekDay;
+  isRest: boolean;
+  estimatedDurationInSeconds: number;
+  /** @nullable */
+  coverImageUrl?: string | null;
+  exercises: UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItem[];
+};
+
+export type UpdateCoachWorkoutPlanTemplate200Payload = {
+  workoutDays: UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItem[];
+};
+
+export type UpdateCoachWorkoutPlanTemplate200 = {
+  id: string;
+  coachId: string;
+  name: string;
+  /** @nullable */
+  description: string | null;
+  payload: UpdateCoachWorkoutPlanTemplate200Payload;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type UpdateCoachWorkoutPlanTemplate400 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateCoachWorkoutPlanTemplate401 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateCoachWorkoutPlanTemplate403 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateCoachWorkoutPlanTemplate404 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateCoachWorkoutPlanTemplate500 = {
+  error: string;
+  code: string;
+};
+
+export type DeleteCoachWorkoutPlanTemplate200 = {
+  success: boolean;
+};
+
+export type DeleteCoachWorkoutPlanTemplate400 = {
+  error: string;
+  code: string;
+};
+
+export type DeleteCoachWorkoutPlanTemplate401 = {
+  error: string;
+  code: string;
+};
+
+export type DeleteCoachWorkoutPlanTemplate403 = {
+  error: string;
+  code: string;
+};
+
+export type DeleteCoachWorkoutPlanTemplate404 = {
+  error: string;
+  code: string;
+};
+
+export type DeleteCoachWorkoutPlanTemplate500 = {
+  error: string;
+  code: string;
+};
+
+export type AllocateCoachWorkoutPlanTemplateBody = {
+  /** @minLength 1 */
+  athleteId: string;
+  /**
+   * @maxLength 1000
+   * @nullable
+   */
+  notes?: string | null;
+};
+
+export type AllocateCoachWorkoutPlanTemplate200PrescriptionStatus =
+  (typeof AllocateCoachWorkoutPlanTemplate200PrescriptionStatus)[keyof typeof AllocateCoachWorkoutPlanTemplate200PrescriptionStatus];
+
+export const AllocateCoachWorkoutPlanTemplate200PrescriptionStatus = {
+  DRAFT: "DRAFT",
+  SENT: "SENT",
+  ACCEPTED: "ACCEPTED",
+  DECLINED: "DECLINED",
+  CANCELLED: "CANCELLED",
+} as const;
+
+export type AllocateCoachWorkoutPlanTemplate200PrescriptionCoach = {
+  id: string;
+  name: string;
+  email?: string;
+  /** @nullable */
+  image?: string | null;
+};
+
+export type AllocateCoachWorkoutPlanTemplate200PrescriptionAthlete = {
+  id: string;
+  name: string;
+  email?: string;
+  /** @nullable */
+  image?: string | null;
+};
+
+export type AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemWeekDay =
+  (typeof AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemWeekDay)[keyof typeof AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemWeekDay];
+
+export const AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemWeekDay =
+  {
+    MONDAY: "MONDAY",
+    TUESDAY: "TUESDAY",
+    WEDNESDAY: "WEDNESDAY",
+    THURSDAY: "THURSDAY",
+    FRIDAY: "FRIDAY",
+    SATURDAY: "SATURDAY",
+    SUNDAY: "SUNDAY",
+  } as const;
+
+export type AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItem =
+  {
+    name: string;
+    order: number;
+    /** @nullable */
+    exerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseName?: string | null;
+    /** @nullable */
+    alternative2ExerciseId?: string | null;
+    /** @nullable */
+    alternative2ExerciseName?: string | null;
+    sets: number;
+    warmupSets: number;
+    reps: number;
+    restTimeInSeconds: number;
+  };
+
+export type AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItem =
+  {
+    name: string;
+    order: number;
+    weekDay: AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemWeekDay;
+    isRest: boolean;
+    estimatedDurationInSeconds: number;
+    /** @nullable */
+    coverImageUrl?: string | null;
+    exercises: AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItem[];
+  };
+
+export type AllocateCoachWorkoutPlanTemplate200PrescriptionPayload = {
+  workoutDays: AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItem[];
+};
+
+export type AllocateCoachWorkoutPlanTemplate200Prescription = {
+  id: string;
+  coachId: string;
+  athleteId: string;
+  status: AllocateCoachWorkoutPlanTemplate200PrescriptionStatus;
+  name: string;
+  /** @nullable */
+  notes: string | null;
+  version: number;
+  /** @nullable */
+  acceptedWorkoutPlanId: string | null;
+  /** @nullable */
+  sentAt: string | null;
+  /** @nullable */
+  respondedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  coach?: AllocateCoachWorkoutPlanTemplate200PrescriptionCoach;
+  athlete?: AllocateCoachWorkoutPlanTemplate200PrescriptionAthlete;
+  payload?: AllocateCoachWorkoutPlanTemplate200PrescriptionPayload;
+};
+
+export type AllocateCoachWorkoutPlanTemplate200 = {
+  success: boolean;
+  prescription: AllocateCoachWorkoutPlanTemplate200Prescription;
+};
+
+export type AllocateCoachWorkoutPlanTemplate400 = {
+  error: string;
+  code: string;
+};
+
+export type AllocateCoachWorkoutPlanTemplate401 = {
+  error: string;
+  code: string;
+};
+
+export type AllocateCoachWorkoutPlanTemplate403 = {
+  error: string;
+  code: string;
+};
+
+export type AllocateCoachWorkoutPlanTemplate404 = {
+  error: string;
+  code: string;
+};
+
+export type AllocateCoachWorkoutPlanTemplate500 = {
+  error: string;
+  code: string;
+};
+
+export type CreateCoachWorkoutPlanTemplateFromPlanBody = {
+  /** @maxLength 100 */
+  name?: string;
+  /**
+   * @maxLength 1000
+   * @nullable
+   */
+  description?: string | null;
+};
+
+export type CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemWeekDay =
+  (typeof CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemWeekDay)[keyof typeof CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemWeekDay];
+
+export const CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemWeekDay =
+  {
+    MONDAY: "MONDAY",
+    TUESDAY: "TUESDAY",
+    WEDNESDAY: "WEDNESDAY",
+    THURSDAY: "THURSDAY",
+    FRIDAY: "FRIDAY",
+    SATURDAY: "SATURDAY",
+    SUNDAY: "SUNDAY",
+  } as const;
+
+export type CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItem =
+  {
+    name: string;
+    order: number;
+    /** @nullable */
+    exerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseName?: string | null;
+    /** @nullable */
+    alternative2ExerciseId?: string | null;
+    /** @nullable */
+    alternative2ExerciseName?: string | null;
+    sets: number;
+    warmupSets: number;
+    reps: number;
+    restTimeInSeconds: number;
+  };
+
+export type CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItem = {
+  name: string;
+  order: number;
+  weekDay: CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemWeekDay;
+  isRest: boolean;
+  estimatedDurationInSeconds: number;
+  /** @nullable */
+  coverImageUrl?: string | null;
+  exercises: CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItem[];
+};
+
+export type CreateCoachWorkoutPlanTemplateFromPlan201Payload = {
+  workoutDays: CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItem[];
+};
+
+export type CreateCoachWorkoutPlanTemplateFromPlan201 = {
+  id: string;
+  coachId: string;
+  name: string;
+  /** @nullable */
+  description: string | null;
+  payload: CreateCoachWorkoutPlanTemplateFromPlan201Payload;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CreateCoachWorkoutPlanTemplateFromPlan400 = {
+  error: string;
+  code: string;
+};
+
+export type CreateCoachWorkoutPlanTemplateFromPlan401 = {
+  error: string;
+  code: string;
+};
+
+export type CreateCoachWorkoutPlanTemplateFromPlan403 = {
+  error: string;
+  code: string;
+};
+
+export type CreateCoachWorkoutPlanTemplateFromPlan404 = {
+  error: string;
+  code: string;
+};
+
+export type CreateCoachWorkoutPlanTemplateFromPlan500 = {
+  error: string;
+  code: string;
+};
+
 export type GetAdminOverview200PendingCoachesItemAccountType =
   (typeof GetAdminOverview200PendingCoachesItemAccountType)[keyof typeof GetAdminOverview200PendingCoachesItemAccountType];
 
@@ -7582,6 +8376,7 @@ export type GetExerciseCatalogVersion500 = {
 export type ListExercisesParams = {
   q?: string;
   onlyWithHistory?: string;
+  onlyCustom?: string;
 };
 
 export type ListExercises200ItemMusclesItemMuscleGroup =
@@ -7923,6 +8718,141 @@ export type GetExerciseMedia404 = {
 };
 
 export type GetExerciseMedia500 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateCustomExerciseBodyPrimaryMuscleGroupsItem =
+  (typeof UpdateCustomExerciseBodyPrimaryMuscleGroupsItem)[keyof typeof UpdateCustomExerciseBodyPrimaryMuscleGroupsItem];
+
+export const UpdateCustomExerciseBodyPrimaryMuscleGroupsItem = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+} as const;
+
+export type UpdateCustomExerciseBodySecondaryMuscleGroupsItem =
+  (typeof UpdateCustomExerciseBodySecondaryMuscleGroupsItem)[keyof typeof UpdateCustomExerciseBodySecondaryMuscleGroupsItem];
+
+export const UpdateCustomExerciseBodySecondaryMuscleGroupsItem = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+} as const;
+
+export type UpdateCustomExerciseBody = {
+  /** @minLength 1 */
+  name?: string;
+  isUnilateral?: boolean;
+  primaryMuscleGroups?: UpdateCustomExerciseBodyPrimaryMuscleGroupsItem[];
+  secondaryMuscleGroups?: UpdateCustomExerciseBodySecondaryMuscleGroupsItem[];
+};
+
+export type UpdateCustomExercise200MusclesItemMuscleGroup =
+  (typeof UpdateCustomExercise200MusclesItemMuscleGroup)[keyof typeof UpdateCustomExercise200MusclesItemMuscleGroup];
+
+export const UpdateCustomExercise200MusclesItemMuscleGroup = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+} as const;
+
+export type UpdateCustomExercise200MusclesItemRole =
+  (typeof UpdateCustomExercise200MusclesItemRole)[keyof typeof UpdateCustomExercise200MusclesItemRole];
+
+export const UpdateCustomExercise200MusclesItemRole = {
+  PRIMARY: "PRIMARY",
+  SECONDARY: "SECONDARY",
+} as const;
+
+export type UpdateCustomExercise200MusclesItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  muscleGroup: UpdateCustomExercise200MusclesItemMuscleGroup;
+  role: UpdateCustomExercise200MusclesItemRole;
+};
+
+export type UpdateCustomExercise200 = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  name: string;
+  /** @nullable */
+  ownerUserId: string | null;
+  isUnilateral?: boolean;
+  hasMedia: boolean;
+  muscles: UpdateCustomExercise200MusclesItem[];
+};
+
+export type UpdateCustomExercise400 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateCustomExercise401 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateCustomExercise404 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateCustomExercise409 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateCustomExercise500 = {
+  error: string;
+  code: string;
+};
+
+export type DeleteCustomExercise200 = {
+  success: boolean;
+};
+
+export type DeleteCustomExercise401 = {
+  error: string;
+  code: string;
+};
+
+export type DeleteCustomExercise404 = {
+  error: string;
+  code: string;
+};
+
+export type DeleteCustomExercise500 = {
   error: string;
   code: string;
 };
@@ -16249,6 +17179,494 @@ export const getCoachAthleteProgressInsights = async (
   );
 };
 
+/**
+ * @summary Listar modelos de treino pré-definidos do treinador
+ */
+export type listCoachWorkoutPlanTemplatesResponse200 = {
+  data: ListCoachWorkoutPlanTemplates200Item[];
+  status: 200;
+};
+
+export type listCoachWorkoutPlanTemplatesResponse400 = {
+  data: ListCoachWorkoutPlanTemplates400;
+  status: 400;
+};
+
+export type listCoachWorkoutPlanTemplatesResponse401 = {
+  data: ListCoachWorkoutPlanTemplates401;
+  status: 401;
+};
+
+export type listCoachWorkoutPlanTemplatesResponse403 = {
+  data: ListCoachWorkoutPlanTemplates403;
+  status: 403;
+};
+
+export type listCoachWorkoutPlanTemplatesResponse404 = {
+  data: ListCoachWorkoutPlanTemplates404;
+  status: 404;
+};
+
+export type listCoachWorkoutPlanTemplatesResponse500 = {
+  data: ListCoachWorkoutPlanTemplates500;
+  status: 500;
+};
+
+export type listCoachWorkoutPlanTemplatesResponseSuccess =
+  listCoachWorkoutPlanTemplatesResponse200 & {
+    headers: Headers;
+  };
+export type listCoachWorkoutPlanTemplatesResponseError = (
+  | listCoachWorkoutPlanTemplatesResponse400
+  | listCoachWorkoutPlanTemplatesResponse401
+  | listCoachWorkoutPlanTemplatesResponse403
+  | listCoachWorkoutPlanTemplatesResponse404
+  | listCoachWorkoutPlanTemplatesResponse500
+) & {
+  headers: Headers;
+};
+
+export type listCoachWorkoutPlanTemplatesResponse =
+  | listCoachWorkoutPlanTemplatesResponseSuccess
+  | listCoachWorkoutPlanTemplatesResponseError;
+
+export const getListCoachWorkoutPlanTemplatesUrl = () => {
+  return `/coach/templates`;
+};
+
+export const listCoachWorkoutPlanTemplates = async (
+  options?: RequestInit,
+): Promise<listCoachWorkoutPlanTemplatesResponse> => {
+  return customFetch<listCoachWorkoutPlanTemplatesResponse>(
+    getListCoachWorkoutPlanTemplatesUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Criar modelo de treino pré-definido
+ */
+export type createCoachWorkoutPlanTemplateResponse201 = {
+  data: CreateCoachWorkoutPlanTemplate201;
+  status: 201;
+};
+
+export type createCoachWorkoutPlanTemplateResponse400 = {
+  data: CreateCoachWorkoutPlanTemplate400;
+  status: 400;
+};
+
+export type createCoachWorkoutPlanTemplateResponse401 = {
+  data: CreateCoachWorkoutPlanTemplate401;
+  status: 401;
+};
+
+export type createCoachWorkoutPlanTemplateResponse403 = {
+  data: CreateCoachWorkoutPlanTemplate403;
+  status: 403;
+};
+
+export type createCoachWorkoutPlanTemplateResponse404 = {
+  data: CreateCoachWorkoutPlanTemplate404;
+  status: 404;
+};
+
+export type createCoachWorkoutPlanTemplateResponse500 = {
+  data: CreateCoachWorkoutPlanTemplate500;
+  status: 500;
+};
+
+export type createCoachWorkoutPlanTemplateResponseSuccess =
+  createCoachWorkoutPlanTemplateResponse201 & {
+    headers: Headers;
+  };
+export type createCoachWorkoutPlanTemplateResponseError = (
+  | createCoachWorkoutPlanTemplateResponse400
+  | createCoachWorkoutPlanTemplateResponse401
+  | createCoachWorkoutPlanTemplateResponse403
+  | createCoachWorkoutPlanTemplateResponse404
+  | createCoachWorkoutPlanTemplateResponse500
+) & {
+  headers: Headers;
+};
+
+export type createCoachWorkoutPlanTemplateResponse =
+  | createCoachWorkoutPlanTemplateResponseSuccess
+  | createCoachWorkoutPlanTemplateResponseError;
+
+export const getCreateCoachWorkoutPlanTemplateUrl = () => {
+  return `/coach/templates`;
+};
+
+export const createCoachWorkoutPlanTemplate = async (
+  createCoachWorkoutPlanTemplateBody: CreateCoachWorkoutPlanTemplateBody,
+  options?: RequestInit,
+): Promise<createCoachWorkoutPlanTemplateResponse> => {
+  return customFetch<createCoachWorkoutPlanTemplateResponse>(
+    getCreateCoachWorkoutPlanTemplateUrl(),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(createCoachWorkoutPlanTemplateBody),
+    },
+  );
+};
+
+/**
+ * @summary Obter detalhes de um modelo de treino
+ */
+export type getCoachWorkoutPlanTemplateResponse200 = {
+  data: GetCoachWorkoutPlanTemplate200;
+  status: 200;
+};
+
+export type getCoachWorkoutPlanTemplateResponse400 = {
+  data: GetCoachWorkoutPlanTemplate400;
+  status: 400;
+};
+
+export type getCoachWorkoutPlanTemplateResponse401 = {
+  data: GetCoachWorkoutPlanTemplate401;
+  status: 401;
+};
+
+export type getCoachWorkoutPlanTemplateResponse403 = {
+  data: GetCoachWorkoutPlanTemplate403;
+  status: 403;
+};
+
+export type getCoachWorkoutPlanTemplateResponse404 = {
+  data: GetCoachWorkoutPlanTemplate404;
+  status: 404;
+};
+
+export type getCoachWorkoutPlanTemplateResponse500 = {
+  data: GetCoachWorkoutPlanTemplate500;
+  status: 500;
+};
+
+export type getCoachWorkoutPlanTemplateResponseSuccess =
+  getCoachWorkoutPlanTemplateResponse200 & {
+    headers: Headers;
+  };
+export type getCoachWorkoutPlanTemplateResponseError = (
+  | getCoachWorkoutPlanTemplateResponse400
+  | getCoachWorkoutPlanTemplateResponse401
+  | getCoachWorkoutPlanTemplateResponse403
+  | getCoachWorkoutPlanTemplateResponse404
+  | getCoachWorkoutPlanTemplateResponse500
+) & {
+  headers: Headers;
+};
+
+export type getCoachWorkoutPlanTemplateResponse =
+  | getCoachWorkoutPlanTemplateResponseSuccess
+  | getCoachWorkoutPlanTemplateResponseError;
+
+export const getGetCoachWorkoutPlanTemplateUrl = (id: string) => {
+  return `/coach/templates/${id}`;
+};
+
+export const getCoachWorkoutPlanTemplate = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getCoachWorkoutPlanTemplateResponse> => {
+  return customFetch<getCoachWorkoutPlanTemplateResponse>(
+    getGetCoachWorkoutPlanTemplateUrl(id),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Atualizar modelo de treino pré-definido
+ */
+export type updateCoachWorkoutPlanTemplateResponse200 = {
+  data: UpdateCoachWorkoutPlanTemplate200;
+  status: 200;
+};
+
+export type updateCoachWorkoutPlanTemplateResponse400 = {
+  data: UpdateCoachWorkoutPlanTemplate400;
+  status: 400;
+};
+
+export type updateCoachWorkoutPlanTemplateResponse401 = {
+  data: UpdateCoachWorkoutPlanTemplate401;
+  status: 401;
+};
+
+export type updateCoachWorkoutPlanTemplateResponse403 = {
+  data: UpdateCoachWorkoutPlanTemplate403;
+  status: 403;
+};
+
+export type updateCoachWorkoutPlanTemplateResponse404 = {
+  data: UpdateCoachWorkoutPlanTemplate404;
+  status: 404;
+};
+
+export type updateCoachWorkoutPlanTemplateResponse500 = {
+  data: UpdateCoachWorkoutPlanTemplate500;
+  status: 500;
+};
+
+export type updateCoachWorkoutPlanTemplateResponseSuccess =
+  updateCoachWorkoutPlanTemplateResponse200 & {
+    headers: Headers;
+  };
+export type updateCoachWorkoutPlanTemplateResponseError = (
+  | updateCoachWorkoutPlanTemplateResponse400
+  | updateCoachWorkoutPlanTemplateResponse401
+  | updateCoachWorkoutPlanTemplateResponse403
+  | updateCoachWorkoutPlanTemplateResponse404
+  | updateCoachWorkoutPlanTemplateResponse500
+) & {
+  headers: Headers;
+};
+
+export type updateCoachWorkoutPlanTemplateResponse =
+  | updateCoachWorkoutPlanTemplateResponseSuccess
+  | updateCoachWorkoutPlanTemplateResponseError;
+
+export const getUpdateCoachWorkoutPlanTemplateUrl = (id: string) => {
+  return `/coach/templates/${id}`;
+};
+
+export const updateCoachWorkoutPlanTemplate = async (
+  id: string,
+  updateCoachWorkoutPlanTemplateBody: UpdateCoachWorkoutPlanTemplateBody,
+  options?: RequestInit,
+): Promise<updateCoachWorkoutPlanTemplateResponse> => {
+  return customFetch<updateCoachWorkoutPlanTemplateResponse>(
+    getUpdateCoachWorkoutPlanTemplateUrl(id),
+    {
+      ...options,
+      method: "PUT",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(updateCoachWorkoutPlanTemplateBody),
+    },
+  );
+};
+
+/**
+ * @summary Excluir modelo de treino pré-definido
+ */
+export type deleteCoachWorkoutPlanTemplateResponse200 = {
+  data: DeleteCoachWorkoutPlanTemplate200;
+  status: 200;
+};
+
+export type deleteCoachWorkoutPlanTemplateResponse400 = {
+  data: DeleteCoachWorkoutPlanTemplate400;
+  status: 400;
+};
+
+export type deleteCoachWorkoutPlanTemplateResponse401 = {
+  data: DeleteCoachWorkoutPlanTemplate401;
+  status: 401;
+};
+
+export type deleteCoachWorkoutPlanTemplateResponse403 = {
+  data: DeleteCoachWorkoutPlanTemplate403;
+  status: 403;
+};
+
+export type deleteCoachWorkoutPlanTemplateResponse404 = {
+  data: DeleteCoachWorkoutPlanTemplate404;
+  status: 404;
+};
+
+export type deleteCoachWorkoutPlanTemplateResponse500 = {
+  data: DeleteCoachWorkoutPlanTemplate500;
+  status: 500;
+};
+
+export type deleteCoachWorkoutPlanTemplateResponseSuccess =
+  deleteCoachWorkoutPlanTemplateResponse200 & {
+    headers: Headers;
+  };
+export type deleteCoachWorkoutPlanTemplateResponseError = (
+  | deleteCoachWorkoutPlanTemplateResponse400
+  | deleteCoachWorkoutPlanTemplateResponse401
+  | deleteCoachWorkoutPlanTemplateResponse403
+  | deleteCoachWorkoutPlanTemplateResponse404
+  | deleteCoachWorkoutPlanTemplateResponse500
+) & {
+  headers: Headers;
+};
+
+export type deleteCoachWorkoutPlanTemplateResponse =
+  | deleteCoachWorkoutPlanTemplateResponseSuccess
+  | deleteCoachWorkoutPlanTemplateResponseError;
+
+export const getDeleteCoachWorkoutPlanTemplateUrl = (id: string) => {
+  return `/coach/templates/${id}`;
+};
+
+export const deleteCoachWorkoutPlanTemplate = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteCoachWorkoutPlanTemplateResponse> => {
+  return customFetch<deleteCoachWorkoutPlanTemplateResponse>(
+    getDeleteCoachWorkoutPlanTemplateUrl(id),
+    {
+      ...options,
+      method: "DELETE",
+    },
+  );
+};
+
+/**
+ * @summary Alocar modelo pré-definido para um aluno como prescrição
+ */
+export type allocateCoachWorkoutPlanTemplateResponse200 = {
+  data: AllocateCoachWorkoutPlanTemplate200;
+  status: 200;
+};
+
+export type allocateCoachWorkoutPlanTemplateResponse400 = {
+  data: AllocateCoachWorkoutPlanTemplate400;
+  status: 400;
+};
+
+export type allocateCoachWorkoutPlanTemplateResponse401 = {
+  data: AllocateCoachWorkoutPlanTemplate401;
+  status: 401;
+};
+
+export type allocateCoachWorkoutPlanTemplateResponse403 = {
+  data: AllocateCoachWorkoutPlanTemplate403;
+  status: 403;
+};
+
+export type allocateCoachWorkoutPlanTemplateResponse404 = {
+  data: AllocateCoachWorkoutPlanTemplate404;
+  status: 404;
+};
+
+export type allocateCoachWorkoutPlanTemplateResponse500 = {
+  data: AllocateCoachWorkoutPlanTemplate500;
+  status: 500;
+};
+
+export type allocateCoachWorkoutPlanTemplateResponseSuccess =
+  allocateCoachWorkoutPlanTemplateResponse200 & {
+    headers: Headers;
+  };
+export type allocateCoachWorkoutPlanTemplateResponseError = (
+  | allocateCoachWorkoutPlanTemplateResponse400
+  | allocateCoachWorkoutPlanTemplateResponse401
+  | allocateCoachWorkoutPlanTemplateResponse403
+  | allocateCoachWorkoutPlanTemplateResponse404
+  | allocateCoachWorkoutPlanTemplateResponse500
+) & {
+  headers: Headers;
+};
+
+export type allocateCoachWorkoutPlanTemplateResponse =
+  | allocateCoachWorkoutPlanTemplateResponseSuccess
+  | allocateCoachWorkoutPlanTemplateResponseError;
+
+export const getAllocateCoachWorkoutPlanTemplateUrl = (id: string) => {
+  return `/coach/templates/${id}/allocate`;
+};
+
+export const allocateCoachWorkoutPlanTemplate = async (
+  id: string,
+  allocateCoachWorkoutPlanTemplateBody: AllocateCoachWorkoutPlanTemplateBody,
+  options?: RequestInit,
+): Promise<allocateCoachWorkoutPlanTemplateResponse> => {
+  return customFetch<allocateCoachWorkoutPlanTemplateResponse>(
+    getAllocateCoachWorkoutPlanTemplateUrl(id),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(allocateCoachWorkoutPlanTemplateBody),
+    },
+  );
+};
+
+/**
+ * @summary Salvar um plano de treino existente como modelo pré-definido
+ */
+export type createCoachWorkoutPlanTemplateFromPlanResponse201 = {
+  data: CreateCoachWorkoutPlanTemplateFromPlan201;
+  status: 201;
+};
+
+export type createCoachWorkoutPlanTemplateFromPlanResponse400 = {
+  data: CreateCoachWorkoutPlanTemplateFromPlan400;
+  status: 400;
+};
+
+export type createCoachWorkoutPlanTemplateFromPlanResponse401 = {
+  data: CreateCoachWorkoutPlanTemplateFromPlan401;
+  status: 401;
+};
+
+export type createCoachWorkoutPlanTemplateFromPlanResponse403 = {
+  data: CreateCoachWorkoutPlanTemplateFromPlan403;
+  status: 403;
+};
+
+export type createCoachWorkoutPlanTemplateFromPlanResponse404 = {
+  data: CreateCoachWorkoutPlanTemplateFromPlan404;
+  status: 404;
+};
+
+export type createCoachWorkoutPlanTemplateFromPlanResponse500 = {
+  data: CreateCoachWorkoutPlanTemplateFromPlan500;
+  status: 500;
+};
+
+export type createCoachWorkoutPlanTemplateFromPlanResponseSuccess =
+  createCoachWorkoutPlanTemplateFromPlanResponse201 & {
+    headers: Headers;
+  };
+export type createCoachWorkoutPlanTemplateFromPlanResponseError = (
+  | createCoachWorkoutPlanTemplateFromPlanResponse400
+  | createCoachWorkoutPlanTemplateFromPlanResponse401
+  | createCoachWorkoutPlanTemplateFromPlanResponse403
+  | createCoachWorkoutPlanTemplateFromPlanResponse404
+  | createCoachWorkoutPlanTemplateFromPlanResponse500
+) & {
+  headers: Headers;
+};
+
+export type createCoachWorkoutPlanTemplateFromPlanResponse =
+  | createCoachWorkoutPlanTemplateFromPlanResponseSuccess
+  | createCoachWorkoutPlanTemplateFromPlanResponseError;
+
+export const getCreateCoachWorkoutPlanTemplateFromPlanUrl = (
+  planId: string,
+) => {
+  return `/coach/templates/from-plan/${planId}`;
+};
+
+export const createCoachWorkoutPlanTemplateFromPlan = async (
+  planId: string,
+  createCoachWorkoutPlanTemplateFromPlanBody: CreateCoachWorkoutPlanTemplateFromPlanBody,
+  options?: RequestInit,
+): Promise<createCoachWorkoutPlanTemplateFromPlanResponse> => {
+  return customFetch<createCoachWorkoutPlanTemplateFromPlanResponse>(
+    getCreateCoachWorkoutPlanTemplateFromPlanUrl(planId),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(createCoachWorkoutPlanTemplateFromPlanBody),
+    },
+  );
+};
+
 export type getAdminOverviewResponse200 = {
   data: GetAdminOverview200;
   status: 200;
@@ -17556,6 +18974,133 @@ export const getExerciseMedia = async (
     {
       ...options,
       method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Update custom exercise name, unilateral status, and muscles
+ */
+export type updateCustomExerciseResponse200 = {
+  data: UpdateCustomExercise200;
+  status: 200;
+};
+
+export type updateCustomExerciseResponse400 = {
+  data: UpdateCustomExercise400;
+  status: 400;
+};
+
+export type updateCustomExerciseResponse401 = {
+  data: UpdateCustomExercise401;
+  status: 401;
+};
+
+export type updateCustomExerciseResponse404 = {
+  data: UpdateCustomExercise404;
+  status: 404;
+};
+
+export type updateCustomExerciseResponse409 = {
+  data: UpdateCustomExercise409;
+  status: 409;
+};
+
+export type updateCustomExerciseResponse500 = {
+  data: UpdateCustomExercise500;
+  status: 500;
+};
+
+export type updateCustomExerciseResponseSuccess =
+  updateCustomExerciseResponse200 & {
+    headers: Headers;
+  };
+export type updateCustomExerciseResponseError = (
+  | updateCustomExerciseResponse400
+  | updateCustomExerciseResponse401
+  | updateCustomExerciseResponse404
+  | updateCustomExerciseResponse409
+  | updateCustomExerciseResponse500
+) & {
+  headers: Headers;
+};
+
+export type updateCustomExerciseResponse =
+  | updateCustomExerciseResponseSuccess
+  | updateCustomExerciseResponseError;
+
+export const getUpdateCustomExerciseUrl = (id: string) => {
+  return `/exercises/${id}`;
+};
+
+export const updateCustomExercise = async (
+  id: string,
+  updateCustomExerciseBody: UpdateCustomExerciseBody,
+  options?: RequestInit,
+): Promise<updateCustomExerciseResponse> => {
+  return customFetch<updateCustomExerciseResponse>(
+    getUpdateCustomExerciseUrl(id),
+    {
+      ...options,
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(updateCustomExerciseBody),
+    },
+  );
+};
+
+/**
+ * @summary Delete a custom exercise belonging to the authenticated user
+ */
+export type deleteCustomExerciseResponse200 = {
+  data: DeleteCustomExercise200;
+  status: 200;
+};
+
+export type deleteCustomExerciseResponse401 = {
+  data: DeleteCustomExercise401;
+  status: 401;
+};
+
+export type deleteCustomExerciseResponse404 = {
+  data: DeleteCustomExercise404;
+  status: 404;
+};
+
+export type deleteCustomExerciseResponse500 = {
+  data: DeleteCustomExercise500;
+  status: 500;
+};
+
+export type deleteCustomExerciseResponseSuccess =
+  deleteCustomExerciseResponse200 & {
+    headers: Headers;
+  };
+export type deleteCustomExerciseResponseError = (
+  | deleteCustomExerciseResponse401
+  | deleteCustomExerciseResponse404
+  | deleteCustomExerciseResponse500
+) & {
+  headers: Headers;
+};
+
+export type deleteCustomExerciseResponse =
+  | deleteCustomExerciseResponseSuccess
+  | deleteCustomExerciseResponseError;
+
+export const getDeleteCustomExerciseUrl = (id: string) => {
+  return `/exercises/${id}`;
+};
+
+export const deleteCustomExercise = async (
+  id: string,
+  options?: RequestInit,
+): Promise<deleteCustomExerciseResponse> => {
+  return customFetch<deleteCustomExerciseResponse>(
+    getDeleteCustomExerciseUrl(id),
+    {
+      ...options,
+      method: "DELETE",
     },
   );
 };

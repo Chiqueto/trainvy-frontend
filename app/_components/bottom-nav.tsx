@@ -25,6 +25,8 @@ export interface BottomNavProps {
     | "personal"
     | "athletes"
     | "prescriptions"
+    | "templates"
+    | "exercises"
     | "my-workout";
   isCoach?: boolean;
 }
@@ -79,10 +81,26 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
 
   const effectiveIsCoach = isCoach ?? (isPersonalRoute || clientIsCoach);
 
+  const isTemplatesRoute = Boolean(
+    pathname &&
+      (pathname === "/personal/modelos" ||
+        pathname.startsWith("/personal/modelos/")),
+  );
+
+  const isExercisesRoute = Boolean(
+    pathname &&
+      (pathname === "/personal/exercicios" ||
+        pathname.startsWith("/personal/exercicios/")),
+  );
+
   // Mapeamentos de estado ativo por rota e prop
   const isAthletesActive = activePage
     ? activePage === "personal" || activePage === "athletes"
-    : isPersonalRoute;
+    : Boolean(isPersonalRoute && !isTemplatesRoute && !isExercisesRoute);
+
+  const isTemplatesActive = activePage
+    ? activePage === "templates"
+    : isTemplatesRoute;
 
   const isPlanningActive = activePage
     ? activePage === "planning" ||
@@ -120,7 +138,8 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
         (!isPlanningActive &&
           !isEvolutionActive &&
           !isProfileActive &&
-          !isAthletesActive),
+          !isAthletesActive &&
+          !isTemplatesActive),
       );
 
   const [optimisticTab, setOptimisticTab] = useState<string | null>(null);
@@ -134,6 +153,10 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
   const effectiveAthletesActive = optimisticTab
     ? optimisticTab === "athletes"
     : isAthletesActive;
+
+  const effectiveTemplatesActive = optimisticTab
+    ? optimisticTab === "templates"
+    : isTemplatesActive;
 
   const effectivePlanningActive = optimisticTab
     ? optimisticTab === "planning"
@@ -196,7 +219,7 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
                 className={cn(
                   "size-5 transition-transform duration-150 group-active:scale-90",
                   effectiveAthletesActive
-                    ? "text-primary"
+                    ? "text-primary text-foreground"
                     : "text-muted-foreground",
                 )}
               />
@@ -208,32 +231,32 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
               )}
             </Link>
 
-            {/* 2. Prescrições */}
+            {/* 2. Prescrições (Modelos pré-definidos) */}
             <Link
-              href="/planning"
+              href="/personal/modelos"
               prefetch={true}
-              onClick={() => setOptimisticTab("planning")}
+              onClick={() => setOptimisticTab("templates")}
               className={cn(
                 "group relative flex w-full flex-1 flex-col items-center justify-center rounded-xl px-1 py-1.5 transition-all duration-150",
-                effectivePlanningActive
+                effectiveTemplatesActive
                   ? "bg-primary/10 font-semibold text-primary"
                   : "font-medium text-muted-foreground hover:text-foreground",
               )}
               aria-label="Prescrições"
-              aria-current={effectivePlanningActive ? "page" : undefined}
+              aria-current={effectiveTemplatesActive ? "page" : undefined}
             >
               <ClipboardList
                 className={cn(
                   "size-5 transition-transform duration-150 group-active:scale-90",
-                  effectivePlanningActive
-                    ? "text-primary"
+                  effectiveTemplatesActive
+                    ? "text-primary text-foreground"
                     : "text-muted-foreground",
                 )}
               />
               <span className="mt-0.5 font-heading text-[11px] leading-tight tracking-tight">
                 Prescrições
               </span>
-              {effectivePlanningActive && (
+              {effectiveTemplatesActive && (
                 <span className="mt-0.5 h-0.5 w-4 rounded-full bg-primary" />
               )}
             </Link>
@@ -270,7 +293,7 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
                 className={cn(
                   "size-5 transition-transform duration-150 group-active:scale-90",
                   effectiveHomeActive
-                    ? "text-primary"
+                    ? "text-primary text-foreground"
                     : "text-muted-foreground",
                 )}
               />
@@ -300,7 +323,7 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
                 className={cn(
                   "size-5 transition-transform duration-150 group-active:scale-90",
                   effectiveProfileActive
-                    ? "text-primary"
+                    ? "text-primary text-foreground"
                     : "text-muted-foreground",
                 )}
               />
@@ -333,7 +356,7 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
                 className={cn(
                   "size-5 transition-transform duration-150 group-active:scale-90",
                   effectiveHomeActive
-                    ? "text-primary"
+                    ? "text-primary text-foreground"
                     : "text-muted-foreground",
                 )}
               />
@@ -363,7 +386,7 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
                 className={cn(
                   "size-5 transition-transform duration-150 group-active:scale-90",
                   effectivePlanningActive
-                    ? "text-primary"
+                    ? "text-primary text-foreground"
                     : "text-muted-foreground",
                 )}
               />
@@ -375,7 +398,7 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
               )}
             </Link>
 
-            {/* 3. Coach */}
+            {/* 3. Trainvy AI */}
             <Suspense
               fallback={
                 <div className="flex w-full flex-1 flex-col items-center justify-center -mt-3.5">
@@ -407,7 +430,7 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
                 className={cn(
                   "size-5 transition-transform duration-150 group-active:scale-90",
                   effectiveEvolutionActive
-                    ? "text-primary"
+                    ? "text-primary text-foreground"
                     : "text-muted-foreground",
                 )}
               />
@@ -437,7 +460,7 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
                 className={cn(
                   "size-5 transition-transform duration-150 group-active:scale-90",
                   effectiveProfileActive
-                    ? "text-primary"
+                    ? "text-primary text-foreground"
                     : "text-muted-foreground",
                 )}
               />

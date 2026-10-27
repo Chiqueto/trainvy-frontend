@@ -10,8 +10,25 @@ import {
   revokeCoachAthleteLink,
   sendWorkoutPrescription,
   updateWorkoutPrescriptionDraft,
+  listCoachWorkoutPlanTemplates,
+  getCoachWorkoutPlanTemplate,
+  createCoachWorkoutPlanTemplate,
+  updateCoachWorkoutPlanTemplate,
+  deleteCoachWorkoutPlanTemplate,
+  allocateCoachWorkoutPlanTemplate,
+  createCoachWorkoutPlanTemplateFromPlan,
+  listExercises,
+  createExercise,
+  updateCustomExercise,
+  deleteCustomExercise,
   type CreateWorkoutPrescriptionDraftBody,
   type UpdateWorkoutPrescriptionDraftBody,
+  type CreateCoachWorkoutPlanTemplateBody,
+  type UpdateCoachWorkoutPlanTemplateBody,
+  type AllocateCoachWorkoutPlanTemplateBody,
+  type CreateCoachWorkoutPlanTemplateFromPlanBody,
+  type CreateExerciseBody,
+  type UpdateCustomExerciseBody,
 } from "@/app/_lib/api/fetch-generated";
 
 function getActionError(data: unknown, fallback: string): string {
@@ -249,3 +266,180 @@ export async function generateCoachPrescriptionWithAiAction(body: {
     };
   }
 }
+
+// ==========================================
+// AÇÕES DE MODELOS PRÉ-DEFINIDOS (TEMPLATES)
+// ==========================================
+
+export async function listTemplatesAction() {
+  try {
+    const res = await listCoachWorkoutPlanTemplates({ cache: "no-store" });
+    if (res.status === 200) {
+      return { success: true as const, data: res.data };
+    }
+    const errorMsg = getActionError(res.data, "Erro ao listar modelos de treino.");
+    return { success: false as const, error: errorMsg };
+  } catch {
+    return { success: false as const, error: "Falha na comunicação com o servidor." };
+  }
+}
+
+export async function getTemplateDetailsAction(id: string) {
+  try {
+    const res = await getCoachWorkoutPlanTemplate(id, { cache: "no-store" });
+    if (res.status === 200) {
+      return { success: true as const, data: res.data };
+    }
+    const errorMsg = getActionError(res.data, "Erro ao carregar detalhes do modelo.");
+    return { success: false as const, error: errorMsg };
+  } catch {
+    return { success: false as const, error: "Falha na comunicação com o servidor." };
+  }
+}
+
+export async function createTemplateAction(body: CreateCoachWorkoutPlanTemplateBody) {
+  try {
+    const res = await createCoachWorkoutPlanTemplate(body, { cache: "no-store" });
+    if (res.status === 201) {
+      revalidatePath("/personal/modelos");
+      return { success: true as const, data: res.data };
+    }
+    const errorMsg = getActionError(res.data, "Erro ao criar modelo de treino.");
+    return { success: false as const, error: errorMsg };
+  } catch {
+    return { success: false as const, error: "Falha na comunicação com o servidor." };
+  }
+}
+
+export async function updateTemplateAction(
+  id: string,
+  body: UpdateCoachWorkoutPlanTemplateBody,
+) {
+  try {
+    const res = await updateCoachWorkoutPlanTemplate(id, body, { cache: "no-store" });
+    if (res.status === 200) {
+      revalidatePath("/personal/modelos");
+      revalidatePath(`/personal/modelos/${id}`);
+      return { success: true as const, data: res.data };
+    }
+    const errorMsg = getActionError(res.data, "Erro ao atualizar modelo de treino.");
+    return { success: false as const, error: errorMsg };
+  } catch {
+    return { success: false as const, error: "Falha na comunicação com o servidor." };
+  }
+}
+
+export async function deleteTemplateAction(id: string) {
+  try {
+    const res = await deleteCoachWorkoutPlanTemplate(id, { cache: "no-store" });
+    if (res.status === 200) {
+      revalidatePath("/personal/modelos");
+      return { success: true as const, data: res.data };
+    }
+    const errorMsg = getActionError(res.data, "Erro ao excluir modelo de treino.");
+    return { success: false as const, error: errorMsg };
+  } catch {
+    return { success: false as const, error: "Falha na comunicação com o servidor." };
+  }
+}
+
+export async function allocateTemplateAction(
+  id: string,
+  body: AllocateCoachWorkoutPlanTemplateBody,
+) {
+  try {
+    const res = await allocateCoachWorkoutPlanTemplate(id, body, { cache: "no-store" });
+    if (res.status === 200) {
+      revalidatePath("/personal/modelos");
+      revalidatePath(`/personal/alunos/${body.athleteId}`);
+      revalidatePath("/personal");
+      return { success: true as const, data: res.data };
+    }
+    const errorMsg = getActionError(res.data, "Erro ao alocar modelo para o aluno.");
+    return { success: false as const, error: errorMsg };
+  } catch {
+    return { success: false as const, error: "Falha na comunicação com o servidor." };
+  }
+}
+
+export async function createTemplateFromPlanAction(
+  planId: string,
+  body: CreateCoachWorkoutPlanTemplateFromPlanBody,
+) {
+  try {
+    const res = await createCoachWorkoutPlanTemplateFromPlan(planId, body, {
+      cache: "no-store",
+    });
+    if (res.status === 201) {
+      revalidatePath("/personal/modelos");
+      return { success: true as const, data: res.data };
+    }
+    const errorMsg = getActionError(res.data, "Erro ao salvar plano como modelo.");
+    return { success: false as const, error: errorMsg };
+  } catch {
+    return { success: false as const, error: "Falha na comunicação com o servidor." };
+  }
+}
+
+// ==========================================
+// AÇÕES DE EXERCÍCIOS PERSONALIZADOS
+// ==========================================
+
+export async function listCustomExercisesAction() {
+  try {
+    const res = await listExercises({ onlyCustom: "true" }, { cache: "no-store" });
+    if (res.status === 200) {
+      return { success: true as const, data: res.data };
+    }
+    const errorMsg = getActionError(res.data, "Erro ao listar exercícios personalizados.");
+    return { success: false as const, error: errorMsg };
+  } catch {
+    return { success: false as const, error: "Falha na comunicação com o servidor." };
+  }
+}
+
+export async function createCustomExerciseAction(body: CreateExerciseBody) {
+  try {
+    const res = await createExercise(body, { cache: "no-store" });
+    if (res.status === 201) {
+      revalidatePath("/personal/exercicios");
+      return { success: true as const, data: res.data };
+    }
+    const errorMsg = getActionError(res.data, "Erro ao cadastrar exercício personalizado.");
+    return { success: false as const, error: errorMsg };
+  } catch {
+    return { success: false as const, error: "Falha na comunicação com o servidor." };
+  }
+}
+
+export async function updateCustomExerciseAction(
+  id: string,
+  body: UpdateCustomExerciseBody,
+) {
+  try {
+    const res = await updateCustomExercise(id, body, { cache: "no-store" });
+    if (res.status === 200) {
+      revalidatePath("/personal/exercicios");
+      return { success: true as const, data: res.data };
+    }
+    const errorMsg = getActionError(res.data, "Erro ao atualizar exercício personalizado.");
+    return { success: false as const, error: errorMsg };
+  } catch {
+    return { success: false as const, error: "Falha na comunicação com o servidor." };
+  }
+}
+
+export async function deleteCustomExerciseAction(id: string) {
+  try {
+    const res = await deleteCustomExercise(id, { cache: "no-store" });
+    if (res.status === 200) {
+      revalidatePath("/personal/exercicios");
+      return { success: true as const, data: res.data };
+    }
+    const errorMsg = getActionError(res.data, "Erro ao excluir exercício personalizado.");
+    return { success: false as const, error: errorMsg };
+  } catch {
+    return { success: false as const, error: "Falha na comunicação com o servidor." };
+  }
+}
+
