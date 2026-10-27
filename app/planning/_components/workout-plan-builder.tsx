@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowDown,
@@ -30,6 +30,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AthleteAiWorkoutPlanModal } from "./athlete-ai-workout-plan-modal";
+import { AdvancedPrescriptionFields } from "./advanced-prescription-fields";
 import type { GetEditableWorkoutPlan200 } from "@/app/_lib/api/fetch-generated";
 
 interface WorkoutPlanBuilderProps {
@@ -51,21 +52,14 @@ export function WorkoutPlanBuilder({
   const [plannedStartDate, setPlannedStartDate] = useState("");
   const [plannedEndDate, setPlannedEndDate] = useState("");
   const [notes, setNotes] = useState("");
-  const [days, setDays] = useState(() => initialPlan ? deserializeWorkoutDays(initialPlan) : createInitialWorkoutDays());
+  const [days, setDays] = useState(() =>
+    initialPlan
+      ? deserializeWorkoutDays(initialPlan)
+      : createInitialWorkoutDays(),
+  );
   const [error, setError] = useState<string>();
   const [isPending, startTransition] = useTransition();
   const [isAiModalOpen, setIsAiModalOpen] = useState(initialOpenAi);
-
-  useEffect(() => {
-    if (initialOpenAi) {
-      setIsAiModalOpen(true);
-    } else if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get("ai") === "true") {
-        setIsAiModalOpen(true);
-      }
-    }
-  }, [initialOpenAi]);
 
   function updateDay(index: number, patch: Partial<WorkoutPlanDraftDay>) {
     setDays((current) =>
@@ -101,8 +95,10 @@ export function WorkoutPlanBuilder({
     patch: Partial<WorkoutPlanDraftExercise>,
   ) {
     if (patch.name !== undefined) patch.exerciseId = null;
-    if (patch.alternative1Name !== undefined) patch.alternative1ExerciseId = null;
-    if (patch.alternative2Name !== undefined) patch.alternative2ExerciseId = null;
+    if (patch.alternative1Name !== undefined)
+      patch.alternative1ExerciseId = null;
+    if (patch.alternative2Name !== undefined)
+      patch.alternative2ExerciseId = null;
     updateDay(dayIndex, {
       exercises: days[dayIndex].exercises.map((exercise, index) =>
         index === exerciseIndex ? { ...exercise, ...patch } : exercise,
@@ -147,20 +143,23 @@ export function WorkoutPlanBuilder({
       const workoutDays = serializeWorkoutDays(days);
       const result =
         mode === "edit" && initialPlan
-          ? await editWorkoutPlanAction(initialPlan.id, { name: name.trim(), workoutDays })
-          : mode === "standalone"
-          ? await createStandaloneWorkoutPlanAction({
+          ? await editWorkoutPlanAction(initialPlan.id, {
               name: name.trim(),
               workoutDays,
-              activate,
             })
-          : await createWorkoutPlanInPeriodizationAction(periodizationId!, {
-              name: name.trim(),
-              workoutDays,
-              plannedStartDate: plannedStartDate || null,
-              plannedEndDate: plannedEndDate || null,
-              notes: notes.trim() || null,
-            });
+          : mode === "standalone"
+            ? await createStandaloneWorkoutPlanAction({
+                name: name.trim(),
+                workoutDays,
+                activate,
+              })
+            : await createWorkoutPlanInPeriodizationAction(periodizationId!, {
+                name: name.trim(),
+                workoutDays,
+                plannedStartDate: plannedStartDate || null,
+                plannedEndDate: plannedEndDate || null,
+                notes: notes.trim() || null,
+              });
 
       if (!result.success) {
         setError(result.error);
@@ -171,8 +170,8 @@ export function WorkoutPlanBuilder({
         mode === "edit" && initialPlan
           ? `/workout-plans/${initialPlan.id}`
           : mode === "standalone"
-          ? "/planning"
-          : `/planning/periodizations/${periodizationId}`;
+            ? "/planning"
+            : `/planning/periodizations/${periodizationId}`;
       router.push(destination);
       router.refresh();
     });
@@ -258,7 +257,12 @@ export function WorkoutPlanBuilder({
               />
             </label>
           </>
-        ) : <p className="text-sm text-muted-foreground">As alterações valem para os próximos treinos. As sessões já registradas serão preservadas.</p>}
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            As alterações valem para os próximos treinos. As sessões já
+            registradas serão preservadas.
+          </p>
+        )}
       </section>
 
       <section
@@ -274,7 +278,8 @@ export function WorkoutPlanBuilder({
               Divisão de Treinos (Rotina Sequencial)
             </h2>
             <p className="text-xs text-muted-foreground">
-              Configure os treinos da sua divisão. O próximo treino será sugerido automaticamente com base no último realizado.
+              Configure os treinos da sua divisão. O próximo treino será
+              sugerido automaticamente com base no último realizado.
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -313,7 +318,8 @@ export function WorkoutPlanBuilder({
                   {String.fromCharCode(65 + (dayIndex % 26))}
                 </span>
                 <h3 className="font-heading text-sm font-semibold">
-                  {day.name || `Treino ${String.fromCharCode(65 + (dayIndex % 26))}`}
+                  {day.name ||
+                    `Treino ${String.fromCharCode(65 + (dayIndex % 26))}`}
                 </h3>
               </div>
               <div className="flex items-center gap-1">
@@ -370,9 +376,7 @@ export function WorkoutPlanBuilder({
                   value={day.estimatedDurationInMinutes}
                   onChange={(event) =>
                     updateDay(dayIndex, {
-                      estimatedDurationInMinutes: Number(
-                        event.target.value,
-                      ),
+                      estimatedDurationInMinutes: Number(event.target.value),
                     })
                   }
                 />
@@ -380,189 +384,211 @@ export function WorkoutPlanBuilder({
             </div>
 
             <label className="flex items-center gap-2 text-sm">
-              <input type="checkbox" checked={day.isRest} disabled={isPending}
-                onChange={event => updateDay(dayIndex, { isRest: event.target.checked,
-                  estimatedDurationInMinutes: event.target.checked ? 0 : day.estimatedDurationInMinutes || 60 })} />
+              <input
+                type="checkbox"
+                checked={day.isRest}
+                disabled={isPending}
+                onChange={(event) =>
+                  updateDay(dayIndex, {
+                    isRest: event.target.checked,
+                    estimatedDurationInMinutes: event.target.checked
+                      ? 0
+                      : day.estimatedDurationInMinutes || 60,
+                  })
+                }
+              />
               Dia de descanso
             </label>
 
-                {!day.isRest && <div className="flex flex-col gap-3">
-                  {day.exercises.map((exercise, exerciseIndex) => (
-                    <div
-                      key={`${day.weekDay}-${exerciseIndex}`}
-                      className="flex flex-col gap-3 rounded-xl bg-muted/40 p-3"
-                    >
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="flex items-center gap-2 text-xs font-semibold">
-                          <Dumbbell className="size-3.5 text-primary" />
-                          Exercício {exerciseIndex + 1}
-                        </span>
-                        <div className="flex gap-1">
-                          <button
-                            type="button"
-                            aria-label={`Mover exercício ${exerciseIndex + 1} para cima`}
-                            disabled={exerciseIndex === 0 || isPending}
-                            onClick={() =>
-                              moveExercise(dayIndex, exerciseIndex, -1)
-                            }
-                            className="flex size-11 items-center justify-center rounded-full hover:bg-accent disabled:opacity-30"
-                          >
-                            <ArrowUp className="size-4" />
-                          </button>
-                          <button
-                            type="button"
-                            aria-label={`Mover exercício ${exerciseIndex + 1} para baixo`}
-                            disabled={
-                              exerciseIndex === day.exercises.length - 1 ||
-                              isPending
-                            }
-                            onClick={() =>
-                              moveExercise(dayIndex, exerciseIndex, 1)
-                            }
-                            className="flex size-11 items-center justify-center rounded-full hover:bg-accent disabled:opacity-30"
-                          >
-                            <ArrowDown className="size-4" />
-                          </button>
-                          <button
-                            type="button"
-                            aria-label={`Remover exercício ${exerciseIndex + 1}`}
-                            disabled={isPending}
-                            onClick={() =>
-                              updateDay(dayIndex, {
-                                exercises: day.exercises.filter(
-                                  (_, index) => index !== exerciseIndex,
-                                ),
-                              })
-                            }
-                            className="flex size-11 items-center justify-center rounded-full text-destructive hover:bg-destructive/10"
-                          >
-                            <Trash2 className="size-4" />
-                          </button>
-                        </div>
+            {!day.isRest && (
+              <div className="flex flex-col gap-3">
+                {day.exercises.map((exercise, exerciseIndex) => (
+                  <div
+                    key={`${day.weekDay}-${exerciseIndex}`}
+                    className="flex flex-col gap-3 rounded-xl bg-muted/40 p-3"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="flex items-center gap-2 text-xs font-semibold">
+                        <Dumbbell className="size-3.5 text-primary" />
+                        Exercício {exerciseIndex + 1}
+                      </span>
+                      <div className="flex gap-1">
+                        <button
+                          type="button"
+                          aria-label={`Mover exercício ${exerciseIndex + 1} para cima`}
+                          disabled={exerciseIndex === 0 || isPending}
+                          onClick={() =>
+                            moveExercise(dayIndex, exerciseIndex, -1)
+                          }
+                          className="flex size-11 items-center justify-center rounded-full hover:bg-accent disabled:opacity-30"
+                        >
+                          <ArrowUp className="size-4" />
+                        </button>
+                        <button
+                          type="button"
+                          aria-label={`Mover exercício ${exerciseIndex + 1} para baixo`}
+                          disabled={
+                            exerciseIndex === day.exercises.length - 1 ||
+                            isPending
+                          }
+                          onClick={() =>
+                            moveExercise(dayIndex, exerciseIndex, 1)
+                          }
+                          className="flex size-11 items-center justify-center rounded-full hover:bg-accent disabled:opacity-30"
+                        >
+                          <ArrowDown className="size-4" />
+                        </button>
+                        <button
+                          type="button"
+                          aria-label={`Remover exercício ${exerciseIndex + 1}`}
+                          disabled={isPending}
+                          onClick={() =>
+                            updateDay(dayIndex, {
+                              exercises: day.exercises.filter(
+                                (_, index) => index !== exerciseIndex,
+                              ),
+                            })
+                          }
+                          className="flex size-11 items-center justify-center rounded-full text-destructive hover:bg-destructive/10"
+                        >
+                          <Trash2 className="size-4" />
+                        </button>
                       </div>
+                    </div>
 
+                    <label className="flex flex-col gap-1.5 text-xs font-medium">
+                      Nome
+                      <Input
+                        value={exercise.name}
+                        placeholder="Ex.: Agachamento"
+                        onChange={(event) =>
+                          updateExercise(dayIndex, exerciseIndex, {
+                            name: event.target.value,
+                          })
+                        }
+                      />
+                    </label>
+                    <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
                       <label className="flex flex-col gap-1.5 text-xs font-medium">
-                        Nome
+                        Aquecimento
                         <Input
-                          value={exercise.name}
-                          placeholder="Ex.: Agachamento"
+                          type="number"
+                          inputMode="numeric"
+                          min={0}
+                          value={exercise.warmupSets ?? 0}
                           onChange={(event) =>
                             updateExercise(dayIndex, exerciseIndex, {
-                              name: event.target.value,
+                              warmupSets: Math.max(
+                                0,
+                                Number(event.target.value),
+                              ),
                             })
                           }
                         />
                       </label>
-                      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
-                        <label className="flex flex-col gap-1.5 text-xs font-medium">
-                          Aquecimento
-                          <Input
-                            type="number"
-                            inputMode="numeric"
-                            min={0}
-                            value={exercise.warmupSets ?? 0}
-                            onChange={(event) =>
-                              updateExercise(dayIndex, exerciseIndex, {
-                                warmupSets: Math.max(0, Number(event.target.value)),
-                              })
-                            }
-                          />
-                        </label>
-                        <label className="flex flex-col gap-1.5 text-xs font-medium">
-                          Séries válidas
-                          <Input
-                            type="number"
-                            inputMode="numeric"
-                            min={1}
-                            value={exercise.sets}
-                            onChange={(event) =>
-                              updateExercise(dayIndex, exerciseIndex, {
-                                sets: Number(event.target.value),
-                              })
-                            }
-                          />
-                        </label>
-                        <label className="flex flex-col gap-1.5 text-xs font-medium">
-                          Repetições
-                          <Input
-                            type="number"
-                            inputMode="numeric"
-                            min={1}
-                            value={exercise.reps}
-                            onChange={(event) =>
-                              updateExercise(dayIndex, exerciseIndex, {
-                                reps: Number(event.target.value),
-                              })
-                            }
-                          />
-                        </label>
-                        <label className="flex flex-col gap-1.5 text-xs font-medium">
-                          Descanso (s)
-                          <Input
-                            type="number"
-                            inputMode="numeric"
-                            min={1}
-                            value={exercise.restTimeInSeconds}
-                            onChange={(event) =>
-                              updateExercise(dayIndex, exerciseIndex, {
-                                restTimeInSeconds: Number(event.target.value),
-                              })
-                            }
-                          />
-                        </label>
-                      </div>
+                      <label className="flex flex-col gap-1.5 text-xs font-medium">
+                        Séries válidas
+                        <Input
+                          type="number"
+                          inputMode="numeric"
+                          min={1}
+                          value={exercise.sets}
+                          onChange={(event) =>
+                            updateExercise(dayIndex, exerciseIndex, {
+                              sets: Number(event.target.value),
+                            })
+                          }
+                        />
+                      </label>
+                      <label className="flex flex-col gap-1.5 text-xs font-medium">
+                        Repetições
+                        <Input
+                          type="number"
+                          inputMode="numeric"
+                          min={1}
+                          value={exercise.reps}
+                          onChange={(event) =>
+                            updateExercise(dayIndex, exerciseIndex, {
+                              reps: Number(event.target.value),
+                            })
+                          }
+                        />
+                      </label>
+                      <label className="flex flex-col gap-1.5 text-xs font-medium">
+                        Descanso (s)
+                        <Input
+                          type="number"
+                          inputMode="numeric"
+                          min={1}
+                          value={exercise.restTimeInSeconds}
+                          onChange={(event) =>
+                            updateExercise(dayIndex, exerciseIndex, {
+                              restTimeInSeconds: Number(event.target.value),
+                            })
+                          }
+                        />
+                      </label>
+                    </div>
 
-                      <div className="pt-2 border-t border-border/40">
-                        <span className="text-[11px] font-medium text-muted-foreground">
-                          Alternativas fixas (opcional)
-                        </span>
-                        <div className="mt-1.5 grid grid-cols-1 gap-2 sm:grid-cols-2">
-                          <label className="flex flex-col gap-1 text-[11px] text-muted-foreground">
-                            Alternativa 1
-                            <Input
-                              value={exercise.alternative1Name ?? ""}
-                              placeholder="Ex: Leg Press 45°"
-                              className="h-8 text-xs font-normal"
-                              onChange={(event) =>
-                                updateExercise(dayIndex, exerciseIndex, {
-                                  alternative1Name: event.target.value,
-                                })
-                              }
-                            />
-                          </label>
-                          <label className="flex flex-col gap-1 text-[11px] text-muted-foreground">
-                            Alternativa 2
-                            <Input
-                              value={exercise.alternative2Name ?? ""}
-                              placeholder="Ex: Hack Squat"
-                              className="h-8 text-xs font-normal"
-                              onChange={(event) =>
-                                updateExercise(dayIndex, exerciseIndex, {
-                                  alternative2Name: event.target.value,
-                                })
-                              }
-                            />
-                          </label>
-                        </div>
+                    <AdvancedPrescriptionFields
+                      value={exercise}
+                      disabled={isPending}
+                      onChange={(patch) =>
+                        updateExercise(dayIndex, exerciseIndex, patch)
+                      }
+                    />
+                    <div className="pt-2 border-t border-border/40">
+                      <span className="text-[11px] font-medium text-muted-foreground">
+                        Alternativas fixas (opcional)
+                      </span>
+                      <div className="mt-1.5 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                        <label className="flex flex-col gap-1 text-[11px] text-muted-foreground">
+                          Alternativa 1
+                          <Input
+                            value={exercise.alternative1Name ?? ""}
+                            placeholder="Ex: Leg Press 45°"
+                            className="h-8 text-xs font-normal"
+                            onChange={(event) =>
+                              updateExercise(dayIndex, exerciseIndex, {
+                                alternative1Name: event.target.value,
+                              })
+                            }
+                          />
+                        </label>
+                        <label className="flex flex-col gap-1 text-[11px] text-muted-foreground">
+                          Alternativa 2
+                          <Input
+                            value={exercise.alternative2Name ?? ""}
+                            placeholder="Ex: Hack Squat"
+                            className="h-8 text-xs font-normal"
+                            onChange={(event) =>
+                              updateExercise(dayIndex, exerciseIndex, {
+                                alternative2Name: event.target.value,
+                              })
+                            }
+                          />
+                        </label>
                       </div>
                     </div>
-                  ))}
+                  </div>
+                ))}
 
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="h-11 rounded-full font-heading text-xs"
-                    disabled={isPending}
-                    onClick={() =>
-                      updateDay(dayIndex, {
-                        exercises: [...day.exercises, createDraftExercise()],
-                      })
-                    }
-                  >
-                    <Plus className="size-3.5" />
-                    Adicionar exercício
-                  </Button>
-                </div>}
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="h-11 rounded-full font-heading text-xs"
+                  disabled={isPending}
+                  onClick={() =>
+                    updateDay(dayIndex, {
+                      exercises: [...day.exercises, createDraftExercise()],
+                    })
+                  }
+                >
+                  <Plus className="size-3.5" />
+                  Adicionar exercício
+                </Button>
+              </div>
+            )}
           </article>
         ))}
 
@@ -595,10 +621,14 @@ export function WorkoutPlanBuilder({
       >
         {isPending && <LoaderCircle className="animate-spin" />}
         {isPending
-          ? mode === "edit" ? "Salvando..." : "Criando..."
-          : mode === "edit" ? "Salvar alterações" : mode === "standalone"
-            ? "Criar plano"
-            : "Criar plano e adicionar etapa"}
+          ? mode === "edit"
+            ? "Salvando..."
+            : "Criando..."
+          : mode === "edit"
+            ? "Salvar alterações"
+            : mode === "standalone"
+              ? "Criar plano"
+              : "Criar plano e adicionar etapa"}
       </Button>
 
       <AthleteAiWorkoutPlanModal

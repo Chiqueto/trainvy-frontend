@@ -45,15 +45,16 @@ export default async function WorkoutSummaryPage({
   const { sessionId } = await params;
   const today = dayjs().locale("pt-br");
 
-  const [sessionRes, homeDataRes, trainDataRes, feedbackRes, exercisesRes] = await Promise.all([
-    getWorkoutSession(sessionId).catch(() => null),
-    getHomeData(today.format("YYYY-MM-DD"), {
-      timezoneOffset: today.utcOffset(),
-    }).catch(() => null),
-    getUserTrainData().catch(() => null),
-    getSessionFeedback(sessionId, { cache: "no-store" }).catch(() => null),
-    listExercises().catch(() => null),
-  ]);
+  const [sessionRes, homeDataRes, trainDataRes, feedbackRes, exercisesRes] =
+    await Promise.all([
+      getWorkoutSession(sessionId).catch(() => null),
+      getHomeData(today.format("YYYY-MM-DD"), {
+        timezoneOffset: today.utcOffset(),
+      }).catch(() => null),
+      getUserTrainData().catch(() => null),
+      getSessionFeedback(sessionId, { cache: "no-store" }).catch(() => null),
+      listExercises().catch(() => null),
+    ]);
 
   if (!sessionRes || sessionRes.status !== 200) {
     redirect("/");
@@ -66,7 +67,6 @@ export default async function WorkoutSummaryPage({
     (trainDataRes?.status === 200 && trainDataRes.data?.gamificationTheme) ||
     homeData?.gamificationTheme ||
     "ALL";
-
 
   // Cálculos de métricas da sessão
   const startedAt = dayjs(workoutSession.startedAt);
@@ -128,10 +128,11 @@ export default async function WorkoutSummaryPage({
     workoutSession.workoutDayNameSnapshot ||
     (workoutSession.workoutDayId ? "Treino Prescrito" : "Treino Avulso");
 
-  const catalogExercises = exercisesRes?.status === 200 ? exercisesRes.data : [];
+  const catalogExercises =
+    exercisesRes?.status === 200 ? exercisesRes.data : [];
   const muscleStats = calculateSessionMuscleStats(
     workoutSession.sessionExercises,
-    catalogExercises
+    catalogExercises,
   );
 
   const nextWorkout = homeData?.todayWorkoutDay;
@@ -178,7 +179,8 @@ export default async function WorkoutSummaryPage({
             </h1>
 
             <p className="font-heading text-xs text-muted-foreground">
-              Finalizado em {completedAt.locale("pt-br").format("DD/MM/YYYY [às] HH:mm")}
+              Finalizado em{" "}
+              {completedAt.locale("pt-br").format("DD/MM/YYYY [às] HH:mm")}
             </p>
           </div>
         </div>
@@ -220,9 +222,14 @@ export default async function WorkoutSummaryPage({
               <Clock className="size-4 text-primary" />
             </div>
             <p className="font-heading text-2xl font-bold text-foreground">
-              {durationInMinutes} <span className="text-xs font-medium text-muted-foreground">min</span>
+              {durationInMinutes}{" "}
+              <span className="text-xs font-medium text-muted-foreground">
+                min
+              </span>
             </p>
-            <span className="text-[11px] text-muted-foreground">Tempo decorrido</span>
+            <span className="text-[11px] text-muted-foreground">
+              Tempo decorrido
+            </span>
           </div>
 
           {/* Volume Total */}
@@ -235,9 +242,13 @@ export default async function WorkoutSummaryPage({
             </div>
             <p className="font-heading text-2xl font-bold text-foreground">
               {totalVolumeKg.toLocaleString("pt-BR")}{" "}
-              <span className="text-xs font-medium text-muted-foreground">kg</span>
+              <span className="text-xs font-medium text-muted-foreground">
+                kg
+              </span>
             </p>
-            <span className="text-[11px] text-muted-foreground">Carga total levantada</span>
+            <span className="text-[11px] text-muted-foreground">
+              Carga total levantada
+            </span>
           </div>
 
           {/* Séries Feitas */}
@@ -250,7 +261,9 @@ export default async function WorkoutSummaryPage({
             </div>
             <p className="font-heading text-2xl font-bold text-foreground">
               {totalSetsCompleted}{" "}
-              <span className="text-xs font-medium text-muted-foreground">séries</span>
+              <span className="text-xs font-medium text-muted-foreground">
+                séries
+              </span>
             </p>
             <span className="text-[11px] text-muted-foreground">
               {totalWorkingSets} de trabalho válidas
@@ -267,9 +280,13 @@ export default async function WorkoutSummaryPage({
             </div>
             <p className="font-heading text-2xl font-bold text-foreground">
               {totalReps}{" "}
-              <span className="text-xs font-medium text-muted-foreground">reps</span>
+              <span className="text-xs font-medium text-muted-foreground">
+                reps
+              </span>
             </p>
-            <span className="text-[11px] text-muted-foreground">Acumuladas na sessão</span>
+            <span className="text-[11px] text-muted-foreground">
+              Acumuladas na sessão
+            </span>
           </div>
         </section>
 
@@ -297,13 +314,17 @@ export default async function WorkoutSummaryPage({
                 {nextWorkout.name}
               </h3>
               <p className="text-xs text-muted-foreground">
-                Ontem você fez {workoutTitle}. O próximo passo da sua divisão é {nextWorkout.name}!
+                Ontem você fez {workoutTitle}. O próximo passo da sua divisão é{" "}
+                {nextWorkout.name}!
               </p>
             </div>
 
             <div className="flex items-center justify-between pt-1">
               <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                <span>⏱️ ~{Math.round(nextWorkout.estimatedDurationInSeconds / 60)} min</span>
+                <span>
+                  ⏱️ ~{Math.round(nextWorkout.estimatedDurationInSeconds / 60)}{" "}
+                  min
+                </span>
                 <span>🏋️ {nextWorkout.exercisesCount} exercícios</span>
               </div>
               <Link
@@ -365,7 +386,9 @@ export default async function WorkoutSummaryPage({
 
                   {item.maxWeightKg !== null && item.maxWeightKg > 0 && (
                     <div className="flex items-center gap-1 rounded-full bg-muted/60 px-2.5 py-1 text-right">
-                      <span className="text-[10px] text-muted-foreground">Carga máx:</span>
+                      <span className="text-[10px] text-muted-foreground">
+                        Carga máx:
+                      </span>
                       <span className="font-heading text-xs font-bold text-foreground">
                         {item.maxWeightKg} kg
                       </span>
@@ -378,8 +401,16 @@ export default async function WorkoutSummaryPage({
         )}
 
         {/* Feedback da Sessão — telinha preparada para planos futuros */}
-        <SummaryFeedbackWidget key={feedbackRes?.status === 200 ? feedbackRes.data?.updatedAt ?? "empty" : "error"}
-          sessionId={sessionId} initial={feedbackRes?.status === 200 ? feedbackRes.data : null} loadFailed={feedbackRes?.status !== 200} />
+        <SummaryFeedbackWidget
+          key={
+            feedbackRes?.status === 200
+              ? (feedbackRes.data?.updatedAt ?? "empty")
+              : "error"
+          }
+          sessionId={sessionId}
+          initial={feedbackRes?.status === 200 ? feedbackRes.data : null}
+          loadFailed={feedbackRes?.status !== 200}
+        />
 
         {/* Ações de Navegação */}
         <div className="flex flex-col gap-3 pt-2">

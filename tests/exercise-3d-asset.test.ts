@@ -89,7 +89,12 @@ describe("Trainvy anatomical athlete", () => {
       EXERCISE_ANIMATIONS["bench-press"].muscles.primary,
     );
   });
-  it.each(["squat", "bench-press", "incline-dumbbell-press"] as const)(
+  it.each([
+    "squat",
+    "bench-press",
+    "incline-dumbbell-press",
+    "flat-dumbbell-press",
+  ] as const)(
     "keeps both arm segments in one bend plane without roll flips in %s",
     (exercise) => {
       const bones = new Map(mesh.skeleton.bones.map((b) => [b.name, b]));
@@ -338,7 +343,12 @@ describe("Trainvy anatomical athlete", () => {
     expect(rootedGluteal).toBeGreaterThan(30);
     expect(supportedGluteal).toBeGreaterThan(100);
   });
-  it.each(["squat", "bench-press", "incline-dumbbell-press"] as const)(
+  it.each([
+    "squat",
+    "bench-press",
+    "incline-dumbbell-press",
+    "flat-dumbbell-press",
+  ] as const)(
     "keeps the closed hands rigid and attached to the bar throughout %s",
     (exercise) => {
       const g = mesh.geometry;
@@ -380,7 +390,12 @@ describe("Trainvy anatomical athlete", () => {
       }
     },
   );
-  it.each(["squat", "bench-press", "incline-dumbbell-press"] as const)(
+  it.each([
+    "squat",
+    "bench-press",
+    "incline-dumbbell-press",
+    "flat-dumbbell-press",
+  ] as const)(
     "keeps every sampled vertex finite through %s",
     (exercise) => {
       const p = new Vector3();
@@ -409,6 +424,7 @@ describe("Trainvy anatomical athlete", () => {
     setAppearance("squat", false);
     setAppearance("bench-press", true);
     setAppearance("incline-dumbbell-press", true);
+    setAppearance("flat-dumbbell-press", true);
     expect(material.map).toBeNull();
     expect(material.normalMap).toBeNull();
     expect(material.vertexColors).toBe(true);
@@ -435,5 +451,10 @@ describe("Trainvy anatomical athlete", () => {
     expect(
       EXERCISE_ANIMATIONS["incline-dumbbell-press"].muscles.primary,
     ).not.toEqual(EXERCISE_ANIMATIONS["bench-press"].muscles.primary);
+    expect(
+      EXERCISE_ANIMATIONS["flat-dumbbell-press"].muscles.primary,
+    ).not.toEqual(
+      EXERCISE_ANIMATIONS["incline-dumbbell-press"].muscles.primary,
+    );
   });
 });

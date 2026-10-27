@@ -1,4 +1,5 @@
 "use client";
+import { serializeAdvancedPrescription } from "@/app/planning/_lib/workout-plan-builder";
 
 import { useRef, useState } from "react";
 import {
@@ -170,7 +171,8 @@ export function CoachAiPrescriptionModal({
 
           if (alt1 && alt1.toLowerCase() === name.toLowerCase()) alt1 = "";
           if (alt2 && alt2.toLowerCase() === name.toLowerCase()) alt2 = "";
-          if (alt1 && alt2 && alt1.toLowerCase() === alt2.toLowerCase()) alt2 = "";
+          if (alt1 && alt2 && alt1.toLowerCase() === alt2.toLowerCase())
+            alt2 = "";
           if (!alt1 && alt2) {
             alt1 = alt2;
             alt2 = "";
@@ -181,6 +183,7 @@ export function CoachAiPrescriptionModal({
             sets: e.sets || 3,
             warmupSets: e.warmupSets ?? 0,
             reps: e.reps || 10,
+            ...serializeAdvancedPrescription(e),
             restTimeInSeconds: e.restTimeInSeconds || 90,
             alternative1Name: alt1,
             alternative2Name: alt2,

@@ -58,6 +58,7 @@ export function getExercisePose(exercise: ExerciseAnimation, depth: number) {
   const p = MathUtils.clamp(depth, 0, 1);
   const squat = exercise === "squat";
   const incline = exercise === "incline-dumbbell-press";
+  const flatDumbbell = exercise === "flat-dumbbell-press";
   const tilt = new Quaternion().setFromAxisAngle(
     X,
     squat ? 0.1 + 0.48 * p : -Math.PI / 2 + (incline ? INCLINE_BENCH_ANGLE : 0),
@@ -89,7 +90,13 @@ export function getExercisePose(exercise: ExerciseAnimation, depth: number) {
               MathUtils.lerp(0.012, 0.102, p),
             ),
           )
-      : bar.clone().add(v(side * (squat ? 0.39 : 0.4), 0, 0));
+      : flatDumbbell
+        ? v(
+            side * MathUtils.lerp(0.15, 0.34, p),
+            MathUtils.lerp(1.035, 0.64, p),
+            MathUtils.lerp(-0.08, 0.01, p),
+          )
+        : bar.clone().add(v(side * (squat ? 0.39 : 0.4), 0, 0));
     const wrist = grip.clone().add(v(0, -0.004, -0.012));
     const elbow = solveJoint(
       shoulder,
@@ -100,7 +107,9 @@ export function getExercisePose(exercise: ExerciseAnimation, depth: number) {
         ? v(side, -0.7, -0.4)
         : incline
           ? v(side, -0.6, 0.45)
-          : v(side, -0.5, 0.7),
+          : flatDumbbell
+            ? v(side, -0.55, 0.65)
+            : v(side, -0.5, 0.7),
     );
     return { side, hip, knee, ankle, shoulder, elbow, wrist, grip };
   });

@@ -1,4 +1,5 @@
 "use client";
+import { serializeAdvancedPrescription } from "@/app/planning/_lib/workout-plan-builder";
 
 import { useRef, useState } from "react";
 import {
@@ -132,14 +133,18 @@ export function AthleteAiWorkoutPlanModal({
 
     try {
       const res = await generateWorkoutPlanWithAiAction({
-        prompt: trimmedPrompt || "Interprete o arquivo em anexo e monte a rotina de treinos ideal.",
+        prompt:
+          trimmedPrompt ||
+          "Interprete o arquivo em anexo e monte a rotina de treinos ideal.",
         fileUrl: attachedFile?.dataUrl,
         mediaType: attachedFile?.mediaType,
         filename: attachedFile?.filename,
       });
 
       if (!res.success) {
-        setError(res.error || "Não foi possível gerar a rotina com o Coach IA.");
+        setError(
+          res.error || "Não foi possível gerar a rotina com o Coach IA.",
+        );
       } else {
         setGeneratedDraft(res.data);
         toast.success("Rotina de treinos gerada pelo Coach IA!");
@@ -159,7 +164,6 @@ export function AthleteAiWorkoutPlanModal({
       (day, dayIdx) => {
         const dayLetter = String.fromCharCode(65 + (dayIdx % 26));
         return {
-          id: `draft-day-${dayIdx}-${Date.now()}`,
           name: day.name || `Treino ${dayLetter}`,
           weekDay: day.weekDay,
           isRest: day.isRest,
@@ -170,19 +174,19 @@ export function AthleteAiWorkoutPlanModal({
           exercises: day.isRest
             ? []
             : day.exercises.map((ex, exIdx) => ({
-                id: `draft-ex-${dayIdx}-${exIdx}-${Date.now()}`,
                 name: ex.name,
                 order: exIdx + 1,
                 sets: ex.sets || 3,
                 warmupSets: ex.warmupSets ?? 0,
                 reps: ex.reps || 10,
+                ...serializeAdvancedPrescription(ex),
                 restTimeInSeconds: ex.restTimeInSeconds || 90,
                 notes: null,
-                alternative1ExerciseName: ex.alternative1Name || null,
-                alternative2ExerciseName: ex.alternative2Name || null,
+                alternative1Name: ex.alternative1Name || "",
+                alternative2Name: ex.alternative2Name || "",
               })),
         };
-      }
+      },
     );
 
     onApplyPlan({
@@ -209,7 +213,8 @@ export function AthleteAiWorkoutPlanModal({
                 Criar Treino com o Coach IA
               </h3>
               <p className="text-xs text-muted-foreground">
-                Fale por voz, anexe PDF/foto da sua ficha, ou descreva sua rotina
+                Fale por voz, anexe PDF/foto da sua ficha, ou descreva sua
+                rotina
               </p>
             </div>
           </div>
@@ -261,7 +266,9 @@ export function AthleteAiWorkoutPlanModal({
                 {/* Botão de Gravação de Áudio */}
                 <Button
                   type="button"
-                  variant={voiceRecorder.isRecording ? "destructive" : "outline"}
+                  variant={
+                    voiceRecorder.isRecording ? "destructive" : "outline"
+                  }
                   size="sm"
                   onClick={handleToggleVoiceRecord}
                   className="h-8 px-2.5 rounded-xl font-heading text-xs gap-1"
@@ -269,7 +276,9 @@ export function AthleteAiWorkoutPlanModal({
                   {voiceRecorder.isRecording ? (
                     <>
                       <Square className="size-3.5 fill-current animate-pulse" />
-                      <span>{formatRecordingTime(voiceRecorder.recordingSeconds)}</span>
+                      <span>
+                        {formatRecordingTime(voiceRecorder.recordingSeconds)}
+                      </span>
                     </>
                   ) : (
                     <>
@@ -289,7 +298,10 @@ export function AthleteAiWorkoutPlanModal({
                   <span className="text-xs font-medium text-foreground truncate">
                     {attachedFile.filename}
                   </span>
-                  <Badge variant="outline" className="text-[10px] uppercase font-bold py-0">
+                  <Badge
+                    variant="outline"
+                    className="text-[10px] uppercase font-bold py-0"
+                  >
                     {attachedFile.mediaType.includes("pdf") ? "PDF" : "Anexo"}
                   </Badge>
                 </div>
@@ -390,12 +402,17 @@ export function AthleteAiWorkoutPlanModal({
                         <span className="font-heading text-xs font-bold text-foreground">
                           {day.name}
                         </span>
-                        <Badge variant="outline" className="text-[10px] font-semibold py-0">
+                        <Badge
+                          variant="outline"
+                          className="text-[10px] font-semibold py-0"
+                        >
                           {day.weekDay}
                         </Badge>
                       </div>
                       <span className="text-[11px] text-muted-foreground">
-                        {day.isRest ? "Descanso" : `${day.exercises.length} exercícios • ~${day.estimatedDurationInMinutes}min`}
+                        {day.isRest
+                          ? "Descanso"
+                          : `${day.exercises.length} exercícios • ~${day.estimatedDurationInMinutes}min`}
                       </span>
                     </div>
 

@@ -114,6 +114,7 @@ const READ_TOOL_NAMES = new Set([
   "getWorkoutPlan",
   "getPeriodization",
   "getUserTrainData",
+  "getSportsProfile",
   "getRecentTrainingHistory",
   "getRecentTrainingFeedback",
   "getWorkoutHistorySession",
@@ -1084,7 +1085,7 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
                 </>
               ) : (
                 <div className="space-y-2 font-heading text-sm leading-relaxed text-primary-foreground">
-                  {message.parts.map((part: any, index) => {
+                  {message.parts.map((part, index) => {
                     if (part.type === "text" && part.text) {
                       return (
                         <p key={index} className="whitespace-pre-wrap">

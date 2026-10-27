@@ -8,6 +8,10 @@ import { ExerciseExecutionDialog } from "@/app/_components/exercise-media";
 import { getExerciseAnimation } from "@/app/_components/exercise-3d/exercises";
 import type { GetWorkoutDay200ExercisesItem } from "@/app/_lib/api/fetch-generated";
 import { Button } from "@/components/ui/button";
+import {
+  PrescriptionTargets,
+  repetitionTarget,
+} from "@/app/_components/prescription-targets";
 
 interface ExerciseCardProps {
   exercise: GetWorkoutDay200ExercisesItem;
@@ -28,7 +32,8 @@ export function ExerciseCard({ exercise }: ExerciseCardProps) {
   };
 
   const warmup = exercise.warmupSets ?? 0;
-  const has3D = getExerciseAnimation(exercise.exerciseId, exercise.name) !== null;
+  const has3D =
+    getExerciseAnimation(exercise.exerciseId, exercise.name) !== null;
 
   return (
     <div className="flex flex-col gap-3 rounded-xl border border-border p-5">
@@ -41,7 +46,11 @@ export function ExerciseCard({ exercise }: ExerciseCardProps) {
             type="button"
             onClick={() => setIsMediaOpen(true)}
             title={has3D ? "Ver execução 3D" : "Ver execução do exercício"}
-            aria-label={has3D ? `Ver execução 3D de ${exercise.name}` : `Ver execução de ${exercise.name}`}
+            aria-label={
+              has3D
+                ? `Ver execução 3D de ${exercise.name}`
+                : `Ver execução de ${exercise.name}`
+            }
             className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-heading font-medium text-primary bg-primary/10 hover:bg-primary/20 border border-primary/20 transition-colors cursor-pointer"
           >
             {has3D ? (
@@ -52,7 +61,12 @@ export function ExerciseCard({ exercise }: ExerciseCardProps) {
             <span>{has3D ? "Ver 3D" : "Ver execução"}</span>
           </button>
         </div>
-        <Button variant="ghost" size="icon" onClick={handleHelp} title="Perguntar para IA">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleHelp}
+          title="Perguntar para IA"
+        >
           <CircleHelp className="size-5 text-muted-foreground" />
         </Button>
       </div>
@@ -60,7 +74,8 @@ export function ExerciseCard({ exercise }: ExerciseCardProps) {
       <div className="flex flex-wrap items-center gap-1.5">
         {warmup > 0 ? (
           <span className="rounded-full bg-amber-500/10 px-2.5 py-1 font-heading text-xs font-semibold text-amber-700 dark:text-amber-400">
-            {warmup} aquecimento • {exercise.sets} séries × {exercise.reps} reps
+            {warmup} aquecimento • {exercise.sets} séries ×{" "}
+            {repetitionTarget(exercise)} reps
           </span>
         ) : (
           <>
@@ -68,7 +83,7 @@ export function ExerciseCard({ exercise }: ExerciseCardProps) {
               {exercise.sets} séries
             </span>
             <span className="rounded-full bg-muted px-2.5 py-1 font-heading text-xs font-semibold uppercase text-muted-foreground">
-              {exercise.reps} reps
+              {repetitionTarget(exercise)} reps
             </span>
           </>
         )}
@@ -78,6 +93,7 @@ export function ExerciseCard({ exercise }: ExerciseCardProps) {
         </span>
       </div>
 
+      <PrescriptionTargets value={exercise} showRange={false} />
       <ExerciseExecutionDialog
         isOpen={isMediaOpen}
         onClose={() => setIsMediaOpen(false)}

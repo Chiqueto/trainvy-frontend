@@ -1,7 +1,8 @@
 export type ExerciseAnimation =
   | "squat"
   | "bench-press"
-  | "incline-dumbbell-press";
+  | "incline-dumbbell-press"
+  | "flat-dumbbell-press";
 
 export interface ExerciseDefinition {
   name: string;
@@ -39,6 +40,19 @@ export const EXERCISE_ANIMATIONS = {
       ],
     },
   },
+  "flat-dumbbell-press": {
+    name: "Supino reto com halteres",
+    equipment: "Banco reto e dois halteres",
+    id: "6ef90b25-cd99-4860-8933-ae29e4d1f3d8",
+    muscles: {
+      primary: ["Peitoral maior (porção esternocostal)"],
+      secondary: [
+        "Peitoral superior (porção clavicular)",
+        "Tríceps",
+        "Deltoide anterior",
+      ],
+    },
+  },
 } satisfies Record<ExerciseAnimation, ExerciseDefinition>;
 
 // Conhecidos IDs legados de exercícios antes do catálogo canônico global
@@ -58,6 +72,8 @@ export function getExerciseAnimation(
   if (id === EXERCISE_ANIMATIONS.squat.id) return "squat";
   if (id === EXERCISE_ANIMATIONS["incline-dumbbell-press"].id)
     return "incline-dumbbell-press";
+  if (id === EXERCISE_ANIMATIONS["flat-dumbbell-press"].id)
+    return "flat-dumbbell-press";
   if (
     id === EXERCISE_ANIMATIONS["bench-press"].id ||
     id === "00000000-0000-4000-8000-000000000102"
@@ -76,6 +92,16 @@ export function getExerciseAnimation(
 
     if (normalized === "supino inclinado com halteres")
       return "incline-dumbbell-press";
+
+    if (
+      normalized === "supino reto com halteres" ||
+      normalized === "supino com halteres" ||
+      normalized === "supino com halter" ||
+      normalized === "supino reto halter" ||
+      normalized === "supino reto halteres"
+    ) {
+      return "flat-dumbbell-press";
+    }
 
     if (
       normalized === "agachamento livre" ||

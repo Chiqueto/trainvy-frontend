@@ -124,6 +124,36 @@
                                       "reps": {
                                         "type": "number"
                                       },
+                                      "repsMin": {
+                                        "nullable": true,
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 10000
+                                      },
+                                      "repsMax": {
+                                        "nullable": true,
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 10000
+                                      },
+                                      "targetRir": {
+                                        "nullable": true,
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 10
+                                      },
+                                      "targetLoadInGrams": {
+                                        "nullable": true,
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 2000000
+                                      },
+                                      "tempo": {
+                                        "nullable": true,
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 80
+                                      },
                                       "restTimeInSeconds": {
                                         "type": "number"
                                       }
@@ -287,6 +317,36 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "repsMin": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 10000
+                              },
+                              "repsMax": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 10000
+                              },
+                              "targetRir": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 10
+                              },
+                              "targetLoadInGrams": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 2000000
+                              },
+                              "tempo": {
+                                "nullable": true,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 80
+                              },
                               "order": {
                                 "type": "number",
                                 "minimum": 0
@@ -437,6 +497,36 @@
                             "items": {
                               "type": "object",
                               "properties": {
+                                "repsMin": {
+                                  "nullable": true,
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 10000
+                                },
+                                "repsMax": {
+                                  "nullable": true,
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 10000
+                                },
+                                "targetRir": {
+                                  "nullable": true,
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 10
+                                },
+                                "targetLoadInGrams": {
+                                  "nullable": true,
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 2000000
+                                },
+                                "tempo": {
+                                  "nullable": true,
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 80
+                                },
                                 "order": {
                                   "type": "number",
                                   "minimum": 0
@@ -1008,6 +1098,36 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "repsMin": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 10000
+                              },
+                              "repsMax": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 10000
+                              },
+                              "targetRir": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 10
+                              },
+                              "targetLoadInGrams": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 2000000
+                              },
+                              "tempo": {
+                                "nullable": true,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 80
+                              },
                               "order": {
                                 "type": "integer",
                                 "minimum": 0,
@@ -1428,6 +1548,36 @@
                           },
                           "reps": {
                             "type": "number"
+                          },
+                          "repsMin": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 10000
+                          },
+                          "repsMax": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 10000
+                          },
+                          "targetRir": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 10
+                          },
+                          "targetLoadInGrams": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 2000000
+                          },
+                          "tempo": {
+                            "nullable": true,
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 80
                           },
                           "restTimeInSeconds": {
                             "type": "number"
@@ -1961,6 +2111,36 @@
                             "items": {
                               "type": "object",
                               "properties": {
+                                "repsMin": {
+                                  "nullable": true,
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 10000
+                                },
+                                "repsMax": {
+                                  "nullable": true,
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 10000
+                                },
+                                "targetRir": {
+                                  "nullable": true,
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 10
+                                },
+                                "targetLoadInGrams": {
+                                  "nullable": true,
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 2000000
+                                },
+                                "tempo": {
+                                  "nullable": true,
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 80
+                                },
                                 "order": {
                                   "type": "number",
                                   "minimum": 0
@@ -2236,6 +2416,36 @@
                       "items": {
                         "type": "object",
                         "properties": {
+                          "plannedRepsMin": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 10000
+                          },
+                          "plannedRepsMax": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 10000
+                          },
+                          "plannedTargetRir": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 10
+                          },
+                          "plannedTargetLoadInGrams": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 2000000
+                          },
+                          "plannedTempo": {
+                            "nullable": true,
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 80
+                          },
                           "id": {
                             "type": "string",
                             "format": "uuid",
@@ -3848,6 +4058,36 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "repsMin": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 10000
+                              },
+                              "repsMax": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 10000
+                              },
+                              "targetRir": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 10
+                              },
+                              "targetLoadInGrams": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 2000000
+                              },
+                              "tempo": {
+                                "nullable": true,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 80
+                              },
                               "order": {
                                 "type": "number",
                                 "minimum": 0
@@ -4068,6 +4308,36 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "repsMin": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "repsMax": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "targetRir": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 10
+                                    },
+                                    "targetLoadInGrams": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 2000000
+                                    },
+                                    "tempo": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 80
+                                    },
                                     "order": {
                                       "type": "number",
                                       "minimum": 0
@@ -6316,6 +6586,36 @@
                                 "reps": {
                                   "type": "number"
                                 },
+                                "repsMin": {
+                                  "nullable": true,
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 10000
+                                },
+                                "repsMax": {
+                                  "nullable": true,
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 10000
+                                },
+                                "targetRir": {
+                                  "nullable": true,
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 10
+                                },
+                                "targetLoadInGrams": {
+                                  "nullable": true,
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 2000000
+                                },
+                                "tempo": {
+                                  "nullable": true,
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 80
+                                },
                                 "restTimeInSeconds": {
                                   "type": "number"
                                 },
@@ -6824,6 +7124,7 @@
                       "type": "number"
                     },
                     "bodyFatPercentage": {
+                      "nullable": true,
                       "type": "number"
                     },
                     "gamificationTheme": {
@@ -6964,7 +7265,8 @@
                     "minimum": 1
                   },
                   "bodyFatPercentage": {
-                    "type": "number",
+                    "nullable": true,
+                    "type": "integer",
                     "minimum": 0,
                     "maximum": 100
                   },
@@ -6982,8 +7284,7 @@
                 "required": [
                   "weightInGrams",
                   "heightInCentimeters",
-                  "age",
-                  "bodyFatPercentage"
+                  "age"
                 ]
               }
             }
@@ -7010,6 +7311,7 @@
                       "type": "number"
                     },
                     "bodyFatPercentage": {
+                      "nullable": true,
                       "type": "number"
                     },
                     "gamificationTheme": {
@@ -11128,6 +11430,36 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "repsMin": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 10000
+                              },
+                              "repsMax": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 10000
+                              },
+                              "targetRir": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 10
+                              },
+                              "targetLoadInGrams": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 2000000
+                              },
+                              "tempo": {
+                                "nullable": true,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 80
+                              },
                               "name": {
                                 "type": "string",
                                 "minLength": 1
@@ -11354,6 +11686,36 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "repsMin": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "repsMax": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "targetRir": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 10
+                                    },
+                                    "targetLoadInGrams": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 2000000
+                                    },
+                                    "tempo": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 80
+                                    },
                                     "name": {
                                       "type": "string"
                                     },
@@ -11659,6 +12021,36 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "repsMin": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 10000
+                              },
+                              "repsMax": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 10000
+                              },
+                              "targetRir": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 10
+                              },
+                              "targetLoadInGrams": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 2000000
+                              },
+                              "tempo": {
+                                "nullable": true,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 80
+                              },
                               "name": {
                                 "type": "string",
                                 "minLength": 1
@@ -11894,6 +12286,36 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "repsMin": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "repsMax": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "targetRir": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 10
+                                    },
+                                    "targetLoadInGrams": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 2000000
+                                    },
+                                    "tempo": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 80
+                                    },
                                     "name": {
                                       "type": "string"
                                     },
@@ -12280,6 +12702,36 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "repsMin": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "repsMax": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "targetRir": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 10
+                                    },
+                                    "targetLoadInGrams": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 2000000
+                                    },
+                                    "tempo": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 80
+                                    },
                                     "name": {
                                       "type": "string"
                                     },
@@ -12668,6 +13120,36 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "repsMin": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "repsMax": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "targetRir": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 10
+                                    },
+                                    "targetLoadInGrams": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 2000000
+                                    },
+                                    "tempo": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 80
+                                    },
                                     "name": {
                                       "type": "string"
                                     },
@@ -13056,6 +13538,36 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "repsMin": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "repsMax": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "targetRir": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 10
+                                    },
+                                    "targetLoadInGrams": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 2000000
+                                    },
+                                    "tempo": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 80
+                                    },
                                     "name": {
                                       "type": "string"
                                     },
@@ -13446,6 +13958,36 @@
                                   "items": {
                                     "type": "object",
                                     "properties": {
+                                      "repsMin": {
+                                        "nullable": true,
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 10000
+                                      },
+                                      "repsMax": {
+                                        "nullable": true,
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 10000
+                                      },
+                                      "targetRir": {
+                                        "nullable": true,
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 10
+                                      },
+                                      "targetLoadInGrams": {
+                                        "nullable": true,
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 2000000
+                                      },
+                                      "tempo": {
+                                        "nullable": true,
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 80
+                                      },
                                       "name": {
                                         "type": "string"
                                       },
@@ -13827,6 +14369,36 @@
                                   "items": {
                                     "type": "object",
                                     "properties": {
+                                      "repsMin": {
+                                        "nullable": true,
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 10000
+                                      },
+                                      "repsMax": {
+                                        "nullable": true,
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 10000
+                                      },
+                                      "targetRir": {
+                                        "nullable": true,
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 10
+                                      },
+                                      "targetLoadInGrams": {
+                                        "nullable": true,
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 2000000
+                                      },
+                                      "tempo": {
+                                        "nullable": true,
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 80
+                                      },
                                       "name": {
                                         "type": "string"
                                       },
@@ -14216,6 +14788,36 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "repsMin": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "repsMax": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "targetRir": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 10
+                                    },
+                                    "targetLoadInGrams": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 2000000
+                                    },
+                                    "tempo": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 80
+                                    },
                                     "name": {
                                       "type": "string"
                                     },
@@ -14610,6 +15212,36 @@
                                     "items": {
                                       "type": "object",
                                       "properties": {
+                                        "repsMin": {
+                                          "nullable": true,
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 10000
+                                        },
+                                        "repsMax": {
+                                          "nullable": true,
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 10000
+                                        },
+                                        "targetRir": {
+                                          "nullable": true,
+                                          "type": "integer",
+                                          "minimum": 0,
+                                          "maximum": 10
+                                        },
+                                        "targetLoadInGrams": {
+                                          "nullable": true,
+                                          "type": "integer",
+                                          "minimum": 0,
+                                          "maximum": 2000000
+                                        },
+                                        "tempo": {
+                                          "nullable": true,
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 80
+                                        },
                                         "name": {
                                           "type": "string"
                                         },
@@ -15013,6 +15645,36 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "repsMin": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "repsMax": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "targetRir": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 10
+                                    },
+                                    "targetLoadInGrams": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 2000000
+                                    },
+                                    "tempo": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 80
+                                    },
                                     "name": {
                                       "type": "string"
                                     },
@@ -15339,6 +16001,36 @@
                                 },
                                 "reps": {
                                   "type": "number"
+                                },
+                                "repsMin": {
+                                  "nullable": true,
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 10000
+                                },
+                                "repsMax": {
+                                  "nullable": true,
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 10000
+                                },
+                                "targetRir": {
+                                  "nullable": true,
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 10
+                                },
+                                "targetLoadInGrams": {
+                                  "nullable": true,
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 2000000
+                                },
+                                "tempo": {
+                                  "nullable": true,
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 80
                                 },
                                 "restTimeInSeconds": {
                                   "type": "number"
@@ -16839,6 +17531,36 @@
                           "planned": {
                             "type": "object",
                             "properties": {
+                              "repsMin": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 10000
+                              },
+                              "repsMax": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 10000
+                              },
+                              "targetRir": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 10
+                              },
+                              "targetLoadInGrams": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 2000000
+                              },
+                              "tempo": {
+                                "nullable": true,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 80
+                              },
                               "warmupSets": {
                                 "nullable": true,
                                 "type": "integer",
@@ -18212,6 +18934,36 @@
                                   "items": {
                                     "type": "object",
                                     "properties": {
+                                      "repsMin": {
+                                        "nullable": true,
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 10000
+                                      },
+                                      "repsMax": {
+                                        "nullable": true,
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 10000
+                                      },
+                                      "targetRir": {
+                                        "nullable": true,
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 10
+                                      },
+                                      "targetLoadInGrams": {
+                                        "nullable": true,
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 2000000
+                                      },
+                                      "tempo": {
+                                        "nullable": true,
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 80
+                                      },
                                       "name": {
                                         "type": "string"
                                       },
@@ -18488,6 +19240,36 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "repsMin": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 10000
+                              },
+                              "repsMax": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 10000
+                              },
+                              "targetRir": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 10
+                              },
+                              "targetLoadInGrams": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 2000000
+                              },
+                              "tempo": {
+                                "nullable": true,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 80
+                              },
                               "name": {
                                 "type": "string",
                                 "minLength": 1
@@ -18633,6 +19415,36 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "repsMin": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "repsMax": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "targetRir": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 10
+                                    },
+                                    "targetLoadInGrams": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 2000000
+                                    },
+                                    "tempo": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 80
+                                    },
                                     "name": {
                                       "type": "string"
                                     },
@@ -18919,6 +19731,36 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "repsMin": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "repsMax": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "targetRir": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 10
+                                    },
+                                    "targetLoadInGrams": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 2000000
+                                    },
+                                    "tempo": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 80
+                                    },
                                     "name": {
                                       "type": "string"
                                     },
@@ -19194,6 +20036,36 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "repsMin": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 10000
+                              },
+                              "repsMax": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 10000
+                              },
+                              "targetRir": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 10
+                              },
+                              "targetLoadInGrams": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 2000000
+                              },
+                              "tempo": {
+                                "nullable": true,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 80
+                              },
                               "name": {
                                 "type": "string",
                                 "minLength": 1
@@ -19349,6 +20221,36 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "repsMin": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "repsMax": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "targetRir": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 10
+                                    },
+                                    "targetLoadInGrams": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 2000000
+                                    },
+                                    "tempo": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 80
+                                    },
                                     "name": {
                                       "type": "string"
                                     },
@@ -19898,6 +20800,36 @@
                                     "items": {
                                       "type": "object",
                                       "properties": {
+                                        "repsMin": {
+                                          "nullable": true,
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 10000
+                                        },
+                                        "repsMax": {
+                                          "nullable": true,
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 10000
+                                        },
+                                        "targetRir": {
+                                          "nullable": true,
+                                          "type": "integer",
+                                          "minimum": 0,
+                                          "maximum": 10
+                                        },
+                                        "targetLoadInGrams": {
+                                          "nullable": true,
+                                          "type": "integer",
+                                          "minimum": 0,
+                                          "maximum": 2000000
+                                        },
+                                        "tempo": {
+                                          "nullable": true,
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 80
+                                        },
                                         "name": {
                                           "type": "string"
                                         },
@@ -20211,6 +21143,36 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "repsMin": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "repsMax": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "targetRir": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 10
+                                    },
+                                    "targetLoadInGrams": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 2000000
+                                    },
+                                    "tempo": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 80
+                                    },
                                     "name": {
                                       "type": "string"
                                     },
@@ -20370,6 +21332,600 @@
             }
           },
           "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/plans": {
+      "post": {
+        "operationId": "createAdminPlan",
+        "summary": "Create a plan and its dynamic entitlements without assigning subscriptions",
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 80,
+                    "pattern": "^[A-Z][A-Z0-9_]*$"
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "description": {
+                    "nullable": true,
+                    "type": "string",
+                    "maxLength": 1000
+                  },
+                  "audience": {
+                    "type": "string",
+                    "enum": [
+                      "ATHLETE",
+                      "COACH",
+                      "INTERNAL"
+                    ]
+                  },
+                  "monthlyPriceInCents": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 2147483647
+                  },
+                  "isPublic": {
+                    "default": false,
+                    "type": "boolean"
+                  },
+                  "isActive": {
+                    "default": true,
+                    "type": "boolean"
+                  },
+                  "sortOrder": {
+                    "default": 0,
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 2147483647
+                  },
+                  "entitlements": {
+                    "maxItems": 8,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "entitlement": {
+                          "type": "string",
+                          "enum": [
+                            "COACH_DASHBOARD",
+                            "MANAGE_ATHLETES",
+                            "ASSIGN_WORKOUTS",
+                            "VIEW_ATHLETE_HISTORY",
+                            "ADVANCED_STATS",
+                            "AI_CHAT",
+                            "AI_PLAN_GENERATION",
+                            "SOURCE_LIBRARY"
+                          ]
+                        },
+                        "limitValue": {
+                          "nullable": true,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 2147483647
+                        }
+                      },
+                      "required": [
+                        "entitlement",
+                        "limitValue"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "code",
+                  "name",
+                  "audience",
+                  "monthlyPriceInCents",
+                  "entitlements"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "audience": {
+                      "type": "string",
+                      "enum": [
+                        "ATHLETE",
+                        "COACH",
+                        "INTERNAL"
+                      ]
+                    },
+                    "monthlyPriceInCents": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "currency": {
+                      "type": "string"
+                    },
+                    "isPublic": {
+                      "type": "boolean"
+                    },
+                    "isActive": {
+                      "type": "boolean"
+                    },
+                    "sortOrder": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "entitlements": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "entitlement": {
+                            "type": "string",
+                            "enum": [
+                              "COACH_DASHBOARD",
+                              "MANAGE_ATHLETES",
+                              "ASSIGN_WORKOUTS",
+                              "VIEW_ATHLETE_HISTORY",
+                              "ADVANCED_STATS",
+                              "AI_CHAT",
+                              "AI_PLAN_GENERATION",
+                              "SOURCE_LIBRARY"
+                            ]
+                          },
+                          "limitValue": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 2147483647
+                          }
+                        },
+                        "required": [
+                          "entitlement",
+                          "limitValue"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "code",
+                    "name",
+                    "description",
+                    "audience",
+                    "monthlyPriceInCents",
+                    "currency",
+                    "isPublic",
+                    "isActive",
+                    "sortOrder",
+                    "entitlements"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "listAdminPlans",
+        "tags": [
+          "Admin"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "code": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "audience": {
+                        "type": "string",
+                        "enum": [
+                          "ATHLETE",
+                          "COACH",
+                          "INTERNAL"
+                        ]
+                      },
+                      "monthlyPriceInCents": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "currency": {
+                        "type": "string"
+                      },
+                      "isPublic": {
+                        "type": "boolean"
+                      },
+                      "isActive": {
+                        "type": "boolean"
+                      },
+                      "sortOrder": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
+                      "entitlements": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "entitlement": {
+                              "type": "string",
+                              "enum": [
+                                "COACH_DASHBOARD",
+                                "MANAGE_ATHLETES",
+                                "ASSIGN_WORKOUTS",
+                                "VIEW_ATHLETE_HISTORY",
+                                "ADVANCED_STATS",
+                                "AI_CHAT",
+                                "AI_PLAN_GENERATION",
+                                "SOURCE_LIBRARY"
+                              ]
+                            },
+                            "limitValue": {
+                              "nullable": true,
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 2147483647
+                            }
+                          },
+                          "required": [
+                            "entitlement",
+                            "limitValue"
+                          ],
+                          "additionalProperties": false
+                        }
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "code",
+                      "name",
+                      "description",
+                      "audience",
+                      "monthlyPriceInCents",
+                      "currency",
+                      "isPublic",
+                      "isActive",
+                      "sortOrder",
+                      "entitlements"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "409": {
             "description": "Default Response",
             "content": {
               "application/json": {
@@ -22426,257 +23982,6 @@
         }
       }
     },
-    "/admin/plans": {
-      "get": {
-        "operationId": "listAdminPlans",
-        "tags": [
-          "Admin"
-        ],
-        "responses": {
-          "200": {
-            "description": "Default Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "minLength": 1,
-                        "maxLength": 200
-                      },
-                      "code": {
-                        "type": "string"
-                      },
-                      "name": {
-                        "type": "string"
-                      },
-                      "description": {
-                        "nullable": true,
-                        "type": "string"
-                      },
-                      "audience": {
-                        "type": "string",
-                        "enum": [
-                          "ATHLETE",
-                          "COACH",
-                          "INTERNAL"
-                        ]
-                      },
-                      "monthlyPriceInCents": {
-                        "type": "integer",
-                        "minimum": -9007199254740991,
-                        "maximum": 9007199254740991
-                      },
-                      "currency": {
-                        "type": "string"
-                      },
-                      "isPublic": {
-                        "type": "boolean"
-                      },
-                      "isActive": {
-                        "type": "boolean"
-                      },
-                      "sortOrder": {
-                        "type": "integer",
-                        "minimum": -9007199254740991,
-                        "maximum": 9007199254740991
-                      },
-                      "entitlements": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "entitlement": {
-                              "type": "string",
-                              "enum": [
-                                "COACH_DASHBOARD",
-                                "MANAGE_ATHLETES",
-                                "ASSIGN_WORKOUTS",
-                                "VIEW_ATHLETE_HISTORY",
-                                "ADVANCED_STATS",
-                                "AI_CHAT",
-                                "AI_PLAN_GENERATION",
-                                "SOURCE_LIBRARY"
-                              ]
-                            },
-                            "limitValue": {
-                              "nullable": true,
-                              "type": "integer",
-                              "minimum": 0,
-                              "maximum": 2147483647
-                            }
-                          },
-                          "required": [
-                            "entitlement",
-                            "limitValue"
-                          ],
-                          "additionalProperties": false
-                        }
-                      }
-                    },
-                    "required": [
-                      "id",
-                      "code",
-                      "name",
-                      "description",
-                      "audience",
-                      "monthlyPriceInCents",
-                      "currency",
-                      "isPublic",
-                      "isActive",
-                      "sortOrder",
-                      "entitlements"
-                    ],
-                    "additionalProperties": false
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Default Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string"
-                    },
-                    "code": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "error",
-                    "code"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Default Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string"
-                    },
-                    "code": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "error",
-                    "code"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Default Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string"
-                    },
-                    "code": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "error",
-                    "code"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Default Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string"
-                    },
-                    "code": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "error",
-                    "code"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Default Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string"
-                    },
-                    "code": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "error",
-                    "code"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Default Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string"
-                    },
-                    "code": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "error",
-                    "code"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/admin/plans/{planId}": {
       "get": {
         "operationId": "getAdminPlan",
@@ -24005,6 +25310,7 @@
             "schema": {
               "type": "string",
               "enum": [
+                "PLAN_CREATED",
                 "PLAN_UPDATED",
                 "PLAN_ENTITLEMENTS_UPDATED",
                 "SUBSCRIPTION_TRIAL_GRANTED",
@@ -24077,6 +25383,7 @@
                           "action": {
                             "type": "string",
                             "enum": [
+                              "PLAN_CREATED",
                               "PLAN_UPDATED",
                               "PLAN_ENTITLEMENTS_UPDATED",
                               "SUBSCRIPTION_TRIAL_GRANTED",
@@ -27151,6 +28458,36 @@
                       "items": {
                         "type": "object",
                         "properties": {
+                          "plannedRepsMin": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 10000
+                          },
+                          "plannedRepsMax": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 10000
+                          },
+                          "plannedTargetRir": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 10
+                          },
+                          "plannedTargetLoadInGrams": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 2000000
+                          },
+                          "plannedTempo": {
+                            "nullable": true,
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 80
+                          },
                           "id": {
                             "type": "string",
                             "format": "uuid",
@@ -27504,6 +28841,36 @@
                       "items": {
                         "type": "object",
                         "properties": {
+                          "plannedRepsMin": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 10000
+                          },
+                          "plannedRepsMax": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 10000
+                          },
+                          "plannedTargetRir": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 10
+                          },
+                          "plannedTargetLoadInGrams": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 2000000
+                          },
+                          "plannedTempo": {
+                            "nullable": true,
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 80
+                          },
                           "id": {
                             "type": "string",
                             "format": "uuid",
@@ -29005,6 +30372,36 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "plannedRepsMin": {
+                      "nullable": true,
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 10000
+                    },
+                    "plannedRepsMax": {
+                      "nullable": true,
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 10000
+                    },
+                    "plannedTargetRir": {
+                      "nullable": true,
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 10
+                    },
+                    "plannedTargetLoadInGrams": {
+                      "nullable": true,
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 2000000
+                    },
+                    "plannedTempo": {
+                      "nullable": true,
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 80
+                    },
                     "id": {
                       "type": "string",
                       "format": "uuid",
@@ -29536,6 +30933,36 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "plannedRepsMin": {
+                      "nullable": true,
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 10000
+                    },
+                    "plannedRepsMax": {
+                      "nullable": true,
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 10000
+                    },
+                    "plannedTargetRir": {
+                      "nullable": true,
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 10
+                    },
+                    "plannedTargetLoadInGrams": {
+                      "nullable": true,
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 2000000
+                    },
+                    "plannedTempo": {
+                      "nullable": true,
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 80
+                    },
                     "id": {
                       "type": "string",
                       "format": "uuid",
@@ -33530,6 +34957,36 @@
                             "items": {
                               "type": "object",
                               "properties": {
+                                "repsMin": {
+                                  "nullable": true,
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 10000
+                                },
+                                "repsMax": {
+                                  "nullable": true,
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 10000
+                                },
+                                "targetRir": {
+                                  "nullable": true,
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 10
+                                },
+                                "targetLoadInGrams": {
+                                  "nullable": true,
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 2000000
+                                },
+                                "tempo": {
+                                  "nullable": true,
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 80
+                                },
                                 "order": {
                                   "type": "integer",
                                   "minimum": 0,
@@ -34157,6 +35614,345 @@
             }
           },
           "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me/sports-profile": {
+      "get": {
+        "operationId": "getSportsProfile",
+        "summary": "Get own optional sports profile",
+        "tags": [
+          "Me"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "trainingGoals": {
+                      "nullable": true,
+                      "type": "string",
+                      "maxLength": 1000
+                    },
+                    "experienceLevel": {
+                      "nullable": true,
+                      "type": "string",
+                      "enum": [
+                        "BEGINNER",
+                        "INTERMEDIATE",
+                        "ADVANCED"
+                      ]
+                    },
+                    "availableEquipment": {
+                      "maxItems": 30,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 80
+                      }
+                    },
+                    "trainingRestrictions": {
+                      "nullable": true,
+                      "type": "string",
+                      "maxLength": 2000
+                    }
+                  },
+                  "required": [
+                    "trainingGoals",
+                    "experienceLevel",
+                    "availableEquipment",
+                    "trainingRestrictions"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateSportsProfile",
+        "summary": "Update own sports profile without changing body metric history",
+        "tags": [
+          "Me"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "trainingGoals": {
+                    "nullable": true,
+                    "type": "string",
+                    "maxLength": 1000
+                  },
+                  "experienceLevel": {
+                    "nullable": true,
+                    "type": "string",
+                    "enum": [
+                      "BEGINNER",
+                      "INTERMEDIATE",
+                      "ADVANCED"
+                    ]
+                  },
+                  "availableEquipment": {
+                    "maxItems": 30,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 80
+                    }
+                  },
+                  "trainingRestrictions": {
+                    "nullable": true,
+                    "type": "string",
+                    "maxLength": 2000
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "trainingGoals": {
+                      "nullable": true,
+                      "type": "string",
+                      "maxLength": 1000
+                    },
+                    "experienceLevel": {
+                      "nullable": true,
+                      "type": "string",
+                      "enum": [
+                        "BEGINNER",
+                        "INTERMEDIATE",
+                        "ADVANCED"
+                      ]
+                    },
+                    "availableEquipment": {
+                      "maxItems": 30,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 80
+                      }
+                    },
+                    "trainingRestrictions": {
+                      "nullable": true,
+                      "type": "string",
+                      "maxLength": 2000
+                    }
+                  },
+                  "required": [
+                    "trainingGoals",
+                    "experienceLevel",
+                    "availableEquipment",
+                    "trainingRestrictions"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
             "description": "Default Response",
             "content": {
               "application/json": {
@@ -35159,6 +36955,36 @@
                           "planned": {
                             "type": "object",
                             "properties": {
+                              "repsMin": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 10000
+                              },
+                              "repsMax": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 10000
+                              },
+                              "targetRir": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 10
+                              },
+                              "targetLoadInGrams": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 2000000
+                              },
+                              "tempo": {
+                                "nullable": true,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 80
+                              },
                               "warmupSets": {
                                 "nullable": true,
                                 "type": "integer",

@@ -1,4 +1,6 @@
 "use client";
+import { AdvancedPrescriptionFields } from "@/app/planning/_components/advanced-prescription-fields";
+import { serializeAdvancedPrescription } from "@/app/planning/_lib/workout-plan-builder";
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -49,6 +51,11 @@ export interface InitialTemplateData {
       sets: number;
       warmupSets?: number;
       reps: number;
+      repsMin?: number | null;
+      repsMax?: number | null;
+      targetRir?: number | null;
+      targetLoadInGrams?: number | null;
+      tempo?: string | null;
       restTimeInSeconds: number;
       alternative1ExerciseName?: string | null;
       alternative2ExerciseName?: string | null;
@@ -60,12 +67,18 @@ interface CoachTemplateBuilderProps {
   initialData?: InitialTemplateData;
 }
 
-export function CoachTemplateBuilder({ initialData }: CoachTemplateBuilderProps) {
+export function CoachTemplateBuilder({
+  initialData,
+}: CoachTemplateBuilderProps) {
   const router = useRouter();
   const isEditing = Boolean(initialData?.id);
   const [name, setName] = useState(initialData?.name ?? "");
-  const [description, setDescription] = useState(initialData?.description ?? "");
-  const [tagsInput, setTagsInput] = useState((initialData?.tags ?? []).join(", "));
+  const [description, setDescription] = useState(
+    initialData?.description ?? "",
+  );
+  const [tagsInput, setTagsInput] = useState(
+    (initialData?.tags ?? []).join(", "),
+  );
 
   const [days, setDays] = useState<WorkoutPlanDraftDay[]>(() => {
     if (initialData?.workoutDays && initialData.workoutDays.length > 0) {
@@ -82,6 +95,7 @@ export function CoachTemplateBuilder({ initialData }: CoachTemplateBuilderProps)
           sets: e.sets,
           warmupSets: e.warmupSets ?? 0,
           reps: e.reps,
+          ...serializeAdvancedPrescription(e),
           restTimeInSeconds: e.restTimeInSeconds,
           alternative1Name: e.alternative1ExerciseName ?? "",
           alternative2Name: e.alternative2ExerciseName ?? "",
@@ -178,9 +192,12 @@ export function CoachTemplateBuilder({ initialData }: CoachTemplateBuilderProps)
             let alt1 = exercise.alternative1Name?.trim() || null;
             let alt2 = exercise.alternative2Name?.trim() || null;
 
-            if (alt1 && alt1.toLowerCase() === exName.toLowerCase()) alt1 = null;
-            if (alt2 && alt2.toLowerCase() === exName.toLowerCase()) alt2 = null;
-            if (alt1 && alt2 && alt1.toLowerCase() === alt2.toLowerCase()) alt2 = null;
+            if (alt1 && alt1.toLowerCase() === exName.toLowerCase())
+              alt1 = null;
+            if (alt2 && alt2.toLowerCase() === exName.toLowerCase())
+              alt2 = null;
+            if (alt1 && alt2 && alt1.toLowerCase() === alt2.toLowerCase())
+              alt2 = null;
             if (!alt1 && alt2) {
               alt1 = alt2;
               alt2 = null;
@@ -192,6 +209,7 @@ export function CoachTemplateBuilder({ initialData }: CoachTemplateBuilderProps)
               sets: exercise.sets,
               warmupSets: exercise.warmupSets ?? 0,
               reps: exercise.reps,
+              ...serializeAdvancedPrescription(exercise),
               restTimeInSeconds: exercise.restTimeInSeconds,
               alternative1ExerciseName: alt1,
               alternative2ExerciseName: alt2,
@@ -282,14 +300,18 @@ export function CoachTemplateBuilder({ initialData }: CoachTemplateBuilderProps)
               {isEditing ? "Editar Modelo de Treino" : "Novo Modelo de Treino"}
             </h2>
             <p className="text-xs text-muted-foreground">
-              Configure a estrutura dos dias e exercícios deste modelo reutilizável.
+              Configure a estrutura dos dias e exercícios deste modelo
+              reutilizável.
             </p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-1.5 md:col-span-2">
-            <Label htmlFor="template-name" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <Label
+              htmlFor="template-name"
+              className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+            >
               Nome do Modelo *
             </Label>
             <Input
@@ -304,7 +326,10 @@ export function CoachTemplateBuilder({ initialData }: CoachTemplateBuilderProps)
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="template-description" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <Label
+              htmlFor="template-description"
+              className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+            >
               Descrição (Opcional)
             </Label>
             <Input
@@ -318,7 +343,10 @@ export function CoachTemplateBuilder({ initialData }: CoachTemplateBuilderProps)
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="template-tags" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <Label
+              htmlFor="template-tags"
+              className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+            >
               Tags (Separadas por vírgula)
             </Label>
             <Input
@@ -365,7 +393,9 @@ export function CoachTemplateBuilder({ initialData }: CoachTemplateBuilderProps)
               <div className="flex flex-1 items-center gap-2 min-w-[200px]">
                 <Input
                   value={day.name}
-                  onChange={(e) => updateDay(dayIndex, { name: e.target.value })}
+                  onChange={(e) =>
+                    updateDay(dayIndex, { name: e.target.value })
+                  }
                   placeholder="Nome do dia (ex: Treino A - Peito)"
                   className="font-heading font-bold text-base h-10 rounded-xl bg-background max-w-sm"
                   disabled={isPending}
@@ -377,7 +407,8 @@ export function CoachTemplateBuilder({ initialData }: CoachTemplateBuilderProps)
                   value={day.weekDay ?? "MONDAY"}
                   onChange={(e) =>
                     updateDay(dayIndex, {
-                      weekDay: e.target.value as (typeof WEEK_DAYS)[number]["value"],
+                      weekDay: e.target
+                        .value as (typeof WEEK_DAYS)[number]["value"],
                     })
                   }
                   className="h-9 rounded-lg border border-border bg-background px-2.5 text-xs font-heading font-medium text-foreground focus-visible:outline-none"
@@ -426,7 +457,9 @@ export function CoachTemplateBuilder({ initialData }: CoachTemplateBuilderProps)
                 <input
                   type="checkbox"
                   checked={day.isRest}
-                  onChange={(e) => updateDay(dayIndex, { isRest: e.target.checked })}
+                  onChange={(e) =>
+                    updateDay(dayIndex, { isRest: e.target.checked })
+                  }
                   className="rounded border-border text-primary focus:ring-primary size-4"
                   disabled={isPending}
                 />
@@ -443,7 +476,8 @@ export function CoachTemplateBuilder({ initialData }: CoachTemplateBuilderProps)
                     value={day.estimatedDurationInMinutes}
                     onChange={(e) =>
                       updateDay(dayIndex, {
-                        estimatedDurationInMinutes: Number(e.target.value) || 60,
+                        estimatedDurationInMinutes:
+                          Number(e.target.value) || 60,
                       })
                     }
                     className="w-16 h-8 text-center text-xs rounded-lg bg-background"
@@ -479,7 +513,9 @@ export function CoachTemplateBuilder({ initialData }: CoachTemplateBuilderProps)
                       />
                       <button
                         type="button"
-                        onClick={() => moveExercise(dayIndex, exerciseIndex, -1)}
+                        onClick={() =>
+                          moveExercise(dayIndex, exerciseIndex, -1)
+                        }
                         disabled={isPending || exerciseIndex === 0}
                         className="size-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-30 transition-colors"
                         title="Subir exercício"
@@ -589,6 +625,13 @@ export function CoachTemplateBuilder({ initialData }: CoachTemplateBuilderProps)
                       </div>
                     </div>
 
+                    <AdvancedPrescriptionFields
+                      value={exercise}
+                      disabled={isPending}
+                      onChange={(patch) =>
+                        updateExercise(dayIndex, exerciseIndex, patch)
+                      }
+                    />
                     {/* Alternativas de Exercício */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 border-t border-border/40">
                       <div className="flex flex-col gap-1">

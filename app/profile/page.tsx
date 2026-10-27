@@ -16,10 +16,10 @@ import { FeedbackButton } from "./_components/feedback-button";
 import { PwaInstallCard } from "@/app/_components/pwa/pwa-install-card";
 import { Logo } from "@/app/_components/logo";
 import { ProfileMetricsSection } from "./_components/profile-metrics-section";
+import { SportsProfileSection } from "./_components/sports-profile-section";
 import { CoachAreaLinkCard } from "./_components/coach-area-link-card";
 import { MyCoachSection } from "./_components/my-coach-section";
 import { ArrowRight, Shield } from "lucide-react";
-
 
 export default async function ProfilePage() {
   const session = await authClient.getSession({
@@ -30,16 +30,18 @@ export default async function ProfilePage() {
 
   if (!session.data?.user) redirect("/auth");
 
-  const [trainData, commercialRes, relationshipRes, sharingRes] = await Promise.all([
-    getUserTrainData(),
-    getCommercialContext({ cache: "no-store" }),
-    getAthleteCoachRelationship({ cache: "no-store" }),
-    getAthleteCoachProgressSharing({ cache: "no-store" }).catch(() => null),
-  ]);
+  const [trainData, commercialRes, relationshipRes, sharingRes] =
+    await Promise.all([
+      getUserTrainData(),
+      getCommercialContext({ cache: "no-store" }),
+      getAthleteCoachRelationship({ cache: "no-store" }),
+      getAthleteCoachProgressSharing({ cache: "no-store" }).catch(() => null),
+    ]);
 
   if (trainData.status === 401) redirect("/auth");
 
-  const commercialData = commercialRes.status === 200 ? commercialRes.data : null;
+  const commercialData =
+    commercialRes.status === 200 ? commercialRes.data : null;
   const isCoach = commercialData?.accountType === "COACH";
   const isAdmin = commercialData?.systemRole === "ADMIN";
 
@@ -138,6 +140,7 @@ export default async function ProfilePage() {
         />
 
         <GamificationThemeSelector currentTheme={data?.gamificationTheme} />
+        <SportsProfileSection />
 
         {/* Instalação do Aplicativo (PWA) */}
         <PwaInstallCard />
@@ -165,7 +168,8 @@ export default async function ProfilePage() {
             >
               RepDB (repdb.co)
             </a>
-            . Ilustrações e demonstrações biomecânicas fornecidas sob a licença aberta oficial do catálogo livre RepDB.
+            . Ilustrações e demonstrações biomecânicas fornecidas sob a licença
+            aberta oficial do catálogo livre RepDB.
           </p>
         </div>
 
@@ -187,7 +191,6 @@ export default async function ProfilePage() {
         </div>
 
         <LogoutButton />
-
       </div>
 
       <BottomNav isCoach={isCoach} activePage="profile" />

@@ -38,8 +38,14 @@ export default async function HistorySessionPage({
     <div className="min-h-svh bg-background pb-24">
       <HistorySessionDetail session={response.data} />
       <div className="mx-auto max-w-3xl px-5 pb-5">
-        <Button asChild variant="outline" className="min-h-11 w-full rounded-full">
-          <Link href={`/workout-sessions/${sessionId}/summary`}>Ver resumo e avaliação pós-treino</Link>
+        <Button
+          asChild
+          variant="outline"
+          className="min-h-11 w-full rounded-full"
+        >
+          <Link href={`/workout-sessions/${sessionId}/summary`}>
+            Ver resumo e avaliação pós-treino
+          </Link>
         </Button>
       </div>
       <BottomNav />

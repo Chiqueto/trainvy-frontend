@@ -1,13 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Layers, ShieldCheck, Tag } from "lucide-react";
+import { Check, Layers, Plus } from "lucide-react";
 import type { ListAdminPlans200Item } from "@/app/_lib/api/fetch-generated";
 import { entitlementLabels, money } from "../_lib/presentation";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { CreatePlanForm } from "./create-plan-form";
+import { PlanPermissionsEditor } from "./plan-permissions-editor";
 
 export function PlansList({ initial }: { initial: ListAdminPlans200Item[] }) {
-  const [plans] = useState(initial);
+  const [plans, setPlans] = useState(initial);
+  const [creating, setCreating] = useState(false);
+  const [created, setCreated] = useState(false);
 
   return (
     <div className="space-y-6">
@@ -17,7 +22,8 @@ export function PlansList({ initial }: { initial: ListAdminPlans200Item[] }) {
             Planos Comerciais
           </h1>
           <p className="text-xs text-muted-foreground">
-            Gerenciamento de planos de assinatura, preços e limites de funcionalidades (entitlements).
+            Gerenciamento de planos de assinatura, preços e limites de
+            funcionalidades (entitlements).
           </p>
         </div>
         <Badge variant="outline" className="w-fit gap-1 text-xs">
@@ -25,6 +31,38 @@ export function PlansList({ initial }: { initial: ListAdminPlans200Item[] }) {
           <span>{plans.length} planos cadastrados</span>
         </Badge>
       </div>
+
+      <Button
+        onClick={() => {
+          setCreating(true);
+          setCreated(false);
+        }}
+        disabled={creating}
+        className="min-h-11 rounded-full"
+      >
+        <Plus className="size-4" />
+        Novo plano
+      </Button>
+      {created && (
+        <p role="status" className="text-sm text-emerald-500">
+          Plano criado.
+        </p>
+      )}
+      {creating && (
+        <CreatePlanForm
+          onCancel={() => setCreating(false)}
+          onCreated={(plan) => {
+            setPlans((current) =>
+              [...current, plan].sort(
+                (a, b) =>
+                  a.sortOrder - b.sortOrder || a.code.localeCompare(b.code),
+              ),
+            );
+            setCreating(false);
+            setCreated(true);
+          }}
+        />
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {plans.map((plan) => (
@@ -62,10 +100,15 @@ export function PlansList({ initial }: { initial: ListAdminPlans200Item[] }) {
               )}
 
               <div className="pt-2">
-                <span className="text-xs text-muted-foreground">Preço base:</span>
+                <span className="text-xs text-muted-foreground">
+                  Preço base:
+                </span>
                 <p className="font-heading text-2xl font-extrabold text-foreground">
                   {money(plan.monthlyPriceInCents, plan.currency)}
-                  <span className="text-xs font-normal text-muted-foreground"> /mês</span>
+                  <span className="text-xs font-normal text-muted-foreground">
+                    {" "}
+                    /mês
+                  </span>
                 </p>
               </div>
 
@@ -81,7 +124,9 @@ export function PlansList({ initial }: { initial: ListAdminPlans200Item[] }) {
                     >
                       <div className="flex items-center gap-1.5">
                         <Check className="size-3.5 text-emerald-500 shrink-0" />
-                        <span>{entitlementLabels[e.entitlement] ?? e.entitlement}</span>
+                        <span>
+                          {entitlementLabels[e.entitlement] ?? e.entitlement}
+                        </span>
                       </div>
                       {e.limitValue !== null && (
                         <span className="font-mono text-[11px] font-bold text-primary">
@@ -93,6 +138,16 @@ export function PlansList({ initial }: { initial: ListAdminPlans200Item[] }) {
                 </ul>
               </div>
             </div>
+            <PlanPermissionsEditor
+              plan={plan}
+              onSaved={(updated) =>
+                setPlans((current) =>
+                  current.map((item) =>
+                    item.id === updated.id ? updated : item,
+                  ),
+                )
+              }
+            />
           </div>
         ))}
       </div>

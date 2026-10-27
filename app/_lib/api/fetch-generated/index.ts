@@ -41,6 +41,36 @@ export type ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItem = {
   warmupSets: number;
   sets: number;
   reps: number;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMin?: number | null;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMax?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  targetRir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 2000000
+   * @nullable
+   */
+  targetLoadInGrams?: number | null;
+  /**
+   * @minLength 1
+   * @maxLength 80
+   * @nullable
+   */
+  tempo?: string | null;
   restTimeInSeconds: number;
 };
 
@@ -93,6 +123,36 @@ export const CreateWorkoutPlanBodyWorkoutDaysItemWeekDay = {
 } as const;
 
 export type CreateWorkoutPlanBodyWorkoutDaysItemExercisesItem = {
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMin?: number | null;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMax?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  targetRir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 2000000
+   * @nullable
+   */
+  targetLoadInGrams?: number | null;
+  /**
+   * @minLength 1
+   * @maxLength 80
+   * @nullable
+   */
+  tempo?: string | null;
   /** @minimum 0 */
   order: number;
   /** @minLength 1 */
@@ -174,6 +234,36 @@ export const CreateWorkoutPlan201WorkoutDaysItemWeekDay = {
 } as const;
 
 export type CreateWorkoutPlan201WorkoutDaysItemExercisesItem = {
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMin?: number | null;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMax?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  targetRir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 2000000
+   * @nullable
+   */
+  targetLoadInGrams?: number | null;
+  /**
+   * @minLength 1
+   * @maxLength 80
+   * @nullable
+   */
+  tempo?: string | null;
   /** @minimum 0 */
   order: number;
   /** @minLength 1 */
@@ -360,6 +450,36 @@ export const EditWorkoutPlanBodyWorkoutDaysItemWeekDay = {
 
 export type EditWorkoutPlanBodyWorkoutDaysItemExercisesItem = {
   /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMin?: number | null;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMax?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  targetRir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 2000000
+   * @nullable
+   */
+  targetLoadInGrams?: number | null;
+  /**
+   * @minLength 1
+   * @maxLength 80
+   * @nullable
+   */
+  tempo?: string | null;
+  /**
    * @minimum 0
    * @maximum 9007199254740991
    */
@@ -540,6 +660,36 @@ export type GetWorkoutDay200ExercisesItem = {
   sets: number;
   warmupSets: number;
   reps: number;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMin?: number | null;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMax?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  targetRir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 2000000
+   * @nullable
+   */
+  targetLoadInGrams?: number | null;
+  /**
+   * @minLength 1
+   * @maxLength 80
+   * @nullable
+   */
+  tempo?: string | null;
   restTimeInSeconds: number;
 };
 
@@ -665,6 +815,36 @@ export const DuplicateWorkoutPlan201WorkoutDaysItemWeekDay = {
 } as const;
 
 export type DuplicateWorkoutPlan201WorkoutDaysItemExercisesItem = {
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMin?: number | null;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMax?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  targetRir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 2000000
+   * @nullable
+   */
+  targetLoadInGrams?: number | null;
+  /**
+   * @minLength 1
+   * @maxLength 80
+   * @nullable
+   */
+  tempo?: string | null;
   /** @minimum 0 */
   order: number;
   /** @minLength 1 */
@@ -767,6 +947,36 @@ export const StartWorkoutSession201Origin = {
 } as const;
 
 export type StartWorkoutSession201ExercisesItem = {
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  plannedRepsMin?: number | null;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  plannedRepsMax?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  plannedTargetRir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 2000000
+   * @nullable
+   */
+  plannedTargetLoadInGrams?: number | null;
+  /**
+   * @minLength 1
+   * @maxLength 80
+   * @nullable
+   */
+  plannedTempo?: string | null;
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
   /**
@@ -1236,6 +1446,36 @@ export const CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemWeekDay = {
 } as const;
 
 export type CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItem = {
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMin?: number | null;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMax?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  targetRir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 2000000
+   * @nullable
+   */
+  targetLoadInGrams?: number | null;
+  /**
+   * @minLength 1
+   * @maxLength 80
+   * @nullable
+   */
+  tempo?: string | null;
   /** @minimum 0 */
   order: number;
   /** @minLength 1 */
@@ -1323,6 +1563,36 @@ export const CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemWeekDa
 
 export type CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMin?: number | null;
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMax?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 10
+     * @nullable
+     */
+    targetRir?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 2000000
+     * @nullable
+     */
+    targetLoadInGrams?: number | null;
+    /**
+     * @minLength 1
+     * @maxLength 80
+     * @nullable
+     */
+    tempo?: string | null;
     /** @minimum 0 */
     order: number;
     /** @minLength 1 */
@@ -2040,6 +2310,36 @@ export type GenerateWorkoutPlanDraftWithAi200WorkoutDaysItemExercisesItem = {
   sets: number;
   warmupSets: number;
   reps: number;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMin?: number | null;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMax?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  targetRir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 2000000
+   * @nullable
+   */
+  targetLoadInGrams?: number | null;
+  /**
+   * @minLength 1
+   * @maxLength 80
+   * @nullable
+   */
+  tempo?: string | null;
   restTimeInSeconds: number;
   /** @nullable */
   alternative1Name?: string | null;
@@ -2211,7 +2511,8 @@ export type GetUserTrainData200 = {
   weightInGrams: number;
   heightInCentimeters: number;
   age: number;
-  bodyFatPercentage: number;
+  /** @nullable */
+  bodyFatPercentage: number | null;
   gamificationTheme:
     | "ALL"
     | "ANIMES"
@@ -2264,8 +2565,9 @@ export type UpsertUserTrainDataBody = {
   /**
    * @minimum 0
    * @maximum 100
+   * @nullable
    */
-  bodyFatPercentage: number;
+  bodyFatPercentage?: number | null;
   gamificationTheme?: UpsertUserTrainDataBodyGamificationTheme;
 };
 
@@ -2285,7 +2587,8 @@ export type UpsertUserTrainData200 = {
   weightInGrams: number;
   heightInCentimeters: number;
   age: number;
-  bodyFatPercentage: number;
+  /** @nullable */
+  bodyFatPercentage: number | null;
   gamificationTheme: UpsertUserTrainData200GamificationTheme;
 };
 
@@ -3354,6 +3657,36 @@ export const CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay = {
 } as const;
 
 export type CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItem = {
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMin?: number | null;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMax?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  targetRir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 2000000
+   * @nullable
+   */
+  targetLoadInGrams?: number | null;
+  /**
+   * @minLength 1
+   * @maxLength 80
+   * @nullable
+   */
+  tempo?: string | null;
   /** @minLength 1 */
   name: string;
   /**
@@ -3480,6 +3813,36 @@ export const CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemWeekDay = {
 
 export type CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMin?: number | null;
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMax?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 10
+     * @nullable
+     */
+    targetRir?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 2000000
+     * @nullable
+     */
+    targetLoadInGrams?: number | null;
+    /**
+     * @minLength 1
+     * @maxLength 80
+     * @nullable
+     */
+    tempo?: string | null;
     name: string;
     order: number;
     /** @nullable */
@@ -3579,6 +3942,36 @@ export const UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay = {
 } as const;
 
 export type UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItem = {
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMin?: number | null;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMax?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  targetRir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 2000000
+   * @nullable
+   */
+  targetLoadInGrams?: number | null;
+  /**
+   * @minLength 1
+   * @maxLength 80
+   * @nullable
+   */
+  tempo?: string | null;
   /** @minLength 1 */
   name: string;
   /**
@@ -3709,6 +4102,36 @@ export const UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemWeekDay = {
 
 export type UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMin?: number | null;
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMax?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 10
+     * @nullable
+     */
+    targetRir?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 2000000
+     * @nullable
+     */
+    targetLoadInGrams?: number | null;
+    /**
+     * @minLength 1
+     * @maxLength 80
+     * @nullable
+     */
+    tempo?: string | null;
     name: string;
     order: number;
     /** @nullable */
@@ -3836,6 +4259,36 @@ export const GetCoachPrescriptionDetails200PayloadWorkoutDaysItemWeekDay = {
 
 export type GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMin?: number | null;
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMax?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 10
+     * @nullable
+     */
+    targetRir?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 2000000
+     * @nullable
+     */
+    targetLoadInGrams?: number | null;
+    /**
+     * @minLength 1
+     * @maxLength 80
+     * @nullable
+     */
+    tempo?: string | null;
     name: string;
     order: number;
     /** @nullable */
@@ -3962,6 +4415,36 @@ export const SendWorkoutPrescription200PayloadWorkoutDaysItemWeekDay = {
 } as const;
 
 export type SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItem = {
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMin?: number | null;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMax?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  targetRir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 2000000
+   * @nullable
+   */
+  targetLoadInGrams?: number | null;
+  /**
+   * @minLength 1
+   * @maxLength 80
+   * @nullable
+   */
+  tempo?: string | null;
   name: string;
   order: number;
   /** @nullable */
@@ -4088,6 +4571,36 @@ export const CancelWorkoutPrescription200PayloadWorkoutDaysItemWeekDay = {
 } as const;
 
 export type CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItem = {
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMin?: number | null;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMax?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  targetRir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 2000000
+   * @nullable
+   */
+  targetLoadInGrams?: number | null;
+  /**
+   * @minLength 1
+   * @maxLength 80
+   * @nullable
+   */
+  tempo?: string | null;
   name: string;
   order: number;
   /** @nullable */
@@ -4216,6 +4729,36 @@ export const ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemWeekDay =
 
 export type ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMin?: number | null;
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMax?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 10
+     * @nullable
+     */
+    targetRir?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 2000000
+     * @nullable
+     */
+    targetLoadInGrams?: number | null;
+    /**
+     * @minLength 1
+     * @maxLength 80
+     * @nullable
+     */
+    tempo?: string | null;
     name: string;
     order: number;
     /** @nullable */
@@ -4343,6 +4886,36 @@ export const ListAthletePrescriptions200ItemPayloadWorkoutDaysItemWeekDay = {
 
 export type ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMin?: number | null;
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMax?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 10
+     * @nullable
+     */
+    targetRir?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 2000000
+     * @nullable
+     */
+    targetLoadInGrams?: number | null;
+    /**
+     * @minLength 1
+     * @maxLength 80
+     * @nullable
+     */
+    tempo?: string | null;
     name: string;
     order: number;
     /** @nullable */
@@ -4470,6 +5043,36 @@ export const GetAthletePrescriptionDetails200PayloadWorkoutDaysItemWeekDay = {
 
 export type GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMin?: number | null;
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMax?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 10
+     * @nullable
+     */
+    targetRir?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 2000000
+     * @nullable
+     */
+    targetLoadInGrams?: number | null;
+    /**
+     * @minLength 1
+     * @maxLength 80
+     * @nullable
+     */
+    tempo?: string | null;
     name: string;
     order: number;
     /** @nullable */
@@ -4598,6 +5201,36 @@ export const AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemWeekD
 
 export type AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMin?: number | null;
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMax?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 10
+     * @nullable
+     */
+    targetRir?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 2000000
+     * @nullable
+     */
+    targetLoadInGrams?: number | null;
+    /**
+     * @minLength 1
+     * @maxLength 80
+     * @nullable
+     */
+    tempo?: string | null;
     name: string;
     order: number;
     /** @nullable */
@@ -4731,6 +5364,36 @@ export const DeclineWorkoutPrescription200PayloadWorkoutDaysItemWeekDay = {
 } as const;
 
 export type DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItem = {
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMin?: number | null;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMax?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  targetRir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 2000000
+   * @nullable
+   */
+  targetLoadInGrams?: number | null;
+  /**
+   * @minLength 1
+   * @maxLength 80
+   * @nullable
+   */
+  tempo?: string | null;
   name: string;
   order: number;
   /** @nullable */
@@ -4844,6 +5507,36 @@ export type GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItem 
     sets: number;
     warmupSets: number;
     reps: number;
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMin?: number | null;
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMax?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 10
+     * @nullable
+     */
+    targetRir?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 2000000
+     * @nullable
+     */
+    targetLoadInGrams?: number | null;
+    /**
+     * @minLength 1
+     * @maxLength 80
+     * @nullable
+     */
+    tempo?: string | null;
     restTimeInSeconds: number;
     /** @nullable */
     alternative1Name?: string | null;
@@ -5330,6 +6023,36 @@ export type GetCoachAthleteProgressSessionDetail200Summary = {
 };
 
 export type GetCoachAthleteProgressSessionDetail200ExercisesItemPlanned = {
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMin?: number | null;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMax?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  targetRir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 2000000
+   * @nullable
+   */
+  targetLoadInGrams?: number | null;
+  /**
+   * @minLength 1
+   * @maxLength 80
+   * @nullable
+   */
+  tempo?: string | null;
   /**
    * @minimum -9007199254740991
    * @maximum 9007199254740991
@@ -5932,6 +6655,36 @@ export const ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemWeekDay =
 
 export type ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMin?: number | null;
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMax?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 10
+     * @nullable
+     */
+    targetRir?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 2000000
+     * @nullable
+     */
+    targetLoadInGrams?: number | null;
+    /**
+     * @minLength 1
+     * @maxLength 80
+     * @nullable
+     */
+    tempo?: string | null;
     name: string;
     order: number;
     /** @nullable */
@@ -6015,6 +6768,36 @@ export const CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemWeekDay = {
 } as const;
 
 export type CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItem = {
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMin?: number | null;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMax?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  targetRir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 2000000
+   * @nullable
+   */
+  targetLoadInGrams?: number | null;
+  /**
+   * @minLength 1
+   * @maxLength 80
+   * @nullable
+   */
+  tempo?: string | null;
   /** @minLength 1 */
   name: string;
   /**
@@ -6113,6 +6896,36 @@ export const CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemWeekDay = {
 
 export type CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMin?: number | null;
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMax?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 10
+     * @nullable
+     */
+    targetRir?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 2000000
+     * @nullable
+     */
+    targetLoadInGrams?: number | null;
+    /**
+     * @minLength 1
+     * @maxLength 80
+     * @nullable
+     */
+    tempo?: string | null;
     name: string;
     order: number;
     /** @nullable */
@@ -6197,6 +7010,36 @@ export const GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemWeekDay = {
 
 export type GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMin?: number | null;
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMax?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 10
+     * @nullable
+     */
+    targetRir?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 2000000
+     * @nullable
+     */
+    targetLoadInGrams?: number | null;
+    /**
+     * @minLength 1
+     * @maxLength 80
+     * @nullable
+     */
+    tempo?: string | null;
     name: string;
     order: number;
     /** @nullable */
@@ -6280,6 +7123,36 @@ export const UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemWeekDay = {
 } as const;
 
 export type UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItem = {
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMin?: number | null;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMax?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  targetRir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 2000000
+   * @nullable
+   */
+  targetLoadInGrams?: number | null;
+  /**
+   * @minLength 1
+   * @maxLength 80
+   * @nullable
+   */
+  tempo?: string | null;
   /** @minLength 1 */
   name: string;
   /**
@@ -6378,6 +7251,36 @@ export const UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemWeekDay = {
 
 export type UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMin?: number | null;
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMax?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 10
+     * @nullable
+     */
+    targetRir?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 2000000
+     * @nullable
+     */
+    targetLoadInGrams?: number | null;
+    /**
+     * @minLength 1
+     * @maxLength 80
+     * @nullable
+     */
+    tempo?: string | null;
     name: string;
     order: number;
     /** @nullable */
@@ -6529,6 +7432,36 @@ export const AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysIt
 
 export type AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMin?: number | null;
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMax?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 10
+     * @nullable
+     */
+    targetRir?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 2000000
+     * @nullable
+     */
+    targetLoadInGrams?: number | null;
+    /**
+     * @minLength 1
+     * @maxLength 80
+     * @nullable
+     */
+    tempo?: string | null;
     name: string;
     order: number;
     /** @nullable */
@@ -6641,6 +7574,36 @@ export const CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemWeek
 
 export type CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMin?: number | null;
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMax?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 10
+     * @nullable
+     */
+    targetRir?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 2000000
+     * @nullable
+     */
+    targetLoadInGrams?: number | null;
+    /**
+     * @minLength 1
+     * @maxLength 80
+     * @nullable
+     */
+    tempo?: string | null;
     name: string;
     order: number;
     /** @nullable */
@@ -6706,6 +7669,253 @@ export type CreateCoachWorkoutPlanTemplateFromPlan404 = {
 };
 
 export type CreateCoachWorkoutPlanTemplateFromPlan500 = {
+  error: string;
+  code: string;
+};
+
+export type CreateAdminPlanBodyAudience =
+  (typeof CreateAdminPlanBodyAudience)[keyof typeof CreateAdminPlanBodyAudience];
+
+export const CreateAdminPlanBodyAudience = {
+  ATHLETE: "ATHLETE",
+  COACH: "COACH",
+  INTERNAL: "INTERNAL",
+} as const;
+
+export type CreateAdminPlanBodyEntitlementsItemEntitlement =
+  (typeof CreateAdminPlanBodyEntitlementsItemEntitlement)[keyof typeof CreateAdminPlanBodyEntitlementsItemEntitlement];
+
+export const CreateAdminPlanBodyEntitlementsItemEntitlement = {
+  COACH_DASHBOARD: "COACH_DASHBOARD",
+  MANAGE_ATHLETES: "MANAGE_ATHLETES",
+  ASSIGN_WORKOUTS: "ASSIGN_WORKOUTS",
+  VIEW_ATHLETE_HISTORY: "VIEW_ATHLETE_HISTORY",
+  ADVANCED_STATS: "ADVANCED_STATS",
+  AI_CHAT: "AI_CHAT",
+  AI_PLAN_GENERATION: "AI_PLAN_GENERATION",
+  SOURCE_LIBRARY: "SOURCE_LIBRARY",
+} as const;
+
+export type CreateAdminPlanBodyEntitlementsItem = {
+  entitlement: CreateAdminPlanBodyEntitlementsItemEntitlement;
+  /**
+   * @minimum 0
+   * @maximum 2147483647
+   * @nullable
+   */
+  limitValue: number | null;
+};
+
+export type CreateAdminPlanBody = {
+  /**
+   * @minLength 2
+   * @maxLength 80
+   * @pattern ^[A-Z][A-Z0-9_]*$
+   */
+  code: string;
+  /**
+   * @minLength 1
+   * @maxLength 120
+   */
+  name: string;
+  /**
+   * @maxLength 1000
+   * @nullable
+   */
+  description?: string | null;
+  audience: CreateAdminPlanBodyAudience;
+  /**
+   * @minimum 0
+   * @maximum 2147483647
+   */
+  monthlyPriceInCents: number;
+  isPublic?: boolean;
+  isActive?: boolean;
+  /**
+   * @minimum 0
+   * @maximum 2147483647
+   */
+  sortOrder?: number;
+  /** @maxItems 8 */
+  entitlements: CreateAdminPlanBodyEntitlementsItem[];
+};
+
+export type CreateAdminPlan201Audience =
+  (typeof CreateAdminPlan201Audience)[keyof typeof CreateAdminPlan201Audience];
+
+export const CreateAdminPlan201Audience = {
+  ATHLETE: "ATHLETE",
+  COACH: "COACH",
+  INTERNAL: "INTERNAL",
+} as const;
+
+export type CreateAdminPlan201EntitlementsItemEntitlement =
+  (typeof CreateAdminPlan201EntitlementsItemEntitlement)[keyof typeof CreateAdminPlan201EntitlementsItemEntitlement];
+
+export const CreateAdminPlan201EntitlementsItemEntitlement = {
+  COACH_DASHBOARD: "COACH_DASHBOARD",
+  MANAGE_ATHLETES: "MANAGE_ATHLETES",
+  ASSIGN_WORKOUTS: "ASSIGN_WORKOUTS",
+  VIEW_ATHLETE_HISTORY: "VIEW_ATHLETE_HISTORY",
+  ADVANCED_STATS: "ADVANCED_STATS",
+  AI_CHAT: "AI_CHAT",
+  AI_PLAN_GENERATION: "AI_PLAN_GENERATION",
+  SOURCE_LIBRARY: "SOURCE_LIBRARY",
+} as const;
+
+export type CreateAdminPlan201EntitlementsItem = {
+  entitlement: CreateAdminPlan201EntitlementsItemEntitlement;
+  /**
+   * @minimum 0
+   * @maximum 2147483647
+   * @nullable
+   */
+  limitValue: number | null;
+};
+
+export type CreateAdminPlan201 = {
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  id: string;
+  code: string;
+  name: string;
+  /** @nullable */
+  description: string | null;
+  audience: CreateAdminPlan201Audience;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  monthlyPriceInCents: number;
+  currency: string;
+  isPublic: boolean;
+  isActive: boolean;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  sortOrder: number;
+  entitlements: CreateAdminPlan201EntitlementsItem[];
+};
+
+export type CreateAdminPlan400 = {
+  error: string;
+  code: string;
+};
+
+export type CreateAdminPlan401 = {
+  error: string;
+  code: string;
+};
+
+export type CreateAdminPlan403 = {
+  error: string;
+  code: string;
+};
+
+export type CreateAdminPlan404 = {
+  error: string;
+  code: string;
+};
+
+export type CreateAdminPlan409 = {
+  error: string;
+  code: string;
+};
+
+export type CreateAdminPlan500 = {
+  error: string;
+  code: string;
+};
+
+export type ListAdminPlans200ItemAudience =
+  (typeof ListAdminPlans200ItemAudience)[keyof typeof ListAdminPlans200ItemAudience];
+
+export const ListAdminPlans200ItemAudience = {
+  ATHLETE: "ATHLETE",
+  COACH: "COACH",
+  INTERNAL: "INTERNAL",
+} as const;
+
+export type ListAdminPlans200ItemEntitlementsItemEntitlement =
+  (typeof ListAdminPlans200ItemEntitlementsItemEntitlement)[keyof typeof ListAdminPlans200ItemEntitlementsItemEntitlement];
+
+export const ListAdminPlans200ItemEntitlementsItemEntitlement = {
+  COACH_DASHBOARD: "COACH_DASHBOARD",
+  MANAGE_ATHLETES: "MANAGE_ATHLETES",
+  ASSIGN_WORKOUTS: "ASSIGN_WORKOUTS",
+  VIEW_ATHLETE_HISTORY: "VIEW_ATHLETE_HISTORY",
+  ADVANCED_STATS: "ADVANCED_STATS",
+  AI_CHAT: "AI_CHAT",
+  AI_PLAN_GENERATION: "AI_PLAN_GENERATION",
+  SOURCE_LIBRARY: "SOURCE_LIBRARY",
+} as const;
+
+export type ListAdminPlans200ItemEntitlementsItem = {
+  entitlement: ListAdminPlans200ItemEntitlementsItemEntitlement;
+  /**
+   * @minimum 0
+   * @maximum 2147483647
+   * @nullable
+   */
+  limitValue: number | null;
+};
+
+export type ListAdminPlans200Item = {
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  id: string;
+  code: string;
+  name: string;
+  /** @nullable */
+  description: string | null;
+  audience: ListAdminPlans200ItemAudience;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  monthlyPriceInCents: number;
+  currency: string;
+  isPublic: boolean;
+  isActive: boolean;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  sortOrder: number;
+  entitlements: ListAdminPlans200ItemEntitlementsItem[];
+};
+
+export type ListAdminPlans400 = {
+  error: string;
+  code: string;
+};
+
+export type ListAdminPlans401 = {
+  error: string;
+  code: string;
+};
+
+export type ListAdminPlans403 = {
+  error: string;
+  code: string;
+};
+
+export type ListAdminPlans404 = {
+  error: string;
+  code: string;
+};
+
+export type ListAdminPlans409 = {
+  error: string;
+  code: string;
+};
+
+export type ListAdminPlans500 = {
   error: string;
   code: string;
 };
@@ -7473,96 +8683,6 @@ export type GetAdminUser500 = {
   code: string;
 };
 
-export type ListAdminPlans200ItemAudience =
-  (typeof ListAdminPlans200ItemAudience)[keyof typeof ListAdminPlans200ItemAudience];
-
-export const ListAdminPlans200ItemAudience = {
-  ATHLETE: "ATHLETE",
-  COACH: "COACH",
-  INTERNAL: "INTERNAL",
-} as const;
-
-export type ListAdminPlans200ItemEntitlementsItemEntitlement =
-  (typeof ListAdminPlans200ItemEntitlementsItemEntitlement)[keyof typeof ListAdminPlans200ItemEntitlementsItemEntitlement];
-
-export const ListAdminPlans200ItemEntitlementsItemEntitlement = {
-  COACH_DASHBOARD: "COACH_DASHBOARD",
-  MANAGE_ATHLETES: "MANAGE_ATHLETES",
-  ASSIGN_WORKOUTS: "ASSIGN_WORKOUTS",
-  VIEW_ATHLETE_HISTORY: "VIEW_ATHLETE_HISTORY",
-  ADVANCED_STATS: "ADVANCED_STATS",
-  AI_CHAT: "AI_CHAT",
-  AI_PLAN_GENERATION: "AI_PLAN_GENERATION",
-  SOURCE_LIBRARY: "SOURCE_LIBRARY",
-} as const;
-
-export type ListAdminPlans200ItemEntitlementsItem = {
-  entitlement: ListAdminPlans200ItemEntitlementsItemEntitlement;
-  /**
-   * @minimum 0
-   * @maximum 2147483647
-   * @nullable
-   */
-  limitValue: number | null;
-};
-
-export type ListAdminPlans200Item = {
-  /**
-   * @minLength 1
-   * @maxLength 200
-   */
-  id: string;
-  code: string;
-  name: string;
-  /** @nullable */
-  description: string | null;
-  audience: ListAdminPlans200ItemAudience;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
-  monthlyPriceInCents: number;
-  currency: string;
-  isPublic: boolean;
-  isActive: boolean;
-  /**
-   * @minimum -9007199254740991
-   * @maximum 9007199254740991
-   */
-  sortOrder: number;
-  entitlements: ListAdminPlans200ItemEntitlementsItem[];
-};
-
-export type ListAdminPlans400 = {
-  error: string;
-  code: string;
-};
-
-export type ListAdminPlans401 = {
-  error: string;
-  code: string;
-};
-
-export type ListAdminPlans403 = {
-  error: string;
-  code: string;
-};
-
-export type ListAdminPlans404 = {
-  error: string;
-  code: string;
-};
-
-export type ListAdminPlans409 = {
-  error: string;
-  code: string;
-};
-
-export type ListAdminPlans500 = {
-  error: string;
-  code: string;
-};
-
 export type GetAdminPlan200Audience =
   (typeof GetAdminPlan200Audience)[keyof typeof GetAdminPlan200Audience];
 
@@ -8106,6 +9226,7 @@ export type ListAdminAuditAction =
   (typeof ListAdminAuditAction)[keyof typeof ListAdminAuditAction];
 
 export const ListAdminAuditAction = {
+  PLAN_CREATED: "PLAN_CREATED",
   PLAN_UPDATED: "PLAN_UPDATED",
   PLAN_ENTITLEMENTS_UPDATED: "PLAN_ENTITLEMENTS_UPDATED",
   SUBSCRIPTION_TRIAL_GRANTED: "SUBSCRIPTION_TRIAL_GRANTED",
@@ -8127,6 +9248,7 @@ export type ListAdminAudit200ItemsItemAction =
   (typeof ListAdminAudit200ItemsItemAction)[keyof typeof ListAdminAudit200ItemsItemAction];
 
 export const ListAdminAudit200ItemsItemAction = {
+  PLAN_CREATED: "PLAN_CREATED",
   PLAN_UPDATED: "PLAN_UPDATED",
   PLAN_ENTITLEMENTS_UPDATED: "PLAN_ENTITLEMENTS_UPDATED",
   SUBSCRIPTION_TRIAL_GRANTED: "SUBSCRIPTION_TRIAL_GRANTED",
@@ -9279,6 +10401,36 @@ export type GetActiveWorkoutSession200SessionExercisesItemSetsItem = {
 };
 
 export type GetActiveWorkoutSession200SessionExercisesItem = {
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  plannedRepsMin?: number | null;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  plannedRepsMax?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  plannedTargetRir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 2000000
+   * @nullable
+   */
+  plannedTargetLoadInGrams?: number | null;
+  /**
+   * @minLength 1
+   * @maxLength 80
+   * @nullable
+   */
+  plannedTempo?: string | null;
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
   /**
@@ -9459,6 +10611,36 @@ export type GetWorkoutSession200SessionExercisesItemSetsItem = {
 };
 
 export type GetWorkoutSession200SessionExercisesItem = {
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  plannedRepsMin?: number | null;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  plannedRepsMax?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  plannedTargetRir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 2000000
+   * @nullable
+   */
+  plannedTargetLoadInGrams?: number | null;
+  /**
+   * @minLength 1
+   * @maxLength 80
+   * @nullable
+   */
+  plannedTempo?: string | null;
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
   /**
@@ -10034,6 +11216,36 @@ export type AddExerciseToWorkoutSession201SetsItem = {
 };
 
 export type AddExerciseToWorkoutSession201 = {
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  plannedRepsMin?: number | null;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  plannedRepsMax?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  plannedTargetRir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 2000000
+   * @nullable
+   */
+  plannedTargetLoadInGrams?: number | null;
+  /**
+   * @minLength 1
+   * @maxLength 80
+   * @nullable
+   */
+  plannedTempo?: string | null;
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
   /**
@@ -10226,6 +11438,36 @@ export type SubstituteSessionExercise200SetsItem = {
 };
 
 export type SubstituteSessionExercise200 = {
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  plannedRepsMin?: number | null;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  plannedRepsMax?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  plannedTargetRir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 2000000
+   * @nullable
+   */
+  plannedTargetLoadInGrams?: number | null;
+  /**
+   * @minLength 1
+   * @maxLength 80
+   * @nullable
+   */
+  plannedTempo?: string | null;
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
   /**
@@ -12039,6 +13281,36 @@ export const GetEditableWorkoutPlan200WorkoutDaysItemWeekDay = {
 
 export type GetEditableWorkoutPlan200WorkoutDaysItemExercisesItem = {
   /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMin?: number | null;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMax?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  targetRir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 2000000
+   * @nullable
+   */
+  targetLoadInGrams?: number | null;
+  /**
+   * @minLength 1
+   * @maxLength 80
+   * @nullable
+   */
+  tempo?: string | null;
+  /**
    * @minimum 0
    * @maximum 9007199254740991
    */
@@ -12305,6 +13577,136 @@ export type SaveSessionFeedback409 = {
 };
 
 export type SaveSessionFeedback500 = {
+  error: string;
+  code: string;
+};
+
+/**
+ * @nullable
+ */
+export type GetSportsProfile200ExperienceLevel =
+  | (typeof GetSportsProfile200ExperienceLevel)[keyof typeof GetSportsProfile200ExperienceLevel]
+  | null;
+
+export const GetSportsProfile200ExperienceLevel = {
+  BEGINNER: "BEGINNER",
+  INTERMEDIATE: "INTERMEDIATE",
+  ADVANCED: "ADVANCED",
+} as const;
+
+export type GetSportsProfile200 = {
+  /**
+   * @maxLength 1000
+   * @nullable
+   */
+  trainingGoals: string | null;
+  /** @nullable */
+  experienceLevel: GetSportsProfile200ExperienceLevel;
+  /** @maxItems 30 */
+  availableEquipment: string[];
+  /**
+   * @maxLength 2000
+   * @nullable
+   */
+  trainingRestrictions: string | null;
+};
+
+export type GetSportsProfile400 = {
+  error: string;
+  code: string;
+};
+
+export type GetSportsProfile401 = {
+  error: string;
+  code: string;
+};
+
+export type GetSportsProfile404 = {
+  error: string;
+  code: string;
+};
+
+export type GetSportsProfile500 = {
+  error: string;
+  code: string;
+};
+
+/**
+ * @nullable
+ */
+export type UpdateSportsProfileBodyExperienceLevel =
+  | (typeof UpdateSportsProfileBodyExperienceLevel)[keyof typeof UpdateSportsProfileBodyExperienceLevel]
+  | null;
+
+export const UpdateSportsProfileBodyExperienceLevel = {
+  BEGINNER: "BEGINNER",
+  INTERMEDIATE: "INTERMEDIATE",
+  ADVANCED: "ADVANCED",
+} as const;
+
+export type UpdateSportsProfileBody = {
+  /**
+   * @maxLength 1000
+   * @nullable
+   */
+  trainingGoals?: string | null;
+  /** @nullable */
+  experienceLevel?: UpdateSportsProfileBodyExperienceLevel;
+  /** @maxItems 30 */
+  availableEquipment?: string[];
+  /**
+   * @maxLength 2000
+   * @nullable
+   */
+  trainingRestrictions?: string | null;
+};
+
+/**
+ * @nullable
+ */
+export type UpdateSportsProfile200ExperienceLevel =
+  | (typeof UpdateSportsProfile200ExperienceLevel)[keyof typeof UpdateSportsProfile200ExperienceLevel]
+  | null;
+
+export const UpdateSportsProfile200ExperienceLevel = {
+  BEGINNER: "BEGINNER",
+  INTERMEDIATE: "INTERMEDIATE",
+  ADVANCED: "ADVANCED",
+} as const;
+
+export type UpdateSportsProfile200 = {
+  /**
+   * @maxLength 1000
+   * @nullable
+   */
+  trainingGoals: string | null;
+  /** @nullable */
+  experienceLevel: UpdateSportsProfile200ExperienceLevel;
+  /** @maxItems 30 */
+  availableEquipment: string[];
+  /**
+   * @maxLength 2000
+   * @nullable
+   */
+  trainingRestrictions: string | null;
+};
+
+export type UpdateSportsProfile400 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateSportsProfile401 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateSportsProfile404 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateSportsProfile500 = {
   error: string;
   code: string;
 };
@@ -12638,6 +14040,36 @@ export type GetWorkoutHistorySession200Summary = {
 };
 
 export type GetWorkoutHistorySession200ExercisesItemPlanned = {
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMin?: number | null;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMax?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  targetRir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 2000000
+   * @nullable
+   */
+  targetLoadInGrams?: number | null;
+  /**
+   * @minLength 1
+   * @maxLength 80
+   * @nullable
+   */
+  tempo?: string | null;
   /**
    * @minimum -9007199254740991
    * @maximum 9007199254740991
@@ -18374,6 +19806,144 @@ export const createCoachWorkoutPlanTemplateFromPlan = async (
 };
 
 /**
+ * @summary Create a plan and its dynamic entitlements without assigning subscriptions
+ */
+export type createAdminPlanResponse201 = {
+  data: CreateAdminPlan201;
+  status: 201;
+};
+
+export type createAdminPlanResponse400 = {
+  data: CreateAdminPlan400;
+  status: 400;
+};
+
+export type createAdminPlanResponse401 = {
+  data: CreateAdminPlan401;
+  status: 401;
+};
+
+export type createAdminPlanResponse403 = {
+  data: CreateAdminPlan403;
+  status: 403;
+};
+
+export type createAdminPlanResponse404 = {
+  data: CreateAdminPlan404;
+  status: 404;
+};
+
+export type createAdminPlanResponse409 = {
+  data: CreateAdminPlan409;
+  status: 409;
+};
+
+export type createAdminPlanResponse500 = {
+  data: CreateAdminPlan500;
+  status: 500;
+};
+
+export type createAdminPlanResponseSuccess = createAdminPlanResponse201 & {
+  headers: Headers;
+};
+export type createAdminPlanResponseError = (
+  | createAdminPlanResponse400
+  | createAdminPlanResponse401
+  | createAdminPlanResponse403
+  | createAdminPlanResponse404
+  | createAdminPlanResponse409
+  | createAdminPlanResponse500
+) & {
+  headers: Headers;
+};
+
+export type createAdminPlanResponse =
+  | createAdminPlanResponseSuccess
+  | createAdminPlanResponseError;
+
+export const getCreateAdminPlanUrl = () => {
+  return `/admin/plans`;
+};
+
+export const createAdminPlan = async (
+  createAdminPlanBody: CreateAdminPlanBody,
+  options?: RequestInit,
+): Promise<createAdminPlanResponse> => {
+  return customFetch<createAdminPlanResponse>(getCreateAdminPlanUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createAdminPlanBody),
+  });
+};
+
+export type listAdminPlansResponse200 = {
+  data: ListAdminPlans200Item[];
+  status: 200;
+};
+
+export type listAdminPlansResponse400 = {
+  data: ListAdminPlans400;
+  status: 400;
+};
+
+export type listAdminPlansResponse401 = {
+  data: ListAdminPlans401;
+  status: 401;
+};
+
+export type listAdminPlansResponse403 = {
+  data: ListAdminPlans403;
+  status: 403;
+};
+
+export type listAdminPlansResponse404 = {
+  data: ListAdminPlans404;
+  status: 404;
+};
+
+export type listAdminPlansResponse409 = {
+  data: ListAdminPlans409;
+  status: 409;
+};
+
+export type listAdminPlansResponse500 = {
+  data: ListAdminPlans500;
+  status: 500;
+};
+
+export type listAdminPlansResponseSuccess = listAdminPlansResponse200 & {
+  headers: Headers;
+};
+export type listAdminPlansResponseError = (
+  | listAdminPlansResponse400
+  | listAdminPlansResponse401
+  | listAdminPlansResponse403
+  | listAdminPlansResponse404
+  | listAdminPlansResponse409
+  | listAdminPlansResponse500
+) & {
+  headers: Headers;
+};
+
+export type listAdminPlansResponse =
+  | listAdminPlansResponseSuccess
+  | listAdminPlansResponseError;
+
+export const getListAdminPlansUrl = () => {
+  return `/admin/plans`;
+};
+
+export const listAdminPlans = async (
+  options?: RequestInit,
+): Promise<listAdminPlansResponse> => {
+  return customFetch<listAdminPlansResponse>(getListAdminPlansUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+/**
  * @summary Estimated AI token usage and provider costs
  */
 export type getAdminAiUsageResponse200 = {
@@ -18732,72 +20302,6 @@ export const getAdminUser = async (
   options?: RequestInit,
 ): Promise<getAdminUserResponse> => {
   return customFetch<getAdminUserResponse>(getGetAdminUserUrl(userId), {
-    ...options,
-    method: "GET",
-  });
-};
-
-export type listAdminPlansResponse200 = {
-  data: ListAdminPlans200Item[];
-  status: 200;
-};
-
-export type listAdminPlansResponse400 = {
-  data: ListAdminPlans400;
-  status: 400;
-};
-
-export type listAdminPlansResponse401 = {
-  data: ListAdminPlans401;
-  status: 401;
-};
-
-export type listAdminPlansResponse403 = {
-  data: ListAdminPlans403;
-  status: 403;
-};
-
-export type listAdminPlansResponse404 = {
-  data: ListAdminPlans404;
-  status: 404;
-};
-
-export type listAdminPlansResponse409 = {
-  data: ListAdminPlans409;
-  status: 409;
-};
-
-export type listAdminPlansResponse500 = {
-  data: ListAdminPlans500;
-  status: 500;
-};
-
-export type listAdminPlansResponseSuccess = listAdminPlansResponse200 & {
-  headers: Headers;
-};
-export type listAdminPlansResponseError = (
-  | listAdminPlansResponse400
-  | listAdminPlansResponse401
-  | listAdminPlansResponse403
-  | listAdminPlansResponse404
-  | listAdminPlansResponse409
-  | listAdminPlansResponse500
-) & {
-  headers: Headers;
-};
-
-export type listAdminPlansResponse =
-  | listAdminPlansResponseSuccess
-  | listAdminPlansResponseError;
-
-export const getListAdminPlansUrl = () => {
-  return `/admin/plans`;
-};
-
-export const listAdminPlans = async (
-  options?: RequestInit,
-): Promise<listAdminPlansResponse> => {
-  return customFetch<listAdminPlansResponse>(getListAdminPlansUrl(), {
     ...options,
     method: "GET",
   });
@@ -21516,6 +23020,124 @@ export const saveSessionFeedback = async (
       body: JSON.stringify(saveSessionFeedbackBody),
     },
   );
+};
+
+/**
+ * @summary Get own optional sports profile
+ */
+export type getSportsProfileResponse200 = {
+  data: GetSportsProfile200;
+  status: 200;
+};
+
+export type getSportsProfileResponse400 = {
+  data: GetSportsProfile400;
+  status: 400;
+};
+
+export type getSportsProfileResponse401 = {
+  data: GetSportsProfile401;
+  status: 401;
+};
+
+export type getSportsProfileResponse404 = {
+  data: GetSportsProfile404;
+  status: 404;
+};
+
+export type getSportsProfileResponse500 = {
+  data: GetSportsProfile500;
+  status: 500;
+};
+
+export type getSportsProfileResponseSuccess = getSportsProfileResponse200 & {
+  headers: Headers;
+};
+export type getSportsProfileResponseError = (
+  | getSportsProfileResponse400
+  | getSportsProfileResponse401
+  | getSportsProfileResponse404
+  | getSportsProfileResponse500
+) & {
+  headers: Headers;
+};
+
+export type getSportsProfileResponse =
+  | getSportsProfileResponseSuccess
+  | getSportsProfileResponseError;
+
+export const getGetSportsProfileUrl = () => {
+  return `/me/sports-profile`;
+};
+
+export const getSportsProfile = async (
+  options?: RequestInit,
+): Promise<getSportsProfileResponse> => {
+  return customFetch<getSportsProfileResponse>(getGetSportsProfileUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+/**
+ * @summary Update own sports profile without changing body metric history
+ */
+export type updateSportsProfileResponse200 = {
+  data: UpdateSportsProfile200;
+  status: 200;
+};
+
+export type updateSportsProfileResponse400 = {
+  data: UpdateSportsProfile400;
+  status: 400;
+};
+
+export type updateSportsProfileResponse401 = {
+  data: UpdateSportsProfile401;
+  status: 401;
+};
+
+export type updateSportsProfileResponse404 = {
+  data: UpdateSportsProfile404;
+  status: 404;
+};
+
+export type updateSportsProfileResponse500 = {
+  data: UpdateSportsProfile500;
+  status: 500;
+};
+
+export type updateSportsProfileResponseSuccess =
+  updateSportsProfileResponse200 & {
+    headers: Headers;
+  };
+export type updateSportsProfileResponseError = (
+  | updateSportsProfileResponse400
+  | updateSportsProfileResponse401
+  | updateSportsProfileResponse404
+  | updateSportsProfileResponse500
+) & {
+  headers: Headers;
+};
+
+export type updateSportsProfileResponse =
+  | updateSportsProfileResponseSuccess
+  | updateSportsProfileResponseError;
+
+export const getUpdateSportsProfileUrl = () => {
+  return `/me/sports-profile`;
+};
+
+export const updateSportsProfile = async (
+  updateSportsProfileBody: UpdateSportsProfileBody,
+  options?: RequestInit,
+): Promise<updateSportsProfileResponse> => {
+  return customFetch<updateSportsProfileResponse>(getUpdateSportsProfileUrl(), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateSportsProfileBody),
+  });
 };
 
 /**

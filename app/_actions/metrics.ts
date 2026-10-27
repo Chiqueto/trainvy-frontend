@@ -17,7 +17,7 @@ export async function saveUserMetricsAction(input: {
   weightInGrams: number;
   heightInCentimeters: number;
   age: number;
-  bodyFatPercentage: number;
+  bodyFatPercentage: number | null;
 }): Promise<ActionResult<void>> {
   try {
     const res = await upsertUserTrainData({

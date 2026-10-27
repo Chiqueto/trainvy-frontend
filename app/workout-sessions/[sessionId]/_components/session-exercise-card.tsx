@@ -1,7 +1,18 @@
 "use client";
 
 import { useEffect, useMemo, useState, useTransition } from "react";
-import { ArrowRightLeft, Box, ChevronDown, Dumbbell, Info, Loader2, Plus, Sparkles, Trash2, Zap } from "lucide-react";
+import {
+  ArrowRightLeft,
+  Box,
+  ChevronDown,
+  Dumbbell,
+  Info,
+  Loader2,
+  Plus,
+  Sparkles,
+  Trash2,
+  Zap,
+} from "lucide-react";
 
 import { getExerciseAnimation } from "@/app/_components/exercise-3d/exercises";
 import { ExerciseExecutionDialog } from "@/app/_components/exercise-media";
@@ -10,6 +21,10 @@ import type {
   GetWorkoutSession200SessionExercisesItemSetsItem,
 } from "@/app/_lib/api/fetch-generated";
 import { Button } from "@/components/ui/button";
+import {
+  PrescriptionTargets,
+  repetitionTarget,
+} from "@/app/_components/prescription-targets";
 
 import { createWorkoutSetAction } from "../_actions";
 import { SubstituteExerciseModal } from "./substitute-exercise-modal";
@@ -22,7 +37,10 @@ interface SessionExerciseCardProps {
   isReadOnly: boolean;
   isFreeWorkout?: boolean;
   onRemoveExercise?: (sessionExerciseId: string) => Promise<void>;
-  onSubstituteExercise?: (sessionExerciseId: string, newExerciseId: string) => Promise<void>;
+  onSubstituteExercise?: (
+    sessionExerciseId: string,
+    newExerciseId: string,
+  ) => Promise<void>;
   onOpenAi?: () => void;
   onError: (errorMsg: string) => void;
   onMutationStart?: () => void;
@@ -148,7 +166,9 @@ export function SessionExerciseCard({
             completedAt: res.data.completedAt,
           };
 
-          setSets((prev) => [...prev, newSet].sort((a, b) => a.order - b.order));
+          setSets((prev) =>
+            [...prev, newSet].sort((a, b) => a.order - b.order),
+          );
         }
       } finally {
         onMutationEnd?.();
@@ -161,7 +181,11 @@ export function SessionExerciseCard({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const warmup = (exercise as any).plannedWarmupSets ?? 0;
     const workingSets = exercise.plannedSets;
-    const reps = exercise.plannedReps;
+    const reps = repetitionTarget({
+      reps: exercise.plannedReps,
+      repsMin: exercise.plannedRepsMin,
+      repsMax: exercise.plannedRepsMax,
+    });
 
     if (warmup > 0) {
       if (workingSets && reps) {
@@ -184,6 +208,16 @@ export function SessionExerciseCard({
 
   return (
     <div className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4 shadow-sm">
+      <PrescriptionTargets
+        value={{
+          repsMin: exercise.plannedRepsMin,
+          repsMax: exercise.plannedRepsMax,
+          targetRir: exercise.plannedTargetRir,
+          targetLoadInGrams: exercise.plannedTargetLoadInGrams,
+          tempo: exercise.plannedTempo,
+        }}
+        showRange={false}
+      />
       {/* Header do Exercício */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex flex-col gap-1">
@@ -219,7 +253,9 @@ export function SessionExerciseCard({
                 <button
                   type="button"
                   onClick={() => setIsMediaOpen(true)}
-                  title={has3D ? "Ver execução 3D" : "Ver execução do exercício"}
+                  title={
+                    has3D ? "Ver execução 3D" : "Ver execução do exercício"
+                  }
                   aria-label={`Ver execução de ${exercise.exerciseNameSnapshot}`}
                   className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-heading font-medium text-primary bg-primary/10 hover:bg-primary/20 border border-primary/20 transition-colors cursor-pointer"
                 >
@@ -272,7 +308,8 @@ export function SessionExerciseCard({
 
           {prescriptionText && (
             <p className="font-heading text-xs text-muted-foreground pl-7">
-              <span className="font-medium text-foreground/80">Planejado:</span> {prescriptionText}
+              <span className="font-medium text-foreground/80">Planejado:</span>{" "}
+              {prescriptionText}
             </p>
           )}
 
@@ -464,8 +501,12 @@ export function SessionExerciseCard({
               </h3>
               <p className="text-sm text-muted-foreground">
                 Este exercício possui {sets.length}{" "}
-                {sets.length === 1 ? "série registrada" : "séries registradas"}. Ao
-                remover, {sets.length === 1 ? "ela será excluída" : "todas serão excluídas"} permanentemente.
+                {sets.length === 1 ? "série registrada" : "séries registradas"}.
+                Ao remover,{" "}
+                {sets.length === 1
+                  ? "ela será excluída"
+                  : "todas serão excluídas"}{" "}
+                permanentemente.
               </p>
             </div>
 

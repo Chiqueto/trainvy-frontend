@@ -2,7 +2,15 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { X, Scale, Ruler, BicepsFlexed, Calendar, CheckCircle2, Loader2 } from "lucide-react";
+import {
+  X,
+  Scale,
+  Ruler,
+  BicepsFlexed,
+  Calendar,
+  CheckCircle2,
+  Loader2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { saveUserMetricsAction } from "@/app/_actions/metrics";
 
@@ -29,16 +37,22 @@ export function EditMetricsDialog({
   const router = useRouter();
 
   const [weightKg, setWeightKg] = useState(() =>
-    initialData?.weightInGrams ? (initialData.weightInGrams / 1000).toString() : ""
+    initialData?.weightInGrams
+      ? (initialData.weightInGrams / 1000).toString()
+      : "",
   );
   const [heightCm, setHeightCm] = useState(() =>
-    initialData?.heightInCentimeters ? initialData.heightInCentimeters.toString() : ""
+    initialData?.heightInCentimeters
+      ? initialData.heightInCentimeters.toString()
+      : "",
   );
   const [age, setAge] = useState(() =>
-    initialData?.age ? initialData.age.toString() : ""
+    initialData?.age ? initialData.age.toString() : "",
   );
   const [bodyFat, setBodyFat] = useState(() =>
-    initialData?.bodyFatPercentage != null ? initialData.bodyFatPercentage.toString() : ""
+    initialData?.bodyFatPercentage != null
+      ? initialData.bodyFatPercentage.toString()
+      : "",
   );
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -54,7 +68,7 @@ export function EditMetricsDialog({
     const parsedWeight = parseFloat(weightKg.replace(",", "."));
     const parsedHeight = parseInt(heightCm, 10);
     const parsedAge = parseInt(age, 10);
-    const parsedBf = parseInt(bodyFat, 10);
+    const parsedBf = bodyFat.trim() === "" ? null : Number(bodyFat);
 
     if (isNaN(parsedWeight) || parsedWeight < 20 || parsedWeight > 350) {
       setErrorMessage("Informe um peso válido entre 20 e 350 kg.");
@@ -68,8 +82,13 @@ export function EditMetricsDialog({
       setErrorMessage("Informe uma idade válida entre 10 e 120 anos.");
       return;
     }
-    if (isNaN(parsedBf) || parsedBf < 0 || parsedBf > 100) {
-      setErrorMessage("Informe um percentual de gordura válido entre 0% e 100%.");
+    if (
+      parsedBf !== null &&
+      (!Number.isInteger(parsedBf) || parsedBf < 0 || parsedBf > 100)
+    ) {
+      setErrorMessage(
+        "Informe um percentual de gordura válido entre 0% e 100%.",
+      );
       return;
     }
 
@@ -98,7 +117,8 @@ export function EditMetricsDialog({
         onClose();
       }, 1500);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Erro ao atualizar dados.";
+      const message =
+        err instanceof Error ? err.message : "Erro ao atualizar dados.";
       setErrorMessage(message);
     } finally {
       setIsSubmitting(false);
@@ -120,7 +140,10 @@ export function EditMetricsDialog({
               <Scale className="size-5" />
             </div>
             <div>
-              <h2 id="metrics-modal-title" className="font-heading text-lg font-bold text-foreground leading-tight">
+              <h2
+                id="metrics-modal-title"
+                className="font-heading text-lg font-bold text-foreground leading-tight"
+              >
                 Editar Dados Corporais
               </h2>
               <p className="text-xs text-muted-foreground">
@@ -227,7 +250,7 @@ export function EditMetricsDialog({
                   className="flex items-center gap-1.5 text-xs font-semibold text-foreground"
                 >
                   <BicepsFlexed className="size-3.5 text-primary" />
-                  <span>Gordura (% GC)</span>
+                  <span>Gordura (% GC, opcional)</span>
                 </label>
                 <div className="relative">
                   <input
@@ -236,10 +259,9 @@ export function EditMetricsDialog({
                     step="1"
                     min="0"
                     max="100"
-                    placeholder="15"
+                    placeholder="Não informado"
                     value={bodyFat}
                     onChange={(e) => setBodyFat(e.target.value)}
-                    required
                     disabled={isSubmitting}
                     className="w-full rounded-xl border border-input bg-background/50 px-3.5 py-2.5 text-sm font-medium text-foreground outline-none transition focus:border-primary focus:ring-1 focus:ring-primary"
                   />
@@ -280,7 +302,8 @@ export function EditMetricsDialog({
             </div>
 
             <p className="text-[11px] text-muted-foreground leading-normal">
-              💡 Cada alteração cria um marco em seu histórico de evolução corporal para acompanhar seus ganhos ao longo das semanas.
+              💡 Cada alteração cria um marco em seu histórico de evolução
+              corporal para acompanhar seus ganhos ao longo das semanas.
             </p>
 
             <div className="flex gap-2.5 pt-2">

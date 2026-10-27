@@ -1,4 +1,6 @@
 "use client";
+import { AdvancedPrescriptionFields } from "@/app/planning/_components/advanced-prescription-fields";
+import { serializeAdvancedPrescription } from "@/app/planning/_lib/workout-plan-builder";
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -48,6 +50,11 @@ export interface InitialPrescriptionData {
       sets: number;
       warmupSets?: number;
       reps: number;
+      repsMin?: number | null;
+      repsMax?: number | null;
+      targetRir?: number | null;
+      targetLoadInGrams?: number | null;
+      tempo?: string | null;
       restTimeInSeconds: number;
       alternative1ExerciseName?: string | null;
       alternative2ExerciseName?: string | null;
@@ -85,6 +92,7 @@ export function CoachPrescriptionBuilder({
           sets: e.sets,
           warmupSets: e.warmupSets ?? 0,
           reps: e.reps,
+          ...serializeAdvancedPrescription(e),
           restTimeInSeconds: e.restTimeInSeconds,
           alternative1Name: e.alternative1ExerciseName ?? "",
           alternative2Name: e.alternative2ExerciseName ?? "",
@@ -188,7 +196,8 @@ export function CoachPrescriptionBuilder({
 
             if (alt1 && alt1.toLowerCase() === name.toLowerCase()) alt1 = null;
             if (alt2 && alt2.toLowerCase() === name.toLowerCase()) alt2 = null;
-            if (alt1 && alt2 && alt1.toLowerCase() === alt2.toLowerCase()) alt2 = null;
+            if (alt1 && alt2 && alt1.toLowerCase() === alt2.toLowerCase())
+              alt2 = null;
             if (!alt1 && alt2) {
               alt1 = alt2;
               alt2 = null;
@@ -200,6 +209,7 @@ export function CoachPrescriptionBuilder({
               sets: exercise.sets,
               warmupSets: exercise.warmupSets ?? 0,
               reps: exercise.reps,
+              ...serializeAdvancedPrescription(exercise),
               restTimeInSeconds: exercise.restTimeInSeconds,
               alternative1ExerciseName: alt1,
               alternative2ExerciseName: alt2,
@@ -694,6 +704,13 @@ export function CoachPrescriptionBuilder({
                             </div>
                           </div>
 
+                          <AdvancedPrescriptionFields
+                            value={exercise}
+                            disabled={isPending}
+                            onChange={(patch) =>
+                              updateExercise(dayIndex, exerciseIndex, patch)
+                            }
+                          />
                           {/* Alternativas Fixas Prescritas */}
                           <div className="pt-2 border-t border-border/40">
                             <span className="text-[10px] font-heading font-medium text-muted-foreground uppercase">

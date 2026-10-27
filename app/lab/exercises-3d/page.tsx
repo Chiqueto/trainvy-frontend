@@ -72,6 +72,17 @@ const LAB_MEDIA_DATA: Record<ExerciseAnimation, GetExerciseMedia200> = {
     attributionUrl: null,
     instructions: null,
   },
+  "flat-dumbbell-press": {
+    exerciseId: EXERCISE_ANIMATIONS["flat-dumbbell-press"].id,
+    hasMedia: false,
+    mediaType: null,
+    startImagePath: null,
+    endImagePath: null,
+    motionPath: null,
+    attributionName: null,
+    attributionUrl: null,
+    instructions: null,
+  },
 };
 
 export default function Exercise3DLab() {
@@ -112,13 +123,24 @@ export default function Exercise3DLab() {
     },
     "incline-dumbbell-press": {
       primary: "Peitoral maior — porção clavicular",
-      secondary: "Tríceps braquial e deltoide anterior",
+      secondary: "Peitoral médio/inferior, tríceps e deltoide anterior",
       cadence:
-        "Descida controlada, pausa breve e subida suave com halteres separados.",
+        "Descida controlada, pausa breve e subida suave com halteres separados no banco a 30°.",
       cues: [
-        "Cabeça, costas e quadril apoiados no banco inclinado; pés firmes no solo.",
+        "Cabeça, costas e quadril apoiados no banco inclinado a 30°; pés firmes no solo.",
         "Halteres ao lado da parte superior do peito, com punhos alinhados aos antebraços.",
         "Suba com aproximação suave dos halteres, sem choque entre as cargas.",
+      ],
+    },
+    "flat-dumbbell-press": {
+      primary: "Peitoral maior — porção esternocostal",
+      secondary: "Feixe clavicular, tríceps braquial e deltoide anterior",
+      cadence:
+        "Descida ampla controlada com cotovelos a 45°-70°, pausa breve e subida convergente.",
+      cues: [
+        "Escápulas retraídas e deprimidas no banco reto com pés firmemente plantados no solo.",
+        "Desça os halteres ao lado do peitoral permitindo um alongamento seguro sem forçar o ombro.",
+        "Empurre convergindo suavemente em direção ao centro do peito sem bater as cargas no topo.",
       ],
     },
   };
@@ -154,16 +176,16 @@ export default function Exercise3DLab() {
           </h1>
         </div>
         <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">
-          Explore a anatomia do agachamento, supino reto e supino inclinado com
-          halteres em qualquer ângulo. Aproxime os detalhes, acompanhe cada fase
-          e compare os grupos musculares principais e secundários destacados em
+          Explore a anatomia do agachamento, supino reto com barra, supino inclinado com
+          halteres e supino reto com halteres em qualquer ângulo. Aproxime os detalhes,
+          acompanhe cada fase e compare os grupos musculares principais e secundários destacados em
           cada movimento.
         </p>
       </header>
 
       {/* Seletor de Exercícios */}
       <div
-        className="grid grid-cols-1 sm:grid-cols-3 gap-4"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
         aria-label="Selecionar exercício"
       >
         {(

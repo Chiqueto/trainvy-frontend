@@ -480,7 +480,10 @@ export async function createStandaloneWorkoutPlanAction(
   }
 }
 
-export async function editWorkoutPlanAction(id: string, body: EditWorkoutPlanBody): Promise<PlanningActionResult<{ id: string; success: boolean }>> {
+export async function editWorkoutPlanAction(
+  id: string,
+  body: EditWorkoutPlanBody,
+): Promise<PlanningActionResult<{ id: string; success: boolean }>> {
   const planId = validId(id);
   if (!planId) return invalidInput("Plano inválido.");
   try {
@@ -490,19 +493,25 @@ export async function editWorkoutPlanAction(id: string, body: EditWorkoutPlanBod
     revalidatePath(`/workout-plans/${planId}`, "layout");
     revalidatePath(`/planning/plans/${planId}/edit`);
     return { success: true, data: response.data };
-  } catch (error) { return connectionError(error); }
+  } catch (error) {
+    return connectionError(error);
+  }
 }
 
 export async function acceptPrescriptionAction(
   prescriptionId: string,
-): Promise<PlanningActionResult<{ workoutPlanId: string; workoutPlanName: string }>> {
+): Promise<
+  PlanningActionResult<{ workoutPlanId: string; workoutPlanName: string }>
+> {
   const id = validId(prescriptionId);
   if (!id) return invalidInput("ID da prescrição inválido.");
 
   try {
     const res = await acceptWorkoutPrescription(id, { cache: "no-store" });
     if (res.status !== 200) {
-      const err = (res.data as { error?: string })?.error ?? "Erro ao aceitar prescrição.";
+      const err =
+        (res.data as { error?: string })?.error ??
+        "Erro ao aceitar prescrição.";
       return { success: false, error: err };
     }
 
@@ -528,7 +537,9 @@ export async function declinePrescriptionAction(
   try {
     const res = await declineWorkoutPrescription(id, { cache: "no-store" });
     if (res.status !== 200) {
-      const err = (res.data as { error?: string })?.error ?? "Erro ao recusar prescrição.";
+      const err =
+        (res.data as { error?: string })?.error ??
+        "Erro ao recusar prescrição.";
       return { success: false, error: err };
     }
 
@@ -562,4 +573,3 @@ export async function generateWorkoutPlanWithAiAction(body: {
     return connectionError(error);
   }
 }
-

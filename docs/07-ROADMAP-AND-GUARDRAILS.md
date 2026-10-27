@@ -4,6 +4,8 @@
 
 ## Prioridade atual — 27/10/2026
 
+Extensão solicitada: [perfil esportivo, prescrição avançada e criação/permissões de planos no admin](16-SPORTS-PRESCRIPTION-AND-ADMIN-PLANS.md). Reajuste com aviso prévio por cobranças permanece somente documentado; nenhum módulo de pagamento é iniciado.
+
 Edição de treinos salvos, feedback pós-treino persistente e painel administrativo de tokens/custos estimados. RAG/biblioteca e cobrança automática ficam fora desta etapa; catálogo evolui separadamente. Detalhes: [escopo e implementação](15-PLAN-EDITING-FEEDBACK-AI-USAGE.md). As fases históricas abaixo precisam ser interpretadas considerando esta decisão.
 
 ## Fase 0 — Correções estruturais [CONCLUÍDA]

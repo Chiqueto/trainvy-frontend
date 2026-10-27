@@ -1,4 +1,7 @@
-import type { EditWorkoutPlanBody, GetEditableWorkoutPlan200 } from "@/app/_lib/api/fetch-generated";
+import type {
+  EditWorkoutPlanBody,
+  GetEditableWorkoutPlan200,
+} from "@/app/_lib/api/fetch-generated";
 
 export const WEEK_DAYS = [
   { value: "MONDAY", label: "Segunda" },
@@ -11,6 +14,11 @@ export const WEEK_DAYS = [
 ] as const;
 
 export type WorkoutPlanDraftExercise = {
+  repsMin?: number | null;
+  repsMax?: number | null;
+  targetRir?: number | null;
+  targetLoadInGrams?: number | null;
+  tempo?: string | null;
   id?: string;
   exerciseId?: string | null;
   alternative1ExerciseId?: string | null;
@@ -106,6 +114,32 @@ export function validateWorkoutPlanDraft(
       return `Adicione ao menos um exercício em ${dayLabel}.`;
     }
     for (const exercise of day.exercises) {
+      const min = exercise.repsMin ?? null,
+        max = exercise.repsMax ?? null;
+      if (
+        (min === null) !== (max === null) ||
+        (min !== null &&
+          max !== null &&
+          (!Number.isInteger(min) ||
+            !Number.isInteger(max) ||
+            min < 1 ||
+            max < min))
+      )
+        return `Revise a faixa de repetições em ${dayLabel}.`;
+      if (
+        exercise.targetRir != null &&
+        (!Number.isInteger(exercise.targetRir) ||
+          exercise.targetRir < 0 ||
+          exercise.targetRir > 10)
+      )
+        return `Informe um RIR alvo entre 0 e 10 em ${dayLabel}.`;
+      if (
+        exercise.targetLoadInGrams != null &&
+        (!Number.isInteger(exercise.targetLoadInGrams) ||
+          exercise.targetLoadInGrams < 0 ||
+          exercise.targetLoadInGrams > 2000000)
+      )
+        return `Revise a carga alvo em ${dayLabel}.`;
       if (!exercise.name.trim()) {
         return `Informe o nome de todos os exercícios de ${dayLabel}.`;
       }
@@ -153,6 +187,7 @@ export function serializeWorkoutDays(
           warmupSets: exercise.warmupSets ?? 0,
           sets: exercise.sets,
           reps: exercise.reps,
+          ...serializeAdvancedPrescription(exercise),
           restTimeInSeconds: exercise.restTimeInSeconds,
           alternative1Name: exercise.alternative1Name?.trim() || null,
           alternative2Name: exercise.alternative2Name?.trim() || null,
@@ -160,12 +195,35 @@ export function serializeWorkoutDays(
   }));
 }
 
-export function deserializeWorkoutDays(plan: GetEditableWorkoutPlan200): WorkoutPlanDraftDay[] {
-  return plan.workoutDays.map(day => ({
-    id: day.id, name: day.name, weekDay: day.weekDay, isRest: day.isRest,
-    coverImageUrl: day.coverImageUrl, estimatedDurationInMinutes: day.estimatedDurationInSeconds / 60,
-    exercises: day.exercises.map(e => ({ ...e,
-      alternative1Name: e.alternative1Name ?? "", alternative2Name: e.alternative2Name ?? "",
+export function deserializeWorkoutDays(
+  plan: GetEditableWorkoutPlan200,
+): WorkoutPlanDraftDay[] {
+  return plan.workoutDays.map((day) => ({
+    id: day.id,
+    name: day.name,
+    weekDay: day.weekDay,
+    isRest: day.isRest,
+    coverImageUrl: day.coverImageUrl,
+    estimatedDurationInMinutes: day.estimatedDurationInSeconds / 60,
+    exercises: day.exercises.map((e) => ({
+      ...e,
+      alternative1Name: e.alternative1Name ?? "",
+      alternative2Name: e.alternative2Name ?? "",
     })),
   }));
+}
+
+export function serializeAdvancedPrescription(
+  exercise: Pick<
+    WorkoutPlanDraftExercise,
+    "repsMin" | "repsMax" | "targetRir" | "targetLoadInGrams" | "tempo"
+  >,
+) {
+  return {
+    repsMin: exercise.repsMin ?? null,
+    repsMax: exercise.repsMax ?? null,
+    targetRir: exercise.targetRir ?? null,
+    targetLoadInGrams: exercise.targetLoadInGrams ?? null,
+    tempo: exercise.tempo?.trim() || null,
+  };
 }

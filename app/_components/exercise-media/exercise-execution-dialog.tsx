@@ -80,6 +80,15 @@ const FALLBACK_3D_INSTRUCTIONS: Record<
       "Desça os halteres com controle ao lado da parte superior do peito, mantendo os cotovelos abaixo das mãos. Após uma pausa breve, empurre para cima com uma aproximação suave, sem bater os halteres.",
     tips: "Mantenha o apoio das escápulas e do quadril, evite abrir excessivamente os cotovelos e não force a extensão dos punhos. O ângulo e a amplitude mostrados são ilustrativos.",
   },
+  "flat-dumbbell-press": {
+    description:
+      "Movimento multiarticular de empurrar no banco reto com halteres independentes. Destaca o peitoral maior esternocostal (motor primário em vermelho vivo) e o feixe clavicular, tríceps e deltoide anterior (sinergistas em vermelho mais claro).",
+    setup:
+      "Deite-se no banco plano com os pés firmemente apoiados no solo e as escápulas retraídas e deprimidas contra o estofado. Segure os halteres acima do peitoral com punhos neutros alinhados aos antebraços.",
+    execution:
+      "Desça os halteres de forma controlada ao lado do tórax permitindo um alongamento amplo e natural do peitoral, mantendo os cotovelos entre 45° e 70° do tronco. Empurre para cima em arco convergente suave, sem encostar as cargas no topo.",
+    tips: "Mantenha as escápulas travadas para proteger os ombros e foque na contração do peitoral no ponto alto, sem travar os cotovelos bruscamente.",
+  },
 };
 
 export function ExerciseExecutionDialog({

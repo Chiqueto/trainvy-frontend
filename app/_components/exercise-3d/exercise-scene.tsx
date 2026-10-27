@@ -357,7 +357,8 @@ function Athlete({
   return (
     <>
       <primitive object={rig.scene} dispose={null} />
-      {exercise === "incline-dumbbell-press" ? (
+      {exercise === "incline-dumbbell-press" ||
+      exercise === "flat-dumbbell-press" ? (
         <>
           <group ref={leftDumbbell}>
             <Dumbbell />
@@ -532,8 +533,8 @@ export default function ExerciseScene(props: SceneProps) {
       {/* Palco esportivo / Pódio de treino com iluminação */}
       <StudioPlatform />
 
-      {/* Banco olímpico exclusivo para supino reto */}
-      {benchPress && <Bench />}
+      {/* Banco olímpico / plano para supino reto (barra ou halteres) */}
+      {(benchPress || props.exercise === "flat-dumbbell-press") && <Bench />}
       {props.exercise === "incline-dumbbell-press" && <InclineBench />}
 
       <Suspense fallback={null}>

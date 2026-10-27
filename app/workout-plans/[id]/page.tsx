@@ -93,14 +93,15 @@ export default async function WorkoutPlanPage({
               Rotina de Treinos
             </h1>
           </div>
-          {isCoach && (
-            <SavePlanAsTemplateButton planId={id} planName={name} />
-          )}
+          {isCoach && <SavePlanAsTemplateButton planId={id} planName={name} />}
         </div>
       </div>
 
       <div className="flex flex-col gap-3 p-5">
-        <Link href={`/planning/plans/${id}/edit`} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-border bg-card px-4 text-sm font-semibold">
+        <Link
+          href={`/planning/plans/${id}/edit`}
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-border bg-card px-4 text-sm font-semibold"
+        >
           <Pencil className="size-4" /> Editar plano
         </Link>
         {trainingDays.map((day, index) => {

@@ -25,6 +25,10 @@ import {
   getSetTypeLabel,
 } from "@/app/_lib/training-formatters";
 import { Badge } from "@/components/ui/badge";
+import {
+  PrescriptionTargets,
+  repetitionTarget,
+} from "@/app/_components/prescription-targets";
 
 export function HistorySessionDetail({
   session,
@@ -178,7 +182,9 @@ function ExerciseSection({
     exercise.planned.workingSets !== null
       ? `${exercise.planned.workingSets} válidas`
       : null,
-    exercise.planned.reps !== null ? `${exercise.planned.reps} reps` : null,
+    repetitionTarget(exercise.planned) !== null
+      ? `${repetitionTarget(exercise.planned)} reps`
+      : null,
     exercise.planned.restTimeInSeconds !== null
       ? `${exercise.planned.restTimeInSeconds}s descanso`
       : null,
@@ -240,6 +246,11 @@ function ExerciseSection({
         )}
         <FactBlock title="Realizado" facts={performedFacts as string[]} />
       </div>
+      {showPlanned && (
+        <div className="mt-2">
+          <PrescriptionTargets value={exercise.planned} showRange={false} />
+        </div>
+      )}
 
       <div className="mt-5">
         <div className="grid grid-cols-[1.25rem_minmax(3.6rem,1fr)_minmax(3.4rem,.9fr)_minmax(2.5rem,.55fr)_minmax(2rem,.45fr)] gap-1 border-b border-border pb-2 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground sm:gap-2 sm:text-xs">
