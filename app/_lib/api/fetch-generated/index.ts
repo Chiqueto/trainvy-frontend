@@ -6576,6 +6576,87 @@ export type CreateCoachWorkoutPlanTemplateFromPlan500 = {
   code: string;
 };
 
+export type ListAdminExercises200ItemMusclesItemMuscleGroup =
+  (typeof ListAdminExercises200ItemMusclesItemMuscleGroup)[keyof typeof ListAdminExercises200ItemMusclesItemMuscleGroup];
+
+export const ListAdminExercises200ItemMusclesItemMuscleGroup = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+} as const;
+
+export type ListAdminExercises200ItemMusclesItemRole =
+  (typeof ListAdminExercises200ItemMusclesItemRole)[keyof typeof ListAdminExercises200ItemMusclesItemRole];
+
+export const ListAdminExercises200ItemMusclesItemRole = {
+  PRIMARY: "PRIMARY",
+  SECONDARY: "SECONDARY",
+} as const;
+
+export type ListAdminExercises200ItemMusclesItem = {
+  muscleGroup: ListAdminExercises200ItemMusclesItemMuscleGroup;
+  role: ListAdminExercises200ItemMusclesItemRole;
+};
+
+export type ListAdminExercises200ItemMediaItem = {
+  mediaType: string;
+  hasImages: boolean;
+  hasMotion: boolean;
+  hasInstructions: boolean;
+};
+
+export type ListAdminExercises200Item = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  name: string;
+  isUnilateral: boolean;
+  /** @nullable */
+  family: string | null;
+  updatedAt: string;
+  muscles: ListAdminExercises200ItemMusclesItem[];
+  media: ListAdminExercises200ItemMediaItem[];
+};
+
+export type ListAdminExercises400 = {
+  error: string;
+  code: string;
+};
+
+export type ListAdminExercises401 = {
+  error: string;
+  code: string;
+};
+
+export type ListAdminExercises403 = {
+  error: string;
+  code: string;
+};
+
+export type ListAdminExercises404 = {
+  error: string;
+  code: string;
+};
+
+export type ListAdminExercises409 = {
+  error: string;
+  code: string;
+};
+
+export type ListAdminExercises500 = {
+  error: string;
+  code: string;
+};
+
 export type GetAdminOverview200PendingCoachesItemAccountType =
   (typeof GetAdminOverview200PendingCoachesItemAccountType)[keyof typeof GetAdminOverview200PendingCoachesItemAccountType];
 
@@ -17665,6 +17746,76 @@ export const createCoachWorkoutPlanTemplateFromPlan = async (
       body: JSON.stringify(createCoachWorkoutPlanTemplateFromPlanBody),
     },
   );
+};
+
+/**
+ * @summary List global exercise catalog and content coverage
+ */
+export type listAdminExercisesResponse200 = {
+  data: ListAdminExercises200Item[];
+  status: 200;
+};
+
+export type listAdminExercisesResponse400 = {
+  data: ListAdminExercises400;
+  status: 400;
+};
+
+export type listAdminExercisesResponse401 = {
+  data: ListAdminExercises401;
+  status: 401;
+};
+
+export type listAdminExercisesResponse403 = {
+  data: ListAdminExercises403;
+  status: 403;
+};
+
+export type listAdminExercisesResponse404 = {
+  data: ListAdminExercises404;
+  status: 404;
+};
+
+export type listAdminExercisesResponse409 = {
+  data: ListAdminExercises409;
+  status: 409;
+};
+
+export type listAdminExercisesResponse500 = {
+  data: ListAdminExercises500;
+  status: 500;
+};
+
+export type listAdminExercisesResponseSuccess =
+  listAdminExercisesResponse200 & {
+    headers: Headers;
+  };
+export type listAdminExercisesResponseError = (
+  | listAdminExercisesResponse400
+  | listAdminExercisesResponse401
+  | listAdminExercisesResponse403
+  | listAdminExercisesResponse404
+  | listAdminExercisesResponse409
+  | listAdminExercisesResponse500
+) & {
+  headers: Headers;
+};
+
+export type listAdminExercisesResponse =
+  | listAdminExercisesResponseSuccess
+  | listAdminExercisesResponseError;
+
+export const getListAdminExercisesUrl = () => {
+  return `/admin/exercises`;
+};
+
+export const listAdminExercises = async (
+  options?: RequestInit,
+): Promise<listAdminExercisesResponse> => {
+  return customFetch<listAdminExercisesResponse>(getListAdminExercisesUrl(), {
+    ...options,
+    method: "GET",
+  });
 };
 
 export type getAdminOverviewResponse200 = {
