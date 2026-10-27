@@ -1,13 +1,13 @@
-# Visualização anatômica — versão atual, 26/10/2026
+# Visualização anatômica — versão atual, 27/10/2026
 
 O visualizador usa `public/models/exercise-3d/trainvy-athlete.glb`: superfícies musculares e
-suporte ósseo adaptados de Z-Anatomy/BodyParts3D, cabeça e shorts com base MakeHuman CC0,
+suporte ósseo adaptados de Z-Anatomy/BodyParts3D, cabeça com base MakeHuman CC0,
 mãos fechadas e calçados próprios. Não se trata de uma escultura integralmente original,
 nem de um modelo clínico validado. A versão anterior está registrada no histórico abaixo.
 
 Foram selecionadas estruturas superficiais, exposto o reto abdominal, corrigidos reflexos
 de normais, ajustado o orçamento de polígonos e transferidas as superfícies para uma pose neutra.
-O rig tem 15 ossos, incluindo suportes de cotovelo. O manifesto
+O rig tem 21 ossos, incluindo suportes de cotovelo, ombro, quadril e torção distal do antebraço. O manifesto
 `public/models/exercise-3d/model-manifest.json` registra estruturas, contagens e SHA-256.
 O GLB usa EXT_meshopt_compression com decoder local habilitado pelo Drei: não carrega
 modelos, texturas ou HDRIs de terceiros em runtime. A compressão preserva os buffers geométricos.
@@ -18,6 +18,26 @@ e não representam EMG, intensidade ou ativação medida. Todo o restante perman
 É possível desligar o destaque, observar pelas costas, pausar, reiniciar, mudar a velocidade,
 percorrer a repetição e ampliar a visualização. A interface de progresso atualiza no máximo
 100 vezes por ciclo, mantendo renderização sob demanda quando pausada.
+
+Na versão 7, a roupa foi removida e as superfícies proximais das coxas e dos glúteos foram
+restauradas integralmente. Esconder apenas a roupa deixaria os recortes feitos na versão 4
+expostos. A pelve contém os ossos do quadril, sacro e músculos inferiores do abdômen do mesmo
+atlas Z-Anatomy. A nuca usa esplênios, espinal da cabeça e outros músculos cervicais do atlas.
+Os preenchimentos lisos experimentais foram removidos. As estruturas adicionadas permanecem
+neutras, com fibras e relevo compatíveis com as demais superfícies musculares.
+As inserções mediais dos glúteos preservam o contato com a pelve; a transição para o fêmur
+usa suportes de quadril. A classificação anatômica impede que vértices da bacia recebam pesos
+dos braços por proximidade. O SHA-256 do manifesto identifica a URL do GLB para invalidar o cache.
+A orientação do braço usa a frente anatômica como referência de flexão, evitando o roll
+introduzido pela pequena inclinação lateral dos cotovelos na pose de repouso. A torção distal
+do antebraço é distribuída por suportes próprios; as mãos fechadas ficam rígidas na barra.
+
+A cabeça MakeHuman foi calibrada ao eixo cervical do atlas: a origem anterior diferente
+foi compensada, preservando o rosto e reposicionando os olhos junto com a cabeça. O contorno
+inferior do pescoço da cabeça é ajustado à seção cervical. Uma transição curta usa a borda
+exata do recorte e o contorno dos músculos nativos, com índices compartilhados, normais
+contínuas e fibras que diminuem em direção à face. O restante da malha da versão 6 aprovada,
+incluindo quadril e glúteos, permanece idêntico.
 
 O link para um Markdown técnico foi substituído pela seção recolhida "Sobre esta visualização",
 com origem e licença legíveis. Créditos completos em `public/models/exercise-3d/ATTRIBUTION.md`;
@@ -42,6 +62,35 @@ Intermediários e renders ficam em `.tmp/anatomy-qa`, ignorados pelo Git. Distri
 final e seu manifesto. O scaffold procedural contribui apenas mãos, calçados e esqueleto;
 seu tronco e sua cabeça experimentais não aparecem no asset final. As poses são ilustrativas;
 novos exercícios exigem revisão anatômica e de articulação específica.
+
+Quando os inputs do Blender não estiverem disponíveis, a recuperação da versão 7 usa os GLBs
+distribuídos nos commits `635a626` (v4) e `a57bd99` (v3, com músculos completos). O script
+confere os SHA-256 antes de gravar e compartilha os pesos e conexões anatômicas com o pipeline de geração.
+As conexões estão preservadas em `scripts/assets/anatomical-connections.glb`; a recuperação
+funciona offline, sem Blender nem download dos FBXs:
+
+```powershell
+node scripts/repair-anatomical-atlas.mjs --from-git
+```
+
+Também aceita caminhos locais para os dois GLBs: `node scripts/repair-anatomical-atlas.mjs <v4.glb> <v3.glb>`.
+Não redirecionar os binários com `git show ... > arquivo.glb` no Windows PowerShell.
+
+Para recriar o recorte das conexões a partir dos FBXs licenciados originais:
+
+```powershell
+node scripts/prepare-anatomical-connections.mjs <SkeletalSystem100.fbx> <MuscularSystem100.fbx>
+```
+
+Os hashes das fontes ficam nos metadados desse recorte. Sua licença e origem estão em
+`scripts/assets/ATTRIBUTION.md`. O runtime carrega somente o GLB final comprimido.
+
+Validação da versão 7: 33 testes de cinemática, asset, visualizador e guia de execução;
+revisão no Chrome em desktop/celular, incluindo closes da cabeça, perfil elevado, costas e poses
+intermediárias dos dois exercícios. Os testes cobrem as máscaras independentes, a
+ancoragem dos glúteos, a ausência de influência dos braços na pelve, as mãos rígidas na barra,
+o alinhamento da cabeça e a junção sem borda aberta no pescoço. Os atributos abaixo da
+região cervical foram comparados à versão 6 aprovada e permanecem idênticos.
 
 ## Registro histórico — protótipo anterior
 

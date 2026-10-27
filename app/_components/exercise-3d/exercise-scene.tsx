@@ -11,6 +11,7 @@ import {
 } from "@react-three/drei";
 import { Bone, Group, Skeleton, SkinnedMesh } from "three";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
+import modelManifest from "../../../public/models/exercise-3d/model-manifest.json";
 import { createTissueMaterial } from "./anatomy-material";
 import { createPoseDriver, getExerciseDepth } from "./kinematics";
 import type { ExerciseAnimation } from "./exercises";
@@ -203,7 +204,7 @@ function Athlete({
   highlighted,
 }: Pick<SceneProps, "exercise" | "tick" | "onReady" | "highlighted">) {
   const { scene: source } = useGLTF(
-    "/models/exercise-3d/trainvy-athlete.glb?v=4",
+    `/models/exercise-3d/trainvy-athlete.glb?v=${modelManifest.sha256.slice(0, 12)}`,
     false,
     true,
   );

@@ -1,7 +1,17 @@
 // @vitest-environment node
 import { readFile } from "node:fs/promises";
 import { beforeAll, describe, expect, it } from "vitest";
-import { Bone, Quaternion, SkinnedMesh, Vector3 } from "three";
+import {
+  Bone,
+  Color,
+  DoubleSide,
+  Mesh,
+  MeshBasicMaterial,
+  Quaternion,
+  Raycaster,
+  SkinnedMesh,
+  Vector3,
+} from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "meshoptimizer";
 import { createPoseDriver } from "../app/_components/exercise-3d/kinematics";
@@ -37,10 +47,11 @@ beforeAll(async () => {
 
 describe("Trainvy anatomical athlete", () => {
   it("has a complete neutral-pose rig, joint supports and normalised weights", () => {
-    expect(mesh.skeleton.bones).toHaveLength(19);
+    expect(mesh.skeleton.bones).toHaveLength(21);
     expect(mesh.skeleton.bones.map((b) => b.name)).toContain("elbow_L");
     expect(mesh.skeleton.bones.map((b) => b.name)).toContain("hip_L");
     expect(mesh.skeleton.bones.map((b) => b.name)).toContain("shoulder_L");
+    expect(mesh.skeleton.bones.map((b) => b.name)).toContain("wrist_L");
     const weights = mesh.geometry.getAttribute("skinWeight");
     let maximumError = 0;
     for (let i = 0; i < weights.count; i += 19)
@@ -91,13 +102,11 @@ describe("Trainvy anatomical athlete", () => {
           const upper = `upperArm_${suffix}`,
             fore = `forearm_${suffix}`,
             hand = `hand_${suffix}`;
-          const normal = bindPositions
+          const anatomicalNormal = bindPositions
             .get(fore)!
             .clone()
             .sub(bindPositions.get(upper)!)
-            .cross(
-              bindPositions.get(hand)!.clone().sub(bindPositions.get(fore)!),
-            )
+            .cross(new Vector3(0, 0, 1))
             .normalize();
           const posedNormal = bones
             .get(fore)!
@@ -108,6 +117,18 @@ describe("Trainvy anatomical athlete", () => {
             )
             .normalize();
           for (const name of [upper, fore]) {
+            const direction = (
+              name === upper
+                ? bindPositions.get(fore)!
+                : bindPositions.get(hand)!
+            )
+              .clone()
+              .sub(bindPositions.get(name)!)
+              .normalize();
+            const normal = anatomicalNormal
+              .clone()
+              .addScaledVector(direction, -anatomicalNormal.dot(direction))
+              .normalize();
             const q = bones.get(name)!.quaternion;
             maximumPlaneError = Math.max(
               maximumPlaneError,
@@ -124,6 +145,239 @@ describe("Trainvy anatomical athlete", () => {
       }
       expect(maximumPlaneError).toBeLessThan(0.000001);
       expect(maximumStepAngle).toBeLessThan(0.04);
+    },
+  );
+  it("exposes primary gluteal surfaces on both sides and keeps them neutral in bench press", () => {
+    const p = mesh.geometry.attributes.position;
+    const m = mesh.geometry.getAttribute("_exercisemuscles");
+    const tissue = mesh.geometry.attributes.uv;
+    for (const side of [-1, 1]) {
+      let gluteal = 0;
+      for (let i = 0; i < p.count; i++) {
+        if (
+          p.getX(i) * side > 0.035 &&
+          p.getX(i) * side < 0.22 &&
+          p.getY(i) > 0.8 &&
+          p.getY(i) < 0.965 &&
+          p.getZ(i) < 0.065 &&
+          m.getX(i) > 0.9
+        ) {
+          gluteal++;
+          expect(m.getY(i)).toBe(0);
+          expect(tissue.getY(i)).toBe(1);
+        }
+      }
+      expect(gluteal).toBeGreaterThan(300);
+    }
+  });
+  it("uses neutral anatomical tissue at the nape and lower abdomen", () => {
+    const surface = new Mesh(
+      mesh.geometry,
+      new MeshBasicMaterial({ side: DoubleSide }),
+    );
+    surface.updateMatrixWorld(true);
+    const tissue = mesh.geometry.attributes.uv;
+    const masks = mesh.geometry.getAttribute("_exercisemuscles");
+    let muscularNape = 0;
+    for (const y of [1.41, 1.43, 1.45]) {
+      for (const x of [-0.018, 0, 0.018]) {
+        const hits = new Raycaster(
+          new Vector3(x, y, -0.5),
+          new Vector3(0, 0, 1),
+        ).intersectObject(surface);
+        expect(hits.length).toBeGreaterThan(0);
+        expect(hits[0].point.z).toBeLessThan(0.13);
+        if (
+          [hits[0].face!.a, hits[0].face!.b, hits[0].face!.c].every(
+            (id) => tissue.getY(id) > 0.9,
+          )
+        )
+          muscularNape++;
+        for (const id of [hits[0].face!.a, hits[0].face!.b, hits[0].face!.c]) {
+          expect(masks.getX(id)).toBe(0);
+          expect(masks.getY(id)).toBe(0);
+        }
+      }
+    }
+    expect(muscularNape).toBeGreaterThanOrEqual(8);
+    for (const y of [0.89, 0.94, 0.975]) {
+      for (const x of [-0.07, 0, 0.07]) {
+        const hits = new Raycaster(
+          new Vector3(x, y, 0.5),
+          new Vector3(0, 0, -1),
+        ).intersectObject(surface);
+        expect(hits.length).toBeGreaterThan(0);
+      }
+    }
+    surface.material.dispose();
+  });
+  it("joins the head cut to the cervical surface without an open seam", () => {
+    const g = mesh.geometry,
+      positions = g.attributes.position;
+    const edges = new Map<string, number>();
+    const key = (i: number) =>
+      new Vector3()
+        .fromBufferAttribute(positions, i)
+        .toArray()
+        .map((v) => Math.round(v * 1e6))
+        .join(",");
+    for (let t = 0; t < g.index!.count; t += 3) {
+      const tri = [0, 1, 2].map((j) => g.index!.getX(t + j));
+      for (let j = 0; j < 3; j++) {
+        const a = tri[j],
+          b = tri[(j + 1) % 3];
+        if (
+          Math.abs(positions.getY(a) - 1.472) > 0.000001 ||
+          Math.abs(positions.getY(b) - 1.472) > 0.000001
+        )
+          continue;
+        const ka = key(a),
+          kb = key(b);
+        if (ka === kb) continue;
+        const edge = [ka, kb].sort().join("|");
+        edges.set(edge, (edges.get(edge) ?? 0) + 1);
+      }
+    }
+    expect(edges.size).toBeGreaterThan(30);
+    expect([...edges.values()].every((count) => count === 2)).toBe(true);
+  });
+  it("positions the head over the cervical column and preserves a continuous nape profile", () => {
+    const g = mesh.geometry;
+    let anteriorHead = -Infinity;
+    for (let i = 0; i < g.attributes.position.count; i++) {
+      if (g.attributes.position.getY(i) > 1.57)
+        anteriorHead = Math.max(anteriorHead, g.attributes.position.getZ(i));
+    }
+    expect(anteriorHead).toBeLessThan(0.225);
+    const surface = new Mesh(g, new MeshBasicMaterial({ side: DoubleSide }));
+    surface.updateMatrixWorld(true);
+    for (const x of [-0.025, 0, 0.025]) {
+      let previous: number | undefined;
+      for (let step = 0; step <= 10; step++) {
+        const y = 1.44 + step * 0.005;
+        const hits = new Raycaster(
+          new Vector3(x, y, -0.4),
+          new Vector3(0, 0, 1),
+        ).intersectObject(surface);
+        expect(hits.length).toBeGreaterThan(0);
+        const z = hits[0].point.z;
+        if (previous !== undefined)
+          expect(Math.abs(z - previous)).toBeLessThan(0.012);
+        previous = z;
+      }
+    }
+    surface.material.dispose();
+  });
+  it("includes native pelvic and neck structures and excludes smooth synthetic seals", async () => {
+    const manifest = JSON.parse(
+      await readFile(
+        new URL(
+          "../public/models/exercise-3d/model-manifest.json",
+          import.meta.url,
+        ),
+        "utf8",
+      ),
+    );
+    for (const name of [
+      "Bone_Hip_bonel",
+      "Bone_Hip_boner",
+      "Bone_Sacrum",
+      "Splenius_capitis_musclel",
+      "Spinalis_capitis_muscler",
+    ])
+      expect(manifest.structures).toContain(name);
+    expect(manifest.structures).not.toContain("Trainvy_NapeSeal");
+    expect(manifest.structures).not.toContain("Trainvy_PelvicSeal");
+    const g = mesh.geometry;
+    let lowerAbdomen = 0;
+    for (let i = 0; i < g.attributes.position.count; i++) {
+      const p = new Vector3().fromBufferAttribute(g.attributes.position, i);
+      if (
+        p.y > 0.87 &&
+        p.y < 0.97 &&
+        Math.abs(p.x) < 0.08 &&
+        p.z > 0.14 &&
+        g.attributes.uv.getY(i) > 0.9 &&
+        g.attributes.uv1.getY(i) > 0.1
+      )
+        lowerAbdomen++;
+    }
+    expect(lowerAbdomen).toBeGreaterThan(100);
+  });
+  it("never binds pelvic muscles to the arms and anchors medial gluteal origins to the pelvis", () => {
+    const g = mesh.geometry,
+      indices = g.attributes.skinIndex,
+      weights = g.attributes.skinWeight;
+    const masks = g.getAttribute("_exercisemuscles");
+    let rootedGluteal = 0,
+      supportedGluteal = 0;
+    for (let i = 0; i < g.attributes.position.count; i++) {
+      const p = new Vector3().fromBufferAttribute(g.attributes.position, i);
+      if (p.y < 0.74 || p.y > 1.005 || Math.abs(p.x) > 0.24) continue;
+      for (let j = 0; j < 4; j++) {
+        if (weights.getComponent(i, j) > 0) {
+          const bone = mesh.skeleton.bones[indices.getComponent(i, j)].name;
+          expect(bone).not.toMatch(
+            /^(upperArm|forearm|hand|elbow|shoulder|wrist)_/,
+          );
+          if (masks.getX(i) > 0.9 && p.z < 0.1 && bone.startsWith("hip_"))
+            supportedGluteal++;
+        }
+      }
+      if (
+        masks.getX(i) > 0.9 &&
+        p.y > 0.9 &&
+        Math.abs(p.x) < 0.065 &&
+        p.z < 0.1
+      ) {
+        expect(indices.getX(i)).toBe(0);
+        expect(weights.getX(i)).toBeGreaterThan(0.95);
+        rootedGluteal++;
+      }
+    }
+    expect(rootedGluteal).toBeGreaterThan(30);
+    expect(supportedGluteal).toBeGreaterThan(100);
+  });
+  it.each(["squat", "bench-press"] as const)(
+    "keeps the closed hands rigid and attached to the bar throughout %s",
+    (exercise) => {
+      const g = mesh.geometry;
+      const c = g.attributes.color;
+      const colour = new Color("#b8b4ac");
+      const sample = [];
+      for (let i = 0; i < g.attributes.position.count; i++) {
+        const p = new Vector3().fromBufferAttribute(g.attributes.position, i);
+        if (
+          g.attributes.uv.getY(i) < 0.1 &&
+          p.y > 0.75 &&
+          p.y < 0.89 &&
+          Math.abs(p.x) > 0.255 &&
+          Math.abs(c.getX(i) - colour.r) < 0.008 &&
+          Math.abs(c.getY(i) - colour.g) < 0.008 &&
+          Math.abs(c.getZ(i) - colour.b) < 0.008
+        )
+          sample.push(i);
+      }
+      expect(sample.length).toBeGreaterThan(500);
+      const vertex = new Vector3();
+      for (const depth of [0, 0.25, 0.5, 0.75, 1]) {
+        apply(exercise, depth);
+        mesh.parent!.updateMatrixWorld(true);
+        mesh.skeleton.update();
+        for (const i of sample.filter((_, index) => index % 31 === 0)) {
+          const restPoint = new Vector3().fromBufferAttribute(
+            g.attributes.position,
+            i,
+          );
+          const name = `hand_${restPoint.x < 0 ? "L" : "R"}`;
+          const hand = mesh.skeleton.bones.find((b) => b.name === name)!;
+          const expected = restPoint
+            .sub(bindPositions.get(name)!)
+            .add(hand.position);
+          mesh.getVertexPosition(i, vertex);
+          expect(vertex.distanceTo(expected)).toBeLessThan(0.00001);
+        }
+      }
     },
   );
   it.each(["squat", "bench-press"] as const)(

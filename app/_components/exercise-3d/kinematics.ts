@@ -158,10 +158,12 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
       const restShoulder = rest.get(`upperArm_${suffix}`)!;
       const restElbow = rest.get(`forearm_${suffix}`)!;
       const restWrist = rest.get(`hand_${suffix}`)!;
+      // The almost straight A-pose is not an anatomical elbow bend. Its small
+      // lateral offset must not introduce an axial roll into every muscle.
       const restNormal = restElbow
         .clone()
         .sub(restShoulder)
-        .cross(restWrist.clone().sub(restElbow))
+        .cross(v(0, 0, 1))
         .normalize();
       const posedNormal = elbow
         .clone()
@@ -176,6 +178,17 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
         restNormal,
         posedNormal,
       );
+      // Pronation belongs in the forearm. Stabilise the distal radius/ulna
+      // against the horizontal grip, rather than rotating the closed hand.
+      const wristSupport = bones.get(`wrist_${suffix}`);
+      if (wristSupport) {
+        wristSupport.position.copy(elbow).lerp(wrist, 0.72);
+        wristSupport.quaternion
+          .copy(frame(wrist.clone().sub(elbow), v(side, 0, 0)))
+          .multiply(
+            frame(restWrist.clone().sub(restElbow), v(side, 0, 0)).invert(),
+          );
+      }
       armSegment(
         `forearm_${suffix}`,
         elbow,

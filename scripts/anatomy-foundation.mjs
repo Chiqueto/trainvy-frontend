@@ -73,8 +73,6 @@ export function createAnatomyFoundation(bones) {
   const torso = [
     ellipsoid(v(0, 1.25, 0.11), v(0.127, 0.16, 0.063)),
     ellipsoid(v(0, 1.08, 0.12), v(0.1, 0.17, 0.065)),
-    tube(v(0, 1.39, 0.12), v(0, 1.49, 0.12), 0.056, 0.034),
-    tube(v(0, 1.47, 0.12), v(0, 1.575, 0.125), 0.034, 0.039),
   ];
   for (const side of [-1, 1])
     torso.push(

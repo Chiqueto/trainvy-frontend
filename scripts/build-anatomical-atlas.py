@@ -82,7 +82,7 @@ for o,world in [(o,o.matrix_world.copy()) for o in bpy.data.objects if o not in 
 rows=[]
 for o in objects:
     if any(t in o.name for t in ('carpi','digitorum','palmaris')):clip(o,2,.845,above=True)
-    if o.name.startswith('Sternocleidomastoid'):clip(o,2,1.51,above=False)
+    if o.name.startswith('Sternocleidomastoid'):clip(o,2,(1.46+.0074)/.988,above=False)
     for vertex in o.data.vertices:vertex.co=retarget(vertex.co,o.name)
     if 'abdom' in o.name.lower() or 'linea alba' in o.name.lower():clip(o,2,.975,above=True)
     if o.name.startswith('Bone_Femur'):clip(o,2,.80,above=False)

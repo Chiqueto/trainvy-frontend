@@ -15,17 +15,31 @@ This asset license does not change the license of the application code.
 
 The head is adapted from MakeHuman hm08 / MPFB core assets (**CC0**).
 Core asset license: https://static.makehumancommunity.org/about/license.html
-The training shorts, neutral connective foundation, closed hands, footwear, anatomical rig, joint supports, fibre coordinates, exercise-specific
+The neutral connective foundation, closed hands, footwear, anatomical rig, joint supports, fibre coordinates, exercise-specific
 muscle masks, studio, equipment and materials are authored/adapted for Trainvy.
 
 Changes: selection of superficial structures, local abdominal exposure, corrected reflected
 normals, adaptive web decimation, neutral-pose retargeting, articulated skin weights, elbow
-hip and shoulder support joints, original muscle-group highlighting, head fitting,
+hip, shoulder and distal forearm support joints, original muscle-group highlighting, head fitting,
 and meshopt compression. No claim of original authorship is made for the anatomical source meshes.
+Version 6 removes the training shorts, restores the uncut proximal/gluteal source surfaces,
+adds native pelvic bones and lower abdominal/cervical muscle surfaces from the same atlas,
+preserves medial gluteal attachments and stabilises elbow orientation and closed grips.
+The experimental smooth nape/pelvic fillers are removed. Added muscles use the existing
+fibre shading and stay neutral in both exercise masks.
+Version 7 calibrates the CC0 head/eyes to the cervical column, adapts the lower neck
+contour and joins its exact cut to a section sampled from the native cervical muscles.
+The face is preserved; the new fitting shares boundary indices and normals with the head.
 The complete structure list and asset SHA-256 are published in `model-manifest.json`.
 
 Generation: `scripts/generate-anatomy-scaffold.mjs`, `scripts/build-anatomical-atlas.py`,
-`scripts/anatomy-foundation.mjs`, `scripts/finalize-anatomical-atlas.mjs`. Build inputs are the licensed source assets retained
+`scripts/anatomy-foundation.mjs`, `scripts/anatomy-skinning.mjs`, `scripts/finalize-anatomical-atlas.mjs`.
+`scripts/fit-anatomical-head.mjs` calibrates and joins the head in both generation paths.
+`scripts/repair-anatomical-atlas.mjs` also reproduces v7 from the published v4/v3 GLBs with source checksum validation.
+`scripts/prepare-anatomical-connections.mjs` extracts the native connections from the licensed FBXs.
+The extracted build input is preserved in `scripts/assets/anatomical-connections.glb` under
+CC BY-SA 4.0, with original FBX SHA-256 hashes in its metadata; it is not loaded at runtime.
+Build inputs are the licensed source assets retained
 in the sibling `trainvy-3d-poc` project; the application loads only the self-contained output GLB.
 
 ## Previous model — anatomical-lifter.glb

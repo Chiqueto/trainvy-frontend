@@ -172,11 +172,24 @@ try {
       );
       for (const view of mobile
         ? ["360°", "Frente"]
-        : ["360°", "Frente", "Lateral", "Costas", "Acima"]) {
+        : [
+            "360°",
+            "Frente",
+            "Lateral",
+            "Costas",
+            "Acima",
+            "Costas elevadas",
+            "Perfil elevado",
+          ]) {
         await evaluate(
-          `Array.from(document.querySelectorAll('[aria-label="Ângulo da câmera"] button')).find(b=>b.textContent===${JSON.stringify(view === "Acima" ? "Frente" : view)}).click()`,
+          `Array.from(document.querySelectorAll('[aria-label="Ângulo da câmera"] button')).find(b=>b.textContent===${JSON.stringify(view === "Acima" ? "Frente" : view === "Costas elevadas" ? "Costas" : view === "Perfil elevado" ? "Lateral" : view)}).click()`,
         );
-        if (view === "Acima") {
+        if (
+          view === "Acima" ||
+          view === "Costas elevadas" ||
+          view === "Perfil elevado"
+        ) {
+          const orbit = view === "Perfil elevado" ? 0.18 : 0.3;
           await evaluate(
             `new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))`,
           );
@@ -201,7 +214,7 @@ try {
               {
                 type: "mouseMoved",
                 x: canvas.x,
-                y: canvas.y + (canvas.height * 0.3 * step) / 6,
+                y: canvas.y + (canvas.height * orbit * step) / 6,
                 button: "left",
                 buttons: 1,
               },
@@ -212,7 +225,7 @@ try {
             {
               type: "mouseReleased",
               x: canvas.x,
-              y: canvas.y + canvas.height * 0.3,
+              y: canvas.y + canvas.height * orbit,
               button: "left",
               buttons: 0,
               clickCount: 1,
@@ -245,6 +258,28 @@ try {
             ),
             Buffer.from(screenshot.data, "base64"),
           );
+          if (
+            !mobile &&
+            exercise === "squat" &&
+            position === 0 &&
+            ["360°", "Frente", "Costas"].includes(view)
+          ) {
+            const headClip = await evaluate(
+              `(()=>{const r=document.querySelector('canvas').getBoundingClientRect();return{x:r.x+scrollX+r.width*.34,y:r.y+scrollY+r.height*.015,width:r.width*.32,height:r.height*.30,scale:2}})()`,
+            );
+            const head = await send(
+              "Page.captureScreenshot",
+              { format: "png", captureBeyondViewport: true, clip: headClip },
+              sessionId,
+            );
+            await writeFile(
+              new URL(
+                `head-${view === "360°" ? "perspective" : view}.png`,
+                out,
+              ),
+              Buffer.from(head.data, "base64"),
+            );
+          }
         }
       }
       results.push({
