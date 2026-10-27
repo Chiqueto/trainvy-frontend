@@ -13,19 +13,19 @@ https://creativecommons.org/licenses/by-sa/4.0/
 The full license is preserved in `LICENSE-CC-BY-SA-4.0.txt`, with upstream notices in `UPSTREAM-NOTICES.txt`.
 This asset license does not change the license of the application code.
 
-The head and fitted shorts are adapted from MakeHuman hm08 / MPFB core assets (**CC0**).
+The head is adapted from MakeHuman hm08 / MPFB core assets (**CC0**).
 Core asset license: https://static.makehumancommunity.org/about/license.html
-The closed hands, footwear, anatomical rig, joint supports, fibre coordinates, exercise-specific
+The training shorts, neutral connective foundation, closed hands, footwear, anatomical rig, joint supports, fibre coordinates, exercise-specific
 muscle masks, studio, equipment and materials are authored/adapted for Trainvy.
 
 Changes: selection of superficial structures, local abdominal exposure, corrected reflected
 normals, adaptive web decimation, neutral-pose retargeting, articulated skin weights, elbow
-support joints, original muscle-group highlighting, head/garment fitting,
+hip and shoulder support joints, original muscle-group highlighting, head fitting,
 and meshopt compression. No claim of original authorship is made for the anatomical source meshes.
 The complete structure list and asset SHA-256 are published in `model-manifest.json`.
 
 Generation: `scripts/generate-anatomy-scaffold.mjs`, `scripts/build-anatomical-atlas.py`,
-`scripts/finalize-anatomical-atlas.mjs`. Build inputs are the licensed source assets retained
+`scripts/anatomy-foundation.mjs`, `scripts/finalize-anatomical-atlas.mjs`. Build inputs are the licensed source assets retained
 in the sibling `trainvy-3d-poc` project; the application loads only the self-contained output GLB.
 
 ## Previous model — anatomical-lifter.glb

@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { readFile } from "node:fs/promises";
 import { beforeAll, describe, expect, it } from "vitest";
-import { Bone, SkinnedMesh, Vector3 } from "three";
+import { Bone, Quaternion, SkinnedMesh, Vector3 } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "meshoptimizer";
 import { createPoseDriver } from "../app/_components/exercise-3d/kinematics";
@@ -10,6 +10,7 @@ import { createTissueMaterial } from "../app/_components/exercise-3d/anatomy-mat
 
 let mesh: SkinnedMesh;
 let apply: ReturnType<typeof createPoseDriver>;
+let bindPositions: Map<string, Vector3>;
 beforeAll(async () => {
   const bytes = await readFile(
     new URL(
@@ -28,13 +29,18 @@ beforeAll(async () => {
     if (object instanceof Bone) bones.set(object.name, object);
     if (object instanceof SkinnedMesh) mesh = object;
   });
+  bindPositions = new Map(
+    [...bones].map(([name, bone]) => [name, bone.position.clone()]),
+  );
   apply = createPoseDriver(bones);
 });
 
 describe("Trainvy anatomical athlete", () => {
   it("has a complete neutral-pose rig, joint supports and normalised weights", () => {
-    expect(mesh.skeleton.bones).toHaveLength(15);
+    expect(mesh.skeleton.bones).toHaveLength(19);
     expect(mesh.skeleton.bones.map((b) => b.name)).toContain("elbow_L");
+    expect(mesh.skeleton.bones.map((b) => b.name)).toContain("hip_L");
+    expect(mesh.skeleton.bones.map((b) => b.name)).toContain("shoulder_L");
     const weights = mesh.geometry.getAttribute("skinWeight");
     let maximumError = 0;
     for (let i = 0; i < weights.count; i += 19)
@@ -72,6 +78,54 @@ describe("Trainvy anatomical athlete", () => {
       EXERCISE_ANIMATIONS["bench-press"].muscles.primary,
     );
   });
+  it.each(["squat", "bench-press"] as const)(
+    "keeps both arm segments in one bend plane without roll flips in %s",
+    (exercise) => {
+      const bones = new Map(mesh.skeleton.bones.map((b) => [b.name, b]));
+      let maximumPlaneError = 0,
+        maximumStepAngle = 0;
+      const previous = new Map<string, Quaternion>();
+      for (let step = 0; step <= 200; step++) {
+        apply(exercise, step / 200);
+        for (const suffix of ["L", "R"]) {
+          const upper = `upperArm_${suffix}`,
+            fore = `forearm_${suffix}`,
+            hand = `hand_${suffix}`;
+          const normal = bindPositions
+            .get(fore)!
+            .clone()
+            .sub(bindPositions.get(upper)!)
+            .cross(
+              bindPositions.get(hand)!.clone().sub(bindPositions.get(fore)!),
+            )
+            .normalize();
+          const posedNormal = bones
+            .get(fore)!
+            .position.clone()
+            .sub(bones.get(upper)!.position)
+            .cross(
+              bones.get(hand)!.position.clone().sub(bones.get(fore)!.position),
+            )
+            .normalize();
+          for (const name of [upper, fore]) {
+            const q = bones.get(name)!.quaternion;
+            maximumPlaneError = Math.max(
+              maximumPlaneError,
+              normal.clone().applyQuaternion(q).distanceTo(posedNormal),
+            );
+            if (previous.has(name))
+              maximumStepAngle = Math.max(
+                maximumStepAngle,
+                previous.get(name)!.angleTo(q),
+              );
+            previous.set(name, q.clone());
+          }
+        }
+      }
+      expect(maximumPlaneError).toBeLessThan(0.000001);
+      expect(maximumStepAngle).toBeLessThan(0.04);
+    },
+  );
   it.each(["squat", "bench-press"] as const)(
     "keeps every sampled vertex finite through %s",
     (exercise) => {

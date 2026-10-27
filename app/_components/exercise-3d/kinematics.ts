@@ -1,13 +1,10 @@
-import { Bone, MathUtils, Quaternion, Vector3 } from "three";
+import { Bone, MathUtils, Matrix4, Quaternion, Vector3 } from "three";
 import type { ExerciseAnimation } from "./exercises";
 
 const v = (x: number, y: number, z: number) => new Vector3(x, y, z);
 const X = v(1, 0, 0);
 const restTilt = new Quaternion();
 const hipLocal = v(0, -0.28, 0.08);
-const restOrigin = v(0, 1.142, 0);
-const restWorld = (p: Vector3) =>
-  p.clone().applyQuaternion(restTilt).add(restOrigin);
 export const ARM_LENGTH = v(0.08, -0.284, -0.012).length();
 export const FOREARM_LENGTH = v(0.025, -0.265, 0.03).length();
 
@@ -109,6 +106,35 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
       end.clone().sub(start).normalize(),
     );
   }
+  // A direction alone leaves roll undefined. Use the same anatomical bend
+  // plane for both arm segments, including at the extremes of the repetition.
+  function frame(direction: Vector3, bendNormal: Vector3) {
+    const y = direction.clone().normalize();
+    const z = bendNormal
+      .clone()
+      .addScaledVector(y, -bendNormal.dot(y))
+      .normalize();
+    const x = y.clone().cross(z).normalize();
+    return new Quaternion().setFromRotationMatrix(
+      new Matrix4().makeBasis(x, y, z),
+    );
+  }
+  function armSegment(
+    name: string,
+    start: Vector3,
+    end: Vector3,
+    restEnd: Vector3,
+    restNormal: Vector3,
+    posedNormal: Vector3,
+  ) {
+    const bone = bones.get(name)!;
+    bone.position.copy(start);
+    bone.quaternion
+      .copy(frame(end.clone().sub(start), posedNormal))
+      .multiply(
+        frame(restEnd.clone().sub(rest.get(name)!), restNormal).invert(),
+      );
+  }
   return (exercise: ExerciseAnimation, depth: number) => {
     const pose = getExercisePose(exercise, depth);
     const root = bones.get("sled")!;
@@ -119,21 +145,52 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
       const suffix = side < 0 ? "L" : "R";
       segment(`thigh_${suffix}`, hip, knee, rest.get(`shin_${suffix}`)!);
       segment(`shin_${suffix}`, knee, ankle, rest.get(`foot_${suffix}`)!);
+      const hipSupport = bones.get(`hip_${suffix}`);
+      if (hipSupport) {
+        hipSupport.position.copy(hip);
+        hipSupport.quaternion
+          .copy(root.quaternion)
+          .slerp(bones.get(`thigh_${suffix}`)!.quaternion, 0.5);
+      }
       const foot = bones.get(`foot_${suffix}`)!;
       foot.position.copy(ankle);
       foot.quaternion.identity();
-      segment(
+      const restShoulder = rest.get(`upperArm_${suffix}`)!;
+      const restElbow = rest.get(`forearm_${suffix}`)!;
+      const restWrist = rest.get(`hand_${suffix}`)!;
+      const restNormal = restElbow
+        .clone()
+        .sub(restShoulder)
+        .cross(restWrist.clone().sub(restElbow))
+        .normalize();
+      const posedNormal = elbow
+        .clone()
+        .sub(shoulder)
+        .cross(wrist.clone().sub(elbow))
+        .normalize();
+      armSegment(
         `upperArm_${suffix}`,
         shoulder,
         elbow,
-        restWorld(v(side * 0.295, -0.06, 0.12)),
+        restElbow,
+        restNormal,
+        posedNormal,
       );
-      segment(
+      armSegment(
         `forearm_${suffix}`,
         elbow,
         wrist,
-        restWorld(v(side * 0.32, -0.325, 0.15)),
+        restWrist,
+        restNormal,
+        posedNormal,
       );
+      const shoulderSupport = bones.get(`shoulder_${suffix}`);
+      if (shoulderSupport) {
+        shoulderSupport.position.copy(shoulder);
+        shoulderSupport.quaternion
+          .copy(root.quaternion)
+          .slerp(bones.get(`upperArm_${suffix}`)!.quaternion, 0.5);
+      }
       // A bisector joint preserves the elbow's cross-section during deep flexion.
       const elbowSupport = bones.get(`elbow_${suffix}`);
       if (elbowSupport) {

@@ -69,7 +69,20 @@ socket.addEventListener("message", (event) => {
 const send = (method, params = {}, sessionId) =>
   new Promise((resolve, reject) => {
     const key = ++id;
-    pending.set(key, { resolve, reject });
+    const timeout = setTimeout(() => {
+      pending.delete(key);
+      reject(new Error(`Chrome QA timed out: ${method}`));
+    }, 30000);
+    pending.set(key, {
+      resolve: (result) => {
+        clearTimeout(timeout);
+        resolve(result);
+      },
+      reject: (error) => {
+        clearTimeout(timeout);
+        reject(error);
+      },
+    });
     socket.send(
       JSON.stringify({
         id: key,
@@ -79,6 +92,11 @@ const send = (method, params = {}, sessionId) =>
       }),
     );
   });
+socket.addEventListener("close", () => {
+  for (const call of pending.values())
+    call.reject(new Error("Isolated QA browser closed"));
+  pending.clear();
+});
 const { targetId } = await send("Target.createTarget", { url: "about:blank" });
 const { sessionId } = await send("Target.attachToTarget", {
   targetId,
@@ -142,6 +160,7 @@ try {
         `${name} overflows horizontally: ${JSON.stringify(dimensions)}`,
       );
     for (const exercise of ["squat", "bench"]) {
+      console.log(`Reviewing ${name}: ${exercise}`);
       if (exercise === "bench") {
         await evaluate(
           `Array.from(document.querySelectorAll('button')).find(b=>b.textContent.includes('Supino reto')).click()`,
@@ -151,25 +170,82 @@ try {
       await evaluate(
         `document.querySelector('section[aria-label^="Demonstração 3D"]').scrollIntoView({block:'start'})`,
       );
-      for (const position of [0, 0.5, 1]) {
+      for (const view of mobile
+        ? ["360°", "Frente"]
+        : ["360°", "Frente", "Lateral", "Costas", "Acima"]) {
         await evaluate(
-          `(()=>{const input=document.querySelector('input[aria-label="Posição do movimento"]');Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(input,${position * 1000});input.dispatchEvent(new Event('input',{bubbles:true}));input.dispatchEvent(new Event('change',{bubbles:true}));})()`,
+          `Array.from(document.querySelectorAll('[aria-label="Ângulo da câmera"] button')).find(b=>b.textContent===${JSON.stringify(view === "Acima" ? "Frente" : view)}).click()`,
         );
-        await evaluate(
-          `new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))`,
-        );
-        const rect = await evaluate(
-          `(()=>{const r=document.querySelector('section[aria-label^="Demonstração 3D"]').getBoundingClientRect();return{x:r.x+scrollX,y:r.y+scrollY,width:r.width,height:r.height,scale:1}})()`,
-        );
-        const screenshot = await send(
-          "Page.captureScreenshot",
-          { format: "png", captureBeyondViewport: true, clip: rect },
-          sessionId,
-        );
-        await writeFile(
-          new URL(`web-${name}-${exercise}-${position}.png`, out),
-          Buffer.from(screenshot.data, "base64"),
-        );
+        if (view === "Acima") {
+          await evaluate(
+            `new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))`,
+          );
+          const canvas = await evaluate(
+            `(()=>{const r=document.querySelector('canvas').getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height*.25,height:r.height}})()`,
+          );
+          await send(
+            "Input.dispatchMouseEvent",
+            {
+              type: "mousePressed",
+              x: canvas.x,
+              y: canvas.y,
+              button: "left",
+              buttons: 1,
+              clickCount: 1,
+            },
+            sessionId,
+          );
+          for (let step = 1; step <= 6; step++)
+            await send(
+              "Input.dispatchMouseEvent",
+              {
+                type: "mouseMoved",
+                x: canvas.x,
+                y: canvas.y + (canvas.height * 0.3 * step) / 6,
+                button: "left",
+                buttons: 1,
+              },
+              sessionId,
+            );
+          await send(
+            "Input.dispatchMouseEvent",
+            {
+              type: "mouseReleased",
+              x: canvas.x,
+              y: canvas.y + canvas.height * 0.3,
+              button: "left",
+              buttons: 0,
+              clickCount: 1,
+            },
+            sessionId,
+          );
+          await delay(250);
+        }
+        for (const position of mobile || view === "Acima"
+          ? [0, 0.5]
+          : [0, 0.25, 0.5, 0.75, 1]) {
+          await evaluate(
+            `(()=>{const input=document.querySelector('input[aria-label="Posição do movimento"]');Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(input,${position * 1000});input.dispatchEvent(new Event('input',{bubbles:true}));input.dispatchEvent(new Event('change',{bubbles:true}));})()`,
+          );
+          await evaluate(
+            `new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))`,
+          );
+          const rect = await evaluate(
+            `(()=>{const r=document.querySelector('section[aria-label^="Demonstração 3D"]').getBoundingClientRect();return{x:r.x+scrollX,y:r.y+scrollY,width:r.width,height:r.height,scale:1}})()`,
+          );
+          const screenshot = await send(
+            "Page.captureScreenshot",
+            { format: "png", captureBeyondViewport: true, clip: rect },
+            sessionId,
+          );
+          await writeFile(
+            new URL(
+              `web-${name}-${exercise}-${view === "360°" ? "perspective" : view}-${position}.png`,
+              out,
+            ),
+            Buffer.from(screenshot.data, "base64"),
+          );
+        }
       }
       results.push({
         viewport: name,

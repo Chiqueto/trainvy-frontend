@@ -104,21 +104,6 @@ for o in dst.objects:
     deps=bpy.context.evaluated_depsgraph_get();deps.update()
     data=bpy.data.meshes.new_from_object(o.evaluated_get(deps));o.modifiers.clear();o.parent=None;o.data=data;o.matrix_world=Matrix.Identity(4)
     is_head='Human' in o.name
-    if is_head:
-        garment=o.copy();garment.data=o.data.copy();garment.name='Trainvy_Garment';bpy.context.scene.collection.objects.link(garment)
-        clip(garment,2,.68,above=True);clip(garment,2,.90,above=False)
-        clip(garment,0,-.19,above=True);clip(garment,0,.19,above=False)
-        clip(garment,1,-.18,above=True);clip(garment,1,.14,above=False)
-        for vertex in garment.data.vertices:
-            y=vertex.co.z+.10;t=max(0,min(1,(y-.94)/.06));t=t*t*(3-2*t)
-            width=1.14-.24*t;rear=2.2-1.2*t
-            vertex.co=Vector((vertex.co.x*width,vertex.co.y*(rear if vertex.co.y>0 else 1.1)-.122,y))
-        # High-cut pelvic garment: rigid at the hip, clear of the rotating thigh.
-        bm=bmesh.new();bm.from_mesh(garment.data)
-        for side in [-1,1]:
-            bmesh.ops.bisect_plane(bm,geom=list(bm.verts)+list(bm.edges)+list(bm.faces),plane_co=Vector((0,0,.80)),plane_no=Vector((side*.4,0,1)),dist=1e-6,clear_inner=True,clear_outer=False)
-        bm.to_mesh(garment.data);bm.free()
-        garment.data.materials.clear();objects.append(garment)
     o.name='Trainvy_Head' if is_head else 'Trainvy_Eyes'
     if is_head:clip(o,2,1.39,above=True)
     # Local MakeHuman coordinates are already metres, Z-up, anterior -Y.

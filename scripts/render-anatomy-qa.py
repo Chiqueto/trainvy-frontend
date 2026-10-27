@@ -25,6 +25,9 @@ def render(name,back=False,close=False):
                 sep=nt.nodes.new('ShaderNodeSeparateXYZ');nt.links.new(uv.outputs['UV'],sep.inputs[0])
                 wave=nt.nodes.new('ShaderNodeMath');wave.operation='SINE';nt.links.new(sep.outputs['X'],wave.inputs[0])
                 bump=nt.nodes.new('ShaderNodeBump');bump.inputs['Strength'].default_value=.22;bump.inputs['Distance'].default_value=.0002
+                strength=nt.nodes.new('ShaderNodeMath');strength.operation='MULTIPLY'
+                nt.links.new(sep.outputs['Y'],strength.inputs[0]);strength.inputs[1].default_value=.22
+                nt.links.new(strength.outputs[0],bump.inputs['Strength'])
                 nt.links.new(wave.outputs[0],bump.inputs['Height']);nt.links.new(bump.outputs[0],p.inputs['Normal'])
             obj.data.materials.clear();obj.data.materials.append(mat)
     bpy.ops.mesh.primitive_plane_add(size=200,location=(0,0,-.003))

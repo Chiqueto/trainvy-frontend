@@ -203,7 +203,7 @@ function Athlete({
   highlighted,
 }: Pick<SceneProps, "exercise" | "tick" | "onReady" | "highlighted">) {
   const { scene: source } = useGLTF(
-    "/models/exercise-3d/trainvy-athlete.glb",
+    "/models/exercise-3d/trainvy-athlete.glb?v=4",
     false,
     true,
   );
@@ -282,7 +282,7 @@ function getCameraParams(
     const target: [number, number, number] = [0, 0.82, 0];
     switch (view) {
       case "front":
-        return { position: [0, 1.05, 2.9], target };
+        return { position: [0, 1.15, 3.25], target: [0, 0.88, 0] };
       case "side":
         return { position: [3.0, 1.0, 0], target };
       case "back":
@@ -298,7 +298,7 @@ function getCameraParams(
   switch (view) {
     case "front":
       // Vista frontal elevada em direção ao peitoral
-      return { position: [0, 1.6, 2.6], target };
+      return { position: [0, 1.8, 3.1], target };
     case "side":
       // Vista lateral pura para avaliar trajetória vertical da barra
       return { position: [2.9, 1.0, 0.05], target };
@@ -307,7 +307,7 @@ function getCameraParams(
     case "perspective":
     default:
       // Vista 3/4 dinâmica destacando peitoral e braços
-      return { position: [2.15, 1.6, 2.05], target };
+      return { position: [2.35, 1.75, 2.3], target };
   }
 }
 
@@ -319,7 +319,7 @@ function CameraView({
   const { camera, invalidate, size } = useThree();
   useEffect(() => {
     const { position, target } = getCameraParams(exercise, view);
-    const fit = Math.max(1, Math.min(1.6, size.height / size.width));
+    const fit = Math.max(1, Math.min(2.1, (size.height / size.width) * 1.15));
     for (let i = 0; i < 3; i++)
       position[i] = target[i] + (position[i] - target[i]) * fit;
     camera.position.set(...position);

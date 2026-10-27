@@ -1,10 +1,10 @@
 {
-  "version": 3,
+  "version": 4,
   "asset": "trainvy-athlete.glb",
-  "sha256": "b2fb045c8c57539fc6eb27032a040d66287bf8f7787716a005105675df7c074d",
-  "vertices": 194947,
-  "triangles": 360002,
-  "bytes": 5900972,
+  "sha256": "4ea1a28cee208db49f7fd5e733f88d8ea43e662042cb92332088a24183a24527",
+  "vertices": 260964,
+  "triangles": 491596,
+  "bytes": 7685012,
   "bones": [
     "sled",
     "thigh_L",
@@ -20,7 +20,11 @@
     "forearm_R",
     "hand_R",
     "elbow_L",
-    "elbow_R"
+    "elbow_R",
+    "hip_L",
+    "shoulder_L",
+    "hip_R",
+    "shoulder_R"
   ],
   "structures": [
     "(Abdominal_part_of_pectoralis_major_muscle)l",
@@ -90,8 +94,6 @@
     "Flexor_digitorum_profundusr",
     "Gluteus_maximus_musclel",
     "Gluteus_maximus_muscler",
-    "Gluteus_medius_musclel",
-    "Gluteus_medius_muscler",
     "Gracilis_musclel",
     "Gracilis_muscler",
     "Humeral_head_of_extensor_carpi_ulnarisl",
@@ -174,7 +176,6 @@
     "Tibialis_anterior_musclel",
     "Tibialis_anterior_muscler",
     "Trainvy_Eyes",
-    "Trainvy_Garment",
     "Trainvy_Head",
     "Transverse_part_of_trapezius_musclel",
     "Transverse_part_of_trapezius_muscler",
@@ -187,7 +188,8 @@
     "Vastus_lateralis_musclel",
     "Vastus_lateralis_muscler",
     "Vastus_medialis_musclel",
-    "Vastus_medialis_muscler"
+    "Vastus_medialis_muscler",
+    "Trainvy_Shorts"
   ],
   "title": "Trainvy anatomical athlete",
   "anatomySource": "Z-Anatomy / BodyParts3D",
@@ -195,5 +197,5 @@
   "assetLicense": "CC-BY-SA-4.0",
   "headSource": "MakeHuman hm08",
   "headLicense": "CC0",
-  "changes": "Selected superficial muscles, abdominal exposure, retargeted neutral pose, articulated rig, exercise-specific masks, fibre coordinates, studio materials; CC0 head and fitted garment; authored closed hands and footwear"
+  "changes": "Selected superficial muscles, abdominal exposure, retargeted neutral pose, articulated rig with hip and elbow supports, exercise-specific masks, fibre coordinates, studio materials; CC0 head; authored connective foundation, training shorts, closed hands and footwear"
 }
