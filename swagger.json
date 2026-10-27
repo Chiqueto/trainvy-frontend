@@ -20135,6 +20135,46 @@
                       "updatedAt": {
                         "type": "string"
                       },
+                      "priority3d": {
+                        "nullable": true,
+                        "type": "object",
+                        "properties": {
+                          "exerciseId": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "exerciseName": {
+                            "type": "string"
+                          },
+                          "tier": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 5
+                          },
+                          "order": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "exclusiveMinimum": true,
+                            "maximum": 9007199254740991
+                          },
+                          "batch": {
+                            "type": "string"
+                          },
+                          "reason": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "exerciseId",
+                          "exerciseName",
+                          "tier",
+                          "order",
+                          "batch",
+                          "reason"
+                        ],
+                        "additionalProperties": false
+                      },
                       "muscles": {
                         "type": "array",
                         "items": {
@@ -20207,6 +20247,7 @@
                       "isUnilateral",
                       "family",
                       "updatedAt",
+                      "priority3d",
                       "muscles",
                       "media"
                     ],

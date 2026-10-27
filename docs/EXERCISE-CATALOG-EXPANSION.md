@@ -275,6 +275,8 @@ Esses movimentos podem exigir distância, tempo, calorias ou contatos em vez de 
 
 ## Estrutura sugerida para a próxima etapa
 
+A [fila de implementação 3D](EXERCISE-3D-PRIORITIES.md) define prioridade P1–P5, ordem, lote de produção e justificativa para cada um dos 266 cadastros. O `/admin/exercises` usa esse plano versionado e calcula a fila somente para movimentos sem 3D disponível. A prioridade é editorial, sem inferir frequência de uso real.
+
 O console em `/admin/exercises` consulta o catálogo global completo por uma rota administrativa dedicada, sem deduplicar IDs. Mostra cobertura de 3D, imagens, instruções e classificação muscular, com busca e filtros combináveis. O suporte de 3D vem do registro real de animações do frontend; mídia ativa no banco não implica suporte de 3D. As famílias dos 213 novos exercícios vêm do manifesto versionado da expansão na API. Exercícios anteriores sem esse metadado aparecem como “Sem família definida”. A tela não modifica cadastros. Para disponibilizá-la em produção, publicar API e frontend com o contrato atualizado.
 
 Manter nome canônico, aliases pesquisáveis, família de movimento, equipamentos, unilateralidade, tags de contexto e unidade de prescrição. Um exercício pode ter tags musculação e funcional ao mesmo tempo. “Explosivo” é uma característica de execução, não sinônimo de CrossFit.

@@ -6576,6 +6576,27 @@ export type CreateCoachWorkoutPlanTemplateFromPlan500 = {
   code: string;
 };
 
+/**
+ * @nullable
+ */
+export type ListAdminExercises200ItemPriority3d = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12} | 00000000-0000-0000-0000-000000000000 | ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  exerciseId: string;
+  exerciseName: string;
+  /**
+   * @minimum 1
+   * @maximum 5
+   */
+  tier: number;
+  /**
+   * @maximum 9007199254740991
+   * @exclusiveMinimum 0
+   */
+  order: number;
+  batch: string;
+  reason: string;
+} | null;
+
 export type ListAdminExercises200ItemMusclesItemMuscleGroup =
   (typeof ListAdminExercises200ItemMusclesItemMuscleGroup)[keyof typeof ListAdminExercises200ItemMusclesItemMuscleGroup];
 
@@ -6623,6 +6644,8 @@ export type ListAdminExercises200Item = {
   /** @nullable */
   family: string | null;
   updatedAt: string;
+  /** @nullable */
+  priority3d: ListAdminExercises200ItemPriority3d;
   muscles: ListAdminExercises200ItemMusclesItem[];
   media: ListAdminExercises200ItemMediaItem[];
 };

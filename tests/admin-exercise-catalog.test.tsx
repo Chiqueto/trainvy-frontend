@@ -16,6 +16,7 @@ const exercises: ListAdminExercises200Item[] = [
     family: null,
     isUnilateral: false,
     updatedAt: "2026-10-27T12:00:00Z",
+    priority3d: null,
     muscles: [{ muscleGroup: "CHEST", role: "PRIMARY" }],
     media: [
       {
@@ -32,6 +33,7 @@ const exercises: ListAdminExercises200Item[] = [
     family: "Musculação tradicional — peito",
     isUnilateral: false,
     updatedAt: "2026-10-27T12:00:00Z",
+    priority3d: null,
     muscles: [],
     media: [],
   },
@@ -41,6 +43,7 @@ const exercises: ListAdminExercises200Item[] = [
     family: "Ombros",
     isUnilateral: false,
     updatedAt: "2026-10-27T12:00:00Z",
+    priority3d: null,
     muscles: [],
     media: [
       {

@@ -9,6 +9,9 @@ import {
   coverage,
   muscleLabels,
   normalizeCatalogSearch,
+  priorityLabels,
+  compareImplementationPriority,
+  implementationQueue,
 } from "../_lib/exercise-coverage";
 import { Button } from "@/components/ui/button";
 
@@ -42,6 +45,10 @@ export function ExercisesCatalog({
   const [family, setFamily] = useState("");
   const [filter, setFilter] = useState("");
   const [muscle, setMuscle] = useState("");
+  const [priority, setPriority] = useState("");
+  const [sort, setSort] = useState("priority");
+  const queue = implementationQueue(exercises);
+  const next = exercises.find((e) => queue.get(e.id) === 1);
   const [selected, setSelected] = useState<string | null>(null);
   const [preview, setPreview] = useState<ListAdminExercises200Item | null>(
     null,
@@ -49,24 +56,35 @@ export function ExercisesCatalog({
   const families = [
     ...new Set(exercises.map((e) => e.family ?? "Sem família definida")),
   ].sort((a, b) => a.localeCompare(b, "pt-BR"));
-  const rows = exercises.filter((e) => {
-    const c = coverage(e);
-    return (
-      normalizeCatalogSearch(`${e.name} ${e.id}`).includes(
-        normalizeCatalogSearch(query),
-      ) &&
-      (!family || (e.family ?? "Sem família definida") === family) &&
-      (!muscle || e.muscles.some((m) => m.muscleGroup === muscle)) &&
-      (!filter ||
-        (filter === "3d" && !!c.animation) ||
-        (filter === "no3d" && !c.animation) ||
-        (filter === "images" && c.images) ||
-        (filter === "noimages" && !c.images) ||
-        (filter === "unclassified" && !c.classified) ||
-        (filter === "noinstructions" && !c.instructions) ||
-        (filter === "novisual" && !c.animation && !c.images && !c.motion))
+  const rows = exercises
+    .filter((e) => {
+      const c = coverage(e);
+      return (
+        normalizeCatalogSearch(`${e.name} ${e.id}`).includes(
+          normalizeCatalogSearch(query),
+        ) &&
+        (!family || (e.family ?? "Sem família definida") === family) &&
+        (!muscle || e.muscles.some((m) => m.muscleGroup === muscle)) &&
+        (!priority ||
+          (priority === "undefined"
+            ? !e.priority3d
+            : e.priority3d?.tier === Number(priority))) &&
+        (!filter ||
+          (filter === "3d" && !!c.animation) ||
+          (filter === "no3d" && !c.animation) ||
+          (filter === "images" && c.images) ||
+          (filter === "noimages" && !c.images) ||
+          (filter === "unclassified" && !c.classified) ||
+          (filter === "noinstructions" && !c.instructions) ||
+          (filter === "novisual" && !c.animation && !c.images && !c.motion))
+      );
+    })
+    .sort(
+      sort === "priority"
+        ? compareImplementationPriority
+        : (a, b) =>
+            a.name.localeCompare(b.name, "pt-BR") || a.id.localeCompare(b.id),
     );
-  });
   const metrics = [
     { label: "Exercícios globais", value: exercises.length, filter: "" },
     {
@@ -115,6 +133,7 @@ export function ExercisesCatalog({
               setFamily("");
               setQuery("");
               setMuscle("");
+              setPriority("");
             }}
             className={`rounded-2xl border bg-card p-4 text-left transition hover:border-primary ${filter === m.filter ? "border-primary/60" : "border-border"}`}
           >
@@ -126,6 +145,32 @@ export function ExercisesCatalog({
             </span>
           </button>
         ))}
+      </div>
+      <div className="rounded-2xl border border-primary/30 bg-primary/5 p-5">
+        <p className="text-xs font-semibold uppercase tracking-widest text-primary">
+          Fila de implementação 3D
+        </p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          P1: básicos essenciais → P2: musculação e core → P3: funcional e
+          landmine → P4: potência e LPO → P5: habilidades avançadas. Ordem
+          editorial por cobertura e complexidade, sem estatística de uso.
+        </p>
+        {next ? (
+          <p className="mt-3 text-sm">
+            <strong>Próximo: #1 · {next.name}</strong>
+            <span className="mt-1 block text-xs text-muted-foreground">
+              {next.priority3d?.reason}
+            </span>
+          </p>
+        ) : (
+          <p className="mt-3 text-sm">
+            Nenhum exercício planejado aguardando 3D.
+          </p>
+        )}
+        <p className="mt-2 text-xs text-muted-foreground">
+          {queue.size} exercícios na fila. Animações disponíveis ficam fora da
+          fila; filtros preservam as posições originais.
+        </p>
       </div>
       <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm">
         <Box className="mr-2 inline size-4 text-primary" />O 3D é contabilizado
@@ -191,6 +236,33 @@ export function ExercisesCatalog({
             ))}
           </select>
         </label>
+        <label className="space-y-1.5 text-xs font-medium">
+          Prioridade 3D
+          <select
+            value={priority}
+            onChange={(e) => setPriority(e.target.value)}
+            className="h-10 w-full rounded-lg border bg-background px-2 text-sm"
+          >
+            <option value="">Todas as prioridades</option>
+            {Object.entries(priorityLabels).map(([tier, label]) => (
+              <option key={tier} value={tier}>
+                {label}
+              </option>
+            ))}
+            <option value="undefined">Sem prioridade definida</option>
+          </select>
+        </label>
+        <label className="space-y-1.5 text-xs font-medium">
+          Ordenação
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+            className="h-10 w-full rounded-lg border bg-background px-2 text-sm"
+          >
+            <option value="priority">Fila de implementação 3D</option>
+            <option value="name">Nome (A–Z)</option>
+          </select>
+        </label>
       </div>
       <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
         <p role="status">
@@ -204,6 +276,7 @@ export function ExercisesCatalog({
             setFamily("");
             setFilter("");
             setMuscle("");
+            setPriority("");
           }}
         >
           Limpar filtros
@@ -217,6 +290,7 @@ export function ExercisesCatalog({
           <thead className="border-b bg-muted/40 text-xs text-muted-foreground">
             <tr>
               {[
+                "Prioridade / fila",
                 "Exercício / família",
                 "Animação 3D",
                 "Imagens",
@@ -246,6 +320,7 @@ export function ExercisesCatalog({
                   toggle={() => setSelected(open ? null : e.id)}
                   preview={() => setPreview(e)}
                   content={c}
+                  queuePosition={queue.get(e.id)}
                 />
               );
             })}
@@ -285,16 +360,32 @@ function ExerciseRow({
   open,
   toggle,
   preview,
+  queuePosition,
 }: {
   exercise: ListAdminExercises200Item;
   content: ReturnType<typeof coverage>;
   open: boolean;
   toggle: () => void;
   preview: () => void;
+  queuePosition?: number;
 }) {
   return (
     <>
       <tr className="border-b border-border/60 hover:bg-muted/20">
+        <td className="min-w-36 px-4 py-4">
+          <span className="block text-xs font-semibold">
+            {e.priority3d
+              ? priorityLabels[e.priority3d.tier]
+              : "Sem prioridade definida"}
+          </span>
+          <span className="mt-1 block text-xs text-muted-foreground">
+            {c.animation
+              ? "3D disponível · fora da fila"
+              : queuePosition
+                ? `#${queuePosition} na fila`
+                : "Aguardando planejamento"}
+          </span>
+        </td>
         <th scope="row" className="min-w-60 px-4 py-4 font-medium">
           <span className="block">{e.name}</span>
           <span className="mt-1 block text-xs font-normal text-muted-foreground">
@@ -328,8 +419,36 @@ function ExerciseRow({
       </tr>
       {open && (
         <tr id={`details-${e.id}`}>
-          <td colSpan={6} className="border-b bg-muted/20 p-5">
+          <td colSpan={7} className="border-b bg-muted/20 p-5">
             <div className="grid gap-5 md:grid-cols-2">
+              <div className="md:col-span-2">
+                <p className="text-xs font-semibold uppercase text-muted-foreground">
+                  Planejamento 3D
+                </p>
+                {e.priority3d ? (
+                  <>
+                    <p className="mt-2 text-sm font-medium">
+                      {priorityLabels[e.priority3d.tier]} · {e.priority3d.batch}
+                    </p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {e.priority3d.reason}
+                    </p>
+                    <p className="mt-2 text-xs">
+                      {c.animation
+                        ? "Já disponível; sem nova produção na fila."
+                        : queuePosition
+                          ? `Posição global: #${queuePosition}.`
+                          : "Aguardando planejamento."}{" "}
+                      Ordem planejada: {e.priority3d.order}.
+                    </p>
+                  </>
+                ) : (
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    Este exercício ainda não recebeu prioridade de
+                    implementação.
+                  </p>
+                )}
+              </div>
               <div>
                 <p className="text-xs font-semibold uppercase text-muted-foreground">
                   Identificação
