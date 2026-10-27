@@ -330,7 +330,7 @@ function Viewer({
           </summary>
           <p className="mt-2 max-w-2xl">
             Visualização desenvolvida para o Trainvy. O vermelho identifica
-            grupos principais e o tom âmbar, grupos secundários. Os demais
+            grupos principais e o vermelho mais claro, grupos secundários. Os demais
             músculos permanecem neutros. A representação é ilustrativa; as cores
             não são uma medição de ativação muscular.
           </p>

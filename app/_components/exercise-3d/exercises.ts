@@ -28,11 +28,15 @@ export const EXERCISE_ANIMATIONS = {
   },
   "incline-dumbbell-press": {
     name: "Supino inclinado com halteres",
-    equipment: "Banco inclinado a 45° e dois halteres",
+    equipment: "Banco inclinado a 30° e dois halteres",
     id: "00000000-0000-4000-8000-000000000103",
     muscles: {
-      primary: ["Peitoral maior — porção clavicular"],
-      secondary: ["Tríceps", "Deltoide anterior"],
+      primary: ["Peitoral superior (porção clavicular)"],
+      secondary: [
+        "Peitoral médio/inferior",
+        "Tríceps",
+        "Deltoide anterior",
+      ],
     },
   },
 } satisfies Record<ExerciseAnimation, ExerciseDefinition>;

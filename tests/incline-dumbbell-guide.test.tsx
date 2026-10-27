@@ -40,7 +40,9 @@ describe("Incline dumbbell guide", () => {
     expect(screen.getByTestId("viewer").getAttribute("data-exercise")).toBe(
       "incline-dumbbell-press",
     );
-    expect(screen.getByText(/encosto inclinado a 45°/)).toBeTruthy();
+    expect(
+      screen.getByText(/encosto regulado a aproximadamente 30°/),
+    ).toBeTruthy();
     expect(screen.getByText(/sem bater os halteres/)).toBeTruthy();
     expect(screen.queryByText(/Tire a barra do suporte/)).toBeNull();
   });

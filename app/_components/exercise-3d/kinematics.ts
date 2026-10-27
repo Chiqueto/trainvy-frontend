@@ -7,7 +7,7 @@ const restTilt = new Quaternion();
 const hipLocal = v(0, -0.28, 0.08);
 export const ARM_LENGTH = v(0.08, -0.284, -0.012).length();
 export const FOREARM_LENGTH = v(0.025, -0.265, 0.03).length();
-export const INCLINE_BENCH_ANGLE = Math.PI / 4;
+export const INCLINE_BENCH_ANGLE = Math.PI / 6; // 30° conforme literatura biomecânica para maximizar feixe clavicular sem sobrecarga excessiva no deltoide anterior
 
 /** Controlled eccentric, short pause at the bottom and smooth concentric. */
 export function getExerciseDepth(phase: number) {

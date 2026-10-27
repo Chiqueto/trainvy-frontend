@@ -74,7 +74,7 @@ describe("incline dumbbell press", () => {
     expect(initial.limbs[1].grip.x).toBeLessThan(bottom.limbs[1].grip.x);
     expect(
       initial.tilt.angleTo(getExercisePose("bench-press", 0).tilt),
-    ).toBeCloseTo(Math.PI / 4, 6);
+    ).toBeCloseTo(Math.PI / 6, 6);
   });
 });
 

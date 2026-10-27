@@ -2,6 +2,7 @@ import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import dayjs from "dayjs";
+import "dayjs/locale/pt-br";
 import {
   ArrowLeft,
   ArrowRight,
@@ -19,14 +20,17 @@ import {
   getUserTrainData,
   getWorkoutSession,
   getSessionFeedback,
+  listExercises,
 } from "@/app/_lib/api/fetch-generated";
 import { authClient } from "@/app/_lib/auth-client";
 import { gramsToKg } from "@/app/_lib/weight";
+import { calculateSessionMuscleStats } from "@/app/_lib/workout-session-muscles";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 import { SummaryFeedbackWidget } from "./_components/summary-feedback-widget";
 import { ThematicCelebrationCard } from "./_components/thematic-celebration-card";
+import { WorkoutStoryBannerCard } from "./_components/workout-story-banner-card";
 
 export default async function WorkoutSummaryPage({
   params,
@@ -39,15 +43,16 @@ export default async function WorkoutSummaryPage({
   if (!session.data?.user) redirect("/auth");
 
   const { sessionId } = await params;
-  const today = dayjs();
+  const today = dayjs().locale("pt-br");
 
-  const [sessionRes, homeDataRes, trainDataRes, feedbackRes] = await Promise.all([
+  const [sessionRes, homeDataRes, trainDataRes, feedbackRes, exercisesRes] = await Promise.all([
     getWorkoutSession(sessionId).catch(() => null),
     getHomeData(today.format("YYYY-MM-DD"), {
       timezoneOffset: today.utcOffset(),
     }).catch(() => null),
     getUserTrainData().catch(() => null),
     getSessionFeedback(sessionId, { cache: "no-store" }).catch(() => null),
+    listExercises().catch(() => null),
   ]);
 
   if (!sessionRes || sessionRes.status !== 200) {
@@ -123,6 +128,12 @@ export default async function WorkoutSummaryPage({
     workoutSession.workoutDayNameSnapshot ||
     (workoutSession.workoutDayId ? "Treino Prescrito" : "Treino Avulso");
 
+  const catalogExercises = exercisesRes?.status === 200 ? exercisesRes.data : [];
+  const muscleStats = calculateSessionMuscleStats(
+    workoutSession.sessionExercises,
+    catalogExercises
+  );
+
   const nextWorkout = homeData?.todayWorkoutDay;
   const workoutStreak = homeData?.workoutStreak ?? 0;
   const rotationIndex = homeData?.rotationIndex;
@@ -167,7 +178,7 @@ export default async function WorkoutSummaryPage({
             </h1>
 
             <p className="font-heading text-xs text-muted-foreground">
-              Finalizado em {completedAt.format("DD/MM/YYYY [às] HH:mm")}
+              Finalizado em {completedAt.locale("pt-br").format("DD/MM/YYYY [às] HH:mm")}
             </p>
           </div>
         </div>
@@ -177,6 +188,17 @@ export default async function WorkoutSummaryPage({
           totalVolumeKg={totalVolumeKg}
           initialTheme={userTheme}
           sessionId={sessionId}
+        />
+
+        {/* Banner Compartilhar no Instagram Stories (Estilo Strava) */}
+        <WorkoutStoryBannerCard
+          workoutTitle={workoutTitle}
+          dateFormatted={completedAt.locale("pt-br").format("DD [de] MMMM")}
+          durationInMinutes={durationInMinutes}
+          totalVolumeKg={totalVolumeKg}
+          totalSetsCompleted={totalSetsCompleted}
+          totalReps={totalReps}
+          stats={muscleStats}
         />
 
         {/* 4 High-Impact Metrics Grid */}

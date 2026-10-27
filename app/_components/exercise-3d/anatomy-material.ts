@@ -4,7 +4,7 @@ import type { ExerciseAnimation } from "./exercises";
 export const ANATOMY_COLORS = {
   neutral: "#b5b3ac",
   primary: "#bd5148",
-  secondary: "#c99865",
+  secondary: "#d97d75",
 } as const;
 
 /** Local tissue shading; fibre coordinates stay attached to the skeleton. */
@@ -66,8 +66,12 @@ export function createTissueMaterial() {
         float fibreVisibility = 1.0 - smoothstep(0.65, 2.0, fwidth(vFibre.x));
         float strand = sin(vFibre.x + 0.26 * sin(vFibre.x * 0.17));
         float fascicle = sin(vFibre.x * 0.127 + sin(vFibre.x * 0.019));
+        float inclineZ = vExerciseMuscles.z;
+        if (exerciseMode > 1.5 && vExerciseMuscles.y > 0.72 && inclineZ < 0.12) {
+          inclineZ = 0.45;
+        }
         float mask = exerciseMode < 0.5 ? vExerciseMuscles.x
-          : exerciseMode < 1.5 ? vExerciseMuscles.y : vExerciseMuscles.z;
+          : exerciseMode < 1.5 ? vExerciseMuscles.y : inclineZ;
         float selected = smoothstep(0.12, 0.40, mask) * highlightMuscles;
         float primary = smoothstep(0.72, 0.93, mask);
         // Constant categorical colours, never a measurement of activation.
