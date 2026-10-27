@@ -31,7 +31,11 @@ vi.mock("next/headers", () => ({
       cookieJar.delete(name);
     },
   })),
-  headers: vi.fn().mockResolvedValue(new Headers()),
+  headers: vi
+    .fn()
+    .mockResolvedValue(
+      new Headers({ cookie: "better-auth.session_token=test-session" }),
+    ),
 }));
 
 // Mock next/navigation redirect with proper NEXT_REDIRECT error
@@ -111,7 +115,9 @@ describe("Task 6.1.2 — Next.js App Router Cookie Runtime Invariants", () => {
 
       // Se cookies().set() ou delete() fosse chamado durante o render, lançaria erro imediatamente
       const result = await AuthPage({
-        searchParams: Promise.resolve({ returnTo: "/convite/token_valido_123" }),
+        searchParams: Promise.resolve({
+          returnTo: "/convite/token_valido_123",
+        }),
       });
 
       expect(result).toBeDefined();
@@ -128,7 +134,9 @@ describe("Task 6.1.2 — Next.js App Router Cookie Runtime Invariants", () => {
 
       await expect(
         AuthPage({
-          searchParams: Promise.resolve({ returnTo: "/convite/token_valido_123" }),
+          searchParams: Promise.resolve({
+            returnTo: "/convite/token_valido_123",
+          }),
         }),
       ).rejects.toThrow("NEXT_REDIRECT: /convite/token_valido_123");
 
@@ -141,7 +149,9 @@ describe("Task 6.1.2 — Next.js App Router Cookie Runtime Invariants", () => {
       const { default: SignupPage } = await import("@/app/auth/signup/page");
 
       const result = await SignupPage({
-        searchParams: Promise.resolve({ returnTo: "/convite/token_valido_123" }),
+        searchParams: Promise.resolve({
+          returnTo: "/convite/token_valido_123",
+        }),
       });
 
       expect(result).toBeDefined();
@@ -160,7 +170,9 @@ describe("Task 6.1.2 — Next.js App Router Cookie Runtime Invariants", () => {
 
       await expect(
         SignupPage({
-          searchParams: Promise.resolve({ returnTo: "/convite/token_valido_123" }),
+          searchParams: Promise.resolve({
+            returnTo: "/convite/token_valido_123",
+          }),
         }),
       ).rejects.toThrow("NEXT_REDIRECT: /convite/token_valido_123");
 
@@ -177,29 +189,39 @@ describe("Task 6.1.2 — Next.js App Router Cookie Runtime Invariants", () => {
         data: { weightInGrams: 75000 },
       });
       // Existe cookie de convite gravado anteriormente
-      cookieJar.set(RETURN_TO_COOKIE_NAME, { value: "/convite/tok_retorno_onboarding" });
+      cookieJar.set(RETURN_TO_COOKIE_NAME, {
+        value: "/convite/tok_retorno_onboarding",
+      });
 
       const { default: OnboardingPage } = await import("@/app/onboarding/page");
 
       // Deve redirecionar para o Route Handler /auth/return (que tem permissão de mutação)
-      await expect(OnboardingPage()).rejects.toThrow("NEXT_REDIRECT: /auth/return");
+      await expect(OnboardingPage()).rejects.toThrow(
+        "NEXT_REDIRECT: /auth/return",
+      );
 
       // O Server Component NÃO deletou o cookie diretamente durante render
-      expect(cookieJar.get(RETURN_TO_COOKIE_NAME)?.value).toBe("/convite/tok_retorno_onboarding");
+      expect(cookieJar.get(RETURN_TO_COOKIE_NAME)?.value).toBe(
+        "/convite/tok_retorno_onboarding",
+      );
     });
 
     it("Home page redireciona para Route Handler /auth/return sem mutar cookies durante render", async () => {
       mockAuthClient.getSession.mockResolvedValue({
         data: { user: { id: "user-1", name: "Atleta" } },
       });
-      cookieJar.set(RETURN_TO_COOKIE_NAME, { value: "/convite/tok_retorno_home" });
+      cookieJar.set(RETURN_TO_COOKIE_NAME, {
+        value: "/convite/tok_retorno_home",
+      });
 
       const { default: Home } = await import("@/app/page");
 
       await expect(Home()).rejects.toThrow("NEXT_REDIRECT: /auth/return");
 
       // O Server Component NÃO deletou o cookie diretamente durante render
-      expect(cookieJar.get(RETURN_TO_COOKIE_NAME)?.value).toBe("/convite/tok_retorno_home");
+      expect(cookieJar.get(RETURN_TO_COOKIE_NAME)?.value).toBe(
+        "/convite/tok_retorno_home",
+      );
     });
   });
 
@@ -208,13 +230,17 @@ describe("Task 6.1.2 — Next.js App Router Cookie Runtime Invariants", () => {
       // Route Handlers rodam com permissão de mutação de cookies
       allowCookieMutation = true;
 
-      cookieJar.set(RETURN_TO_COOKIE_NAME, { value: "/convite/tok_destination_abc" });
+      cookieJar.set(RETURN_TO_COOKIE_NAME, {
+        value: "/convite/tok_destination_abc",
+      });
 
       const fakeReq = new NextRequest("http://localhost:3000/auth/return");
       const response = await returnRouteHandler(fakeReq);
 
       expect(response.status).toBe(307);
-      expect(response.headers.get("location")).toBe("http://localhost:3000/convite/tok_destination_abc");
+      expect(response.headers.get("location")).toBe(
+        "http://localhost:3000/convite/tok_destination_abc",
+      );
 
       // O cookie foi efetivamente e legalmente removido pelo Route Handler
       expect(cookieJar.get(RETURN_TO_COOKIE_NAME)).toBeUndefined();
@@ -262,8 +288,12 @@ describe("Task 6.1.2 — Next.js App Router Cookie Runtime Invariants", () => {
       });
 
       expect(res.success).toBe(true);
-      expect(cookieJar.get("trainvy-signup-intent")?.value).toBe("intent-token-xyz");
-      expect(cookieJar.get(RETURN_TO_COOKIE_NAME)?.value).toBe("/convite/tok_intent_flow");
+      expect(cookieJar.get("trainvy-signup-intent")?.value).toBe(
+        "intent-token-xyz",
+      );
+      expect(cookieJar.get(RETURN_TO_COOKIE_NAME)?.value).toBe(
+        "/convite/tok_intent_flow",
+      );
     });
   });
 

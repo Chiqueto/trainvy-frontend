@@ -118,13 +118,15 @@ export function createTissueMaterial() {
           + (1.0-tissue) * (1.0-smoothstep(0.02,0.12,dot(diffuseColor.rgb,vec3(0.333)))) * 0.28, 0.38, 0.88);`,
       );
   };
-  material.customProgramCacheKey = () => "trainvy-atelier-tissue-v4";
+  material.customProgramCacheKey = () => "trainvy-atelier-tissue-v5";
   const setAppearance = (exercise: ExerciseAnimation, highlighted = true) => {
     uniforms.exerciseMode.value = {
       squat: 0,
       "bench-press": 1,
       "incline-dumbbell-press": 2,
       "flat-dumbbell-press": 3,
+      "incline-bench-press": 2,
+      "decline-bench-press": 3,
     }[exercise];
     uniforms.highlightMuscles.value = highlighted ? 1 : 0;
   };

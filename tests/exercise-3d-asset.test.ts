@@ -94,6 +94,8 @@ describe("Trainvy anatomical athlete", () => {
     "bench-press",
     "incline-dumbbell-press",
     "flat-dumbbell-press",
+    "incline-bench-press",
+    "decline-bench-press",
   ] as const)(
     "keeps both arm segments in one bend plane without roll flips in %s",
     (exercise) => {
@@ -348,6 +350,8 @@ describe("Trainvy anatomical athlete", () => {
     "bench-press",
     "incline-dumbbell-press",
     "flat-dumbbell-press",
+    "incline-bench-press",
+    "decline-bench-press",
   ] as const)(
     "keeps the closed hands rigid and attached to the bar throughout %s",
     (exercise) => {
@@ -395,6 +399,8 @@ describe("Trainvy anatomical athlete", () => {
     "bench-press",
     "incline-dumbbell-press",
     "flat-dumbbell-press",
+    "incline-bench-press",
+    "decline-bench-press",
   ] as const)(
     "keeps every sampled vertex finite through %s",
     (exercise) => {
@@ -425,6 +431,8 @@ describe("Trainvy anatomical athlete", () => {
     setAppearance("bench-press", true);
     setAppearance("incline-dumbbell-press", true);
     setAppearance("flat-dumbbell-press", true);
+    setAppearance("incline-bench-press", true);
+    setAppearance("decline-bench-press", true);
     expect(material.map).toBeNull();
     expect(material.normalMap).toBeNull();
     expect(material.vertexColors).toBe(true);
@@ -456,5 +464,63 @@ describe("Trainvy anatomical athlete", () => {
     ).not.toEqual(
       EXERCISE_ANIMATIONS["incline-dumbbell-press"].muscles.primary,
     );
+    expect(
+      EXERCISE_ANIMATIONS["incline-bench-press"].muscles.primary,
+    ).toEqual(EXERCISE_ANIMATIONS["incline-dumbbell-press"].muscles.primary);
+    expect(
+      EXERCISE_ANIMATIONS["decline-bench-press"].muscles.primary,
+    ).not.toEqual(
+      EXERCISE_ANIMATIONS["incline-bench-press"].muscles.primary,
+    );
   });
+  it.each([
+    "bench-press",
+    "incline-dumbbell-press",
+    "flat-dumbbell-press",
+    "incline-bench-press",
+    "decline-bench-press",
+  ] as const)(
+    "supports the load over the forearm and keeps forearms vertical in %s",
+    (exercise) => {
+      const bones = new Map(mesh.skeleton.bones.map((b) => [b.name, b]));
+      for (const depth of [0, 0.25, 0.5, 0.75, 1]) {
+        apply(exercise, depth);
+        const rightForearm = bones
+          .get("hand_R")!
+          .position.clone()
+          .sub(bones.get("elbow_R")!.position);
+        const leftForearm = bones
+          .get("hand_L")!
+          .position.clone()
+          .sub(bones.get("elbow_L")!.position);
+
+        // O peso deve estar apoiado sobre o antebraço:
+        if (exercise.includes("dumbbell")) {
+          // Nos halteres, o antebraço fica perfeitamente vertical (0°)
+          const angleR =
+            (Math.acos(Math.abs(rightForearm.y) / rightForearm.length()) * 180) /
+            Math.PI;
+          const angleL =
+            (Math.acos(Math.abs(leftForearm.y) / leftForearm.length()) * 180) /
+            Math.PI;
+          expect(angleR).toBeLessThan(0.01);
+          expect(angleL).toBeLessThan(0.01);
+        } else {
+          // Na barra, o antebraço no fundo do movimento fica rigorosamente vertical sob a carga
+          if (depth === 1) {
+            const angleR =
+              (Math.acos(Math.abs(rightForearm.y) / rightForearm.length()) * 180) /
+              Math.PI;
+            expect(angleR).toBeLessThan(6.0);
+          }
+        }
+
+        // Os cotovelos se aproximam na adução mas nunca colidem ou encostam:
+        const distElbows = bones
+          .get("elbow_R")!
+          .position.distanceTo(bones.get("elbow_L")!.position);
+        expect(distElbows).toBeGreaterThan(0.5);
+      }
+    },
+  );
 });

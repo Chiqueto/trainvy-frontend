@@ -1,5 +1,9 @@
 import { sanitizeReturnTo } from "@/app/_lib/auth-return-to";
 import { SignupCompletion } from "../_components/signup-completion";
+import styles from "../_components/auth.module.css";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Preparando sua conta | Trainvy" };
 
 export const dynamic = "force-dynamic";
 
@@ -12,8 +16,12 @@ export default async function CompletePage({
   const returnTo = sanitizeReturnTo(rawReturnTo);
 
   return (
-    <main className="mx-auto flex min-h-svh max-w-xl flex-col justify-center gap-5 px-5 py-10">
-      <h1 className="text-2xl font-semibold">Concluir cadastro</h1>
+    <main className={styles.content}>
+      <h1 className={styles.heading}>
+        Falta pouco.
+        <br />
+        <span>Vamos começar.</span>
+      </h1>
       <SignupCompletion returnTo={returnTo} />
     </main>
   );

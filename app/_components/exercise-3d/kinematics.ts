@@ -8,6 +8,7 @@ const hipLocal = v(0, -0.28, 0.08);
 export const ARM_LENGTH = v(0.08, -0.284, -0.012).length();
 export const FOREARM_LENGTH = v(0.025, -0.265, 0.03).length();
 export const INCLINE_BENCH_ANGLE = Math.PI / 6; // 30° conforme literatura biomecânica para maximizar feixe clavicular sem sobrecarga excessiva no deltoide anterior
+export const DECLINE_BENCH_ANGLE = -Math.PI / 10; // -18° conforme literatura cinesiológica para foco no feixe esternocostal/inferior sem cisalhamento anterior
 
 /** Controlled eccentric, short pause at the bottom and smooth concentric. */
 export function getExerciseDepth(phase: number) {
@@ -57,60 +58,112 @@ export function solveJoint(
 export function getExercisePose(exercise: ExerciseAnimation, depth: number) {
   const p = MathUtils.clamp(depth, 0, 1);
   const squat = exercise === "squat";
-  const incline = exercise === "incline-dumbbell-press";
+  const inclineDumbbell = exercise === "incline-dumbbell-press";
+  const inclineBarbell = exercise === "incline-bench-press";
   const flatDumbbell = exercise === "flat-dumbbell-press";
+  const declineBarbell = exercise === "decline-bench-press";
+
+  const benchAngle =
+    inclineDumbbell || inclineBarbell
+      ? INCLINE_BENCH_ANGLE
+      : declineBarbell
+        ? DECLINE_BENCH_ANGLE
+        : 0;
+
   const tilt = new Quaternion().setFromAxisAngle(
     X,
-    squat ? 0.1 + 0.48 * p : -Math.PI / 2 + (incline ? INCLINE_BENCH_ANGLE : 0),
+    squat ? 0.1 + 0.48 * p : -Math.PI / 2 + benchAngle,
   );
   const hipCenter = squat
     ? v(0, 0.895 - 0.38 * p, -0.03 - 0.25 * p)
     : v(0, 0.49, 0.4);
   const body = (point: Vector3) =>
     point.clone().sub(hipLocal).applyQuaternion(tilt).add(hipCenter);
+
   const bar = squat
     ? body(v(0, 0.245, 0.035))
-    : v(0, 1.035 - 0.36 * p, -0.1 + 0.1 * p);
+    : inclineBarbell
+      ? v(0, MathUtils.lerp(1.26, 0.89, p), MathUtils.lerp(0.04, 0.14, p))
+      : declineBarbell
+        ? v(0, MathUtils.lerp(0.83, 0.55, p), MathUtils.lerp(-0.22, -0.19, p))
+        : v(
+            0,
+            MathUtils.lerp(1.035, 0.655, p),
+            MathUtils.lerp(-0.09, -0.015, p),
+          );
+
   const limbs = [-1, 1].map((side) => {
     const hip = body(v(side * 0.14, -0.28, 0.08));
     const ankle = squat
       ? v(side * 0.2, 0.05, 0.04)
-      : v(side * 0.25, 0.05, 0.83);
+      : declineBarbell
+        ? v(side * 0.16, 0.58, 0.82)
+        : v(side * 0.25, 0.05, 0.83);
     const knee = solveJoint(hip, ankle, 0.44, 0.42, v(side * 0.12, 0.15, 1));
     const shoulder = body(v(side * 0.215, 0.224, 0.132));
-    // Each dumbbell follows its own converging path. At the bottom the
-    // forearms stay close to vertical; at the top the weights remain separated.
-    const grip = incline
-      ? shoulder
-          .clone()
-          .add(
-            v(
-              side * MathUtils.lerp(-0.025, 0.24, p),
-              MathUtils.lerp(0.526, 0.046, p),
-              MathUtils.lerp(0.012, 0.102, p),
-            ),
-          )
-      : flatDumbbell
-        ? v(
-            side * MathUtils.lerp(0.15, 0.34, p),
-            MathUtils.lerp(1.035, 0.64, p),
-            MathUtils.lerp(-0.08, 0.01, p),
-          )
-        : bar.clone().add(v(side * (squat ? 0.39 : 0.4), 0, 0));
-    const wrist = grip.clone().add(v(0, -0.004, -0.012));
-    const elbow = solveJoint(
-      shoulder,
-      wrist,
-      ARM_LENGTH,
-      FOREARM_LENGTH,
-      squat
-        ? v(side, -0.7, -0.4)
-        : incline
-          ? v(side, -0.6, 0.45)
-          : flatDumbbell
-            ? v(side, -0.55, 0.65)
-            : v(side, -0.5, 0.7),
-    );
+
+    let wrist: Vector3;
+    let grip: Vector3;
+    let elbow: Vector3;
+
+    if (squat) {
+      grip = bar.clone().add(v(side * 0.39, 0, 0));
+      wrist = grip.clone().add(v(0, -0.004, -0.012));
+      elbow = solveJoint(
+        shoulder,
+        wrist,
+        ARM_LENGTH,
+        FOREARM_LENGTH,
+        v(side, -0.7, -0.4),
+      );
+    } else if (flatDumbbell) {
+      // Supino reto com halteres:
+      // O peso é sustentado verticalmente pelo antebraço (sem momento de flexão no tríceps).
+      // Na subida concêntrica, o peitoral maior aduz os cotovelos aproximando-os em direção ao centro
+      // sem colisão entre membros e sem fechar as cargas no topo.
+      const armDir = v(
+        side * MathUtils.lerp(0.07, 0.19, p),
+        MathUtils.lerp(0.28, -0.14, p),
+        MathUtils.lerp(0.06, 0.14, p),
+      ).normalize();
+      elbow = shoulder.clone().addScaledVector(armDir, ARM_LENGTH);
+      wrist = elbow.clone().add(v(0, FOREARM_LENGTH, 0));
+      grip = wrist.clone().add(v(0, 0.004, 0.012));
+    } else if (inclineDumbbell) {
+      // Supino inclinado com halteres:
+      // O feixe clavicular aduz os cotovelos na subida convergente suave.
+      // O peso permanece perfeitamente apoiado sobre o antebraço vertical.
+      const armDir = v(
+        side * MathUtils.lerp(0.08, 0.2, p),
+        MathUtils.lerp(0.27, -0.1, p),
+        MathUtils.lerp(0.12, 0.2, p),
+      ).normalize();
+      elbow = shoulder.clone().addScaledVector(armDir, ARM_LENGTH);
+      wrist = elbow.clone().add(v(0, FOREARM_LENGTH, 0));
+      grip = wrist.clone().add(v(0, 0.004, 0.012));
+    } else {
+      // Supinos com barra olímpica:
+      // A pegada na barra é calibrada para que, no fundo do movimento (p=1),
+      // o antebraço fique vertical diretamente sob a barra, sustentando a carga
+      // por meio da estrutura óssea e direcionando o torque para o peitoral maior.
+      const gripX = side * (inclineBarbell ? 0.42 : declineBarbell ? 0.465 : 0.45);
+      grip = bar.clone().add(v(gripX, 0, 0));
+      wrist = grip.clone().add(v(0, -0.004, -0.012));
+
+      const bottomPole = v(
+        side * (inclineBarbell ? 0.05 : declineBarbell ? -0.05 : 0.0),
+        -0.95,
+        inclineBarbell ? -0.05 : -0.05,
+      );
+      const topPole = inclineBarbell
+        ? v(side * 0.25, -0.8, -0.4)
+        : declineBarbell
+          ? v(side * 0.15, -0.9, -0.05)
+          : v(side * 0.25, -0.85, 0.15);
+      const pole = topPole.clone().lerp(bottomPole, p).normalize();
+      elbow = solveJoint(shoulder, wrist, ARM_LENGTH, FOREARM_LENGTH, pole);
+    }
+
     return { side, hip, knee, ankle, shoulder, elbow, wrist, grip };
   });
   return { origin: body(v(0, 0, 0)), tilt, bar, limbs };

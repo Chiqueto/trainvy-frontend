@@ -1,12 +1,23 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import {
+  AlertCircle,
+  ArrowUpRight,
+  Check,
+  Dumbbell,
+  Loader2,
+  RotateCcw,
+  ShieldCheck,
+  Users,
+} from "lucide-react";
 import { authClient } from "@/app/_lib/auth-client";
 import type { ListPublicPlans200Item } from "@/app/_lib/api/fetch-generated";
 import { beginSignup, loadCoachPlans } from "../_actions";
+import styles from "./auth.module.css";
 
 const labels: Record<string, string> = {
   COACH_DASHBOARD: "Área do personal",
@@ -22,15 +33,19 @@ const labels: Record<string, string> = {
 export function SignupForm({
   authenticated = false,
   returnTo,
+  initialAccountType = "ATHLETE",
 }: {
   authenticated?: boolean;
   returnTo?: string | null;
+  initialAccountType?: "ATHLETE" | "COACH";
 }) {
   const router = useRouter();
-  const [type, setType] = useState<"ATHLETE" | "COACH">("ATHLETE");
+  const [type, setType] = useState<"ATHLETE" | "COACH">(initialAccountType);
   const [plans, setPlans] = useState<ListPublicPlans200Item[]>([]);
   const [planCode, setPlanCode] = useState("");
-  const [loadingPlans, setLoadingPlans] = useState(false);
+  const [loadingPlans, setLoadingPlans] = useState(
+    initialAccountType === "COACH",
+  );
   const [planError, setPlanError] = useState(false);
   const [retry, setRetry] = useState(0);
   const [busy, setBusy] = useState(false);
@@ -115,24 +130,36 @@ export function SignupForm({
   }
 
   return (
-    <main className="mx-auto flex min-h-svh w-full max-w-xl flex-col gap-6 px-5 py-10">
-      <Link
-        href={
-          returnTo
-            ? `/auth?returnTo=${encodeURIComponent(returnTo)}`
-            : "/auth"
-        }
-        className="w-fit text-sm underline"
-      >
-        Voltar para entrar
-      </Link>
-      <div>
-        <p className="text-sm text-muted-foreground">Trainvy · Criar conta</p>
-        <h1 className="mt-2 text-2xl font-semibold">
-          Como você vai usar o Trainvy?
-        </h1>
+    <main className={styles.content}>
+      <h1 className={styles.heading}>
+        Seu próximo nível
+        <br />
+        <span>começa aqui.</span>
+      </h1>
+      <p className={styles.smallLogin}>
+        Já tem uma conta?{" "}
+        <Link
+          href={
+            returnTo
+              ? `/auth?returnTo=${encodeURIComponent(returnTo)}`
+              : "/auth"
+          }
+        >
+          Entrar <ArrowUpRight size={12} className="inline" />
+        </Link>
+      </p>
+      {returnTo && (
+        <div className={styles.inviteNote}>
+          <Users size={16} />
+          <span>
+            Crie sua conta para continuar com o convite do seu personal.
+          </span>
+        </div>
+      )}
+      <div className={styles.stepLabel}>
+        <span>01</span> Como você vai usar o Trainvy?
       </div>
-      <div className="grid gap-3" role="group" aria-label="Tipo de conta">
+      <div className={styles.roleGrid} role="group" aria-label="Tipo de conta">
         {(
           [
             [
@@ -149,115 +176,180 @@ export function SignupForm({
         ).map(([value, title, description]) => (
           <button
             key={value}
+            data-account-type={value}
             type="button"
             aria-pressed={type === value}
             disabled={busy}
             onClick={() => chooseType(value)}
-            className={`rounded-2xl border p-5 text-left focus-visible:outline-2 focus-visible:outline-primary ${type === value ? "border-primary bg-primary/10" : "border-border"}`}
+            className={styles.roleCard}
           >
-            <span className="block font-semibold">{title}</span>
-            <span className="mt-1 block text-sm text-muted-foreground">
-              {description}
+            <span className={styles.radioMark} aria-hidden="true">
+              {type === value && <Check size={11} />}
             </span>
+            <span className={styles.roleIcon}>
+              {value === "ATHLETE" ? (
+                <Dumbbell size={18} />
+              ) : (
+                <Users size={18} />
+              )}
+            </span>
+            <strong>{title}</strong>
+            <span>{description}</span>
           </button>
         ))}
       </div>
-      {type === "ATHLETE" ? (
-        <section className="rounded-2xl border p-5">
-          <h2 className="font-semibold">Grátis</h2>
-          <p className="text-sm text-muted-foreground">
-            Comece agora sem mensalidade.
-          </p>
-        </section>
-      ) : (
-        <section className="space-y-3" aria-busy={loadingPlans}>
-          <h2 className="text-xl font-semibold">Escolha seu plano</h2>
-          <p className="text-sm text-muted-foreground">
-            A assinatura fica pendente até liberação. Não há cobrança automática
-            nesta etapa. Recursos de gestão de alunos serão disponibilizados em
-            etapas futuras.
-          </p>
-          {loadingPlans ? (
-            <p role="status">Carregando planos...</p>
-          ) : planError ? (
-            <div role="alert">
-              Não foi possível carregar os planos.
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setLoadingPlans(true);
-                  setPlanError(false);
-                  setRetry((n) => n + 1);
-                }}
-              >
-                Tentar novamente
-              </Button>
+      <section
+        className={styles.planSection}
+        aria-label={
+          type === "ATHLETE"
+            ? "Conta de atleta gratuita"
+            : "Planos para personal"
+        }
+        aria-busy={loadingPlans}
+      >
+        <div className={styles.stepLabel}>
+          <span>02</span>
+          {type === "ATHLETE" ? "Seu ponto de partida" : "Escolha seu plano"}
+        </div>
+        {type === "ATHLETE" ? (
+          <div className={styles.freePlan}>
+            <div className={styles.freePlanTop}>
+              <h2>Grátis</h2>
+              <span className={styles.freeBadge}>SEM MENSALIDADE</span>
             </div>
-          ) : plans.length === 0 ? (
-            <p>Nenhum plano disponível no momento.</p>
-          ) : (
-            plans.map((plan) => (
-              <button
-                key={plan.code}
-                type="button"
-                aria-pressed={planCode === plan.code}
-                disabled={busy}
-                onClick={() => setPlanCode(plan.code)}
-                className={`block w-full rounded-2xl border p-5 text-left focus-visible:outline-2 focus-visible:outline-primary ${planCode === plan.code ? "border-primary bg-primary/10" : "border-border"}`}
-              >
-                <span className="block font-semibold">{plan.name}</span>
-                <span className="mt-1 block text-xl">
-                  {new Intl.NumberFormat("pt-BR", {
-                    style: "currency",
-                    currency: plan.currency,
-                  }).format(plan.monthlyPriceInCents / 100)}
-                  <span className="text-sm text-muted-foreground"> / mês</span>
-                </span>
-                {plan.description && (
-                  <span className="mt-2 block text-sm">{plan.description}</span>
-                )}
-                <span className="mt-3 block text-xs text-muted-foreground">
-                  {plan.entitlements
-                    .map(
-                      (e) =>
-                        `${labels[e.entitlement] ?? e.entitlement}${e.limitValue !== null ? `: ${e.limitValue}` : ""}`,
-                    )
-                    .join(" · ")}
-                </span>
-              </button>
-            ))
-          )}
-        </section>
-      )}
+            <p>O primeiro passo não precisa esperar.</p>
+            <ul className={styles.benefitList}>
+              {[
+                "Organize e personalize seus treinos",
+                "Registre carga, repetições e RIR por série",
+                "Acompanhe seu histórico e evolução",
+              ].map((text) => (
+                <li key={text}>
+                  <Check size={13} />
+                  {text}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <>
+            {loadingPlans ? (
+              <div role="status" className={styles.planLoader}>
+                <Loader2 size={17} className={styles.spin} />
+                Carregando planos...
+              </div>
+            ) : planError ? (
+              <div role="alert" className={styles.errorBlock}>
+                <div className={styles.alert}>
+                  <AlertCircle size={15} />
+                  <span>
+                    Não foi possível carregar os planos. Tente novamente para
+                    ver as opções disponíveis.
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  className={styles.retryButton}
+                  onClick={() => {
+                    setLoadingPlans(true);
+                    setPlanError(false);
+                    setRetry((n) => n + 1);
+                  }}
+                >
+                  <RotateCcw size={13} className="mr-2 inline" />
+                  Tentar novamente
+                </button>
+              </div>
+            ) : plans.length === 0 ? (
+              <p className={styles.emptyPlans}>
+                Nenhum plano disponível no momento. Você pode voltar mais tarde
+                ou começar com uma conta de atleta.
+              </p>
+            ) : (
+              <div className={styles.plansGrid}>
+                {plans.map((plan) => (
+                  <button
+                    key={plan.code}
+                    data-plan-code={plan.code}
+                    type="button"
+                    aria-pressed={planCode === plan.code}
+                    disabled={busy}
+                    onClick={() => setPlanCode(plan.code)}
+                    className={styles.planCard}
+                  >
+                    <span className={styles.radioMark} aria-hidden="true">
+                      {planCode === plan.code && <Check size={11} />}
+                    </span>
+                    <strong>{plan.name}</strong>
+                    <span className={styles.planPrice}>
+                      {new Intl.NumberFormat("pt-BR", {
+                        style: "currency",
+                        currency: plan.currency,
+                      }).format(plan.monthlyPriceInCents / 100)}
+                      <small> / mês</small>
+                    </span>
+                    {plan.description && (
+                      <span className={styles.planDescription}>
+                        {plan.description}
+                      </span>
+                    )}
+                    <span className={styles.planEntitlements}>
+                      {plan.entitlements.map((e) => (
+                        <span key={e.entitlement}>
+                          <Check size={11} />
+                          <span>
+                            {labels[e.entitlement] ?? e.entitlement}
+                            {e.limitValue != null ? `: ${e.limitValue}` : ""}
+                          </span>
+                        </span>
+                      ))}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
+            <p className={styles.plansNote}>
+              A assinatura fica pendente até liberação. Não há cobrança
+              automática nesta etapa. Os recursos seguem o plano e a
+              disponibilidade da conta.
+            </p>
+          </>
+        )}
+      </section>
       {error && (
-        <p role="alert" className="text-sm text-destructive">
-          {error}
-        </p>
+        <div role="alert" className={styles.alert}>
+          <AlertCircle size={16} />
+          <span>{error}</span>
+        </div>
       )}
-      <Button
-        className="min-h-12 rounded-full"
+      <button
+        type="button"
+        className={styles.googleButton}
+        aria-busy={busy}
         disabled={
           busy || (type === "COACH" && (loadingPlans || planError || !planCode))
         }
         onClick={submit}
       >
+        {busy ? (
+          <Loader2 className={styles.spin} size={17} />
+        ) : authenticated ? (
+          <ShieldCheck size={18} />
+        ) : (
+          <Image src="/google-icon.svg" alt="" width={18} height={18} />
+        )}
         {busy
           ? "Preparando cadastro..."
           : authenticated
             ? "Concluir cadastro"
             : "Continuar com Google"}
-      </Button>
+        {!busy && <ArrowUpRight size={17} className={styles.buttonArrow} />}
+      </button>
 
-      <p className="text-center text-xs text-muted-foreground leading-relaxed pt-1">
+      <p className={styles.terms}>
         Ao continuar, você concorda com nossos{" "}
-        <Link href="/termos" className="text-primary underline hover:text-primary/80">
-          Termos de Uso
-        </Link>{" "}
-        e{" "}
-        <Link href="/privacidade" className="text-primary underline hover:text-primary/80">
-          Política de Privacidade
-        </Link>
-        .
+        <Link href="/termos">Termos de Uso</Link> e{" "}
+        <Link href="/privacidade">Política de Privacidade</Link>.
       </p>
     </main>
   );

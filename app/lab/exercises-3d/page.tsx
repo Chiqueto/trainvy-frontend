@@ -83,6 +83,28 @@ const LAB_MEDIA_DATA: Record<ExerciseAnimation, GetExerciseMedia200> = {
     attributionUrl: null,
     instructions: null,
   },
+  "incline-bench-press": {
+    exerciseId: EXERCISE_ANIMATIONS["incline-bench-press"].id,
+    hasMedia: false,
+    mediaType: null,
+    startImagePath: null,
+    endImagePath: null,
+    motionPath: null,
+    attributionName: null,
+    attributionUrl: null,
+    instructions: null,
+  },
+  "decline-bench-press": {
+    exerciseId: EXERCISE_ANIMATIONS["decline-bench-press"].id,
+    hasMedia: false,
+    mediaType: null,
+    startImagePath: null,
+    endImagePath: null,
+    motionPath: null,
+    attributionName: null,
+    attributionUrl: null,
+    instructions: null,
+  },
 };
 
 export default function Exercise3DLab() {
@@ -111,36 +133,58 @@ export default function Exercise3DLab() {
       ],
     },
     "bench-press": {
-      primary: "Peitoral Maior (Porção esternal e clavicular)",
+      primary: "Peitoral Maior (feixes esternal e clavicular)",
       secondary: "Tríceps braquial e Deltoide anterior",
       cadence:
-        "Descida cadenciada até a linha intermamilar, pausa breve e empurrão firme.",
+        "Descida cadenciada até o terço inferior do esterno, pausa breve e empurrão firme.",
       cues: [
-        "Pés 100% plantados no chão para transferir força (leg drive).",
-        "Cotovelos em ângulo de aprox. 45° a 70° em relação ao tronco.",
-        "Escápulas retraídas e deprimidas fixadas no estofado do banco.",
+        "Antebraços rigorosamente verticais sob a barra no fundo, sustentando a carga sem sobrecarga no tríceps.",
+        "Cotovelos em ângulo de aprox. 45° a 70° em relação ao tronco no plano escapular.",
+        "Escápulas retraídas e deprimidas fixadas no estofado, com pés firmemente plantados no solo.",
       ],
     },
     "incline-dumbbell-press": {
       primary: "Peitoral maior — porção clavicular",
       secondary: "Peitoral médio/inferior, tríceps e deltoide anterior",
       cadence:
-        "Descida controlada, pausa breve e subida suave com halteres separados no banco a 30°.",
+        "Descida controlada com peso sobre o antebraço, pausa breve e subida por adução dos cotovelos.",
       cues: [
-        "Cabeça, costas e quadril apoiados no banco inclinado a 30°; pés firmes no solo.",
-        "Halteres ao lado da parte superior do peito, com punhos alinhados aos antebraços.",
-        "Suba com aproximação suave dos halteres, sem choque entre as cargas.",
+        "Foco na adução dos cotovelos na subida concêntrica, aproximando os cotovelos sem encostá-los.",
+        "Pesos apoiados verticalmente sobre os antebraços em toda a trajetória, sem juntar os halteres no topo.",
+        "Banco a 30° comprovado para feixe clavicular sem sobrecarga na cápsula anterior do ombro.",
       ],
     },
     "flat-dumbbell-press": {
       primary: "Peitoral maior — porção esternocostal",
       secondary: "Feixe clavicular, tríceps braquial e deltoide anterior",
       cadence:
-        "Descida ampla controlada com cotovelos a 45°-70°, pausa breve e subida convergente.",
+        "Descida ampla controlada com cotovelos a 45°-70°, pausa breve e subida por aproximação dos cotovelos.",
       cues: [
-        "Escápulas retraídas e deprimidas no banco reto com pés firmemente plantados no solo.",
-        "Desça os halteres ao lado do peitoral permitindo um alongamento seguro sem forçar o ombro.",
-        "Empurre convergindo suavemente em direção ao centro do peito sem bater as cargas no topo.",
+        "O objetivo é aproximar os cotovelos para contração máxima do peitoral, e não bater os halteres.",
+        "Halteres mantidos apoiados verticalmente sobre os antebraços, aliviando o esforço desnecessário do tríceps.",
+        "Cotovelos aproximam-se na adução sem colidir e sem hiperextensão articular no topo.",
+      ],
+    },
+    "incline-bench-press": {
+      primary: "Peitoral maior — porção clavicular",
+      secondary: "Peitoral médio/inferior, tríceps e deltoide anterior",
+      cadence:
+        "Descida cadenciada ao terço superior do peito no banco a 30°, pausa breve e empurrão estável.",
+      cues: [
+        "Banco inclinado a 30° para maximizar recrutamento clavicular e proteger a articulação do ombro.",
+        "Antebraço vertical perpendicular ao chão no ponto mais baixo, apoiando a barra diretamente sobre a estrutura óssea.",
+        "Pegada média na barra olímpica com escápulas travadas no encosto.",
+      ],
+    },
+    "decline-bench-press": {
+      primary: "Peitoral maior — porção esternocostal e inferior",
+      secondary: "Feixe clavicular, tríceps braquial e deltoide anterior",
+      cadence:
+        "Descida controlada à linha inferior do tórax/esterno no banco a -18°, pausa breve e empurrão.",
+      cues: [
+        "Banco declinado a -18° com pernas e tornozelos travados com firmeza nos roletes de apoio.",
+        "Antebraços verticais sustentando o peso da barra no terço inferior do esterno.",
+        "Menor solicitação no deltoide anterior com ênfase no feixe inferior/esternal do peitoral.",
       ],
     },
   };
@@ -177,15 +221,15 @@ export default function Exercise3DLab() {
         </div>
         <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">
           Explore a anatomia do agachamento, supino reto com barra, supino inclinado com
-          halteres e supino reto com halteres em qualquer ângulo. Aproxime os detalhes,
-          acompanhe cada fase e compare os grupos musculares principais e secundários destacados em
-          cada movimento.
+          halteres, supino reto com halteres, supino inclinado com barra e supino declinado com barra
+          em qualquer ângulo. Aproxime os detalhes, acompanhe a trajetória vertical dos antebraços
+          com peso apoiado sobre o antebraço e compare os grupos musculares destacados em cada movimento.
         </p>
       </header>
 
       {/* Seletor de Exercícios */}
       <div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
         aria-label="Selecionar exercício"
       >
         {(

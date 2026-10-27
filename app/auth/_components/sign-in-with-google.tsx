@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Loader2 } from "lucide-react";
+import { AlertCircle, ArrowUpRight, Loader2 } from "lucide-react";
 import { authClient } from "@/app/_lib/auth-client";
-import { Button } from "@/components/ui/button";
 import { setAuthReturnToAction } from "../_actions";
+import styles from "./auth.module.css";
 
 export const SignInWithGoogle = ({
   returnTo,
@@ -49,8 +49,7 @@ export const SignInWithGoogle = ({
       if (result?.error) {
         console.error("Erro ao autenticar com Google:", result.error);
         setErrorMessage(
-          result.error.message ||
-            `Erro (${result.error.status || "desconhecido"}) ao conectar com Google`,
+          "Não foi possível entrar com Google. Tente novamente. Se este é seu primeiro acesso, escolha Criar conta.",
         );
         setIsLoading(false);
       }
@@ -62,15 +61,17 @@ export const SignInWithGoogle = ({
   };
 
   return (
-    <div className="flex w-full flex-col items-center gap-3">
-      <Button
+    <div className={styles.googleGroup}>
+      <button
+        type="button"
         onClick={handleGoogleLogin}
         disabled={isLoading}
-        className="h-[38px] cursor-pointer rounded-full bg-white px-6 text-black hover:bg-white/90 disabled:opacity-75"
+        aria-busy={isLoading}
+        className={styles.googleButton}
       >
         {isLoading ? (
           <>
-            <Loader2 className="h-4 w-4 animate-spin text-black" />
+            <Loader2 size={17} className={styles.spin} />
             Conectando com Google...
           </>
         ) : (
@@ -78,19 +79,21 @@ export const SignInWithGoogle = ({
             <Image
               src="/google-icon.svg"
               alt=""
-              width={16}
-              height={16}
+              width={18}
+              height={18}
               className="shrink-0"
             />
             Fazer login com Google
+            <ArrowUpRight className={styles.buttonArrow} size={17} />
           </>
         )}
-      </Button>
+      </button>
 
       {errorMessage && (
-        <p className="max-w-xs text-center text-xs font-medium text-red-200">
-          {errorMessage}
-        </p>
+        <div role="alert" className={styles.alert}>
+          <AlertCircle size={16} />
+          <span>{errorMessage}</span>
+        </div>
       )}
     </div>
   );

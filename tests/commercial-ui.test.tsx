@@ -26,8 +26,14 @@ vi.mock("@/app/auth/_actions", () => ({
   beginSignup: vi.fn(),
   loadCoachPlans: vi.fn(),
   finishSignup: vi.fn(),
+  setAuthReturnToAction: vi.fn(),
 }));
-import { beginSignup, finishSignup, loadCoachPlans } from "@/app/auth/_actions";
+import {
+  beginSignup,
+  finishSignup,
+  loadCoachPlans,
+  setAuthReturnToAction,
+} from "@/app/auth/_actions";
 import { SignupForm } from "@/app/auth/_components/signup-form";
 import { SignupCompletion } from "@/app/auth/_components/signup-completion";
 import { SignInWithGoogle } from "@/app/auth/_components/sign-in-with-google";
@@ -59,6 +65,88 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe("Account signup UI", () => {
+  it("keeps signin disabled while Google is connecting", () => {
+    mocks.social.mockReturnValue(new Promise(() => {}));
+    render(<SignInWithGoogle />);
+    fireEvent.click(screen.getByRole("button"));
+    expect(screen.getByRole("button").hasAttribute("disabled")).toBe(true);
+    expect(screen.getByRole("button").getAttribute("aria-busy")).toBe("true");
+  });
+  it("shows a recoverable signin error and preserves the invitation", async () => {
+    vi.mocked(setAuthReturnToAction).mockResolvedValue({ success: true });
+    mocks.social.mockResolvedValue({
+      error: { message: "INTERNAL_PROVIDER_TRACE", status: 500 },
+    });
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    render(<SignInWithGoogle returnTo="/convite/qa_token_123456" />);
+    fireEvent.click(screen.getByRole("button"));
+    const alert = await screen.findByRole("alert");
+    expect(alert.textContent).toContain("Tente novamente");
+    expect(alert.textContent).not.toContain("INTERNAL_PROVIDER_TRACE");
+    expect(screen.getByRole("button").hasAttribute("disabled")).toBe(false);
+    expect(setAuthReturnToAction).toHaveBeenCalledWith(
+      "/convite/qa_token_123456",
+    );
+    expect(mocks.social).toHaveBeenCalledWith(
+      expect.objectContaining({
+        requestSignUp: false,
+        callbackURL: expect.stringContaining(
+          "returnTo=%2Fconvite%2Fqa_token_123456",
+        ),
+      }),
+    );
+    vi.mocked(console.error).mockRestore();
+  });
+  it("keeps the selected coach plan after OAuth fails so signup can be retried", async () => {
+    mocks.social.mockResolvedValue({ error: { status: 500 } });
+    render(<SignupForm initialAccountType="COACH" />);
+    await screen.findByText("Personal AI");
+    fireEvent.click(screen.getByRole("button", { name: /Personal AI/ }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Continuar com Google" }),
+    );
+    await screen.findByRole("alert");
+    expect(
+      screen
+        .getByRole("button", { name: /Personal AI/ })
+        .getAttribute("aria-pressed"),
+    ).toBe("true");
+    expect(
+      screen
+        .getByRole("button", { name: "Continuar com Google" })
+        .hasAttribute("disabled"),
+    ).toBe(false);
+  });
+  it("blocks coach signup when no public plan is available", async () => {
+    vi.mocked(loadCoachPlans).mockResolvedValue({ success: true, plans: [] });
+    render(<SignupForm initialAccountType="COACH" />);
+    await screen.findByText(/Nenhum plano disponível/);
+    expect(
+      screen
+        .getByRole("button", { name: "Continuar com Google" })
+        .hasAttribute("disabled"),
+    ).toBe(true);
+  });
+  it("opens personal plans directly from the landing page signup intent", async () => {
+    render(<SignupForm initialAccountType="COACH" />);
+    await screen.findByText("Personal");
+    expect(loadCoachPlans).toHaveBeenCalledOnce();
+    expect(
+      screen
+        .getByRole("button", { name: /Sou Personal/ })
+        .getAttribute("aria-pressed"),
+    ).toBe("true");
+    fireEvent.click(
+      screen.getByRole("button", { name: "Continuar com Google" }),
+    );
+    await waitFor(() =>
+      expect(beginSignup).toHaveBeenCalledWith({
+        accountType: "COACH",
+        planCode: "COACH",
+        returnTo: undefined,
+      }),
+    );
+  });
   it("existing login uses OAuth without signup intent or implicit signup", async () => {
     render(<SignInWithGoogle />);
     fireEvent.click(screen.getByRole("button"));

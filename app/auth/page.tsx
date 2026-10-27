@@ -1,11 +1,22 @@
-import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { authClient } from "@/app/_lib/auth-client";
 import { headers } from "next/headers";
 import { SignInWithGoogle } from "./_components/sign-in-with-google";
-import { Logo } from "@/app/_components/logo";
 import { sanitizeReturnTo } from "@/app/_lib/auth-return-to";
+import {
+  AlertCircle,
+  ArrowUpRight,
+  ChartNoAxesCombined,
+  Dumbbell,
+  ShieldCheck,
+  Users,
+} from "lucide-react";
+import type { Metadata } from "next";
+import { getSessionCookie } from "better-auth/cookies";
+import styles from "./_components/auth.module.css";
+
+export const metadata: Metadata = { title: "Entrar | Trainvy" };
 
 export const dynamic = "force-dynamic";
 
@@ -19,11 +30,12 @@ export default async function AuthPage({
 
   let session = null;
   try {
-    session = await authClient.getSession({
-      fetchOptions: {
-        headers: await headers(),
-      },
-    });
+    const requestHeaders = await headers();
+    if (getSessionCookie(new Headers(requestHeaders))) {
+      session = await authClient.getSession({
+        fetchOptions: { headers: requestHeaders },
+      });
+    }
   } catch (error) {
     if (typeof error === "object" && error !== null && "digest" in error) {
       throw error;
@@ -38,70 +50,66 @@ export default async function AuthPage({
   }
 
   return (
-    <div className="relative flex min-h-svh flex-col bg-black">
-      <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
-        <Image
-          src="/login-bg.png"
-          alt=""
-          fill
-          className="object-cover"
-          priority
-        />
-      </div>
-
-      <div className="relative z-10 flex justify-center pt-12">
-        <div className="rounded-2xl bg-white/95 px-5 py-3 shadow-2xl backdrop-blur-md">
-          <Logo variant="full" size="md" />
+    <div className={styles.content} role="main">
+      <h1 className={styles.heading}>
+        Bom ter você
+        <br />
+        <span>de volta.</span>
+      </h1>
+      <p className={styles.description}>
+        Seu planejamento, suas conquistas e o próximo treino estão esperando por
+        você.
+      </p>
+      {sanitizedReturnTo && (
+        <div className={styles.inviteNote}>
+          <Users size={16} />
+          <span>
+            Entre para continuar com seu convite. Guardamos o caminho para você.
+          </span>
         </div>
-      </div>
-
-      <div className="flex-1" />
-
-      <div className="relative z-10 flex flex-col items-center gap-15 rounded-t-[20px] bg-primary px-5 pb-10 pt-12">
-        <div className="flex w-full flex-col items-center gap-6">
-          <p className="font-semibold text-primary-foreground">Entrar</p>
-          <h1 className="w-full text-center font-heading text-[32px] font-semibold leading-[1.05] text-primary-foreground">
-            O app que vai transformar a forma como você treina.
-          </h1>
-
-          <SignInWithGoogle returnTo={sanitizedReturnTo} />
-          {oauthError && (
-            <p
-              role="alert"
-              className="text-center text-sm text-primary-foreground"
-            >
-              Não foi possível entrar. Se ainda não tem uma conta, escolha Criar
-              conta para se cadastrar.
-            </p>
-          )}
-          <p className="text-sm text-primary-foreground">
-            Ainda não tem conta?{" "}
-            <Link
-              href={
-                sanitizedReturnTo
-                  ? `/auth/signup?returnTo=${encodeURIComponent(sanitizedReturnTo)}`
-                  : "/auth/signup"
-              }
-              className="font-semibold underline"
-            >
-              Criar conta
-            </Link>
-          </p>
+      )}
+      {oauthError && (
+        <div role="alert" className={styles.alert}>
+          <AlertCircle size={16} />
+          <span>
+            Não foi possível entrar. Tente novamente ou escolha Criar conta se
+            este for seu primeiro acesso.
+          </span>
         </div>
-
-        <div className="flex flex-col items-center gap-2">
-          <div className="flex items-center justify-center gap-3 text-xs text-primary-foreground/80">
-            <Link href="/termos" className="hover:underline">
-              Termos de Uso
-            </Link>
-            <span>•</span>
-            <Link href="/privacidade" className="hover:underline">
-              Privacidade
-            </Link>
-          </div>
-          <p className="font-heading text-xs leading-[1.4] text-primary-foreground/70">
-            ©2026 Copyright Trainvy. Todos os direitos reservados
-          </p>
+      )}
+      <div className={styles.divider} />
+      <SignInWithGoogle returnTo={sanitizedReturnTo} />
+      <p className={styles.secureNote}>
+        <ShieldCheck size={13} /> Acesso seguro com sua conta Google.
+      </p>
+      <div className={styles.signupPrompt}>
+        <span>Primeira vez por aqui?</span>
+        <Link
+          href={
+            sanitizedReturnTo
+              ? `/auth/signup?returnTo=${encodeURIComponent(sanitizedReturnTo)}`
+              : "/auth/signup"
+          }
+          className={styles.signupLink}
+        >
+          Criar conta <ArrowUpRight size={17} />
+        </Link>
+      </div>
+      <div className={styles.valueStrip}>
+        <div>
+          <Dumbbell />
+          <strong>Seu treino</strong>
+          <span>Com direção.</span>
+        </div>
+        <div>
+          <ChartNoAxesCombined />
+          <strong>Sua evolução</strong>
+          <span>Em cada série.</span>
+        </div>
+        <div>
+          <ShieldCheck />
+          <strong>Seu espaço</strong>
+          <span>Do seu jeito.</span>
         </div>
       </div>
     </div>

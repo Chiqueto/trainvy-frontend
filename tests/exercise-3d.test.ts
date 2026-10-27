@@ -24,30 +24,45 @@ describe("exercise 3D scope", () => {
     expect(getExerciseAnimation("6ef90b25-cd99-4860-8933-ae29e4d1f3d8")).toBe(
       "flat-dumbbell-press",
     );
+    expect(getExerciseAnimation("00000000-0000-4000-8000-000000000104")).toBe(
+      "incline-bench-press",
+    );
+    expect(getExerciseAnimation("eb910207-283c-414d-8d37-7c6b6d7de0d8")).toBe(
+      "decline-bench-press",
+    );
     for (const id of [
       null,
       undefined,
       "custom-supino",
-      "00000000-0000-4000-8000-000000000104",
       "00000000-0000-4000-8000-000000000106",
+      "00000000-0000-4000-8000-000000000110",
     ]) {
       expect(getExerciseAnimation(id)).toBeNull();
     }
   });
 });
 
-describe("incline dumbbell press", () => {
-  it("does not enable barbell, Smith, or unsupported variants", () => {
+describe("incline press variants", () => {
+  it("enables supported barbell and dumbbell variants while keeping Smith or declinado halteres unsupported", () => {
     for (const name of [
-      "Supino Inclinado",
-      "Supino Inclinado com Barra",
       "Supino Inclinado no Smith",
       "Supino Declinado com Halteres",
+      "Supino Declinado no Smith",
     ])
       expect(getExerciseAnimation(undefined, name)).toBeNull();
+
     expect(
       getExerciseAnimation(undefined, "Supino Inclinado com Halteres"),
     ).toBe("incline-dumbbell-press");
+    expect(
+      getExerciseAnimation(undefined, "Supino Inclinado com Barra"),
+    ).toBe("incline-bench-press");
+    expect(
+      getExerciseAnimation(undefined, "Supino Inclinado"),
+    ).toBe("incline-bench-press");
+    expect(
+      getExerciseAnimation(undefined, "Supino Declinado com Barra"),
+    ).toBe("decline-bench-press");
   });
   it("keeps the incline, supports and anatomical lengths while the dumbbells converge without colliding", () => {
     const initial = getExercisePose("incline-dumbbell-press", 0);
@@ -133,7 +148,12 @@ describe("flat dumbbell press", () => {
   });
 });
 
-describe.each(["squat", "bench-press"] as const)(
+describe.each([
+  "squat",
+  "bench-press",
+  "incline-bench-press",
+  "decline-bench-press",
+] as const)(
   "%s kinematics",
   (exercise) => {
     it("keeps limb lengths, feet planted and hands on the bar throughout a repetition", () => {

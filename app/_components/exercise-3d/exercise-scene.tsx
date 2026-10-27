@@ -17,6 +17,7 @@ import {
   createPoseDriver,
   getExerciseDepth,
   INCLINE_BENCH_ANGLE,
+  DECLINE_BENCH_ANGLE,
 } from "./kinematics";
 import type { ExerciseAnimation } from "./exercises";
 
@@ -252,6 +253,96 @@ function InclineBench() {
   );
 }
 
+function DeclineBench() {
+  return (
+    <group>
+      {/* Encosto Declinado a -18° */}
+      <group position={[0, 0.44, 0.35]} rotation={[DECLINE_BENCH_ANGLE, 0, 0]}>
+        <RoundedBox
+          args={[0.3, 0.08, 1.15]}
+          radius={0.025}
+          smoothness={4}
+          position={[0, 0, -0.52]}
+          castShadow
+          receiveShadow
+        >
+          <meshStandardMaterial color="#182232" roughness={0.75} />
+        </RoundedBox>
+        {/* Friso central do estofado */}
+        <mesh position={[0, 0.041, -0.52]}>
+          <boxGeometry args={[0.015, 0.002, 1.1]} />
+          <meshStandardMaterial color="#f97316" />
+        </mesh>
+        {/* Barra de reforço sob o estofado */}
+        <mesh position={[0, -0.075, -0.52]} castShadow>
+          <boxGeometry args={[0.08, 0.06, 1.08]} />
+          <meshStandardMaterial
+            color="#334155"
+            metalness={0.7}
+            roughness={0.3}
+          />
+        </mesh>
+      </group>
+
+      {/* Roletes de fixação para as pernas e tornozelos */}
+      <mesh position={[0, 0.58, 0.62]} rotation={[0, 0, Math.PI / 2]} castShadow>
+        <cylinderGeometry args={[0.018, 0.018, 0.48, 24]} />
+        <meshStandardMaterial color="#334155" metalness={0.75} roughness={0.25} />
+      </mesh>
+      {[-1, 1].map((side) => (
+        <group key={side} position={[side * 0.16, 0.58, 0.62]}>
+          <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
+            <cylinderGeometry args={[0.05, 0.05, 0.16, 24]} />
+            <meshStandardMaterial color="#182232" roughness={0.8} />
+          </mesh>
+          <mesh position={[side * 0.085, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.025, 0.025, 0.015, 20]} />
+            <meshStandardMaterial color="#f97316" roughness={0.5} />
+          </mesh>
+        </group>
+      ))}
+
+      {/* Roletes acolchoados inferiores de trava */}
+      <mesh position={[0, 0.46, 0.76]} rotation={[0, 0, Math.PI / 2]} castShadow>
+        <cylinderGeometry args={[0.018, 0.018, 0.48, 24]} />
+        <meshStandardMaterial color="#334155" metalness={0.75} roughness={0.25} />
+      </mesh>
+      {[-1, 1].map((side) => (
+        <group key={side} position={[side * 0.16, 0.46, 0.76]}>
+          <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
+            <cylinderGeometry args={[0.05, 0.05, 0.16, 24]} />
+            <meshStandardMaterial color="#182232" roughness={0.8} />
+          </mesh>
+          <mesh position={[side * 0.085, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.025, 0.025, 0.015, 20]} />
+            <meshStandardMaterial color="#f97316" roughness={0.5} />
+          </mesh>
+        </group>
+      ))}
+
+      {/* Colunas verticais e pés metálicos */}
+      {[-0.45, 0.38].map((z, idx) => (
+        <group key={z}>
+          <mesh position={[0, idx === 0 ? 0.12 : 0.22, z]} castShadow>
+            <boxGeometry args={[0.08, idx === 0 ? 0.22 : 0.42, 0.08]} />
+            <meshStandardMaterial color="#334155" metalness={0.7} roughness={0.3} />
+          </mesh>
+          <mesh position={[0, 0.035, z]} castShadow>
+            <boxGeometry args={[0.6, 0.07, 0.13]} />
+            <meshStandardMaterial color="#1e293b" roughness={0.6} />
+          </mesh>
+        </group>
+      ))}
+
+      {/* Barra transversal de base */}
+      <mesh position={[0, 0.12, -0.04]} castShadow>
+        <boxGeometry args={[0.08, 0.06, 0.9]} />
+        <meshStandardMaterial color="#334155" metalness={0.7} roughness={0.3} />
+      </mesh>
+    </group>
+  );
+}
+
 function StudioPlatform() {
   return (
     <group position={[0, 0, 0]}>
@@ -410,8 +501,11 @@ function getCameraParams(
     }
   }
 
-  if (exercise === "incline-dumbbell-press") {
-    const target: [number, number, number] = [0, 0.68, 0.12];
+  if (
+    exercise === "incline-dumbbell-press" ||
+    exercise === "incline-bench-press"
+  ) {
+    const target: [number, number, number] = [0, 0.72, 0.12];
     switch (view) {
       case "front":
         return { position: [0, 1.8, 3.6], target };
@@ -424,7 +518,22 @@ function getCameraParams(
     }
   }
 
-  // Supino reto: foco central no tórax e trajetória da barra
+  if (exercise === "decline-bench-press") {
+    const target: [number, number, number] = [0, 0.52, -0.05];
+    switch (view) {
+      case "front":
+        return { position: [0, 1.7, 3.0], target };
+      case "side":
+        return { position: [2.9, 0.9, -0.05], target };
+      case "back":
+        return { position: [-0.35, 1.8, -2.6], target };
+      case "perspective":
+      default:
+        return { position: [2.4, 1.6, 2.2], target };
+    }
+  }
+
+  // Supino reto (barra ou halteres): foco central no tórax e trajetória da carga
   const target: [number, number, number] = [0, 0.6, 0.05];
   switch (view) {
     case "front":
@@ -535,7 +644,9 @@ export default function ExerciseScene(props: SceneProps) {
 
       {/* Banco olímpico / plano para supino reto (barra ou halteres) */}
       {(benchPress || props.exercise === "flat-dumbbell-press") && <Bench />}
-      {props.exercise === "incline-dumbbell-press" && <InclineBench />}
+      {(props.exercise === "incline-dumbbell-press" ||
+        props.exercise === "incline-bench-press") && <InclineBench />}
+      {props.exercise === "decline-bench-press" && <DeclineBench />}
 
       <Suspense fallback={null}>
         <Athlete {...props} />

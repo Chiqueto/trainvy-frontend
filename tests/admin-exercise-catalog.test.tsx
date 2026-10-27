@@ -29,7 +29,7 @@ const exercises: ListAdminExercises200Item[] = [
   },
   {
     id: "00000000-0000-4000-8000-000000000199",
-    name: "Supino Declinado com Barra",
+    name: "Supino Declinado com Halteres",
     family: "Musculação tradicional — peito",
     isUnilateral: false,
     updatedAt: "2026-10-27T12:00:00Z",
@@ -63,12 +63,12 @@ describe("Admin catalog coverage", () => {
       target: { value: "3d" },
     });
     expect(screen.getByText("Supino Reto com Barra")).toBeTruthy();
-    expect(screen.queryByText("Supino Declinado com Barra")).toBeNull();
+    expect(screen.queryByText("Supino Declinado com Halteres")).toBeNull();
     expect(screen.queryByText("Elevação Frontal com Halteres")).toBeNull();
     fireEvent.change(screen.getByLabelText("Conteúdo"), {
       target: { value: "novisual" },
     });
-    expect(screen.getByText("Supino Declinado com Barra")).toBeTruthy();
+    expect(screen.getByText("Supino Declinado com Halteres")).toBeTruthy();
     expect(screen.queryByText("Elevação Frontal com Halteres")).toBeNull();
   });
   it("combines accent-insensitive search and missing classification, then shows details", () => {

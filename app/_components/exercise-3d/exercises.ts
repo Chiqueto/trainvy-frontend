@@ -2,7 +2,9 @@ export type ExerciseAnimation =
   | "squat"
   | "bench-press"
   | "incline-dumbbell-press"
-  | "flat-dumbbell-press";
+  | "flat-dumbbell-press"
+  | "incline-bench-press"
+  | "decline-bench-press";
 
 export interface ExerciseDefinition {
   name: string;
@@ -53,6 +55,32 @@ export const EXERCISE_ANIMATIONS = {
       ],
     },
   },
+  "incline-bench-press": {
+    name: "Supino inclinado com barra",
+    equipment: "Banco inclinado a 30° e barra",
+    id: "00000000-0000-4000-8000-000000000104",
+    muscles: {
+      primary: ["Peitoral superior (porção clavicular)"],
+      secondary: [
+        "Peitoral médio/inferior",
+        "Tríceps",
+        "Deltoide anterior",
+      ],
+    },
+  },
+  "decline-bench-press": {
+    name: "Supino declinado com barra",
+    equipment: "Banco declinado a -18° e barra",
+    id: "eb910207-283c-414d-8d37-7c6b6d7de0d8",
+    muscles: {
+      primary: ["Peitoral maior (porção esternocostal e inferior)"],
+      secondary: [
+        "Peitoral superior (porção clavicular)",
+        "Tríceps",
+        "Deltoide anterior",
+      ],
+    },
+  },
 } satisfies Record<ExerciseAnimation, ExerciseDefinition>;
 
 // Conhecidos IDs legados de exercícios antes do catálogo canônico global
@@ -74,6 +102,10 @@ export function getExerciseAnimation(
     return "incline-dumbbell-press";
   if (id === EXERCISE_ANIMATIONS["flat-dumbbell-press"].id)
     return "flat-dumbbell-press";
+  if (id === EXERCISE_ANIMATIONS["incline-bench-press"].id)
+    return "incline-bench-press";
+  if (id === EXERCISE_ANIMATIONS["decline-bench-press"].id)
+    return "decline-bench-press";
   if (
     id === EXERCISE_ANIMATIONS["bench-press"].id ||
     id === "00000000-0000-4000-8000-000000000102"
@@ -92,6 +124,22 @@ export function getExerciseAnimation(
 
     if (normalized === "supino inclinado com halteres")
       return "incline-dumbbell-press";
+
+    if (
+      normalized === "supino inclinado com barra" ||
+      normalized === "supino inclinado barra" ||
+      normalized === "supino inclinado"
+    ) {
+      return "incline-bench-press";
+    }
+
+    if (
+      normalized === "supino declinado com barra" ||
+      normalized === "supino declinado barra" ||
+      normalized === "supino declinado"
+    ) {
+      return "decline-bench-press";
+    }
 
     if (
       normalized === "supino reto com halteres" ||

@@ -64,30 +64,48 @@ const FALLBACK_3D_INSTRUCTIONS: Record<
   },
   "bench-press": {
     description:
-      "Exercício composto de empurrar para peitoral maior, deltoide anterior e tríceps braquial.",
+      "Exercício composto de empurrar no banco reto com barra. Destaca o peitoral maior (motor primário em vermelho vivo), além do tríceps braquial e deltoide anterior (em vermelho mais claro).",
     setup:
-      "Deite-se no banco com os olhos sob a barra, pés firmes no solo, escápulas retraídas e pegada ligeiramente mais larga que os ombros.",
+      "Deite-se no banco plano com os olhos sob a barra, pés firmes no solo, escápulas retraídas e pegada calibrada para manter os antebraços verticais no ponto mais baixo.",
     execution:
-      "Tire a barra do suporte, desça de forma controlada até o terço inferior do esterno e empurre de volta à posição inicial sem hiperestender os cotovelos.",
-    tips: "Mantenha os cotovelos a aproximadamente 45° a 75° do tronco, evitando abri-los totalmente a 90°.",
+      "Tire a barra do suporte, desça de forma controlada até o terço inferior do esterno, mantendo os antebraços verticais diretamente abaixo da barra. Empurre de volta à posição inicial sem hiperestender os cotovelos.",
+    tips: "Mantenha os cotovelos a aproximadamente 45° a 70° do tronco no plano escapular. O antebraço vertical garante que o peso fique apoiado na estrutura óssea, aliviando o tríceps e focando o trabalho no peitoral.",
   },
   "incline-dumbbell-press": {
     description:
-      "Movimento de empurrar com dois halteres no banco inclinado a 30°. A ilustração destaca a porção clavicular do peitoral (foco principal em vermelho vivo), além do peitoral médio/inferior, tríceps e deltoide anterior (em vermelho mais claro).",
+      "Movimento de empurrar com dois halteres no banco inclinado a 30°. Destaca a porção clavicular do peitoral (foco principal em vermelho vivo), além do peitoral médio/inferior, tríceps e deltoide anterior (em vermelho mais claro).",
     setup:
-      "Apoie costas e cabeça no encosto regulado a aproximadamente 30° (evitando inclinações excessivas de 45° que sobrecarregam o deltoide anterior), mantenha os pés firmes no chão e um halter em cada mão com punhos alinhados aos antebraços.",
+      "Apoie costas e cabeça no encosto regulado a aproximadamente 30° (evitando inclinações excessivas de 45° que sobrecarregam o deltoide anterior), mantenha os pés firmes no chão e um halter em cada mão com punhos empilhados verticalmente sobre os cotovelos.",
     execution:
-      "Desça os halteres com controle ao lado da parte superior do peito, mantendo os cotovelos abaixo das mãos. Após uma pausa breve, empurre para cima com uma aproximação suave, sem bater os halteres.",
-    tips: "Mantenha o apoio das escápulas e do quadril, evite abrir excessivamente os cotovelos e não force a extensão dos punhos. O ângulo e a amplitude mostrados são ilustrativos.",
+      "Desça os halteres com controle ao lado da parte superior do peito, mantendo o peso apoiado sobre o antebraço vertical. Suba focando em aproximar os cotovelos (adução do braço pelo peitoral) sem bater os halteres no topo e sem aproximá-los em excesso.",
+    tips: "O foco motor deve ser aproximar os cotovelos para contração máxima do peitoral, e não encostar as mãos. Mantenha os halteres apoiados sobre os antebraços para não sobrecarregar o tríceps.",
   },
   "flat-dumbbell-press": {
     description:
       "Movimento multiarticular de empurrar no banco reto com halteres independentes. Destaca o peitoral maior esternocostal (motor primário em vermelho vivo) e o feixe clavicular, tríceps e deltoide anterior (sinergistas em vermelho mais claro).",
     setup:
-      "Deite-se no banco plano com os pés firmemente apoiados no solo e as escápulas retraídas e deprimidas contra o estofado. Segure os halteres acima do peitoral com punhos neutros alinhados aos antebraços.",
+      "Deite-se no banco plano com os pés firmemente apoiados no solo e as escápulas retraídas e deprimidas contra o estofado. Segure os halteres acima do peitoral com antebraços verticais sustentando o peso.",
     execution:
-      "Desça os halteres de forma controlada ao lado do tórax permitindo um alongamento amplo e natural do peitoral, mantendo os cotovelos entre 45° e 70° do tronco. Empurre para cima em arco convergente suave, sem encostar as cargas no topo.",
-    tips: "Mantenha as escápulas travadas para proteger os ombros e foque na contração do peitoral no ponto alto, sem travar os cotovelos bruscamente.",
+      "Desça os halteres de forma controlada ao lado do tórax permitindo um alongamento amplo e natural do peitoral, mantendo os antebraços verticais. Empurre em um arco convergente suave aproximando os cotovelos em direção ao centro do tórax, sem bater ou aproximar excessivamente as cargas no topo.",
+    tips: "Lembre-se: o objetivo é aproximar os cotovelos para recrutar o peitoral maior, e não encostar os pesos. Manter o peso apoiado sobre o antebraço alivia a sobrecarga do tríceps.",
+  },
+  "incline-bench-press": {
+    description:
+      "Supino no banco inclinado a 30° com barra olímpica. Destaca o feixe clavicular do peitoral maior (motor primário em vermelho vivo) e os sinergistas peitoral médio/inferior, tríceps e deltoide anterior (em vermelho mais claro).",
+    setup:
+      "Ajuste o encosto a 30° para otimizar o estímulo no peitoral superior e poupar a cápsula articular do ombro. Posicione os olhos sob a barra com pés firmemente plantados no solo, escápulas retraídas e pegada média na barra.",
+    execution:
+      "Retire a barra do suporte e desça controladamente até tocar suavemente a parte superior do tórax (próximo à clavícula), garantindo que os antebraços permaneçam verticais diretamente sob a barra. Empurre estendendo os braços sem hiperestender os cotovelos.",
+    tips: "Mantenha o peito aberto e as escápulas coladas ao banco. O alinhamento vertical dos antebraços garante que a carga fique sustentada pela estrutura óssea, transferindo a tensão diretamente para o peitoral.",
+  },
+  "decline-bench-press": {
+    description:
+      "Supino no banco declinado a -18° com barra olímpica. Destaca o feixe esternocostal e inferior do peitoral maior (motor primário em vermelho vivo) e feixe clavicular, tríceps e deltoide anterior (em vermelho mais claro).",
+    setup:
+      "Deite-se no banco declinado travando os pés e pernas com firmeza sob os roletes acolchoados para máxima estabilidade. Retraia as escápulas contra o estofado e segure a barra com pegada que mantenha os antebraços verticais no fundo.",
+    execution:
+      "Tire a barra do suporte e desça de forma controlada até tocar o terço inferior do esterno (linha submamilar), com antebraços verticais sob a carga. Empurre a barra de forma fluida de volta à posição inicial.",
+    tips: "A declinação a -18° reduz a sobrecarga no deltoide anterior e foca a contração na porção inferior e média do peitoral. Mantenha os cotovelos a cerca de 45° a 70° do tronco sem abri-los a 90°.",
   },
 };
 

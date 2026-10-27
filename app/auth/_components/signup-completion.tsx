@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { AlertCircle, ArrowUpRight, Dumbbell, RotateCcw } from "lucide-react";
 import { finishSignup } from "../_actions";
+import styles from "./auth.module.css";
 
 const messages: Record<string, string> = {
   SIGNUP_INTENT_EXPIRED:
@@ -20,11 +21,7 @@ const messages: Record<string, string> = {
   UNAUTHORIZED: "Entre com Google para continuar.",
 };
 
-export function SignupCompletion({
-  returnTo,
-}: {
-  returnTo?: string | null;
-}) {
+export function SignupCompletion({ returnTo }: { returnTo?: string | null }) {
   const router = useRouter();
   const [attempt, setAttempt] = useState(0);
   const [code, setCode] = useState<string | null>(null);
@@ -43,36 +40,56 @@ export function SignupCompletion({
       current = false;
     };
   }, [attempt, router, returnTo]);
-  if (!code) return <p role="status">Verificando sua conta...</p>;
+  if (!code)
+    return (
+      <div role="status" className={styles.completionState}>
+        <div className={styles.loadingOrbit} aria-hidden="true">
+          <Dumbbell size={27} />
+        </div>
+        <p>Verificando sua conta...</p>
+        <p className={styles.statusDescription}>
+          Estamos preparando seu espaço de treino. Você será direcionado
+          automaticamente.
+        </p>
+      </div>
+    );
   return (
-    <div className="space-y-4">
-      <p role="alert">
-        {messages[code] ??
-          "Não foi possível concluir seu cadastro. Tente novamente."}
-      </p>
-      <Button
-        variant="outline"
-        onClick={() => {
-          setCode(null);
-          setAttempt((n) => n + 1);
-        }}
-      >
-        Tentar novamente
-      </Button>
-      <Link
-        className="block underline"
-        href={
-          code === "UNAUTHORIZED"
-            ? returnTo
-              ? `/auth?returnTo=${encodeURIComponent(returnTo)}`
-              : "/auth"
-            : returnTo
-              ? `/auth/signup?returnTo=${encodeURIComponent(returnTo)}`
-              : "/auth/signup"
-        }
-      >
-        {code === "UNAUTHORIZED" ? "Entrar" : "Reiniciar cadastro"}
-      </Link>
+    <div className={styles.completionState}>
+      <div role="alert" className={styles.alert}>
+        <AlertCircle size={17} />
+        <span>
+          {messages[code] ??
+            "Não foi possível concluir seu cadastro. Tente novamente."}
+        </span>
+      </div>
+      <div className={styles.completionActions}>
+        <button
+          type="button"
+          className={styles.retryButton}
+          onClick={() => {
+            setCode(null);
+            setAttempt((n) => n + 1);
+          }}
+        >
+          <RotateCcw size={13} className="mr-2 inline" />
+          Tentar novamente
+        </button>
+        <Link
+          className={styles.primaryButton}
+          href={
+            code === "UNAUTHORIZED"
+              ? returnTo
+                ? `/auth?returnTo=${encodeURIComponent(returnTo)}`
+                : "/auth"
+              : returnTo
+                ? `/auth/signup?returnTo=${encodeURIComponent(returnTo)}`
+                : "/auth/signup"
+          }
+        >
+          {code === "UNAUTHORIZED" ? "Entrar" : "Reiniciar cadastro"}
+          <ArrowUpRight size={17} />
+        </Link>
+      </div>
     </div>
   );
 }

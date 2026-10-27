@@ -20,15 +20,43 @@ import { StartFreeWorkoutButton } from "./_components/start-free-workout-button"
 import { WorkoutDayCard } from "./_components/workout-day-card";
 import { Logo } from "./_components/logo";
 import { HomeBodyMetricsCard } from "./_components/home-body-metrics-card";
+import { WebEntry } from "./_components/landing/web-entry";
+import type { Metadata, Viewport } from "next";
+import { getSessionCookie } from "better-auth/cookies";
+
+export const metadata: Metadata = {
+  title: "Trainvy — Seu treino. Sua evolução.",
+  description:
+    "Transforme esforço em evolução. Organize seus treinos, registre cada série e explore movimentos em 3D com o Trainvy. Comece com uma conta de atleta gratuita.",
+  openGraph: {
+    title: "Trainvy — Seu próximo nível começa aqui",
+    description:
+      "Treinos, evolução, Coach AI e anatomia em movimento. Descubra o Trainvy.",
+    locale: "pt_BR",
+    type: "website",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+};
 
 export default async function Home() {
+  const requestHeaders = await headers();
+  // Public marketing must not depend on an authentication API round trip.
+  // Normalize Next's Headers adapter before passing it to Better Auth.
+  if (!getSessionCookie(new Headers(requestHeaders))) return <WebEntry />;
+
   const session = await authClient.getSession({
     fetchOptions: {
-      headers: await headers(),
+      headers: requestHeaders,
     },
   });
 
-  if (!session.data?.user) redirect("/auth");
+  if (!session.data?.user) return <WebEntry />;
   await requireAccountSetup();
 
   const returnTo = await readReturnToCookie();
@@ -48,11 +76,15 @@ export default async function Home() {
   const activeSession =
     activeSessionResponse?.status === 200 ? activeSessionResponse.data : null;
 
-  const commercialRes = await getCommercialContext({ cache: "no-store" }).catch(() => null);
-  const isCoach = commercialRes?.status === 200 && commercialRes.data.accountType === "COACH";
+  const commercialRes = await getCommercialContext({ cache: "no-store" }).catch(
+    () => null,
+  );
+  const isCoach =
+    commercialRes?.status === 200 && commercialRes.data.accountType === "COACH";
 
   const needsOnboarding =
-    !isCoach && ((trainData.status === 200 && !trainData.data) || trainData.status === 404);
+    !isCoach &&
+    ((trainData.status === 200 && !trainData.data) || trainData.status === 404);
   if (needsOnboarding) {
     redirect("/onboarding");
   }
@@ -150,7 +182,6 @@ export default async function Home() {
           )}
         </div>
       </div>
-
 
       {activeSession && (
         <div className="px-5 pt-5">
@@ -284,7 +315,8 @@ export default async function Home() {
                 Nenhum plano ativo
               </h2>
               <p className="font-heading text-xs text-muted-foreground">
-                Você pode iniciar um treino avulso ou organizar seu planejamento.
+                Você pode iniciar um treino avulso ou organizar seu
+                planejamento.
               </p>
             </div>
             <Link

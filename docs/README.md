@@ -12,5 +12,6 @@
 | `05-AI-AND-RAG.md` | IA, PDFs, RAG e geração estruturada |
 | `06-ARCHITECTURE-AND-INTEGRATIONS.md` | Arquitetura, deploy e integrações |
 | `07-ROADMAP-AND-GUARDRAILS.md` | Roadmap e regras de engenharia |
+| `17-WEB-LANDING-PAGE.md` | Landing pública, entrada PWA e validação visual |
 
 A fonte de verdade do estado ATUAL continua sendo o código dos repositórios.
