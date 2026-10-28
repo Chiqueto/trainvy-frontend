@@ -68,6 +68,7 @@ export function getExercisePose(
   const flatDumbbell = exercise === "flat-dumbbell-press";
   const declineBarbell = exercise === "decline-bench-press";
   const pecDeck = exercise === "pec-deck";
+  const machinePress = exercise === "machine-chest-press";
   const smithBarbell = exercise === "smith-bench-press";
 
   const benchAngle =
@@ -79,7 +80,7 @@ export function getExercisePose(
 
   const tilt = new Quaternion().setFromAxisAngle(
     X,
-    pecDeck ? 0 : squat ? 0.1 + 0.48 * p : -Math.PI / 2 + benchAngle,
+    pecDeck ? 0 : machinePress ? -0.05 : squat ? 0.1 + 0.48 * p : -Math.PI / 2 + benchAngle,
   );
   const hipCenter = squat
     ? v(0, 0.895 - 0.38 * p, -0.03 - 0.25 * p)
@@ -134,7 +135,19 @@ export function getExercisePose(
     let elbow: Vector3;
     const handRotation = new Quaternion();
 
-    if (pecDeck) {
+    if (machinePress) {
+      // Seated converging machine chest press:
+      // Controlled horizontal pressing trajectory in the scapular plane (~45-60° flare).
+      // Hands track the handles from deep stretch (p=1) to forward extension (p=0).
+      grip = v(
+        side * MathUtils.lerp(0.25, 0.33, p),
+        MathUtils.lerp(0.95, 0.92, p),
+        MathUtils.lerp(0.52, 0.19, p),
+      );
+      wrist = grip.clone().add(v(0, -0.004, -0.012));
+      const pole = v(side * 0.45, -0.75, 0.05).normalize();
+      elbow = solveJoint(shoulder, wrist, ARM_LENGTH, FOREARM_LENGTH, pole);
+    } else if (pecDeck) {
       // Horizontal adduction on a seated forearm-pad machine. The elbows keep
       // their flexion; this is neither a bench press nor a dumbbell fly.
       const angle = MathUtils.degToRad(MathUtils.lerp(-25, 78, p));
@@ -303,7 +316,7 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
       const { side, hip, knee, ankle, footRotation, shoulder, elbow, wrist } =
         limb;
       const suffix = side < 0 ? "L" : "R";
-      if (exercise === "decline-bench-press" || exercise === "pec-deck") {
+      if (exercise === "decline-bench-press" || exercise === "pec-deck" || exercise === "machine-chest-press") {
         const restHip = rest.get(`thigh_${suffix}`)!;
         const restKnee = rest.get(`shin_${suffix}`)!;
         const restAnkle = rest.get(`foot_${suffix}`)!;

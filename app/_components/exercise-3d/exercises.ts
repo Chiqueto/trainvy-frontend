@@ -1,3 +1,4 @@
+import { MACHINE_CHEST_PRESS_INSTRUCTIONS } from "./machine-chest-press-instructions";
 import { PEC_DECK_INSTRUCTIONS } from "./pec-deck-instructions";
 import { SMITH_BENCH_INSTRUCTIONS } from "./smith-bench-instructions";
 
@@ -10,7 +11,8 @@ export type ExerciseAnimation =
   | "decline-bench-press"
   | "pec-deck"
   | "flat-dumbbell-fly"
-  | "smith-bench-press";
+  | "smith-bench-press"
+  | "machine-chest-press";
 
 export interface ExerciseDefinition {
   name: string;
@@ -19,7 +21,8 @@ export interface ExerciseDefinition {
   muscles: { primary: readonly string[]; secondary: readonly string[] };
   instructions?:
     | typeof PEC_DECK_INSTRUCTIONS
-    | typeof SMITH_BENCH_INSTRUCTIONS;
+    | typeof SMITH_BENCH_INSTRUCTIONS
+    | typeof MACHINE_CHEST_PRESS_INSTRUCTIONS;
 }
 
 export const EXERCISE_ANIMATIONS = {
@@ -28,6 +31,16 @@ export const EXERCISE_ANIMATIONS = {
     id: "d555deb1-6eef-436d-8377-9427ac267697",
     instructions: { description: "Adução horizontal dos braços com halteres, com foco no peitoral maior.", setup: "Deite no banco reto com pés apoiados e segure os halteres acima do peito.", execution: "Abra os braços em arco, mantendo os cotovelos levemente flexionados; retorne suavemente pelo mesmo caminho.", tips: "Mantenha o tronco apoiado e use uma amplitude confortável. A pose é ilustrativa." },
     muscles: { primary: ["Peitoral maior"], secondary: ["Deltoide anterior", "Bíceps braquial"] },
+  },
+  "machine-chest-press": {
+    name: "Supino Reto na Máquina",
+    equipment: "Máquina de supino articulada com encosto e pegadores",
+    id: "f3e5e1cf-d232-4a80-87b3-9f35650a1b5e",
+    instructions: MACHINE_CHEST_PRESS_INSTRUCTIONS,
+    muscles: {
+      primary: ["Peitoral maior (porções esternocostal e clavicular)"],
+      secondary: ["Tríceps braquial", "Deltoide anterior"],
+    },
   },
   "pec-deck": {
     name: "Crucifixo na Máquina (peck deck)",
@@ -127,6 +140,8 @@ export function getExerciseAnimation(
   if (id === EXERCISE_ANIMATIONS["flat-dumbbell-fly"].id) return "flat-dumbbell-fly";
   if (id === EXERCISE_ANIMATIONS["smith-bench-press"].id)
     return "smith-bench-press";
+  if (id === EXERCISE_ANIMATIONS["machine-chest-press"].id)
+    return "machine-chest-press";
   if (id === EXERCISE_ANIMATIONS["pec-deck"].id) return "pec-deck";
   if (id === EXERCISE_ANIMATIONS.squat.id) return "squat";
   if (id === EXERCISE_ANIMATIONS["incline-dumbbell-press"].id)
@@ -152,6 +167,23 @@ export function getExerciseAnimation(
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
+
+    if (
+      [
+        "supino reto na maquina",
+        "supino reto maquina",
+        "supino na maquina",
+        "supino maquina",
+        "supino sentado na maquina",
+        "supino maquina sentado",
+        "supino articulado",
+        "machine chest press",
+        "chest press machine",
+      ].includes(normalized)
+    ) {
+      return "machine-chest-press";
+    }
+
     if (
       [
         "peck deck",

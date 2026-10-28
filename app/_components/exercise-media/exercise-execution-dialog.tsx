@@ -23,6 +23,7 @@ import { cn } from "@/lib/utils";
 import { ExerciseMediaPreview } from "./exercise-media-preview";
 import { PEC_DECK_INSTRUCTIONS } from "../exercise-3d/pec-deck-instructions";
 import { EXERCISE_ANIMATIONS, getExerciseAnimation, type ExerciseAnimation } from "../exercise-3d/exercises";
+import { MACHINE_CHEST_PRESS_INSTRUCTIONS } from "../exercise-3d/machine-chest-press-instructions";
 
 const Exercise3DViewer = dynamic(
   () =>
@@ -54,6 +55,7 @@ const FALLBACK_3D_INSTRUCTIONS: Record<
   ExerciseAnimation,
   NonNullable<GetExerciseMedia200["instructions"]>
 > = {
+  "machine-chest-press": MACHINE_CHEST_PRESS_INSTRUCTIONS,
   "pec-deck": PEC_DECK_INSTRUCTIONS,
   "flat-dumbbell-fly": EXERCISE_ANIMATIONS["flat-dumbbell-fly"].instructions,
   squat: {

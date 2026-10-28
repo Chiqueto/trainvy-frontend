@@ -36,6 +36,9 @@ describe("exercise 3D scope", () => {
     expect(getExerciseAnimation("f5a99b5a-74d1-4622-880e-bcf24758dc31")).toBe(
       "smith-bench-press",
     );
+    expect(getExerciseAnimation("f3e5e1cf-d232-4a80-87b3-9f35650a1b5e")).toBe(
+      "machine-chest-press",
+    );
     for (const id of [
       null,
       undefined,

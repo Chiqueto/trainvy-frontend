@@ -19,6 +19,7 @@ import { EXERCISE_ANIMATIONS } from "../app/_components/exercise-3d/exercises";
 import { createTissueMaterial } from "../app/_components/exercise-3d/anatomy-material";
 import { createPecDeckMuscleMask } from "../app/_components/exercise-3d/pec-deck-muscles";
 import { createSmithBenchMuscleMask } from "../app/_components/exercise-3d/smith-bench-muscles";
+import { createMachineChestPressMuscleMask } from "../app/_components/exercise-3d/machine-chest-press-muscles";
 
 let mesh: SkinnedMesh;
 let apply: ReturnType<typeof createPoseDriver>;
