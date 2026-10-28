@@ -21,8 +21,8 @@ function beam(mesh: Mesh | null, from: Vector3, to: Vector3) {
 }
 
 /** The same pose drives the athlete, forearm pads, handles and rotating arms. */
-export const PecDeckMachine = forwardRef<PecDeckMachineHandle>(
-  function PecDeckMachine(_, ref) {
+export const PecDeckMachine = forwardRef<PecDeckMachineHandle, { handGrips?: boolean }>(
+  function PecDeckMachine({ handGrips = false }, ref) {
     const pads = useRef<(Group | null)[]>([]);
     const handles = useRef<(Group | null)[]>([]);
     const vertical = useRef<(Mesh | null)[]>([]);
@@ -53,6 +53,7 @@ export const PecDeckMachine = forwardRef<PecDeckMachineHandle>(
               .clone()
               .addScaledVector(y, 0.11)
               .addScaledVector(z, 0.053);
+            if (handGrips) padCenter.copy(limb.grip);
             const top = padCenter.clone().setY(1.56);
             beam(vertical.current[index], padCenter, top);
             beam(
@@ -66,7 +67,7 @@ export const PecDeckMachine = forwardRef<PecDeckMachineHandle>(
               0.22 + (0.56 - pose.limbs[1].elbow.x) * 0.3;
         },
       }),
-      [],
+      [handGrips],
     );
     return (
       <group>
@@ -163,6 +164,7 @@ export const PecDeckMachine = forwardRef<PecDeckMachineHandle>(
               <meshStandardMaterial {...metal} />
             </mesh>
             <group
+              visible={!handGrips}
               ref={(group) => {
                 pads.current[index] = group;
               }}

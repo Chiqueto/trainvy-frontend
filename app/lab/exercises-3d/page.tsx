@@ -35,6 +35,7 @@ const LAB_MEDIA_DATA: Record<ExerciseAnimation, GetExerciseMedia200> = {
     attributionUrl: null,
     instructions: EXERCISE_ANIMATIONS["machine-chest-press"].instructions,
   },
+  "machine-fly": { exerciseId: "6ca42bbc-3724-45ec-98ed-36fb53af260a", hasMedia: false, mediaType: null, startImagePath: null, endImagePath: null, motionPath: null, attributionName: null, attributionUrl: null, instructions: EXERCISE_ANIMATIONS["machine-fly"].instructions },
   "pec-deck": {
     exerciseId: EXERCISE_ANIMATIONS["pec-deck"].id,hasMedia:false,mediaType:null,
     startImagePath:null,endImagePath:null,motionPath:null,attributionName:null,attributionUrl:null,
@@ -161,6 +162,7 @@ export default function Exercise3DLab() {
       cues: string[];
     }
   > = {
+    "machine-fly": { primary: "Peitoral maior", secondary: "Deltoide anterior e bíceps braquial", cadence: "Abertura controlada, pausa breve e fechamento suave.", cues: ["Costas no encosto e pés no chão.", "Segure os pegadores, sem apoio de antebraço.", "Mantenha os cotovelos levemente flexionados durante todo o arco."] },
     "flat-dumbbell-fly": { primary: "Peitoral maior", secondary: "Deltoide anterior e bíceps braquial", cadence: "Abertura controlada, pausa breve e fechamento suave.", cues: ["Tronco e pés apoiados.", "Abra os braços em arco com cotovelos levemente flexionados.", "Retorne pela mesma trajetória sem bater os halteres."] },
     "machine-chest-press": {
       primary: "Peitoral maior (porções esternocostal e clavicular)",

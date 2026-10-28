@@ -2,7 +2,7 @@
 
 import { forwardRef, useImperativeHandle, useRef } from "react";
 import { RoundedBox } from "@react-three/drei";
-import { Group, Mesh, Quaternion, Vector3 } from "three";
+import { Group, Mesh, Vector3 } from "three";
 import type { getExercisePose } from "./kinematics";
 
 type Pose = ReturnType<typeof getExercisePose>;
@@ -14,6 +14,10 @@ const metal = { color: "#334155", metalness: 0.75, roughness: 0.3 };
 const chrome = { color: "#cbd5e1", metalness: 0.9, roughness: 0.15 };
 const pad = { color: "#182232", roughness: 0.8 };
 const up = new Vector3(0, 1, 0);
+const pivots = [
+  new Vector3(-0.32, 1.42, -0.12),
+  new Vector3(0.32, 1.42, -0.12),
+];
 
 function beam(mesh: Mesh | null, from: Vector3, to: Vector3) {
   if (!mesh) return;
@@ -31,12 +35,6 @@ export const MachineChestPress = forwardRef<MachineChestPressHandle>(
     const leverArms = useRef<(Mesh | null)[]>([]);
     const stack = useRef<Group>(null);
 
-    // Pivot locations for the left and right independent lever arms
-    const pivots = [
-      new Vector3(-0.32, 1.42, -0.12),
-      new Vector3(0.32, 1.42, -0.12),
-    ];
-
     useImperativeHandle(
       ref,
       () => ({
@@ -53,7 +51,7 @@ export const MachineChestPress = forwardRef<MachineChestPressHandle>(
 
           // Move the weight stack smoothly with forward press displacement (concentric lift)
           if (stack.current) {
-            const pressProgress = (pose.limbs[0].grip.z - 0.19) / (0.52 - 0.19);
+            const pressProgress = (pose.limbs[0].grip.z - 0.25) / (0.60 - 0.25);
             const clamped = Math.max(0, Math.min(1, pressProgress));
             stack.current.position.y = 0.22 + clamped * 0.18;
           }

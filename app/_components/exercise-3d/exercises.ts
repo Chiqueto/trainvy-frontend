@@ -1,3 +1,4 @@
+import { FLAT_DUMBBELL_FLY_INSTRUCTIONS } from "./flat-dumbbell-fly-instructions";
 import { MACHINE_CHEST_PRESS_INSTRUCTIONS } from "./machine-chest-press-instructions";
 import { PEC_DECK_INSTRUCTIONS } from "./pec-deck-instructions";
 import { SMITH_BENCH_INSTRUCTIONS } from "./smith-bench-instructions";
@@ -11,6 +12,7 @@ export type ExerciseAnimation =
   | "incline-bench-press"
   | "decline-bench-press"
   | "pec-deck"
+  | "machine-fly"
   | "flat-dumbbell-fly"
   | "smith-bench-press"
   | "machine-chest-press"
@@ -32,7 +34,7 @@ export const EXERCISE_ANIMATIONS = {
   "flat-dumbbell-fly": {
     name: "Crucifixo reto com halteres", equipment: "Banco reto e dois halteres",
     id: "d555deb1-6eef-436d-8377-9427ac267697",
-    instructions: { description: "Adução horizontal dos braços com halteres, com foco no peitoral maior.", setup: "Deite no banco reto com pés apoiados e segure os halteres acima do peito.", execution: "Abra os braços em arco, mantendo os cotovelos levemente flexionados; retorne suavemente pelo mesmo caminho.", tips: "Mantenha o tronco apoiado e use uma amplitude confortável. A pose é ilustrativa." },
+    instructions: FLAT_DUMBBELL_FLY_INSTRUCTIONS,
     muscles: { primary: ["Peitoral maior"], secondary: ["Deltoide anterior", "Bíceps braquial"] },
   },
   "machine-chest-press": {
@@ -45,8 +47,20 @@ export const EXERCISE_ANIMATIONS = {
       secondary: ["Tríceps braquial", "Deltoide anterior"],
     },
   },
+  "machine-fly": {
+    name: "Crucifixo na Máquina",
+    equipment: "Máquina de crucifixo com pegadores e encosto, sem apoio de antebraços",
+    id: "6ca42bbc-3724-45ec-98ed-36fb53af260a",
+    instructions: {
+      description: "Adução horizontal na máquina com pegadores, sem apoio de antebraços.",
+      setup: "Sente com costas no encosto e pés apoiados. Segure os pegadores à altura do peito, com cotovelos levemente flexionados.",
+      execution: "Aproxime os pegadores em arco à frente do peito mantendo a flexão dos cotovelos. Reabra de forma controlada até uma amplitude confortável.",
+      tips: "Mantenha o tronco apoiado. Esta variação usa pegadores; o Peck Deck usa apoios de antebraço. Participação muscular ilustrativa.",
+    },
+    muscles: { primary: ["Peitoral maior"], secondary: ["Deltoide anterior", "Bíceps braquial"] },
+  },
   "pec-deck": {
-    name: "Crucifixo na Máquina (peck deck)",
+    name: "Peck Deck",
     equipment: "Máquina peck deck com encosto e apoios de antebraço",
     id: "b9859cd9-6ed6-4e63-8fd0-500e8cf8d553",
     instructions: PEC_DECK_INSTRUCTIONS,
@@ -72,7 +86,7 @@ export const EXERCISE_ANIMATIONS = {
     },
   },
   "bench-press": {
-    name: "Supino reto",
+    name: "Supino Reto com Barra",
     equipment: "Banco reto e barra",
     id: "00000000-0000-4000-8000-000000000101",
     muscles: {
@@ -175,6 +189,7 @@ export function getExerciseAnimation(
   if (id && LEGACY_SQUAT_IDS.has(id)) return "squat";
   if (id && LEGACY_BENCH_IDS.has(id)) return "bench-press";
 
+  if (id === EXERCISE_ANIMATIONS["machine-fly"].id) return "machine-fly";
   if (name) {
     const normalized = name
       .trim()
@@ -198,12 +213,13 @@ export function getExerciseAnimation(
       return "machine-chest-press";
     }
 
+    if (["crucifixo na maquina", "crucifixo maquina"].includes(normalized)) return "machine-fly";
+    if (normalized === "crucifixo reto com halteres") return "flat-dumbbell-fly";
     if (
       [
         "peck deck",
         "pec deck",
         "voador",
-        "crucifixo na maquina",
         "crucifixo na maquina (peck deck)",
         "crucifixo na maquina — aliases: peck deck, pec deck, voador",
       ].includes(normalized)

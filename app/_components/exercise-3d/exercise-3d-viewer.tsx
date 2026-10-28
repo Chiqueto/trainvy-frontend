@@ -50,7 +50,7 @@ export function Exercise3DViewer(props: {
 }
 
 function phaseLabel(phase: number, exercise: ExerciseAnimation) {
-  if(exercise === "pec-deck") {
+  if(exercise === "pec-deck" || exercise === "machine-fly" || exercise === "flat-dumbbell-fly") {
     if(phase<0.04||phase>=0.99) return "Posição fechada";
     if(phase<0.48) return "Abertura controlada";
     if(phase<0.54) return "Pausa na abertura";

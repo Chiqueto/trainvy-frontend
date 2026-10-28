@@ -56,6 +56,7 @@ const FALLBACK_3D_INSTRUCTIONS: Record<
   ExerciseAnimation,
   NonNullable<GetExerciseMedia200["instructions"]>
 > = {
+  "machine-fly": EXERCISE_ANIMATIONS["machine-fly"].instructions,
   "machine-chest-press": MACHINE_CHEST_PRESS_INSTRUCTIONS,
   "pec-deck": PEC_DECK_INSTRUCTIONS,
   "flat-dumbbell-fly": EXERCISE_ANIMATIONS["flat-dumbbell-fly"].instructions,

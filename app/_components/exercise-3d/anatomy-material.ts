@@ -145,6 +145,7 @@ export function createTissueMaterial() {
       "incline-bench-press": 2,
       "decline-bench-press": 3,
       "pec-deck": 4,
+      "machine-fly": 7, // Same validated participants as dumbbell fly: pec, anterior deltoid, biceps.
       "smith-squat": 8,
       "flat-dumbbell-fly": 7,
       "smith-bench-press": 5,

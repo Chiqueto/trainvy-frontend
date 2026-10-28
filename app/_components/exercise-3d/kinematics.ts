@@ -70,6 +70,7 @@ export function getExercisePose(
   const flatDumbbell = exercise === "flat-dumbbell-press";
   const declineBarbell = exercise === "decline-bench-press";
   const pecDeck = exercise === "pec-deck";
+  const machineFly = exercise === "machine-fly";
   const machinePress = exercise === "machine-chest-press";
   const smithBarbell = exercise === "smith-bench-press";
 
@@ -84,7 +85,7 @@ export function getExercisePose(
   const smithTilt = 0.06 + 0.16 * p;
   const tilt = new Quaternion().setFromAxisAngle(
     X,
-    pecDeck ? 0 : machinePress ? -0.05 : squat ? 0.1 + 0.48 * p : smithSquat ? smithTilt : -Math.PI / 2 + benchAngle,
+    pecDeck || machineFly || machinePress ? 0 : squat ? 0.1 + 0.48 * p : smithSquat ? smithTilt : -Math.PI / 2 + benchAngle,
   );
 
   const smithOffset = v(0, 0.525, -0.045).applyQuaternion(tilt);
@@ -94,8 +95,8 @@ export function getExercisePose(
     ? smithBar.clone().sub(smithOffset)
     : squat
       ? v(0, 0.895 - 0.38 * p, -0.03 - 0.25 * p)
-      : pecDeck
-        ? v(0, 0.51, 0)
+      : pecDeck || machineFly || machinePress
+        ? v(0, 0.51, machinePress ? 0.04 : 0)
         : v(0, 0.49, 0.4);
 
   const body = (point: Vector3) =>
@@ -123,7 +124,7 @@ export function getExercisePose(
         ? v(side * 0.2, 0.05, 0.04)
         : declineBarbell
           ? v(side * 0.16, 0.48, 1.0)
-          : pecDeck
+          : pecDeck || machineFly || machinePress
             ? v(side * 0.2, 0.05, 0.52)
             : v(side * 0.25, 0.05, 0.83);
     // A seated/declined leg bends above the bench. The standing pole points
@@ -154,12 +155,23 @@ export function getExercisePose(
       // Hands track the handles from deep stretch (p=1) to forward extension (p=0).
       grip = v(
         side * MathUtils.lerp(0.25, 0.33, p),
-        MathUtils.lerp(0.95, 0.92, p),
-        MathUtils.lerp(0.52, 0.19, p),
+        MathUtils.lerp(0.99, 0.96, p),
+        MathUtils.lerp(0.60, 0.25, p),
       );
-      wrist = grip.clone().add(v(0, -0.004, -0.012));
-      const pole = v(side * 0.45, -0.75, 0.05).normalize();
+      handRotation.setFromAxisAngle(X, Math.PI / 2);
+      wrist = grip.clone().sub(v(0, 0.004, 0.012).applyQuaternion(handRotation));
+      const pole = v(side * 0.65, -0.7, -0.1).normalize();
       elbow = solveJoint(shoulder, wrist, ARM_LENGTH, FOREARM_LENGTH, pole);
+    } else if (machineFly) {
+      // Hand-grip fly: fixed slight elbow bend, distinct from forearm-pad pec deck.
+      const angle = MathUtils.degToRad(MathUtils.lerp(-10, 72, p));
+      const bend = MathUtils.degToRad(20);
+      const upper = v(side * Math.sin(angle), -0.08, Math.cos(angle)).normalize();
+      const forearm = v(side * Math.sin(angle - bend), -0.08, Math.cos(angle - bend)).normalize();
+      elbow = shoulder.clone().addScaledVector(upper, ARM_LENGTH);
+      wrist = elbow.clone().addScaledVector(forearm, FOREARM_LENGTH);
+      handRotation.setFromAxisAngle(v(0, 0, 1), (-side * Math.PI) / 2);
+      grip = wrist.clone().add(v(0, 0.004, 0.012).applyQuaternion(handRotation));
     } else if (pecDeck) {
       // Horizontal adduction on a seated forearm-pad machine. The elbows keep
       // their flexion; this is neither a bench press nor a dumbbell fly.
@@ -329,7 +341,7 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
       const { side, hip, knee, ankle, footRotation, shoulder, elbow, wrist } =
         limb;
       const suffix = side < 0 ? "L" : "R";
-      if (exercise === "decline-bench-press" || exercise === "pec-deck" || exercise === "machine-chest-press") {
+      if (exercise === "decline-bench-press" || exercise === "pec-deck" || exercise === "machine-fly" || exercise === "machine-chest-press") {
         const restHip = rest.get(`thigh_${suffix}`)!;
         const restKnee = rest.get(`shin_${suffix}`)!;
         const restAnkle = rest.get(`foot_${suffix}`)!;
@@ -408,6 +420,9 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
           .multiply(
             frame(restWrist.clone().sub(restElbow), v(side, 0, 0)).invert(),
           );
+        if (exercise === "flat-dumbbell-fly" || exercise === "machine-chest-press") {
+          wristSupport.quaternion.copy(limb.handRotation);
+        }
       }
       orientedSegment(
         `forearm_${suffix}`,
@@ -469,8 +484,15 @@ export function getFlatDumbbellFlyPose(depth: number): {
     const forearm = v(side * Math.sin(angle - bend), Math.cos(angle - bend), 0);
     const elbow = shoulder.clone().addScaledVector(upper, ARM_LENGTH);
     const wrist = elbow.clone().addScaledVector(forearm, FOREARM_LENGTH);
-    const grip = wrist.clone().add(v(0, 0.004, 0.012));
-    return { ...limb, elbow, wrist, grip };
+    // Neutral grip follows the arc: palms face each other above the chest
+    // and face upward as the arms open. The authored palm faces local +Z.
+    const palmNormal = v(-side * forearm.y, side * forearm.x, 0);
+    const gripAxis = forearm.clone().cross(palmNormal).normalize();
+    const handRotation = new Quaternion().setFromRotationMatrix(
+      new Matrix4().makeBasis(gripAxis, forearm, palmNormal),
+    );
+    const grip = wrist.clone().add(v(0, 0.004, 0.012).applyQuaternion(handRotation));
+    return { ...limb, elbow, wrist, grip, handRotation };
   });
   return { ...base, limbs };
 }

@@ -508,6 +508,8 @@ function Athlete({
     bar.current?.position.copy(pose.bar);
     leftDumbbell.current?.position.copy(pose.limbs[0].grip);
     rightDumbbell.current?.position.copy(pose.limbs[1].grip);
+    leftDumbbell.current?.quaternion.copy(pose.limbs[0].handRotation);
+    rightDumbbell.current?.quaternion.copy(pose.limbs[1].handRotation);
     pecDeckMachine.current?.update(pose);
     machineChestPress.current?.update(pose);
     rig.scene.updateMatrixWorld(true);
@@ -517,6 +519,8 @@ function Athlete({
       <primitive object={rig.scene} dispose={null} />
       {exercise === "machine-chest-press" ? (
         <MachineChestPress ref={machineChestPress} />
+      ) : exercise === "machine-fly" ? (
+        <PecDeckMachine ref={pecDeckMachine} handGrips />
       ) : exercise === "pec-deck" ? (
         <PecDeckMachine ref={pecDeckMachine} />
       ) : exercise === "smith-bench-press" ? (
@@ -562,7 +566,7 @@ function getCameraParams(
   exercise: ExerciseAnimation,
   view: SceneProps["view"],
 ): { position: [number, number, number]; target: [number, number, number] } {
-  if(exercise === "pec-deck") {
+  if(exercise === "pec-deck" || exercise === "machine-fly") {
     const target: [number,number,number]=[0,0.86,0.03];
     switch(view) {
       case "front": return {position:[0,1.15,3.8],target};
