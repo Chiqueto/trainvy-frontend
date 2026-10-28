@@ -56,7 +56,11 @@ export function solveJoint(
     .addScaledVector(bend, height);
 }
 
-export function getExercisePose(exercise: ExerciseAnimation, depth: number) {
+export function getExercisePose(
+  exercise: ExerciseAnimation,
+  depth: number,
+): ReturnType<typeof getFlatDumbbellFlyPose> {
+  if (exercise === "flat-dumbbell-fly") return getFlatDumbbellFlyPose(depth);
   const p = MathUtils.clamp(depth, 0, 1);
   const squat = exercise === "squat";
   const inclineDumbbell = exercise === "incline-dumbbell-press";
@@ -406,4 +410,38 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
     }
     return pose;
   };
+}
+
+/** Flat dumbbell fly trajectory: constant elbow flexion with shoulder-driven arc. */
+export function getFlatDumbbellFlyPose(depth: number): {
+  origin: Vector3;
+  tilt: Quaternion;
+  bar: Vector3;
+  limbs: {
+    side: number;
+    hip: Vector3;
+    knee: Vector3;
+    ankle: Vector3;
+    footRotation: Quaternion;
+    shoulder: Vector3;
+    elbow: Vector3;
+    wrist: Vector3;
+    grip: Vector3;
+    handRotation: Quaternion;
+  }[];
+} {
+  const p = MathUtils.clamp(depth, 0, 1);
+  const base = getExercisePose("flat-dumbbell-press", p);
+  const angle = MathUtils.degToRad(MathUtils.lerp(10, 76, p));
+  const bend = MathUtils.degToRad(20);
+  const limbs = base.limbs.map((limb) => {
+    const { side, shoulder } = limb;
+    const upper = v(side * Math.sin(angle), Math.cos(angle), 0);
+    const forearm = v(side * Math.sin(angle - bend), Math.cos(angle - bend), 0);
+    const elbow = shoulder.clone().addScaledVector(upper, ARM_LENGTH);
+    const wrist = elbow.clone().addScaledVector(forearm, FOREARM_LENGTH);
+    const grip = wrist.clone().add(v(0, 0.004, 0.012));
+    return { ...limb, elbow, wrist, grip };
+  });
+  return { ...base, limbs };
 }

@@ -7,7 +7,8 @@ export type ExerciseAnimation =
   | "flat-dumbbell-press"
   | "incline-bench-press"
   | "decline-bench-press"
-  | "pec-deck";
+  | "pec-deck"
+  | "flat-dumbbell-fly";
 
 export interface ExerciseDefinition {
   name: string;
@@ -18,6 +19,12 @@ export interface ExerciseDefinition {
 }
 
 export const EXERCISE_ANIMATIONS = {
+  "flat-dumbbell-fly": {
+    name: "Crucifixo reto com halteres", equipment: "Banco reto e dois halteres",
+    id: "d555deb1-6eef-436d-8377-9427ac267697",
+    instructions: { description: "Adução horizontal dos braços com halteres, com foco no peitoral maior.", setup: "Deite no banco reto com pés apoiados e segure os halteres acima do peito.", execution: "Abra os braços em arco, mantendo os cotovelos levemente flexionados; retorne suavemente pelo mesmo caminho.", tips: "Mantenha o tronco apoiado e use uma amplitude confortável. A pose é ilustrativa." },
+    muscles: { primary: ["Peitoral maior"], secondary: ["Deltoide anterior", "Bíceps braquial"] },
+  },
   "pec-deck": {
     name: "Crucifixo na Máquina (peck deck)",
     equipment: "Máquina peck deck com encosto e apoios de antebraço",
@@ -103,6 +110,7 @@ export function getExerciseAnimation(
   id?: string | null,
   name?: string | null,
 ): ExerciseAnimation | null {
+  if (id === EXERCISE_ANIMATIONS["flat-dumbbell-fly"].id) return "flat-dumbbell-fly";
   if (id === EXERCISE_ANIMATIONS["pec-deck"].id) return "pec-deck";
   if (id === EXERCISE_ANIMATIONS.squat.id) return "squat";
   if (id === EXERCISE_ANIMATIONS["incline-dumbbell-press"].id)

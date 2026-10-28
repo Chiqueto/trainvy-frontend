@@ -10,6 +10,7 @@ import {
   useGLTF,
 } from "@react-three/drei";
 import { Bone, Group, Skeleton, SkinnedMesh, type BufferGeometry } from "three";
+import { createFlyMuscleMask } from "./fly-muscles";
 import { createPecDeckMuscleMask } from "./pec-deck-muscles";
 import { PecDeckMachine, type PecDeckMachineHandle } from "./pec-deck-machine";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
@@ -461,6 +462,7 @@ function Athlete({
       if (object instanceof SkinnedMesh) {
         object.geometry = object.geometry.clone();
         object.geometry.setAttribute("_pecdeckmuscles",createPecDeckMuscleMask(object.geometry));
+        object.geometry.setAttribute("_flymuscles", createFlyMuscleMask(object.geometry));
         geometries.add(object.geometry);
         object.material = material;
         object.castShadow = true;
@@ -504,7 +506,7 @@ function Athlete({
     <>
       <primitive object={rig.scene} dispose={null} />
       {exercise === "pec-deck" ? <PecDeckMachine ref={pecDeckMachine}/> : exercise === "incline-dumbbell-press" ||
-      exercise === "flat-dumbbell-press" ? (
+      (exercise === "flat-dumbbell-press" || exercise === "flat-dumbbell-fly") ? (
         <>
           <group ref={leftDumbbell}>
             <Dumbbell />
@@ -708,7 +710,7 @@ export default function ExerciseScene(props: SceneProps) {
       <StudioPlatform />
 
       {/* Banco olímpico / plano para supino reto (barra ou halteres) */}
-      {(benchPress || props.exercise === "flat-dumbbell-press") && <Bench />}
+      {(benchPress || props.exercise === "flat-dumbbell-press" || props.exercise === "flat-dumbbell-fly") && <Bench />}
       {(props.exercise === "incline-dumbbell-press" ||
         props.exercise === "incline-bench-press") && <InclineBench />}
       {props.exercise === "decline-bench-press" && <DeclineBench />}

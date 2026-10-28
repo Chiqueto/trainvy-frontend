@@ -62,7 +62,7 @@ describe("forearm-pad pec deck", () => {
       ),
     ]);
     expect(queue.has(id)).toBe(false);
-    expect(queue.get("d555deb1-6eef-436d-8377-9427ac267697")).toBe(1);
+    expect(queue.has("d555deb1-6eef-436d-8377-9427ac267697")).toBe(false);
   });
 
   it("maintains elbow flexion, bone lengths and seated supports through the entire repetition", () => {

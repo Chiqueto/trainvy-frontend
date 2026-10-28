@@ -23,6 +23,7 @@ import type { GetExerciseMedia200 } from "@/app/_lib/api/fetch-generated";
 import { Button } from "@/components/ui/button";
 
 const LAB_MEDIA_DATA: Record<ExerciseAnimation, GetExerciseMedia200> = {
+  "flat-dumbbell-fly": { exerciseId: EXERCISE_ANIMATIONS["flat-dumbbell-fly"].id, hasMedia: false, mediaType: null, startImagePath: null, endImagePath: null, motionPath: null, attributionName: null, attributionUrl: null, instructions: EXERCISE_ANIMATIONS["flat-dumbbell-fly"].instructions },
   "pec-deck": {
     exerciseId: EXERCISE_ANIMATIONS["pec-deck"].id,hasMedia:false,mediaType:null,
     startImagePath:null,endImagePath:null,motionPath:null,attributionName:null,attributionUrl:null,
@@ -127,6 +128,7 @@ export default function Exercise3DLab() {
       cues: string[];
     }
   > = {
+    "flat-dumbbell-fly": { primary: "Peitoral maior", secondary: "Deltoide anterior e bíceps braquial", cadence: "Abertura controlada, pausa breve e fechamento suave.", cues: ["Tronco e pés apoiados.", "Abra os braços em arco com cotovelos levemente flexionados.", "Retorne pela mesma trajetória sem bater os halteres."] },
     "pec-deck": {
       primary: "Peitoral maior — porções clavicular e esternocostal, sem predominância regional definida",
       secondary: "Deltoide anterior",

@@ -22,7 +22,7 @@ import { cn } from "@/lib/utils";
 
 import { ExerciseMediaPreview } from "./exercise-media-preview";
 import { PEC_DECK_INSTRUCTIONS } from "../exercise-3d/pec-deck-instructions";
-import { getExerciseAnimation, type ExerciseAnimation } from "../exercise-3d/exercises";
+import { EXERCISE_ANIMATIONS, getExerciseAnimation, type ExerciseAnimation } from "../exercise-3d/exercises";
 
 const Exercise3DViewer = dynamic(
   () =>
@@ -55,6 +55,7 @@ const FALLBACK_3D_INSTRUCTIONS: Record<
   NonNullable<GetExerciseMedia200["instructions"]>
 > = {
   "pec-deck": PEC_DECK_INSTRUCTIONS,
+  "flat-dumbbell-fly": EXERCISE_ANIMATIONS["flat-dumbbell-fly"].instructions,
   squat: {
     description:
       "Exercício composto multiarticular dominante de joelho e quadril, fundamental para desenvolvimento de membros inferiores e core.",
