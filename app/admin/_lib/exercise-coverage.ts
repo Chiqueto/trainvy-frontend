@@ -1,21 +1,18 @@
 import type { ListAdminExercises200Item } from "@/app/_lib/api/fetch-generated";
 import { getExerciseAnimation } from "@/app/_components/exercise-3d/exercises";
+import { MUSCLE_GROUP_LABELS } from "@/app/_lib/muscle-labels";
 
-export const muscleLabels: Record<string, string> = {
-  CHEST: "Peito",
-  BACK: "Costas",
-  SHOULDERS: "Ombros",
-  BICEPS: "Bíceps",
-  TRICEPS: "Tríceps",
-  FOREARMS: "Antebraços",
-  QUADRICEPS: "Quadríceps",
-  HAMSTRINGS: "Posteriores de coxa",
-  GLUTES: "Glúteos",
-  ADDUCTORS: "Adutores",
-  HIP_ABDUCTORS: "Abdutores",
-  CALVES: "Panturrilhas",
-  CORE: "Core",
-};
+export const muscleLabels: Record<string, string> = MUSCLE_GROUP_LABELS;
+export const trainingGroupLabels = {
+  RESISTANCE: "Musculação / força",
+  POWER: "Potência / explosão",
+  PLYOMETRICS: "Saltos / pliometria",
+  WEIGHTLIFTING: "LPO e derivados",
+  CALISTHENICS: "Ginástica / calistenia",
+  CONDITIONING: "Condicionamento",
+  CORE_STABILITY: "Core / estabilidade",
+  CARRIES: "Transportes de carga",
+} as const;
 export function coverage(e: ListAdminExercises200Item) {
   return {
     animation: getExerciseAnimation(e.id, e.name),

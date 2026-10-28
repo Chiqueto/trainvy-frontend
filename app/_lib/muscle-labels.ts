@@ -11,7 +11,9 @@ export type MuscleGroup =
   | "ADDUCTORS"
   | "HIP_ABDUCTORS"
   | "CALVES"
-  | "CORE";
+  | "CORE"
+  | "HIP_FLEXORS"
+  | "TIBIALIS_ANTERIOR";
 
 export type MuscleRole = "PRIMARY" | "SECONDARY";
 
@@ -29,6 +31,8 @@ export const MUSCLE_GROUP_LABELS: Record<MuscleGroup, string> = {
   HIP_ABDUCTORS: "Abdutores",
   CALVES: "Panturrilhas",
   CORE: "Core",
+  HIP_FLEXORS: "Flexores do quadril",
+  TIBIALIS_ANTERIOR: "Tibial anterior",
 };
 
 export const ALL_MUSCLE_GROUPS: Array<{ value: MuscleGroup; label: string }> = [
@@ -45,6 +49,8 @@ export const ALL_MUSCLE_GROUPS: Array<{ value: MuscleGroup; label: string }> = [
   { value: "HIP_ABDUCTORS", label: "Abdutores" },
   { value: "CALVES", label: "Panturrilhas" },
   { value: "CORE", label: "Core" },
+  { value: "HIP_FLEXORS", label: "Flexores do quadril" },
+  { value: "TIBIALIS_ANTERIOR", label: "Tibial anterior" },
 ];
 
 export function getMuscleGroupLabel(group?: string | null): string {

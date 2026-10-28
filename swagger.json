@@ -16853,7 +16853,9 @@
                                   "ADDUCTORS",
                                   "HIP_ABDUCTORS",
                                   "CALVES",
-                                  "CORE"
+                                  "CORE",
+                                  "HIP_FLEXORS",
+                                  "TIBIALIS_ANTERIOR"
                                 ]
                               },
                               "directWorkingSets": {
@@ -17952,7 +17954,9 @@
                                 "ADDUCTORS",
                                 "HIP_ABDUCTORS",
                                 "CALVES",
-                                "CORE"
+                                "CORE",
+                                "HIP_FLEXORS",
+                                "TIBIALIS_ANTERIOR"
                               ]
                             },
                             "role": {
@@ -18190,7 +18194,9 @@
                                   "ADDUCTORS",
                                   "HIP_ABDUCTORS",
                                   "CALVES",
-                                  "CORE"
+                                  "CORE",
+                                  "HIP_FLEXORS",
+                                  "TIBIALIS_ANTERIOR"
                                 ]
                               },
                               "role": {
@@ -21380,6 +21386,307 @@
         }
       }
     },
+    "/admin/exercises/{exerciseId}/muscles": {
+      "put": {
+        "operationId": "updateAdminExerciseMuscles",
+        "summary": "Update global exercise muscles with audit and conflict protection",
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "expectedUpdatedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                  },
+                  "primaryMuscleGroups": {
+                    "minItems": 1,
+                    "maxItems": 15,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "CHEST",
+                        "BACK",
+                        "SHOULDERS",
+                        "BICEPS",
+                        "TRICEPS",
+                        "FOREARMS",
+                        "QUADRICEPS",
+                        "HAMSTRINGS",
+                        "GLUTES",
+                        "ADDUCTORS",
+                        "HIP_ABDUCTORS",
+                        "CALVES",
+                        "CORE",
+                        "HIP_FLEXORS",
+                        "TIBIALIS_ANTERIOR"
+                      ]
+                    }
+                  },
+                  "secondaryMuscleGroups": {
+                    "maxItems": 15,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "CHEST",
+                        "BACK",
+                        "SHOULDERS",
+                        "BICEPS",
+                        "TRICEPS",
+                        "FOREARMS",
+                        "QUADRICEPS",
+                        "HAMSTRINGS",
+                        "GLUTES",
+                        "ADDUCTORS",
+                        "HIP_ABDUCTORS",
+                        "CALVES",
+                        "CORE",
+                        "HIP_FLEXORS",
+                        "TIBIALIS_ANTERIOR"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "expectedUpdatedAt",
+                  "primaryMuscleGroups",
+                  "secondaryMuscleGroups"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "exerciseId",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                    },
+                    "muscles": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "muscleGroup": {
+                            "type": "string",
+                            "enum": [
+                              "CHEST",
+                              "BACK",
+                              "SHOULDERS",
+                              "BICEPS",
+                              "TRICEPS",
+                              "FOREARMS",
+                              "QUADRICEPS",
+                              "HAMSTRINGS",
+                              "GLUTES",
+                              "ADDUCTORS",
+                              "HIP_ABDUCTORS",
+                              "CALVES",
+                              "CORE",
+                              "HIP_FLEXORS",
+                              "TIBIALIS_ANTERIOR"
+                            ]
+                          },
+                          "role": {
+                            "type": "string",
+                            "enum": [
+                              "PRIMARY",
+                              "SECONDARY"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "muscleGroup",
+                          "role"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "updatedAt",
+                    "muscles"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/admin/plans": {
       "post": {
         "operationId": "createAdminPlan",
@@ -22441,6 +22748,65 @@
                       "updatedAt": {
                         "type": "string"
                       },
+                      "groups": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "RESISTANCE",
+                            "POWER",
+                            "PLYOMETRICS",
+                            "WEIGHTLIFTING",
+                            "CALISTHENICS",
+                            "CONDITIONING",
+                            "CORE_STABILITY",
+                            "CARRIES"
+                          ]
+                        }
+                      },
+                      "review": {
+                        "nullable": true,
+                        "type": "object",
+                        "properties": {
+                          "version": {
+                            "type": "string"
+                          },
+                          "matches": {
+                            "type": "boolean"
+                          },
+                          "notes": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "sources": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "title": {
+                                  "type": "string"
+                                },
+                                "url": {
+                                  "type": "string",
+                                  "format": "uri"
+                                }
+                              },
+                              "required": [
+                                "title",
+                                "url"
+                              ],
+                              "additionalProperties": false
+                            }
+                          }
+                        },
+                        "required": [
+                          "version",
+                          "matches",
+                          "notes",
+                          "sources"
+                        ],
+                        "additionalProperties": false
+                      },
                       "priority3d": {
                         "nullable": true,
                         "type": "object",
@@ -22501,7 +22867,9 @@
                                 "ADDUCTORS",
                                 "HIP_ABDUCTORS",
                                 "CALVES",
-                                "CORE"
+                                "CORE",
+                                "HIP_FLEXORS",
+                                "TIBIALIS_ANTERIOR"
                               ]
                             },
                             "role": {
@@ -22553,6 +22921,8 @@
                       "isUnilateral",
                       "family",
                       "updatedAt",
+                      "groups",
+                      "review",
                       "priority3d",
                       "muscles",
                       "media"
@@ -25310,6 +25680,7 @@
             "schema": {
               "type": "string",
               "enum": [
+                "EXERCISE_MUSCLES_UPDATED",
                 "PLAN_CREATED",
                 "PLAN_UPDATED",
                 "PLAN_ENTITLEMENTS_UPDATED",
@@ -25349,7 +25720,8 @@
               "type": "string",
               "enum": [
                 "PLAN",
-                "SUBSCRIPTION"
+                "SUBSCRIPTION",
+                "EXERCISE"
               ]
             },
             "in": "query",
@@ -25383,6 +25755,7 @@
                           "action": {
                             "type": "string",
                             "enum": [
+                              "EXERCISE_MUSCLES_UPDATED",
                               "PLAN_CREATED",
                               "PLAN_UPDATED",
                               "PLAN_ENTITLEMENTS_UPDATED",
@@ -27222,7 +27595,9 @@
                                 "ADDUCTORS",
                                 "HIP_ABDUCTORS",
                                 "CALVES",
-                                "CORE"
+                                "CORE",
+                                "HIP_FLEXORS",
+                                "TIBIALIS_ANTERIOR"
                               ]
                             },
                             "role": {
@@ -27356,7 +27731,9 @@
                         "ADDUCTORS",
                         "HIP_ABDUCTORS",
                         "CALVES",
-                        "CORE"
+                        "CORE",
+                        "HIP_FLEXORS",
+                        "TIBIALIS_ANTERIOR"
                       ]
                     }
                   },
@@ -27377,7 +27754,9 @@
                         "ADDUCTORS",
                         "HIP_ABDUCTORS",
                         "CALVES",
-                        "CORE"
+                        "CORE",
+                        "HIP_FLEXORS",
+                        "TIBIALIS_ANTERIOR"
                       ]
                     }
                   }
@@ -27443,7 +27822,9 @@
                               "ADDUCTORS",
                               "HIP_ABDUCTORS",
                               "CALVES",
-                              "CORE"
+                              "CORE",
+                              "HIP_FLEXORS",
+                              "TIBIALIS_ANTERIOR"
                             ]
                           },
                           "role": {
@@ -27602,7 +27983,9 @@
                         "ADDUCTORS",
                         "HIP_ABDUCTORS",
                         "CALVES",
-                        "CORE"
+                        "CORE",
+                        "HIP_FLEXORS",
+                        "TIBIALIS_ANTERIOR"
                       ]
                     }
                   },
@@ -27623,7 +28006,9 @@
                         "ADDUCTORS",
                         "HIP_ABDUCTORS",
                         "CALVES",
-                        "CORE"
+                        "CORE",
+                        "HIP_FLEXORS",
+                        "TIBIALIS_ANTERIOR"
                       ]
                     }
                   }
@@ -27701,7 +28086,9 @@
                               "ADDUCTORS",
                               "HIP_ABDUCTORS",
                               "CALVES",
-                              "CORE"
+                              "CORE",
+                              "HIP_FLEXORS",
+                              "TIBIALIS_ANTERIOR"
                             ]
                           },
                           "role": {
@@ -28044,7 +28431,9 @@
                         "ADDUCTORS",
                         "HIP_ABDUCTORS",
                         "CALVES",
-                        "CORE"
+                        "CORE",
+                        "HIP_FLEXORS",
+                        "TIBIALIS_ANTERIOR"
                       ]
                     }
                   },
@@ -28065,7 +28454,9 @@
                         "ADDUCTORS",
                         "HIP_ABDUCTORS",
                         "CALVES",
-                        "CORE"
+                        "CORE",
+                        "HIP_FLEXORS",
+                        "TIBIALIS_ANTERIOR"
                       ]
                     }
                   }
@@ -28140,7 +28531,9 @@
                               "ADDUCTORS",
                               "HIP_ABDUCTORS",
                               "CALVES",
-                              "CORE"
+                              "CORE",
+                              "HIP_FLEXORS",
+                              "TIBIALIS_ANTERIOR"
                             ]
                           },
                           "role": {
@@ -36421,7 +36814,9 @@
                               "ADDUCTORS",
                               "HIP_ABDUCTORS",
                               "CALVES",
-                              "CORE"
+                              "CORE",
+                              "HIP_FLEXORS",
+                              "TIBIALIS_ANTERIOR"
                             ]
                           },
                           "directWorkingSets": {
@@ -37318,7 +37713,9 @@
                                   "ADDUCTORS",
                                   "HIP_ABDUCTORS",
                                   "CALVES",
-                                  "CORE"
+                                  "CORE",
+                                  "HIP_FLEXORS",
+                                  "TIBIALIS_ANTERIOR"
                                 ]
                               },
                               "role": {

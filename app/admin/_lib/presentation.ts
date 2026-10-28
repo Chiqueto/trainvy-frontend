@@ -24,6 +24,7 @@ export const entitlementLabels: Record<
   SOURCE_LIBRARY: "Biblioteca de fontes",
 };
 export const actionLabels: Record<ListAdminAuditAction, string> = {
+  EXERCISE_MUSCLES_UPDATED: "Corrigiu músculos de exercício",
   PLAN_CREATED: "Criou plano",
   PLAN_UPDATED: "Atualizou plano",
   PLAN_ENTITLEMENTS_UPDATED: "Alterou entitlements",
@@ -59,6 +60,9 @@ export function adminDate(value: string | null) {
   );
 }
 const errors: Record<string, string> = {
+  EXERCISE_CHANGED:
+    "Este exercício foi alterado enquanto você editava. Atualize o catálogo antes de tentar novamente.",
+  EXERCISE_NOT_FOUND: "Exercício global não encontrado.",
   PLAN_CODE_ALREADY_EXISTS:
     "Já existe um plano com esse código. Escolha outro.",
   ADMIN_REQUIRED: "Seu acesso administrativo não está mais disponível.",

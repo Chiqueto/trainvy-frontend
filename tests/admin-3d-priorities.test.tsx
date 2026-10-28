@@ -26,6 +26,8 @@ function exercise(
     id,
     name,
     family: "Testes",
+    groups: [],
+    review: null,
     updatedAt: "2026-10-27T12:00:00Z",
     isUnilateral: false,
     muscles: [],
@@ -87,7 +89,7 @@ describe("3D implementation queue", () => {
     expect(within(table).queryByText("#1 na fila")).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Limpar filtros" }));
     fireEvent.change(screen.getByLabelText("Ordenação"), {
-      target: { value: "name" },
+      target: { value: "name:asc" },
     });
     expect(within(table).getAllByRole("row")[1].textContent).toContain(
       "Cadeira Extensora",

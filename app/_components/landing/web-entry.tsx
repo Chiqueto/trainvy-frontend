@@ -9,12 +9,18 @@ const displayMode =
   "(display-mode: standalone), (display-mode: minimal-ui)";
 
 function subscribe(callback: () => void) {
+  if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+    return () => {};
+  }
   const query = window.matchMedia(displayMode);
   query.addEventListener("change", callback);
   return () => query.removeEventListener("change", callback);
 }
 
 function isStandalone() {
+  if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+    return false;
+  }
   return (
     window.matchMedia(displayMode).matches ||
     (navigator as Navigator & { standalone?: boolean }).standalone === true

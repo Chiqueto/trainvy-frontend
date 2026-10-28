@@ -2,18 +2,31 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Box, Check, Search, RefreshCw, Minus } from "lucide-react";
+import { Check, RefreshCw, Minus } from "lucide-react";
 import type { ListAdminExercises200Item } from "@/app/_lib/api/fetch-generated";
 import { ExerciseExecutionDialog } from "@/app/_components/exercise-media/exercise-execution-dialog";
+import { Button } from "@/components/ui/button";
 import {
   coverage,
   muscleLabels,
   normalizeCatalogSearch,
   priorityLabels,
-  compareImplementationPriority,
   implementationQueue,
+  trainingGroupLabels,
 } from "../_lib/exercise-coverage";
-import { Button } from "@/components/ui/button";
+import {
+  catalogColumns,
+  compareCatalogRows,
+  groupNames,
+  muscleNames,
+  type CatalogColumn,
+  type CatalogSort,
+} from "../_lib/exercise-table";
+import {
+  ExerciseColumnControls,
+  useExerciseColumns,
+} from "./exercise-column-controls";
+import { ExerciseMusclesEditor } from "./exercise-muscles-editor";
 
 function Status({
   value,
@@ -34,6 +47,7 @@ function Status({
     </span>
   );
 }
+const selectClass = "h-10 w-full rounded-lg border bg-background px-2 text-sm";
 
 export function ExercisesCatalog({
   exercises,
@@ -41,22 +55,41 @@ export function ExercisesCatalog({
   exercises: ListAdminExercises200Item[];
 }) {
   const router = useRouter();
+  const columns = useExerciseColumns();
+  const [overrides, setOverrides] = useState<
+    Record<string, Pick<ListAdminExercises200Item, "muscles" | "updatedAt">>
+  >({});
+  const catalog = exercises.map((e) => {
+    const saved = overrides[e.id];
+    if (!saved || Date.parse(saved.updatedAt) <= Date.parse(e.updatedAt))
+      return e;
+    return {
+      ...e,
+      ...saved,
+      review: e.review ? { ...e.review, matches: false } : null,
+    };
+  });
   const [query, setQuery] = useState("");
   const [family, setFamily] = useState("");
+  const [group, setGroup] = useState("");
   const [filter, setFilter] = useState("");
   const [muscle, setMuscle] = useState("");
+  const [muscleRole, setMuscleRole] = useState("");
   const [priority, setPriority] = useState("");
-  const [sort, setSort] = useState("priority");
-  const queue = implementationQueue(exercises);
-  const next = exercises.find((e) => queue.get(e.id) === 1);
+  const [sort, setSort] = useState<CatalogSort>({
+    column: "priority",
+    direction: "asc",
+  });
   const [selected, setSelected] = useState<string | null>(null);
-  const [preview, setPreview] = useState<ListAdminExercises200Item | null>(
-    null,
-  );
+  const [editing, setEditing] = useState<string | null>(null);
+  const [previewId, setPreviewId] = useState<string | null>(null);
+  const queue = implementationQueue(catalog);
+  const next = catalog.find((e) => queue.get(e.id) === 1);
+  const preview = catalog.find((e) => e.id === previewId);
   const families = [
-    ...new Set(exercises.map((e) => e.family ?? "Sem família definida")),
+    ...new Set(catalog.map((e) => e.family ?? "Sem família definida")),
   ].sort((a, b) => a.localeCompare(b, "pt-BR"));
-  const rows = exercises
+  const rows = catalog
     .filter((e) => {
       const c = coverage(e);
       return (
@@ -64,7 +97,16 @@ export function ExercisesCatalog({
           normalizeCatalogSearch(query),
         ) &&
         (!family || (e.family ?? "Sem família definida") === family) &&
-        (!muscle || e.muscles.some((m) => m.muscleGroup === muscle)) &&
+        (!group ||
+          (group === "undefined"
+            ? !e.groups?.length
+            : e.groups?.includes(group as keyof typeof trainingGroupLabels))) &&
+        (!muscle ||
+          e.muscles.some(
+            (m) =>
+              m.muscleGroup === muscle &&
+              (!muscleRole || m.role === muscleRole),
+          )) &&
         (!priority ||
           (priority === "undefined"
             ? !e.priority3d
@@ -79,30 +121,61 @@ export function ExercisesCatalog({
           (filter === "novisual" && !c.animation && !c.images && !c.motion))
       );
     })
-    .sort(
-      sort === "priority"
-        ? compareImplementationPriority
-        : (a, b) =>
-            a.name.localeCompare(b.name, "pt-BR") || a.id.localeCompare(b.id),
-    );
+    .sort((a, b) => compareCatalogRows(a, b, sort));
+  function clearFilters() {
+    setQuery("");
+    setFamily("");
+    setGroup("");
+    setFilter("");
+    setMuscle("");
+    setMuscleRole("");
+    setPriority("");
+  }
   const metrics = [
-    { label: "Exercícios globais", value: exercises.length, filter: "" },
+    { label: "Exercícios globais", value: catalog.length, filter: "" },
     {
       label: "Com animação 3D",
-      value: exercises.filter((e) => coverage(e).animation).length,
+      value: catalog.filter((e) => coverage(e).animation).length,
       filter: "3d",
     },
     {
       label: "3D pendente",
-      value: exercises.filter((e) => !coverage(e).animation).length,
+      value: catalog.filter((e) => !coverage(e).animation).length,
       filter: "no3d",
     },
     {
       label: "Sem classificação muscular",
-      value: exercises.filter((e) => !coverage(e).classified).length,
+      value: catalog.filter((e) => !coverage(e).classified).length,
       filter: "unclassified",
     },
   ];
+  function select(
+    label: string,
+    value: string,
+    set: (value: string) => void,
+    options: Record<string, string>,
+    empty: string,
+    disabled = false,
+  ) {
+    return (
+      <label className="space-y-1.5 text-xs font-medium">
+        {label}
+        <select
+          value={value}
+          onChange={(e) => set(e.target.value)}
+          disabled={disabled}
+          className={selectClass}
+        >
+          <option value="">{empty}</option>
+          {Object.entries(options).map(([key, text]) => (
+            <option key={key} value={key}>
+              {text}
+            </option>
+          ))}
+        </select>
+      </label>
+    );
+  }
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -114,9 +187,8 @@ export function ExercisesCatalog({
             Catálogo de exercícios
           </h1>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-            Confira o que está cadastrado e acompanhe a produção de conteúdo de
-            cada movimento. Dados do catálogo global, sem exercícios
-            particulares de usuários.
+            Organize o catálogo global, confira os músculos de cada movimento e
+            acompanhe a cobertura de conteúdo.
           </p>
         </div>
         <Button variant="outline" onClick={() => router.refresh()}>
@@ -129,11 +201,8 @@ export function ExercisesCatalog({
           <button
             key={m.label}
             onClick={() => {
+              clearFilters();
               setFilter(m.filter);
-              setFamily("");
-              setQuery("");
-              setMuscle("");
-              setPriority("");
             }}
             className={`rounded-2xl border bg-card p-4 text-left transition hover:border-primary ${filter === m.filter ? "border-primary/60" : "border-border"}`}
           >
@@ -146,10 +215,10 @@ export function ExercisesCatalog({
           </button>
         ))}
       </div>
-      <div className="rounded-2xl border border-primary/30 bg-primary/5 p-5">
-        <p className="text-xs font-semibold uppercase tracking-widest text-primary">
-          Fila de implementação 3D
-        </p>
+      <details className="rounded-2xl border border-primary/30 bg-primary/5 p-5">
+        <summary className="cursor-pointer text-sm font-semibold text-primary">
+          Fila de implementação 3D · {queue.size} pendentes
+        </summary>
         <p className="mt-2 text-sm text-muted-foreground">
           P1: básicos essenciais → P2: musculação e core → P3: funcional e
           landmine → P4: potência e LPO → P5: habilidades avançadas. Ordem
@@ -168,116 +237,115 @@ export function ExercisesCatalog({
           </p>
         )}
         <p className="mt-2 text-xs text-muted-foreground">
-          {queue.size} exercícios na fila. Animações disponíveis ficam fora da
-          fila; filtros preservam as posições originais.
+          Animações disponíveis ficam fora da fila; filtros preservam as
+          posições originais.
         </p>
-      </div>
-      <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm">
-        <Box className="mr-2 inline size-4 text-primary" />O 3D é contabilizado
-        pelo suporte real do visualizador. Ter imagem não significa ter 3D.
-        Músculos cadastrados e músculos ilustrados na animação são verificações
-        separadas.
-      </div>
+      </details>
       <div className="grid gap-3 rounded-2xl border bg-card p-4 sm:grid-cols-2 xl:grid-cols-4">
         <label className="space-y-1.5 text-xs font-medium">
           Buscar por nome ou ID
-          <div className="relative">
-            <Search className="absolute top-3 left-3 size-4 text-muted-foreground" />
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Ex.: landmine, supino…"
-              className="h-10 w-full rounded-lg border bg-background pr-3 pl-9 text-sm"
-            />
-          </div>
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Ex.: landmine, supino…"
+            className={selectClass}
+          />
         </label>
-        <label className="space-y-1.5 text-xs font-medium">
-          Família
-          <select
-            value={family}
-            onChange={(e) => setFamily(e.target.value)}
-            className="h-10 w-full rounded-lg border bg-background px-2 text-sm"
-          >
-            <option value="">Todas as famílias</option>
-            {families.map((f) => (
-              <option key={f}>{f}</option>
-            ))}
-          </select>
-        </label>
-        <label className="space-y-1.5 text-xs font-medium">
-          Conteúdo
-          <select
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="h-10 w-full rounded-lg border bg-background px-2 text-sm"
-          >
-            <option value="">Todos os exercícios</option>
-            <option value="3d">Com 3D</option>
-            <option value="no3d">Sem 3D</option>
-            <option value="images">Com imagens</option>
-            <option value="noimages">Sem imagens</option>
-            <option value="novisual">Sem qualquer visual</option>
-            <option value="unclassified">Sem classificação muscular</option>
-            <option value="noinstructions">Sem instruções cadastradas</option>
-          </select>
-        </label>
-        <label className="space-y-1.5 text-xs font-medium">
-          Grupo muscular
-          <select
-            value={muscle}
-            onChange={(e) => setMuscle(e.target.value)}
-            className="h-10 w-full rounded-lg border bg-background px-2 text-sm"
-          >
-            <option value="">Todos os grupos</option>
-            {Object.entries(muscleLabels).map(([key, label]) => (
-              <option key={key} value={key}>
-                {label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="space-y-1.5 text-xs font-medium">
-          Prioridade 3D
-          <select
-            value={priority}
-            onChange={(e) => setPriority(e.target.value)}
-            className="h-10 w-full rounded-lg border bg-background px-2 text-sm"
-          >
-            <option value="">Todas as prioridades</option>
-            {Object.entries(priorityLabels).map(([tier, label]) => (
-              <option key={tier} value={tier}>
-                {label}
-              </option>
-            ))}
-            <option value="undefined">Sem prioridade definida</option>
-          </select>
-        </label>
+        {select(
+          "Família",
+          family,
+          setFamily,
+          Object.fromEntries(families.map((f) => [f, f])),
+          "Todas as famílias",
+        )}
+        {select(
+          "Grupo de exercícios",
+          group,
+          setGroup,
+          { ...trainingGroupLabels, undefined: "Sem grupo definido" },
+          "Todos os tipos de treino",
+        )}
+        {select(
+          "Grupo muscular",
+          muscle,
+          setMuscle,
+          muscleLabels,
+          "Todos os grupos",
+        )}
+        {select(
+          "Papel do músculo",
+          muscleRole,
+          setMuscleRole,
+          { PRIMARY: "Somente principal", SECONDARY: "Somente secundário" },
+          "Principal ou secundário",
+          !muscle,
+        )}
+        {select(
+          "Conteúdo",
+          filter,
+          setFilter,
+          {
+            "3d": "Com 3D",
+            no3d: "Sem 3D",
+            images: "Com imagens",
+            noimages: "Sem imagens",
+            novisual: "Sem qualquer visual",
+            unclassified: "Sem classificação muscular",
+            noinstructions: "Sem instruções cadastradas",
+          },
+          "Todos os exercícios",
+        )}
+        {select(
+          "Prioridade 3D",
+          priority,
+          setPriority,
+          { ...priorityLabels, undefined: "Sem prioridade definida" },
+          "Todas as prioridades",
+        )}
         <label className="space-y-1.5 text-xs font-medium">
           Ordenação
           <select
-            value={sort}
-            onChange={(e) => setSort(e.target.value)}
-            className="h-10 w-full rounded-lg border bg-background px-2 text-sm"
+            value={`${sort.column}:${sort.direction}`}
+            onChange={(e) => {
+              const [column, direction] = e.target.value.split(":");
+              setSort({
+                column: column as CatalogSort["column"],
+                direction: direction as CatalogSort["direction"],
+              });
+            }}
+            className={selectClass}
           >
-            <option value="priority">Fila de implementação 3D</option>
-            <option value="name">Nome (A–Z)</option>
+            {Object.entries(catalogColumns)
+              .filter(([column]) => column !== "details")
+              .flatMap(([column, label]) =>
+                ["asc", "desc"].map((direction) => (
+                  <option
+                    key={`${column}:${direction}`}
+                    value={`${column}:${direction}`}
+                  >
+                    {column === "priority" && direction === "asc"
+                      ? "Fila de implementação 3D"
+                      : `${label} (${direction === "asc" ? "crescente" : "decrescente"})`}
+                  </option>
+                )),
+              )}
           </select>
         </label>
       </div>
+      <p className="text-xs text-muted-foreground">
+        Os grupos podem se combinar: um salto pode ser de potência e pliometria.
+        Landmine é uma família de implemento e não indica, por si só, execução
+        explosiva.
+      </p>
+      <ExerciseColumnControls columns={columns} />
       <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
         <p role="status">
-          {rows.length} de {exercises.length} exercícios · Totais dos cartões
+          {rows.length} de {catalog.length} exercícios · Totais dos cartões
           consideram todo o catálogo
         </p>
         <button
           className="min-h-9 text-primary underline"
-          onClick={() => {
-            setQuery("");
-            setFamily("");
-            setFilter("");
-            setMuscle("");
-            setPriority("");
-          }}
+          onClick={clearFilters}
         >
           Limpar filtros
         </button>
@@ -285,45 +353,76 @@ export function ExercisesCatalog({
       <div className="overflow-x-auto rounded-2xl border bg-card">
         <table className="w-full text-left text-sm">
           <caption className="sr-only">
-            Cobertura de conteúdo por exercício
+            Catálogo global com músculos e cobertura de conteúdo. Clique nos
+            títulos para ordenar.
           </caption>
           <thead className="border-b bg-muted/40 text-xs text-muted-foreground">
             <tr>
-              {[
-                "Prioridade / fila",
-                "Exercício / família",
-                "Animação 3D",
-                "Imagens",
-                "Músculos",
-                "Instruções",
-                "Detalhes",
-              ].map((h) => (
+              {columns.visible.map((column) => (
                 <th
+                  key={column}
                   scope="col"
-                  key={h}
+                  aria-sort={
+                    sort.column === column
+                      ? sort.direction === "asc"
+                        ? "ascending"
+                        : "descending"
+                      : undefined
+                  }
                   className="whitespace-nowrap px-4 py-3 font-medium"
                 >
-                  {h}
+                  {column === "details" ? (
+                    catalogColumns[column]
+                  ) : (
+                    <button
+                      className="min-h-9 text-left"
+                      onClick={() =>
+                        setSort({
+                          column,
+                          direction:
+                            sort.column === column && sort.direction === "asc"
+                              ? "desc"
+                              : "asc",
+                        })
+                      }
+                    >
+                      {catalogColumns[column]}
+                      <span aria-hidden className="ml-1">
+                        {sort.column === column
+                          ? sort.direction === "asc"
+                            ? "↑"
+                            : "↓"
+                          : "↕"}
+                      </span>
+                    </button>
+                  )}
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {rows.map((e) => {
-              const c = coverage(e);
-              const open = selected === e.id;
-              return (
-                <ExerciseRow
-                  key={e.id}
-                  exercise={e}
-                  open={open}
-                  toggle={() => setSelected(open ? null : e.id)}
-                  preview={() => setPreview(e)}
-                  content={c}
-                  queuePosition={queue.get(e.id)}
-                />
-              );
-            })}
+            {rows.map((e) => (
+              <ExerciseRow
+                key={e.id}
+                exercise={e}
+                columns={columns.visible}
+                open={selected === e.id}
+                toggle={() => {
+                  setSelected(selected === e.id ? null : e.id);
+                  setEditing(null);
+                }}
+                preview={() => setPreviewId(e.id)}
+                queuePosition={queue.get(e.id)}
+                editing={editing === e.id}
+                onEdit={() => setEditing(e.id)}
+                onCancel={() => setEditing(null)}
+                onSaved={(result) => {
+                  setOverrides((previous) => ({ ...previous, [e.id]: result }));
+                  setEditing(null);
+                  router.refresh();
+                }}
+              />
+            ))}
           </tbody>
         </table>
         {!rows.length && (
@@ -336,16 +435,18 @@ export function ExercisesCatalog({
         )}
       </div>
       <p className="text-xs text-muted-foreground">
-        “Sem família definida” indica metadado ausente; não significa exercício
-        inexistente. Imagens, movimento em arquivo e instruções consideram
-        apenas mídias ativas. Instruções próprias do visualizador 3D não contam
-        como instruções cadastradas.
+        Principais e secundários são grupos anatômicos ilustrativos, não medidas
+        de ativação ou intensidade. “Nenhum cadastrado” não comprova isolamento
+        muscular. Alterar a classificação pode atualizar relatórios por músculo
+        de sessões anteriores; cargas, séries e histórico permanecem
+        registrados. Ter imagem não significa ter 3D; músculos do cadastro e da
+        animação são verificações separadas.
       </p>
       {preview && (
         <ExerciseExecutionDialog
           key={preview.id}
           isOpen
-          onClose={() => setPreview(null)}
+          onClose={() => setPreviewId(null)}
           exerciseId={preview.id}
           exerciseName={preview.name}
         />
@@ -356,55 +457,73 @@ export function ExercisesCatalog({
 
 function ExerciseRow({
   exercise: e,
-  content: c,
+  columns,
   open,
   toggle,
   preview,
   queuePosition,
+  editing,
+  onEdit,
+  onCancel,
+  onSaved,
 }: {
   exercise: ListAdminExercises200Item;
-  content: ReturnType<typeof coverage>;
+  columns: CatalogColumn[];
   open: boolean;
   toggle: () => void;
   preview: () => void;
   queuePosition?: number;
+  editing: boolean;
+  onEdit: () => void;
+  onCancel: () => void;
+  onSaved: (
+    result: Pick<ListAdminExercises200Item, "id" | "updatedAt" | "muscles">,
+  ) => void;
 }) {
-  return (
-    <>
-      <tr className="border-b border-border/60 hover:bg-muted/20">
-        <td className="min-w-36 px-4 py-4">
-          <span className="block text-xs font-semibold">
-            {e.priority3d
-              ? priorityLabels[e.priority3d.tier]
-              : "Sem prioridade definida"}
-          </span>
-          <span className="mt-1 block text-xs text-muted-foreground">
-            {c.animation
-              ? "3D disponível · fora da fila"
-              : queuePosition
-                ? `#${queuePosition} na fila`
-                : "Aguardando planejamento"}
-          </span>
-        </td>
-        <th scope="row" className="min-w-60 px-4 py-4 font-medium">
-          <span className="block">{e.name}</span>
-          <span className="mt-1 block text-xs font-normal text-muted-foreground">
-            {e.family ?? "Sem família definida"}
-          </span>
-        </th>
-        <td className="px-4">
-          <Status value={!!c.animation} />
-        </td>
-        <td className="px-4">
-          <Status value={c.images} no="Sem imagens" />
-        </td>
-        <td className="px-4">
-          <Status value={c.classified} yes="Classificado" />
-        </td>
-        <td className="px-4">
-          <Status value={c.instructions} />
-        </td>
-        <td className="px-4">
+  const c = coverage(e);
+  function cell(column: CatalogColumn) {
+    switch (column) {
+      case "priority":
+        return (
+          <>
+            <span className="block text-xs font-semibold">
+              {e.priority3d
+                ? priorityLabels[e.priority3d.tier]
+                : "Sem prioridade definida"}
+            </span>
+            <span className="mt-1 block text-xs text-muted-foreground">
+              {c.animation
+                ? "3D disponível · fora da fila"
+                : queuePosition
+                  ? `#${queuePosition} na fila`
+                  : "Aguardando planejamento"}
+            </span>
+          </>
+        );
+      case "name":
+        return e.name;
+      case "family":
+        return e.family ?? "Sem família definida";
+      case "groups":
+        return groupNames(e) || "Sem grupo definido";
+      case "primary":
+        return muscleNames(e, "PRIMARY") || "Não definidos";
+      case "secondary":
+        return muscleNames(e, "SECONDARY") || "Nenhum cadastrado";
+      case "animation":
+        return <Status value={!!c.animation} />;
+      case "images":
+        return <Status value={c.images} no="Sem imagens" />;
+      case "instructions":
+        return <Status value={c.instructions} />;
+      case "updatedAt":
+        return new Intl.DateTimeFormat("pt-BR", {
+          dateStyle: "short",
+          timeStyle: "short",
+          timeZone: "America/Sao_Paulo",
+        }).format(new Date(e.updatedAt));
+      case "details":
+        return (
           <button
             className="min-h-11 text-xs font-semibold text-primary"
             aria-expanded={open}
@@ -413,21 +532,149 @@ function ExerciseRow({
             onClick={toggle}
           >
             {open ? "Fechar" : "Ver detalhes"}
-            <span className="sr-only"> de {e.name}</span>
           </button>
-        </td>
+        );
+    }
+  }
+  return (
+    <>
+      <tr className="border-b border-border/60 hover:bg-muted/20">
+        {columns.map((column) =>
+          column === "name" ? (
+            <th
+              key={column}
+              scope="row"
+              className="min-w-60 px-4 py-4 font-medium"
+            >
+              {cell(column)}
+            </th>
+          ) : (
+            <td
+              key={column}
+              className={`px-4 py-4 ${["primary", "secondary", "family", "groups"].includes(column) ? "min-w-44 text-xs" : ""}`}
+            >
+              {cell(column)}
+            </td>
+          ),
+        )}
       </tr>
       {open && (
         <tr id={`details-${e.id}`}>
-          <td colSpan={7} className="border-b bg-muted/20 p-5">
+          <td colSpan={columns.length} className="border-b bg-muted/20 p-5">
             <div className="grid gap-5 md:grid-cols-2">
-              <div className="md:col-span-2">
+              <div>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">
+                  Identificação
+                </p>
+                <p className="mt-2 break-all font-mono text-xs select-all">
+                  {e.id}
+                </p>
+                <p className="mt-2 text-xs">
+                  Unilateral no cadastro: {e.isUnilateral ? "Sim" : "Não"}
+                </p>
+                <p className="mt-1 text-xs">
+                  Família: {e.family ?? "Sem família definida"}
+                </p>
+                <p className="mt-1 text-xs">
+                  Grupos: {groupNames(e) || "Sem grupo definido"}
+                </p>
+                <p className="mt-1 text-xs">
+                  Atualizado em{" "}
+                  {new Intl.DateTimeFormat("pt-BR", {
+                    dateStyle: "short",
+                    timeStyle: "short",
+                    timeZone: "America/Sao_Paulo",
+                  }).format(new Date(e.updatedAt))}{" "}
+                  (Brasília)
+                </p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">
+                  Grupos musculares cadastrados
+                </p>
+                {(["PRIMARY", "SECONDARY"] as const).map((role) => (
+                  <p key={role} className="mt-2 text-xs">
+                    <strong>
+                      {role === "PRIMARY" ? "Principais" : "Secundários"}:
+                    </strong>{" "}
+                    {muscleNames(e, role) || "Não definidos"}
+                  </p>
+                ))}
+                <Button
+                  variant="outline"
+                  className="mt-3"
+                  onClick={onEdit}
+                  disabled={editing}
+                >
+                  Editar músculos
+                </Button>
+              </div>
+              {editing && (
+                <div className="md:col-span-2">
+                  <ExerciseMusclesEditor
+                    key={e.id}
+                    exercise={e}
+                    onSaved={onSaved}
+                    onCancel={onCancel}
+                  />
+                </div>
+              )}
+              <div>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">
+                  Revisão do catálogo
+                </p>
+                {e.review ? (
+                  <>
+                    <p className="mt-2 text-xs">
+                      Versão {e.review.version} ·{" "}
+                      {e.review.matches
+                        ? "Classificação conforme a revisão"
+                        : "Classificação diferente da revisão versionada"}
+                    </p>
+                    {e.review.notes && (
+                      <p className="mt-2 text-xs text-muted-foreground">
+                        {e.review.notes}
+                      </p>
+                    )}
+                    <details className="mt-2 text-xs">
+                      <summary className="cursor-pointer">
+                        Referências e limites
+                      </summary>
+                      <p className="mt-2 text-muted-foreground">
+                        Classificação editorial por ação articular, sinergia e
+                        estabilização. As referências apoiam famílias de
+                        movimento; não constituem medição individual de cada
+                        variação.
+                      </p>
+                      <ul className="mt-2 space-y-1">
+                        {e.review.sources.map((s, index) => (
+                          <li key={`${s.url}-${index}`}>
+                            <a
+                              href={s.url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-primary underline"
+                            >
+                              {s.title}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
+                  </>
+                ) : (
+                  <p className="mt-2 text-xs">
+                    Sem revisão versionada para este cadastro.
+                  </p>
+                )}
+              </div>
+              <div>
                 <p className="text-xs font-semibold uppercase text-muted-foreground">
                   Planejamento 3D
                 </p>
                 {e.priority3d ? (
                   <>
-                    <p className="mt-2 text-sm font-medium">
+                    <p className="mt-2 text-xs">
                       {priorityLabels[e.priority3d.tier]} · {e.priority3d.batch}
                     </p>
                     <p className="mt-1 text-xs text-muted-foreground">
@@ -443,67 +690,21 @@ function ExerciseRow({
                     </p>
                   </>
                 ) : (
-                  <p className="mt-2 text-xs text-muted-foreground">
+                  <p className="mt-2 text-xs">
                     Este exercício ainda não recebeu prioridade de
                     implementação.
                   </p>
                 )}
-              </div>
-              <div>
-                <p className="text-xs font-semibold uppercase text-muted-foreground">
-                  Identificação
-                </p>
-                <p className="mt-2 break-all font-mono text-xs select-all">
-                  {e.id}
-                </p>
                 <p className="mt-2 text-xs">
-                  Unilateral no cadastro: {e.isUnilateral ? "Sim" : "Não"}
+                  Mídias ativas: {e.media.length} · Movimento em arquivo
+                  (vídeo/GIF): {c.motion ? "Disponível" : "Não cadastrado"}
                 </p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Atualizado em{" "}
-                  {new Intl.DateTimeFormat("pt-BR", {
-                    dateStyle: "short",
-                    timeStyle: "short",
-                    timeZone: "America/Sao_Paulo",
-                  }).format(new Date(e.updatedAt))}{" "}
-                  (Brasília)
-                </p>
-              </div>
-              <div>
-                <p className="text-xs font-semibold uppercase text-muted-foreground">
-                  Grupos musculares cadastrados
-                </p>
-                {["PRIMARY", "SECONDARY"].map((role) => (
-                  <p key={role} className="mt-2 text-xs">
-                    <strong>
-                      {role === "PRIMARY" ? "Principais" : "Secundários"}:
-                    </strong>{" "}
-                    {e.muscles
-                      .filter((m) => m.role === role)
-                      .map((m) => muscleLabels[m.muscleGroup] ?? m.muscleGroup)
-                      .join(", ") || "Não definidos"}
-                  </p>
-                ))}
-              </div>
-              <div className="text-xs">
-                <p>Mídias ativas: {e.media.length}</p>
-                <p className="mt-1">
-                  Movimento em arquivo (vídeo/GIF):{" "}
-                  {c.motion ? "Disponível" : "Não cadastrado"}
-                </p>
-                <p className="mt-1">
-                  {c.animation
-                    ? "Animação 3D disponível para este exercício."
-                    : "Animação 3D ainda não implementada para este exercício."}
-                </p>
-              </div>
-              <div className="flex items-center">
                 {c.animation || c.images || c.motion ? (
-                  <Button variant="outline" onClick={preview}>
+                  <Button className="mt-3" variant="outline" onClick={preview}>
                     Visualizar execução
                   </Button>
                 ) : (
-                  <p className="text-xs text-muted-foreground">
+                  <p className="mt-2 text-xs text-muted-foreground">
                     Sem visual disponível. O exercício está cadastrado e pode
                     receber seu próprio 3D.
                   </p>

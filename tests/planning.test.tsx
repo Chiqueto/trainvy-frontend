@@ -33,6 +33,10 @@ vi.mock("next/headers", () => ({
   }),
 }));
 
+vi.mock("better-auth/cookies", () => ({
+  getSessionCookie: () => "mock-session-cookie",
+}));
+
 // Mock next/image
 vi.mock("next/image", () => ({
   default: ({

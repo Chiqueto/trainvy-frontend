@@ -8,6 +8,7 @@ import { Chat } from "@/app/_components/chat";
 import { PwaProvider } from "@/app/_components/pwa/pwa-provider";
 import { PwaInstallPrompt } from "@/app/_components/pwa/pwa-install-prompt";
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -33,8 +34,8 @@ const anton = Anton({
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#09090b" },
-    { media: "(prefers-color-scheme: light)", color: "#09090b" },
+    { media: "(prefers-color-scheme: dark)", color: "#080c11" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -76,22 +77,29 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${interTight.variable} ${anton.variable} antialiased`}
       >
-        <PwaProvider>
-          <NuqsAdapter>
-            {children}
-            <PwaInstallPrompt />
-            <Suspense>
-              <Chat />
-            </Suspense>
-          </NuqsAdapter>
-        </PwaProvider>
-        <Toaster />
-        <Analytics />
-        <SpeedInsights />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <PwaProvider>
+            <NuqsAdapter>
+              {children}
+              <PwaInstallPrompt />
+              <Suspense>
+                <Chat />
+              </Suspense>
+            </NuqsAdapter>
+          </PwaProvider>
+          <Toaster />
+          <Analytics />
+          <SpeedInsights />
+        </ThemeProvider>
       </body>
     </html>
   );

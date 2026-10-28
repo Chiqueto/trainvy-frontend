@@ -52,6 +52,20 @@ export async function saveAdminEntitlements(
 ) {
   return invoke(() => api.updateAdminPlanEntitlements(planId, input), true);
 }
+export async function saveAdminExerciseMuscles(
+  exerciseId: string,
+  input: api.UpdateAdminExerciseMusclesBody,
+) {
+  const result = await invoke(
+    () => api.updateAdminExerciseMuscles(exerciseId, input),
+    true,
+  );
+  if (result.success) {
+    revalidatePath("/stats");
+    revalidatePath("/personal/exercicios");
+  }
+  return result;
+}
 export async function createAdminPlanAction(input: api.CreateAdminPlanBody) {
   try {
     const result = await api.createAdminPlan(input);

@@ -1,6 +1,6 @@
 # Expansão do catálogo de exercícios
 
-Pesquisa e curadoria em 27/10/2026. Base comparada: 53 exercícios globais após a consolidação do catálogo. Os 213 exercícios abaixo foram cadastrados em produção a pedido do usuário, totalizando 266 exercícios globais. Os novos registros não possuem imagens nem outras mídias; classificação muscular e animações 3D serão revisadas por exercício. Os registros anteriores foram preservados.
+Pesquisa e curadoria em 27/10/2026. Base comparada: 53 exercícios globais após a consolidação do catálogo. Os 213 exercícios abaixo foram cadastrados em produção a pedido do usuário, totalizando 266 exercícios globais. A classificação muscular dos 266 e a organização do admin foram implementadas na [revisão de 28/10](EXERCISE-CATALOG-REVIEW.md), com migrações validadas em testes e pendentes de publicação no banco principal. Mídias e animações 3D continuam sendo tratadas por exercício.
 
 Os nomes abaixo são uma proposta editorial própria. As bibliotecas citadas servem como referência de famílias e nomenclatura, não como comprovação individual de cada variação. Não foram importados vídeos, imagens, instruções ou licenças de mídia. A seleção ainda precisa de classificação muscular e revisão de execução antes de virar cadastro publicável.
 
@@ -277,7 +277,7 @@ Esses movimentos podem exigir distância, tempo, calorias ou contatos em vez de 
 
 A [fila de implementação 3D](EXERCISE-3D-PRIORITIES.md) define prioridade P1–P5, ordem, lote de produção e justificativa para cada um dos 266 cadastros. O `/admin/exercises` usa esse plano versionado e calcula a fila somente para movimentos sem 3D disponível. A prioridade é editorial, sem inferir frequência de uso real.
 
-O console em `/admin/exercises` consulta o catálogo global completo por uma rota administrativa dedicada, sem deduplicar IDs. Mostra cobertura de 3D, imagens, instruções e classificação muscular, com busca e filtros combináveis. O suporte de 3D vem do registro real de animações do frontend; mídia ativa no banco não implica suporte de 3D. As famílias dos 213 novos exercícios vêm do manifesto versionado da expansão na API. Exercícios anteriores sem esse metadado aparecem como “Sem família definida”. A tela não modifica cadastros. Para disponibilizá-la em produção, publicar API e frontend com o contrato atualizado.
+O console em `/admin/exercises` consulta o catálogo global completo por uma rota administrativa dedicada, sem deduplicar IDs. A revisão atual acrescenta famílias para os 266 exercícios, grupos de treino não exclusivos (incluindo potência/explosão), filtro por músculo principal/secundário, ordenação por cabeçalhos, posição/visibilidade das colunas e edição auditada dos músculos globais. O suporte de 3D continua vindo do registro real de animações do frontend; mídia ativa no banco não implica suporte de 3D. Os detalhes de classificação, referências e publicação estão na [revisão do catálogo](EXERCISE-CATALOG-REVIEW.md).
 
 Manter nome canônico, aliases pesquisáveis, família de movimento, equipamentos, unilateralidade, tags de contexto e unidade de prescrição. Um exercício pode ter tags musculação e funcional ao mesmo tempo. “Explosivo” é uma característica de execução, não sinônimo de CrossFit.
 

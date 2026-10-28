@@ -19,6 +19,8 @@ import { ProfileMetricsSection } from "./_components/profile-metrics-section";
 import { SportsProfileSection } from "./_components/sports-profile-section";
 import { CoachAreaLinkCard } from "./_components/coach-area-link-card";
 import { MyCoachSection } from "./_components/my-coach-section";
+import { ThemeSelector } from "./_components/theme-selector";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { ArrowRight, Shield } from "lucide-react";
 
 export default async function ProfilePage() {
@@ -67,8 +69,9 @@ export default async function ProfilePage() {
 
   return (
     <div className="flex min-h-svh flex-col bg-background pb-24">
-      <div className="flex h-[56px] items-center px-5">
+      <div className="flex h-[56px] items-center justify-between px-5">
         <Logo size="md" asLink />
+        <ThemeToggle />
       </div>
 
       <div className="flex flex-col items-center gap-5 px-5 pt-5">
@@ -138,6 +141,9 @@ export default async function ProfilePage() {
           weightDiffInGrams={data?.weightDiffInGrams}
           bodyFatDiff={data?.bodyFatDiff}
         />
+
+        {/* Seletor de Aparência / Tema Escuro Trainvy */}
+        <ThemeSelector />
 
         <GamificationThemeSelector currentTheme={data?.gamificationTheme} />
         <SportsProfileSection />

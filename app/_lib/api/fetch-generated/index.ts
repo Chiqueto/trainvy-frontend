@@ -5787,6 +5787,8 @@ export const GetCoachAthleteProgressOverview200MusclesMusclesItemMuscleGroup = {
   HIP_ABDUCTORS: "HIP_ABDUCTORS",
   CALVES: "CALVES",
   CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
 } as const;
 
 export type GetCoachAthleteProgressOverview200MusclesMusclesItem = {
@@ -6287,6 +6289,8 @@ export const ListCoachAthleteProgressExercises200ItemMusclesItemMuscleGroup = {
   HIP_ABDUCTORS: "HIP_ABDUCTORS",
   CALVES: "CALVES",
   CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
 } as const;
 
 export type ListCoachAthleteProgressExercises200ItemMusclesItemRole =
@@ -6367,6 +6371,8 @@ export const GetCoachAthleteProgressExerciseEvolution200ExerciseMusclesItemMuscl
     HIP_ABDUCTORS: "HIP_ABDUCTORS",
     CALVES: "CALVES",
     CORE: "CORE",
+    HIP_FLEXORS: "HIP_FLEXORS",
+    TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
   } as const;
 
 export type GetCoachAthleteProgressExerciseEvolution200ExerciseMusclesItemRole =
@@ -7673,6 +7679,132 @@ export type CreateCoachWorkoutPlanTemplateFromPlan500 = {
   code: string;
 };
 
+export type UpdateAdminExerciseMusclesBodyPrimaryMuscleGroupsItem =
+  (typeof UpdateAdminExerciseMusclesBodyPrimaryMuscleGroupsItem)[keyof typeof UpdateAdminExerciseMusclesBodyPrimaryMuscleGroupsItem];
+
+export const UpdateAdminExerciseMusclesBodyPrimaryMuscleGroupsItem = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
+} as const;
+
+export type UpdateAdminExerciseMusclesBodySecondaryMuscleGroupsItem =
+  (typeof UpdateAdminExerciseMusclesBodySecondaryMuscleGroupsItem)[keyof typeof UpdateAdminExerciseMusclesBodySecondaryMuscleGroupsItem];
+
+export const UpdateAdminExerciseMusclesBodySecondaryMuscleGroupsItem = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
+} as const;
+
+export type UpdateAdminExerciseMusclesBody = {
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$ */
+  expectedUpdatedAt: string;
+  /**
+   * @minItems 1
+   * @maxItems 15
+   */
+  primaryMuscleGroups: UpdateAdminExerciseMusclesBodyPrimaryMuscleGroupsItem[];
+  /** @maxItems 15 */
+  secondaryMuscleGroups: UpdateAdminExerciseMusclesBodySecondaryMuscleGroupsItem[];
+};
+
+export type UpdateAdminExerciseMuscles200MusclesItemMuscleGroup =
+  (typeof UpdateAdminExerciseMuscles200MusclesItemMuscleGroup)[keyof typeof UpdateAdminExerciseMuscles200MusclesItemMuscleGroup];
+
+export const UpdateAdminExerciseMuscles200MusclesItemMuscleGroup = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
+} as const;
+
+export type UpdateAdminExerciseMuscles200MusclesItemRole =
+  (typeof UpdateAdminExerciseMuscles200MusclesItemRole)[keyof typeof UpdateAdminExerciseMuscles200MusclesItemRole];
+
+export const UpdateAdminExerciseMuscles200MusclesItemRole = {
+  PRIMARY: "PRIMARY",
+  SECONDARY: "SECONDARY",
+} as const;
+
+export type UpdateAdminExerciseMuscles200MusclesItem = {
+  muscleGroup: UpdateAdminExerciseMuscles200MusclesItemMuscleGroup;
+  role: UpdateAdminExerciseMuscles200MusclesItemRole;
+};
+
+export type UpdateAdminExerciseMuscles200 = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$ */
+  updatedAt: string;
+  muscles: UpdateAdminExerciseMuscles200MusclesItem[];
+};
+
+export type UpdateAdminExerciseMuscles400 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateAdminExerciseMuscles401 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateAdminExerciseMuscles403 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateAdminExerciseMuscles404 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateAdminExerciseMuscles409 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateAdminExerciseMuscles500 = {
+  error: string;
+  code: string;
+};
+
 export type CreateAdminPlanBodyAudience =
   (typeof CreateAdminPlanBodyAudience)[keyof typeof CreateAdminPlanBodyAudience];
 
@@ -8036,6 +8168,36 @@ export type GetAdminAiUsage500 = {
   code: string;
 };
 
+export type ListAdminExercises200ItemGroupsItem =
+  (typeof ListAdminExercises200ItemGroupsItem)[keyof typeof ListAdminExercises200ItemGroupsItem];
+
+export const ListAdminExercises200ItemGroupsItem = {
+  RESISTANCE: "RESISTANCE",
+  POWER: "POWER",
+  PLYOMETRICS: "PLYOMETRICS",
+  WEIGHTLIFTING: "WEIGHTLIFTING",
+  CALISTHENICS: "CALISTHENICS",
+  CONDITIONING: "CONDITIONING",
+  CORE_STABILITY: "CORE_STABILITY",
+  CARRIES: "CARRIES",
+} as const;
+
+export type Item = {
+  title: string;
+  url: string;
+};
+
+/**
+ * @nullable
+ */
+export type ListAdminExercises200ItemReview = {
+  version: string;
+  matches: boolean;
+  /** @nullable */
+  notes: string | null;
+  sources: Item[];
+} | null;
+
 /**
  * @nullable
  */
@@ -8074,6 +8236,8 @@ export const ListAdminExercises200ItemMusclesItemMuscleGroup = {
   HIP_ABDUCTORS: "HIP_ABDUCTORS",
   CALVES: "CALVES",
   CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
 } as const;
 
 export type ListAdminExercises200ItemMusclesItemRole =
@@ -8104,6 +8268,9 @@ export type ListAdminExercises200Item = {
   /** @nullable */
   family: string | null;
   updatedAt: string;
+  groups: ListAdminExercises200ItemGroupsItem[];
+  /** @nullable */
+  review: ListAdminExercises200ItemReview;
   /** @nullable */
   priority3d: ListAdminExercises200ItemPriority3d;
   muscles: ListAdminExercises200ItemMusclesItem[];
@@ -9226,6 +9393,7 @@ export type ListAdminAuditAction =
   (typeof ListAdminAuditAction)[keyof typeof ListAdminAuditAction];
 
 export const ListAdminAuditAction = {
+  EXERCISE_MUSCLES_UPDATED: "EXERCISE_MUSCLES_UPDATED",
   PLAN_CREATED: "PLAN_CREATED",
   PLAN_UPDATED: "PLAN_UPDATED",
   PLAN_ENTITLEMENTS_UPDATED: "PLAN_ENTITLEMENTS_UPDATED",
@@ -9242,12 +9410,14 @@ export type ListAdminAuditEntityType =
 export const ListAdminAuditEntityType = {
   PLAN: "PLAN",
   SUBSCRIPTION: "SUBSCRIPTION",
+  EXERCISE: "EXERCISE",
 } as const;
 
 export type ListAdminAudit200ItemsItemAction =
   (typeof ListAdminAudit200ItemsItemAction)[keyof typeof ListAdminAudit200ItemsItemAction];
 
 export const ListAdminAudit200ItemsItemAction = {
+  EXERCISE_MUSCLES_UPDATED: "EXERCISE_MUSCLES_UPDATED",
   PLAN_CREATED: "PLAN_CREATED",
   PLAN_UPDATED: "PLAN_UPDATED",
   PLAN_ENTITLEMENTS_UPDATED: "PLAN_ENTITLEMENTS_UPDATED",
@@ -9872,6 +10042,8 @@ export const ListExercises200ItemMusclesItemMuscleGroup = {
   HIP_ABDUCTORS: "HIP_ABDUCTORS",
   CALVES: "CALVES",
   CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
 } as const;
 
 export type ListExercises200ItemMusclesItemRole =
@@ -9937,6 +10109,8 @@ export const CreateExerciseBodyPrimaryMuscleGroupsItem = {
   HIP_ABDUCTORS: "HIP_ABDUCTORS",
   CALVES: "CALVES",
   CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
 } as const;
 
 export type CreateExerciseBodySecondaryMuscleGroupsItem =
@@ -9956,6 +10130,8 @@ export const CreateExerciseBodySecondaryMuscleGroupsItem = {
   HIP_ABDUCTORS: "HIP_ABDUCTORS",
   CALVES: "CALVES",
   CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
 } as const;
 
 export type CreateExerciseBody = {
@@ -9983,6 +10159,8 @@ export const CreateExercise201MusclesItemMuscleGroup = {
   HIP_ABDUCTORS: "HIP_ABDUCTORS",
   CALVES: "CALVES",
   CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
 } as const;
 
 export type CreateExercise201MusclesItemRole =
@@ -10048,6 +10226,8 @@ export const UpdateExerciseMusclesBodyPrimaryMuscleGroupsItem = {
   HIP_ABDUCTORS: "HIP_ABDUCTORS",
   CALVES: "CALVES",
   CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
 } as const;
 
 export type UpdateExerciseMusclesBodySecondaryMuscleGroupsItem =
@@ -10067,6 +10247,8 @@ export const UpdateExerciseMusclesBodySecondaryMuscleGroupsItem = {
   HIP_ABDUCTORS: "HIP_ABDUCTORS",
   CALVES: "CALVES",
   CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
 } as const;
 
 export type UpdateExerciseMusclesBody = {
@@ -10092,6 +10274,8 @@ export const UpdateExerciseMuscles200MusclesItemMuscleGroup = {
   HIP_ABDUCTORS: "HIP_ABDUCTORS",
   CALVES: "CALVES",
   CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
 } as const;
 
 export type UpdateExerciseMuscles200MusclesItemRole =
@@ -10215,6 +10399,8 @@ export const UpdateCustomExerciseBodyPrimaryMuscleGroupsItem = {
   HIP_ABDUCTORS: "HIP_ABDUCTORS",
   CALVES: "CALVES",
   CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
 } as const;
 
 export type UpdateCustomExerciseBodySecondaryMuscleGroupsItem =
@@ -10234,6 +10420,8 @@ export const UpdateCustomExerciseBodySecondaryMuscleGroupsItem = {
   HIP_ABDUCTORS: "HIP_ABDUCTORS",
   CALVES: "CALVES",
   CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
 } as const;
 
 export type UpdateCustomExerciseBody = {
@@ -10261,6 +10449,8 @@ export const UpdateCustomExercise200MusclesItemMuscleGroup = {
   HIP_ABDUCTORS: "HIP_ABDUCTORS",
   CALVES: "CALVES",
   CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
 } as const;
 
 export type UpdateCustomExercise200MusclesItemRole =
@@ -13840,6 +14030,8 @@ export const GetMuscleTrainingAnalytics200MusclesItemMuscleGroup = {
   HIP_ABDUCTORS: "HIP_ABDUCTORS",
   CALVES: "CALVES",
   CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
 } as const;
 
 export type GetMuscleTrainingAnalytics200MusclesItem = {
@@ -14289,6 +14481,8 @@ export const GetExerciseEvolution200ExerciseMusclesItemMuscleGroup = {
   HIP_ABDUCTORS: "HIP_ABDUCTORS",
   CALVES: "CALVES",
   CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
 } as const;
 
 export type GetExerciseEvolution200ExerciseMusclesItemRole =
@@ -19801,6 +19995,83 @@ export const createCoachWorkoutPlanTemplateFromPlan = async (
       method: "POST",
       headers: { "Content-Type": "application/json", ...options?.headers },
       body: JSON.stringify(createCoachWorkoutPlanTemplateFromPlanBody),
+    },
+  );
+};
+
+/**
+ * @summary Update global exercise muscles with audit and conflict protection
+ */
+export type updateAdminExerciseMusclesResponse200 = {
+  data: UpdateAdminExerciseMuscles200;
+  status: 200;
+};
+
+export type updateAdminExerciseMusclesResponse400 = {
+  data: UpdateAdminExerciseMuscles400;
+  status: 400;
+};
+
+export type updateAdminExerciseMusclesResponse401 = {
+  data: UpdateAdminExerciseMuscles401;
+  status: 401;
+};
+
+export type updateAdminExerciseMusclesResponse403 = {
+  data: UpdateAdminExerciseMuscles403;
+  status: 403;
+};
+
+export type updateAdminExerciseMusclesResponse404 = {
+  data: UpdateAdminExerciseMuscles404;
+  status: 404;
+};
+
+export type updateAdminExerciseMusclesResponse409 = {
+  data: UpdateAdminExerciseMuscles409;
+  status: 409;
+};
+
+export type updateAdminExerciseMusclesResponse500 = {
+  data: UpdateAdminExerciseMuscles500;
+  status: 500;
+};
+
+export type updateAdminExerciseMusclesResponseSuccess =
+  updateAdminExerciseMusclesResponse200 & {
+    headers: Headers;
+  };
+export type updateAdminExerciseMusclesResponseError = (
+  | updateAdminExerciseMusclesResponse400
+  | updateAdminExerciseMusclesResponse401
+  | updateAdminExerciseMusclesResponse403
+  | updateAdminExerciseMusclesResponse404
+  | updateAdminExerciseMusclesResponse409
+  | updateAdminExerciseMusclesResponse500
+) & {
+  headers: Headers;
+};
+
+export type updateAdminExerciseMusclesResponse =
+  | updateAdminExerciseMusclesResponseSuccess
+  | updateAdminExerciseMusclesResponseError;
+
+export const getUpdateAdminExerciseMusclesUrl = (exerciseId: string) => {
+  return `/admin/exercises/${exerciseId}/muscles`;
+};
+
+export const updateAdminExerciseMuscles = async (
+  exerciseId: string,
+  updateAdminExerciseMusclesBody: UpdateAdminExerciseMusclesBody,
+  options?: RequestInit,
+): Promise<updateAdminExerciseMusclesResponse> => {
+  return customFetch<updateAdminExerciseMusclesResponse>(
+    getUpdateAdminExerciseMusclesUrl(exerciseId),
+    {
+      ...options,
+      method: "PUT",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(updateAdminExerciseMusclesBody),
     },
   );
 };

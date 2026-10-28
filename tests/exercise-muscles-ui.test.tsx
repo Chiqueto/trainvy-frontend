@@ -31,7 +31,7 @@ describe("Task 3.1C - Grupos Musculares no Frontend", () => {
   });
 
   describe("1. Labels em Português Centralizados (Item 16)", () => {
-    it("mapeia todos os 13 grupos musculares para o português", () => {
+    it("mapeia os grupos musculares para o português", () => {
       expect(getMuscleGroupLabel("CHEST")).toBe("Peito");
       expect(getMuscleGroupLabel("BACK")).toBe("Costas");
       expect(getMuscleGroupLabel("SHOULDERS")).toBe("Ombros");
@@ -45,10 +45,12 @@ describe("Task 3.1C - Grupos Musculares no Frontend", () => {
       expect(getMuscleGroupLabel("HIP_ABDUCTORS")).toBe("Abdutores");
       expect(getMuscleGroupLabel("CALVES")).toBe("Panturrilhas");
       expect(getMuscleGroupLabel("CORE")).toBe("Core");
+      expect(getMuscleGroupLabel("HIP_FLEXORS")).toBe("Flexores do quadril");
+      expect(getMuscleGroupLabel("TIBIALIS_ANTERIOR")).toBe("Tibial anterior");
     });
 
     it("ALL_MUSCLE_GROUPS contém 13 itens com labels válidos", () => {
-      expect(ALL_MUSCLE_GROUPS).toHaveLength(13);
+      expect(ALL_MUSCLE_GROUPS).toHaveLength(15);
       for (const item of ALL_MUSCLE_GROUPS) {
         expect(item.label).toBe(MUSCLE_GROUP_LABELS[item.value]);
       }
