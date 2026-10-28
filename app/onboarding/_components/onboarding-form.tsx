@@ -6,6 +6,7 @@ import { ArrowRight, Dumbbell, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { completeOnboardingAction } from "../_actions";
+import { calendarToday } from "@/app/_lib/birth-date";
 import {
   getOnboardingError,
   onboardingSchema,
@@ -67,17 +68,25 @@ export function OnboardingForm() {
           <fieldset disabled={pending} className="space-y-4">
             <legend className="sr-only">Dados iniciais do perfil</legend>
             <label className="flex flex-col gap-2 text-sm font-medium">
-              Idade (anos)
+              Data de nascimento
               <Input
-                name="age"
-                type="number"
-                inputMode="numeric"
-                min={10}
-                max={120}
-                step={1}
+                name="birthDate"
+                type="date"
+                autoComplete="bday"
+                max={calendarToday()}
                 required
-                placeholder="Ex.: 28"
                 aria-describedby={error ? "onboarding-error" : undefined}
+              />
+            </label>
+            <label className="flex flex-col gap-2 text-sm font-medium">
+              Objetivo de treino
+              <textarea
+                name="trainingGoals"
+                required
+                maxLength={1000}
+                rows={3}
+                placeholder="Ex.: ganhar massa muscular, emagrecer, ganhar força ou melhorar o condicionamento"
+                className="min-h-24 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
               />
             </label>
             <div className="grid grid-cols-2 gap-3">

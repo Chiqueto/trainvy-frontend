@@ -3,6 +3,7 @@ import { useState, useTransition } from "react";
 import type { GetSportsProfile200 } from "@/app/_lib/api/fetch-generated";
 import { saveSportsProfileAction } from "@/app/_actions/sports-profile";
 import { Button } from "@/components/ui/button";
+import { birthDateSchema, calendarToday } from "@/app/_lib/birth-date";
 const experienceLabels = {
   BEGINNER: "Iniciante",
   INTERMEDIATE: "Intermediário",
@@ -14,6 +15,18 @@ export function SportsProfileForm({
   initial: GetSportsProfile200;
 }) {
   const [goals, setGoals] = useState(initial.trainingGoals ?? "");
+  const [birthDate, setBirthDate] = useState(initial.birthDate ?? "");
+  const [persisted, setPersisted] = useState({
+    birthDate: initial.birthDate ?? "",
+    goals: initial.trainingGoals ?? "",
+  });
+  const [open, setOpen] = useState(false);
+  const missing = [
+    !persisted.birthDate && "data de nascimento",
+    !persisted.goals.trim() && "objetivo de treino",
+  ]
+    .filter(Boolean)
+    .join(" e ");
   const [experience, setExperience] = useState(initial.experienceLevel ?? "");
   const [equipment, setEquipment] = useState(
     initial.availableEquipment.join(", "),
@@ -31,12 +44,31 @@ export function SportsProfileForm({
     setError("");
   }
   return (
-    <section className="rounded-2xl border border-border bg-card p-5 text-left">
+    <section className="w-full rounded-2xl border border-border bg-card p-5 text-left">
       <h2 className="font-heading text-base font-semibold">Perfil esportivo</h2>
       <p className="mt-1 text-xs text-muted-foreground">
-        Opcional. Ajuda a personalizar os treinos e as respostas da IA.
+        Seus dados e preferências ajudam a personalizar os treinos.
       </p>
-      <details className="mt-4">
+      {missing && (
+        <aside
+          aria-label="Cadastro incompleto"
+          className="mt-4 rounded-xl border border-primary/20 bg-primary/5 p-3 text-sm"
+        >
+          <p>Complete seu perfil: falta informar {missing}.</p>
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            className="mt-2 min-h-10 font-semibold text-primary hover:underline"
+          >
+            Completar cadastro
+          </button>
+        </aside>
+      )}
+      <details
+        className="mt-4"
+        open={open}
+        onToggle={(event) => setOpen(event.currentTarget.open)}
+      >
         <summary className="cursor-pointer py-2 text-sm font-semibold text-primary">
           Editar objetivos e preferências
         </summary>
@@ -46,8 +78,16 @@ export function SportsProfileForm({
             event.preventDefault();
             setError("");
             setSaved(false);
+            if (birthDate) {
+              const parsed = birthDateSchema.safeParse(birthDate);
+              if (!parsed.success) {
+                setError(parsed.error.issues[0].message);
+                return;
+              }
+            }
             startTransition(async () => {
               const result = await saveSportsProfileAction({
+                ...(birthDate ? { birthDate } : {}),
                 trainingGoals: goals.trim() || null,
                 experienceLevel: experience
                   ? (experience as GetSportsProfile200["experienceLevel"])
@@ -67,11 +107,30 @@ export function SportsProfileForm({
                 return;
               }
               setSaved(true);
+              setPersisted({
+                birthDate: result.data.birthDate ?? birthDate,
+                goals: result.data.trainingGoals ?? goals,
+              });
             });
           }}
         >
           <fieldset disabled={pending} className="flex flex-col gap-4">
             <legend className="sr-only">Dados esportivos opcionais</legend>
+            <label className="flex flex-col gap-2 text-sm">
+              Data de nascimento
+              <input
+                type="date"
+                value={birthDate}
+                autoComplete="bday"
+                max={calendarToday()}
+                required={Boolean(persisted.birthDate)}
+                onChange={(event) => {
+                  setBirthDate(event.target.value);
+                  changed();
+                }}
+                className={inputClass}
+              />
+            </label>
             <label className="flex flex-col gap-2 text-sm">
               Objetivos
               <textarea

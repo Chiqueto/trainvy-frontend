@@ -42,7 +42,7 @@ export default async function PlanningPage() {
         console.error("Failed to fetch planning overview:", err);
         return null;
       }),
-      getUserTrainData(),
+      getUserTrainData({ cache: "no-store" }),
       listAthletePrescriptions().catch(() => null),
       getCommercialContext({ cache: "no-store" }).catch(() => null),
     ]);

@@ -16,7 +16,8 @@ export type MetricHistoryItem = GetUserMetricsHistory200Item;
 export async function saveUserMetricsAction(input: {
   weightInGrams: number;
   heightInCentimeters: number;
-  age: number;
+  age?: number;
+  birthDate?: string;
   bodyFatPercentage: number | null;
 }): Promise<ActionResult<void>> {
   try {
@@ -24,6 +25,7 @@ export async function saveUserMetricsAction(input: {
       weightInGrams: input.weightInGrams,
       heightInCentimeters: input.heightInCentimeters,
       age: input.age,
+      birthDate: input.birthDate,
       bodyFatPercentage: input.bodyFatPercentage,
     });
 

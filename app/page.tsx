@@ -37,6 +37,8 @@ export const metadata: Metadata = {
   },
 };
 
+export const dynamic = "force-dynamic";
+
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -66,10 +68,10 @@ export default async function Home() {
 
   const today = dayjs();
   const [homeData, trainData, activeSessionResponse] = await Promise.all([
-    getHomeData(today.format("YYYY-MM-DD"), {
-      timezoneOffset: today.utcOffset(),
-    }),
-    getUserTrainData(),
+    getHomeData(today.format("YYYY-MM-DD"), { timezoneOffset: today.utcOffset() }, { cache: "no-store" }),
+
+
+    getUserTrainData({ cache: "no-store" }),
     getActiveWorkoutSession().catch(() => null),
   ]);
 
@@ -331,6 +333,7 @@ export default async function Home() {
       ) : null}
 
       <HomeBodyMetricsCard
+        birthDate={userTrainData?.birthDate}
         weightInGrams={userTrainData?.weightInGrams}
         heightInCentimeters={userTrainData?.heightInCentimeters}
         age={userTrainData?.age}

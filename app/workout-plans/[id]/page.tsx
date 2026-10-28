@@ -25,6 +25,8 @@ const WEEKDAY_ORDER = [
   "SUNDAY",
 ];
 
+export const dynamic = "force-dynamic";
+
 export default async function WorkoutPlanPage({
   params,
 }: {
@@ -41,7 +43,7 @@ export default async function WorkoutPlanPage({
   const { id } = await params;
   const [workoutPlanData, trainData, commercialRes] = await Promise.all([
     getWorkoutPlan(id),
-    getUserTrainData(),
+    getUserTrainData({ cache: "no-store" }),
     getCommercialContext({ cache: "no-store" }).catch(() => null),
   ]);
 

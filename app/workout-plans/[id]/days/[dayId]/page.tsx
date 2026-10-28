@@ -37,6 +37,8 @@ const WEEKDAY_TITLE_LABELS: Record<string, string> = {
   SUNDAY: "Domingo",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function WorkoutDayPage({
   params,
 }: {
@@ -54,7 +56,7 @@ export default async function WorkoutDayPage({
   const today = dayjs();
   const [workoutDayData, trainData, commercialRes] = await Promise.all([
     getWorkoutDay(workoutPlanId, dayId),
-    getUserTrainData(),
+    getUserTrainData({ cache: "no-store" }),
     getCommercialContext({ cache: "no-store" }).catch(() => null),
   ]);
 

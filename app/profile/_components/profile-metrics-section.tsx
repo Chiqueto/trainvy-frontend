@@ -10,6 +10,7 @@ interface ProfileMetricsSectionProps {
   weightInGrams?: number | null;
   heightInCentimeters?: number | null;
   age?: number | null;
+  birthDate?: string | null;
   bodyFatPercentage?: number | null;
   weightDiffInGrams?: number | null;
   bodyFatDiff?: number | null;
@@ -19,6 +20,7 @@ export function ProfileMetricsSection({
   weightInGrams,
   heightInCentimeters,
   age,
+  birthDate,
   bodyFatPercentage,
   weightDiffInGrams,
   bodyFatDiff,
@@ -165,6 +167,7 @@ export function ProfileMetricsSection({
           weightInGrams,
           heightInCentimeters,
           age,
+          birthDate,
           bodyFatPercentage,
         }}
       />

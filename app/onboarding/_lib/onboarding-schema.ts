@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { birthDateSchema } from "@/app/_lib/birth-date";
 
 const decimal = (value: string) => Number(value.trim().replace(",", "."));
 
@@ -22,16 +23,12 @@ export const onboardingSchema = z.object({
         .min(50, "Informe uma altura entre 50 e 250 cm.")
         .max(250, "Informe uma altura entre 50 e 250 cm."),
     ),
-  age: z
+  birthDate: birthDateSchema,
+  trainingGoals: z
     .string()
-    .transform(decimal)
-    .pipe(
-      z
-        .number()
-        .int("Informe a idade em anos completos.")
-        .min(10, "Informe uma idade entre 10 e 120 anos.")
-        .max(120, "Informe uma idade entre 10 e 120 anos."),
-    ),
+    .trim()
+    .min(1, "Conte qual é seu objetivo de treino.")
+    .max(1000, "Descreva seu objetivo em até 1000 caracteres."),
   bodyFatPercentage: z
     .string()
     .transform((value) => (value.trim() ? decimal(value) : null))

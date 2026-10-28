@@ -23,6 +23,8 @@ import { ThemeSelector } from "./_components/theme-selector";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ArrowRight, Shield } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 export default async function ProfilePage() {
   const session = await authClient.getSession({
     fetchOptions: {
@@ -34,7 +36,7 @@ export default async function ProfilePage() {
 
   const [trainData, commercialRes, relationshipRes, sharingRes] =
     await Promise.all([
-      getUserTrainData(),
+      getUserTrainData({ cache: "no-store" }),
       getCommercialContext({ cache: "no-store" }),
       getAthleteCoachRelationship({ cache: "no-store" }),
       getAthleteCoachProgressSharing({ cache: "no-store" }).catch(() => null),
@@ -133,10 +135,12 @@ export default async function ProfilePage() {
           />
         )}
 
+        <SportsProfileSection />
         <ProfileMetricsSection
           weightInGrams={data?.weightInGrams}
           heightInCentimeters={data?.heightInCentimeters}
           age={data?.age}
+          birthDate={data?.birthDate}
           bodyFatPercentage={data?.bodyFatPercentage}
           weightDiffInGrams={data?.weightDiffInGrams}
           bodyFatDiff={data?.bodyFatDiff}
@@ -146,7 +150,6 @@ export default async function ProfilePage() {
         <ThemeSelector />
 
         <GamificationThemeSelector currentTheme={data?.gamificationTheme} />
-        <SportsProfileSection />
 
         {/* Instalação do Aplicativo (PWA) */}
         <PwaInstallCard />

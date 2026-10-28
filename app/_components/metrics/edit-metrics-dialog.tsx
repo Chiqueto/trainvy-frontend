@@ -13,11 +13,13 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { saveUserMetricsAction } from "@/app/_actions/metrics";
+import { birthDateSchema, calendarToday } from "@/app/_lib/birth-date";
 
 export interface MetricData {
   weightInGrams?: number | null;
   heightInCentimeters?: number | null;
   age?: number | null;
+  birthDate?: string | null;
   bodyFatPercentage?: number | null;
 }
 
@@ -46,9 +48,7 @@ export function EditMetricsDialog({
       ? initialData.heightInCentimeters.toString()
       : "",
   );
-  const [age, setAge] = useState(() =>
-    initialData?.age ? initialData.age.toString() : "",
-  );
+  const [birthDate, setBirthDate] = useState(initialData?.birthDate ?? "");
   const [bodyFat, setBodyFat] = useState(() =>
     initialData?.bodyFatPercentage != null
       ? initialData.bodyFatPercentage.toString()
@@ -67,7 +67,7 @@ export function EditMetricsDialog({
 
     const parsedWeight = parseFloat(weightKg.replace(",", "."));
     const parsedHeight = parseInt(heightCm, 10);
-    const parsedAge = parseInt(age, 10);
+    const parsedBirthDate = birthDateSchema.safeParse(birthDate);
     const parsedBf = bodyFat.trim() === "" ? null : Number(bodyFat);
 
     if (isNaN(parsedWeight) || parsedWeight < 20 || parsedWeight > 350) {
@@ -78,8 +78,8 @@ export function EditMetricsDialog({
       setErrorMessage("Informe uma altura válida entre 50 e 250 cm.");
       return;
     }
-    if (isNaN(parsedAge) || parsedAge < 10 || parsedAge > 120) {
-      setErrorMessage("Informe uma idade válida entre 10 e 120 anos.");
+    if (!parsedBirthDate.success) {
+      setErrorMessage(parsedBirthDate.error.issues[0].message);
       return;
     }
     if (
@@ -98,7 +98,7 @@ export function EditMetricsDialog({
       const res = await saveUserMetricsAction({
         weightInGrams: Math.round(parsedWeight * 1000),
         heightInCentimeters: parsedHeight,
-        age: parsedAge,
+        birthDate: parsedBirthDate.data,
         bodyFatPercentage: parsedBf,
       });
 
@@ -271,32 +271,27 @@ export function EditMetricsDialog({
                 </div>
               </div>
 
-              {/* Idade */}
+              {/* Data de nascimento */}
               <div className="space-y-1.5">
                 <label
-                  htmlFor="age"
+                  htmlFor="birth-date"
                   className="flex items-center gap-1.5 text-xs font-semibold text-foreground"
                 >
                   <Calendar className="size-3.5 text-primary" />
-                  <span>Idade (anos)</span>
+                  <span>Data de nascimento</span>
                 </label>
                 <div className="relative">
                   <input
-                    id="age"
-                    type="number"
-                    step="1"
-                    min="10"
-                    max="120"
-                    placeholder="26"
-                    value={age}
-                    onChange={(e) => setAge(e.target.value)}
+                    id="birth-date"
+                    type="date"
+                    autoComplete="bday"
+                    max={calendarToday()}
+                    value={birthDate}
+                    onChange={(e) => setBirthDate(e.target.value)}
                     required
                     disabled={isSubmitting}
                     className="w-full rounded-xl border border-input bg-background/50 px-3.5 py-2.5 text-sm font-medium text-foreground outline-none transition focus:border-primary focus:ring-1 focus:ring-primary"
                   />
-                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground">
-                    anos
-                  </span>
                 </div>
               </div>
             </div>

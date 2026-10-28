@@ -2753,6 +2753,11 @@ export type GetUserTrainData200 = {
   weightInGrams: number;
   heightInCentimeters: number;
   age: number;
+  /**
+   * @nullable
+   * @pattern ^(?:(?:\d\d[2468][048] | \d\d[13579][26] | \d\d0[48] | [02468][048]00 | [13579][26]00)-02-29 | \d{4}-(?:(?:0[13578] | 1[02])-(?:0[1-9] | [12]\d | 3[01]) | (?:0[469] | 11)-(?:0[1-9] | 30) | (?:02)-(?:0[1-9] | 1\d | 2[0-8])))$
+   */
+  birthDate?: string | null;
   /** @nullable */
   bodyFatPercentage: number | null;
   gamificationTheme:
@@ -2802,8 +2807,18 @@ export type UpsertUserTrainDataBody = {
   weightInGrams: number;
   /** @minimum 1 */
   heightInCentimeters: number;
-  /** @minimum 1 */
-  age: number;
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  age?: number;
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$ */
+  birthDate?: string;
+  /**
+   * @minLength 1
+   * @maxLength 1000
+   */
+  trainingGoals?: string;
   /**
    * @minimum 0
    * @maximum 100
@@ -2829,6 +2844,11 @@ export type UpsertUserTrainData200 = {
   weightInGrams: number;
   heightInCentimeters: number;
   age: number;
+  /**
+   * @nullable
+   * @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$
+   */
+  birthDate?: string | null;
   /** @nullable */
   bodyFatPercentage: number | null;
   gamificationTheme: UpsertUserTrainData200GamificationTheme;
@@ -14048,6 +14068,11 @@ export type GetSportsProfile200 = {
    * @nullable
    */
   trainingRestrictions: string | null;
+  /**
+   * @nullable
+   * @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$
+   */
+  birthDate?: string | null;
 };
 
 export type GetSportsProfile400 = {
@@ -14098,6 +14123,8 @@ export type UpdateSportsProfileBody = {
    * @nullable
    */
   trainingRestrictions?: string | null;
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$ */
+  birthDate?: string;
 };
 
 /**
@@ -14128,6 +14155,11 @@ export type UpdateSportsProfile200 = {
    * @nullable
    */
   trainingRestrictions: string | null;
+  /**
+   * @nullable
+   * @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$
+   */
+  birthDate?: string | null;
 };
 
 export type UpdateSportsProfile400 = {

@@ -23,6 +23,8 @@ function formatTotalTime(totalSeconds: number): string {
   return `${hours}h${minutes.toString().padStart(2, "0")}m`;
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function StatsPage() {
   const session = await authClient.getSession({
     fetchOptions: {
@@ -42,7 +44,7 @@ export default async function StatsPage() {
 
   const [statsResponse, trainData, metricsHistoryResponse, commercialRes] = await Promise.all([
     getStats({ from, to, timezoneOffset: today.utcOffset() }),
-    getUserTrainData(),
+    getUserTrainData({ cache: "no-store" }),
     getUserMetricsHistory().catch(() => null),
     getCommercialContext({ cache: "no-store" }).catch(() => null),
   ]);
@@ -98,6 +100,7 @@ export default async function StatsPage() {
         <EvolutionDashboard />
 
         <BodyMetricsEvolution
+          initialBirthDate={userTrainData?.birthDate}
           initialWeightInGrams={userTrainData?.weightInGrams}
           initialHeightInCm={userTrainData?.heightInCentimeters}
           initialAge={userTrainData?.age}

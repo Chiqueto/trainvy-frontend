@@ -10,6 +10,7 @@ interface HomeBodyMetricsCardProps {
   weightInGrams?: number | null;
   heightInCentimeters?: number | null;
   age?: number | null;
+  birthDate?: string | null;
   bodyFatPercentage?: number | null;
   weightDiffInGrams?: number | null;
   bodyFatDiff?: number | null;
@@ -19,6 +20,7 @@ export function HomeBodyMetricsCard({
   weightInGrams,
   heightInCentimeters,
   age,
+  birthDate,
   bodyFatPercentage,
   weightDiffInGrams,
   bodyFatDiff,
@@ -147,6 +149,7 @@ export function HomeBodyMetricsCard({
           weightInGrams,
           heightInCentimeters,
           age,
+          birthDate,
           bodyFatPercentage,
         }}
       />

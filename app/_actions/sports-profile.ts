@@ -13,6 +13,8 @@ export async function saveSportsProfileAction(input: UpdateSportsProfileBody) {
         error: "Não foi possível salvar. Revise os campos e tente novamente.",
       };
     revalidatePath("/profile");
+    revalidatePath("/");
+    revalidatePath("/stats");
     return { success: true as const, data: result.data };
   } catch {
     return {

@@ -10,11 +10,13 @@ export async function completeOnboardingAction(input: unknown) {
     return { success: false as const, error: getOnboardingError(parsed.error) };
 
   try {
-    const { weightKg, heightCm, age, bodyFatPercentage } = parsed.data;
+    const { weightKg, heightCm, birthDate, trainingGoals, bodyFatPercentage } =
+      parsed.data;
     const result = await upsertUserTrainData({
       weightInGrams: Math.round(weightKg * 1000),
       heightInCentimeters: heightCm,
-      age,
+      birthDate,
+      trainingGoals,
       bodyFatPercentage,
     });
     if (result.status !== 200) {
@@ -27,6 +29,7 @@ export async function completeOnboardingAction(input: unknown) {
       };
     }
     revalidatePath("/");
+    revalidatePath("/onboarding");
     revalidatePath("/profile");
     revalidatePath("/stats");
     // This route safely consumes any pending invitation; otherwise it opens home.

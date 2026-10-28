@@ -52,7 +52,8 @@ import { completeOnboardingAction } from "@/app/onboarding/_actions";
 const input = {
   weightKg: "75,5",
   heightCm: "175",
-  age: "28",
+  birthDate: "1998-05-20",
+  trainingGoals: "Ganhar força",
   bodyFatPercentage: "",
 };
 beforeEach(() => {
@@ -97,6 +98,14 @@ describe("onboarding sem IA, com integração preservada", () => {
     mocks.getUserTrainData.mockResolvedValue({ status: 404 });
     expect((await OnboardingPage()).type).toBe(OnboardingForm);
   });
+  it("não obriga contas existentes sem nascimento ou objetivo a repetir o onboarding", async () => {
+    mocks.getUserTrainData.mockResolvedValue({
+      status: 200,
+      data: { age: 28, birthDate: null },
+    });
+    await expect(OnboardingPage()).rejects.toThrow("redirect:/");
+    expect(mocks.upsertUserTrainData).not.toHaveBeenCalled();
+  });
   it("preserva o fluxo de convites para quem já completou os dados", async () => {
     mocks.getUserTrainData.mockResolvedValue({
       status: 200,
@@ -130,7 +139,8 @@ describe("cadastro direto pelo contrato existente", () => {
     expect(mocks.upsertUserTrainData).toHaveBeenCalledWith({
       weightInGrams: 75500,
       heightInCentimeters: 175,
-      age: 28,
+      birthDate: "1998-05-20",
+      trainingGoals: "Ganhar força",
       bodyFatPercentage: null,
     });
     expect(mocks.revalidatePath).toHaveBeenCalledWith("/");
@@ -138,7 +148,10 @@ describe("cadastro direto pelo contrato existente", () => {
   it.each([
     { ...input, weightKg: "inválido" },
     { ...input, heightCm: "175.5" },
-    { ...input, age: "" },
+    { ...input, birthDate: "" },
+    { ...input, birthDate: "2000-02-30" },
+    { ...input, birthDate: "9999-01-01" },
+    { ...input, trainingGoals: "   " },
     { ...input, bodyFatPercentage: "101" },
     { ...input, bodyFatPercentage: "12.5" },
   ])("rejeita dados inválidos também no servidor", async (invalid) => {
@@ -157,8 +170,11 @@ describe("cadastro direto pelo contrato existente", () => {
 
 describe("formulário inicial", () => {
   function fill() {
-    fireEvent.change(screen.getByLabelText("Idade (anos)"), {
-      target: { value: "28" },
+    fireEvent.change(screen.getByLabelText("Objetivo de treino"), {
+      target: { value: "Ganhar força" },
+    });
+    fireEvent.change(screen.getByLabelText("Data de nascimento"), {
+      target: { value: "1998-05-20" },
     });
     fireEvent.change(screen.getByLabelText("Peso (kg)"), {
       target: { value: "75,5" },

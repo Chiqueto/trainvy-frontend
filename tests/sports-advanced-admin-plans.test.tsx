@@ -74,6 +74,31 @@ const commercial: ListAdminPlans200Item = {
   entitlements: [{ entitlement: "MANAGE_ATHLETES", limitValue: 5 }],
 };
 describe("Optional sports profile", () => {
+  it("shows a discreet notice for missing birth date and goals and opens their editor", () => {
+    render(<SportsProfileForm initial={emptyProfile} />);
+    const notice = screen.getByLabelText("Cadastro incompleto");
+    expect(notice.textContent).toContain("data de nascimento e objetivo de treino");
+    fireEvent.click(screen.getByRole("button", { name: "Completar cadastro" }));
+    expect(screen.getByText("Editar objetivos e preferências").closest("details")?.open).toBe(true);
+    expect(screen.getByLabelText("Data de nascimento")).toBeDefined();
+  });
+  it("lists only the missing field and hides the notice after a successful save", async () => {
+    const initial = { ...emptyProfile, birthDate: "1996-05-20" };
+    mocks.sports.mockResolvedValue({ success: true, data: { ...initial, trainingGoals: "Ganhar força" } });
+    render(<SportsProfileForm initial={initial} />);
+    const notice = screen.getByLabelText("Cadastro incompleto");
+    expect(notice.textContent).toContain("objetivo de treino");
+    expect(notice.textContent).not.toContain("data de nascimento");
+    fireEvent.click(screen.getByRole("button", { name: "Completar cadastro" }));
+    fireEvent.change(screen.getByLabelText("Objetivos"), { target: { value: "Ganhar força" } });
+    fireEvent.click(screen.getByRole("button", { name: "Salvar perfil esportivo" }));
+    await waitFor(() => expect(screen.queryByLabelText("Cadastro incompleto")).toBeNull());
+    expect(mocks.sports).toHaveBeenCalledWith(expect.objectContaining({ birthDate: "1996-05-20", trainingGoals: "Ganhar força" }));
+  });
+  it("does not show the notice for a complete profile", () => {
+    render(<SportsProfileForm initial={{ ...emptyProfile, birthDate: "1996-05-20", trainingGoals: "Condicionamento" }} />);
+    expect(screen.queryByLabelText("Cadastro incompleto")).toBeNull();
+  });
   it("saves goals, experience, equipment and restrictions without requiring body measurements", async () => {
     mocks.sports.mockResolvedValue({ success: true, data: emptyProfile });
     render(<SportsProfileForm initial={emptyProfile} />);
@@ -131,7 +156,7 @@ describe("Optional sports profile", () => {
         initialData={{
           weightInGrams: 80000,
           heightInCentimeters: 180,
-          age: 30,
+          birthDate: "1996-05-20",
           bodyFatPercentage: null,
         }}
       />,
@@ -145,7 +170,7 @@ describe("Optional sports profile", () => {
       expect(mocks.metrics).toHaveBeenCalledWith({
         weightInGrams: 80000,
         heightInCentimeters: 180,
-        age: 30,
+        birthDate: "1996-05-20",
         bodyFatPercentage: null,
       }),
     );

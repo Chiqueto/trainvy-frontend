@@ -26,6 +26,7 @@ interface BodyMetricsEvolutionProps {
   initialWeightInGrams?: number | null;
   initialHeightInCm?: number | null;
   initialAge?: number | null;
+  initialBirthDate?: string | null;
   initialBodyFat?: number | null;
   initialWeightDiffInGrams?: number | null;
   initialBodyFatDiff?: number | null;
@@ -36,6 +37,7 @@ export function BodyMetricsEvolution({
   initialWeightInGrams,
   initialHeightInCm,
   initialAge,
+  initialBirthDate,
   initialBodyFat,
   initialWeightDiffInGrams,
   initialBodyFatDiff,
@@ -300,6 +302,7 @@ export function BodyMetricsEvolution({
         isOpen={isEditDialogOpen}
         onClose={() => setIsEditDialogOpen(false)}
         initialData={{
+          birthDate: initialBirthDate,
           weightInGrams: latestLog ? latestLog.weightInGrams : initialWeightInGrams,
           heightInCentimeters: latestLog
             ? latestLog.heightInCentimeters

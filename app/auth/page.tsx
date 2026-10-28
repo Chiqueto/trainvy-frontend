@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { authClient } from "@/app/_lib/auth-client";
 import { headers } from "next/headers";
+import { getCommercialContext } from "@/app/_lib/api/fetch-generated";
 import { SignInWithGoogle } from "./_components/sign-in-with-google";
 import { sanitizeReturnTo } from "@/app/_lib/auth-return-to";
 import {
@@ -45,6 +46,12 @@ export default async function AuthPage({
   if (session?.data?.user) {
     if (sanitizedReturnTo) {
       redirect(sanitizedReturnTo);
+    }
+    const context = await getCommercialContext({ cache: "no-store" }).catch(
+      () => null,
+    );
+    if (context?.status === 200 && context.data.accountSetupCompletedAt) {
+      redirect("/");
     }
     redirect("/auth/complete");
   }
