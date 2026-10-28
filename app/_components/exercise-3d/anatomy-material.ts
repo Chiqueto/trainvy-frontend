@@ -39,7 +39,9 @@ export function createTissueMaterial() {
         `#include <common>
         attribute vec3 _exercisemuscles;
         attribute float _pecdeckmuscles;
+        attribute float _smithsquatmuscles;
         varying float vPecDeckMuscles;
+        varying float vSmithSquatMuscles;
         varying vec2 vTissue;
         varying vec2 vFibre;
         varying vec3 vExerciseMuscles;
@@ -49,7 +51,7 @@ export function createTissueMaterial() {
         "#include <uv_vertex>",
         `#include <uv_vertex>
         vTissue = uv; vFibre = uv1;
-        vExerciseMuscles = _exercisemuscles; vPecDeckMuscles = _pecdeckmuscles; vRestSurface = position;`,
+        vExerciseMuscles = _exercisemuscles; vPecDeckMuscles = _pecdeckmuscles; vSmithSquatMuscles = _smithsquatmuscles; vRestSurface = position;`,
       );
     shader.fragmentShader = shader.fragmentShader
       .replace(
@@ -58,6 +60,7 @@ export function createTissueMaterial() {
         varying vec2 vTissue; varying vec2 vFibre;
         varying vec3 vExerciseMuscles; varying vec3 vRestSurface;
         varying float vPecDeckMuscles;
+        varying float vSmithSquatMuscles;
         uniform float exerciseMode; uniform float highlightMuscles;
         uniform vec3 neutralTissue; uniform vec3 primaryTissue; uniform vec3 secondaryTissue;`,
       )
@@ -90,7 +93,8 @@ export function createTissueMaterial() {
             mask = 0.0;
           }
         }
-        if (exerciseMode > 3.5) mask = vPecDeckMuscles;
+        if (exerciseMode > 3.5 && exerciseMode < 4.5) mask = vPecDeckMuscles;
+        if (exerciseMode > 4.5 && exerciseMode < 5.5) mask = vSmithSquatMuscles;
         float selected = smoothstep(0.12, 0.40, mask) * highlightMuscles;
         float primary = smoothstep(0.72, 0.93, mask);
         // Constant categorical colours, never a measurement of activation.
@@ -122,7 +126,7 @@ export function createTissueMaterial() {
           + (1.0-tissue) * (1.0-smoothstep(0.02,0.12,dot(diffuseColor.rgb,vec3(0.333)))) * 0.28, 0.38, 0.88);`,
       );
   };
-  material.customProgramCacheKey = () => "trainvy-atelier-tissue-v6-pec-deck";
+  material.customProgramCacheKey = () => "trainvy-atelier-tissue-v7-smith-squat";
   const setAppearance = (exercise: ExerciseAnimation, highlighted = true) => {
     uniforms.exerciseMode.value = {
       squat: 0,
@@ -132,6 +136,7 @@ export function createTissueMaterial() {
       "incline-bench-press": 2,
       "decline-bench-press": 3,
       "pec-deck": 4,
+      "smith-squat": 5,
     }[exercise];
     uniforms.highlightMuscles.value = highlighted ? 1 : 0;
   };

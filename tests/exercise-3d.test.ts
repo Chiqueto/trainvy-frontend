@@ -8,6 +8,7 @@ import {
   getExercisePose,
   getDeclineLegSupports,
   DECLINE_ROLLER_RADIUS,
+  SMITH_RAIL_Z,
 } from "../app/_components/exercise-3d/kinematics";
 
 describe("exercise 3D scope", () => {
@@ -20,6 +21,9 @@ describe("exercise 3D scope", () => {
     );
     expect(getExerciseAnimation("00000000-0000-4000-8000-000000000105")).toBe(
       "squat",
+    );
+    expect(getExerciseAnimation("d3b3f492-65fa-4038-851f-6f46b69e9fb4")).toBe(
+      "smith-squat",
     );
     expect(getExerciseAnimation("00000000-0000-4000-8000-000000000103")).toBe(
       "incline-dumbbell-press",
@@ -153,6 +157,7 @@ describe("flat dumbbell press", () => {
 
 describe.each([
   "squat",
+  "smith-squat",
   "bench-press",
   "incline-bench-press",
   "decline-bench-press",
@@ -175,6 +180,72 @@ describe.each([
         expect(limb.grip.z).toBe(pose.bar.z);
       }
     }
+  });
+});
+
+
+describe("smith squat kinematics", () => {
+  it("enables canonical id and normalized names", () => {
+    expect(getExerciseAnimation("d3b3f492-65fa-4038-851f-6f46b69e9fb4")).toBe(
+      "smith-squat",
+    );
+    expect(getExerciseAnimation(undefined, "Agachamento no Smith")).toBe(
+      "smith-squat",
+    );
+    expect(getExerciseAnimation(undefined, "agachamento smith")).toBe(
+      "smith-squat",
+    );
+    expect(getExerciseAnimation(undefined, "smith squat")).toBe(
+      "smith-squat",
+    );
+    expect(getExerciseAnimation(undefined, "agachamento na maquina smith")).toBe(
+      "smith-squat",
+    );
+  });
+
+  it("strictly constrains bar to vertical linear guide rails with upright torso and preserved bone lengths", () => {
+    const initial = getExercisePose("smith-squat", 0);
+    const bottom = getExercisePose("smith-squat", 1);
+    const freeSquat = getExercisePose("squat", 1);
+
+    // Barbell descends purely vertically on the fixed guide rail (constant Z, X=0)
+    expect(initial.bar.z).toBeCloseTo(SMITH_RAIL_Z, 6);
+    expect(bottom.bar.z).toBeCloseTo(SMITH_RAIL_Z, 6);
+    expect(initial.bar.x).toBeCloseTo(0, 6);
+    expect(bottom.bar.x).toBeCloseTo(0, 6);
+    expect(initial.bar.y).toBeGreaterThan(bottom.bar.y);
+
+    for (let step = 0; step <= 100; step++) {
+      const depth = step / 100;
+      const pose = getExercisePose("smith-squat", depth);
+
+      // Linear guide: bar Z remains fixed at SMITH_RAIL_Z across the entire rep
+      expect(pose.bar.z).toBeCloseTo(SMITH_RAIL_Z, 5);
+      expect(pose.bar.x).toBeCloseTo(0, 5);
+
+      // Trapezius contact stays attached to the barbell
+      for (let i = 0; i < 2; i++) {
+        const limb = pose.limbs[i];
+        expect(limb.hip.distanceTo(limb.knee)).toBeCloseTo(0.44, 5);
+        expect(limb.knee.distanceTo(limb.ankle)).toBeCloseTo(0.42, 5);
+        expect(limb.shoulder.distanceTo(limb.elbow)).toBeCloseTo(ARM_LENGTH, 5);
+        expect(limb.elbow.distanceTo(limb.wrist)).toBeCloseTo(FOREARM_LENGTH, 5);
+        expect(limb.ankle.y).toBeCloseTo(0.05, 5);
+        expect(limb.ankle.distanceTo(initial.limbs[i].ankle)).toBe(0);
+        expect(limb.grip.y).toBeCloseTo(pose.bar.y, 5);
+        expect(limb.grip.z).toBeCloseTo(pose.bar.z, 5);
+      }
+    }
+
+    // Biomechanical finding: Torso is more upright in Smith squat than free squat
+    // (Abelbeck 2002; Schwanbeck 2009)
+    const smithMaxTilt = bottom.tilt.angleTo(new Vector3(1, 0, 0).applyAxisAngle(new Vector3(1, 0, 0), 0) as any);
+    expect(bottom.tilt.y).toBe(0);
+    // Torso angle of smith squat is significantly more vertical than free squat forward lean
+    expect(bottom.tilt.x).toBeLessThan(freeSquat.tilt.x);
+
+    // Feet are placed slightly anterior to the bar path
+    expect(initial.limbs[0].ankle.z).toBeGreaterThan(SMITH_RAIL_Z);
   });
 });
 

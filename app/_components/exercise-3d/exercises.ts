@@ -1,4 +1,5 @@
 import { PEC_DECK_INSTRUCTIONS } from "./pec-deck-instructions";
+import { SMITH_SQUAT_INSTRUCTIONS } from "./smith-squat-instructions";
 
 export type ExerciseAnimation =
   | "squat"
@@ -7,14 +8,15 @@ export type ExerciseAnimation =
   | "flat-dumbbell-press"
   | "incline-bench-press"
   | "decline-bench-press"
-  | "pec-deck";
+  | "pec-deck"
+  | "smith-squat";
 
 export interface ExerciseDefinition {
   name: string;
   equipment: string;
   id: string;
   muscles: { primary: readonly string[]; secondary: readonly string[] };
-  instructions?: typeof PEC_DECK_INSTRUCTIONS;
+  instructions?: typeof PEC_DECK_INSTRUCTIONS | typeof SMITH_SQUAT_INSTRUCTIONS;
 }
 
 export const EXERCISE_ANIMATIONS = {
@@ -33,6 +35,16 @@ export const EXERCISE_ANIMATIONS = {
     equipment: "Barra livre",
     id: "00000000-0000-4000-8000-000000000105",
     muscles: { primary: ["Quadríceps", "Glúteos"], secondary: ["Adutores"] },
+  },
+  "smith-squat": {
+    name: "Agachamento no Smith",
+    equipment: "Máquina Smith com barra guiada vertical e travas de segurança",
+    id: "d3b3f492-65fa-4038-851f-6f46b69e9fb4",
+    instructions: SMITH_SQUAT_INSTRUCTIONS,
+    muscles: {
+      primary: ["Quadríceps", "Glúteos (ênfase no máximo)"],
+      secondary: ["Adutores"],
+    },
   },
   "bench-press": {
     name: "Supino reto",
@@ -104,6 +116,7 @@ export function getExerciseAnimation(
   name?: string | null,
 ): ExerciseAnimation | null {
   if (id === EXERCISE_ANIMATIONS["pec-deck"].id) return "pec-deck";
+  if (id === EXERCISE_ANIMATIONS["smith-squat"].id) return "smith-squat";
   if (id === EXERCISE_ANIMATIONS.squat.id) return "squat";
   if (id === EXERCISE_ANIMATIONS["incline-dumbbell-press"].id)
     return "incline-dumbbell-press";
@@ -139,6 +152,18 @@ export function getExerciseAnimation(
       ].includes(normalized)
     )
       return "pec-deck";
+
+    if (
+      [
+        "agachamento no smith",
+        "agachamento smith",
+        "smith squat",
+        "agachamento na maquina smith",
+        "agachamento maquina smith",
+      ].includes(normalized)
+    ) {
+      return "smith-squat";
+    }
 
     if (normalized === "supino inclinado com halteres")
       return "incline-dumbbell-press";

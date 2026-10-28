@@ -10,6 +10,7 @@ export const FOREARM_LENGTH = v(0.025, -0.265, 0.03).length();
 export const INCLINE_BENCH_ANGLE = Math.PI / 6; // 30° conforme literatura biomecânica para maximizar feixe clavicular sem sobrecarga excessiva no deltoide anterior
 export const DECLINE_BENCH_ANGLE = -Math.PI / 10; // Existing illustrative bench setting (-18°), not a universal optimum.
 export const DECLINE_ROLLER_RADIUS = 0.055;
+export const SMITH_RAIL_Z = -0.035; // Posição longitudinal dos trilhos guias verticais da máquina Smith
 
 /** Controlled eccentric, short pause at the bottom and smooth concentric. */
 export function getExerciseDepth(phase: number) {
@@ -59,6 +60,7 @@ export function solveJoint(
 export function getExercisePose(exercise: ExerciseAnimation, depth: number) {
   const p = MathUtils.clamp(depth, 0, 1);
   const squat = exercise === "squat";
+  const smithSquat = exercise === "smith-squat";
   const inclineDumbbell = exercise === "incline-dumbbell-press";
   const inclineBarbell = exercise === "incline-bench-press";
   const flatDumbbell = exercise === "flat-dumbbell-press";
@@ -72,39 +74,58 @@ export function getExercisePose(exercise: ExerciseAnimation, depth: number) {
         ? DECLINE_BENCH_ANGLE
         : 0;
 
+  // Smith squat: coluna mais ereta permitida pela sustentação dos trilhos verticais
+  const smithTilt = 0.06 + 0.16 * p;
   const tilt = new Quaternion().setFromAxisAngle(
     X,
-    pecDeck ? 0 : squat ? 0.1 + 0.48 * p : -Math.PI / 2 + benchAngle,
+    pecDeck
+      ? 0
+      : squat
+        ? 0.1 + 0.48 * p
+        : smithSquat
+          ? smithTilt
+          : -Math.PI / 2 + benchAngle,
   );
-  const hipCenter = squat
-    ? v(0, 0.895 - 0.38 * p, -0.03 - 0.25 * p)
-    : pecDeck
-      ? v(0, 0.51, 0)
-      : v(0, 0.49, 0.4);
+
+  const smithOffset = v(0, 0.525, -0.045).applyQuaternion(tilt);
+  const smithBar = v(0, MathUtils.lerp(1.42, 1.04, p), SMITH_RAIL_Z);
+
+  const hipCenter = smithSquat
+    ? smithBar.clone().sub(smithOffset)
+    : squat
+      ? v(0, 0.895 - 0.38 * p, -0.03 - 0.25 * p)
+      : pecDeck
+        ? v(0, 0.51, 0)
+        : v(0, 0.49, 0.4);
+
   const body = (point: Vector3) =>
     point.clone().sub(hipLocal).applyQuaternion(tilt).add(hipCenter);
 
-  const bar = squat
-    ? body(v(0, 0.245, 0.035))
-    : inclineBarbell
-      ? v(0, MathUtils.lerp(1.26, 0.89, p), MathUtils.lerp(0.04, 0.14, p))
-      : declineBarbell
-        ? v(0, MathUtils.lerp(0.83, 0.55, p), MathUtils.lerp(-0.22, -0.19, p))
-        : v(
-            0,
-            MathUtils.lerp(1.035, 0.655, p),
-            MathUtils.lerp(-0.09, -0.015, p),
-          );
+  const bar = smithSquat
+    ? smithBar
+    : squat
+      ? body(v(0, 0.245, 0.035))
+      : inclineBarbell
+        ? v(0, MathUtils.lerp(1.26, 0.89, p), MathUtils.lerp(0.04, 0.14, p))
+        : declineBarbell
+          ? v(0, MathUtils.lerp(0.83, 0.55, p), MathUtils.lerp(-0.22, -0.19, p))
+          : v(
+              0,
+              MathUtils.lerp(1.035, 0.655, p),
+              MathUtils.lerp(-0.09, -0.015, p),
+            );
 
   const limbs = [-1, 1].map((side) => {
     const hip = body(v(side * 0.14, -0.28, 0.08));
-    const ankle = squat
-      ? v(side * 0.2, 0.05, 0.04)
-      : declineBarbell
-        ? v(side * 0.16, 0.48, 1.0)
-        : pecDeck
-          ? v(side * 0.2, 0.05, 0.52)
-          : v(side * 0.25, 0.05, 0.83);
+    const ankle = smithSquat
+      ? v(side * 0.21, 0.05, SMITH_RAIL_Z + 0.14)
+      : squat
+        ? v(side * 0.2, 0.05, 0.04)
+        : declineBarbell
+          ? v(side * 0.16, 0.48, 1.0)
+          : pecDeck
+            ? v(side * 0.2, 0.05, 0.52)
+            : v(side * 0.25, 0.05, 0.83);
     // A seated/declined leg bends above the bench. The standing pole points
     // almost along the declined hip-to-ankle axis and folds the knees underneath.
     const knee = solveJoint(
@@ -145,7 +166,7 @@ export function getExercisePose(exercise: ExerciseAnimation, depth: number) {
       grip = wrist
         .clone()
         .add(v(0, 0.004, 0.012).applyQuaternion(handRotation));
-    } else if (squat) {
+    } else if (squat || smithSquat) {
       grip = bar.clone().add(v(side * 0.39, 0, 0));
       wrist = grip.clone().add(v(0, -0.004, -0.012));
       elbow = solveJoint(

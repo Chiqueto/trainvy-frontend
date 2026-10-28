@@ -22,6 +22,7 @@ import { cn } from "@/lib/utils";
 
 import { ExerciseMediaPreview } from "./exercise-media-preview";
 import { PEC_DECK_INSTRUCTIONS } from "../exercise-3d/pec-deck-instructions";
+import { SMITH_SQUAT_INSTRUCTIONS } from "../exercise-3d/smith-squat-instructions";
 import { getExerciseAnimation, type ExerciseAnimation } from "../exercise-3d/exercises";
 
 const Exercise3DViewer = dynamic(
@@ -55,6 +56,7 @@ const FALLBACK_3D_INSTRUCTIONS: Record<
   NonNullable<GetExerciseMedia200["instructions"]>
 > = {
   "pec-deck": PEC_DECK_INSTRUCTIONS,
+  "smith-squat": SMITH_SQUAT_INSTRUCTIONS,
   squat: {
     description:
       "Exercício composto multiarticular dominante de joelho e quadril, fundamental para desenvolvimento de membros inferiores e core.",

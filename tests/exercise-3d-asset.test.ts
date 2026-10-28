@@ -18,6 +18,7 @@ import { createPoseDriver } from "../app/_components/exercise-3d/kinematics";
 import { EXERCISE_ANIMATIONS } from "../app/_components/exercise-3d/exercises";
 import { createTissueMaterial } from "../app/_components/exercise-3d/anatomy-material";
 import { createPecDeckMuscleMask } from "../app/_components/exercise-3d/pec-deck-muscles";
+import { createSmithSquatMuscleMask } from "../app/_components/exercise-3d/smith-squat-muscles";
 
 let mesh: SkinnedMesh;
 let apply: ReturnType<typeof createPoseDriver>;
@@ -47,6 +48,35 @@ beforeAll(async () => {
 });
 
 describe("Trainvy anatomical athlete", () => {
+
+  it("maps the smith squat explicitly with quadriceps and glutes as primary and adductors as secondary", () => {
+    const geometry = mesh.geometry;
+    const mask = createSmithSquatMuscleMask(geometry);
+    const positions = geometry.getAttribute("position");
+    let primary = 0,
+      secondary = 0,
+      neutralUpper = 0;
+    for (let i = 0; i < mask.count; i++) {
+      const val = mask.getX(i);
+      if (val > 0.9) primary++;
+      else if (val > 0.1) secondary++;
+      if (positions.getY(i) > 1.05) {
+        expect(val).toBe(0);
+        neutralUpper++;
+      }
+    }
+    expect(primary).toBeGreaterThan(3000);
+    expect(secondary).toBeGreaterThan(200);
+    expect(neutralUpper).toBeGreaterThan(1000);
+    expect(EXERCISE_ANIMATIONS["smith-squat"].muscles.primary).toEqual([
+      "Quadríceps",
+      "Glúteos (ênfase no máximo)",
+    ]);
+    expect(EXERCISE_ANIMATIONS["smith-squat"].muscles.secondary).toEqual([
+      "Adutores",
+    ]);
+  });
+
   it("maps the pec deck explicitly without inheriting the press triceps map or changing the cached asset", () => {
     const geometry = mesh.geometry;
     const existing = geometry.getAttribute("_exercisemuscles");
@@ -128,6 +158,7 @@ describe("Trainvy anatomical athlete", () => {
     // Switching back to any planted-foot exercise must clear the declined pose.
     for (const exercise of [
       "squat",
+      "smith-squat",
       "bench-press",
       "incline-dumbbell-press",
       "flat-dumbbell-press",
@@ -185,6 +216,7 @@ describe("Trainvy anatomical athlete", () => {
   });
   it.each([
     "squat",
+    "smith-squat",
     "bench-press",
     "incline-dumbbell-press",
     "flat-dumbbell-press",
@@ -441,6 +473,7 @@ describe("Trainvy anatomical athlete", () => {
   });
   it.each([
     "squat",
+    "smith-squat",
     "bench-press",
     "incline-dumbbell-press",
     "flat-dumbbell-press",
@@ -490,6 +523,7 @@ describe("Trainvy anatomical athlete", () => {
   );
   it.each([
     "squat",
+    "smith-squat",
     "bench-press",
     "incline-dumbbell-press",
     "flat-dumbbell-press",
@@ -524,6 +558,7 @@ describe("Trainvy anatomical athlete", () => {
     setAppearance("flat-dumbbell-press", true);
     setAppearance("incline-bench-press", true);
     setAppearance("decline-bench-press", true);
+    setAppearance("smith-squat", true);
     expect(material.map).toBeNull();
     expect(material.normalMap).toBeNull();
     expect(material.vertexColors).toBe(true);
