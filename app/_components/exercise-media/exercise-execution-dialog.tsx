@@ -110,6 +110,15 @@ const FALLBACK_3D_INSTRUCTIONS: Record<
       "Tire a barra do suporte e desça de forma controlada até tocar o terço inferior do esterno (linha submamilar), com antebraços verticais sob a carga. Empurre a barra de forma fluida de volta à posição inicial.",
     tips: "A declinação a -18° reduz a sobrecarga no deltoide anterior e foca a contração na porção inferior e média do peitoral. Mantenha os cotovelos a cerca de 45° a 70° do tronco sem abri-los a 90°.",
   },
+  "smith-bench-press": {
+    description:
+      "Supino reto executado na máquina Smith com barra guiada em trajetória linear estritamente vertical. Destaca o peitoral maior (motor primário em vermelho vivo) e o tríceps braquial e deltoide anterior (sinergistas em vermelho mais claro).",
+    setup:
+      "Posicione o banco plano centralizado sob a barra do Smith. Deite-se com as escápulas retraídas e deprimidas contra o estofado, pés firmemente plantados no solo e pegada pronada na barra ligeiramente mais larga que os ombros, alinhada à altura média do tórax.",
+    execution:
+      "Gire os punhos para destravar os ganchos da barra dos trilhos. Desça a carga de forma controlada ao longo da guia vertical até o contato suave próximo ao esterno, mantendo os antebraços verticais sob a barra. Empurre a barra de forma fluida até a extensão quase completa dos cotovelos, sem hiperestender.",
+    tips: "A trajetória fixa da máquina Smith remove a necessidade de estabilização tridimensional; mantenha os punhos alinhados com os antebraços e gire os punhos para travar os ganchos com segurança ao final da série.",
+  },
 };
 
 export function ExerciseExecutionDialog({

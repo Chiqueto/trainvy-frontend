@@ -68,6 +68,7 @@ export function getExercisePose(
   const flatDumbbell = exercise === "flat-dumbbell-press";
   const declineBarbell = exercise === "decline-bench-press";
   const pecDeck = exercise === "pec-deck";
+  const smithBarbell = exercise === "smith-bench-press";
 
   const benchAngle =
     inclineDumbbell || inclineBarbell
@@ -94,6 +95,8 @@ export function getExercisePose(
       ? v(0, MathUtils.lerp(1.26, 0.89, p), MathUtils.lerp(0.04, 0.14, p))
       : declineBarbell
         ? v(0, MathUtils.lerp(0.83, 0.55, p), MathUtils.lerp(-0.22, -0.19, p))
+        : smithBarbell
+          ? v(0, MathUtils.lerp(1.035, 0.655, p), -0.035)
         : v(
             0,
             MathUtils.lerp(1.035, 0.655, p),
@@ -195,7 +198,7 @@ export function getExercisePose(
       wrist = grip.clone().add(v(0, -0.004, -0.012));
 
       const bottomPole = v(
-        side * (inclineBarbell ? 0.05 : declineBarbell ? -0.05 : 0.0),
+        side * (inclineBarbell ? 0.05 : declineBarbell ? -0.05 : smithBarbell ? 0.05 : 0.0),
         -0.95,
         inclineBarbell ? -0.05 : -0.05,
       );

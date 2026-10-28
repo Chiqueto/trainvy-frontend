@@ -1,4 +1,5 @@
 import { PEC_DECK_INSTRUCTIONS } from "./pec-deck-instructions";
+import { SMITH_BENCH_INSTRUCTIONS } from "./smith-bench-instructions";
 
 export type ExerciseAnimation =
   | "squat"
@@ -8,14 +9,17 @@ export type ExerciseAnimation =
   | "incline-bench-press"
   | "decline-bench-press"
   | "pec-deck"
-  | "flat-dumbbell-fly";
+  | "flat-dumbbell-fly"
+  | "smith-bench-press";
 
 export interface ExerciseDefinition {
   name: string;
   equipment: string;
   id: string;
   muscles: { primary: readonly string[]; secondary: readonly string[] };
-  instructions?: typeof PEC_DECK_INSTRUCTIONS;
+  instructions?:
+    | typeof PEC_DECK_INSTRUCTIONS
+    | typeof SMITH_BENCH_INSTRUCTIONS;
 }
 
 export const EXERCISE_ANIMATIONS = {
@@ -94,6 +98,16 @@ export const EXERCISE_ANIMATIONS = {
       ],
     },
   },
+  "smith-bench-press": {
+    name: "Supino Reto no Smith",
+    equipment: "Máquina Smith com barra guiada e banco reto",
+    id: "f5a99b5a-74d1-4622-880e-bcf24758dc31",
+    instructions: SMITH_BENCH_INSTRUCTIONS,
+    muscles: {
+      primary: ["Peitoral maior (porções esternocostal e clavicular)"],
+      secondary: ["Tríceps braquial", "Deltoide anterior"],
+    },
+  },
 } satisfies Record<ExerciseAnimation, ExerciseDefinition>;
 
 // Conhecidos IDs legados de exercícios antes do catálogo canônico global
@@ -111,6 +125,8 @@ export function getExerciseAnimation(
   name?: string | null,
 ): ExerciseAnimation | null {
   if (id === EXERCISE_ANIMATIONS["flat-dumbbell-fly"].id) return "flat-dumbbell-fly";
+  if (id === EXERCISE_ANIMATIONS["smith-bench-press"].id)
+    return "smith-bench-press";
   if (id === EXERCISE_ANIMATIONS["pec-deck"].id) return "pec-deck";
   if (id === EXERCISE_ANIMATIONS.squat.id) return "squat";
   if (id === EXERCISE_ANIMATIONS["incline-dumbbell-press"].id)
@@ -183,6 +199,15 @@ export function getExerciseAnimation(
       normalized === "agachamento com barra"
     ) {
       return "squat";
+    }
+
+    if (
+      normalized === "supino reto no smith" ||
+      normalized === "supino no smith" ||
+      normalized === "supino smith" ||
+      normalized === "supino reto smith"
+    ) {
+      return "smith-bench-press";
     }
 
     if (

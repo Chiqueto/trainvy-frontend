@@ -34,6 +34,7 @@ export type WorkoutPlanDraftExercise = {
 
 export type WorkoutPlanDraftDay = {
   id?: string;
+  clientId?: string;
   coverImageUrl?: string | null;
   weekDay?: (typeof WEEK_DAYS)[number]["value"];
   label?: string;
@@ -42,6 +43,12 @@ export type WorkoutPlanDraftDay = {
   estimatedDurationInMinutes: number;
   exercises: WorkoutPlanDraftExercise[];
 };
+
+let daySequence = 0;
+export function createClientDayId(): string {
+  daySequence += 1;
+  return `draft-day-${Date.now()}-${daySequence}`;
+}
 
 export function createDraftExercise(): WorkoutPlanDraftExercise {
   return {
@@ -57,6 +64,7 @@ export function createDraftExercise(): WorkoutPlanDraftExercise {
 
 export function createDraftWorkoutDay(letter: string): WorkoutPlanDraftDay {
   return {
+    clientId: createClientDayId(),
     name: `Treino ${letter}`,
     isRest: false,
     estimatedDurationInMinutes: 60,
@@ -67,18 +75,21 @@ export function createDraftWorkoutDay(letter: string): WorkoutPlanDraftDay {
 export function createInitialWorkoutDays(): WorkoutPlanDraftDay[] {
   return [
     {
+      clientId: createClientDayId(),
       name: "Treino A - Peito e Tríceps",
       isRest: false,
       estimatedDurationInMinutes: 60,
       exercises: [createDraftExercise()],
     },
     {
+      clientId: createClientDayId(),
       name: "Treino B - Costas e Bíceps",
       isRest: false,
       estimatedDurationInMinutes: 60,
       exercises: [createDraftExercise()],
     },
     {
+      clientId: createClientDayId(),
       name: "Treino C - Pernas e Ombros",
       isRest: false,
       estimatedDurationInMinutes: 60,
@@ -211,6 +222,7 @@ export function deserializeWorkoutDays(
 ): WorkoutPlanDraftDay[] {
   return plan.workoutDays.map((day) => ({
     id: day.id,
+    clientId: day.id || createClientDayId(),
     name: day.name,
     weekDay: day.weekDay,
     isRest: day.isRest,
