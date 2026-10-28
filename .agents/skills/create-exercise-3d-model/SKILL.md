@@ -4,7 +4,8 @@ description: >-
   Crie ou revise exercícios 3D do Trainvy com pesquisa biomecânica prévia e revisão
   do cadastro do mesmo exercício: músculos principais/secundários, regiões e ênfase
   ilustrativa coerentes com a execução. Trabalhe por UUID, um exercício por vez,
-  preservando catálogo, busca e histórico. Aplique ao implementar ou corrigir modelos
+  preservando catálogo, busca e histórico, com branches/worktrees isolados e integração
+  serializada na main. Aplique ao implementar ou corrigir modelos
   e animações de exercícios; editar esta skill não executa uma revisão de exercícios.
 ---
 
@@ -18,6 +19,12 @@ Cada exercício é uma unidade de trabalho: **pesquisa → cadastro → modelo/l
 - Fixe o UUID canônico e a variação: equipamento, inclinação, pegada, apoio, amplitude e execução representada. Compare o cadastro da API com as instruções e o registro 3D existentes. Um nome genérico não autoriza presumir barra, halteres ou uma técnica específica.
 - O padrão é revisar **um UUID por vez**. Se o pedido incluir vários exercícios, conclua cada unidade separadamente. Não classifique o catálogo inteiro nem os exercícios de uma família como efeito colateral.
 - Leia [a integração com o catálogo](references/catalog-review.md) ao iniciar a unidade, antes de decidir onde persistir a revisão. O schema atual e o código consultado prevalecem sobre exemplos desta skill.
+
+## Isolar a tarefa e integrar na main
+
+Antes de alterar arquivos do exercício, siga [o fluxo de branches e worktrees](references/parallel-workflow.md): reserve o UUID, crie uma branch e um diretório isolados por chat, implemente e valide nesse worktree e integre na main com exclusão mútua. Branches diferentes na mesma pasta não isolam chats.
+
+O fluxo padrão solicitado inclui commits da tarefa e merge local na main após as verificações, respeitando instruções mais recentes da sessão. Push/deploy continuam sujeitos à autorização correspondente. Use o helper [workflow-lock.mjs](scripts/workflow-lock.mjs) para coordenar reservas e integração entre worktrees. Editar esta skill não inicia esse fluxo nem integra alterações já presentes na pasta do usuário.
 
 ## Pesquisa antes de alterar o cadastro ou modelar
 
