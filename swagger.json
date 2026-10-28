@@ -23001,6 +23001,10 @@
                           "status": {
                             "type": "string"
                           },
+                          "errorMessage": {
+                            "nullable": true,
+                            "type": "string"
+                          },
                           "inputTokens": {
                             "nullable": true,
                             "type": "number"
@@ -23030,6 +23034,54 @@
                         ],
                         "additionalProperties": false
                       }
+                    },
+                    "recentErrors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "userId": {
+                            "type": "string"
+                          },
+                          "userName": {
+                            "type": "string"
+                          },
+                          "userEmail": {
+                            "type": "string"
+                          },
+                          "feature": {
+                            "type": "string"
+                          },
+                          "model": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "errorMessage": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "createdAt": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "userId",
+                          "userName",
+                          "userEmail",
+                          "feature",
+                          "model",
+                          "status",
+                          "errorMessage",
+                          "createdAt"
+                        ],
+                        "additionalProperties": false
+                      }
                     }
                   },
                   "required": [
@@ -23042,7 +23094,8 @@
                     "byFeature",
                     "byUser",
                     "daily",
-                    "recent"
+                    "recent",
+                    "recentErrors"
                   ],
                   "additionalProperties": false
                 }

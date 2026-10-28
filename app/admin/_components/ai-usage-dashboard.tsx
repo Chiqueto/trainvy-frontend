@@ -79,19 +79,32 @@ export function AiUsageDashboard({
           </Link>
         )}
       </form>
-      <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">
         {[
-          ["Custo estimado", money(data.totals.estimatedCostUsd)],
-          ["Chamadas ao modelo", integer(data.totals.calls)],
-          ["Tokens de entrada", integer(data.totals.inputTokens)],
-          ["Tokens de saída", integer(data.totals.outputTokens)],
-        ].map(([label, value]) => (
+          { label: "Custo estimado", value: money(data.totals.estimatedCostUsd), alert: false },
+          { label: "Chamadas ao modelo", value: integer(data.totals.calls), alert: false },
+          { label: "Tokens de entrada", value: integer(data.totals.inputTokens), alert: false },
+          { label: "Tokens de saída", value: integer(data.totals.outputTokens), alert: false },
+          {
+            label: "Erros registrados",
+            value: integer(data.totals.errors),
+            alert: data.totals.errors > 0,
+          },
+        ].map(({ label, value, alert }) => (
           <div
             key={label}
-            className="min-w-0 rounded-2xl border border-border bg-card p-4"
+            className={`min-w-0 rounded-2xl border p-4 ${
+              alert
+                ? "border-destructive/40 bg-destructive/5"
+                : "border-border bg-card"
+            }`}
           >
             <p className="text-xs text-muted-foreground">{label}</p>
-            <p className="mt-2 break-words font-heading text-xl font-bold">
+            <p
+              className={`mt-2 break-words font-heading text-xl font-bold ${
+                alert ? "text-destructive" : ""
+              }`}
+            >
               {value}
             </p>
           </div>
@@ -264,6 +277,71 @@ export function AiUsageDashboard({
             </div>
           </section>
           <section className="space-y-3">
+            <div>
+              <h2 className="font-heading text-base font-semibold">
+                Erros e falhas da IA ({(data.recentErrors ?? []).length})
+              </h2>
+              <p className="text-xs text-muted-foreground">
+                Falhas registradas durante chamadas à API com o motivo do erro reportado.
+              </p>
+            </div>
+            {(!data.recentErrors || data.recentErrors.length === 0) ? (
+              <div className="rounded-2xl border border-dashed border-border bg-card p-6 text-center text-xs text-muted-foreground">
+                Nenhum erro registrado para este filtro.
+              </div>
+            ) : (
+              <div className="overflow-x-auto rounded-2xl border border-destructive/30 bg-card">
+                <table className="w-full text-left text-xs">
+                  <thead className="border-b border-border bg-destructive/5 text-muted-foreground">
+                    <tr>
+                      <th className="whitespace-nowrap p-3 font-medium">Data (UTC)</th>
+                      <th className="whitespace-nowrap p-3 font-medium">Usuário</th>
+                      <th className="whitespace-nowrap p-3 font-medium">Funcionalidade / Modelo</th>
+                      <th className="p-3 font-medium">Motivo do erro</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/50">
+                    {data.recentErrors.map((err) => (
+                      <tr key={err.id} className="hover:bg-muted/30">
+                        <td className="whitespace-nowrap p-3 align-top text-muted-foreground">
+                          {new Date(err.createdAt).toLocaleString("pt-BR", {
+                            timeZone: "UTC",
+                          })}
+                        </td>
+                        <td className="whitespace-nowrap p-3 align-top">
+                          <Link
+                            href={`/admin/users/${encodeURIComponent(err.userId)}`}
+                            className="font-semibold text-primary hover:underline"
+                          >
+                            {err.userName}
+                          </Link>
+                          {err.userEmail && (
+                            <p className="text-[11px] text-muted-foreground">
+                              {err.userEmail}
+                            </p>
+                          )}
+                        </td>
+                        <td className="whitespace-nowrap p-3 align-top">
+                          <div className="font-medium">
+                            {featureNames[err.feature] ?? err.feature}
+                          </div>
+                          <div className="font-mono text-[11px] text-muted-foreground">
+                            {err.model}
+                          </div>
+                        </td>
+                        <td className="p-3 align-top">
+                          <div className="rounded-xl border border-destructive/20 bg-destructive/10 p-2.5 font-mono text-[11px] text-destructive break-words max-h-40 overflow-y-auto whitespace-pre-wrap select-all">
+                            {err.errorMessage || "Motivo não reportado pelo provedor"}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </section>
+          <section className="space-y-3">
             <h2 className="font-heading text-base font-semibold">
               Últimas 30 chamadas
             </h2>
@@ -308,7 +386,25 @@ export function AiUsageDashboard({
                         {featureNames[e.feature] ?? e.feature}
                       </td>
                       <td className="p-3">
-                        {e.status === "ERROR" ? "Falha" : "Concluída"}
+                        {e.status === "ERROR" ? (
+                          <div>
+                            <span className="inline-flex items-center rounded-md bg-destructive/10 px-2 py-0.5 text-[10px] font-semibold text-destructive">
+                              Falha
+                            </span>
+                            {e.errorMessage && (
+                              <p
+                                className="mt-1 line-clamp-1 max-w-44 text-[10px] text-destructive/80"
+                                title={e.errorMessage}
+                              >
+                                {e.errorMessage}
+                              </p>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="inline-flex items-center rounded-md bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">
+                            Concluída
+                          </span>
+                        )}
                       </td>
                       <td className="whitespace-nowrap p-3">
                         {e.inputTokens === null ? "—" : integer(e.inputTokens)}{" "}

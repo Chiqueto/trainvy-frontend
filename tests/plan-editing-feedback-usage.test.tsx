@@ -254,6 +254,7 @@ describe("Admin AI cost visibility", () => {
     byUser: [],
     daily: [],
     recent: [],
+    recentErrors: [],
   };
   it("provides period/user filters, a clear empty state and cost limitations", () => {
     render(<AiUsageDashboard data={data} days={30} />);
@@ -265,6 +266,34 @@ describe("Admin AI cost visibility", () => {
     expect(
       screen.getByText(/O consumo anterior à implantação não é reconstruído/),
     ).toBeTruthy();
+  });
+  it("displays empty error state when calls exist but without errors", () => {
+    render(
+      <AiUsageDashboard
+        days={30}
+        data={{
+          ...data,
+          totals: { ...totals, calls: 1 },
+          recent: [
+            {
+              id: "call-1",
+              userId: "user-1",
+              feature: "CHAT",
+              model: "gemini-2.5-flash",
+              status: "COMPLETED",
+              inputTokens: 100,
+              outputTokens: 50,
+              estimatedCostUsd: 0.0001,
+              createdAt: "2026-10-27T10:00:00Z",
+            },
+          ],
+        }}
+      />,
+    );
+    expect(
+      screen.getByText("Nenhum erro registrado para este filtro."),
+    ).toBeTruthy();
+    expect(screen.getByText("Erros e falhas da IA (0)")).toBeTruthy();
   });
   it("distinguishes missing token/cost data from measured zero", () => {
     render(
@@ -280,9 +309,23 @@ describe("Admin AI cost visibility", () => {
               feature: "CHAT",
               model: "gemini-2.5-flash",
               status: "ERROR",
+              errorMessage: "Quota limit exceeded",
               inputTokens: null,
               outputTokens: null,
               estimatedCostUsd: null,
+              createdAt: "2026-10-27T10:00:00Z",
+            },
+          ],
+          recentErrors: [
+            {
+              id: "usage",
+              userId: "user",
+              userName: "Carlos Atleta",
+              userEmail: "carlos@example.com",
+              feature: "CHAT",
+              model: "gemini-2.5-flash",
+              status: "ERROR",
+              errorMessage: "Quota limit exceeded",
               createdAt: "2026-10-27T10:00:00Z",
             },
           ],
@@ -290,6 +333,10 @@ describe("Admin AI cost visibility", () => {
       />,
     );
     expect(screen.getByText("Não informado")).toBeTruthy();
-    expect(screen.getByText("Falha")).toBeTruthy();
+    expect(screen.getAllByText("Falha").length).toBeGreaterThan(0);
+    expect(screen.getByText("Carlos Atleta")).toBeTruthy();
+    expect(screen.getByText("carlos@example.com")).toBeTruthy();
+    expect(screen.getAllByText("Quota limit exceeded").length).toBeGreaterThan(0);
+    expect(screen.getByText("Erros e falhas da IA (1)")).toBeTruthy();
   });
 });

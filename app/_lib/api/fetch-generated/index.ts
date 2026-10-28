@@ -8379,11 +8379,26 @@ export type GetAdminAiUsage200RecentItem = {
   model: string;
   status: string;
   /** @nullable */
+  errorMessage?: string | null;
+  /** @nullable */
   inputTokens: number | null;
   /** @nullable */
   outputTokens: number | null;
   /** @nullable */
   estimatedCostUsd: number | null;
+  createdAt: string;
+};
+
+export type GetAdminAiUsage200RecentErrorsItem = {
+  id: string;
+  userId: string;
+  userName: string;
+  userEmail: string;
+  feature: string;
+  model: string;
+  status: string;
+  /** @nullable */
+  errorMessage: string | null;
   createdAt: string;
 };
 
@@ -8399,6 +8414,7 @@ export type GetAdminAiUsage200 = {
   byUser: GetAdminAiUsage200ByUserItem[];
   daily: GetAdminAiUsage200DailyItem[];
   recent: GetAdminAiUsage200RecentItem[];
+  recentErrors: GetAdminAiUsage200RecentErrorsItem[];
 };
 
 export type GetAdminAiUsage400 = {
