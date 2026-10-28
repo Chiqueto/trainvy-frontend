@@ -388,6 +388,15 @@ describe("WorkoutPlanBuilder — interface", () => {
     });
   });
 
+  it("usa os mesmos IDs dos cards ao iniciar com todos os treinos expandidos", () => {
+    render(<WorkoutPlanBuilder mode="standalone" defaultExpandedAll />);
+    for (const card of screen.getAllByRole("article")) {
+      expect(within(card).getByLabelText("Nome do treino")).toBeDefined();
+    }
+    fireEvent.click(screen.getByRole("button", { name: "Recolher todos" }));
+    expect(screen.queryByLabelText("Nome do treino")).toBeNull();
+  });
+
   it("ao adicionar um novo treino, ele vem automaticamente expandido", () => {
     render(<WorkoutPlanBuilder mode="standalone" />);
     fireEvent.click(screen.getByRole("button", { name: "Adicionar Treino" }));

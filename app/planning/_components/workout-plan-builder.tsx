@@ -64,11 +64,8 @@ export function WorkoutPlanBuilder({
   );
   const [expandedDayIds, setExpandedDayIds] = useState<Set<string>>(() => {
     if (defaultExpandedAll) {
-      const initialDays = initialPlan
-        ? deserializeWorkoutDays(initialPlan)
-        : createInitialWorkoutDays();
       return new Set(
-        initialDays.map((d, i) => d.clientId ?? d.id ?? String(i)),
+        days.map((d, i) => d.clientId ?? d.id ?? String(i)),
       );
     }
     return new Set<string>();

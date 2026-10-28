@@ -34,7 +34,7 @@ Confirmado no código:
 Fluxos atuais:
 
 - login Google;
-- onboarding via chat;
+- onboarding por formulário, sem dependência de IA (chat preservado, desativado por padrão; reativação com `ONBOARDING_AI_ENABLED=true`);
 - home;
 - consistência;
 - plano semanal;
