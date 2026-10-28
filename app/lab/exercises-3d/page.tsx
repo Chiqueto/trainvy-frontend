@@ -99,6 +99,17 @@ const LAB_MEDIA_DATA: Record<ExerciseAnimation, GetExerciseMedia200> = {
     attributionUrl: null,
     instructions: null,
   },
+  "smith-bench-press": {
+    exerciseId: EXERCISE_ANIMATIONS["smith-bench-press"].id,
+    hasMedia: false,
+    mediaType: null,
+    startImagePath: null,
+    endImagePath: null,
+    motionPath: null,
+    attributionName: null,
+    attributionUrl: null,
+    instructions: EXERCISE_ANIMATIONS["smith-bench-press"].instructions,
+  },
   "decline-bench-press": {
     exerciseId: EXERCISE_ANIMATIONS["decline-bench-press"].id,
     hasMedia: false,
@@ -187,7 +198,18 @@ export default function Exercise3DLab() {
         "Pegada média na barra olímpica com escápulas travadas no encosto.",
       ],
     },
-    "decline-bench-press": {
+    "smith-bench-press": {
+      primary: "Peitoral maior (porções esternocostal e clavicular)",
+      secondary: "Tríceps braquial e Deltoide anterior",
+      cadence:
+        "Descida linear vertical estritamente guiada até a altura do esterno, pausa breve e empurrão firme.",
+      cues: [
+        "Barra guiada em trilhos verticais fixos, eliminando oscilações laterais e poupando estabilizadores secundários.",
+        "Banco plano posicionado para que a barra desça alinhada ao terço médio/inferior do esterno com antebraços verticais.",
+        "Giro de punhos no topo para travar ou destravar os ganchos da barra com máxima segurança.",
+      ],
+    },
+  "decline-bench-press": {
       primary: "Peitoral maior — porção esternocostal e inferior",
       secondary: "Feixe clavicular, tríceps braquial e deltoide anterior",
       cadence:
