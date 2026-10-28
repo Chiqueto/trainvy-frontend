@@ -40,6 +40,17 @@ const LAB_MEDIA_DATA: Record<ExerciseAnimation, GetExerciseMedia200> = {
     startImagePath:null,endImagePath:null,motionPath:null,attributionName:null,attributionUrl:null,
     instructions:EXERCISE_ANIMATIONS["pec-deck"].instructions,
   },
+  "smith-squat": {
+    exerciseId: EXERCISE_ANIMATIONS["smith-squat"].id,
+    hasMedia: false,
+    mediaType: null,
+    startImagePath: null,
+    endImagePath: null,
+    motionPath: null,
+    attributionName: null,
+    attributionUrl: null,
+    instructions: EXERCISE_ANIMATIONS["smith-squat"].instructions ?? null,
+  },
   squat: {
     exerciseId: EXERCISE_ANIMATIONS.squat.id,
     hasMedia: true,
@@ -166,6 +177,18 @@ export default function Exercise3DLab() {
       secondary: "Deltoide anterior",
       cadence: "Abertura controlada, pausa breve e fechamento por adução dos braços.",
       cues: ["Costas apoiadas no encosto e pés firmes no chão.","Cotovelos flexionados e antebraços apoiados nas almofadas.","Aproxime os apoios sem bater; retorne até a abertura confortável, sem levar os braços excessivamente para trás."],
+    },
+    "smith-squat": {
+      primary: "Quadríceps e Glúteos (ênfase no glúteo máximo)",
+      secondary: "Adutores da coxa",
+      cadence:
+        "Descida cadenciada (2s), pausa breve no fundo (paralela) e subida fluida e potente.",
+      cues: [
+        "Barra apoiada confortavelmente sobre o trapézio superior em posição high-bar.",
+        "Trilhos guias verticais direcionam o movimento, permitindo postura mais ereta do tronco.",
+        "Pés posicionados ligeiramente à frente da linha da barra (~10 a 15 cm) com joelhos alinhados com a ponta dos pés.",
+        "Travas de segurança ajustadas logo abaixo da profundidade pretendida.",
+      ],
     },
     squat: {
       primary: "Quadríceps e glúteos",

@@ -1,7 +1,5 @@
 "use client";
 
-import { RoundedBox } from "@react-three/drei";
-
 /**
  * Representação 3D estrutural e mecânica de uma Máquina Smith de musculação.
  * Estrutura estacionária:

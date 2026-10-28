@@ -17,6 +17,7 @@ import { SmithMachineFrame, SmithBarbell } from "./smith-machine";
 import { PecDeckMachine, type PecDeckMachineHandle } from "./pec-deck-machine";
 import { createMachineChestPressMuscleMask } from "./machine-chest-press-muscles";
 import { MachineChestPress, type MachineChestPressHandle } from "./machine-chest-press";
+import { createSmithSquatMuscleMask } from "./smith-squat-muscles";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
 import modelManifest from "../../../public/models/exercise-3d/model-manifest.json";
 import { createTissueMaterial } from "./anatomy-material";
@@ -470,6 +471,7 @@ function Athlete({
         object.geometry.setAttribute("_flymuscles", createFlyMuscleMask(object.geometry));
         object.geometry.setAttribute("_smithbenchmuscles", createSmithBenchMuscleMask(object.geometry));
         object.geometry.setAttribute("_machinechestpressmuscles", createMachineChestPressMuscleMask(object.geometry));
+        object.geometry.setAttribute("_smithsquatmuscles",createSmithSquatMuscleMask(object.geometry));
         geometries.add(object.geometry);
         object.material = material;
         object.castShadow = true;
@@ -530,6 +532,10 @@ function Athlete({
             <Dumbbell />
           </group>
         </>
+      ) : exercise === "smith-squat" ? (
+        <group ref={bar}>
+          <SmithBarbell />
+        </group>
       ) : (
         <group ref={bar}>
           <Barbell />
@@ -565,6 +571,21 @@ function getCameraParams(
       default: return {position:[2.6,1.7,3.1],target};
     }
   }
+  if (exercise === "smith-squat") {
+    const target: [number, number, number] = [0, 0.85, 0];
+    switch (view) {
+      case "front":
+        return { position: [0, 1.25, 3.4], target: [0, 0.9, 0] };
+      case "side":
+        return { position: [3.4, 1.1, 0], target };
+      case "back":
+        return { position: [-0.35, 1.35, -3.2], target };
+      case "perspective":
+      default:
+        return { position: [2.3, 1.55, 2.7], target };
+    }
+  }
+
   const squat = exercise === "squat";
 
   if (squat) {
@@ -754,6 +775,7 @@ export default function ExerciseScene(props: SceneProps) {
       {(props.exercise === "incline-dumbbell-press" ||
         props.exercise === "incline-bench-press") && <InclineBench />}
       {props.exercise === "decline-bench-press" && <DeclineBench />}
+      {props.exercise === "smith-squat" && <SmithMachineFrame />}
 
       <Suspense fallback={null}>
         <Athlete {...props} />
