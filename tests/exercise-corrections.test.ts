@@ -50,4 +50,26 @@ describe("reported exercise regressions", () => {
       }
     }
   });
+
+  it("keeps a small downward elbow bend through the machine fly without moving the supports", () => {
+    const initial = getExercisePose("machine-fly", 0);
+    for (let step = 0; step <= 100; step++) {
+      const pose = getExercisePose("machine-fly", step / 100);
+      for (const [index, limb] of pose.limbs.entries()) {
+        const drop = limb.shoulder.y - limb.elbow.y;
+        expect(drop).toBeGreaterThan(0.04);
+        expect(drop).toBeLessThan(0.06);
+        expect(limb.wrist.y).toBeGreaterThan(limb.elbow.y + 0.04);
+        const upper = limb.elbow.clone().sub(limb.shoulder);
+        const forearm = limb.wrist.clone().sub(limb.elbow);
+        expect(upper.angleTo(forearm)).toBeCloseTo(Math.PI / 9, 6);
+        expect(upper.length()).toBeCloseTo(ARM_LENGTH, 6);
+        expect(forearm.length()).toBeCloseTo(FOREARM_LENGTH, 6);
+        expect(limb.ankle.distanceTo(initial.limbs[index].ankle)).toBe(0);
+        expect(limb.shoulder.distanceTo(initial.limbs[index].shoulder)).toBe(0);
+        const palm = new Vector3(0, 0, 1).applyQuaternion(limb.handRotation);
+        expect(Math.abs(palm.y)).toBeLessThan(0.03);
+      }
+    }
+  });
 });

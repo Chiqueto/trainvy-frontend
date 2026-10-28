@@ -51,6 +51,30 @@ beforeAll(async () => {
 
 describe("Trainvy anatomical athlete", () => {
 
+  it("keeps the machine fly forearm and its distal tissue aligned without opposing axial rolls", () => {
+    const bones = new Map(mesh.skeleton.bones.map((b) => [b.name, b]));
+    for (let step = 0; step <= 40; step++) {
+      const pose = apply("machine-fly", step / 40);
+      for (const limb of pose.limbs) {
+        const suffix = limb.side < 0 ? "L" : "R";
+        const restAxis = bindPositions.get(`hand_${suffix}`)!.clone()
+          .sub(bindPositions.get(`forearm_${suffix}`)!).normalize();
+        const restPalm = new Vector3(0, 0, 1).addScaledVector(restAxis, -restAxis.z).normalize();
+        const axis = limb.wrist.clone().sub(limb.elbow).normalize();
+        const forearm = bones.get(`forearm_${suffix}`)!;
+        const distal = bones.get(`wrist_${suffix}`)!;
+        // Blended skin weights must agree on the longitudinal axis and palm
+        // direction; disagreement collapses the radius/ulna between supports.
+        expect(restAxis.clone().applyQuaternion(forearm.quaternion).dot(axis)).toBeGreaterThan(0.999999);
+        expect(restAxis.clone().applyQuaternion(distal.quaternion).dot(axis)).toBeGreaterThan(0.999999);
+        expect(restPalm.clone().applyQuaternion(forearm.quaternion).dot(
+          restPalm.clone().applyQuaternion(distal.quaternion),
+        )).toBeGreaterThan(0.999999);
+        expect(distal.position.distanceTo(limb.elbow.clone().lerp(limb.wrist, 0.72))).toBeLessThan(1e-8);
+      }
+    }
+  });
+
   it("maps the smith squat explicitly with quadriceps and glutes as primary and adductors as secondary", () => {
     const geometry = mesh.geometry;
     const mask = createSmithSquatMuscleMask(geometry);

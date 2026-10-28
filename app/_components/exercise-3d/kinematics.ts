@@ -12,6 +12,14 @@ export const DECLINE_BENCH_ANGLE = -Math.PI / 10; // Existing illustrative bench
 export const DECLINE_ROLLER_RADIUS = 0.055;
 export const SMITH_RAIL_Z = -0.035; // Posição longitudinal dos trilhos guias verticais da máquina Smith
 
+/** Direction plus a surface normal fixes axial roll as well as segment aim. */
+function frame(direction: Vector3, normal: Vector3) {
+  const y = direction.clone().normalize();
+  const z = normal.clone().addScaledVector(y, -normal.dot(y)).normalize();
+  const x = y.clone().cross(z).normalize();
+  return new Quaternion().setFromRotationMatrix(new Matrix4().makeBasis(x, y, z));
+}
+
 /** Controlled eccentric, short pause at the bottom and smooth concentric. */
 export function getExerciseDepth(phase: number) {
   const cycle = ((phase % 1) + 1) % 1;
@@ -163,14 +171,21 @@ export function getExercisePose(
       const pole = v(side * 0.65, -0.7, -0.1).normalize();
       elbow = solveJoint(shoulder, wrist, ARM_LENGTH, FOREARM_LENGTH, pole);
     } else if (machineFly) {
-      // Hand-grip fly: fixed slight elbow bend, distinct from forearm-pad pec deck.
-      const angle = MathUtils.degToRad(MathUtils.lerp(-10, 72, p));
-      const bend = MathUtils.degToRad(20);
-      const upper = v(side * Math.sin(angle), -0.08, Math.cos(angle)).normalize();
-      const forearm = v(side * Math.sin(angle - bend), -0.08, Math.cos(angle - bend)).normalize();
+      // Fixed 20° flexion in a slightly downward elbow plane. The elbow sits
+      // about 5 cm below the shoulder while the hands remain at chest height.
+      const angle = MathUtils.degToRad(MathUtils.lerp(-20, 62, p));
+      const halfBend = MathUtils.degToRad(10);
+      const radial = v(side * Math.sin(angle), 0, Math.cos(angle));
+      const upper = radial.clone().multiplyScalar(Math.cos(halfBend)).add(v(0, -Math.sin(halfBend), 0));
+      const forearm = radial.clone().multiplyScalar(Math.cos(halfBend)).add(v(0, Math.sin(halfBend), 0));
       elbow = shoulder.clone().addScaledVector(upper, ARM_LENGTH);
       wrist = elbow.clone().addScaledVector(forearm, FOREARM_LENGTH);
-      handRotation.setFromAxisAngle(v(0, 0, 1), (-side * Math.PI) / 2);
+      // Use the actual bind forearm, rather than treating +Y as its long axis.
+      // One frame for forearm, wrist support and grip prevents a distal twist.
+      const palm = v(-side * radial.z, 0, side * radial.x);
+      handRotation.copy(frame(forearm, palm)).multiply(
+        frame(v(side * 0.025, -0.265, 0.03), v(0, 0, 1)).invert(),
+      );
       grip = wrist.clone().add(v(0, 0.004, 0.012).applyQuaternion(handRotation));
     } else if (pecDeck) {
       // Horizontal adduction on a seated forearm-pad machine. The elbows keep
@@ -303,19 +318,6 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
       end.clone().sub(start).normalize(),
     );
   }
-  // A direction alone leaves roll undefined. Use the same anatomical bend
-  // plane for both arm segments, including at the extremes of the repetition.
-  function frame(direction: Vector3, bendNormal: Vector3) {
-    const y = direction.clone().normalize();
-    const z = bendNormal
-      .clone()
-      .addScaledVector(y, -bendNormal.dot(y))
-      .normalize();
-    const x = y.clone().cross(z).normalize();
-    return new Quaternion().setFromRotationMatrix(
-      new Matrix4().makeBasis(x, y, z),
-    );
-  }
   function orientedSegment(
     name: string,
     start: Vector3,
@@ -432,6 +434,10 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
         restNormal,
         posedNormal,
       );
+      if (exercise === "machine-fly") {
+        bones.get(`forearm_${suffix}`)!.quaternion.copy(limb.handRotation);
+        wristSupport?.quaternion.copy(limb.handRotation);
+      }
       const shoulderSupport = bones.get(`shoulder_${suffix}`);
       if (shoulderSupport) {
         shoulderSupport.position.copy(shoulder);

@@ -49,6 +49,10 @@ export const PecDeckMachine = forwardRef<PecDeckMachineHandle, { handGrips?: boo
               assembly.quaternion.copy(rotation);
             }
             handles.current[index]?.position.copy(limb.grip);
+            if (handGrips && handles.current[index]) {
+              const gripAxis = new Vector3(1, 0, 0).applyQuaternion(limb.handRotation);
+              handles.current[index]!.quaternion.setFromUnitVectors(up, gripAxis);
+            }
             const padCenter = limb.elbow
               .clone()
               .addScaledVector(y, 0.11)
