@@ -8,7 +8,7 @@ import {
 } from "@/app/_lib/api/fetch-generated";
 import { WorkoutCover } from "@/app/_components/workout-cover";
 import Link from "next/link";
-import { Goal, Pencil } from "lucide-react";
+import { ArrowLeft, Goal, Pencil } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { BottomNav } from "@/app/_components/bottom-nav";
 import { WorkoutDayCard } from "@/app/_components/workout-day-card";
@@ -81,12 +81,21 @@ export default async function WorkoutPlanPage({
           priority
         />
 
-        <Logo size="md" light className="relative" asLink />
+        <div className="relative flex w-full items-center justify-between gap-3">
+          <Link
+            href="/planning"
+            aria-label="Voltar para rotinas de treino"
+            className="flex size-11 shrink-0 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-sm transition hover:bg-black/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+          >
+            <ArrowLeft className="size-5" />
+          </Link>
+          <Logo size="md" light asLink />
+        </div>
 
         <div className="relative flex w-full items-end justify-between">
-          <div className="flex flex-col gap-3">
-            <Badge className="gap-1 rounded-full px-2.5 py-1.5 font-heading text-xs font-semibold uppercase">
-              <Goal className="size-4" />
+          <div className="flex min-w-0 flex-col gap-3">
+            <Badge className="max-w-full gap-1 rounded-full px-2.5 py-1.5 font-heading text-xs font-semibold whitespace-normal uppercase">
+              <Goal className="size-4 shrink-0" />
               {name}
             </Badge>
             <h1 className="font-heading text-2xl font-semibold leading-[1.05] text-white">

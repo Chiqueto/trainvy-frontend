@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Check, RefreshCw, Minus } from "lucide-react";
 import type { ListAdminExercises200Item } from "@/app/_lib/api/fetch-generated";
+import { anatomySearchTerms } from "@/app/_lib/exercise-anatomy";
 import { ExerciseExecutionDialog } from "@/app/_components/exercise-media/exercise-execution-dialog";
 import { Button } from "@/components/ui/button";
 import {
@@ -66,6 +67,7 @@ export function ExercisesCatalog({
     return {
       ...e,
       ...saved,
+      anatomy: null,
       review: e.review ? { ...e.review, matches: false } : null,
     };
   });
@@ -93,9 +95,9 @@ export function ExercisesCatalog({
     .filter((e) => {
       const c = coverage(e);
       return (
-        normalizeCatalogSearch(`${e.name} ${e.id}`).includes(
-          normalizeCatalogSearch(query),
-        ) &&
+        normalizeCatalogSearch(
+          `${e.name} ${e.id} ${anatomySearchTerms(e.anatomy).join(" ")} ${e.muscles.map((m) => muscleLabels[m.muscleGroup]).join(" ")} ${e.muscles.some((m) => m.muscleGroup === "CHEST") ? "peitoral" : ""}`,
+        ).includes(normalizeCatalogSearch(query)) &&
         (!family || (e.family ?? "Sem família definida") === family) &&
         (!group ||
           (group === "undefined"
@@ -609,6 +611,34 @@ function ExerciseRow({
                   Editar músculos
                 </Button>
               </div>
+              {e.anatomy && (
+                <div className="md:col-span-2 text-xs">
+                  <p className="font-semibold">
+                    Revisão anatômica · {e.anatomy.version}
+                  </p>
+                  <p className="mt-2">{e.anatomy.variant}</p>
+                  <p className="mt-2 text-muted-foreground">
+                    {e.anatomy.notes}
+                  </p>
+                  <ul className="mt-2 space-y-2">
+                    {e.anatomy.sources.map((source) => (
+                      <li key={source.id}>
+                        <a
+                          href={source.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-primary underline"
+                        >
+                          {source.title}
+                        </a>
+                        <p className="text-muted-foreground">
+                          {source.limitation}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               {editing && (
                 <div className="md:col-span-2">
                   <ExerciseMusclesEditor

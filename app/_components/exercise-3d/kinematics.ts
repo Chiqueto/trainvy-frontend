@@ -8,7 +8,8 @@ const hipLocal = v(0, -0.28, 0.08);
 export const ARM_LENGTH = v(0.08, -0.284, -0.012).length();
 export const FOREARM_LENGTH = v(0.025, -0.265, 0.03).length();
 export const INCLINE_BENCH_ANGLE = Math.PI / 6; // 30° conforme literatura biomecânica para maximizar feixe clavicular sem sobrecarga excessiva no deltoide anterior
-export const DECLINE_BENCH_ANGLE = -Math.PI / 10; // -18° conforme literatura cinesiológica para foco no feixe esternocostal/inferior sem cisalhamento anterior
+export const DECLINE_BENCH_ANGLE = -Math.PI / 10; // Existing illustrative bench setting (-18°), not a universal optimum.
+export const DECLINE_ROLLER_RADIUS = 0.055;
 
 /** Controlled eccentric, short pause at the bottom and smooth concentric. */
 export function getExerciseDepth(phase: number) {
@@ -62,6 +63,7 @@ export function getExercisePose(exercise: ExerciseAnimation, depth: number) {
   const inclineBarbell = exercise === "incline-bench-press";
   const flatDumbbell = exercise === "flat-dumbbell-press";
   const declineBarbell = exercise === "decline-bench-press";
+  const pecDeck = exercise === "pec-deck";
 
   const benchAngle =
     inclineDumbbell || inclineBarbell
@@ -72,11 +74,13 @@ export function getExercisePose(exercise: ExerciseAnimation, depth: number) {
 
   const tilt = new Quaternion().setFromAxisAngle(
     X,
-    squat ? 0.1 + 0.48 * p : -Math.PI / 2 + benchAngle,
+    pecDeck ? 0 : squat ? 0.1 + 0.48 * p : -Math.PI / 2 + benchAngle,
   );
   const hipCenter = squat
     ? v(0, 0.895 - 0.38 * p, -0.03 - 0.25 * p)
-    : v(0, 0.49, 0.4);
+    : pecDeck
+      ? v(0, 0.51, 0)
+      : v(0, 0.49, 0.4);
   const body = (point: Vector3) =>
     point.clone().sub(hipLocal).applyQuaternion(tilt).add(hipCenter);
 
@@ -97,16 +101,51 @@ export function getExercisePose(exercise: ExerciseAnimation, depth: number) {
     const ankle = squat
       ? v(side * 0.2, 0.05, 0.04)
       : declineBarbell
-        ? v(side * 0.16, 0.58, 0.82)
-        : v(side * 0.25, 0.05, 0.83);
-    const knee = solveJoint(hip, ankle, 0.44, 0.42, v(side * 0.12, 0.15, 1));
+        ? v(side * 0.16, 0.48, 1.0)
+        : pecDeck
+          ? v(side * 0.2, 0.05, 0.52)
+          : v(side * 0.25, 0.05, 0.83);
+    // A seated/declined leg bends above the bench. The standing pole points
+    // almost along the declined hip-to-ankle axis and folds the knees underneath.
+    const knee = solveJoint(
+      hip,
+      ankle,
+      0.44,
+      0.42,
+      declineBarbell ? v(0, 1, 0) : v(side * 0.12, 0.15, 1),
+    );
+    // The feet are secured beneath the ankle rollers, not planted on the floor.
+    // Keep the sole approximately perpendicular to the shins (neutral ankle).
+    const footRotation = new Quaternion().setFromAxisAngle(
+      X,
+      declineBarbell ? Math.atan2(knee.z - ankle.z, knee.y - ankle.y) : 0,
+    );
     const shoulder = body(v(side * 0.215, 0.224, 0.132));
 
     let wrist: Vector3;
     let grip: Vector3;
     let elbow: Vector3;
+    const handRotation = new Quaternion();
 
-    if (squat) {
+    if (pecDeck) {
+      // Horizontal adduction on a seated forearm-pad machine. The elbows keep
+      // their flexion; this is neither a bench press nor a dumbbell fly.
+      const angle = MathUtils.degToRad(MathUtils.lerp(-25, 78, p));
+      const upperDirection = v(
+        side * Math.sin(angle),
+        -0.035,
+        Math.cos(angle),
+      ).normalize();
+      elbow = shoulder.clone().addScaledVector(upperDirection, ARM_LENGTH);
+      const forearmDirection = v(0, 1, 0)
+        .addScaledVector(upperDirection, -upperDirection.y)
+        .normalize();
+      wrist = elbow.clone().addScaledVector(forearmDirection, FOREARM_LENGTH);
+      handRotation.setFromAxisAngle(v(0, 0, 1), (-side * Math.PI) / 2);
+      grip = wrist
+        .clone()
+        .add(v(0, 0.004, 0.012).applyQuaternion(handRotation));
+    } else if (squat) {
       grip = bar.clone().add(v(side * 0.39, 0, 0));
       wrist = grip.clone().add(v(0, -0.004, -0.012));
       elbow = solveJoint(
@@ -146,7 +185,8 @@ export function getExercisePose(exercise: ExerciseAnimation, depth: number) {
       // A pegada na barra é calibrada para que, no fundo do movimento (p=1),
       // o antebraço fique vertical diretamente sob a barra, sustentando a carga
       // por meio da estrutura óssea e direcionando o torque para o peitoral maior.
-      const gripX = side * (inclineBarbell ? 0.42 : declineBarbell ? 0.465 : 0.45);
+      const gripX =
+        side * (inclineBarbell ? 0.42 : declineBarbell ? 0.465 : 0.45);
       grip = bar.clone().add(v(gripX, 0, 0));
       wrist = grip.clone().add(v(0, -0.004, -0.012));
 
@@ -164,9 +204,41 @@ export function getExercisePose(exercise: ExerciseAnimation, depth: number) {
       elbow = solveJoint(shoulder, wrist, ARM_LENGTH, FOREARM_LENGTH, pole);
     }
 
-    return { side, hip, knee, ankle, shoulder, elbow, wrist, grip };
+    return {
+      side,
+      hip,
+      knee,
+      ankle,
+      footRotation,
+      shoulder,
+      elbow,
+      wrist,
+      grip,
+      handRotation,
+    };
   });
   return { origin: body(v(0, 0, 0)), tilt, bar, limbs };
+}
+
+/** Derive equipment contacts from the same fixed leg pose used by the athlete. */
+export function getDeclineLegSupports() {
+  const { knee, ankle, footRotation } = getExercisePose(
+    "decline-bench-press",
+    0,
+  ).limbs[0];
+  const footUp = v(0, 1, 0).applyQuaternion(footRotation);
+  const footForward = v(0, 0, 1).applyQuaternion(footRotation);
+  return {
+    kneeRoller: knee
+      .clone()
+      .setX(0)
+      .add(v(0, -0.085, -0.01)),
+    ankleRoller: ankle
+      .clone()
+      .setX(0)
+      .addScaledVector(footUp, DECLINE_ROLLER_RADIUS + 0.035)
+      .addScaledVector(footForward, 0.035),
+  };
 }
 
 export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
@@ -199,7 +271,7 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
       new Matrix4().makeBasis(x, y, z),
     );
   }
-  function armSegment(
+  function orientedSegment(
     name: string,
     start: Vector3,
     end: Vector3,
@@ -221,10 +293,45 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
     root.position.copy(pose.origin);
     root.quaternion.copy(pose.tilt).multiply(restTilt.clone().invert());
     for (const limb of pose.limbs) {
-      const { side, hip, knee, ankle, shoulder, elbow, wrist } = limb;
+      const { side, hip, knee, ankle, footRotation, shoulder, elbow, wrist } =
+        limb;
       const suffix = side < 0 ? "L" : "R";
-      segment(`thigh_${suffix}`, hip, knee, rest.get(`shin_${suffix}`)!);
-      segment(`shin_${suffix}`, knee, ankle, rest.get(`foot_${suffix}`)!);
+      if (exercise === "decline-bench-press" || exercise === "pec-deck") {
+        const restHip = rest.get(`thigh_${suffix}`)!;
+        const restKnee = rest.get(`shin_${suffix}`)!;
+        const restAnkle = rest.get(`foot_${suffix}`)!;
+        const restNormal = restKnee
+          .clone()
+          .sub(restHip)
+          .cross(restAnkle.clone().sub(restKnee))
+          .normalize();
+        const posedNormal = knee
+          .clone()
+          .sub(hip)
+          .cross(ankle.clone().sub(knee))
+          .normalize();
+        // Preserve the anatomical knee plane as well as the segment direction;
+        // a shortest-arc rotation alone leaves the thigh/shin's roll undefined.
+        orientedSegment(
+          `thigh_${suffix}`,
+          hip,
+          knee,
+          restKnee,
+          restNormal,
+          posedNormal,
+        );
+        orientedSegment(
+          `shin_${suffix}`,
+          knee,
+          ankle,
+          restAnkle,
+          restNormal,
+          posedNormal,
+        );
+      } else {
+        segment(`thigh_${suffix}`, hip, knee, rest.get(`shin_${suffix}`)!);
+        segment(`shin_${suffix}`, knee, ankle, rest.get(`foot_${suffix}`)!);
+      }
       const hipSupport = bones.get(`hip_${suffix}`);
       if (hipSupport) {
         hipSupport.position.copy(hip);
@@ -234,7 +341,7 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
       }
       const foot = bones.get(`foot_${suffix}`)!;
       foot.position.copy(ankle);
-      foot.quaternion.identity();
+      foot.quaternion.copy(footRotation);
       const restShoulder = rest.get(`upperArm_${suffix}`)!;
       const restElbow = rest.get(`forearm_${suffix}`)!;
       const restWrist = rest.get(`hand_${suffix}`)!;
@@ -250,7 +357,7 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
         .sub(shoulder)
         .cross(wrist.clone().sub(elbow))
         .normalize();
-      armSegment(
+      orientedSegment(
         `upperArm_${suffix}`,
         shoulder,
         elbow,
@@ -269,7 +376,7 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
             frame(restWrist.clone().sub(restElbow), v(side, 0, 0)).invert(),
           );
       }
-      armSegment(
+      orientedSegment(
         `forearm_${suffix}`,
         elbow,
         wrist,
@@ -295,7 +402,7 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
       const hand = bones.get(`hand_${suffix}`)!;
       hand.position.copy(wrist);
       // The new hands are sculpted around the horizontal bar in their bind pose.
-      hand.quaternion.identity();
+      hand.quaternion.copy(limb.handRotation);
     }
     return pose;
   };

@@ -15,6 +15,26 @@ const mocks = vi.hoisted(() => ({
   createPeriodizationAction: vi.fn(),
   createStandaloneWorkoutPlanAction: vi.fn(),
   createWorkoutPlanInPeriodizationAction: vi.fn(),
+  catalogRefresh: vi.fn().mockResolvedValue([]),
+  catalog: ["Agachamento", "Remada", "Desenvolvimento"].map((name, index) => ({
+    id: `catalog-${index}`,
+    name,
+    muscles: [],
+    ownerUserId: null,
+    hasMedia: false,
+  })),
+}));
+
+vi.mock("@/app/_lib/hooks/use-exercise-catalog", () => ({
+  useExerciseCatalog: () => ({
+    exercises: mocks.catalog,
+    search: (query: string) =>
+      mocks.catalog.filter((exercise) =>
+        exercise.name.toLowerCase().includes(query.toLowerCase()),
+      ),
+    isSyncing: false,
+    refresh: mocks.catalogRefresh,
+  }),
 }));
 
 vi.mock("next/navigation", () => ({
@@ -126,9 +146,14 @@ describe("WorkoutPlanBuilder — interface", () => {
     });
     const exercises = ["Agachamento", "Remada", "Desenvolvimento"];
     screen.getAllByRole("article").forEach((card, index) => {
-      fireEvent.change(within(card).getByLabelText("Nome"), {
-        target: { value: exercises[index] },
-      });
+      fireEvent.click(
+        within(card).getByRole("button", {
+          name: "Exercício: Selecionar exercício",
+        }),
+      );
+      fireEvent.click(
+        screen.getByRole("button", { name: `Selecionar ${exercises[index]}` }),
+      );
     });
   }
 
@@ -146,6 +171,7 @@ describe("WorkoutPlanBuilder — interface", () => {
     expect(payload.workoutDays).toHaveLength(3);
     expect(payload.workoutDays[0].exercises[0]).toMatchObject({
       name: "Agachamento",
+      exerciseId: "catalog-0",
       order: 0,
     });
   });
@@ -229,6 +255,105 @@ describe("WorkoutPlanBuilder — interface", () => {
     expect(
       (screen.getByLabelText("Nome do plano *") as HTMLInputElement).value,
     ).toBe("Meu plano preservado");
+  });
+
+  it("busca no catálogo e vincula alternativas e novos exercícios por ID", async () => {
+    render(<WorkoutPlanBuilder mode="standalone" />);
+    configureMonday();
+    const card = screen.getAllByRole("article")[0];
+    expect(within(card).queryByRole("textbox", { name: "Nome" })).toBeNull();
+    fireEvent.click(
+      within(card).getByRole("button", {
+        name: "Alternativa 1: Selecionar exercício",
+      }),
+    );
+    fireEvent.change(
+      screen.getByRole("textbox", { name: "Buscar exercícios" }),
+      { target: { value: "Remada" } },
+    );
+    expect(
+      screen.queryByRole("button", { name: "Selecionar Agachamento" }),
+    ).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Selecionar Remada" }));
+    expect(screen.queryByRole("dialog")).toBeNull();
+    fireEvent.click(
+      within(card).getByRole("button", {
+        name: "Adicionar exercício: Selecionar exercício",
+      }),
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: "Selecionar Desenvolvimento" }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Criar plano" }));
+    await waitFor(() =>
+      expect(mocks.createStandaloneWorkoutPlanAction).toHaveBeenCalled(),
+    );
+    expect(
+      mocks.createStandaloneWorkoutPlanAction.mock.calls[0][0].workoutDays[0]
+        .exercises,
+    ).toEqual([
+      expect.objectContaining({
+        exerciseId: "catalog-0",
+        alternative1Name: "Remada",
+        alternative1ExerciseId: "catalog-1",
+      }),
+      expect.objectContaining({
+        exerciseId: "catalog-2",
+        name: "Desenvolvimento",
+        order: 1,
+      }),
+    ]);
+  });
+
+  it("permite remover uma alternativa e cancelar uma adição sem alterar o treino", async () => {
+    render(<WorkoutPlanBuilder mode="standalone" />);
+    configureMonday();
+    const card = screen.getAllByRole("article")[0];
+    fireEvent.click(
+      within(card).getByRole("button", {
+        name: "Alternativa 2: Selecionar exercício",
+      }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Selecionar Remada" }));
+    fireEvent.click(
+      within(card).getByRole("button", { name: "Remover alternativa 2" }),
+    );
+    fireEvent.click(
+      within(card).getByRole("button", {
+        name: "Adicionar exercício: Selecionar exercício",
+      }),
+    );
+    fireEvent.change(
+      screen.getByRole("textbox", { name: "Buscar exercícios" }),
+      { target: { value: "inexistente" } },
+    );
+    expect(screen.getByText(/Nenhum exercício encontrado/)).toBeDefined();
+    expect(
+      screen.queryByRole("button", { name: /criar exercício/i }),
+    ).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Fechar catálogo" }));
+    fireEvent.click(screen.getByRole("button", { name: "Criar plano" }));
+    await waitFor(() =>
+      expect(mocks.createStandaloneWorkoutPlanAction).toHaveBeenCalled(),
+    );
+    const exercises =
+      mocks.createStandaloneWorkoutPlanAction.mock.calls[0][0].workoutDays[0]
+        .exercises;
+    expect(exercises).toHaveLength(1);
+    expect(exercises[0]).toMatchObject({
+      alternative2Name: null,
+      alternative2ExerciseId: null,
+    });
+  });
+
+  it("não salva nomes livres de exercícios em rascunhos novos", () => {
+    const days = createInitialWorkoutDays().slice(0, 1);
+    days[0].exercises[0].name = "Nome livre";
+    expect(validateWorkoutPlanDraft("Plano", days)).toContain("no catálogo");
+    days[0].exercises[0].exerciseId = "catalog-0";
+    expect(validateWorkoutPlanDraft("Plano", days)).toBeNull();
+    days[0].exercises[0].alternative1Name = "Outra opção livre";
+    expect(validateWorkoutPlanDraft("Plano", days)).toContain("alternativas");
   });
 });
 

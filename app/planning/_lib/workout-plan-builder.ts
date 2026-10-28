@@ -140,8 +140,19 @@ export function validateWorkoutPlanDraft(
           exercise.targetLoadInGrams > 2000000)
       )
         return `Revise a carga alvo em ${dayLabel}.`;
-      if (!exercise.name.trim()) {
-        return `Informe o nome de todos os exercícios de ${dayLabel}.`;
+      // Existing prescriptions may predate the catalog. Keep them editable;
+      // new exercises (including AI drafts) must reference a catalog entry.
+      if (!exercise.name.trim() || (!exercise.exerciseId && !exercise.id)) {
+        return `Selecione todos os exercícios de ${dayLabel} no catálogo.`;
+      }
+      if (
+        !exercise.id &&
+        ((exercise.alternative1Name?.trim() &&
+          !exercise.alternative1ExerciseId) ||
+          (exercise.alternative2Name?.trim() &&
+            !exercise.alternative2ExerciseId))
+      ) {
+        return `Selecione as alternativas de ${dayLabel} no catálogo.`;
       }
       if (
         (exercise.warmupSets !== undefined &&

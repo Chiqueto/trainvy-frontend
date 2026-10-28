@@ -1,19 +1,33 @@
+import { PEC_DECK_INSTRUCTIONS } from "./pec-deck-instructions";
+
 export type ExerciseAnimation =
   | "squat"
   | "bench-press"
   | "incline-dumbbell-press"
   | "flat-dumbbell-press"
   | "incline-bench-press"
-  | "decline-bench-press";
+  | "decline-bench-press"
+  | "pec-deck";
 
 export interface ExerciseDefinition {
   name: string;
   equipment: string;
   id: string;
   muscles: { primary: readonly string[]; secondary: readonly string[] };
+  instructions?: typeof PEC_DECK_INSTRUCTIONS;
 }
 
 export const EXERCISE_ANIMATIONS = {
+  "pec-deck": {
+    name: "Crucifixo na Máquina (peck deck)",
+    equipment: "Máquina peck deck com encosto e apoios de antebraço",
+    id: "b9859cd9-6ed6-4e63-8fd0-500e8cf8d553",
+    instructions: PEC_DECK_INSTRUCTIONS,
+    muscles: {
+      primary: ["Peitoral maior — porções clavicular e esternocostal"],
+      secondary: ["Deltoide anterior"],
+    },
+  },
   squat: {
     name: "Agachamento livre",
     equipment: "Barra livre",
@@ -35,11 +49,7 @@ export const EXERCISE_ANIMATIONS = {
     id: "00000000-0000-4000-8000-000000000103",
     muscles: {
       primary: ["Peitoral superior (porção clavicular)"],
-      secondary: [
-        "Peitoral médio/inferior",
-        "Tríceps",
-        "Deltoide anterior",
-      ],
+      secondary: ["Peitoral médio/inferior", "Tríceps", "Deltoide anterior"],
     },
   },
   "flat-dumbbell-press": {
@@ -61,11 +71,7 @@ export const EXERCISE_ANIMATIONS = {
     id: "00000000-0000-4000-8000-000000000104",
     muscles: {
       primary: ["Peitoral superior (porção clavicular)"],
-      secondary: [
-        "Peitoral médio/inferior",
-        "Tríceps",
-        "Deltoide anterior",
-      ],
+      secondary: ["Peitoral médio/inferior", "Tríceps", "Deltoide anterior"],
     },
   },
   "decline-bench-press": {
@@ -97,6 +103,7 @@ export function getExerciseAnimation(
   id?: string | null,
   name?: string | null,
 ): ExerciseAnimation | null {
+  if (id === EXERCISE_ANIMATIONS["pec-deck"].id) return "pec-deck";
   if (id === EXERCISE_ANIMATIONS.squat.id) return "squat";
   if (id === EXERCISE_ANIMATIONS["incline-dumbbell-press"].id)
     return "incline-dumbbell-press";
@@ -121,6 +128,17 @@ export function getExerciseAnimation(
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
+    if (
+      [
+        "peck deck",
+        "pec deck",
+        "voador",
+        "crucifixo na maquina",
+        "crucifixo na maquina (peck deck)",
+        "crucifixo na maquina — aliases: peck deck, pec deck, voador",
+      ].includes(normalized)
+    )
+      return "pec-deck";
 
     if (normalized === "supino inclinado com halteres")
       return "incline-dumbbell-press";

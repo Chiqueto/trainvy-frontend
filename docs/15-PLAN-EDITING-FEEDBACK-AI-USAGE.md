@@ -7,6 +7,8 @@ Escopo definido em 27/10/2026: priorizar treino editável, feedback persistente 
 - O detalhe de um plano oferece **Editar plano**, levando a `/planning/plans/:id/edit`.
 - O construtor existente recebe os dias, exercícios, aquecimento, alternativas e capas já salvos.
 - É possível alterar nome, exercícios, séries, repetições, descansos e ordem, além de adicionar/remover treinos e exercícios.
+- Na criação e edição manual, exercícios e alternativas são escolhidos em um modal de busca por nome/grupo muscular, com cards do catálogo e envio dos IDs existentes. Não há cadastro de exercício personalizado nesse fluxo. Prescrições antigas sem vínculo continuam preservadas; novos itens, inclusive rascunhos de IA, precisam ser selecionados no catálogo antes de salvar.
+- O detalhe da rotina oferece retorno para `/planning`. O menu de ações usa portal, reposicionamento para caber na tela e espaço reservado à navegação inferior; confirmações também usam portal e empilham os botões no celular.
 - A API preserva IDs de itens mantidos, vínculo com periodização e estado de ativação. IDs enviados precisam pertencer ao plano/dia e os exercícios precisam ser globais ou do próprio atleta.
 - Uma sessão em andamento do mesmo plano bloqueia a edição. Início de sessão e edição compartilham lock do plano.
 - Execuções anteriores continuam com os snapshots e séries originais. Remover um dia prescrito não apaga a sessão histórica.

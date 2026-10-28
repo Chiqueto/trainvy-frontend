@@ -49,7 +49,13 @@ export function Exercise3DViewer(props: {
   return <Viewer key={props.exercise} {...props} />;
 }
 
-function phaseLabel(phase: number) {
+function phaseLabel(phase: number, exercise: ExerciseAnimation) {
+  if(exercise === "pec-deck") {
+    if(phase<0.04||phase>=0.99) return "Posição fechada";
+    if(phase<0.48) return "Abertura controlada";
+    if(phase<0.54) return "Pausa na abertura";
+    return "Fechamento controlado";
+  }
   if (phase < 0.04 || phase >= 0.99) return "Posição inicial";
   if (phase < 0.48) return "Descida controlada";
   if (phase < 0.54) return "Pausa no ponto baixo";
@@ -203,7 +209,7 @@ function Viewer({
               <span
                 className={`size-1.5 rounded-full ${playing ? "bg-emerald-400" : "bg-slate-500"}`}
               />
-              {phaseLabel(phase)}
+              {phaseLabel(phase, exercise)}
             </div>
             <button
               type="button"

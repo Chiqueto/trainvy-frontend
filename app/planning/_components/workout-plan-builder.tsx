@@ -31,6 +31,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AthleteAiWorkoutPlanModal } from "./athlete-ai-workout-plan-modal";
 import { AdvancedPrescriptionFields } from "./advanced-prescription-fields";
+import { CatalogExercisePicker } from "./catalog-exercise-picker";
 import type { GetEditableWorkoutPlan200 } from "@/app/_lib/api/fetch-generated";
 
 interface WorkoutPlanBuilderProps {
@@ -94,11 +95,6 @@ export function WorkoutPlanBuilder({
     exerciseIndex: number,
     patch: Partial<WorkoutPlanDraftExercise>,
   ) {
-    if (patch.name !== undefined) patch.exerciseId = null;
-    if (patch.alternative1Name !== undefined)
-      patch.alternative1ExerciseId = null;
-    if (patch.alternative2Name !== undefined)
-      patch.alternative2ExerciseId = null;
     updateDay(dayIndex, {
       exercises: days[dayIndex].exercises.map((exercise, index) =>
         index === exerciseIndex ? { ...exercise, ...patch } : exercise,
@@ -269,8 +265,8 @@ export function WorkoutPlanBuilder({
         className="flex flex-col gap-3"
         aria-labelledby="workout-days-title"
       >
-        <div className="flex items-center justify-between">
-          <div>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0 flex-1">
             <h2
               id="workout-days-title"
               className="font-heading text-base font-semibold"
@@ -282,7 +278,7 @@ export function WorkoutPlanBuilder({
               sugerido automaticamente com base no último realizado.
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 sm:shrink-0">
             <Button
               type="button"
               variant="outline"
@@ -313,16 +309,16 @@ export function WorkoutPlanBuilder({
             className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-4"
           >
             <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2">
-                <span className="flex size-7 items-center justify-center rounded-full bg-primary/10 font-heading text-xs font-bold text-primary">
+              <div className="flex min-w-0 items-center gap-2">
+                <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10 font-heading text-xs font-bold text-primary">
                   {String.fromCharCode(65 + (dayIndex % 26))}
                 </span>
-                <h3 className="font-heading text-sm font-semibold">
+                <h3 className="min-w-0 break-words font-heading text-sm font-semibold">
                   {day.name ||
                     `Treino ${String.fromCharCode(65 + (dayIndex % 26))}`}
                 </h3>
               </div>
-              <div className="flex items-center gap-1">
+              <div className="flex shrink-0 items-center gap-1">
                 <button
                   type="button"
                   aria-label={`Mover treino para cima`}
@@ -456,18 +452,18 @@ export function WorkoutPlanBuilder({
                       </div>
                     </div>
 
-                    <label className="flex flex-col gap-1.5 text-xs font-medium">
-                      Nome
-                      <Input
-                        value={exercise.name}
-                        placeholder="Ex.: Agachamento"
-                        onChange={(event) =>
+                    <CatalogExercisePicker
+                      label="Exercício"
+                      name={exercise.name}
+                      disabled={isPending}
+                      onSelect={(selected) => {
+                        if (selected)
                           updateExercise(dayIndex, exerciseIndex, {
-                            name: event.target.value,
-                          })
-                        }
-                      />
-                    </label>
+                            name: selected.name,
+                            exerciseId: selected.id,
+                          });
+                      }}
+                    />
                     <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
                       <label className="flex flex-col gap-1.5 text-xs font-medium">
                         Aquecimento
@@ -542,51 +538,52 @@ export function WorkoutPlanBuilder({
                         Alternativas fixas (opcional)
                       </span>
                       <div className="mt-1.5 grid grid-cols-1 gap-2 sm:grid-cols-2">
-                        <label className="flex flex-col gap-1 text-[11px] text-muted-foreground">
-                          Alternativa 1
-                          <Input
-                            value={exercise.alternative1Name ?? ""}
-                            placeholder="Ex: Leg Press 45°"
-                            className="h-8 text-xs font-normal"
-                            onChange={(event) =>
-                              updateExercise(dayIndex, exerciseIndex, {
-                                alternative1Name: event.target.value,
-                              })
-                            }
-                          />
-                        </label>
-                        <label className="flex flex-col gap-1 text-[11px] text-muted-foreground">
-                          Alternativa 2
-                          <Input
-                            value={exercise.alternative2Name ?? ""}
-                            placeholder="Ex: Hack Squat"
-                            className="h-8 text-xs font-normal"
-                            onChange={(event) =>
-                              updateExercise(dayIndex, exerciseIndex, {
-                                alternative2Name: event.target.value,
-                              })
-                            }
-                          />
-                        </label>
+                        <CatalogExercisePicker
+                          label="Alternativa 1"
+                          name={exercise.alternative1Name}
+                          optional
+                          disabled={isPending}
+                          onSelect={(selected) =>
+                            updateExercise(dayIndex, exerciseIndex, {
+                              alternative1Name: selected?.name ?? "",
+                              alternative1ExerciseId: selected?.id ?? null,
+                            })
+                          }
+                        />
+                        <CatalogExercisePicker
+                          label="Alternativa 2"
+                          name={exercise.alternative2Name}
+                          optional
+                          disabled={isPending}
+                          onSelect={(selected) =>
+                            updateExercise(dayIndex, exerciseIndex, {
+                              alternative2Name: selected?.name ?? "",
+                              alternative2ExerciseId: selected?.id ?? null,
+                            })
+                          }
+                        />
                       </div>
                     </div>
                   </div>
                 ))}
 
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="h-11 rounded-full font-heading text-xs"
+                <CatalogExercisePicker
+                  label="Adicionar exercício"
                   disabled={isPending}
-                  onClick={() =>
+                  onSelect={(selected) => {
+                    if (!selected) return;
                     updateDay(dayIndex, {
-                      exercises: [...day.exercises, createDraftExercise()],
-                    })
-                  }
-                >
-                  <Plus className="size-3.5" />
-                  Adicionar exercício
-                </Button>
+                      exercises: [
+                        ...day.exercises,
+                        {
+                          ...createDraftExercise(),
+                          name: selected.name,
+                          exerciseId: selected.id,
+                        },
+                      ],
+                    });
+                  }}
+                />
               </div>
             )}
           </article>

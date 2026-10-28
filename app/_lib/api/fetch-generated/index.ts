@@ -6,6 +6,248 @@
  * OpenAPI spec version: 1.0.0
  */
 import { customFetch } from "../../fetch";
+export type ExerciseAnatomyReviewInputParticipantsItemMuscleGroup =
+  (typeof ExerciseAnatomyReviewInputParticipantsItemMuscleGroup)[keyof typeof ExerciseAnatomyReviewInputParticipantsItemMuscleGroup];
+
+export const ExerciseAnatomyReviewInputParticipantsItemMuscleGroup = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
+} as const;
+
+export type ExerciseAnatomyReviewInputParticipantsItemRole =
+  (typeof ExerciseAnatomyReviewInputParticipantsItemRole)[keyof typeof ExerciseAnatomyReviewInputParticipantsItemRole];
+
+export const ExerciseAnatomyReviewInputParticipantsItemRole = {
+  PRIMARY: "PRIMARY",
+  SECONDARY: "SECONDARY",
+} as const;
+
+export type ExerciseAnatomyReviewInputParticipantsItemRegionsItem = {
+  /** @pattern ^[A-Z][A-Z0-9_]{1,79}$ */
+  id: string;
+  /**
+   * @minLength 1
+   * @maxLength 160
+   */
+  label: string;
+  /** @maxItems 30 */
+  aliases: string[];
+};
+
+export type ExerciseAnatomyReviewInputParticipantsItem = {
+  /** @pattern ^[A-Z][A-Z0-9_]{1,79}$ */
+  id: string;
+  /**
+   * @minLength 1
+   * @maxLength 160
+   */
+  label: string;
+  muscleGroup: ExerciseAnatomyReviewInputParticipantsItemMuscleGroup;
+  role: ExerciseAnatomyReviewInputParticipantsItemRole;
+  /** @maxItems 30 */
+  aliases: string[];
+  /** @maxItems 12 */
+  regions: ExerciseAnatomyReviewInputParticipantsItemRegionsItem[];
+  /** @maxItems 12 */
+  emphasizedRegionIds: string[];
+  /**
+   * @minItems 1
+   * @maxItems 12
+   */
+  sourceIds: string[];
+};
+
+export type ExerciseAnatomyReviewInputSourcesItem = {
+  /** @pattern ^[A-Z][A-Z0-9_]{1,79}$ */
+  id: string;
+  /**
+   * @minLength 1
+   * @maxLength 300
+   */
+  title: string;
+  url: string;
+  /** @maxLength 1200 */
+  limitation: string;
+};
+
+export type ExerciseAnatomyReviewInputInstructions = {
+  /** @minLength 1 */
+  description: string;
+  /** @minLength 1 */
+  setup: string;
+  /** @minLength 1 */
+  execution: string;
+  /** @minLength 1 */
+  tips: string;
+};
+
+export interface ExerciseAnatomyReviewInput {
+  /**
+   * @minLength 1
+   * @maxLength 40
+   */
+  version: string;
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$ */
+  reviewedAt: string;
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  variant: string;
+  /** @maxItems 30 */
+  aliases: string[];
+  /**
+   * @minItems 1
+   * @maxItems 40
+   */
+  participants: ExerciseAnatomyReviewInputParticipantsItem[];
+  /**
+   * @minItems 1
+   * @maxItems 20
+   */
+  sources: ExerciseAnatomyReviewInputSourcesItem[];
+  /**
+   * @minLength 1
+   * @maxLength 3000
+   */
+  notes: string;
+  instructions: ExerciseAnatomyReviewInputInstructions;
+}
+
+export type ExerciseAnatomyReviewParticipantsItemMuscleGroup =
+  (typeof ExerciseAnatomyReviewParticipantsItemMuscleGroup)[keyof typeof ExerciseAnatomyReviewParticipantsItemMuscleGroup];
+
+export const ExerciseAnatomyReviewParticipantsItemMuscleGroup = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
+} as const;
+
+export type ExerciseAnatomyReviewParticipantsItemRole =
+  (typeof ExerciseAnatomyReviewParticipantsItemRole)[keyof typeof ExerciseAnatomyReviewParticipantsItemRole];
+
+export const ExerciseAnatomyReviewParticipantsItemRole = {
+  PRIMARY: "PRIMARY",
+  SECONDARY: "SECONDARY",
+} as const;
+
+export type ExerciseAnatomyReviewParticipantsItemRegionsItem = {
+  /** @pattern ^[A-Z][A-Z0-9_]{1,79}$ */
+  id: string;
+  /**
+   * @minLength 1
+   * @maxLength 160
+   */
+  label: string;
+  /** @maxItems 30 */
+  aliases: string[];
+};
+
+export type ExerciseAnatomyReviewParticipantsItem = {
+  /** @pattern ^[A-Z][A-Z0-9_]{1,79}$ */
+  id: string;
+  /**
+   * @minLength 1
+   * @maxLength 160
+   */
+  label: string;
+  muscleGroup: ExerciseAnatomyReviewParticipantsItemMuscleGroup;
+  role: ExerciseAnatomyReviewParticipantsItemRole;
+  /** @maxItems 30 */
+  aliases: string[];
+  /** @maxItems 12 */
+  regions: ExerciseAnatomyReviewParticipantsItemRegionsItem[];
+  /** @maxItems 12 */
+  emphasizedRegionIds: string[];
+  /**
+   * @minItems 1
+   * @maxItems 12
+   */
+  sourceIds: string[];
+};
+
+export type ExerciseAnatomyReviewSourcesItem = {
+  /** @pattern ^[A-Z][A-Z0-9_]{1,79}$ */
+  id: string;
+  /**
+   * @minLength 1
+   * @maxLength 300
+   */
+  title: string;
+  url: string;
+  /** @maxLength 1200 */
+  limitation: string;
+};
+
+export type ExerciseAnatomyReviewInstructions = {
+  /** @minLength 1 */
+  description: string;
+  /** @minLength 1 */
+  setup: string;
+  /** @minLength 1 */
+  execution: string;
+  /** @minLength 1 */
+  tips: string;
+};
+
+export interface ExerciseAnatomyReview {
+  /**
+   * @minLength 1
+   * @maxLength 40
+   */
+  version: string;
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$ */
+  reviewedAt: string;
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  variant: string;
+  /** @maxItems 30 */
+  aliases: string[];
+  /**
+   * @minItems 1
+   * @maxItems 40
+   */
+  participants: ExerciseAnatomyReviewParticipantsItem[];
+  /**
+   * @minItems 1
+   * @maxItems 20
+   */
+  sources: ExerciseAnatomyReviewSourcesItem[];
+  /**
+   * @minLength 1
+   * @maxLength 3000
+   */
+  notes: string;
+  instructions: ExerciseAnatomyReviewInstructions;
+}
+
 export type ListWorkoutPlansParams = {
   active?: ListWorkoutPlansActive;
 };
@@ -6317,6 +6559,7 @@ export type ListCoachAthleteProgressExercises200Item = {
   isUnilateral?: boolean;
   hasMedia: boolean;
   muscles: ListCoachAthleteProgressExercises200ItemMusclesItem[];
+  anatomy?: ExerciseAnatomyReview | null;
 };
 
 export type ListCoachAthleteProgressExercises400 = {
@@ -8269,6 +8512,7 @@ export type ListAdminExercises200Item = {
   family: string | null;
   updatedAt: string;
   groups: ListAdminExercises200ItemGroupsItem[];
+  anatomy?: ExerciseAnatomyReview | null;
   /** @nullable */
   review: ListAdminExercises200ItemReview;
   /** @nullable */
@@ -10070,6 +10314,7 @@ export type ListExercises200Item = {
   isUnilateral?: boolean;
   hasMedia: boolean;
   muscles: ListExercises200ItemMusclesItem[];
+  anatomy?: ExerciseAnatomyReview | null;
 };
 
 /**
@@ -10187,6 +10432,7 @@ export type CreateExercise201 = {
   isUnilateral?: boolean;
   hasMedia: boolean;
   muscles: CreateExercise201MusclesItem[];
+  anatomy?: ExerciseAnatomyReview | null;
 };
 
 export type CreateExercise400 = {
@@ -10302,6 +10548,7 @@ export type UpdateExerciseMuscles200 = {
   isUnilateral?: boolean;
   hasMedia: boolean;
   muscles: UpdateExerciseMuscles200MusclesItem[];
+  anatomy?: ExerciseAnatomyReview | null;
 };
 
 export type UpdateExerciseMuscles400 = {
@@ -10348,6 +10595,7 @@ export type GetExerciseMedia200Instructions = {
 } | null;
 
 export type GetExerciseMedia200 = {
+  anatomy?: ExerciseAnatomyReview | null;
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   exerciseId: string;
   hasMedia: boolean;
@@ -10477,6 +10725,7 @@ export type UpdateCustomExercise200 = {
   isUnilateral?: boolean;
   hasMedia: boolean;
   muscles: UpdateCustomExercise200MusclesItem[];
+  anatomy?: ExerciseAnatomyReview | null;
 };
 
 export type UpdateCustomExercise400 = {

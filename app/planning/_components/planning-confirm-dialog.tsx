@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { Dialog } from "radix-ui";
 import { LoaderCircle, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -31,68 +32,68 @@ export function PlanningConfirmDialog({
   if (!open) return null;
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-5 backdrop-blur-xs"
-      role="presentation"
-      onMouseDown={(event) => {
-        if (event.target === event.currentTarget && !isPending) onCancel();
+    <Dialog.Root
+      open={open}
+      onOpenChange={(value) => {
+        if (!value && !isPending) onCancel();
       }}
     >
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="planning-dialog-title"
-        aria-describedby="planning-dialog-description"
-        className="flex w-full max-w-sm flex-col gap-4 rounded-3xl border border-border bg-card p-6 shadow-xl"
-      >
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex flex-col gap-2">
-            <h2
-              id="planning-dialog-title"
-              className="font-heading text-base font-semibold text-foreground"
-            >
-              {title}
-            </h2>
-            <div
-              id="planning-dialog-description"
-              className="text-sm leading-relaxed text-muted-foreground"
-            >
-              {description}
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-xs" />
+        <Dialog.Content
+          className="fixed left-1/2 top-1/2 z-[61] flex max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 flex-col gap-4 overflow-y-auto rounded-3xl border border-border bg-card p-5 shadow-xl sm:p-6"
+          onEscapeKeyDown={(event) => {
+            if (isPending) event.preventDefault();
+          }}
+          onPointerDownOutside={(event) => {
+            if (isPending) event.preventDefault();
+          }}
+        >
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex min-w-0 flex-col gap-2">
+              <Dialog.Title className="font-heading text-base font-semibold text-foreground">
+                {title}
+              </Dialog.Title>
+              <Dialog.Description asChild>
+                <div className="text-sm leading-relaxed text-muted-foreground">
+                  {description}
+                </div>
+              </Dialog.Description>
             </div>
+            <button
+              type="button"
+              aria-label="Fechar"
+              disabled={isPending}
+              onClick={onCancel}
+              className="flex size-10 shrink-0 items-center justify-center rounded-full text-muted-foreground transition hover:bg-accent hover:text-foreground disabled:opacity-50"
+            >
+              <X className="size-4" />
+            </button>
           </div>
-          <button
-            type="button"
-            aria-label="Fechar"
-            disabled={isPending}
-            onClick={onCancel}
-            className="flex size-10 shrink-0 items-center justify-center rounded-full text-muted-foreground transition hover:bg-accent hover:text-foreground disabled:opacity-50"
-          >
-            <X className="size-4" />
-          </button>
-        </div>
 
-        <div className="grid grid-cols-2 gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            className="h-11 rounded-full"
-            disabled={isPending}
-            onClick={onCancel}
-          >
-            Cancelar
-          </Button>
-          <Button
-            type="button"
-            variant={destructive ? "destructive" : "default"}
-            className="h-11 rounded-full"
-            disabled={isPending}
-            onClick={onConfirm}
-          >
-            {isPending && <LoaderCircle className="size-4 animate-spin" />}
-            {isPending ? pendingLabel : confirmLabel}
-          </Button>
-        </div>
-      </div>
-    </div>
+          <div className="flex flex-col-reverse gap-2 sm:flex-row">
+            <Button
+              type="button"
+              variant="outline"
+              className="h-auto min-h-11 min-w-0 rounded-full px-4 py-3 whitespace-normal sm:flex-1"
+              disabled={isPending}
+              onClick={onCancel}
+            >
+              Cancelar
+            </Button>
+            <Button
+              type="button"
+              variant={destructive ? "destructive" : "default"}
+              className="h-auto min-h-11 min-w-0 rounded-full px-4 py-3 whitespace-normal sm:flex-1"
+              disabled={isPending}
+              onClick={onConfirm}
+            >
+              {isPending && <LoaderCircle className="size-4 animate-spin" />}
+              {isPending ? pendingLabel : confirmLabel}
+            </Button>
+          </div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }

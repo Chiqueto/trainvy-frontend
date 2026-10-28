@@ -19,6 +19,24 @@ const mocks = vi.hoisted(() => ({
   save: vi.fn(),
   push: vi.fn(),
   refresh: vi.fn(),
+  catalogRefresh: vi.fn().mockResolvedValue([]),
+  catalog: [
+    {
+      id: "remada-id",
+      name: "Remada",
+      muscles: [],
+      ownerUserId: null,
+      hasMedia: false,
+    },
+  ],
+}));
+vi.mock("@/app/_lib/hooks/use-exercise-catalog", () => ({
+  useExerciseCatalog: () => ({
+    exercises: mocks.catalog,
+    search: () => mocks.catalog,
+    isSyncing: false,
+    refresh: mocks.catalogRefresh,
+  }),
 }));
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: mocks.push, refresh: mocks.refresh }),
@@ -110,16 +128,18 @@ describe("Editing saved plans", () => {
     expect(mocks.edit.mock.calls[0][1]).not.toHaveProperty("activate");
     expect(mocks.push).toHaveBeenCalledWith("/workout-plans/plan");
   });
-  it("keeps edits after failure and clears the old canonical ID when the movement changes", async () => {
+  it("keeps edits after failure and replaces the canonical ID when selecting another movement", async () => {
     mocks.edit.mockResolvedValue({
       success: false,
       error: "Conclua sua sessão",
     });
     render(<WorkoutPlanBuilder mode="edit" initialPlan={plan} />);
-    fireEvent.change(
-      within(screen.getByRole("article")).getByLabelText("Nome"),
-      { target: { value: "Remada" } },
+    fireEvent.click(
+      within(screen.getByRole("article")).getByRole("button", {
+        name: "Exercício: Supino",
+      }),
     );
+    fireEvent.click(screen.getByRole("button", { name: "Selecionar Remada" }));
     fireEvent.click(screen.getByRole("button", { name: "Salvar alterações" }));
     await waitFor(() =>
       expect(screen.getByRole("alert").textContent).toContain(
@@ -127,15 +147,13 @@ describe("Editing saved plans", () => {
       ),
     );
     expect(
-      (
-        within(screen.getByRole("article")).getByLabelText(
-          "Nome",
-        ) as HTMLInputElement
-      ).value,
-    ).toBe("Remada");
+      within(screen.getByRole("article")).getByRole("button", {
+        name: "Exercício: Remada",
+      }),
+    ).toBeDefined();
     expect(
       mocks.edit.mock.calls[0][1].workoutDays[0].exercises[0].exerciseId,
-    ).toBeNull();
+    ).toBe("remada-id");
     expect(mocks.push).not.toHaveBeenCalled();
   });
 });
@@ -184,7 +202,9 @@ describe("Persistent session feedback", () => {
     expect(
       (screen.getByLabelText("Observações") as HTMLTextAreaElement).value,
     ).toBe("Cansado hoje");
-    fireEvent.click(await screen.findByRole("button", { name: "Salvar avaliação" }));
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Salvar avaliação" }),
+    );
     await waitFor(() =>
       expect(screen.getByRole("status").textContent).toContain("Salvo"),
     );

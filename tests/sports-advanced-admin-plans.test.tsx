@@ -215,7 +215,7 @@ describe("Optional advanced prescription", () => {
   it("rejects partial/inverted ranges but retains the fixed-rep workflow", () => {
     const days = createInitialWorkoutDays().map((day) => ({
       ...day,
-      exercises: [{ name: "Supino", sets: 3, reps: 10, restTimeInSeconds: 90 }],
+      exercises: [{ exerciseId: "catalog-supino", name: "Supino", sets: 3, reps: 10, restTimeInSeconds: 90 }],
     }));
     expect(validateWorkoutPlanDraft("Plano", days)).toBeNull();
     expect(serializeWorkoutDays(days)[0].exercises[0]).toMatchObject({

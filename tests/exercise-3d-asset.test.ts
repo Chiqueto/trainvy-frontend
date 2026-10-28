@@ -17,6 +17,7 @@ import { MeshoptDecoder } from "meshoptimizer";
 import { createPoseDriver } from "../app/_components/exercise-3d/kinematics";
 import { EXERCISE_ANIMATIONS } from "../app/_components/exercise-3d/exercises";
 import { createTissueMaterial } from "../app/_components/exercise-3d/anatomy-material";
+import { createPecDeckMuscleMask } from "../app/_components/exercise-3d/pec-deck-muscles";
 
 let mesh: SkinnedMesh;
 let apply: ReturnType<typeof createPoseDriver>;
@@ -46,6 +47,99 @@ beforeAll(async () => {
 });
 
 describe("Trainvy anatomical athlete", () => {
+  it("maps the pec deck explicitly without inheriting the press triceps map or changing the cached asset", () => {
+    const geometry = mesh.geometry;
+    const existing = geometry.getAttribute("_exercisemuscles");
+    const before = Array.from(existing.array);
+    const mask = createPecDeckMuscleMask(geometry);
+    const positions = geometry.getAttribute("position");
+    let primary = 0,
+      secondary = 0,
+      excludedPress = 0;
+    for (let i = 0; i < mask.count; i++) {
+      if (mask.getX(i) > 0.9) primary++;
+      else if (mask.getX(i) > 0.1) secondary++;
+      if (
+        existing.getY(i) > 0.15 &&
+        existing.getY(i) < 0.72 &&
+        mask.getX(i) === 0
+      )
+        excludedPress++;
+      if (positions.getY(i) < 1 || positions.getY(i) > 1.49)
+        expect(mask.getX(i)).toBe(0);
+      if (mask.getX(i) > 0 && mask.getX(i) < 0.9) {
+        expect(positions.getY(i)).toBeGreaterThan(1.24);
+        expect(positions.getZ(i)).toBeGreaterThan(0.145);
+      }
+    }
+    expect(primary).toBeGreaterThan(1000);
+    expect(secondary).toBeGreaterThan(100);
+    expect(excludedPress).toBeGreaterThan(1000);
+    expect(Array.from(existing.array)).toEqual(before);
+  });
+
+  it("resets the vertical pec-deck hand grip when switching to a barbell exercise", () => {
+    const bones = new Map(mesh.skeleton.bones.map((b) => [b.name, b]));
+    const pose = apply("pec-deck", 0.5);
+    for (const limb of pose.limbs) {
+      const hand = bones.get(`hand_${limb.side < 0 ? "L" : "R"}`);
+      expect(hand).toBeDefined();
+      expect(hand!.quaternion.angleTo(limb.handRotation)).toBeLessThan(1e-6);
+    }
+    apply("bench-press", 0.5);
+    for (const suffix of ["L", "R"])
+      expect(
+        bones.get(`hand_${suffix}`)!.quaternion.angleTo(new Quaternion()),
+      ).toBe(0);
+  });
+  it("keeps the declined knees in their anatomical bend plane and rotates the actual foot bones with the shins", () => {
+    const bones = new Map(mesh.skeleton.bones.map((b) => [b.name, b]));
+    for (const depth of [0, 0.5, 1]) {
+      const pose = apply("decline-bench-press", depth);
+      for (const limb of pose.limbs) {
+        const suffix = limb.side < 0 ? "L" : "R";
+        const hip = bindPositions.get(`thigh_${suffix}`)!;
+        const knee = bindPositions.get(`shin_${suffix}`)!;
+        const ankle = bindPositions.get(`foot_${suffix}`)!;
+        const restNormal = knee
+          .clone()
+          .sub(hip)
+          .cross(ankle.clone().sub(knee))
+          .normalize();
+        const posedNormal = limb.knee
+          .clone()
+          .sub(limb.hip)
+          .cross(limb.ankle.clone().sub(limb.knee))
+          .normalize();
+        for (const segment of ["thigh", "shin"]) {
+          expect(
+            restNormal
+              .clone()
+              .applyQuaternion(bones.get(`${segment}_${suffix}`)!.quaternion)
+              .dot(posedNormal),
+          ).toBeCloseTo(1, 6);
+        }
+        const foot = bones.get(`foot_${suffix}`)!;
+        expect(foot.quaternion.angleTo(limb.footRotation)).toBeLessThan(1e-6);
+        expect(foot.quaternion.angleTo(new Quaternion())).toBeGreaterThan(0.2);
+        expect(foot.position.distanceTo(limb.ankle)).toBeLessThan(1e-6);
+      }
+    }
+    // Switching back to any planted-foot exercise must clear the declined pose.
+    for (const exercise of [
+      "squat",
+      "bench-press",
+      "incline-dumbbell-press",
+      "flat-dumbbell-press",
+      "incline-bench-press",
+    ] as const) {
+      apply(exercise, 0.5);
+      for (const suffix of ["L", "R"])
+        expect(
+          bones.get(`foot_${suffix}`)!.quaternion.angleTo(new Quaternion()),
+        ).toBe(0);
+    }
+  });
   it("has a complete neutral-pose rig, joint supports and normalised weights", () => {
     expect(mesh.skeleton.bones).toHaveLength(21);
     expect(mesh.skeleton.bones.map((b) => b.name)).toContain("elbow_L");
@@ -401,30 +495,27 @@ describe("Trainvy anatomical athlete", () => {
     "flat-dumbbell-press",
     "incline-bench-press",
     "decline-bench-press",
-  ] as const)(
-    "keeps every sampled vertex finite through %s",
-    (exercise) => {
-      const p = new Vector3();
-      let invalid = 0,
-        maximumRadius = 0;
-      for (const depth of [0, 0.25, 0.5, 0.75, 1]) {
-        apply(exercise, depth);
-        mesh.parent!.updateMatrixWorld(true);
-        mesh.skeleton.update();
-        for (
-          let i = 0;
-          i < mesh.geometry.getAttribute("position").count;
-          i += 47
-        ) {
-          mesh.getVertexPosition(i, p);
-          if (!p.toArray().every(Number.isFinite)) invalid++;
-          maximumRadius = Math.max(maximumRadius, p.length());
-        }
+  ] as const)("keeps every sampled vertex finite through %s", (exercise) => {
+    const p = new Vector3();
+    let invalid = 0,
+      maximumRadius = 0;
+    for (const depth of [0, 0.25, 0.5, 0.75, 1]) {
+      apply(exercise, depth);
+      mesh.parent!.updateMatrixWorld(true);
+      mesh.skeleton.update();
+      for (
+        let i = 0;
+        i < mesh.geometry.getAttribute("position").count;
+        i += 47
+      ) {
+        mesh.getVertexPosition(i, p);
+        if (!p.toArray().every(Number.isFinite)) invalid++;
+        maximumRadius = Math.max(maximumRadius, p.length());
       }
-      expect(invalid).toBe(0);
-      expect(maximumRadius).toBeLessThan(3);
-    },
-  );
+    }
+    expect(invalid).toBe(0);
+    expect(maximumRadius).toBeLessThan(3);
+  });
   it("can switch to neutral anatomy without replacing the material or linking external textures", () => {
     const { material, setAppearance } = createTissueMaterial();
     setAppearance("squat", false);
@@ -464,14 +555,12 @@ describe("Trainvy anatomical athlete", () => {
     ).not.toEqual(
       EXERCISE_ANIMATIONS["incline-dumbbell-press"].muscles.primary,
     );
-    expect(
-      EXERCISE_ANIMATIONS["incline-bench-press"].muscles.primary,
-    ).toEqual(EXERCISE_ANIMATIONS["incline-dumbbell-press"].muscles.primary);
+    expect(EXERCISE_ANIMATIONS["incline-bench-press"].muscles.primary).toEqual(
+      EXERCISE_ANIMATIONS["incline-dumbbell-press"].muscles.primary,
+    );
     expect(
       EXERCISE_ANIMATIONS["decline-bench-press"].muscles.primary,
-    ).not.toEqual(
-      EXERCISE_ANIMATIONS["incline-bench-press"].muscles.primary,
-    );
+    ).not.toEqual(EXERCISE_ANIMATIONS["incline-bench-press"].muscles.primary);
   });
   it.each([
     "bench-press",
@@ -498,7 +587,8 @@ describe("Trainvy anatomical athlete", () => {
         if (exercise.includes("dumbbell")) {
           // Nos halteres, o antebraço fica perfeitamente vertical (0°)
           const angleR =
-            (Math.acos(Math.abs(rightForearm.y) / rightForearm.length()) * 180) /
+            (Math.acos(Math.abs(rightForearm.y) / rightForearm.length()) *
+              180) /
             Math.PI;
           const angleL =
             (Math.acos(Math.abs(leftForearm.y) / leftForearm.length()) * 180) /
@@ -509,7 +599,8 @@ describe("Trainvy anatomical athlete", () => {
           // Na barra, o antebraço no fundo do movimento fica rigorosamente vertical sob a carga
           if (depth === 1) {
             const angleR =
-              (Math.acos(Math.abs(rightForearm.y) / rightForearm.length()) * 180) /
+              (Math.acos(Math.abs(rightForearm.y) / rightForearm.length()) *
+                180) /
               Math.PI;
             expect(angleR).toBeLessThan(6.0);
           }

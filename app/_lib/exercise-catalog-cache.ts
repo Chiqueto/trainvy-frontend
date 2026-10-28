@@ -1,5 +1,9 @@
 import type { ListExercises200Item } from "@/app/_lib/api/fetch-generated";
-import { getMuscleGroupLabel, type MuscleGroup } from "@/app/_lib/muscle-labels";
+import { anatomySearchTerms } from "./exercise-anatomy";
+import {
+  getMuscleGroupLabel,
+  type MuscleGroup,
+} from "@/app/_lib/muscle-labels";
 import {
   getExerciseCatalogVersionAction,
   listExercisesAction,
@@ -18,12 +22,20 @@ interface MemoryCache {
 }
 
 let memoryCache: MemoryCache | null = null;
-let syncPromise: Promise<{ exercises: ListExercises200Item[]; updated: boolean }> | null = null;
+let syncPromise: Promise<{
+  exercises: ListExercises200Item[];
+  updated: boolean;
+}> | null = null;
 
-type CacheListener = (exercises: ListExercises200Item[], version: string) => void;
+type CacheListener = (
+  exercises: ListExercises200Item[],
+  version: string,
+) => void;
 const listeners = new Set<CacheListener>();
 
-export function subscribeToExerciseCatalog(listener: CacheListener): () => void {
+export function subscribeToExerciseCatalog(
+  listener: CacheListener,
+): () => void {
   listeners.add(listener);
   return () => {
     listeners.delete(listener);
@@ -67,7 +79,8 @@ export function getStoredExercises(): {
     try {
       const rawList = window.localStorage.getItem(STORAGE_LIST_KEY);
       const version = window.localStorage.getItem(STORAGE_VERSION_KEY) || "";
-      const syncedAtStr = window.localStorage.getItem(STORAGE_SYNCED_KEY) || "0";
+      const syncedAtStr =
+        window.localStorage.getItem(STORAGE_SYNCED_KEY) || "0";
 
       if (rawList) {
         const parsed = JSON.parse(rawList) as ListExercises200Item[];
@@ -81,7 +94,10 @@ export function getStoredExercises(): {
         }
       }
     } catch (err) {
-      console.warn("[ExerciseCache] Falha ao ler cache local de exercícios:", err);
+      console.warn(
+        "[ExerciseCache] Falha ao ler cache local de exercícios:",
+        err,
+      );
     }
   }
 
@@ -131,7 +147,9 @@ export function addExerciseToLocalCache(newExercise: ListExercises200Item) {
 /**
  * Atualiza um exercício existente no cache local (ex: após editar músculos).
  */
-export function updateExerciseInLocalCache(updatedExercise: ListExercises200Item) {
+export function updateExerciseInLocalCache(
+  updatedExercise: ListExercises200Item,
+) {
   const current = getStoredExercises();
   const nextList = current.exercises.map((ex) =>
     ex.id === updatedExercise.id ? updatedExercise : ex,
@@ -254,9 +272,13 @@ export function filterExercisesInstant(
 
           if (
             isPerna &&
-            ["QUADRICEPS", "HAMSTRINGS", "GLUTES", "CALVES", "ADDUCTORS"].includes(
-              m.muscleGroup,
-            )
+            [
+              "QUADRICEPS",
+              "HAMSTRINGS",
+              "GLUTES",
+              "CALVES",
+              "ADDUCTORS",
+            ].includes(m.muscleGroup)
           ) {
             return true;
           }
@@ -271,7 +293,13 @@ export function filterExercisesInstant(
           return false;
         });
 
-        if (matchesMuscle) {
+        const matchesAnatomy = anatomySearchTerms(exercise.anatomy).some(
+          (term) => normalizeSearchTerm(term).includes(normQuery),
+        );
+        const matchesParent =
+          ["peitoral", "peitorais"].includes(normQuery) &&
+          exercise.muscles?.some((m) => m.muscleGroup === "CHEST");
+        if (matchesMuscle || matchesAnatomy || matchesParent) {
           rank = 4;
         }
       }

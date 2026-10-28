@@ -15,6 +15,7 @@ const mocks = vi.hoisted(() => ({
   activateWorkoutPlanAction: vi.fn(),
   deactivateWorkoutPlanAction: vi.fn(),
   duplicateWorkoutPlanAction: vi.fn(),
+  deleteWorkoutPlanAction: vi.fn(),
   activatePeriodizationAction: vi.fn(),
   deactivatePeriodizationAction: vi.fn(),
   advancePeriodizationAction: vi.fn(),
@@ -29,6 +30,7 @@ vi.mock("@/app/planning/_actions", () => ({
   activateWorkoutPlanAction: mocks.activateWorkoutPlanAction,
   deactivateWorkoutPlanAction: mocks.deactivateWorkoutPlanAction,
   duplicateWorkoutPlanAction: mocks.duplicateWorkoutPlanAction,
+  deleteWorkoutPlanAction: mocks.deleteWorkoutPlanAction,
   activatePeriodizationAction: mocks.activatePeriodizationAction,
   deactivatePeriodizationAction: mocks.deactivatePeriodizationAction,
   advancePeriodizationAction: mocks.advancePeriodizationAction,
@@ -83,9 +85,33 @@ describe("ações interativas de planos", () => {
   afterEach(cleanup);
 
   function openMenu() {
-    fireEvent.click(screen.getByRole("button", { name: /ações do plano/i }));
+    fireEvent.keyDown(screen.getByRole("button", { name: /ações do plano/i }), {
+      key: "ArrowDown",
+    });
     return screen.getByRole("menu");
   }
+
+  it("mantém excluir acessível no menu em portal e confirma antes de excluir", async () => {
+    mocks.deleteWorkoutPlanAction.mockResolvedValue({ success: true });
+    const { container } = render(<WorkoutPlanCard plan={inactivePlan} />);
+    const menu = openMenu();
+    expect(container.contains(menu)).toBe(false);
+    fireEvent.click(
+      within(menu).getByRole("menuitem", { name: "Excluir definitivamente" }),
+    );
+    expect(mocks.deleteWorkoutPlanAction).not.toHaveBeenCalled();
+    const dialog = screen.getByRole("dialog", {
+      name: "Excluir plano definitivamente",
+    });
+    expect(container.contains(dialog)).toBe(false);
+    expect(dialog.textContent).toContain("continuarão preservados");
+    fireEvent.click(
+      within(dialog).getByRole("button", { name: "Excluir definitivamente" }),
+    );
+    await waitFor(() =>
+      expect(mocks.deleteWorkoutPlanAction).toHaveBeenCalledWith("plan-1"),
+    );
+  });
 
   it("ativa um plano standalone após confirmação e atualiza o Hub", async () => {
     render(<WorkoutPlanCard plan={inactivePlan} />);

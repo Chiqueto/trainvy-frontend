@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Dialog, DropdownMenu } from "radix-ui";
 import {
   CheckCircle2,
   ChevronRight,
@@ -139,94 +140,85 @@ export function WorkoutPlanCard({ plan }: WorkoutPlanCardProps) {
               </span>
               {plan.periodization && (
                 <span className="font-heading text-[11px] text-muted-foreground">
-                  Ciclo: <span className="font-semibold text-foreground/90">{plan.periodization.name}</span> (Etapa {plan.periodization.order})
+                  Ciclo:{" "}
+                  <span className="font-semibold text-foreground/90">
+                    {plan.periodization.name}
+                  </span>{" "}
+                  (Etapa {plan.periodization.order})
                 </span>
               )}
             </div>
           </div>
         </Link>
 
-        <div className="relative shrink-0">
-          <button
-            type="button"
-            aria-label={`Ações do plano ${plan.name}`}
-            aria-expanded={isMenuOpen}
-            aria-haspopup="menu"
-            disabled={isPending}
-            onClick={() => setIsMenuOpen((open) => !open)}
-            className="flex size-11 items-center justify-center rounded-full text-muted-foreground transition hover:bg-accent hover:text-foreground disabled:opacity-50"
-          >
-            {isPending ? (
-              <LoaderCircle className="size-5 animate-spin" />
-            ) : (
-              <MoreHorizontal className="size-5" />
-            )}
-          </button>
-
-          {isMenuOpen && (
-            <>
-              <button
-                type="button"
-                aria-label="Fechar menu"
-                className="fixed inset-0 z-40 cursor-default"
-                onClick={() => setIsMenuOpen(false)}
-              />
-              <div
-                role="menu"
-                className="absolute right-0 top-full z-50 mt-1 w-52 rounded-2xl border border-border bg-popover p-1.5 shadow-lg"
-              >
+        <DropdownMenu.Root open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+          <DropdownMenu.Trigger asChild>
+            <button
+              type="button"
+              aria-label={`Ações do plano ${plan.name}`}
+              disabled={isPending}
+              className="flex size-11 items-center justify-center rounded-full text-muted-foreground transition hover:bg-accent hover:text-foreground disabled:opacity-50"
+            >
+              {isPending ? (
+                <LoaderCircle className="size-5 animate-spin" />
+              ) : (
+                <MoreHorizontal className="size-5" />
+              )}
+            </button>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Portal>
+            <DropdownMenu.Content
+              align="end"
+              sideOffset={4}
+              collisionPadding={{ top: 12, right: 12, bottom: 100, left: 12 }}
+              className="z-[60] max-h-[var(--radix-dropdown-menu-content-available-height)] w-60 max-w-[calc(100vw-1.5rem)] overflow-y-auto rounded-2xl border border-border bg-popover p-1.5 shadow-lg"
+            >
+              <DropdownMenu.Item asChild>
                 <Link
-                  role="menuitem"
                   href={`/workout-plans/${plan.id}`}
                   className="flex min-h-11 items-center gap-2.5 rounded-xl px-3 text-sm font-medium transition hover:bg-accent"
                 >
                   <ChevronRight className="size-4" />
                   Ver plano
                 </Link>
+              </DropdownMenu.Item>
 
-                {isStandalone && (
-                  <button
-                    type="button"
-                    role="menuitem"
-                    className="flex min-h-11 w-full items-center gap-2.5 rounded-xl px-3 text-left text-sm font-medium transition hover:bg-accent"
-                    onClick={() =>
-                      openDialog(isStandaloneActive ? "deactivate" : "activate")
-                    }
-                  >
-                    {isStandaloneActive ? (
-                      <PauseCircle className="size-4" />
-                    ) : (
-                      <PlayCircle className="size-4" />
-                    )}
-                    {isStandaloneActive ? "Desativar plano" : "Ativar plano"}
-                  </button>
-                )}
-
-                <button
-                  type="button"
-                  role="menuitem"
-                  className="flex min-h-11 w-full items-center gap-2.5 rounded-xl px-3 text-left text-sm font-medium transition hover:bg-accent"
-                  onClick={() => openDialog("duplicate")}
+              {isStandalone && (
+                <DropdownMenu.Item
+                  className="flex min-h-11 w-full cursor-pointer items-center gap-2.5 rounded-xl px-3 text-left text-sm font-medium outline-none transition focus:bg-accent"
+                  onSelect={() =>
+                    openDialog(isStandaloneActive ? "deactivate" : "activate")
+                  }
                 >
-                  <Copy className="size-4" />
-                  Duplicar
-                </button>
+                  {isStandaloneActive ? (
+                    <PauseCircle className="size-4" />
+                  ) : (
+                    <PlayCircle className="size-4" />
+                  )}
+                  {isStandaloneActive ? "Desativar plano" : "Ativar plano"}
+                </DropdownMenu.Item>
+              )}
 
-                <div className="my-1 h-px bg-border/60" />
+              <DropdownMenu.Item
+                className="flex min-h-11 w-full cursor-pointer items-center gap-2.5 rounded-xl px-3 text-left text-sm font-medium outline-none transition focus:bg-accent"
+                onSelect={() => openDialog("duplicate")}
+              >
+                <Copy className="size-4" />
+                Duplicar
+              </DropdownMenu.Item>
 
-                <button
-                  type="button"
-                  role="menuitem"
-                  className="flex min-h-11 w-full items-center gap-2.5 rounded-xl px-3 text-left text-sm font-medium text-destructive transition hover:bg-destructive/10"
-                  onClick={() => openDialog("delete")}
-                >
-                  <Trash2 className="size-4 text-destructive" />
-                  Excluir definitivamente
-                </button>
-              </div>
-            </>
-          )}
-        </div>
+              <DropdownMenu.Separator className="my-1 h-px bg-border/60" />
+
+              <DropdownMenu.Item
+                className="flex min-h-11 w-full cursor-pointer items-center gap-2.5 rounded-xl px-3 text-left text-sm font-medium text-destructive outline-none transition focus:bg-destructive/10"
+                onSelect={() => openDialog("delete")}
+              >
+                <Trash2 className="size-4 text-destructive" />
+                Excluir definitivamente
+              </DropdownMenu.Item>
+            </DropdownMenu.Content>
+          </DropdownMenu.Portal>
+        </DropdownMenu.Root>
       </div>
 
       {feedback && (
@@ -274,9 +266,12 @@ export function WorkoutPlanCard({ plan }: WorkoutPlanCardProps) {
         destructive
         description={
           <>
-            <p>Tem certeza que deseja excluir o plano &ldquo;{plan.name}&rdquo;?</p>
+            <p>
+              Tem certeza que deseja excluir o plano &ldquo;{plan.name}&rdquo;?
+            </p>
             <p className="mt-2 text-muted-foreground">
-              Ele nunca mais será exibido para você. Treinos já concluídos no histórico continuarão preservados.
+              Ele nunca mais será exibido para você. Treinos já concluídos no
+              histórico continuarão preservados.
             </p>
           </>
         }
@@ -287,24 +282,30 @@ export function WorkoutPlanCard({ plan }: WorkoutPlanCardProps) {
         onConfirm={handleMutation}
       />
 
-      {dialog === "duplicate" && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-5 backdrop-blur-xs">
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="duplicate-plan-title"
-            className="flex w-full max-w-sm flex-col gap-4 rounded-3xl border border-border bg-card p-6 shadow-xl"
+      <Dialog.Root
+        open={dialog === "duplicate"}
+        onOpenChange={(open) => {
+          if (!open && !isPending) setDialog(null);
+        }}
+      >
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-xs" />
+          <Dialog.Content
+            className="fixed left-1/2 top-1/2 z-[61] flex max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 flex-col gap-4 overflow-y-auto rounded-3xl border border-border bg-card p-5 shadow-xl sm:p-6"
+            onEscapeKeyDown={(event) => {
+              if (isPending) event.preventDefault();
+            }}
+            onPointerDownOutside={(event) => {
+              if (isPending) event.preventDefault();
+            }}
           >
             <div className="flex flex-col gap-1">
-              <h2
-                id="duplicate-plan-title"
-                className="font-heading text-base font-semibold text-foreground"
-              >
+              <Dialog.Title className="font-heading text-base font-semibold text-foreground">
                 Duplicar plano
-              </h2>
-              <p className="text-sm text-muted-foreground">
+              </Dialog.Title>
+              <Dialog.Description className="text-sm text-muted-foreground">
                 A cópia será criada inativa e fora de periodizações.
-              </p>
+              </Dialog.Description>
             </div>
 
             <label className="flex flex-col gap-2 text-sm font-medium text-foreground">
@@ -338,9 +339,9 @@ export function WorkoutPlanCard({ plan }: WorkoutPlanCardProps) {
                 {isPending ? "Duplicando..." : "Criar cópia"}
               </Button>
             </div>
-          </div>
-        </div>
-      )}
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
     </div>
   );
 }

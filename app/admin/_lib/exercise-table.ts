@@ -1,4 +1,5 @@
 import type { ListAdminExercises200Item } from "@/app/_lib/api/fetch-generated";
+import { anatomyMuscleNames } from "@/app/_lib/exercise-anatomy";
 import {
   compareImplementationPriority,
   coverage,
@@ -31,6 +32,8 @@ export function muscleNames(
   e: ListAdminExercises200Item,
   role: "PRIMARY" | "SECONDARY",
 ) {
+  const detailed = anatomyMuscleNames(e.anatomy, role);
+  if(detailed.length) return detailed.join(", ");
   return e.muscles
     .filter((m) => m.role === role)
     .map((m) => muscleLabels[m.muscleGroup] ?? m.muscleGroup)

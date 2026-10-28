@@ -1,10 +1,13 @@
 import { describe, expect, it } from "vitest";
+import { Vector3 } from "three";
 import { getExerciseAnimation } from "../app/_components/exercise-3d/exercises";
 import {
   ARM_LENGTH,
   FOREARM_LENGTH,
   getExerciseDepth,
   getExercisePose,
+  getDeclineLegSupports,
+  DECLINE_ROLLER_RADIUS,
 } from "../app/_components/exercise-3d/kinematics";
 
 describe("exercise 3D scope", () => {
@@ -54,15 +57,15 @@ describe("incline press variants", () => {
     expect(
       getExerciseAnimation(undefined, "Supino Inclinado com Halteres"),
     ).toBe("incline-dumbbell-press");
-    expect(
-      getExerciseAnimation(undefined, "Supino Inclinado com Barra"),
-    ).toBe("incline-bench-press");
-    expect(
-      getExerciseAnimation(undefined, "Supino Inclinado"),
-    ).toBe("incline-bench-press");
-    expect(
-      getExerciseAnimation(undefined, "Supino Declinado com Barra"),
-    ).toBe("decline-bench-press");
+    expect(getExerciseAnimation(undefined, "Supino Inclinado com Barra")).toBe(
+      "incline-bench-press",
+    );
+    expect(getExerciseAnimation(undefined, "Supino Inclinado")).toBe(
+      "incline-bench-press",
+    );
+    expect(getExerciseAnimation(undefined, "Supino Declinado com Barra")).toBe(
+      "decline-bench-press",
+    );
   });
   it("keeps the incline, supports and anatomical lengths while the dumbbells converge without colliding", () => {
     const initial = getExercisePose("incline-dumbbell-press", 0);
@@ -101,15 +104,15 @@ describe("flat dumbbell press", () => {
     expect(getExerciseAnimation("6ef90b25-cd99-4860-8933-ae29e4d1f3d8")).toBe(
       "flat-dumbbell-press",
     );
-    expect(
-      getExerciseAnimation(undefined, "Supino Reto com Halteres"),
-    ).toBe("flat-dumbbell-press");
-    expect(
-      getExerciseAnimation(undefined, "supino com halteres"),
-    ).toBe("flat-dumbbell-press");
-    expect(
-      getExerciseAnimation(undefined, "supino com halter"),
-    ).toBe("flat-dumbbell-press");
+    expect(getExerciseAnimation(undefined, "Supino Reto com Halteres")).toBe(
+      "flat-dumbbell-press",
+    );
+    expect(getExerciseAnimation(undefined, "supino com halteres")).toBe(
+      "flat-dumbbell-press",
+    );
+    expect(getExerciseAnimation(undefined, "supino com halter")).toBe(
+      "flat-dumbbell-press",
+    );
   });
   it("keeps flat bench orientation, converging dumbbell path, and preserved bone lengths", () => {
     const initial = getExercisePose("flat-dumbbell-press", 0);
@@ -153,33 +156,84 @@ describe.each([
   "bench-press",
   "incline-bench-press",
   "decline-bench-press",
-] as const)(
-  "%s kinematics",
-  (exercise) => {
-    it("keeps limb lengths, feet planted and hands on the bar throughout a repetition", () => {
-      const start = getExercisePose(exercise, 0);
-      for (let step = 0; step <= 100; step++) {
-        const pose = getExercisePose(exercise, step / 100);
-        for (let i = 0; i < pose.limbs.length; i++) {
-          const limb = pose.limbs[i];
-          expect(limb.hip.distanceTo(limb.knee)).toBeCloseTo(0.44, 5);
-          expect(limb.knee.distanceTo(limb.ankle)).toBeCloseTo(0.42, 5);
-          expect(limb.shoulder.distanceTo(limb.elbow)).toBeCloseTo(
-            ARM_LENGTH,
-            5,
-          );
-          expect(limb.elbow.distanceTo(limb.wrist)).toBeCloseTo(
-            FOREARM_LENGTH,
-            5,
-          );
-          expect(limb.ankle.distanceTo(start.limbs[i].ankle)).toBe(0);
-          expect(limb.grip.y).toBe(pose.bar.y);
-          expect(limb.grip.z).toBe(pose.bar.z);
-        }
+] as const)("%s kinematics", (exercise) => {
+  it("keeps limb lengths, feet planted and hands on the bar throughout a repetition", () => {
+    const start = getExercisePose(exercise, 0);
+    for (let step = 0; step <= 100; step++) {
+      const pose = getExercisePose(exercise, step / 100);
+      for (let i = 0; i < pose.limbs.length; i++) {
+        const limb = pose.limbs[i];
+        expect(limb.hip.distanceTo(limb.knee)).toBeCloseTo(0.44, 5);
+        expect(limb.knee.distanceTo(limb.ankle)).toBeCloseTo(0.42, 5);
+        expect(limb.shoulder.distanceTo(limb.elbow)).toBeCloseTo(ARM_LENGTH, 5);
+        expect(limb.elbow.distanceTo(limb.wrist)).toBeCloseTo(
+          FOREARM_LENGTH,
+          5,
+        );
+        expect(limb.ankle.distanceTo(start.limbs[i].ankle)).toBe(0);
+        expect(limb.grip.y).toBe(pose.bar.y);
+        expect(limb.grip.z).toBe(pose.bar.z);
       }
-    });
-  },
-);
+    }
+  });
+});
+
+describe("decline bench leg support", () => {
+  it("bends knees above the hips with feet secured in a neutral ankle position throughout the press", () => {
+    const start = getExercisePose("decline-bench-press", 0);
+    for (const depth of [0, 0.25, 0.5, 0.75, 1]) {
+      const pose = getExercisePose("decline-bench-press", depth);
+      for (const [index, limb] of pose.limbs.entries()) {
+        expect(limb.knee.y - limb.hip.y).toBeGreaterThan(0.2);
+        expect(limb.knee.y - limb.ankle.y).toBeGreaterThan(0.2);
+        expect(limb.knee.z).toBeGreaterThan(limb.hip.z);
+        expect(limb.ankle.z).toBeGreaterThan(limb.knee.z);
+        // A flexed knee, rather than the inverted V beneath the bench.
+        const angle = limb.hip
+          .clone()
+          .sub(limb.knee)
+          .angleTo(limb.ankle.clone().sub(limb.knee));
+        expect(angle).toBeGreaterThan(Math.PI / 3);
+        expect(angle).toBeLessThan((2 * Math.PI) / 3);
+        expect(limb.knee.distanceTo(start.limbs[index].knee)).toBe(0);
+        expect(limb.footRotation.angleTo(start.limbs[index].footRotation)).toBe(
+          0,
+        );
+        const footUp = new Vector3(0, 1, 0).applyQuaternion(limb.footRotation);
+        const shinUp = limb.knee.clone().sub(limb.ankle).normalize();
+        expect(footUp.dot(shinUp)).toBeGreaterThan(0.999);
+        const toeDirection = new Vector3(0, 0, 1).applyQuaternion(
+          limb.footRotation,
+        );
+        expect(toeDirection.z).toBeGreaterThan(0.5);
+        expect(toeDirection.y).toBeGreaterThan(0.2);
+        expect(limb.hip.distanceTo(limb.knee)).toBeCloseTo(0.44, 6);
+        expect(limb.knee.distanceTo(limb.ankle)).toBeCloseTo(0.42, 6);
+      }
+      expect(pose.limbs[0].knee.y).toBeCloseTo(pose.limbs[1].knee.y, 8);
+      expect(pose.limbs[0].knee.x).toBeCloseTo(-pose.limbs[1].knee.x, 8);
+    }
+  });
+
+  it("places the retaining roller over the instep and the upper roller behind the knees", () => {
+    const { kneeRoller, ankleRoller } = getDeclineLegSupports();
+    for (const limb of getExercisePose("decline-bench-press", 0).limbs) {
+      const footUp = new Vector3(0, 1, 0).applyQuaternion(limb.footRotation);
+      const footForward = new Vector3(0, 0, 1).applyQuaternion(
+        limb.footRotation,
+      );
+      const rollerOffset = ankleRoller.clone().sub(limb.ankle);
+      expect(rollerOffset.dot(footUp)).toBeGreaterThan(DECLINE_ROLLER_RADIUS);
+      expect(rollerOffset.dot(footUp)).toBeLessThan(
+        DECLINE_ROLLER_RADIUS + 0.05,
+      );
+      expect(rollerOffset.dot(footForward)).toBeGreaterThan(0);
+      expect(rollerOffset.dot(footForward)).toBeLessThan(0.1);
+      expect(kneeRoller.y + DECLINE_ROLLER_RADIUS).toBeLessThan(limb.knee.y);
+      expect(Math.abs(kneeRoller.z - limb.knee.z)).toBeLessThan(0.05);
+    }
+  });
+});
 
 describe("rep timing", () => {
   it("holds briefly at lockout and the bottom, with a smooth slower descent", () => {

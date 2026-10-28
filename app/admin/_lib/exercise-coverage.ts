@@ -18,7 +18,7 @@ export function coverage(e: ListAdminExercises200Item) {
     animation: getExerciseAnimation(e.id, e.name),
     images: e.media.some((m) => m.hasImages),
     motion: e.media.some((m) => m.hasMotion),
-    instructions: e.media.some((m) => m.hasInstructions),
+    instructions: !!e.anatomy?.instructions || e.media.some((m) => m.hasInstructions),
     classified: e.muscles.some((m) => m.role === "PRIMARY"),
   };
 }

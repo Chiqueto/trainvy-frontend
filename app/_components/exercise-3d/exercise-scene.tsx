@@ -9,7 +9,9 @@ import {
   RoundedBox,
   useGLTF,
 } from "@react-three/drei";
-import { Bone, Group, Skeleton, SkinnedMesh } from "three";
+import { Bone, Group, Skeleton, SkinnedMesh, type BufferGeometry } from "three";
+import { createPecDeckMuscleMask } from "./pec-deck-muscles";
+import { PecDeckMachine, type PecDeckMachineHandle } from "./pec-deck-machine";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
 import modelManifest from "../../../public/models/exercise-3d/model-manifest.json";
 import { createTissueMaterial } from "./anatomy-material";
@@ -18,6 +20,8 @@ import {
   getExerciseDepth,
   INCLINE_BENCH_ANGLE,
   DECLINE_BENCH_ANGLE,
+  DECLINE_ROLLER_RADIUS,
+  getDeclineLegSupports,
 } from "./kinematics";
 import type { ExerciseAnimation } from "./exercises";
 
@@ -254,6 +258,11 @@ function InclineBench() {
 }
 
 function DeclineBench() {
+  const { kneeRoller, ankleRoller } = getDeclineLegSupports();
+  const supportRails = [
+    { from: { y: 0.12, z: 0.38 }, to: kneeRoller },
+    { from: kneeRoller, to: ankleRoller },
+  ];
   return (
     <group>
       {/* Encosto Declinado a -18° */}
@@ -284,15 +293,21 @@ function DeclineBench() {
         </mesh>
       </group>
 
-      {/* Roletes de fixação para as pernas e tornozelos */}
-      <mesh position={[0, 0.58, 0.62]} rotation={[0, 0, Math.PI / 2]} castShadow>
+      {/* Upper rollers support the back of the bent knees. */}
+      <mesh position={kneeRoller} rotation={[0, 0, Math.PI / 2]} castShadow>
         <cylinderGeometry args={[0.018, 0.018, 0.48, 24]} />
-        <meshStandardMaterial color="#334155" metalness={0.75} roughness={0.25} />
+        <meshStandardMaterial
+          color="#334155"
+          metalness={0.75}
+          roughness={0.25}
+        />
       </mesh>
       {[-1, 1].map((side) => (
-        <group key={side} position={[side * 0.16, 0.58, 0.62]}>
+        <group key={side} position={[side * 0.16, kneeRoller.y, kneeRoller.z]}>
           <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
-            <cylinderGeometry args={[0.05, 0.05, 0.16, 24]} />
+            <cylinderGeometry
+              args={[DECLINE_ROLLER_RADIUS, DECLINE_ROLLER_RADIUS, 0.16, 24]}
+            />
             <meshStandardMaterial color="#182232" roughness={0.8} />
           </mesh>
           <mesh position={[side * 0.085, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
@@ -302,15 +317,24 @@ function DeclineBench() {
         </group>
       ))}
 
-      {/* Roletes acolchoados inferiores de trava */}
-      <mesh position={[0, 0.46, 0.76]} rotation={[0, 0, Math.PI / 2]} castShadow>
+      {/* Lower rollers retain the insteps, above the feet, rather than below the soles. */}
+      <mesh position={ankleRoller} rotation={[0, 0, Math.PI / 2]} castShadow>
         <cylinderGeometry args={[0.018, 0.018, 0.48, 24]} />
-        <meshStandardMaterial color="#334155" metalness={0.75} roughness={0.25} />
+        <meshStandardMaterial
+          color="#334155"
+          metalness={0.75}
+          roughness={0.25}
+        />
       </mesh>
       {[-1, 1].map((side) => (
-        <group key={side} position={[side * 0.16, 0.46, 0.76]}>
+        <group
+          key={side}
+          position={[side * 0.16, ankleRoller.y, ankleRoller.z]}
+        >
           <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
-            <cylinderGeometry args={[0.05, 0.05, 0.16, 24]} />
+            <cylinderGeometry
+              args={[DECLINE_ROLLER_RADIUS, DECLINE_ROLLER_RADIUS, 0.16, 24]}
+            />
             <meshStandardMaterial color="#182232" roughness={0.8} />
           </mesh>
           <mesh position={[side * 0.085, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
@@ -318,6 +342,25 @@ function DeclineBench() {
             <meshStandardMaterial color="#f97316" roughness={0.5} />
           </mesh>
         </group>
+      ))}
+
+      {/* Connect both roller axes to the bench frame, between the legs. */}
+      {supportRails.map(({ from, to }, index) => (
+        <mesh
+          key={index}
+          position={[0, (from.y + to.y) / 2, (from.z + to.z) / 2]}
+          rotation={[Math.atan2(to.z - from.z, to.y - from.y), 0, 0]}
+          castShadow
+        >
+          <boxGeometry
+            args={[0.045, Math.hypot(to.y - from.y, to.z - from.z), 0.045]}
+          />
+          <meshStandardMaterial
+            color="#334155"
+            metalness={0.7}
+            roughness={0.3}
+          />
+        </mesh>
       ))}
 
       {/* Colunas verticais e pés metálicos */}
@@ -325,7 +368,11 @@ function DeclineBench() {
         <group key={z}>
           <mesh position={[0, idx === 0 ? 0.12 : 0.22, z]} castShadow>
             <boxGeometry args={[0.08, idx === 0 ? 0.22 : 0.42, 0.08]} />
-            <meshStandardMaterial color="#334155" metalness={0.7} roughness={0.3} />
+            <meshStandardMaterial
+              color="#334155"
+              metalness={0.7}
+              roughness={0.3}
+            />
           </mesh>
           <mesh position={[0, 0.035, z]} castShadow>
             <boxGeometry args={[0.6, 0.07, 0.13]} />
@@ -402,14 +449,19 @@ function Athlete({
   const bar = useRef<Group>(null);
   const leftDumbbell = useRef<Group>(null);
   const rightDumbbell = useRef<Group>(null);
+  const pecDeckMachine = useRef<PecDeckMachineHandle>(null);
   const rig = useMemo(() => {
     const scene = clone(source);
     const { material, setAppearance } = createTissueMaterial();
     const bones = new Map<string, Bone>();
     const skeletons = new Set<Skeleton>();
+    const geometries = new Set<BufferGeometry>();
     scene.traverse((object) => {
       if (object instanceof Bone) bones.set(object.name, object);
       if (object instanceof SkinnedMesh) {
+        object.geometry = object.geometry.clone();
+        object.geometry.setAttribute("_pecdeckmuscles",createPecDeckMuscleMask(object.geometry));
+        geometries.add(object.geometry);
         object.material = material;
         object.castShadow = true;
         object.frustumCulled = false;
@@ -421,6 +473,7 @@ function Athlete({
       material,
       setAppearance,
       skeletons,
+      geometries,
       applyPose: createPoseDriver(bones),
     };
   }, [source]);
@@ -434,6 +487,7 @@ function Athlete({
     return () => {
       rig.material.dispose();
       rig.skeletons.forEach((skeleton) => skeleton.dispose());
+      rig.geometries.forEach(geometry=>geometry.dispose());
     };
   }, [rig, onReady]);
   useFrame((_, delta) => {
@@ -443,12 +497,13 @@ function Athlete({
     bar.current?.position.copy(pose.bar);
     leftDumbbell.current?.position.copy(pose.limbs[0].grip);
     rightDumbbell.current?.position.copy(pose.limbs[1].grip);
+    pecDeckMachine.current?.update(pose);
     rig.scene.updateMatrixWorld(true);
   });
   return (
     <>
       <primitive object={rig.scene} dispose={null} />
-      {exercise === "incline-dumbbell-press" ||
+      {exercise === "pec-deck" ? <PecDeckMachine ref={pecDeckMachine}/> : exercise === "incline-dumbbell-press" ||
       exercise === "flat-dumbbell-press" ? (
         <>
           <group ref={leftDumbbell}>
@@ -484,6 +539,15 @@ function getCameraParams(
   exercise: ExerciseAnimation,
   view: SceneProps["view"],
 ): { position: [number, number, number]; target: [number, number, number] } {
+  if(exercise === "pec-deck") {
+    const target: [number,number,number]=[0,0.86,0.03];
+    switch(view) {
+      case "front": return {position:[0,1.15,3.8],target};
+      case "side": return {position:[3.5,1.25,0.08],target};
+      case "back": return {position:[-0.5,1.4,-3.5],target};
+      default: return {position:[2.6,1.7,3.1],target};
+    }
+  }
   const squat = exercise === "squat";
 
   if (squat) {
@@ -519,12 +583,13 @@ function getCameraParams(
   }
 
   if (exercise === "decline-bench-press") {
-    const target: [number, number, number] = [0, 0.52, -0.05];
+    // Centre the full supported pose, including the feet at the raised end.
+    const target: [number, number, number] = [0, 0.52, 0.18];
     switch (view) {
       case "front":
         return { position: [0, 1.7, 3.0], target };
       case "side":
-        return { position: [2.9, 0.9, -0.05], target };
+        return { position: [2.9, 0.9, 0.18], target };
       case "back":
         return { position: [-0.35, 1.8, -2.6], target };
       case "perspective":
