@@ -18,6 +18,7 @@ import { createPoseDriver } from "../app/_components/exercise-3d/kinematics";
 import { EXERCISE_ANIMATIONS } from "../app/_components/exercise-3d/exercises";
 import { createTissueMaterial } from "../app/_components/exercise-3d/anatomy-material";
 import { createPecDeckMuscleMask } from "../app/_components/exercise-3d/pec-deck-muscles";
+import { createSmithBenchMuscleMask } from "../app/_components/exercise-3d/smith-bench-muscles";
 import { createMachineChestPressMuscleMask } from "../app/_components/exercise-3d/machine-chest-press-muscles";
 
 let mesh: SkinnedMesh;
@@ -79,6 +80,31 @@ describe("Trainvy anatomical athlete", () => {
     expect(Array.from(existing.array)).toEqual(before);
   });
 
+  it("maps the Smith bench press explicitly with pectoralis major as primary and triceps/anterior deltoid as secondary", () => {
+    const geometry = mesh.geometry;
+    const mask = createSmithBenchMuscleMask(geometry);
+    const positions = geometry.getAttribute("position");
+    let primary = 0,
+      secondary = 0;
+    for (let i = 0; i < mask.count; i++) {
+      if (mask.getX(i) > 0.9) primary++;
+      else if (mask.getX(i) > 0.1) secondary++;
+
+      if (positions.getY(i) > 1.49 || positions.getY(i) < 0.8) {
+        expect(mask.getX(i)).toBe(0);
+      }
+    }
+    expect(primary).toBe(2460);
+    expect(secondary).toBe(4488);
+    expect(EXERCISE_ANIMATIONS["smith-bench-press"].muscles.primary).toEqual([
+      "Peitoral maior (porções esternocostal e clavicular)",
+    ]);
+    expect(EXERCISE_ANIMATIONS["smith-bench-press"].muscles.secondary).toEqual([
+      "Tríceps braquial",
+      "Deltoide anterior",
+    ]);
+  });
+
   it("resets the vertical pec-deck hand grip when switching to a barbell exercise", () => {
     const bones = new Map(mesh.skeleton.bones.map((b) => [b.name, b]));
     const pose = apply("pec-deck", 0.5);
@@ -133,6 +159,7 @@ describe("Trainvy anatomical athlete", () => {
       "incline-dumbbell-press",
       "flat-dumbbell-press",
       "incline-bench-press",
+      "smith-bench-press",
     ] as const) {
       apply(exercise, 0.5);
       for (const suffix of ["L", "R"])
@@ -191,6 +218,7 @@ describe("Trainvy anatomical athlete", () => {
     "flat-dumbbell-press",
     "incline-bench-press",
     "decline-bench-press",
+    "smith-bench-press",
   ] as const)(
     "keeps both arm segments in one bend plane without roll flips in %s",
     (exercise) => {
@@ -447,6 +475,7 @@ describe("Trainvy anatomical athlete", () => {
     "flat-dumbbell-press",
     "incline-bench-press",
     "decline-bench-press",
+    "smith-bench-press",
   ] as const)(
     "keeps the closed hands rigid and attached to the bar throughout %s",
     (exercise) => {
@@ -496,6 +525,7 @@ describe("Trainvy anatomical athlete", () => {
     "flat-dumbbell-press",
     "incline-bench-press",
     "decline-bench-press",
+    "smith-bench-press",
   ] as const)("keeps every sampled vertex finite through %s", (exercise) => {
     const p = new Vector3();
     let invalid = 0,
@@ -525,6 +555,7 @@ describe("Trainvy anatomical athlete", () => {
     setAppearance("flat-dumbbell-press", true);
     setAppearance("incline-bench-press", true);
     setAppearance("decline-bench-press", true);
+    setAppearance("smith-bench-press", true);
     expect(material.map).toBeNull();
     expect(material.normalMap).toBeNull();
     expect(material.vertexColors).toBe(true);
@@ -569,6 +600,7 @@ describe("Trainvy anatomical athlete", () => {
     "flat-dumbbell-press",
     "incline-bench-press",
     "decline-bench-press",
+    "smith-bench-press",
   ] as const)(
     "supports the load over the forearm and keeps forearms vertical in %s",
     (exercise) => {

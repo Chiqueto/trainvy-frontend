@@ -33,6 +33,9 @@ describe("exercise 3D scope", () => {
     expect(getExerciseAnimation("eb910207-283c-414d-8d37-7c6b6d7de0d8")).toBe(
       "decline-bench-press",
     );
+    expect(getExerciseAnimation("f5a99b5a-74d1-4622-880e-bcf24758dc31")).toBe(
+      "smith-bench-press",
+    );
     expect(getExerciseAnimation("f3e5e1cf-d232-4a80-87b3-9f35650a1b5e")).toBe(
       "machine-chest-press",
     );
@@ -154,11 +157,77 @@ describe("flat dumbbell press", () => {
   });
 });
 
+describe("smith bench press", () => {
+  it("enables canonical id and normalized variations", () => {
+    expect(getExerciseAnimation("f5a99b5a-74d1-4622-880e-bcf24758dc31")).toBe(
+      "smith-bench-press",
+    );
+    expect(getExerciseAnimation(undefined, "Supino Reto no Smith")).toBe(
+      "smith-bench-press",
+    );
+    expect(getExerciseAnimation(undefined, "supino no smith")).toBe(
+      "smith-bench-press",
+    );
+    expect(getExerciseAnimation(undefined, "supino smith")).toBe(
+      "smith-bench-press",
+    );
+    expect(getExerciseAnimation(undefined, "supino reto smith")).toBe(
+      "smith-bench-press",
+    );
+  });
+
+  it("guides the bar along a strictly linear vertical path with preserved bone lengths and flat bench pose", () => {
+    const initial = getExercisePose("smith-bench-press", 0);
+    const bottom = getExercisePose("smith-bench-press", 1);
+
+    for (let step = 0; step <= 200; step++) {
+      const pose = getExercisePose("smith-bench-press", step / 200);
+
+      // Trajetória perfeitamente linear vertical da barra nos trilhos do Smith: Z constante!
+      expect(pose.bar.z).toBeCloseTo(-0.035, 6);
+      expect(pose.bar.x).toBe(0);
+
+      // Orientação plana e estável do banco
+      expect(pose.tilt.angleTo(initial.tilt)).toBeLessThan(0.000001);
+      expect(pose.origin.distanceTo(initial.origin)).toBe(0);
+
+      // Preservação anatômica de segmentos ósseos
+      for (let i = 0; i < 2; i++) {
+        const limb = pose.limbs[i];
+        expect(limb.hip.distanceTo(limb.knee)).toBeCloseTo(0.44, 5);
+        expect(limb.knee.distanceTo(limb.ankle)).toBeCloseTo(0.42, 5);
+        expect(limb.shoulder.distanceTo(limb.elbow)).toBeCloseTo(ARM_LENGTH, 5);
+        expect(limb.elbow.distanceTo(limb.wrist)).toBeCloseTo(
+          FOREARM_LENGTH,
+          5,
+        );
+        expect(limb.ankle.distanceTo(initial.limbs[i].ankle)).toBe(0);
+        expect(limb.shoulder.distanceTo(initial.limbs[i].shoulder)).toBe(0);
+
+        // Mãos conectadas à barra
+        expect(limb.grip.y).toBe(pose.bar.y);
+        expect(limb.grip.z).toBe(pose.bar.z);
+      }
+    }
+
+    // Posição no topo (lockout) é mais alta que no fundo (contato no peito)
+    expect(initial.bar.y).toBeGreaterThan(bottom.bar.y);
+    expect(initial.bar.y).toBeCloseTo(1.035, 5);
+    expect(bottom.bar.y).toBeCloseTo(0.655, 5);
+
+    // Alinhamento paralelo ao supino reto convencional
+    expect(
+      initial.tilt.angleTo(getExercisePose("bench-press", 0).tilt),
+    ).toBeCloseTo(0, 6);
+  });
+});
+
 describe.each([
   "squat",
   "bench-press",
   "incline-bench-press",
   "decline-bench-press",
+  "smith-bench-press",
 ] as const)("%s kinematics", (exercise) => {
   it("keeps limb lengths, feet planted and hands on the bar throughout a repetition", () => {
     const start = getExercisePose(exercise, 0);

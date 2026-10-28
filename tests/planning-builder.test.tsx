@@ -146,6 +146,10 @@ describe("WorkoutPlanBuilder — interface", () => {
     });
     const exercises = ["Agachamento", "Remada", "Desenvolvimento"];
     screen.getAllByRole("article").forEach((card, index) => {
+      const expandBtn = within(card).queryByRole("button", {
+        name: "Expandir treino",
+      });
+      if (expandBtn) fireEvent.click(expandBtn);
       fireEvent.click(
         within(card).getByRole("button", {
           name: "Exercício: Selecionar exercício",
@@ -344,6 +348,56 @@ describe("WorkoutPlanBuilder — interface", () => {
       alternative2Name: null,
       alternative2ExerciseId: null,
     });
+  });
+
+  it("inicia com cards recolhidos e expande ao clicar na setinha", () => {
+    render(<WorkoutPlanBuilder mode="standalone" />);
+    const articles = screen.getAllByRole("article");
+    expect(articles).toHaveLength(3);
+
+    // Inicialmente recolhidos: inputs internos não estão visíveis
+    expect(within(articles[0]).queryByLabelText("Nome do treino")).toBeNull();
+    expect(within(articles[0]).getByRole("button", { name: "Expandir treino" })).toBeDefined();
+
+    // Clica para expandir o primeiro treino
+    fireEvent.click(within(articles[0]).getByRole("button", { name: "Expandir treino" }));
+    expect(within(articles[0]).getByLabelText("Nome do treino")).toBeDefined();
+    expect(within(articles[0]).getByLabelText("Duração (min)")).toBeDefined();
+    expect(within(articles[0]).getByRole("button", { name: "Recolher treino" })).toBeDefined();
+
+    // Clica para recolher novamente
+    fireEvent.click(within(articles[0]).getByRole("button", { name: "Recolher treino" }));
+    expect(within(articles[0]).queryByLabelText("Nome do treino")).toBeNull();
+  });
+
+  it("expande e recolhe todos os treinos pelo botão global", () => {
+    render(<WorkoutPlanBuilder mode="standalone" />);
+    const toggleAllBtn = screen.getByRole("button", { name: "Expandir todos" });
+    fireEvent.click(toggleAllBtn);
+
+    const articles = screen.getAllByRole("article");
+    articles.forEach((card) => {
+      expect(within(card).getByLabelText("Nome do treino")).toBeDefined();
+    });
+
+    const collapseAllBtn = screen.getByRole("button", { name: "Recolher todos" });
+    fireEvent.click(collapseAllBtn);
+
+    articles.forEach((card) => {
+      expect(within(card).queryByLabelText("Nome do treino")).toBeNull();
+    });
+  });
+
+  it("ao adicionar um novo treino, ele vem automaticamente expandido", () => {
+    render(<WorkoutPlanBuilder mode="standalone" />);
+    fireEvent.click(screen.getByRole("button", { name: "Adicionar Treino" }));
+
+    const articles = screen.getAllByRole("article");
+    expect(articles).toHaveLength(4);
+    // O último treino (recém adicionado) está expandido
+    expect(within(articles[3]).getByLabelText("Nome do treino")).toBeDefined();
+    // Os anteriores continuam recolhidos
+    expect(within(articles[0]).queryByLabelText("Nome do treino")).toBeNull();
   });
 
   it("não salva nomes livres de exercícios em rascunhos novos", () => {

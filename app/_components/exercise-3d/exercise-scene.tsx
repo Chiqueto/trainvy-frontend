@@ -11,6 +11,8 @@ import {
 } from "@react-three/drei";
 import { Bone, Group, Skeleton, SkinnedMesh, type BufferGeometry } from "three";
 import { createPecDeckMuscleMask } from "./pec-deck-muscles";
+import { createSmithBenchMuscleMask } from "./smith-bench-muscles";
+import { SmithMachineFrame, SmithBarbell } from "./smith-machine";
 import { PecDeckMachine, type PecDeckMachineHandle } from "./pec-deck-machine";
 import { createMachineChestPressMuscleMask } from "./machine-chest-press-muscles";
 import { MachineChestPress, type MachineChestPressHandle } from "./machine-chest-press";
@@ -464,6 +466,7 @@ function Athlete({
       if (object instanceof SkinnedMesh) {
         object.geometry = object.geometry.clone();
         object.geometry.setAttribute("_pecdeckmuscles",createPecDeckMuscleMask(object.geometry));
+        object.geometry.setAttribute("_smithbenchmuscles", createSmithBenchMuscleMask(object.geometry));
         object.geometry.setAttribute("_machinechestpressmuscles", createMachineChestPressMuscleMask(object.geometry));
         geometries.add(object.geometry);
         object.material = material;
@@ -508,7 +511,15 @@ function Athlete({
   return (
     <>
       <primitive object={rig.scene} dispose={null} />
-      {exercise === "machine-chest-press" ? <MachineChestPress ref={machineChestPress} /> : exercise === "pec-deck" ? <PecDeckMachine ref={pecDeckMachine}/> : exercise === "incline-dumbbell-press" ||
+      {exercise === "machine-chest-press" ? (
+        <MachineChestPress ref={machineChestPress} />
+      ) : exercise === "pec-deck" ? (
+        <PecDeckMachine ref={pecDeckMachine} />
+      ) : exercise === "smith-bench-press" ? (
+        <group ref={bar}>
+          <SmithBarbell />
+        </group>
+      ) : exercise === "incline-dumbbell-press" ||
       exercise === "flat-dumbbell-press" ? (
         <>
           <group ref={leftDumbbell}>
@@ -544,15 +555,6 @@ function getCameraParams(
   exercise: ExerciseAnimation,
   view: SceneProps["view"],
 ): { position: [number, number, number]; target: [number, number, number] } {
-  if (exercise === "machine-chest-press") {
-    const target: [number, number, number] = [0, 0.86, 0.05];
-    switch (view) {
-      case "front": return { position: [0, 1.15, 3.8], target };
-      case "side": return { position: [3.5, 1.25, 0.08], target };
-      case "back": return { position: [-0.5, 1.4, -3.5], target };
-      default: return { position: [2.6, 1.7, 3.1], target };
-    }
-  }
   if(exercise === "pec-deck") {
     const target: [number,number,number]=[0,0.86,0.03];
     switch(view) {
@@ -609,6 +611,30 @@ function getCameraParams(
       case "perspective":
       default:
         return { position: [2.4, 1.6, 2.2], target };
+    }
+  }
+
+  if (exercise === "machine-chest-press") {
+    const target: [number, number, number] = [0, 0.86, 0.05];
+    switch (view) {
+      case "front": return { position: [0, 1.15, 3.8], target };
+      case "side": return { position: [3.5, 1.25, 0.08], target };
+      case "back": return { position: [-0.5, 1.4, -3.5], target };
+      default: return { position: [2.6, 1.7, 3.1], target };
+    }
+  }
+  if (exercise === "smith-bench-press") {
+    const target: [number, number, number] = [0, 0.72, 0.0];
+    switch (view) {
+      case "front":
+        return { position: [0, 1.65, 3.4], target };
+      case "side":
+        return { position: [3.4, 1.05, 0.0], target };
+      case "back":
+        return { position: [-0.35, 1.9, -3.0], target };
+      case "perspective":
+      default:
+        return { position: [2.5, 1.7, 2.5], target };
     }
   }
 
@@ -722,7 +748,8 @@ export default function ExerciseScene(props: SceneProps) {
       <StudioPlatform />
 
       {/* Banco olímpico / plano para supino reto (barra ou halteres) */}
-      {(benchPress || props.exercise === "flat-dumbbell-press") && <Bench />}
+      {(benchPress || props.exercise === "flat-dumbbell-press" || props.exercise === "smith-bench-press") && <Bench />}
+      {props.exercise === "smith-bench-press" && <SmithMachineFrame />}
       {(props.exercise === "incline-dumbbell-press" ||
         props.exercise === "incline-bench-press") && <InclineBench />}
       {props.exercise === "decline-bench-press" && <DeclineBench />}
