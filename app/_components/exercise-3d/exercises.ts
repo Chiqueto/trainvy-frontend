@@ -1,3 +1,4 @@
+import { MACHINE_CHEST_PRESS_INSTRUCTIONS } from "./machine-chest-press-instructions";
 import { PEC_DECK_INSTRUCTIONS } from "./pec-deck-instructions";
 
 export type ExerciseAnimation =
@@ -7,7 +8,8 @@ export type ExerciseAnimation =
   | "flat-dumbbell-press"
   | "incline-bench-press"
   | "decline-bench-press"
-  | "pec-deck";
+  | "pec-deck"
+  | "machine-chest-press";
 
 export interface ExerciseDefinition {
   name: string;
@@ -18,6 +20,17 @@ export interface ExerciseDefinition {
 }
 
 export const EXERCISE_ANIMATIONS = {
+  "machine-chest-press": {
+    name: "Supino Reto na Máquina",
+    equipment: "Máquina de supino articulada com encosto e pegadores",
+    id: "f3e5e1cf-d232-4a80-87b3-9f35650a1b5e",
+    instructions: MACHINE_CHEST_PRESS_INSTRUCTIONS,
+    muscles: {
+      primary: ["Peitoral maior (porções esternocostal e clavicular)"],
+      secondary: ["Tríceps braquial", "Deltoide anterior"],
+    },
+  },
+
   "pec-deck": {
     name: "Crucifixo na Máquina (peck deck)",
     equipment: "Máquina peck deck com encosto e apoios de antebraço",
@@ -104,6 +117,7 @@ export function getExerciseAnimation(
   name?: string | null,
 ): ExerciseAnimation | null {
   if (id === EXERCISE_ANIMATIONS["pec-deck"].id) return "pec-deck";
+  if (id === EXERCISE_ANIMATIONS["machine-chest-press"].id) return "machine-chest-press";
   if (id === EXERCISE_ANIMATIONS.squat.id) return "squat";
   if (id === EXERCISE_ANIMATIONS["incline-dumbbell-press"].id)
     return "incline-dumbbell-press";
@@ -128,6 +142,22 @@ export function getExerciseAnimation(
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
+    if (
+      [
+        "supino reto na maquina",
+        "supino reto maquina",
+        "supino na maquina",
+        "supino maquina",
+        "supino sentado na maquina",
+        "supino maquina sentado",
+        "supino articulado",
+        "machine chest press",
+        "chest press machine",
+      ].includes(normalized)
+    ) {
+      return "machine-chest-press";
+    }
+
     if (
       [
         "peck deck",

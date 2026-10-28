@@ -23,6 +23,17 @@ import type { GetExerciseMedia200 } from "@/app/_lib/api/fetch-generated";
 import { Button } from "@/components/ui/button";
 
 const LAB_MEDIA_DATA: Record<ExerciseAnimation, GetExerciseMedia200> = {
+  "machine-chest-press": {
+    exerciseId: EXERCISE_ANIMATIONS["machine-chest-press"].id,
+    hasMedia: false,
+    mediaType: null,
+    startImagePath: null,
+    endImagePath: null,
+    motionPath: null,
+    attributionName: null,
+    attributionUrl: null,
+    instructions: EXERCISE_ANIMATIONS["machine-chest-press"].instructions,
+  },
   "pec-deck": {
     exerciseId: EXERCISE_ANIMATIONS["pec-deck"].id,hasMedia:false,mediaType:null,
     startImagePath:null,endImagePath:null,motionPath:null,attributionName:null,attributionUrl:null,
@@ -127,6 +138,16 @@ export default function Exercise3DLab() {
       cues: string[];
     }
   > = {
+    "machine-chest-press": {
+      primary: "Peitoral maior (porções esternocostal e clavicular)",
+      secondary: "Tríceps braquial e Deltoide anterior",
+      cadence: "Empurre horizontal convergente controlado, extensão suave e retorno cadenciado.",
+      cues: [
+        "Ajuste a altura do assento para que as manoplas alinhem à linha média do tórax.",
+        "Mantenha as costas e cabeça apoiadas no encosto, com pés firmemente plantados no chão.",
+        "Cotovelos em ângulo de ~45° a 60° no plano escapular, empurrando à frente sem travar os cotovelos.",
+      ],
+    },
     "pec-deck": {
       primary: "Peitoral maior — porções clavicular e esternocostal, sem predominância regional definida",
       secondary: "Deltoide anterior",
