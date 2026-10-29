@@ -184,12 +184,18 @@ export async function updatePrescriptionDraftAction({
 export async function sendPrescriptionAction({
   id,
   athleteId,
+  version,
 }: {
   id: string;
   athleteId: string;
+  version: number;
 }) {
   try {
-    const res = await sendWorkoutPrescription(id, { cache: "no-store" });
+    const res = await sendWorkoutPrescription(
+      id,
+      { version, approval: true },
+      { cache: "no-store" },
+    );
 
     if (res.status === 200) {
       revalidatePath(`/personal/alunos/${athleteId}`);
@@ -277,10 +283,16 @@ export async function listTemplatesAction() {
     if (res.status === 200) {
       return { success: true as const, data: res.data };
     }
-    const errorMsg = getActionError(res.data, "Erro ao listar modelos de treino.");
+    const errorMsg = getActionError(
+      res.data,
+      "Erro ao listar modelos de treino.",
+    );
     return { success: false as const, error: errorMsg };
   } catch {
-    return { success: false as const, error: "Falha na comunicação com o servidor." };
+    return {
+      success: false as const,
+      error: "Falha na comunicação com o servidor.",
+    };
   }
 }
 
@@ -290,24 +302,40 @@ export async function getTemplateDetailsAction(id: string) {
     if (res.status === 200) {
       return { success: true as const, data: res.data };
     }
-    const errorMsg = getActionError(res.data, "Erro ao carregar detalhes do modelo.");
+    const errorMsg = getActionError(
+      res.data,
+      "Erro ao carregar detalhes do modelo.",
+    );
     return { success: false as const, error: errorMsg };
   } catch {
-    return { success: false as const, error: "Falha na comunicação com o servidor." };
+    return {
+      success: false as const,
+      error: "Falha na comunicação com o servidor.",
+    };
   }
 }
 
-export async function createTemplateAction(body: CreateCoachWorkoutPlanTemplateBody) {
+export async function createTemplateAction(
+  body: CreateCoachWorkoutPlanTemplateBody,
+) {
   try {
-    const res = await createCoachWorkoutPlanTemplate(body, { cache: "no-store" });
+    const res = await createCoachWorkoutPlanTemplate(body, {
+      cache: "no-store",
+    });
     if (res.status === 201) {
       revalidatePath("/personal/modelos");
       return { success: true as const, data: res.data };
     }
-    const errorMsg = getActionError(res.data, "Erro ao criar modelo de treino.");
+    const errorMsg = getActionError(
+      res.data,
+      "Erro ao criar modelo de treino.",
+    );
     return { success: false as const, error: errorMsg };
   } catch {
-    return { success: false as const, error: "Falha na comunicação com o servidor." };
+    return {
+      success: false as const,
+      error: "Falha na comunicação com o servidor.",
+    };
   }
 }
 
@@ -316,16 +344,24 @@ export async function updateTemplateAction(
   body: UpdateCoachWorkoutPlanTemplateBody,
 ) {
   try {
-    const res = await updateCoachWorkoutPlanTemplate(id, body, { cache: "no-store" });
+    const res = await updateCoachWorkoutPlanTemplate(id, body, {
+      cache: "no-store",
+    });
     if (res.status === 200) {
       revalidatePath("/personal/modelos");
       revalidatePath(`/personal/modelos/${id}`);
       return { success: true as const, data: res.data };
     }
-    const errorMsg = getActionError(res.data, "Erro ao atualizar modelo de treino.");
+    const errorMsg = getActionError(
+      res.data,
+      "Erro ao atualizar modelo de treino.",
+    );
     return { success: false as const, error: errorMsg };
   } catch {
-    return { success: false as const, error: "Falha na comunicação com o servidor." };
+    return {
+      success: false as const,
+      error: "Falha na comunicação com o servidor.",
+    };
   }
 }
 
@@ -336,10 +372,16 @@ export async function deleteTemplateAction(id: string) {
       revalidatePath("/personal/modelos");
       return { success: true as const, data: res.data };
     }
-    const errorMsg = getActionError(res.data, "Erro ao excluir modelo de treino.");
+    const errorMsg = getActionError(
+      res.data,
+      "Erro ao excluir modelo de treino.",
+    );
     return { success: false as const, error: errorMsg };
   } catch {
-    return { success: false as const, error: "Falha na comunicação com o servidor." };
+    return {
+      success: false as const,
+      error: "Falha na comunicação com o servidor.",
+    };
   }
 }
 
@@ -348,17 +390,25 @@ export async function allocateTemplateAction(
   body: AllocateCoachWorkoutPlanTemplateBody,
 ) {
   try {
-    const res = await allocateCoachWorkoutPlanTemplate(id, body, { cache: "no-store" });
+    const res = await allocateCoachWorkoutPlanTemplate(id, body, {
+      cache: "no-store",
+    });
     if (res.status === 200) {
       revalidatePath("/personal/modelos");
       revalidatePath(`/personal/alunos/${body.athleteId}`);
       revalidatePath("/personal");
       return { success: true as const, data: res.data };
     }
-    const errorMsg = getActionError(res.data, "Erro ao alocar modelo para o aluno.");
+    const errorMsg = getActionError(
+      res.data,
+      "Erro ao alocar modelo para o aluno.",
+    );
     return { success: false as const, error: errorMsg };
   } catch {
-    return { success: false as const, error: "Falha na comunicação com o servidor." };
+    return {
+      success: false as const,
+      error: "Falha na comunicação com o servidor.",
+    };
   }
 }
 
@@ -374,10 +424,16 @@ export async function createTemplateFromPlanAction(
       revalidatePath("/personal/modelos");
       return { success: true as const, data: res.data };
     }
-    const errorMsg = getActionError(res.data, "Erro ao salvar plano como modelo.");
+    const errorMsg = getActionError(
+      res.data,
+      "Erro ao salvar plano como modelo.",
+    );
     return { success: false as const, error: errorMsg };
   } catch {
-    return { success: false as const, error: "Falha na comunicação com o servidor." };
+    return {
+      success: false as const,
+      error: "Falha na comunicação com o servidor.",
+    };
   }
 }
 
@@ -387,14 +443,23 @@ export async function createTemplateFromPlanAction(
 
 export async function listCustomExercisesAction() {
   try {
-    const res = await listExercises({ onlyCustom: "true" }, { cache: "no-store" });
+    const res = await listExercises(
+      { onlyCustom: "true" },
+      { cache: "no-store" },
+    );
     if (res.status === 200) {
       return { success: true as const, data: res.data };
     }
-    const errorMsg = getActionError(res.data, "Erro ao listar exercícios personalizados.");
+    const errorMsg = getActionError(
+      res.data,
+      "Erro ao listar exercícios personalizados.",
+    );
     return { success: false as const, error: errorMsg };
   } catch {
-    return { success: false as const, error: "Falha na comunicação com o servidor." };
+    return {
+      success: false as const,
+      error: "Falha na comunicação com o servidor.",
+    };
   }
 }
 
@@ -405,10 +470,16 @@ export async function createCustomExerciseAction(body: CreateExerciseBody) {
       revalidatePath("/personal/exercicios");
       return { success: true as const, data: res.data };
     }
-    const errorMsg = getActionError(res.data, "Erro ao cadastrar exercício personalizado.");
+    const errorMsg = getActionError(
+      res.data,
+      "Erro ao cadastrar exercício personalizado.",
+    );
     return { success: false as const, error: errorMsg };
   } catch {
-    return { success: false as const, error: "Falha na comunicação com o servidor." };
+    return {
+      success: false as const,
+      error: "Falha na comunicação com o servidor.",
+    };
   }
 }
 
@@ -422,10 +493,16 @@ export async function updateCustomExerciseAction(
       revalidatePath("/personal/exercicios");
       return { success: true as const, data: res.data };
     }
-    const errorMsg = getActionError(res.data, "Erro ao atualizar exercício personalizado.");
+    const errorMsg = getActionError(
+      res.data,
+      "Erro ao atualizar exercício personalizado.",
+    );
     return { success: false as const, error: errorMsg };
   } catch {
-    return { success: false as const, error: "Falha na comunicação com o servidor." };
+    return {
+      success: false as const,
+      error: "Falha na comunicação com o servidor.",
+    };
   }
 }
 
@@ -436,10 +513,15 @@ export async function deleteCustomExerciseAction(id: string) {
       revalidatePath("/personal/exercicios");
       return { success: true as const, data: res.data };
     }
-    const errorMsg = getActionError(res.data, "Erro ao excluir exercício personalizado.");
+    const errorMsg = getActionError(
+      res.data,
+      "Erro ao excluir exercício personalizado.",
+    );
     return { success: false as const, error: errorMsg };
   } catch {
-    return { success: false as const, error: "Falha na comunicação com o servidor." };
+    return {
+      success: false as const,
+      error: "Falha na comunicação com o servidor.",
+    };
   }
 }
-

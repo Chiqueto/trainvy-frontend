@@ -14,6 +14,7 @@ import { requireAdminPage } from "@/app/admin/_lib/server";
 import { Logo } from "@/app/_components/logo";
 
 const links = [
+  { href: "/admin/professionals", label: "Verificação CREF", icon: Shield },
   { href: "/admin", label: "Visão Geral", icon: LayoutDashboard },
   { href: "/admin/ai-usage", label: "Consumo de IA", icon: Sparkles },
   { href: "/admin/exercises", label: "Exercícios", icon: Dumbbell },

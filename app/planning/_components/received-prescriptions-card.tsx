@@ -67,6 +67,10 @@ export interface AthletePrescriptionItem {
   name: string;
   notes: string | null;
   version: number;
+  approvedAt?: string | null;
+  approvedVersion?: number | null;
+  approvedByUserId?: string | null;
+  approvalMode?: "VERIFIED" | "TEST" | "UNVERIFIED";
   acceptedWorkoutPlanId: string | null;
   sentAt: string | null;
   respondedAt: string | null;
@@ -275,10 +279,26 @@ export function ReceivedPrescriptionsCard({
             </div>
 
             <p className="text-xs text-muted-foreground">
-              Prescrito por{" "}
+              Enviado por{" "}
               <strong>
                 {selectedPrescription.coach?.name ?? "Seu Treinador"}
               </strong>
+              {selectedPrescription.approvalMode === "TEST" ? (
+                <> · Aprovação em modo de testes, sem CREF verificado</>
+              ) : selectedPrescription.approvedAt &&
+                selectedPrescription.approvedVersion ===
+                  selectedPrescription.version ? (
+                <>
+                  {" "}
+                  · Aprovação registrada em{" "}
+                  {new Date(selectedPrescription.approvedAt).toLocaleDateString(
+                    "pt-BR",
+                  )}{" "}
+                  · versão {selectedPrescription.approvedVersion}
+                </>
+              ) : (
+                <> · Aprovação profissional não verificada neste registro</>
+              )}
             </p>
 
             {/* Estado de Sucesso pós-aceite */}

@@ -65,7 +65,8 @@ export function TemplatesList({
   const [templates, setTemplates] = useState<TemplateItem[]>(initialTemplates);
   const [search, setSearch] = useState("");
   const [selectedTag, setSelectedTag] = useState("ALL");
-  const [templateToAllocate, setTemplateToAllocate] = useState<TemplateSummary | null>(null);
+  const [templateToAllocate, setTemplateToAllocate] =
+    useState<TemplateSummary | null>(null);
   const [isAllocateModalOpen, setIsAllocateModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -112,9 +113,12 @@ export function TemplatesList({
     const matchesSearch =
       tpl.name.toLowerCase().includes(search.toLowerCase()) ||
       (tpl.description ?? "").toLowerCase().includes(search.toLowerCase()) ||
-      tpl.payload.workoutDays.some((d) =>
-        d.name.toLowerCase().includes(search.toLowerCase()) ||
-        d.exercises.some((e) => e.name.toLowerCase().includes(search.toLowerCase())),
+      tpl.payload.workoutDays.some(
+        (d) =>
+          d.name.toLowerCase().includes(search.toLowerCase()) ||
+          d.exercises.some((e) =>
+            e.name.toLowerCase().includes(search.toLowerCase()),
+          ),
       );
 
     if (!matchesSearch) return false;
@@ -196,8 +200,12 @@ export function TemplatesList({
       {/* Resumo e Contagem */}
       <div className="flex items-center justify-between text-xs text-muted-foreground px-1">
         <span>
-          Mostrando <strong className="text-foreground">{filteredTemplates.length}</strong> de{" "}
-          <strong className="text-foreground">{templates.length}</strong> modelos de treino
+          Mostrando{" "}
+          <strong className="text-foreground">
+            {filteredTemplates.length}
+          </strong>{" "}
+          de <strong className="text-foreground">{templates.length}</strong>{" "}
+          modelos de treino
         </span>
       </div>
 
@@ -264,7 +272,10 @@ export function TemplatesList({
                   <div className="flex flex-wrap items-center gap-2">
                     <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-muted text-foreground text-xs font-heading font-medium">
                       <Calendar className="size-3.5 text-primary" />
-                      <span>{days.length} {days.length === 1 ? "dia" : "dias"} ({nonRestDays.length} treinos)</span>
+                      <span>
+                        {days.length} {days.length === 1 ? "dia" : "dias"} (
+                        {nonRestDays.length} treinos)
+                      </span>
                     </div>
 
                     <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-muted text-foreground text-xs font-heading font-medium">
@@ -290,8 +301,12 @@ export function TemplatesList({
                         key={dIdx}
                         className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-background border border-border/60 text-[11px] text-muted-foreground"
                       >
-                        <span className="font-semibold text-foreground">{d.name}:</span>
-                        <span>{d.isRest ? "Off" : `${d.exercises?.length ?? 0} ex`}</span>
+                        <span className="font-semibold text-foreground">
+                          {d.name}:
+                        </span>
+                        <span>
+                          {d.isRest ? "Off" : `${d.exercises?.length ?? 0} ex`}
+                        </span>
                       </span>
                     ))}
                     {days.length > 4 && (
@@ -335,7 +350,7 @@ export function TemplatesList({
             <p className="text-sm text-muted-foreground leading-relaxed">
               {search || selectedTag !== "ALL"
                 ? "Tente ajustar seus termos de busca ou filtros de tags."
-                : "Crie modelos de treino reutilizáveis (ex: Hipertrofia ABC, Iniciante Full Body, Força 5x5) e aloque-os para seus alunos com apenas 1 clique."}
+                : "Crie modelos de treino reutilizáveis, prepare rascunhos para seus alunos e revise a versão final antes de aprovar e enviar."}
             </p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">

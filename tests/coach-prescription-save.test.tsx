@@ -32,6 +32,7 @@ const initialData = {
       estimatedDurationInSeconds: 3600,
       exercises: [
         {
+          exerciseId: "ex-supino",
           name: "Supino",
           sets: 3,
           reps: 10,
@@ -64,7 +65,9 @@ describe("Salvar prescrição do personal", () => {
       success: true,
     } as Awaited<ReturnType<typeof sendPrescriptionAction>>);
     renderBuilder();
-    fireEvent.click(screen.getByRole("button", { name: /salvar e enviar/i }));
+    fireEvent.click(
+      screen.getByRole("button", { name: /aprovar esta versão e enviar/i }),
+    );
     await waitFor(() => expect(push).toHaveBeenCalled());
     expect(createPrescriptionDraftAction).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -86,6 +89,7 @@ describe("Salvar prescrição do personal", () => {
     expect(sendPrescriptionAction).toHaveBeenCalledWith({
       id: "draft",
       athleteId: "aluno",
+      version: 1,
     });
     expect(toast.success).toHaveBeenCalledWith("Prescrição enviada ao aluno!");
   });
@@ -119,7 +123,9 @@ describe("Salvar prescrição do personal", () => {
         ReturnType<typeof sendPrescriptionAction>
       >);
     renderBuilder();
-    const button = screen.getByRole("button", { name: /salvar e enviar/i });
+    const button = screen.getByRole("button", {
+      name: /aprovar esta versão e enviar/i,
+    });
     fireEvent.click(button);
     await waitFor(() =>
       expect(toast.error).toHaveBeenCalledWith(

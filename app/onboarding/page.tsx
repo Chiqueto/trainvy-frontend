@@ -51,7 +51,10 @@ export default async function OnboardingPage() {
 
   if (process.env.ONBOARDING_AI_ENABLED === "true") {
     return (
-      <Chat embedded initialMessage="Quero começar a melhorar minha saúde!" />
+      <div className="grid lg:grid-cols-2">
+        <OnboardingForm />
+        <Chat embedded initialMessage="Quero começar a melhorar minha saúde!" />
+      </div>
     );
   }
 

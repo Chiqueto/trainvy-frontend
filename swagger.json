@@ -6466,6 +6466,358 @@
         }
       }
     },
+    "/planning/imports/confirm": {
+      "post": {
+        "operationId": "confirmWorkoutImport",
+        "tags": [
+          "Planning"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "previewToken": {
+                    "type": "string",
+                    "maxLength": 300000
+                  },
+                  "confirmed": {
+                    "type": "boolean",
+                    "enum": [
+                      true
+                    ]
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 180
+                  },
+                  "workoutDays": {
+                    "minItems": 1,
+                    "maxItems": 7,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "order": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "weekDay": {
+                          "type": "string",
+                          "enum": [
+                            "MONDAY",
+                            "TUESDAY",
+                            "WEDNESDAY",
+                            "THURSDAY",
+                            "FRIDAY",
+                            "SATURDAY",
+                            "SUNDAY"
+                          ]
+                        },
+                        "isRest": {
+                          "type": "boolean"
+                        },
+                        "estimatedDurationInSeconds": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "coverImageUrl": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "exercises": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "repsMin": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 10000
+                              },
+                              "repsMax": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 10000
+                              },
+                              "targetRir": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 10
+                              },
+                              "targetLoadInGrams": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 2000000
+                              },
+                              "tempo": {
+                                "nullable": true,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 80
+                              },
+                              "name": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "order": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "exerciseId": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "alternative1ExerciseId": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "alternative1ExerciseName": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "alternative2ExerciseId": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "alternative2ExerciseName": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "sets": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 9007199254740991
+                              },
+                              "warmupSets": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "reps": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 9007199254740991
+                              },
+                              "restTimeInSeconds": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "order",
+                              "sets",
+                              "warmupSets",
+                              "reps",
+                              "restTimeInSeconds"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "weekDay",
+                        "isRest",
+                        "estimatedDurationInSeconds",
+                        "exercises"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "previewToken",
+                  "confirmed",
+                  "name",
+                  "workoutDays"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/planning/overview": {
       "get": {
         "operationId": "getPlanningOverview",
@@ -6942,7 +7294,7 @@
     "/planning/ai-generate": {
       "post": {
         "operationId": "generateWorkoutPlanDraftWithAi",
-        "summary": "Generate workout plan draft with AI using text prompt, voice audio or PDF document",
+        "summary": "Extrair uma ficha fornecida sem prescrever ou preencher dados ausentes",
         "tags": [
           "Planning"
         ],
@@ -6955,21 +7307,26 @@
                 "properties": {
                   "prompt": {
                     "type": "string",
-                    "minLength": 2
+                    "minLength": 2,
+                    "maxLength": 20000
                   },
                   "fileUrl": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 14000000
                   },
                   "mediaType": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 100
                   },
                   "filename": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 200
                   }
                 },
                 "required": [
                   "prompt"
-                ]
+                ],
+                "additionalProperties": false
               }
             }
           }
@@ -6983,21 +7340,23 @@
                   "type": "object",
                   "properties": {
                     "name": {
-                      "type": "string"
-                    },
-                    "notes": {
                       "nullable": true,
-                      "type": "string"
+                      "type": "string",
+                      "maxLength": 180
                     },
                     "workoutDays": {
+                      "maxItems": 7,
                       "type": "array",
                       "items": {
                         "type": "object",
                         "properties": {
                           "name": {
-                            "type": "string"
+                            "nullable": true,
+                            "type": "string",
+                            "maxLength": 180
                           },
                           "weekDay": {
+                            "nullable": true,
                             "type": "string",
                             "enum": [
                               "MONDAY",
@@ -7010,40 +7369,55 @@
                             ]
                           },
                           "isRest": {
+                            "nullable": true,
                             "type": "boolean"
                           },
-                          "estimatedDurationInMinutes": {
-                            "type": "number"
+                          "estimatedDurationInSeconds": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 86400
                           },
                           "exercises": {
+                            "maxItems": 40,
                             "type": "array",
                             "items": {
                               "type": "object",
                               "properties": {
                                 "name": {
-                                  "type": "string"
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 180
                                 },
                                 "sets": {
-                                  "type": "number"
-                                },
-                                "warmupSets": {
-                                  "default": 0,
-                                  "type": "number"
+                                  "nullable": true,
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 100
                                 },
                                 "reps": {
-                                  "type": "number"
-                                },
-                                "repsMin": {
                                   "nullable": true,
                                   "type": "integer",
                                   "minimum": 1,
-                                  "maximum": 10000
+                                  "maximum": 500
                                 },
-                                "repsMax": {
+                                "warmupSets": {
                                   "nullable": true,
                                   "type": "integer",
-                                  "minimum": 1,
-                                  "maximum": 10000
+                                  "minimum": 0,
+                                  "maximum": 100
+                                },
+                                "restTimeInSeconds": {
+                                  "nullable": true,
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 3600
+                                },
+                                "targetLoadInGrams": {
+                                  "nullable": true,
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 1000000
                                 },
                                 "targetRir": {
                                   "nullable": true,
@@ -7051,36 +7425,21 @@
                                   "minimum": 0,
                                   "maximum": 10
                                 },
-                                "targetLoadInGrams": {
-                                  "nullable": true,
-                                  "type": "integer",
-                                  "minimum": 0,
-                                  "maximum": 2000000
-                                },
                                 "tempo": {
                                   "nullable": true,
                                   "type": "string",
-                                  "minLength": 1,
-                                  "maxLength": 80
-                                },
-                                "restTimeInSeconds": {
-                                  "type": "number"
-                                },
-                                "alternative1Name": {
-                                  "nullable": true,
-                                  "type": "string"
-                                },
-                                "alternative2Name": {
-                                  "nullable": true,
-                                  "type": "string"
+                                  "maxLength": 100
                                 }
                               },
                               "required": [
                                 "name",
                                 "sets",
-                                "warmupSets",
                                 "reps",
-                                "restTimeInSeconds"
+                                "warmupSets",
+                                "restTimeInSeconds",
+                                "targetLoadInGrams",
+                                "targetRir",
+                                "tempo"
                               ],
                               "additionalProperties": false
                             }
@@ -7090,16 +7449,83 @@
                           "name",
                           "weekDay",
                           "isRest",
-                          "estimatedDurationInMinutes",
+                          "estimatedDurationInSeconds",
                           "exercises"
                         ],
                         "additionalProperties": false
                       }
+                    },
+                    "provenance": {
+                      "maxItems": 1000,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string",
+                            "maxLength": 200
+                          },
+                          "quote": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 500
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "quote"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "questions": {
+                      "maxItems": 30,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "maxLength": 500
+                      }
+                    },
+                    "previewToken": {
+                      "type": "string"
+                    },
+                    "requiresConfirmation": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
                     }
                   },
                   "required": [
                     "name",
-                    "workoutDays"
+                    "workoutDays",
+                    "provenance",
+                    "questions",
+                    "previewToken",
+                    "requiresConfirmation"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
                   ],
                   "additionalProperties": false
                 }
@@ -7107,6 +7533,98 @@
             }
           },
           "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "429": {
             "description": "Default Response",
             "content": {
               "application/json": {
@@ -8103,8 +8621,36 @@
                 "type": "object",
                 "properties": {
                   "messages": {
+                    "minItems": 1,
+                    "maxItems": 100,
                     "type": "array",
-                    "items": {}
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "maxLength": 200
+                        },
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "user",
+                            "assistant"
+                          ]
+                        },
+                        "parts": {
+                          "maxItems": 100,
+                          "type": "array",
+                          "items": {}
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "role",
+                        "parts"
+                      ],
+                      "additionalProperties": {}
+                    }
                   },
                   "conversationId": {
                     "type": "string",
@@ -9470,6 +10016,30 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "crefVerificationRequired": {
+                      "type": "boolean"
+                    },
+                    "professionalAccessGranted": {
+                      "type": "boolean"
+                    },
+                    "professionalVerification": {
+                      "nullable": true,
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string"
+                        },
+                        "validUntil": {
+                          "nullable": true,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "validUntil"
+                      ],
+                      "additionalProperties": false
+                    },
                     "accountType": {
                       "type": "string",
                       "enum": [
@@ -9592,6 +10162,9 @@
                     }
                   },
                   "required": [
+                    "crefVerificationRequired",
+                    "professionalAccessGranted",
+                    "professionalVerification",
                     "accountType",
                     "systemRole",
                     "accountSetupCompletedAt",
@@ -11826,6 +12399,1818 @@
         }
       }
     },
+    "/admin/professional-verification-policy": {
+      "get": {
+        "operationId": "getProfessionalVerificationPolicy",
+        "tags": [
+          "Admin"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "required": {
+                      "type": "boolean"
+                    },
+                    "revision": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "updatedAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "updatedByUserId": {
+                      "nullable": true,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "required",
+                    "revision",
+                    "updatedAt",
+                    "updatedByUserId"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateProfessionalVerificationPolicy",
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "required": {
+                    "type": "boolean"
+                  },
+                  "revision": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 500
+                  }
+                },
+                "required": [
+                  "required",
+                  "revision",
+                  "reason"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "required": {
+                      "type": "boolean"
+                    },
+                    "revision": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "updatedAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "updatedByUserId": {
+                      "nullable": true,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "required",
+                    "revision",
+                    "updatedAt",
+                    "updatedByUserId"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me/professional-registration": {
+      "get": {
+        "operationId": "getProfessionalRegistration",
+        "tags": [
+          "Professional verification"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "type": "object",
+                  "properties": {
+                    "fullName": {
+                      "type": "string",
+                      "minLength": 5,
+                      "maxLength": 180
+                    },
+                    "cref": {
+                      "type": "string",
+                      "pattern": "^\\d{4,8}-[GP]$"
+                    },
+                    "region": {
+                      "type": "string",
+                      "enum": [
+                        "AC",
+                        "AL",
+                        "AP",
+                        "AM",
+                        "BA",
+                        "CE",
+                        "DF",
+                        "ES",
+                        "GO",
+                        "MA",
+                        "MT",
+                        "MS",
+                        "MG",
+                        "PA",
+                        "PB",
+                        "PR",
+                        "PE",
+                        "PI",
+                        "RJ",
+                        "RN",
+                        "RS",
+                        "RO",
+                        "RR",
+                        "SC",
+                        "SP",
+                        "SE",
+                        "TO"
+                      ]
+                    },
+                    "category": {
+                      "type": "string",
+                      "minLength": 3,
+                      "maxLength": 160
+                    },
+                    "userId": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "revision": {
+                      "type": "number"
+                    },
+                    "verifiedAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "validUntil": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "publicReason": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "fullName",
+                    "cref",
+                    "region",
+                    "category",
+                    "userId",
+                    "status",
+                    "revision",
+                    "verifiedAt",
+                    "validUntil",
+                    "publicReason",
+                    "updatedAt"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "submitProfessionalRegistration",
+        "tags": [
+          "Professional verification"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "fullName": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 180
+                  },
+                  "cref": {
+                    "type": "string",
+                    "pattern": "^\\d{4,8}-[GP]$"
+                  },
+                  "region": {
+                    "type": "string",
+                    "enum": [
+                      "AC",
+                      "AL",
+                      "AP",
+                      "AM",
+                      "BA",
+                      "CE",
+                      "DF",
+                      "ES",
+                      "GO",
+                      "MA",
+                      "MT",
+                      "MS",
+                      "MG",
+                      "PA",
+                      "PB",
+                      "PR",
+                      "PE",
+                      "PI",
+                      "RJ",
+                      "RN",
+                      "RS",
+                      "RO",
+                      "RR",
+                      "SC",
+                      "SP",
+                      "SE",
+                      "TO"
+                    ]
+                  },
+                  "category": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 160
+                  }
+                },
+                "required": [
+                  "fullName",
+                  "cref",
+                  "region",
+                  "category"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "fullName": {
+                      "type": "string",
+                      "minLength": 5,
+                      "maxLength": 180
+                    },
+                    "cref": {
+                      "type": "string",
+                      "pattern": "^\\d{4,8}-[GP]$"
+                    },
+                    "region": {
+                      "type": "string",
+                      "enum": [
+                        "AC",
+                        "AL",
+                        "AP",
+                        "AM",
+                        "BA",
+                        "CE",
+                        "DF",
+                        "ES",
+                        "GO",
+                        "MA",
+                        "MT",
+                        "MS",
+                        "MG",
+                        "PA",
+                        "PB",
+                        "PR",
+                        "PE",
+                        "PI",
+                        "RJ",
+                        "RN",
+                        "RS",
+                        "RO",
+                        "RR",
+                        "SC",
+                        "SP",
+                        "SE",
+                        "TO"
+                      ]
+                    },
+                    "category": {
+                      "type": "string",
+                      "minLength": 3,
+                      "maxLength": 160
+                    },
+                    "userId": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "revision": {
+                      "type": "number"
+                    },
+                    "verifiedAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "validUntil": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "publicReason": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "fullName",
+                    "cref",
+                    "region",
+                    "category",
+                    "userId",
+                    "status",
+                    "revision",
+                    "verifiedAt",
+                    "validUntil",
+                    "publicReason",
+                    "updatedAt"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/professional-registrations": {
+      "get": {
+        "operationId": "listProfessionalRegistrations",
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 180
+            },
+            "in": "query",
+            "name": "q",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "AC",
+                "AL",
+                "AP",
+                "AM",
+                "BA",
+                "CE",
+                "DF",
+                "ES",
+                "GO",
+                "MA",
+                "MT",
+                "MS",
+                "MG",
+                "PA",
+                "PB",
+                "PR",
+                "PE",
+                "PI",
+                "RJ",
+                "RN",
+                "RS",
+                "RO",
+                "RR",
+                "SC",
+                "SP",
+                "SE",
+                "TO"
+              ]
+            },
+            "in": "query",
+            "name": "region",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "fullName": {
+                        "type": "string",
+                        "minLength": 5,
+                        "maxLength": 180
+                      },
+                      "cref": {
+                        "type": "string",
+                        "pattern": "^\\d{4,8}-[GP]$"
+                      },
+                      "region": {
+                        "type": "string",
+                        "enum": [
+                          "AC",
+                          "AL",
+                          "AP",
+                          "AM",
+                          "BA",
+                          "CE",
+                          "DF",
+                          "ES",
+                          "GO",
+                          "MA",
+                          "MT",
+                          "MS",
+                          "MG",
+                          "PA",
+                          "PB",
+                          "PR",
+                          "PE",
+                          "PI",
+                          "RJ",
+                          "RN",
+                          "RS",
+                          "RO",
+                          "RR",
+                          "SC",
+                          "SP",
+                          "SE",
+                          "TO"
+                        ]
+                      },
+                      "category": {
+                        "type": "string",
+                        "minLength": 3,
+                        "maxLength": 160
+                      },
+                      "userId": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "revision": {
+                        "type": "number"
+                      },
+                      "verifiedAt": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "validUntil": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "publicReason": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "updatedAt": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "fullName",
+                      "cref",
+                      "region",
+                      "category",
+                      "userId",
+                      "status",
+                      "revision",
+                      "verifiedAt",
+                      "validUntil",
+                      "publicReason",
+                      "updatedAt"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/professional-registrations/{userId}/reviews": {
+      "get": {
+        "operationId": "listProfessionalVerificationReviews",
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "userId",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "userId": {
+                        "type": "string"
+                      },
+                      "reviewerId": {
+                        "type": "string"
+                      },
+                      "revision": {
+                        "type": "number"
+                      },
+                      "result": {
+                        "type": "string"
+                      },
+                      "sourceUrl": {
+                        "type": "string"
+                      },
+                      "evidence": {
+                        "type": "string"
+                      },
+                      "identityMatched": {
+                        "type": "boolean"
+                      },
+                      "registrationActive": {
+                        "type": "boolean"
+                      },
+                      "scopeConfirmed": {
+                        "type": "boolean"
+                      },
+                      "checkedAt": {
+                        "type": "string"
+                      },
+                      "validUntil": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      },
+                      "registrationSnapshot": {}
+                    },
+                    "required": [
+                      "id",
+                      "userId",
+                      "reviewerId",
+                      "revision",
+                      "result",
+                      "sourceUrl",
+                      "evidence",
+                      "identityMatched",
+                      "registrationActive",
+                      "scopeConfirmed",
+                      "checkedAt",
+                      "validUntil",
+                      "createdAt",
+                      "registrationSnapshot"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/professional-registrations/{userId}/review": {
+      "post": {
+        "operationId": "reviewProfessionalRegistration",
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "revision": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "maximum": 9007199254740991
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": [
+                      "VERIFIED",
+                      "REJECTED",
+                      "SUSPENDED",
+                      "EXPIRED",
+                      "PENDING_VERIFICATION"
+                    ]
+                  },
+                  "sourceUrl": {
+                    "type": "string",
+                    "maxLength": 500,
+                    "format": "uri"
+                  },
+                  "evidence": {
+                    "type": "string",
+                    "minLength": 10,
+                    "maxLength": 1500
+                  },
+                  "identityMatched": {
+                    "type": "boolean"
+                  },
+                  "identityVerificationMethod": {
+                    "type": "string",
+                    "enum": [
+                      "NOT_CONFIRMED",
+                      "OFFICIAL_CONTACT",
+                      "DOCUMENT_REVIEW",
+                      "LIVE_IDENTITY_CHECK"
+                    ]
+                  },
+                  "identityEvidenceReference": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 200
+                  },
+                  "registrationActive": {
+                    "type": "boolean"
+                  },
+                  "scopeConfirmed": {
+                    "type": "boolean"
+                  },
+                  "checkedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                  },
+                  "publicReason": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 400
+                  }
+                },
+                "required": [
+                  "revision",
+                  "result",
+                  "sourceUrl",
+                  "evidence",
+                  "identityMatched",
+                  "identityVerificationMethod",
+                  "identityEvidenceReference",
+                  "registrationActive",
+                  "scopeConfirmed",
+                  "checkedAt",
+                  "publicReason"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "userId",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "fullName": {
+                      "type": "string",
+                      "minLength": 5,
+                      "maxLength": 180
+                    },
+                    "cref": {
+                      "type": "string",
+                      "pattern": "^\\d{4,8}-[GP]$"
+                    },
+                    "region": {
+                      "type": "string",
+                      "enum": [
+                        "AC",
+                        "AL",
+                        "AP",
+                        "AM",
+                        "BA",
+                        "CE",
+                        "DF",
+                        "ES",
+                        "GO",
+                        "MA",
+                        "MT",
+                        "MS",
+                        "MG",
+                        "PA",
+                        "PB",
+                        "PR",
+                        "PE",
+                        "PI",
+                        "RJ",
+                        "RN",
+                        "RS",
+                        "RO",
+                        "RR",
+                        "SC",
+                        "SP",
+                        "SE",
+                        "TO"
+                      ]
+                    },
+                    "category": {
+                      "type": "string",
+                      "minLength": 3,
+                      "maxLength": 160
+                    },
+                    "userId": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "revision": {
+                      "type": "number"
+                    },
+                    "verifiedAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "validUntil": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "publicReason": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "fullName",
+                    "cref",
+                    "region",
+                    "category",
+                    "userId",
+                    "status",
+                    "revision",
+                    "verifiedAt",
+                    "validUntil",
+                    "publicReason",
+                    "updatedAt"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/coach/prescriptions": {
       "post": {
         "operationId": "createWorkoutPrescriptionDraft",
@@ -12049,6 +14434,26 @@
                     },
                     "version": {
                       "type": "number"
+                    },
+                    "approvedByUserId": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "approvedAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "approvedVersion": {
+                      "nullable": true,
+                      "type": "number"
+                    },
+                    "approvalMode": {
+                      "type": "string",
+                      "enum": [
+                        "VERIFIED",
+                        "TEST",
+                        "UNVERIFIED"
+                      ]
                     },
                     "acceptedWorkoutPlanId": {
                       "nullable": true,
@@ -12597,6 +15002,7 @@
                 },
                 "required": [
                   "name",
+                  "version",
                   "workoutDays"
                 ]
               }
@@ -12649,6 +15055,26 @@
                     },
                     "version": {
                       "type": "number"
+                    },
+                    "approvedByUserId": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "approvedAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "approvedVersion": {
+                      "nullable": true,
+                      "type": "number"
+                    },
+                    "approvalMode": {
+                      "type": "string",
+                      "enum": [
+                        "VERIFIED",
+                        "TEST",
+                        "UNVERIFIED"
+                      ]
                     },
                     "acceptedWorkoutPlanId": {
                       "nullable": true,
@@ -13066,6 +15492,26 @@
                     "version": {
                       "type": "number"
                     },
+                    "approvedByUserId": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "approvedAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "approvedVersion": {
+                      "nullable": true,
+                      "type": "number"
+                    },
+                    "approvalMode": {
+                      "type": "string",
+                      "enum": [
+                        "VERIFIED",
+                        "TEST",
+                        "UNVERIFIED"
+                      ]
+                    },
                     "acceptedWorkoutPlanId": {
                       "nullable": true,
                       "type": "string"
@@ -13437,6 +15883,35 @@
         "tags": [
           "Coach"
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "maximum": 9007199254740991
+                  },
+                  "approval": {
+                    "type": "boolean",
+                    "enum": [
+                      true
+                    ]
+                  }
+                },
+                "required": [
+                  "version",
+                  "approval"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
         "parameters": [
           {
             "schema": {
@@ -13483,6 +15958,26 @@
                     },
                     "version": {
                       "type": "number"
+                    },
+                    "approvedByUserId": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "approvedAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "approvedVersion": {
+                      "nullable": true,
+                      "type": "number"
+                    },
+                    "approvalMode": {
+                      "type": "string",
+                      "enum": [
+                        "VERIFIED",
+                        "TEST",
+                        "UNVERIFIED"
+                      ]
                     },
                     "acceptedWorkoutPlanId": {
                       "nullable": true,
@@ -13901,6 +16396,26 @@
                     },
                     "version": {
                       "type": "number"
+                    },
+                    "approvedByUserId": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "approvedAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "approvedVersion": {
+                      "nullable": true,
+                      "type": "number"
+                    },
+                    "approvalMode": {
+                      "type": "string",
+                      "enum": [
+                        "VERIFIED",
+                        "TEST",
+                        "UNVERIFIED"
+                      ]
                     },
                     "acceptedWorkoutPlanId": {
                       "nullable": true,
@@ -14322,6 +16837,26 @@
                       "version": {
                         "type": "number"
                       },
+                      "approvedByUserId": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "approvedAt": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "approvedVersion": {
+                        "nullable": true,
+                        "type": "number"
+                      },
+                      "approvalMode": {
+                        "type": "string",
+                        "enum": [
+                          "VERIFIED",
+                          "TEST",
+                          "UNVERIFIED"
+                        ]
+                      },
                       "acceptedWorkoutPlanId": {
                         "nullable": true,
                         "type": "string"
@@ -14732,6 +17267,26 @@
                       },
                       "version": {
                         "type": "number"
+                      },
+                      "approvedByUserId": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "approvedAt": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "approvedVersion": {
+                        "nullable": true,
+                        "type": "number"
+                      },
+                      "approvalMode": {
+                        "type": "string",
+                        "enum": [
+                          "VERIFIED",
+                          "TEST",
+                          "UNVERIFIED"
+                        ]
                       },
                       "acceptedWorkoutPlanId": {
                         "nullable": true,
@@ -15151,6 +17706,26 @@
                     },
                     "version": {
                       "type": "number"
+                    },
+                    "approvedByUserId": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "approvedAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "approvedVersion": {
+                      "nullable": true,
+                      "type": "number"
+                    },
+                    "approvalMode": {
+                      "type": "string",
+                      "enum": [
+                        "VERIFIED",
+                        "TEST",
+                        "UNVERIFIED"
+                      ]
                     },
                     "acceptedWorkoutPlanId": {
                       "nullable": true,
@@ -15575,6 +18150,26 @@
                         },
                         "version": {
                           "type": "number"
+                        },
+                        "approvedByUserId": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "approvedAt": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "approvedVersion": {
+                          "nullable": true,
+                          "type": "number"
+                        },
+                        "approvalMode": {
+                          "type": "string",
+                          "enum": [
+                            "VERIFIED",
+                            "TEST",
+                            "UNVERIFIED"
+                          ]
                         },
                         "acceptedWorkoutPlanId": {
                           "nullable": true,
@@ -16009,6 +18604,26 @@
                     "version": {
                       "type": "number"
                     },
+                    "approvedByUserId": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "approvedAt": {
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "approvedVersion": {
+                      "nullable": true,
+                      "type": "number"
+                    },
+                    "approvalMode": {
+                      "type": "string",
+                      "enum": [
+                        "VERIFIED",
+                        "TEST",
+                        "UNVERIFIED"
+                      ]
+                    },
                     "acceptedWorkoutPlanId": {
                       "nullable": true,
                       "type": "string"
@@ -16420,6 +19035,12 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "DRAFT"
+                      ]
+                    },
                     "name": {
                       "type": "string"
                     },
@@ -16536,6 +19157,7 @@
                     }
                   },
                   "required": [
+                    "status",
                     "name",
                     "workoutDays"
                   ],
@@ -21178,6 +23800,26 @@
                         "version": {
                           "type": "number"
                         },
+                        "approvedByUserId": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "approvedAt": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "approvedVersion": {
+                          "nullable": true,
+                          "type": "number"
+                        },
+                        "approvalMode": {
+                          "type": "string",
+                          "enum": [
+                            "VERIFIED",
+                            "TEST",
+                            "UNVERIFIED"
+                          ]
+                        },
                         "acceptedWorkoutPlanId": {
                           "nullable": true,
                           "type": "string"
@@ -24599,6 +27241,30 @@
                     "commercialContext": {
                       "type": "object",
                       "properties": {
+                        "crefVerificationRequired": {
+                          "type": "boolean"
+                        },
+                        "professionalAccessGranted": {
+                          "type": "boolean"
+                        },
+                        "professionalVerification": {
+                          "nullable": true,
+                          "type": "object",
+                          "properties": {
+                            "status": {
+                              "type": "string"
+                            },
+                            "validUntil": {
+                              "nullable": true,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "status",
+                            "validUntil"
+                          ],
+                          "additionalProperties": false
+                        },
                         "accountType": {
                           "type": "string",
                           "enum": [
@@ -24721,6 +27387,9 @@
                         }
                       },
                       "required": [
+                        "crefVerificationRequired",
+                        "professionalAccessGranted",
+                        "professionalVerification",
                         "accountType",
                         "systemRole",
                         "accountSetupCompletedAt",
@@ -26218,6 +28887,7 @@
             "schema": {
               "type": "string",
               "enum": [
+                "PROFESSIONAL_VERIFICATION_POLICY_UPDATED",
                 "EXERCISE_MUSCLES_UPDATED",
                 "PLAN_CREATED",
                 "PLAN_UPDATED",
@@ -26293,6 +28963,7 @@
                           "action": {
                             "type": "string",
                             "enum": [
+                              "PROFESSIONAL_VERIFICATION_POLICY_UPDATED",
                               "EXERCISE_MUSCLES_UPDATED",
                               "PLAN_CREATED",
                               "PLAN_UPDATED",

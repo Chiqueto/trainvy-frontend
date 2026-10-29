@@ -221,7 +221,9 @@ export function CoachPrescriptionBuilder({
   async function handleSave(sendImmediately: boolean = false) {
     if (isPending) return;
     const validationError =
-      validateWorkoutPlanDraft(name, days) ||
+      validateWorkoutPlanDraft(name, days, undefined, undefined, {
+        requireCatalogSelection: false,
+      }) ||
       (name.trim().length > 100
         ? "O nome deve ter no máximo 100 caracteres."
         : null) ||
@@ -242,6 +244,7 @@ export function CoachPrescriptionBuilder({
         const serializedWorkoutDays = serializeDaysForApi();
 
         let savedPrescriptionId = savedDraft.id;
+        let reviewedVersion = savedDraft.version;
 
         if (savedDraft.id) {
           // Atualiza rascunho existente
@@ -252,7 +255,7 @@ export function CoachPrescriptionBuilder({
               name: name.trim(),
               notes: notes.trim() || null,
               workoutDays: serializedWorkoutDays,
-              version: savedDraft.version,
+              version: savedDraft.version!,
             },
           });
 
@@ -260,6 +263,7 @@ export function CoachPrescriptionBuilder({
             toast.error(updateRes.error);
             return;
           }
+          reviewedVersion = updateRes.data.version;
           setSavedDraft({
             id: updateRes.data.id,
             version: updateRes.data.version,
@@ -278,6 +282,7 @@ export function CoachPrescriptionBuilder({
             return;
           }
           savedPrescriptionId = createRes.data.id;
+          reviewedVersion = createRes.data.version;
           setSavedDraft({
             id: createRes.data.id,
             version: createRes.data.version,
@@ -289,6 +294,7 @@ export function CoachPrescriptionBuilder({
           const sendRes = await sendPrescriptionAction({
             id: savedPrescriptionId,
             athleteId,
+            version: reviewedVersion!,
           });
           if (!sendRes.success) {
             toast.error(`Rascunho salvo. ${sendRes.error}`);
@@ -777,7 +783,7 @@ export function CoachPrescriptionBuilder({
           ) : (
             <Send className="size-3.5" />
           )}
-          <span>Salvar e Enviar ao Aluno</span>
+          <span>Aprovar esta versão e enviar ao aluno</span>
         </Button>
       </div>
 

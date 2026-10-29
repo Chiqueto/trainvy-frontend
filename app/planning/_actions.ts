@@ -573,3 +573,16 @@ export async function generateWorkoutPlanWithAiAction(body: {
     return connectionError(error);
   }
 }
+
+export async function confirmWorkoutImportAction(
+  body: import("@/app/_lib/api/fetch-generated").ConfirmWorkoutImportBody,
+) {
+  const { confirmWorkoutImport } =
+    await import("@/app/_lib/api/fetch-generated");
+  const result = await confirmWorkoutImport(body, { cache: "no-store" });
+  if (result.status === 201) {
+    revalidatePath("/planning");
+    return { status: 201 as const, data: result.data };
+  }
+  return { status: result.status, data: result.data };
+}

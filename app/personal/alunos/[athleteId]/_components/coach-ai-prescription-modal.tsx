@@ -77,8 +77,8 @@ export function CoachAiPrescriptionModal({
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.size > 15 * 1024 * 1024) {
-      toast.error("O arquivo excede o limite máximo de 15MB.");
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("O arquivo excede o limite máximo de 10MB.");
       return;
     }
 
@@ -147,7 +147,7 @@ export function CoachAiPrescriptionModal({
 
     if (res.success && res.data) {
       setGeneratedDraft(res.data);
-      toast.success("Prescrição gerada pelo Coach AI!");
+      toast.success("Proposta em rascunho gerada. Revise antes de aprovar.");
     } else {
       toast.error(res.error || "Não foi possível gerar a prescrição com IA.");
     }
@@ -266,7 +266,8 @@ export function CoachAiPrescriptionModal({
               {/* Instruções do Treinador */}
               <div className="space-y-1.5">
                 <label className="text-xs font-heading font-semibold text-foreground">
-                  Diretrizes da Prescrição
+                  Crie propostas de treino com IA. Você revisa, ajusta e aprova
+                  antes de enviar ao aluno.
                 </label>
                 <textarea
                   placeholder="Ex: Prescreva uma rotina ABC para hipertrofia, 4 exercícios por dia, 3 séries válidas e aquecimento no primeiro composto. Foque em deltoides laterais e posteriores de coxa..."
@@ -383,7 +384,7 @@ export function CoachAiPrescriptionModal({
                 <div className="flex items-center gap-2">
                   <Check className="size-4 text-emerald-500 shrink-0" />
                   <span className="font-heading text-xs font-bold text-emerald-600 dark:text-emerald-400">
-                    Prescrição Estruturada com Sucesso!
+                    Proposta em rascunho para revisão
                   </span>
                 </div>
                 <button

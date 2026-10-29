@@ -86,13 +86,13 @@ describe("onboarding sem IA, com integração preservada", () => {
       expect(mocks.upsertUserTrainData).not.toHaveBeenCalled();
     },
   );
-  it("preserva a opção de reativar o onboarding com chat", async () => {
+  it("preserva o chat e permite concluir o cadastro pelo formulário", async () => {
     vi.stubEnv("ONBOARDING_AI_ENABLED", "true");
     render(await OnboardingPage());
     expect(screen.getByText("Chat com IA")).toBeDefined();
     expect(
       screen.queryByRole("button", { name: "Concluir cadastro" }),
-    ).toBeNull();
+    ).not.toBeNull();
   });
   it("aceita o perfil ainda não cadastrado como 404", async () => {
     mocks.getUserTrainData.mockResolvedValue({ status: 404 });
@@ -206,6 +206,15 @@ describe("formulário inicial", () => {
       "75,5",
     );
     expect(mocks.replace).not.toHaveBeenCalled();
+    await waitFor(() =>
+      expect(
+        (
+          screen.getByRole("button", {
+            name: "Concluir cadastro",
+          }) as HTMLButtonElement
+        ).disabled,
+      ).toBe(false),
+    );
     fireEvent.click(screen.getByRole("button", { name: "Concluir cadastro" }));
     await waitFor(() => expect(mocks.replace).toHaveBeenCalledOnce());
   });

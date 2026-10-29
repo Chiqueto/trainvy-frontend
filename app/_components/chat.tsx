@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useChat } from "@ai-sdk/react";
+import { getProfessionalChatModeAction } from "@/app/personal/_verification-actions";
 import {
   DefaultChatTransport,
   lastAssistantMessageIsCompleteWithApprovalResponses,
@@ -50,8 +51,8 @@ interface AttachedFileItem {
 }
 
 const SUGGESTED_MESSAGES = [
-  "Monte um plano de treino para mim",
-  "Monte uma periodização para mim",
+  "Como cadastrar minha ficha de treino?",
+  "O que significa periodização?",
   "Explique meu planejamento atual",
   "Esqueci de marcar um treino passado",
 ];
@@ -59,7 +60,7 @@ const SUGGESTED_MESSAGES = [
 const THINKING_PHRASES = [
   "(Pensando...)",
   "(Preparando Equipamento...)",
-  "(Calculando Cargas & Séries...)",
+  "(Organizando informações...)",
   "(Aquecendo os Músculos...)",
   "(Batendo o PR...)",
   "(Montando Prescrição...)",
@@ -319,6 +320,21 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
     chat_open: parseAsBoolean.withDefault(false),
     chat_initial_message: parseAsString,
   });
+  const [professionalMode, setProfessionalMode] = useState(false);
+  useEffect(() => {
+    let active = true;
+    if (chatParams.chat_open || embedded)
+      getProfessionalChatModeAction()
+        .then((mode) => {
+          if (active) setProfessionalMode(mode);
+        })
+        .catch(() => {
+          if (active) setProfessionalMode(false);
+        });
+    return () => {
+      active = false;
+    };
+  }, [chatParams.chat_open, embedded]);
 
   const [activeConversationId, setActiveConversationId] = useState<
     string | null
@@ -334,7 +350,9 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
   const [activeRecoveryDraftId, setActiveRecoveryDraftId] = useState<
     string | null
   >(null);
-  const [pendingAttachments, setPendingAttachments] = useState<AttachedFileItem[]>([]);
+  const [pendingAttachments, setPendingAttachments] = useState<
+    AttachedFileItem[]
+  >([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const voiceRecorder = useVoiceRecorder();
 
@@ -371,7 +389,9 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
     }
   }, []);
 
-  const [quotaErrorMessage, setQuotaErrorMessage] = useState<string | null>(null);
+  const [quotaErrorMessage, setQuotaErrorMessage] = useState<string | null>(
+    null,
+  );
   const pendingMessageRef = useRef<string>("");
 
   const {
@@ -409,11 +429,11 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
         msg.includes("AI_MINUTE_LIMIT_EXCEEDED")
       ) {
         setQuotaErrorMessage(
-          "Você atingiu o limite do Coach IA nesta versão de testes. Seu acesso será renovado automaticamente à meia-noite UTC (21h Brasília)."
+          "Você atingiu o limite do Coach IA nesta versão de testes. Seu acesso será renovado automaticamente à meia-noite UTC (21h Brasília).",
         );
       } else {
         setQuotaErrorMessage(
-          "Não foi possível processar sua mensagem agora. Tente novamente em instantes."
+          "Não foi possível processar sua mensagem agora. Tente novamente em instantes.",
         );
       }
       if (pendingMessageRef.current) {
@@ -501,13 +521,13 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    const MAX_SIZE = 15 * 1024 * 1024; // 15MB
+    const MAX_SIZE = 10 * 1024 * 1024; // 10MB
     const newItems: AttachedFileItem[] = [];
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       if (file.size > MAX_SIZE) {
-        toast.error(`Arquivo ${file.name} excede o limite máximo de 15MB.`);
+        toast.error(`Arquivo ${file.name} excede o limite máximo de 10MB.`);
         continue;
       }
 
@@ -679,7 +699,9 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
               <span className="font-heading text-sm font-semibold text-foreground sm:text-base">
-                Coach AI
+                {professionalMode
+                  ? "Copiloto de Prescrição"
+                  : "Organizador de Treinos"}
               </span>
               <div className="flex items-center gap-1">
                 <div className="size-1.5 rounded-full bg-online" />
@@ -1069,7 +1091,9 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
                               <Button
                                 size="sm"
                                 type="button"
-                                onClick={() => setActiveRecoveryDraftId(draftId)}
+                                onClick={() =>
+                                  setActiveRecoveryDraftId(draftId)
+                                }
                                 className="h-7 text-xs font-semibold gap-1.5"
                               >
                                 Revisar e Salvar no Histórico
@@ -1201,7 +1225,7 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
           type="file"
           ref={fileInputRef}
           onChange={handleFileSelect}
-          accept="application/pdf,image/*,audio/*,text/plain"
+          accept=".pdf,.png,.jpg,.jpeg,.webp,.mp3,.m4a,.mp4,.wav,.webm,.ogg"
           multiple
           className="hidden"
         />

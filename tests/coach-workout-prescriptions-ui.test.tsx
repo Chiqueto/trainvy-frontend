@@ -95,7 +95,9 @@ describe("TASK 6.2B — Coach Workout Prescriptions UI & UX Hardening", () => {
     it("404 real: chama notFound() quando o aluno não for encontrado ou não tiver vínculo", async () => {
       (getCoachAthleteDetails as any).mockResolvedValue({
         status: 404,
-        data: { error: "Aluno não encontrado ou vínculo inativo com este treinador." },
+        data: {
+          error: "Aluno não encontrado ou vínculo inativo com este treinador.",
+        },
       });
 
       await expect(
@@ -118,8 +120,14 @@ describe("TASK 6.2B — Coach Workout Prescriptions UI & UX Hardening", () => {
       render(Page);
 
       expect(screen.getByText("Acesso Não Permitido")).toBeDefined();
-      expect(screen.getByText(/Você não tem autorização para visualizar este aluno/i)).toBeDefined();
-      expect(screen.getByRole("button", { name: /voltar para alunos/i })).toBeDefined();
+      expect(
+        screen.getByText(
+          /Você não tem autorização para visualizar este aluno/i,
+        ),
+      ).toBeDefined();
+      expect(
+        screen.getByRole("button", { name: /voltar para alunos/i }),
+      ).toBeDefined();
     });
 
     it("500 / Erro de Rede: exibe card de erro com RetryButton e NÃO dispara notFound()", async () => {
@@ -134,9 +142,15 @@ describe("TASK 6.2B — Coach Workout Prescriptions UI & UX Hardening", () => {
 
       render(Page);
 
-      expect(screen.getByText("Falha ao carregar dados do aluno")).toBeDefined();
-      expect(screen.getByText(/Não foi possível recuperar as informações/i)).toBeDefined();
-      expect(screen.getByRole("button", { name: /tentar novamente/i })).toBeDefined();
+      expect(
+        screen.getByText("Falha ao carregar dados do aluno"),
+      ).toBeDefined();
+      expect(
+        screen.getByText(/Não foi possível recuperar as informações/i),
+      ).toBeDefined();
+      expect(
+        screen.getByRole("button", { name: /tentar novamente/i }),
+      ).toBeDefined();
     });
   });
 
@@ -202,7 +216,7 @@ describe("TASK 6.2B — Coach Workout Prescriptions UI & UX Hardening", () => {
           athleteId="ath-1"
           athleteName="Carlos Atleta"
           prescriptions={mockPrescriptions as any}
-        />
+        />,
       );
 
       expect(screen.getByText("Hipertrofia ABC - Iniciante")).toBeDefined();
@@ -212,11 +226,15 @@ describe("TASK 6.2B — Coach Workout Prescriptions UI & UX Hardening", () => {
 
       // Botão Nova Prescrição
       const newBtn = screen.getByRole("button", { name: /nova prescrição/i });
-      expect(newBtn.closest("a")?.getAttribute("href")).toBe("/personal/alunos/ath-1/prescrever");
+      expect(newBtn.closest("a")?.getAttribute("href")).toBe(
+        "/personal/alunos/ath-1/prescrever",
+      );
 
       // Botão Editar Rascunho
       const editBtn = screen.getByRole("button", { name: /editar/i });
-      expect(editBtn.closest("a")?.getAttribute("href")).toBe("/personal/alunos/ath-1/prescricoes/presc-1/editar");
+      expect(editBtn.closest("a")?.getAttribute("href")).toBe(
+        "/personal/alunos/ath-1/prescricoes/presc-1/editar",
+      );
     });
 
     it("abre modal de detalhes da prescrição ao clicar em 'Ver Detalhes'", () => {
@@ -225,10 +243,12 @@ describe("TASK 6.2B — Coach Workout Prescriptions UI & UX Hardening", () => {
           athleteId="ath-1"
           athleteName="Carlos Atleta"
           prescriptions={mockPrescriptions as any}
-        />
+        />,
       );
 
-      const viewButtons = screen.getAllByRole("button", { name: /ver detalhes/i });
+      const viewButtons = screen.getAllByRole("button", {
+        name: /ver detalhes/i,
+      });
       fireEvent.click(viewButtons[0]);
 
       expect(screen.getByText("Estrutura dos Treinos:")).toBeDefined();
@@ -247,16 +267,20 @@ describe("TASK 6.2B — Coach Workout Prescriptions UI & UX Hardening", () => {
           athleteId="ath-1"
           athleteName="Carlos Atleta"
           prescriptions={mockPrescriptions as any}
-        />
+        />,
       );
 
       const cancelBtn = screen.getByRole("button", { name: /cancelar envio/i });
       fireEvent.click(cancelBtn);
 
       expect(screen.getByText("Confirmar Cancelamento")).toBeDefined();
-      expect(screen.getByText(/Tem certeza que deseja cancelar esta prescrição/i)).toBeDefined();
+      expect(
+        screen.getByText(/Tem certeza que deseja cancelar esta prescrição/i),
+      ).toBeDefined();
 
-      const confirmBtn = screen.getByRole("button", { name: "Cancelar Prescrição" });
+      const confirmBtn = screen.getByRole("button", {
+        name: "Cancelar Prescrição",
+      });
       fireEvent.click(confirmBtn);
 
       await waitFor(() => {
@@ -300,11 +324,13 @@ describe("TASK 6.2B — Coach Workout Prescriptions UI & UX Hardening", () => {
           athleteId="ath-1"
           athleteName="Carlos Atleta"
           initialData={validInitialData}
-        />
+        />,
       );
 
       // Clica em Salvar Rascunho
-      const saveDraftBtn = screen.getByRole("button", { name: /salvar rascunho/i });
+      const saveDraftBtn = screen.getByRole("button", {
+        name: /salvar rascunho/i,
+      });
       fireEvent.click(saveDraftBtn);
 
       await waitFor(() => {
@@ -312,15 +338,15 @@ describe("TASK 6.2B — Coach Workout Prescriptions UI & UX Hardening", () => {
           expect.objectContaining({
             athleteId: "ath-1",
             name: "Planejamento Força 2026",
-          })
+          }),
         );
       });
     });
 
-    it("permite salvar e enviar diretamente ao atleta", async () => {
+    it("permite aprovar esta versão e enviar diretamente ao atleta", async () => {
       (createPrescriptionDraftAction as any).mockResolvedValue({
         success: true,
-        data: { id: "presc-sent" },
+        data: { id: "presc-sent", version: 1 },
       });
       (sendPrescriptionAction as any).mockResolvedValue({
         success: true,
@@ -331,11 +357,13 @@ describe("TASK 6.2B — Coach Workout Prescriptions UI & UX Hardening", () => {
           athleteId="ath-1"
           athleteName="Carlos Atleta"
           initialData={validInitialData}
-        />
+        />,
       );
 
       // Clica em Salvar e Enviar
-      const sendBtn = screen.getByRole("button", { name: /salvar e enviar ao aluno/i });
+      const sendBtn = screen.getByRole("button", {
+        name: /aprovar esta versão e enviar ao aluno/i,
+      });
       fireEvent.click(sendBtn);
 
       await waitFor(() => {
@@ -343,11 +371,12 @@ describe("TASK 6.2B — Coach Workout Prescriptions UI & UX Hardening", () => {
           expect.objectContaining({
             athleteId: "ath-1",
             name: "Planejamento Força 2026",
-          })
+          }),
         );
         expect(sendPrescriptionAction).toHaveBeenCalledWith({
           id: "presc-sent",
           athleteId: "ath-1",
+          version: 1,
         });
       });
     });
@@ -394,17 +423,27 @@ describe("TASK 6.2B — Coach Workout Prescriptions UI & UX Hardening", () => {
     ];
 
     it("renderiza card de prescrição recebida com nome do treinador e botões", () => {
-      render(<ReceivedPrescriptionsCard prescriptions={receivedPrescriptions as any} />);
+      render(
+        <ReceivedPrescriptionsCard
+          prescriptions={receivedPrescriptions as any}
+        />,
+      );
 
       expect(screen.getByText("Prescrição de Treino Recebida")).toBeDefined();
       expect(screen.getByText("Planejamento Upper/Lower")).toBeDefined();
       expect(screen.getByText(/Prof\. Ricardo Silva/i)).toBeDefined();
-      expect(screen.getByRole("button", { name: /revisar treino/i })).toBeDefined();
+      expect(
+        screen.getByRole("button", { name: /revisar treino/i }),
+      ).toBeDefined();
       expect(screen.getByRole("button", { name: /recusar/i })).toBeDefined();
     });
 
     it("abre modal de revisão ao clicar em 'Revisar Treino'", () => {
-      render(<ReceivedPrescriptionsCard prescriptions={receivedPrescriptions as any} />);
+      render(
+        <ReceivedPrescriptionsCard
+          prescriptions={receivedPrescriptions as any}
+        />,
+      );
 
       fireEvent.click(screen.getByRole("button", { name: /revisar treino/i }));
 
@@ -412,7 +451,9 @@ describe("TASK 6.2B — Coach Workout Prescriptions UI & UX Hardening", () => {
       expect(screen.getByText("Upper Power")).toBeDefined();
       expect(screen.getByText("Supino Reto com Halteres")).toBeDefined();
       expect(screen.getByText(/4x8 • 120s/i)).toBeDefined();
-      expect(screen.getAllByRole("button", { name: /aceitar prescrição/i }).length).toBe(2);
+      expect(
+        screen.getAllByRole("button", { name: /aceitar prescrição/i }).length,
+      ).toBe(2);
     });
 
     it("ao aceitar a prescrição, cria o plano inativo e apresenta opção voluntária de ativação", async () => {
@@ -424,13 +465,19 @@ describe("TASK 6.2B — Coach Workout Prescriptions UI & UX Hardening", () => {
         },
       });
 
-      render(<ReceivedPrescriptionsCard prescriptions={receivedPrescriptions as any} />);
+      render(
+        <ReceivedPrescriptionsCard
+          prescriptions={receivedPrescriptions as any}
+        />,
+      );
 
       // Abre modal
       fireEvent.click(screen.getByRole("button", { name: /revisar treino/i }));
 
       // Clica em Aceitar Prescrição dentro do modal
-      const acceptButtons = screen.getAllByRole("button", { name: /aceitar prescrição/i });
+      const acceptButtons = screen.getAllByRole("button", {
+        name: /aceitar prescrição/i,
+      });
       fireEvent.click(acceptButtons[acceptButtons.length - 1]);
 
       await waitFor(() => {
@@ -439,21 +486,33 @@ describe("TASK 6.2B — Coach Workout Prescriptions UI & UX Hardening", () => {
 
       // Feedback de sucesso com opção voluntária de ativação
       expect(screen.getByText("Prescrição Aceita com Sucesso!")).toBeDefined();
-      expect(screen.getByText(/O planejamento foi adicionado à sua conta como/i)).toBeDefined();
-      expect(screen.getByRole("link", { name: /ver e ativar planejamento agora/i })).toBeDefined();
-      expect(screen.getByRole("button", { name: /manter inativo por enquanto/i })).toBeDefined();
+      expect(
+        screen.getByText(/O planejamento foi adicionado à sua conta como/i),
+      ).toBeDefined();
+      expect(
+        screen.getByRole("link", { name: /ver e ativar planejamento agora/i }),
+      ).toBeDefined();
+      expect(
+        screen.getByRole("button", { name: /manter inativo por enquanto/i }),
+      ).toBeDefined();
     });
 
     it("permite recusar prescrição pendente com diálogo de confirmação", async () => {
       (declinePrescriptionAction as any).mockResolvedValue({ success: true });
 
-      render(<ReceivedPrescriptionsCard prescriptions={receivedPrescriptions as any} />);
+      render(
+        <ReceivedPrescriptionsCard
+          prescriptions={receivedPrescriptions as any}
+        />,
+      );
 
       const declineBtn = screen.getByRole("button", { name: /recusar/i });
       fireEvent.click(declineBtn);
 
       expect(screen.getByText("Recusar Prescrição")).toBeDefined();
-      expect(screen.getByText(/Tem certeza de que deseja recusar a prescrição/i)).toBeDefined();
+      expect(
+        screen.getByText(/Tem certeza de que deseja recusar a prescrição/i),
+      ).toBeDefined();
 
       const confirmBtn = screen.getByRole("button", { name: /sim, recusar/i });
       fireEvent.click(confirmBtn);

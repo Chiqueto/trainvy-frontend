@@ -64,9 +64,7 @@ export function WorkoutPlanBuilder({
   );
   const [expandedDayIds, setExpandedDayIds] = useState<Set<string>>(() => {
     if (defaultExpandedAll) {
-      return new Set(
-        days.map((d, i) => d.clientId ?? d.id ?? String(i)),
-      );
+      return new Set(days.map((d, i) => d.clientId ?? d.id ?? String(i)));
     }
     return new Set<string>();
   });
@@ -88,9 +86,7 @@ export function WorkoutPlanBuilder({
 
   const allExpanded =
     days.length > 0 &&
-    days.every((d, i) =>
-      expandedDayIds.has(d.clientId ?? d.id ?? String(i)),
-    );
+    days.every((d, i) => expandedDayIds.has(d.clientId ?? d.id ?? String(i)));
 
   function toggleExpandAll() {
     if (allExpanded) {
@@ -245,7 +241,7 @@ export function WorkoutPlanBuilder({
           </div>
           <div>
             <h4 className="font-heading text-xs font-bold text-foreground">
-              Quer acelerar? Monte seu treino com o Coach IA
+              Organize seus exercícios ou importe sua ficha com IA
             </h4>
             <p className="text-[11px] text-muted-foreground">
               Fale por voz ou anexe o PDF/foto da sua ficha antiga da academia
@@ -554,8 +550,8 @@ export function WorkoutPlanBuilder({
                                 type="button"
                                 aria-label={`Mover exercício ${exerciseIndex + 1} para baixo`}
                                 disabled={
-                                  exerciseIndex ===
-                                    day.exercises.length - 1 || isPending
+                                  exerciseIndex === day.exercises.length - 1 ||
+                                  isPending
                                 }
                                 onClick={() =>
                                   moveExercise(dayIndex, exerciseIndex, 1)
@@ -678,7 +674,8 @@ export function WorkoutPlanBuilder({
                                 onSelect={(selected) =>
                                   updateExercise(dayIndex, exerciseIndex, {
                                     alternative1Name: selected?.name ?? "",
-                                    alternative1ExerciseId: selected?.id ?? null,
+                                    alternative1ExerciseId:
+                                      selected?.id ?? null,
                                   })
                                 }
                               />
@@ -690,7 +687,8 @@ export function WorkoutPlanBuilder({
                                 onSelect={(selected) =>
                                   updateExercise(dayIndex, exerciseIndex, {
                                     alternative2Name: selected?.name ?? "",
-                                    alternative2ExerciseId: selected?.id ?? null,
+                                    alternative2ExerciseId:
+                                      selected?.id ?? null,
                                   })
                                 }
                               />

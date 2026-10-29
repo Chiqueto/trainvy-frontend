@@ -109,10 +109,10 @@ describe("Chat — Trainvy Planning Coach V1 & Task 2.8 Persistent Chat", () => 
     });
   });
 
-  it("exibe branding Coach AI e Acessar Trainvy no modo embedded", () => {
+  it("exibe branding Organizador de Treinos e Acessar Trainvy no modo embedded", () => {
     render(<Chat embedded={true} />);
 
-    expect(screen.getByText("Coach AI")).toBeDefined();
+    expect(screen.getByText("Organizador de Treinos")).toBeDefined();
     const trainvyLink = screen.getByRole("link", { name: /Acessar Trainvy/i });
     expect(trainvyLink).toBeDefined();
     expect(trainvyLink.getAttribute("href")).toBe("/");
@@ -122,10 +122,10 @@ describe("Chat — Trainvy Planning Coach V1 & Task 2.8 Persistent Chat", () => 
     render(<Chat embedded={false} />);
 
     const suggestion1 = screen.getByRole("button", {
-      name: "Monte um plano de treino para mim",
+      name: "Como cadastrar minha ficha de treino?",
     });
     const suggestion2 = screen.getByRole("button", {
-      name: "Monte uma periodização para mim",
+      name: "O que significa periodização?",
     });
     const suggestion3 = screen.getByRole("button", {
       name: "Explique meu planejamento atual",
@@ -137,7 +137,7 @@ describe("Chat — Trainvy Planning Coach V1 & Task 2.8 Persistent Chat", () => 
 
     fireEvent.click(suggestion1);
     expect(mockSendMessage).toHaveBeenCalledWith({
-      text: "Monte um plano de treino para mim",
+      text: "Como cadastrar minha ficha de treino?",
     });
   });
 

@@ -103,7 +103,8 @@ export default async function PlanningPage() {
   const { activeContext, plans, periodizations } = overviewResponse.data;
 
   const athletePrescriptions: AthletePrescriptionItem[] =
-    prescriptionsResponse?.status === 200 && Array.isArray(prescriptionsResponse.data)
+    prescriptionsResponse?.status === 200 &&
+    Array.isArray(prescriptionsResponse.data)
       ? (prescriptionsResponse.data as unknown as AthletePrescriptionItem[])
       : [];
 
@@ -141,14 +142,15 @@ export default async function PlanningPage() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-heading text-xs font-bold text-foreground">
-                  Montar com o Coach IA ou Importar Ficha
+                  Organizar com IA ou importar ficha
                 </span>
                 <span className="rounded-full bg-primary/20 px-2 py-0.5 text-[9px] font-bold text-primary uppercase">
                   Novo
                 </span>
               </div>
               <p className="text-[11px] text-muted-foreground mt-0.5">
-                Gere sua divisão completa por voz ou anexando o PDF/foto da sua ficha antiga
+                Gere sua divisão completa por voz ou anexando o PDF/foto da sua
+                ficha antiga
               </p>
             </div>
           </div>
@@ -174,7 +176,8 @@ export default async function PlanningPage() {
                 </span>
               </div>
               <p className="text-[11px] text-muted-foreground mt-0.5">
-                Veja o agachamento e supino em 360°, cadência controlada e grupos musculares destacados
+                Veja o agachamento e supino em 360°, cadência controlada e
+                grupos musculares destacados
               </p>
             </div>
           </div>

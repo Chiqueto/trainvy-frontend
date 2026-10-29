@@ -61,7 +61,7 @@ export function AllocateTemplateModal({
       if (res.success) {
         const student = athletes.find((a) => a.id === selectedAthleteId);
         toast.success(
-          `Prescrição "${template.name}" enviada com sucesso para ${student?.name || "o aluno"}!`,
+          `Rascunho "${template.name}" criado para revisão antes de enviar a ${student?.name || "o aluno"}.`,
         );
         onSuccess?.();
         onClose();
@@ -85,7 +85,8 @@ export function AllocateTemplateModal({
                 Alocar Modelo para Aluno
               </h2>
               <p className="text-xs text-muted-foreground">
-                Cria e envia instantaneamente a prescrição do treino para o aluno.
+                Cria um rascunho. Revise e aprove a versão final antes de enviar
+                ao aluno.
               </p>
             </div>
           </div>
@@ -173,14 +174,18 @@ export function AllocateTemplateModal({
             </div>
           ) : (
             <div className="rounded-xl border border-dashed border-border p-4 text-center text-xs text-muted-foreground">
-              Você não possui nenhum aluno ativo vinculado no momento. Convide um aluno na aba &ldquo;Alunos&rdquo;.
+              Você não possui nenhum aluno ativo vinculado no momento. Convide
+              um aluno na aba &ldquo;Alunos&rdquo;.
             </div>
           )}
         </div>
 
         {/* Orientações opcionais */}
         <div className="space-y-1.5">
-          <Label htmlFor="template-notes" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          <Label
+            htmlFor="template-notes"
+            className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+          >
             Orientações / Notas para o Aluno (Opcional)
           </Label>
           <textarea
@@ -219,7 +224,7 @@ export function AllocateTemplateModal({
             ) : (
               <div className="flex items-center gap-2">
                 <Send className="size-4" />
-                <span>Enviar Prescrição</span>
+                <span>Criar rascunho para revisão</span>
               </div>
             )}
           </Button>

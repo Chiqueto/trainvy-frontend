@@ -2352,6 +2352,168 @@ export type CompletePeriodization500 = {
   code: string;
 };
 
+export type ConfirmWorkoutImportBodyWorkoutDaysItemWeekDay =
+  (typeof ConfirmWorkoutImportBodyWorkoutDaysItemWeekDay)[keyof typeof ConfirmWorkoutImportBodyWorkoutDaysItemWeekDay];
+
+export const ConfirmWorkoutImportBodyWorkoutDaysItemWeekDay = {
+  MONDAY: "MONDAY",
+  TUESDAY: "TUESDAY",
+  WEDNESDAY: "WEDNESDAY",
+  THURSDAY: "THURSDAY",
+  FRIDAY: "FRIDAY",
+  SATURDAY: "SATURDAY",
+  SUNDAY: "SUNDAY",
+} as const;
+
+export type ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItem = {
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMin?: number | null;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMax?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  targetRir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 2000000
+   * @nullable
+   */
+  targetLoadInGrams?: number | null;
+  /**
+   * @minLength 1
+   * @maxLength 80
+   * @nullable
+   */
+  tempo?: string | null;
+  /** @minLength 1 */
+  name: string;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  order: number;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative1ExerciseId?: string | null;
+  /** @nullable */
+  alternative1ExerciseName?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative2ExerciseId?: string | null;
+  /** @nullable */
+  alternative2ExerciseName?: string | null;
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  sets: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  warmupSets: number;
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  reps: number;
+  /**
+   * @minimum 1
+   * @maximum 9007199254740991
+   */
+  restTimeInSeconds: number;
+};
+
+export type ConfirmWorkoutImportBodyWorkoutDaysItem = {
+  /** @minLength 1 */
+  name: string;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  order?: number;
+  weekDay: ConfirmWorkoutImportBodyWorkoutDaysItemWeekDay;
+  isRest: boolean;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  estimatedDurationInSeconds: number;
+  /** @nullable */
+  coverImageUrl?: string | null;
+  exercises: ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItem[];
+};
+
+export type ConfirmWorkoutImportBody = {
+  /** @maxLength 300000 */
+  previewToken: string;
+  confirmed: boolean;
+  /**
+   * @minLength 1
+   * @maxLength 180
+   */
+  name: string;
+  /**
+   * @minItems 1
+   * @maxItems 7
+   */
+  workoutDays: ConfirmWorkoutImportBodyWorkoutDaysItem[];
+};
+
+export type ConfirmWorkoutImport201 = {
+  id: string;
+};
+
+export type ConfirmWorkoutImport400 = {
+  error: string;
+  code: string;
+};
+
+export type ConfirmWorkoutImport401 = {
+  error: string;
+  code: string;
+};
+
+export type ConfirmWorkoutImport403 = {
+  error: string;
+  code: string;
+};
+
+export type ConfirmWorkoutImport404 = {
+  error: string;
+  code: string;
+};
+
+export type ConfirmWorkoutImport409 = {
+  error: string;
+  code: string;
+};
+
+export type ConfirmWorkoutImport500 = {
+  error: string;
+  code: string;
+};
+
 export type GetPlanningOverview200ActiveContext =
   | {
       type: "NONE";
@@ -2527,15 +2689,25 @@ export type GetPlanningOverview500 = {
 };
 
 export type GenerateWorkoutPlanDraftWithAiBody = {
-  /** @minLength 2 */
+  /**
+   * @minLength 2
+   * @maxLength 20000
+   */
   prompt: string;
+  /** @maxLength 14000000 */
   fileUrl?: string;
+  /** @maxLength 100 */
   mediaType?: string;
+  /** @maxLength 200 */
   filename?: string;
 };
 
+/**
+ * @nullable
+ */
 export type GenerateWorkoutPlanDraftWithAi200WorkoutDaysItemWeekDay =
-  (typeof GenerateWorkoutPlanDraftWithAi200WorkoutDaysItemWeekDay)[keyof typeof GenerateWorkoutPlanDraftWithAi200WorkoutDaysItemWeekDay];
+  | (typeof GenerateWorkoutPlanDraftWithAi200WorkoutDaysItemWeekDay)[keyof typeof GenerateWorkoutPlanDraftWithAi200WorkoutDaysItemWeekDay]
+  | null;
 
 export const GenerateWorkoutPlanDraftWithAi200WorkoutDaysItemWeekDay = {
   MONDAY: "MONDAY",
@@ -2548,63 +2720,126 @@ export const GenerateWorkoutPlanDraftWithAi200WorkoutDaysItemWeekDay = {
 } as const;
 
 export type GenerateWorkoutPlanDraftWithAi200WorkoutDaysItemExercisesItem = {
+  /**
+   * @minLength 1
+   * @maxLength 180
+   */
   name: string;
-  sets: number;
-  warmupSets: number;
-  reps: number;
   /**
    * @minimum 1
-   * @maximum 10000
+   * @maximum 100
    * @nullable
    */
-  repsMin?: number | null;
+  sets: number | null;
   /**
    * @minimum 1
-   * @maximum 10000
+   * @maximum 500
    * @nullable
    */
-  repsMax?: number | null;
+  reps: number | null;
+  /**
+   * @minimum 0
+   * @maximum 100
+   * @nullable
+   */
+  warmupSets: number | null;
+  /**
+   * @minimum 0
+   * @maximum 3600
+   * @nullable
+   */
+  restTimeInSeconds: number | null;
+  /**
+   * @minimum 0
+   * @maximum 1000000
+   * @nullable
+   */
+  targetLoadInGrams: number | null;
   /**
    * @minimum 0
    * @maximum 10
    * @nullable
    */
-  targetRir?: number | null;
+  targetRir: number | null;
   /**
-   * @minimum 0
-   * @maximum 2000000
+   * @maxLength 100
    * @nullable
    */
-  targetLoadInGrams?: number | null;
-  /**
-   * @minLength 1
-   * @maxLength 80
-   * @nullable
-   */
-  tempo?: string | null;
-  restTimeInSeconds: number;
-  /** @nullable */
-  alternative1Name?: string | null;
-  /** @nullable */
-  alternative2Name?: string | null;
+  tempo: string | null;
 };
 
 export type GenerateWorkoutPlanDraftWithAi200WorkoutDaysItem = {
-  name: string;
+  /**
+   * @maxLength 180
+   * @nullable
+   */
+  name: string | null;
+  /** @nullable */
   weekDay: GenerateWorkoutPlanDraftWithAi200WorkoutDaysItemWeekDay;
-  isRest: boolean;
-  estimatedDurationInMinutes: number;
+  /** @nullable */
+  isRest: boolean | null;
+  /**
+   * @minimum 0
+   * @maximum 86400
+   * @nullable
+   */
+  estimatedDurationInSeconds: number | null;
+  /** @maxItems 40 */
   exercises: GenerateWorkoutPlanDraftWithAi200WorkoutDaysItemExercisesItem[];
 };
 
+export type GenerateWorkoutPlanDraftWithAi200ProvenanceItem = {
+  /** @maxLength 200 */
+  path: string;
+  /**
+   * @minLength 1
+   * @maxLength 500
+   */
+  quote: string;
+};
+
 export type GenerateWorkoutPlanDraftWithAi200 = {
-  name: string;
-  /** @nullable */
-  notes?: string | null;
+  /**
+   * @maxLength 180
+   * @nullable
+   */
+  name: string | null;
+  /** @maxItems 7 */
   workoutDays: GenerateWorkoutPlanDraftWithAi200WorkoutDaysItem[];
+  /** @maxItems 1000 */
+  provenance: GenerateWorkoutPlanDraftWithAi200ProvenanceItem[];
+  /** @maxItems 30 */
+  questions: string[];
+  previewToken: string;
+  requiresConfirmation: boolean;
+};
+
+export type GenerateWorkoutPlanDraftWithAi400 = {
+  error: string;
+  code: string;
 };
 
 export type GenerateWorkoutPlanDraftWithAi401 = {
+  error: string;
+  code: string;
+};
+
+export type GenerateWorkoutPlanDraftWithAi403 = {
+  error: string;
+  code: string;
+};
+
+export type GenerateWorkoutPlanDraftWithAi404 = {
+  error: string;
+  code: string;
+};
+
+export type GenerateWorkoutPlanDraftWithAi409 = {
+  error: string;
+  code: string;
+};
+
+export type GenerateWorkoutPlanDraftWithAi429 = {
   error: string;
   code: string;
 };
@@ -2949,8 +3184,29 @@ export type PostAiParams = {
   sessionExerciseId?: string;
 };
 
+export type PostAiBodyMessagesItemRole =
+  (typeof PostAiBodyMessagesItemRole)[keyof typeof PostAiBodyMessagesItemRole];
+
+export const PostAiBodyMessagesItemRole = {
+  user: "user",
+  assistant: "assistant",
+} as const;
+
+export type PostAiBodyMessagesItem = {
+  /** @maxLength 200 */
+  id: string;
+  role: PostAiBodyMessagesItemRole;
+  /** @maxItems 100 */
+  parts: unknown[];
+  [key: string]: unknown;
+};
+
 export type PostAiBody = {
-  messages: unknown[];
+  /**
+   * @minItems 1
+   * @maxItems 100
+   */
+  messages: PostAiBodyMessagesItem[];
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   conversationId?: string;
   /** @maxLength 255 */
@@ -3288,6 +3544,15 @@ export type CompleteSignup500 = {
   code: string;
 };
 
+/**
+ * @nullable
+ */
+export type GetCommercialContext200ProfessionalVerification = {
+  status: string;
+  /** @nullable */
+  validUntil: string | null;
+} | null;
+
 export type GetCommercialContext200AccountType =
   (typeof GetCommercialContext200AccountType)[keyof typeof GetCommercialContext200AccountType];
 
@@ -3361,6 +3626,10 @@ export type GetCommercialContext200EntitlementsItem = {
 };
 
 export type GetCommercialContext200 = {
+  crefVerificationRequired: boolean;
+  professionalAccessGranted: boolean;
+  /** @nullable */
+  professionalVerification: GetCommercialContext200ProfessionalVerification;
   accountType: GetCommercialContext200AccountType;
   systemRole: GetCommercialContext200SystemRole;
   /** @nullable */
@@ -3905,6 +4174,650 @@ export type RevokeAthleteCoachRelationship500 = {
   code: string;
 };
 
+export type GetProfessionalVerificationPolicy200 = {
+  required: boolean;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  revision: number;
+  /** @nullable */
+  updatedAt: string | null;
+  /** @nullable */
+  updatedByUserId: string | null;
+};
+
+export type GetProfessionalVerificationPolicy400 = {
+  error: string;
+  code: string;
+};
+
+export type GetProfessionalVerificationPolicy401 = {
+  error: string;
+  code: string;
+};
+
+export type GetProfessionalVerificationPolicy403 = {
+  error: string;
+  code: string;
+};
+
+export type GetProfessionalVerificationPolicy404 = {
+  error: string;
+  code: string;
+};
+
+export type GetProfessionalVerificationPolicy409 = {
+  error: string;
+  code: string;
+};
+
+export type GetProfessionalVerificationPolicy500 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateProfessionalVerificationPolicyBody = {
+  required: boolean;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  revision: number;
+  /**
+   * @minLength 5
+   * @maxLength 500
+   */
+  reason: string;
+};
+
+export type UpdateProfessionalVerificationPolicy200 = {
+  required: boolean;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  revision: number;
+  /** @nullable */
+  updatedAt: string | null;
+  /** @nullable */
+  updatedByUserId: string | null;
+};
+
+export type UpdateProfessionalVerificationPolicy400 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateProfessionalVerificationPolicy401 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateProfessionalVerificationPolicy403 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateProfessionalVerificationPolicy404 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateProfessionalVerificationPolicy409 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateProfessionalVerificationPolicy500 = {
+  error: string;
+  code: string;
+};
+
+/**
+ * @nullable
+ */
+export type GetProfessionalRegistration200 = {
+  /**
+   * @minLength 5
+   * @maxLength 180
+   */
+  fullName: string;
+  /** @pattern ^\d{4,8}-[GP]$ */
+  cref: string;
+  region:
+    | "AC"
+    | "AL"
+    | "AP"
+    | "AM"
+    | "BA"
+    | "CE"
+    | "DF"
+    | "ES"
+    | "GO"
+    | "MA"
+    | "MT"
+    | "MS"
+    | "MG"
+    | "PA"
+    | "PB"
+    | "PR"
+    | "PE"
+    | "PI"
+    | "RJ"
+    | "RN"
+    | "RS"
+    | "RO"
+    | "RR"
+    | "SC"
+    | "SP"
+    | "SE"
+    | "TO";
+  /**
+   * @minLength 3
+   * @maxLength 160
+   */
+  category: string;
+  userId: string;
+  status: string;
+  revision: number;
+  /** @nullable */
+  verifiedAt: string | null;
+  /** @nullable */
+  validUntil: string | null;
+  /** @nullable */
+  publicReason: string | null;
+  updatedAt: string;
+} | null;
+
+export type GetProfessionalRegistration400 = {
+  error: string;
+  code: string;
+};
+
+export type GetProfessionalRegistration401 = {
+  error: string;
+  code: string;
+};
+
+export type GetProfessionalRegistration403 = {
+  error: string;
+  code: string;
+};
+
+export type GetProfessionalRegistration404 = {
+  error: string;
+  code: string;
+};
+
+export type GetProfessionalRegistration409 = {
+  error: string;
+  code: string;
+};
+
+export type GetProfessionalRegistration500 = {
+  error: string;
+  code: string;
+};
+
+export type SubmitProfessionalRegistrationBodyRegion =
+  (typeof SubmitProfessionalRegistrationBodyRegion)[keyof typeof SubmitProfessionalRegistrationBodyRegion];
+
+export const SubmitProfessionalRegistrationBodyRegion = {
+  AC: "AC",
+  AL: "AL",
+  AP: "AP",
+  AM: "AM",
+  BA: "BA",
+  CE: "CE",
+  DF: "DF",
+  ES: "ES",
+  GO: "GO",
+  MA: "MA",
+  MT: "MT",
+  MS: "MS",
+  MG: "MG",
+  PA: "PA",
+  PB: "PB",
+  PR: "PR",
+  PE: "PE",
+  PI: "PI",
+  RJ: "RJ",
+  RN: "RN",
+  RS: "RS",
+  RO: "RO",
+  RR: "RR",
+  SC: "SC",
+  SP: "SP",
+  SE: "SE",
+  TO: "TO",
+} as const;
+
+export type SubmitProfessionalRegistrationBody = {
+  /**
+   * @minLength 5
+   * @maxLength 180
+   */
+  fullName: string;
+  /** @pattern ^\d{4,8}-[GP]$ */
+  cref: string;
+  region: SubmitProfessionalRegistrationBodyRegion;
+  /**
+   * @minLength 3
+   * @maxLength 160
+   */
+  category: string;
+};
+
+export type SubmitProfessionalRegistration200Region =
+  (typeof SubmitProfessionalRegistration200Region)[keyof typeof SubmitProfessionalRegistration200Region];
+
+export const SubmitProfessionalRegistration200Region = {
+  AC: "AC",
+  AL: "AL",
+  AP: "AP",
+  AM: "AM",
+  BA: "BA",
+  CE: "CE",
+  DF: "DF",
+  ES: "ES",
+  GO: "GO",
+  MA: "MA",
+  MT: "MT",
+  MS: "MS",
+  MG: "MG",
+  PA: "PA",
+  PB: "PB",
+  PR: "PR",
+  PE: "PE",
+  PI: "PI",
+  RJ: "RJ",
+  RN: "RN",
+  RS: "RS",
+  RO: "RO",
+  RR: "RR",
+  SC: "SC",
+  SP: "SP",
+  SE: "SE",
+  TO: "TO",
+} as const;
+
+export type SubmitProfessionalRegistration200 = {
+  /**
+   * @minLength 5
+   * @maxLength 180
+   */
+  fullName: string;
+  /** @pattern ^\d{4,8}-[GP]$ */
+  cref: string;
+  region: SubmitProfessionalRegistration200Region;
+  /**
+   * @minLength 3
+   * @maxLength 160
+   */
+  category: string;
+  userId: string;
+  status: string;
+  revision: number;
+  /** @nullable */
+  verifiedAt: string | null;
+  /** @nullable */
+  validUntil: string | null;
+  /** @nullable */
+  publicReason: string | null;
+  updatedAt: string;
+};
+
+export type SubmitProfessionalRegistration400 = {
+  error: string;
+  code: string;
+};
+
+export type SubmitProfessionalRegistration401 = {
+  error: string;
+  code: string;
+};
+
+export type SubmitProfessionalRegistration403 = {
+  error: string;
+  code: string;
+};
+
+export type SubmitProfessionalRegistration404 = {
+  error: string;
+  code: string;
+};
+
+export type SubmitProfessionalRegistration409 = {
+  error: string;
+  code: string;
+};
+
+export type SubmitProfessionalRegistration500 = {
+  error: string;
+  code: string;
+};
+
+export type ListProfessionalRegistrationsParams = {
+  /**
+   * @maxLength 180
+   */
+  q?: string;
+  region?: ListProfessionalRegistrationsRegion;
+};
+
+export type ListProfessionalRegistrationsRegion =
+  (typeof ListProfessionalRegistrationsRegion)[keyof typeof ListProfessionalRegistrationsRegion];
+
+export const ListProfessionalRegistrationsRegion = {
+  AC: "AC",
+  AL: "AL",
+  AP: "AP",
+  AM: "AM",
+  BA: "BA",
+  CE: "CE",
+  DF: "DF",
+  ES: "ES",
+  GO: "GO",
+  MA: "MA",
+  MT: "MT",
+  MS: "MS",
+  MG: "MG",
+  PA: "PA",
+  PB: "PB",
+  PR: "PR",
+  PE: "PE",
+  PI: "PI",
+  RJ: "RJ",
+  RN: "RN",
+  RS: "RS",
+  RO: "RO",
+  RR: "RR",
+  SC: "SC",
+  SP: "SP",
+  SE: "SE",
+  TO: "TO",
+} as const;
+
+export type ListProfessionalRegistrations200ItemRegion =
+  (typeof ListProfessionalRegistrations200ItemRegion)[keyof typeof ListProfessionalRegistrations200ItemRegion];
+
+export const ListProfessionalRegistrations200ItemRegion = {
+  AC: "AC",
+  AL: "AL",
+  AP: "AP",
+  AM: "AM",
+  BA: "BA",
+  CE: "CE",
+  DF: "DF",
+  ES: "ES",
+  GO: "GO",
+  MA: "MA",
+  MT: "MT",
+  MS: "MS",
+  MG: "MG",
+  PA: "PA",
+  PB: "PB",
+  PR: "PR",
+  PE: "PE",
+  PI: "PI",
+  RJ: "RJ",
+  RN: "RN",
+  RS: "RS",
+  RO: "RO",
+  RR: "RR",
+  SC: "SC",
+  SP: "SP",
+  SE: "SE",
+  TO: "TO",
+} as const;
+
+export type ListProfessionalRegistrations200Item = {
+  /**
+   * @minLength 5
+   * @maxLength 180
+   */
+  fullName: string;
+  /** @pattern ^\d{4,8}-[GP]$ */
+  cref: string;
+  region: ListProfessionalRegistrations200ItemRegion;
+  /**
+   * @minLength 3
+   * @maxLength 160
+   */
+  category: string;
+  userId: string;
+  status: string;
+  revision: number;
+  /** @nullable */
+  verifiedAt: string | null;
+  /** @nullable */
+  validUntil: string | null;
+  /** @nullable */
+  publicReason: string | null;
+  updatedAt: string;
+};
+
+export type ListProfessionalRegistrations400 = {
+  error: string;
+  code: string;
+};
+
+export type ListProfessionalRegistrations401 = {
+  error: string;
+  code: string;
+};
+
+export type ListProfessionalRegistrations403 = {
+  error: string;
+  code: string;
+};
+
+export type ListProfessionalRegistrations404 = {
+  error: string;
+  code: string;
+};
+
+export type ListProfessionalRegistrations409 = {
+  error: string;
+  code: string;
+};
+
+export type ListProfessionalRegistrations500 = {
+  error: string;
+  code: string;
+};
+
+export type ListProfessionalVerificationReviews200Item = {
+  id: string;
+  userId: string;
+  reviewerId: string;
+  revision: number;
+  result: string;
+  sourceUrl: string;
+  evidence: string;
+  identityMatched: boolean;
+  registrationActive: boolean;
+  scopeConfirmed: boolean;
+  checkedAt: string;
+  /** @nullable */
+  validUntil: string | null;
+  createdAt: string;
+  registrationSnapshot: unknown;
+};
+
+export type ListProfessionalVerificationReviews400 = {
+  error: string;
+  code: string;
+};
+
+export type ListProfessionalVerificationReviews401 = {
+  error: string;
+  code: string;
+};
+
+export type ListProfessionalVerificationReviews403 = {
+  error: string;
+  code: string;
+};
+
+export type ListProfessionalVerificationReviews404 = {
+  error: string;
+  code: string;
+};
+
+export type ListProfessionalVerificationReviews409 = {
+  error: string;
+  code: string;
+};
+
+export type ListProfessionalVerificationReviews500 = {
+  error: string;
+  code: string;
+};
+
+export type ReviewProfessionalRegistrationBodyResult =
+  (typeof ReviewProfessionalRegistrationBodyResult)[keyof typeof ReviewProfessionalRegistrationBodyResult];
+
+export const ReviewProfessionalRegistrationBodyResult = {
+  VERIFIED: "VERIFIED",
+  REJECTED: "REJECTED",
+  SUSPENDED: "SUSPENDED",
+  EXPIRED: "EXPIRED",
+  PENDING_VERIFICATION: "PENDING_VERIFICATION",
+} as const;
+
+export type ReviewProfessionalRegistrationBodyIdentityVerificationMethod =
+  (typeof ReviewProfessionalRegistrationBodyIdentityVerificationMethod)[keyof typeof ReviewProfessionalRegistrationBodyIdentityVerificationMethod];
+
+export const ReviewProfessionalRegistrationBodyIdentityVerificationMethod = {
+  NOT_CONFIRMED: "NOT_CONFIRMED",
+  OFFICIAL_CONTACT: "OFFICIAL_CONTACT",
+  DOCUMENT_REVIEW: "DOCUMENT_REVIEW",
+  LIVE_IDENTITY_CHECK: "LIVE_IDENTITY_CHECK",
+} as const;
+
+export type ReviewProfessionalRegistrationBody = {
+  /**
+   * @maximum 9007199254740991
+   * @exclusiveMinimum 0
+   */
+  revision: number;
+  result: ReviewProfessionalRegistrationBodyResult;
+  /** @maxLength 500 */
+  sourceUrl: string;
+  /**
+   * @minLength 10
+   * @maxLength 1500
+   */
+  evidence: string;
+  identityMatched: boolean;
+  identityVerificationMethod: ReviewProfessionalRegistrationBodyIdentityVerificationMethod;
+  /**
+   * @minLength 3
+   * @maxLength 200
+   */
+  identityEvidenceReference: string;
+  registrationActive: boolean;
+  scopeConfirmed: boolean;
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$ */
+  checkedAt: string;
+  /**
+   * @minLength 3
+   * @maxLength 400
+   */
+  publicReason: string;
+};
+
+export type ReviewProfessionalRegistration200Region =
+  (typeof ReviewProfessionalRegistration200Region)[keyof typeof ReviewProfessionalRegistration200Region];
+
+export const ReviewProfessionalRegistration200Region = {
+  AC: "AC",
+  AL: "AL",
+  AP: "AP",
+  AM: "AM",
+  BA: "BA",
+  CE: "CE",
+  DF: "DF",
+  ES: "ES",
+  GO: "GO",
+  MA: "MA",
+  MT: "MT",
+  MS: "MS",
+  MG: "MG",
+  PA: "PA",
+  PB: "PB",
+  PR: "PR",
+  PE: "PE",
+  PI: "PI",
+  RJ: "RJ",
+  RN: "RN",
+  RS: "RS",
+  RO: "RO",
+  RR: "RR",
+  SC: "SC",
+  SP: "SP",
+  SE: "SE",
+  TO: "TO",
+} as const;
+
+export type ReviewProfessionalRegistration200 = {
+  /**
+   * @minLength 5
+   * @maxLength 180
+   */
+  fullName: string;
+  /** @pattern ^\d{4,8}-[GP]$ */
+  cref: string;
+  region: ReviewProfessionalRegistration200Region;
+  /**
+   * @minLength 3
+   * @maxLength 160
+   */
+  category: string;
+  userId: string;
+  status: string;
+  revision: number;
+  /** @nullable */
+  verifiedAt: string | null;
+  /** @nullable */
+  validUntil: string | null;
+  /** @nullable */
+  publicReason: string | null;
+  updatedAt: string;
+};
+
+export type ReviewProfessionalRegistration400 = {
+  error: string;
+  code: string;
+};
+
+export type ReviewProfessionalRegistration401 = {
+  error: string;
+  code: string;
+};
+
+export type ReviewProfessionalRegistration403 = {
+  error: string;
+  code: string;
+};
+
+export type ReviewProfessionalRegistration404 = {
+  error: string;
+  code: string;
+};
+
+export type ReviewProfessionalRegistration409 = {
+  error: string;
+  code: string;
+};
+
+export type ReviewProfessionalRegistration500 = {
+  error: string;
+  code: string;
+};
+
 export type CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay =
   (typeof CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay)[keyof typeof CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay];
 
@@ -4044,6 +4957,15 @@ export const CreateWorkoutPrescriptionDraft201Status = {
   CANCELLED: "CANCELLED",
 } as const;
 
+export type CreateWorkoutPrescriptionDraft201ApprovalMode =
+  (typeof CreateWorkoutPrescriptionDraft201ApprovalMode)[keyof typeof CreateWorkoutPrescriptionDraft201ApprovalMode];
+
+export const CreateWorkoutPrescriptionDraft201ApprovalMode = {
+  VERIFIED: "VERIFIED",
+  TEST: "TEST",
+  UNVERIFIED: "UNVERIFIED",
+} as const;
+
 export type CreateWorkoutPrescriptionDraft201Coach = {
   id: string;
   name: string;
@@ -4147,6 +5069,13 @@ export type CreateWorkoutPrescriptionDraft201 = {
   /** @nullable */
   notes: string | null;
   version: number;
+  /** @nullable */
+  approvedByUserId?: string | null;
+  /** @nullable */
+  approvedAt?: string | null;
+  /** @nullable */
+  approvedVersion?: number | null;
+  approvalMode?: CreateWorkoutPrescriptionDraft201ApprovalMode;
   /** @nullable */
   acceptedWorkoutPlanId: string | null;
   /** @nullable */
@@ -4317,7 +5246,7 @@ export type UpdateWorkoutPrescriptionDraftBody = {
    * @maximum 9007199254740991
    * @exclusiveMinimum 0
    */
-  version?: number;
+  version: number;
   /** @minItems 1 */
   workoutDays: UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItem[];
 };
@@ -4331,6 +5260,15 @@ export const UpdateWorkoutPrescriptionDraft200Status = {
   ACCEPTED: "ACCEPTED",
   DECLINED: "DECLINED",
   CANCELLED: "CANCELLED",
+} as const;
+
+export type UpdateWorkoutPrescriptionDraft200ApprovalMode =
+  (typeof UpdateWorkoutPrescriptionDraft200ApprovalMode)[keyof typeof UpdateWorkoutPrescriptionDraft200ApprovalMode];
+
+export const UpdateWorkoutPrescriptionDraft200ApprovalMode = {
+  VERIFIED: "VERIFIED",
+  TEST: "TEST",
+  UNVERIFIED: "UNVERIFIED",
 } as const;
 
 export type UpdateWorkoutPrescriptionDraft200Coach = {
@@ -4437,6 +5375,13 @@ export type UpdateWorkoutPrescriptionDraft200 = {
   notes: string | null;
   version: number;
   /** @nullable */
+  approvedByUserId?: string | null;
+  /** @nullable */
+  approvedAt?: string | null;
+  /** @nullable */
+  approvedVersion?: number | null;
+  approvalMode?: UpdateWorkoutPrescriptionDraft200ApprovalMode;
+  /** @nullable */
   acceptedWorkoutPlanId: string | null;
   /** @nullable */
   sentAt: string | null;
@@ -4488,6 +5433,15 @@ export const GetCoachPrescriptionDetails200Status = {
   ACCEPTED: "ACCEPTED",
   DECLINED: "DECLINED",
   CANCELLED: "CANCELLED",
+} as const;
+
+export type GetCoachPrescriptionDetails200ApprovalMode =
+  (typeof GetCoachPrescriptionDetails200ApprovalMode)[keyof typeof GetCoachPrescriptionDetails200ApprovalMode];
+
+export const GetCoachPrescriptionDetails200ApprovalMode = {
+  VERIFIED: "VERIFIED",
+  TEST: "TEST",
+  UNVERIFIED: "UNVERIFIED",
 } as const;
 
 export type GetCoachPrescriptionDetails200Coach = {
@@ -4594,6 +5548,13 @@ export type GetCoachPrescriptionDetails200 = {
   notes: string | null;
   version: number;
   /** @nullable */
+  approvedByUserId?: string | null;
+  /** @nullable */
+  approvedAt?: string | null;
+  /** @nullable */
+  approvedVersion?: number | null;
+  approvalMode?: GetCoachPrescriptionDetails200ApprovalMode;
+  /** @nullable */
   acceptedWorkoutPlanId: string | null;
   /** @nullable */
   sentAt: string | null;
@@ -4636,6 +5597,15 @@ export type GetCoachPrescriptionDetails500 = {
   code: string;
 };
 
+export type SendWorkoutPrescriptionBody = {
+  /**
+   * @maximum 9007199254740991
+   * @exclusiveMinimum 0
+   */
+  version: number;
+  approval: boolean;
+};
+
 export type SendWorkoutPrescription200Status =
   (typeof SendWorkoutPrescription200Status)[keyof typeof SendWorkoutPrescription200Status];
 
@@ -4645,6 +5615,15 @@ export const SendWorkoutPrescription200Status = {
   ACCEPTED: "ACCEPTED",
   DECLINED: "DECLINED",
   CANCELLED: "CANCELLED",
+} as const;
+
+export type SendWorkoutPrescription200ApprovalMode =
+  (typeof SendWorkoutPrescription200ApprovalMode)[keyof typeof SendWorkoutPrescription200ApprovalMode];
+
+export const SendWorkoutPrescription200ApprovalMode = {
+  VERIFIED: "VERIFIED",
+  TEST: "TEST",
+  UNVERIFIED: "UNVERIFIED",
 } as const;
 
 export type SendWorkoutPrescription200Coach = {
@@ -4750,6 +5729,13 @@ export type SendWorkoutPrescription200 = {
   notes: string | null;
   version: number;
   /** @nullable */
+  approvedByUserId?: string | null;
+  /** @nullable */
+  approvedAt?: string | null;
+  /** @nullable */
+  approvedVersion?: number | null;
+  approvalMode?: SendWorkoutPrescription200ApprovalMode;
+  /** @nullable */
   acceptedWorkoutPlanId: string | null;
   /** @nullable */
   sentAt: string | null;
@@ -4801,6 +5787,15 @@ export const CancelWorkoutPrescription200Status = {
   ACCEPTED: "ACCEPTED",
   DECLINED: "DECLINED",
   CANCELLED: "CANCELLED",
+} as const;
+
+export type CancelWorkoutPrescription200ApprovalMode =
+  (typeof CancelWorkoutPrescription200ApprovalMode)[keyof typeof CancelWorkoutPrescription200ApprovalMode];
+
+export const CancelWorkoutPrescription200ApprovalMode = {
+  VERIFIED: "VERIFIED",
+  TEST: "TEST",
+  UNVERIFIED: "UNVERIFIED",
 } as const;
 
 export type CancelWorkoutPrescription200Coach = {
@@ -4906,6 +5901,13 @@ export type CancelWorkoutPrescription200 = {
   notes: string | null;
   version: number;
   /** @nullable */
+  approvedByUserId?: string | null;
+  /** @nullable */
+  approvedAt?: string | null;
+  /** @nullable */
+  approvedVersion?: number | null;
+  approvalMode?: CancelWorkoutPrescription200ApprovalMode;
+  /** @nullable */
   acceptedWorkoutPlanId: string | null;
   /** @nullable */
   sentAt: string | null;
@@ -4957,6 +5959,15 @@ export const ListCoachAthletePrescriptions200ItemStatus = {
   ACCEPTED: "ACCEPTED",
   DECLINED: "DECLINED",
   CANCELLED: "CANCELLED",
+} as const;
+
+export type ListCoachAthletePrescriptions200ItemApprovalMode =
+  (typeof ListCoachAthletePrescriptions200ItemApprovalMode)[keyof typeof ListCoachAthletePrescriptions200ItemApprovalMode];
+
+export const ListCoachAthletePrescriptions200ItemApprovalMode = {
+  VERIFIED: "VERIFIED",
+  TEST: "TEST",
+  UNVERIFIED: "UNVERIFIED",
 } as const;
 
 export type ListCoachAthletePrescriptions200ItemCoach = {
@@ -5064,6 +6075,13 @@ export type ListCoachAthletePrescriptions200Item = {
   notes: string | null;
   version: number;
   /** @nullable */
+  approvedByUserId?: string | null;
+  /** @nullable */
+  approvedAt?: string | null;
+  /** @nullable */
+  approvedVersion?: number | null;
+  approvalMode?: ListCoachAthletePrescriptions200ItemApprovalMode;
+  /** @nullable */
   acceptedWorkoutPlanId: string | null;
   /** @nullable */
   sentAt: string | null;
@@ -5115,6 +6133,15 @@ export const ListAthletePrescriptions200ItemStatus = {
   ACCEPTED: "ACCEPTED",
   DECLINED: "DECLINED",
   CANCELLED: "CANCELLED",
+} as const;
+
+export type ListAthletePrescriptions200ItemApprovalMode =
+  (typeof ListAthletePrescriptions200ItemApprovalMode)[keyof typeof ListAthletePrescriptions200ItemApprovalMode];
+
+export const ListAthletePrescriptions200ItemApprovalMode = {
+  VERIFIED: "VERIFIED",
+  TEST: "TEST",
+  UNVERIFIED: "UNVERIFIED",
 } as const;
 
 export type ListAthletePrescriptions200ItemCoach = {
@@ -5221,6 +6248,13 @@ export type ListAthletePrescriptions200Item = {
   notes: string | null;
   version: number;
   /** @nullable */
+  approvedByUserId?: string | null;
+  /** @nullable */
+  approvedAt?: string | null;
+  /** @nullable */
+  approvedVersion?: number | null;
+  approvalMode?: ListAthletePrescriptions200ItemApprovalMode;
+  /** @nullable */
   acceptedWorkoutPlanId: string | null;
   /** @nullable */
   sentAt: string | null;
@@ -5272,6 +6306,15 @@ export const GetAthletePrescriptionDetails200Status = {
   ACCEPTED: "ACCEPTED",
   DECLINED: "DECLINED",
   CANCELLED: "CANCELLED",
+} as const;
+
+export type GetAthletePrescriptionDetails200ApprovalMode =
+  (typeof GetAthletePrescriptionDetails200ApprovalMode)[keyof typeof GetAthletePrescriptionDetails200ApprovalMode];
+
+export const GetAthletePrescriptionDetails200ApprovalMode = {
+  VERIFIED: "VERIFIED",
+  TEST: "TEST",
+  UNVERIFIED: "UNVERIFIED",
 } as const;
 
 export type GetAthletePrescriptionDetails200Coach = {
@@ -5378,6 +6421,13 @@ export type GetAthletePrescriptionDetails200 = {
   notes: string | null;
   version: number;
   /** @nullable */
+  approvedByUserId?: string | null;
+  /** @nullable */
+  approvedAt?: string | null;
+  /** @nullable */
+  approvedVersion?: number | null;
+  approvalMode?: GetAthletePrescriptionDetails200ApprovalMode;
+  /** @nullable */
   acceptedWorkoutPlanId: string | null;
   /** @nullable */
   sentAt: string | null;
@@ -5429,6 +6479,15 @@ export const AcceptWorkoutPrescription200PrescriptionStatus = {
   ACCEPTED: "ACCEPTED",
   DECLINED: "DECLINED",
   CANCELLED: "CANCELLED",
+} as const;
+
+export type AcceptWorkoutPrescription200PrescriptionApprovalMode =
+  (typeof AcceptWorkoutPrescription200PrescriptionApprovalMode)[keyof typeof AcceptWorkoutPrescription200PrescriptionApprovalMode];
+
+export const AcceptWorkoutPrescription200PrescriptionApprovalMode = {
+  VERIFIED: "VERIFIED",
+  TEST: "TEST",
+  UNVERIFIED: "UNVERIFIED",
 } as const;
 
 export type AcceptWorkoutPrescription200PrescriptionCoach = {
@@ -5536,6 +6595,13 @@ export type AcceptWorkoutPrescription200Prescription = {
   notes: string | null;
   version: number;
   /** @nullable */
+  approvedByUserId?: string | null;
+  /** @nullable */
+  approvedAt?: string | null;
+  /** @nullable */
+  approvedVersion?: number | null;
+  approvalMode?: AcceptWorkoutPrescription200PrescriptionApprovalMode;
+  /** @nullable */
   acceptedWorkoutPlanId: string | null;
   /** @nullable */
   sentAt: string | null;
@@ -5594,6 +6660,15 @@ export const DeclineWorkoutPrescription200Status = {
   ACCEPTED: "ACCEPTED",
   DECLINED: "DECLINED",
   CANCELLED: "CANCELLED",
+} as const;
+
+export type DeclineWorkoutPrescription200ApprovalMode =
+  (typeof DeclineWorkoutPrescription200ApprovalMode)[keyof typeof DeclineWorkoutPrescription200ApprovalMode];
+
+export const DeclineWorkoutPrescription200ApprovalMode = {
+  VERIFIED: "VERIFIED",
+  TEST: "TEST",
+  UNVERIFIED: "UNVERIFIED",
 } as const;
 
 export type DeclineWorkoutPrescription200Coach = {
@@ -5699,6 +6774,13 @@ export type DeclineWorkoutPrescription200 = {
   notes: string | null;
   version: number;
   /** @nullable */
+  approvedByUserId?: string | null;
+  /** @nullable */
+  approvedAt?: string | null;
+  /** @nullable */
+  approvedVersion?: number | null;
+  approvalMode?: DeclineWorkoutPrescription200ApprovalMode;
+  /** @nullable */
   acceptedWorkoutPlanId: string | null;
   /** @nullable */
   sentAt: string | null;
@@ -5749,6 +6831,13 @@ export type GenerateCoachPrescriptionDraftWithAiBody = {
   mediaType?: string;
   filename?: string;
 };
+
+export type GenerateCoachPrescriptionDraftWithAi200Status =
+  (typeof GenerateCoachPrescriptionDraftWithAi200Status)[keyof typeof GenerateCoachPrescriptionDraftWithAi200Status];
+
+export const GenerateCoachPrescriptionDraftWithAi200Status = {
+  DRAFT: "DRAFT",
+} as const;
 
 export type GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemWeekDay =
   (typeof GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemWeekDay)[keyof typeof GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemWeekDay];
@@ -5815,6 +6904,7 @@ export type GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItem = {
 };
 
 export type GenerateCoachPrescriptionDraftWithAi200 = {
+  status: GenerateCoachPrescriptionDraftWithAi200Status;
   name: string;
   /** @nullable */
   notes?: string | null;
@@ -7669,6 +8759,15 @@ export const AllocateCoachWorkoutPlanTemplate200PrescriptionStatus = {
   CANCELLED: "CANCELLED",
 } as const;
 
+export type AllocateCoachWorkoutPlanTemplate200PrescriptionApprovalMode =
+  (typeof AllocateCoachWorkoutPlanTemplate200PrescriptionApprovalMode)[keyof typeof AllocateCoachWorkoutPlanTemplate200PrescriptionApprovalMode];
+
+export const AllocateCoachWorkoutPlanTemplate200PrescriptionApprovalMode = {
+  VERIFIED: "VERIFIED",
+  TEST: "TEST",
+  UNVERIFIED: "UNVERIFIED",
+} as const;
+
 export type AllocateCoachWorkoutPlanTemplate200PrescriptionCoach = {
   id: string;
   name: string;
@@ -7774,6 +8873,13 @@ export type AllocateCoachWorkoutPlanTemplate200Prescription = {
   /** @nullable */
   notes: string | null;
   version: number;
+  /** @nullable */
+  approvedByUserId?: string | null;
+  /** @nullable */
+  approvedAt?: string | null;
+  /** @nullable */
+  approvedVersion?: number | null;
+  approvalMode?: AllocateCoachWorkoutPlanTemplate200PrescriptionApprovalMode;
   /** @nullable */
   acceptedWorkoutPlanId: string | null;
   /** @nullable */
@@ -8994,6 +10100,15 @@ export type GetAdminUser200Subscription = {
   trialExpired: boolean;
 } | null;
 
+/**
+ * @nullable
+ */
+export type GetAdminUser200CommercialContextProfessionalVerification = {
+  status: string;
+  /** @nullable */
+  validUntil: string | null;
+} | null;
+
 export type GetAdminUser200CommercialContextAccountType =
   (typeof GetAdminUser200CommercialContextAccountType)[keyof typeof GetAdminUser200CommercialContextAccountType];
 
@@ -9067,6 +10182,10 @@ export type GetAdminUser200CommercialContextEntitlementsItem = {
 };
 
 export type GetAdminUser200CommercialContext = {
+  crefVerificationRequired: boolean;
+  professionalAccessGranted: boolean;
+  /** @nullable */
+  professionalVerification: GetAdminUser200CommercialContextProfessionalVerification;
   accountType: GetAdminUser200CommercialContextAccountType;
   systemRole: GetAdminUser200CommercialContextSystemRole;
   /** @nullable */
@@ -9673,6 +10792,8 @@ export type ListAdminAuditAction =
   (typeof ListAdminAuditAction)[keyof typeof ListAdminAuditAction];
 
 export const ListAdminAuditAction = {
+  PROFESSIONAL_VERIFICATION_POLICY_UPDATED:
+    "PROFESSIONAL_VERIFICATION_POLICY_UPDATED",
   EXERCISE_MUSCLES_UPDATED: "EXERCISE_MUSCLES_UPDATED",
   PLAN_CREATED: "PLAN_CREATED",
   PLAN_UPDATED: "PLAN_UPDATED",
@@ -9697,6 +10818,8 @@ export type ListAdminAudit200ItemsItemAction =
   (typeof ListAdminAudit200ItemsItemAction)[keyof typeof ListAdminAudit200ItemsItemAction];
 
 export const ListAdminAudit200ItemsItemAction = {
+  PROFESSIONAL_VERIFICATION_POLICY_UPDATED:
+    "PROFESSIONAL_VERIFICATION_POLICY_UPDATED",
   EXERCISE_MUSCLES_UPDATED: "EXERCISE_MUSCLES_UPDATED",
   PLAN_CREATED: "PLAN_CREATED",
   PLAN_UPDATED: "PLAN_UPDATED",
@@ -16546,6 +17669,79 @@ export const completePeriodization = async (
   );
 };
 
+export type confirmWorkoutImportResponse201 = {
+  data: ConfirmWorkoutImport201;
+  status: 201;
+};
+
+export type confirmWorkoutImportResponse400 = {
+  data: ConfirmWorkoutImport400;
+  status: 400;
+};
+
+export type confirmWorkoutImportResponse401 = {
+  data: ConfirmWorkoutImport401;
+  status: 401;
+};
+
+export type confirmWorkoutImportResponse403 = {
+  data: ConfirmWorkoutImport403;
+  status: 403;
+};
+
+export type confirmWorkoutImportResponse404 = {
+  data: ConfirmWorkoutImport404;
+  status: 404;
+};
+
+export type confirmWorkoutImportResponse409 = {
+  data: ConfirmWorkoutImport409;
+  status: 409;
+};
+
+export type confirmWorkoutImportResponse500 = {
+  data: ConfirmWorkoutImport500;
+  status: 500;
+};
+
+export type confirmWorkoutImportResponseSuccess =
+  confirmWorkoutImportResponse201 & {
+    headers: Headers;
+  };
+export type confirmWorkoutImportResponseError = (
+  | confirmWorkoutImportResponse400
+  | confirmWorkoutImportResponse401
+  | confirmWorkoutImportResponse403
+  | confirmWorkoutImportResponse404
+  | confirmWorkoutImportResponse409
+  | confirmWorkoutImportResponse500
+) & {
+  headers: Headers;
+};
+
+export type confirmWorkoutImportResponse =
+  | confirmWorkoutImportResponseSuccess
+  | confirmWorkoutImportResponseError;
+
+export const getConfirmWorkoutImportUrl = () => {
+  return `/planning/imports/confirm`;
+};
+
+export const confirmWorkoutImport = async (
+  confirmWorkoutImportBody: ConfirmWorkoutImportBody,
+  options?: RequestInit,
+): Promise<confirmWorkoutImportResponse> => {
+  return customFetch<confirmWorkoutImportResponse>(
+    getConfirmWorkoutImportUrl(),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(confirmWorkoutImportBody),
+    },
+  );
+};
+
 /**
  * @summary Get planning overview for authenticated user
  */
@@ -16605,16 +17801,41 @@ export const getPlanningOverview = async (
 };
 
 /**
- * @summary Generate workout plan draft with AI using text prompt, voice audio or PDF document
+ * @summary Extrair uma ficha fornecida sem prescrever ou preencher dados ausentes
  */
 export type generateWorkoutPlanDraftWithAiResponse200 = {
   data: GenerateWorkoutPlanDraftWithAi200;
   status: 200;
 };
 
+export type generateWorkoutPlanDraftWithAiResponse400 = {
+  data: GenerateWorkoutPlanDraftWithAi400;
+  status: 400;
+};
+
 export type generateWorkoutPlanDraftWithAiResponse401 = {
   data: GenerateWorkoutPlanDraftWithAi401;
   status: 401;
+};
+
+export type generateWorkoutPlanDraftWithAiResponse403 = {
+  data: GenerateWorkoutPlanDraftWithAi403;
+  status: 403;
+};
+
+export type generateWorkoutPlanDraftWithAiResponse404 = {
+  data: GenerateWorkoutPlanDraftWithAi404;
+  status: 404;
+};
+
+export type generateWorkoutPlanDraftWithAiResponse409 = {
+  data: GenerateWorkoutPlanDraftWithAi409;
+  status: 409;
+};
+
+export type generateWorkoutPlanDraftWithAiResponse429 = {
+  data: GenerateWorkoutPlanDraftWithAi429;
+  status: 429;
 };
 
 export type generateWorkoutPlanDraftWithAiResponse500 = {
@@ -16627,7 +17848,12 @@ export type generateWorkoutPlanDraftWithAiResponseSuccess =
     headers: Headers;
   };
 export type generateWorkoutPlanDraftWithAiResponseError = (
+  | generateWorkoutPlanDraftWithAiResponse400
   | generateWorkoutPlanDraftWithAiResponse401
+  | generateWorkoutPlanDraftWithAiResponse403
+  | generateWorkoutPlanDraftWithAiResponse404
+  | generateWorkoutPlanDraftWithAiResponse409
+  | generateWorkoutPlanDraftWithAiResponse429
   | generateWorkoutPlanDraftWithAiResponse500
 ) & {
   headers: Headers;
@@ -18353,6 +19579,522 @@ export const revokeAthleteCoachRelationship = async (
   );
 };
 
+export type getProfessionalVerificationPolicyResponse200 = {
+  data: GetProfessionalVerificationPolicy200;
+  status: 200;
+};
+
+export type getProfessionalVerificationPolicyResponse400 = {
+  data: GetProfessionalVerificationPolicy400;
+  status: 400;
+};
+
+export type getProfessionalVerificationPolicyResponse401 = {
+  data: GetProfessionalVerificationPolicy401;
+  status: 401;
+};
+
+export type getProfessionalVerificationPolicyResponse403 = {
+  data: GetProfessionalVerificationPolicy403;
+  status: 403;
+};
+
+export type getProfessionalVerificationPolicyResponse404 = {
+  data: GetProfessionalVerificationPolicy404;
+  status: 404;
+};
+
+export type getProfessionalVerificationPolicyResponse409 = {
+  data: GetProfessionalVerificationPolicy409;
+  status: 409;
+};
+
+export type getProfessionalVerificationPolicyResponse500 = {
+  data: GetProfessionalVerificationPolicy500;
+  status: 500;
+};
+
+export type getProfessionalVerificationPolicyResponseSuccess =
+  getProfessionalVerificationPolicyResponse200 & {
+    headers: Headers;
+  };
+export type getProfessionalVerificationPolicyResponseError = (
+  | getProfessionalVerificationPolicyResponse400
+  | getProfessionalVerificationPolicyResponse401
+  | getProfessionalVerificationPolicyResponse403
+  | getProfessionalVerificationPolicyResponse404
+  | getProfessionalVerificationPolicyResponse409
+  | getProfessionalVerificationPolicyResponse500
+) & {
+  headers: Headers;
+};
+
+export type getProfessionalVerificationPolicyResponse =
+  | getProfessionalVerificationPolicyResponseSuccess
+  | getProfessionalVerificationPolicyResponseError;
+
+export const getGetProfessionalVerificationPolicyUrl = () => {
+  return `/admin/professional-verification-policy`;
+};
+
+export const getProfessionalVerificationPolicy = async (
+  options?: RequestInit,
+): Promise<getProfessionalVerificationPolicyResponse> => {
+  return customFetch<getProfessionalVerificationPolicyResponse>(
+    getGetProfessionalVerificationPolicyUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export type updateProfessionalVerificationPolicyResponse200 = {
+  data: UpdateProfessionalVerificationPolicy200;
+  status: 200;
+};
+
+export type updateProfessionalVerificationPolicyResponse400 = {
+  data: UpdateProfessionalVerificationPolicy400;
+  status: 400;
+};
+
+export type updateProfessionalVerificationPolicyResponse401 = {
+  data: UpdateProfessionalVerificationPolicy401;
+  status: 401;
+};
+
+export type updateProfessionalVerificationPolicyResponse403 = {
+  data: UpdateProfessionalVerificationPolicy403;
+  status: 403;
+};
+
+export type updateProfessionalVerificationPolicyResponse404 = {
+  data: UpdateProfessionalVerificationPolicy404;
+  status: 404;
+};
+
+export type updateProfessionalVerificationPolicyResponse409 = {
+  data: UpdateProfessionalVerificationPolicy409;
+  status: 409;
+};
+
+export type updateProfessionalVerificationPolicyResponse500 = {
+  data: UpdateProfessionalVerificationPolicy500;
+  status: 500;
+};
+
+export type updateProfessionalVerificationPolicyResponseSuccess =
+  updateProfessionalVerificationPolicyResponse200 & {
+    headers: Headers;
+  };
+export type updateProfessionalVerificationPolicyResponseError = (
+  | updateProfessionalVerificationPolicyResponse400
+  | updateProfessionalVerificationPolicyResponse401
+  | updateProfessionalVerificationPolicyResponse403
+  | updateProfessionalVerificationPolicyResponse404
+  | updateProfessionalVerificationPolicyResponse409
+  | updateProfessionalVerificationPolicyResponse500
+) & {
+  headers: Headers;
+};
+
+export type updateProfessionalVerificationPolicyResponse =
+  | updateProfessionalVerificationPolicyResponseSuccess
+  | updateProfessionalVerificationPolicyResponseError;
+
+export const getUpdateProfessionalVerificationPolicyUrl = () => {
+  return `/admin/professional-verification-policy`;
+};
+
+export const updateProfessionalVerificationPolicy = async (
+  updateProfessionalVerificationPolicyBody: UpdateProfessionalVerificationPolicyBody,
+  options?: RequestInit,
+): Promise<updateProfessionalVerificationPolicyResponse> => {
+  return customFetch<updateProfessionalVerificationPolicyResponse>(
+    getUpdateProfessionalVerificationPolicyUrl(),
+    {
+      ...options,
+      method: "PUT",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(updateProfessionalVerificationPolicyBody),
+    },
+  );
+};
+
+export type getProfessionalRegistrationResponse200 = {
+  data: GetProfessionalRegistration200;
+  status: 200;
+};
+
+export type getProfessionalRegistrationResponse400 = {
+  data: GetProfessionalRegistration400;
+  status: 400;
+};
+
+export type getProfessionalRegistrationResponse401 = {
+  data: GetProfessionalRegistration401;
+  status: 401;
+};
+
+export type getProfessionalRegistrationResponse403 = {
+  data: GetProfessionalRegistration403;
+  status: 403;
+};
+
+export type getProfessionalRegistrationResponse404 = {
+  data: GetProfessionalRegistration404;
+  status: 404;
+};
+
+export type getProfessionalRegistrationResponse409 = {
+  data: GetProfessionalRegistration409;
+  status: 409;
+};
+
+export type getProfessionalRegistrationResponse500 = {
+  data: GetProfessionalRegistration500;
+  status: 500;
+};
+
+export type getProfessionalRegistrationResponseSuccess =
+  getProfessionalRegistrationResponse200 & {
+    headers: Headers;
+  };
+export type getProfessionalRegistrationResponseError = (
+  | getProfessionalRegistrationResponse400
+  | getProfessionalRegistrationResponse401
+  | getProfessionalRegistrationResponse403
+  | getProfessionalRegistrationResponse404
+  | getProfessionalRegistrationResponse409
+  | getProfessionalRegistrationResponse500
+) & {
+  headers: Headers;
+};
+
+export type getProfessionalRegistrationResponse =
+  | getProfessionalRegistrationResponseSuccess
+  | getProfessionalRegistrationResponseError;
+
+export const getGetProfessionalRegistrationUrl = () => {
+  return `/me/professional-registration`;
+};
+
+export const getProfessionalRegistration = async (
+  options?: RequestInit,
+): Promise<getProfessionalRegistrationResponse> => {
+  return customFetch<getProfessionalRegistrationResponse>(
+    getGetProfessionalRegistrationUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export type submitProfessionalRegistrationResponse200 = {
+  data: SubmitProfessionalRegistration200;
+  status: 200;
+};
+
+export type submitProfessionalRegistrationResponse400 = {
+  data: SubmitProfessionalRegistration400;
+  status: 400;
+};
+
+export type submitProfessionalRegistrationResponse401 = {
+  data: SubmitProfessionalRegistration401;
+  status: 401;
+};
+
+export type submitProfessionalRegistrationResponse403 = {
+  data: SubmitProfessionalRegistration403;
+  status: 403;
+};
+
+export type submitProfessionalRegistrationResponse404 = {
+  data: SubmitProfessionalRegistration404;
+  status: 404;
+};
+
+export type submitProfessionalRegistrationResponse409 = {
+  data: SubmitProfessionalRegistration409;
+  status: 409;
+};
+
+export type submitProfessionalRegistrationResponse500 = {
+  data: SubmitProfessionalRegistration500;
+  status: 500;
+};
+
+export type submitProfessionalRegistrationResponseSuccess =
+  submitProfessionalRegistrationResponse200 & {
+    headers: Headers;
+  };
+export type submitProfessionalRegistrationResponseError = (
+  | submitProfessionalRegistrationResponse400
+  | submitProfessionalRegistrationResponse401
+  | submitProfessionalRegistrationResponse403
+  | submitProfessionalRegistrationResponse404
+  | submitProfessionalRegistrationResponse409
+  | submitProfessionalRegistrationResponse500
+) & {
+  headers: Headers;
+};
+
+export type submitProfessionalRegistrationResponse =
+  | submitProfessionalRegistrationResponseSuccess
+  | submitProfessionalRegistrationResponseError;
+
+export const getSubmitProfessionalRegistrationUrl = () => {
+  return `/me/professional-registration`;
+};
+
+export const submitProfessionalRegistration = async (
+  submitProfessionalRegistrationBody: SubmitProfessionalRegistrationBody,
+  options?: RequestInit,
+): Promise<submitProfessionalRegistrationResponse> => {
+  return customFetch<submitProfessionalRegistrationResponse>(
+    getSubmitProfessionalRegistrationUrl(),
+    {
+      ...options,
+      method: "PUT",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(submitProfessionalRegistrationBody),
+    },
+  );
+};
+
+export type listProfessionalRegistrationsResponse200 = {
+  data: ListProfessionalRegistrations200Item[];
+  status: 200;
+};
+
+export type listProfessionalRegistrationsResponse400 = {
+  data: ListProfessionalRegistrations400;
+  status: 400;
+};
+
+export type listProfessionalRegistrationsResponse401 = {
+  data: ListProfessionalRegistrations401;
+  status: 401;
+};
+
+export type listProfessionalRegistrationsResponse403 = {
+  data: ListProfessionalRegistrations403;
+  status: 403;
+};
+
+export type listProfessionalRegistrationsResponse404 = {
+  data: ListProfessionalRegistrations404;
+  status: 404;
+};
+
+export type listProfessionalRegistrationsResponse409 = {
+  data: ListProfessionalRegistrations409;
+  status: 409;
+};
+
+export type listProfessionalRegistrationsResponse500 = {
+  data: ListProfessionalRegistrations500;
+  status: 500;
+};
+
+export type listProfessionalRegistrationsResponseSuccess =
+  listProfessionalRegistrationsResponse200 & {
+    headers: Headers;
+  };
+export type listProfessionalRegistrationsResponseError = (
+  | listProfessionalRegistrationsResponse400
+  | listProfessionalRegistrationsResponse401
+  | listProfessionalRegistrationsResponse403
+  | listProfessionalRegistrationsResponse404
+  | listProfessionalRegistrationsResponse409
+  | listProfessionalRegistrationsResponse500
+) & {
+  headers: Headers;
+};
+
+export type listProfessionalRegistrationsResponse =
+  | listProfessionalRegistrationsResponseSuccess
+  | listProfessionalRegistrationsResponseError;
+
+export const getListProfessionalRegistrationsUrl = (
+  params?: ListProfessionalRegistrationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/admin/professional-registrations?${stringifiedParams}`
+    : `/admin/professional-registrations`;
+};
+
+export const listProfessionalRegistrations = async (
+  params?: ListProfessionalRegistrationsParams,
+  options?: RequestInit,
+): Promise<listProfessionalRegistrationsResponse> => {
+  return customFetch<listProfessionalRegistrationsResponse>(
+    getListProfessionalRegistrationsUrl(params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export type listProfessionalVerificationReviewsResponse200 = {
+  data: ListProfessionalVerificationReviews200Item[];
+  status: 200;
+};
+
+export type listProfessionalVerificationReviewsResponse400 = {
+  data: ListProfessionalVerificationReviews400;
+  status: 400;
+};
+
+export type listProfessionalVerificationReviewsResponse401 = {
+  data: ListProfessionalVerificationReviews401;
+  status: 401;
+};
+
+export type listProfessionalVerificationReviewsResponse403 = {
+  data: ListProfessionalVerificationReviews403;
+  status: 403;
+};
+
+export type listProfessionalVerificationReviewsResponse404 = {
+  data: ListProfessionalVerificationReviews404;
+  status: 404;
+};
+
+export type listProfessionalVerificationReviewsResponse409 = {
+  data: ListProfessionalVerificationReviews409;
+  status: 409;
+};
+
+export type listProfessionalVerificationReviewsResponse500 = {
+  data: ListProfessionalVerificationReviews500;
+  status: 500;
+};
+
+export type listProfessionalVerificationReviewsResponseSuccess =
+  listProfessionalVerificationReviewsResponse200 & {
+    headers: Headers;
+  };
+export type listProfessionalVerificationReviewsResponseError = (
+  | listProfessionalVerificationReviewsResponse400
+  | listProfessionalVerificationReviewsResponse401
+  | listProfessionalVerificationReviewsResponse403
+  | listProfessionalVerificationReviewsResponse404
+  | listProfessionalVerificationReviewsResponse409
+  | listProfessionalVerificationReviewsResponse500
+) & {
+  headers: Headers;
+};
+
+export type listProfessionalVerificationReviewsResponse =
+  | listProfessionalVerificationReviewsResponseSuccess
+  | listProfessionalVerificationReviewsResponseError;
+
+export const getListProfessionalVerificationReviewsUrl = (userId: string) => {
+  return `/admin/professional-registrations/${userId}/reviews`;
+};
+
+export const listProfessionalVerificationReviews = async (
+  userId: string,
+  options?: RequestInit,
+): Promise<listProfessionalVerificationReviewsResponse> => {
+  return customFetch<listProfessionalVerificationReviewsResponse>(
+    getListProfessionalVerificationReviewsUrl(userId),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export type reviewProfessionalRegistrationResponse200 = {
+  data: ReviewProfessionalRegistration200;
+  status: 200;
+};
+
+export type reviewProfessionalRegistrationResponse400 = {
+  data: ReviewProfessionalRegistration400;
+  status: 400;
+};
+
+export type reviewProfessionalRegistrationResponse401 = {
+  data: ReviewProfessionalRegistration401;
+  status: 401;
+};
+
+export type reviewProfessionalRegistrationResponse403 = {
+  data: ReviewProfessionalRegistration403;
+  status: 403;
+};
+
+export type reviewProfessionalRegistrationResponse404 = {
+  data: ReviewProfessionalRegistration404;
+  status: 404;
+};
+
+export type reviewProfessionalRegistrationResponse409 = {
+  data: ReviewProfessionalRegistration409;
+  status: 409;
+};
+
+export type reviewProfessionalRegistrationResponse500 = {
+  data: ReviewProfessionalRegistration500;
+  status: 500;
+};
+
+export type reviewProfessionalRegistrationResponseSuccess =
+  reviewProfessionalRegistrationResponse200 & {
+    headers: Headers;
+  };
+export type reviewProfessionalRegistrationResponseError = (
+  | reviewProfessionalRegistrationResponse400
+  | reviewProfessionalRegistrationResponse401
+  | reviewProfessionalRegistrationResponse403
+  | reviewProfessionalRegistrationResponse404
+  | reviewProfessionalRegistrationResponse409
+  | reviewProfessionalRegistrationResponse500
+) & {
+  headers: Headers;
+};
+
+export type reviewProfessionalRegistrationResponse =
+  | reviewProfessionalRegistrationResponseSuccess
+  | reviewProfessionalRegistrationResponseError;
+
+export const getReviewProfessionalRegistrationUrl = (userId: string) => {
+  return `/admin/professional-registrations/${userId}/review`;
+};
+
+export const reviewProfessionalRegistration = async (
+  userId: string,
+  reviewProfessionalRegistrationBody: ReviewProfessionalRegistrationBody,
+  options?: RequestInit,
+): Promise<reviewProfessionalRegistrationResponse> => {
+  return customFetch<reviewProfessionalRegistrationResponse>(
+    getReviewProfessionalRegistrationUrl(userId),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(reviewProfessionalRegistrationBody),
+    },
+  );
+};
+
 /**
  * @summary Criar rascunho de prescrição de treino para um aluno
  */
@@ -18643,6 +20385,7 @@ export const getSendWorkoutPrescriptionUrl = (id: string) => {
 
 export const sendWorkoutPrescription = async (
   id: string,
+  sendWorkoutPrescriptionBody: SendWorkoutPrescriptionBody,
   options?: RequestInit,
 ): Promise<sendWorkoutPrescriptionResponse> => {
   return customFetch<sendWorkoutPrescriptionResponse>(
@@ -18650,6 +20393,8 @@ export const sendWorkoutPrescription = async (
     {
       ...options,
       method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(sendWorkoutPrescriptionBody),
     },
   );
 };

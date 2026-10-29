@@ -20,10 +20,7 @@ import {
   XCircle,
 } from "lucide-react";
 
-import {
-  cancelPrescriptionAction,
-  sendPrescriptionAction,
-} from "@/app/personal/_actions";
+import { cancelPrescriptionAction } from "@/app/personal/_actions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -68,6 +65,7 @@ export interface PrescriptionListItem {
   name: string;
   notes: string | null;
   version: number;
+  approvalMode?:"VERIFIED"|"TEST"|"UNVERIFIED";
   acceptedWorkoutPlanId: string | null;
   sentAt: string | null;
   respondedAt: string | null;
@@ -93,21 +91,6 @@ export function CoachPrescriptionsList({
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [cancelTargetId, setCancelTargetId] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
-
-  function handleSend(prescriptionId: string) {
-    startTransition(async () => {
-      const res = await sendPrescriptionAction({
-        id: prescriptionId,
-        athleteId,
-      });
-      if (!res.success) {
-        toast.error(res.error);
-        return;
-      }
-      toast.success("Prescrição enviada ao aluno!");
-      router.refresh();
-    });
-  }
 
   function handleCancelConfirm() {
     if (!cancelTargetId) return;
@@ -264,6 +247,7 @@ export function CoachPrescriptionsList({
                         {item.name}
                       </h3>
                       {renderStatusBadge(item.status)}
+                      {item.approvalMode === "TEST" && <Badge variant="outline" className="border-amber-500/50 text-amber-600">Teste · CREF não verificado</Badge>}
                     </div>
                     {item.notes && (
                       <p className="text-xs text-muted-foreground line-clamp-1 italic">
@@ -331,7 +315,11 @@ export function CoachPrescriptionsList({
                           size="sm"
                           variant="default"
                           disabled={isPending}
-                          onClick={() => handleSend(item.id)}
+                          onClick={() =>
+                            router.push(
+                              `/personal/alunos/${athleteId}/prescricoes/${item.id}/editar`,
+                            )
+                          }
                           className="h-8 px-3 text-xs font-heading font-semibold gap-1.5 rounded-lg shadow-xs"
                         >
                           {isPending ? (
@@ -339,7 +327,7 @@ export function CoachPrescriptionsList({
                           ) : (
                             <Send className="size-3" />
                           )}
-                          <span>Enviar</span>
+                          <span>Revisar e aprovar</span>
                         </Button>
 
                         <Button

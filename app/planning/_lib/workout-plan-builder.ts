@@ -103,6 +103,7 @@ export function validateWorkoutPlanDraft(
   days: WorkoutPlanDraftDay[],
   plannedStartDate?: string,
   plannedEndDate?: string,
+  options: { requireCatalogSelection?: boolean } = {},
 ): string | null {
   if (!name.trim()) return "Informe o nome do plano.";
   if (days.length === 0) return "Adicione pelo menos um treino à sua rotina.";
@@ -153,10 +154,16 @@ export function validateWorkoutPlanDraft(
         return `Revise a carga alvo em ${dayLabel}.`;
       // Existing prescriptions may predate the catalog. Keep them editable;
       // new exercises (including AI drafts) must reference a catalog entry.
-      if (!exercise.name.trim() || (!exercise.exerciseId && !exercise.id)) {
+      if (
+        !exercise.name.trim() ||
+        (options.requireCatalogSelection !== false &&
+          !exercise.exerciseId &&
+          !exercise.id)
+      ) {
         return `Selecione todos os exercícios de ${dayLabel} no catálogo.`;
       }
       if (
+        options.requireCatalogSelection !== false &&
         !exercise.id &&
         ((exercise.alternative1Name?.trim() &&
           !exercise.alternative1ExerciseId) ||
