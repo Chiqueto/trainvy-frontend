@@ -4,6 +4,7 @@ import { PEC_DECK_INSTRUCTIONS } from "./pec-deck-instructions";
 import { SMITH_BENCH_INSTRUCTIONS } from "./smith-bench-instructions";
 import { SMITH_SQUAT_INSTRUCTIONS } from "./smith-squat-instructions";
 import { LEG_EXTENSION_INSTRUCTIONS } from "./leg-extension-instructions";
+import { SEATED_LEG_CURL_INSTRUCTIONS } from "./seated-leg-curl-instructions";
 
 export type ExerciseAnimation =
   | "squat"
@@ -18,7 +19,8 @@ export type ExerciseAnimation =
   | "smith-bench-press"
   | "machine-chest-press"
   | "smith-squat"
-  | "leg-extension";
+  | "leg-extension"
+  | "seated-leg-curl";
 
 export interface ExerciseDefinition {
   name: string;
@@ -33,6 +35,16 @@ export interface ExerciseDefinition {
 }
 
 export const EXERCISE_ANIMATIONS = {
+  "seated-leg-curl": {
+    name: "Cadeira Flexora",
+    equipment: "Máquina flexora sentada com apoio de coxas e rolo posterior às pernas",
+    id: "00000000-0000-4000-8000-000000000111",
+    instructions: SEATED_LEG_CURL_INSTRUCTIONS,
+    muscles: {
+      primary: ["Isquiotibiais — bíceps femoral, semitendíneo e semimembranáceo"],
+      secondary: ["Gastrocnêmio", "Sartório", "Grácil"],
+    },
+  },
   "leg-extension": {
     name: "Cadeira Extensora",
     equipment: "Máquina extensora com encosto, alças laterais e rolo anterior às pernas",
@@ -176,6 +188,7 @@ export function getExerciseAnimation(
   id?: string | null,
   name?: string | null,
 ): ExerciseAnimation | null {
+  if (id === EXERCISE_ANIMATIONS["seated-leg-curl"].id) return "seated-leg-curl";
   if (id === EXERCISE_ANIMATIONS["leg-extension"].id) return "leg-extension";
   if (id === EXERCISE_ANIMATIONS["flat-dumbbell-fly"].id) return "flat-dumbbell-fly";
   if (id === EXERCISE_ANIMATIONS["smith-bench-press"].id)
@@ -209,6 +222,7 @@ export function getExerciseAnimation(
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
+    if (["cadeira flexora", "flexora sentada", "flexao de joelhos na maquina sentada", "seated leg curl"].includes(normalized)) return "seated-leg-curl";
     if (["cadeira extensora", "extensora", "leg extension", "seated leg extension", "extensao de joelhos na maquina"].includes(normalized)) return "leg-extension";
 
     if (

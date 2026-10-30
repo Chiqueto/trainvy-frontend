@@ -23,6 +23,7 @@ import type { GetExerciseMedia200 } from "@/app/_lib/api/fetch-generated";
 import { Button } from "@/components/ui/button";
 
 const LAB_MEDIA_DATA: Record<ExerciseAnimation, GetExerciseMedia200> = {
+  "seated-leg-curl": { exerciseId: EXERCISE_ANIMATIONS["seated-leg-curl"].id, hasMedia: false, mediaType: null, startImagePath: null, endImagePath: null, motionPath: null, attributionName: null, attributionUrl: null, instructions: EXERCISE_ANIMATIONS["seated-leg-curl"].instructions },
   "leg-extension": { exerciseId: EXERCISE_ANIMATIONS["leg-extension"].id, hasMedia: false, mediaType: null, startImagePath: null, endImagePath: null, motionPath: null, attributionName: null, attributionUrl: null, instructions: EXERCISE_ANIMATIONS["leg-extension"].instructions },
   "flat-dumbbell-fly": { exerciseId: EXERCISE_ANIMATIONS["flat-dumbbell-fly"].id, hasMedia: false, mediaType: null, startImagePath: null, endImagePath: null, motionPath: null, attributionName: null, attributionUrl: null, instructions: EXERCISE_ANIMATIONS["flat-dumbbell-fly"].instructions },
   "machine-chest-press": {
@@ -163,6 +164,12 @@ export default function Exercise3DLab() {
       cues: string[];
     }
   > = {
+    "seated-leg-curl": {
+      primary: "Isquiotibiais — bíceps femoral, semitendíneo e semimembranáceo",
+      secondary: "Gastrocnêmio, sartório e grácil",
+      cadence: "Extensão controlada, pausa breve e flexão suave dos joelhos.",
+      cues: ["Alinhe os joelhos ao eixo e ajuste o apoio sobre as coxas.", "Rolo atrás das pernas, acima dos calcanhares.", "Mantenha costas, quadril e coxas estáveis, sem puxar com o tronco."],
+    },
     "leg-extension": {
       primary: "Quadríceps — reto femoral e vastos lateral, medial e intermédio",
       secondary: "Bíceps femoral — coativação estabilizadora, sem esforço equivalente",

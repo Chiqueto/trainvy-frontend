@@ -26,6 +26,7 @@ import { EXERCISE_ANIMATIONS, getExerciseAnimation, type ExerciseAnimation } fro
 import { MACHINE_CHEST_PRESS_INSTRUCTIONS } from "../exercise-3d/machine-chest-press-instructions";
 import { SMITH_SQUAT_INSTRUCTIONS } from "../exercise-3d/smith-squat-instructions";
 import { LEG_EXTENSION_INSTRUCTIONS } from "../exercise-3d/leg-extension-instructions";
+import { SEATED_LEG_CURL_INSTRUCTIONS } from "../exercise-3d/seated-leg-curl-instructions";
 
 const Exercise3DViewer = dynamic(
   () =>
@@ -63,6 +64,7 @@ const FALLBACK_3D_INSTRUCTIONS: Record<
   "flat-dumbbell-fly": EXERCISE_ANIMATIONS["flat-dumbbell-fly"].instructions,
   "smith-squat": SMITH_SQUAT_INSTRUCTIONS,
   "leg-extension": LEG_EXTENSION_INSTRUCTIONS,
+  "seated-leg-curl": SEATED_LEG_CURL_INSTRUCTIONS,
   squat: {
     description:
       "Exercício composto multiarticular dominante de joelho e quadril, fundamental para desenvolvimento de membros inferiores e core.",

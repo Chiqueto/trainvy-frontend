@@ -37,7 +37,7 @@ describe("seated leg extension", () => {
     ])
       expect(getExerciseAnimation(null, name)).toBe("leg-extension");
     for (const name of [
-      "Cadeira Flexora",
+      "Cadeira Flexora Unilateral",
       "Cadeira Extensora Unilateral",
       "Mesa Flexora",
     ])
