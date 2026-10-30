@@ -26,6 +26,8 @@ import { createProneLegCurlMuscleMask } from "./prone-leg-curl-muscles";
 import { ProneLegCurlMachine, type ProneLegCurlMachineHandle } from "./prone-leg-curl-machine";
 import { HackSquatMachine, type HackSquatMachineHandle } from "./hack-squat-machine";
 import { createHackSquatMuscleMask } from "./hack-squat-muscles";
+import { LegPress45Machine, type LegPress45MachineHandle } from "./leg-press-45-machine";
+import { createLegPress45MuscleMask } from "./leg-press-45-muscles";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
 import modelManifest from "../../../public/models/exercise-3d/model-manifest.json";
 import { createTissueMaterial } from "./anatomy-material";
@@ -467,6 +469,7 @@ function Athlete({
   const machineChestPress = useRef<MachineChestPressHandle>(null);
   const legExtensionMachine = useRef<LegExtensionMachineHandle>(null);
   const seatedLegCurlMachine = useRef<SeatedLegCurlMachineHandle>(null);
+  const legPress45Machine = useRef<LegPress45MachineHandle>(null);
   const hackSquatMachine = useRef<HackSquatMachineHandle>(null);
   const proneLegCurlMachine = useRef<ProneLegCurlMachineHandle>(null);
   const rig = useMemo(() => {
@@ -488,13 +491,15 @@ function Athlete({
         object.geometry.setAttribute("_seatedlegcurlmuscles", createSeatedLegCurlMuscleMask(object.geometry));
         const prone = createProneLegCurlMuscleMask(object.geometry);
         const hack = createHackSquatMuscleMask(object.geometry);
+        const press = createLegPress45MuscleMask(object.geometry);
         // Pack independent categorical maps into one slot to stay within WebGL limits.
-        const packed = new Float32Array(prone.count * 2);
+        const packed = new Float32Array(prone.count * 3);
         for (let i = 0; i < prone.count; i++) {
-          packed[i * 2] = prone.getX(i);
-          packed[i * 2 + 1] = hack.getX(i);
+          packed[i * 3] = prone.getX(i);
+          packed[i * 3 + 1] = hack.getX(i);
+          packed[i * 3 + 2] = press.getX(i);
         }
-        object.geometry.setAttribute("_pronehackmuscles", new BufferAttribute(packed, 2));
+        object.geometry.setAttribute("_lowerbodymuscles", new BufferAttribute(packed, 3));
         geometries.add(object.geometry);
         object.material = material;
         object.castShadow = true;
@@ -539,12 +544,15 @@ function Athlete({
     seatedLegCurlMachine.current?.update(pose);
     proneLegCurlMachine.current?.update(pose);
     hackSquatMachine.current?.update(pose);
+    legPress45Machine.current?.update(pose);
     rig.scene.updateMatrixWorld(true);
   });
   return (
     <>
       <primitive object={rig.scene} dispose={null} />
-      {exercise === "hack-squat" ? (
+      {exercise === "leg-press-45" ? (
+        <LegPress45Machine ref={legPress45Machine} />
+      ) : exercise === "hack-squat" ? (
         <HackSquatMachine ref={hackSquatMachine} />
       ) : exercise === "prone-leg-curl" ? (
         <ProneLegCurlMachine ref={proneLegCurlMachine} />
@@ -601,6 +609,15 @@ function getCameraParams(
   exercise: ExerciseAnimation,
   view: SceneProps["view"],
 ): { position: [number, number, number]; target: [number, number, number] } {
+  if (exercise === "leg-press-45") {
+    const target: [number, number, number] = [0, 0.8, -0.25];
+    switch (view) {
+      case "front": return { position: [0, 3.44, -3.19], target };
+      case "side": return { position: [-3.7, 1.5, -0.25], target };
+      case "back": return { position: [0, 1.8, 3.8], target };
+      default: return { position: [-3.6, 2.36, -1.87], target };
+    }
+  }
   if (exercise === "hack-squat") {
     const target: [number, number, number] = [0, 0.9, -0.12];
     switch (view) {

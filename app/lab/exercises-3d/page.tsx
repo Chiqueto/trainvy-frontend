@@ -23,6 +23,11 @@ import type { GetExerciseMedia200 } from "@/app/_lib/api/fetch-generated";
 import { Button } from "@/components/ui/button";
 
 const LAB_MEDIA_DATA: Record<ExerciseAnimation, GetExerciseMedia200> = {
+  "leg-press-45": {
+    exerciseId: EXERCISE_ANIMATIONS["leg-press-45"].id, hasMedia: false, mediaType: null,
+    startImagePath: null, endImagePath: null, motionPath: null, attributionName: null, attributionUrl: null,
+    instructions: EXERCISE_ANIMATIONS["leg-press-45"].instructions,
+  },
   "hack-squat": {
     exerciseId: EXERCISE_ANIMATIONS["hack-squat"].id,
     hasMedia: false, mediaType: null,
@@ -172,6 +177,12 @@ export default function Exercise3DLab() {
       cues: string[];
     }
   > = {
+    "leg-press-45": {
+      primary: EXERCISE_ANIMATIONS["leg-press-45"].muscles.primary.join(", "),
+      secondary: EXERCISE_ANIMATIONS["leg-press-45"].muscles.secondary.join(", "),
+      cadence: "Retorno controlado, pausa breve e extensão suave de joelhos e quadris.",
+      cues: ["Costas e pelve apoiadas.", "Pés inteiros na plataforma e joelhos na direção dos pés.", "Limite a descida sem arredondar a lombar ou levantar o quadril."],
+    },
     "hack-squat": {
       primary: EXERCISE_ANIMATIONS["hack-squat"].muscles.primary.join(", "),
       secondary: EXERCISE_ANIMATIONS["hack-squat"].muscles.secondary.join(", "),
