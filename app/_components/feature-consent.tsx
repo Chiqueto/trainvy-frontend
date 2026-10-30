@@ -12,8 +12,8 @@ import { Button } from "@/components/ui/button";
 import {
   acceptFeatureTermsAction,
   authorizeFeatureAccessAction,
-  getFeatureTermsAction,
 } from "@/app/_actions/feature-terms";
+import { useFeatureTermsCache } from "./feature-consent-provider";
 import type { GetFeatureTerms200 } from "@/app/_lib/api/fetch-generated";
 
 type Feature = "AI_WORKOUT" | "EXERCISE_3D";
@@ -25,6 +25,7 @@ export function FeatureConsentDialog({
   terms: GetFeatureTerms200;
   onFinish: (accepted: boolean) => void;
 }) {
+  const cache = useFeatureTermsCache();
   const [checked, setChecked] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -93,6 +94,7 @@ export function FeatureConsentDialog({
                     terms.textHash,
                   );
                   if (!result.success) throw new Error(result.error);
+                  cache.update(result.data);
                   onFinish(true);
                 } catch (err) {
                   setError(
@@ -115,6 +117,7 @@ export function FeatureConsentDialog({
 }
 
 export function useFeatureConsent() {
+  const cache = useFeatureTermsCache();
   const [terms, setTerms] = useState<GetFeatureTerms200 | null>(null);
   const pending = useRef<((accepted: boolean) => void) | null>(null);
   const requestRevision = useRef(0);
@@ -131,19 +134,20 @@ export function useFeatureConsent() {
     },
     [],
   );
-  const requestConsent = useCallback(async (feature: Feature) => {
-    const revision = ++requestRevision.current;
-    const result = await getFeatureTermsAction(feature);
-    if (revision !== requestRevision.current) return false;
-    if (!result.success) throw new Error(result.error);
-    const status = result.data;
-    if (status.accepted) return true;
-    return new Promise<boolean>((resolve) => {
-      pending.current?.(false);
-      pending.current = resolve;
-      setTerms(status);
-    });
-  }, []);
+  const requestConsent = useCallback(
+    async (feature: Feature) => {
+      const revision = ++requestRevision.current;
+      const status = await cache.get(feature, feature === "AI_WORKOUT");
+      if (revision !== requestRevision.current) return false;
+      if (status.accepted) return true;
+      return new Promise<boolean>((resolve) => {
+        pending.current?.(false);
+        pending.current = resolve;
+        setTerms(status);
+      });
+    },
+    [cache],
+  );
   const dialog = terms ? (
     <FeatureConsentDialog
       key={`${terms.feature}:${terms.textHash}`}
@@ -188,6 +192,7 @@ function ConsentGate({
   context: string;
   children: ReactNode;
 }) {
+  const cache = useFeatureTermsCache();
   const { requestConsent, dialog } = useFeatureConsent();
   const [authorized, setAuthorized] = useState(false);
   const [busy, setBusy] = useState(true);
@@ -196,17 +201,18 @@ function ConsentGate({
   useEffect(() => {
     let active = true;
     mounted.current = true;
-    // Revalidate the current account/version on every opening. Do not treat a
-    // browser cache or an earlier resource's authorization as consent evidence.
+    // Reuse session terms; the access endpoint still validates and audits usage.
     async function restoreAcceptance() {
       try {
-        const status = await getFeatureTermsAction(feature);
+        const status = await cache.get(feature);
         if (!active) return;
-        if (!status.success) throw new Error(status.error);
-        if (status.data.accepted) {
+        if (status.accepted) {
           const access = await authorizeFeatureAccessAction(feature, context);
           if (!active) return;
-          if (!access.success) throw new Error(access.error);
+          if (!access.success) {
+            cache.invalidate(feature);
+            throw new Error(access.error);
+          }
           setAuthorized(true);
         }
       } catch (err) {
@@ -225,7 +231,7 @@ function ConsentGate({
       active = false;
       mounted.current = false;
     };
-  }, [feature, context]);
+  }, [feature, context, cache]);
   async function open() {
     setBusy(true);
     setError("");
@@ -234,7 +240,10 @@ function ConsentGate({
         if (!mounted.current) return;
         const result = await authorizeFeatureAccessAction(feature, context);
         if (!mounted.current) return;
-        if (!result.success) throw new Error(result.error);
+        if (!result.success) {
+          cache.invalidate(feature);
+          throw new Error(result.error);
+        }
         setAuthorized(true);
       }
     } catch (err) {

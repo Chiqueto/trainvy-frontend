@@ -9,6 +9,7 @@ import { PwaProvider } from "@/app/_components/pwa/pwa-provider";
 import { PwaInstallPrompt } from "@/app/_components/pwa/pwa-install-prompt";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
+import { FeatureConsentProvider } from "@/app/_components/feature-consent-provider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -65,9 +66,7 @@ export const metadata: Metadata = {
       { url: "/icon.png", sizes: "512x512", type: "image/png" },
     ],
     shortcut: "/favicon.ico",
-    apple: [
-      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
-    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
 };
 
@@ -89,11 +88,13 @@ export default function RootLayout({
         >
           <PwaProvider>
             <NuqsAdapter>
-              {children}
-              <PwaInstallPrompt />
-              <Suspense>
-                <Chat />
-              </Suspense>
+              <FeatureConsentProvider>
+                {children}
+                <PwaInstallPrompt />
+                <Suspense>
+                  <Chat />
+                </Suspense>
+              </FeatureConsentProvider>
             </NuqsAdapter>
           </PwaProvider>
           <Toaster />
@@ -104,4 +105,3 @@ export default function RootLayout({
     </html>
   );
 }
-
