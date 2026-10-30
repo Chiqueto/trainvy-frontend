@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useChat } from "@ai-sdk/react";
+import { useFeatureConsent } from "./feature-consent";
+import { fetchWithFeatureConsent } from "@/app/_lib/feature-consent-transport";
 import { getProfessionalChatModeAction } from "@/app/personal/_verification-actions";
 import {
   DefaultChatTransport,
@@ -51,6 +53,7 @@ interface AttachedFileItem {
 }
 
 const SUGGESTED_MESSAGES = [
+  "Crie um treino para mim",
   "Como cadastrar minha ficha de treino?",
   "O que significa periodização?",
   "Explique meu planejamento atual",
@@ -315,6 +318,11 @@ interface ConversationItem {
 }
 
 export function Chat({ embedded = false, initialMessage }: ChatProps) {
+  const {
+    requestConsent,
+    cancelConsent,
+    dialog: consentDialog,
+  } = useFeatureConsent();
   const router = useRouter();
   const [chatParams, setChatParams] = useQueryStates({
     chat_open: parseAsBoolean.withDefault(false),
@@ -406,7 +414,11 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
       api: `${process.env.NEXT_PUBLIC_API_URL}/ai`,
       credentials: "include",
       fetch: async (input, init) => {
-        const response = await fetch(input, init);
+        const response = await fetchWithFeatureConsent(
+          input,
+          init,
+          requestConsent,
+        );
         const newConvId = response.headers.get("x-conversation-id");
         if (newConvId && !activeConversationIdRef.current) {
           activeConversationIdRef.current = newConvId;
@@ -421,6 +433,12 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
     },
     onError: (error) => {
       const msg = error?.message || "";
+      if (msg.includes("FEATURE_TERMS_CANCELLED")) {
+        setQuotaErrorMessage("Geração cancelada. Nenhum treino foi gerado.");
+        if (pendingMessageRef.current)
+          form.setValue("message", pendingMessageRef.current);
+        return;
+      }
       if (
         msg.includes("429") ||
         msg.includes("limite") ||
@@ -514,6 +532,7 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
   }, [messages, isLoading]);
 
   const handleClose = () => {
+    cancelConsent();
     setChatParams({ chat_open: false, chat_initial_message: null });
   };
 
@@ -617,6 +636,7 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
   };
 
   const handleNewConversation = () => {
+    cancelConsent();
     setActiveConversationId(null);
     setActiveConversationTitle(null);
     activeConversationIdRef.current = null;
@@ -699,9 +719,7 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
               <span className="font-heading text-sm font-semibold text-foreground sm:text-base">
-                {professionalMode
-                  ? "Copiloto de Prescrição"
-                  : "Organizador de Treinos"}
+                {professionalMode ? "Copiloto de Prescrição" : "Coach IA"}
               </span>
               <div className="flex items-center gap-1">
                 <div className="size-1.5 rounded-full bg-online" />
@@ -1382,6 +1400,7 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
       <>
         {chatContent}
         {modalElement}
+        {consentDialog}
       </>
     );
   }
@@ -1399,6 +1418,7 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
         </div>
       </div>
       {modalElement}
+      {consentDialog}
     </>
   );
 }

@@ -10,6 +10,7 @@ import {
   UserRound,
   Users,
   ClipboardList,
+  CalendarDays,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ChatOpenButton } from "@/app/_components/chat-open-button";
@@ -199,7 +200,10 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
           </span>
         </span>
       </Link>
-      <div className="mx-auto grid max-w-lg grid-cols-5 items-end justify-items-center">
+      <div className={cn(
+        "mx-auto grid w-full items-end justify-items-center",
+        effectiveIsCoach ? "max-w-xl grid-cols-6" : "max-w-lg grid-cols-5",
+      )}>
         {effectiveIsCoach ? (
           <>
             {/* 1. Alunos (Gestão Pro do Personal) */}
@@ -232,7 +236,7 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
               )}
             </Link>
 
-            {/* 2. Prescrições (Modelos pré-definidos) */}
+            {/* Biblioteca de modelos reutilizáveis para os alunos */}
             <Link
               href="/personal/modelos"
               prefetch={true}
@@ -243,7 +247,7 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
                   ? "bg-primary/10 font-semibold text-primary"
                   : "font-medium text-muted-foreground hover:text-foreground",
               )}
-              aria-label="Prescrições"
+              aria-label="Modelos de treino"
               aria-current={effectiveTemplatesActive ? "page" : undefined}
             >
               <ClipboardList
@@ -255,7 +259,7 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
                 )}
               />
               <span className="mt-0.5 font-heading text-[11px] leading-tight tracking-tight">
-                Prescrições
+                Modelos
               </span>
               {effectiveTemplatesActive && (
                 <span className="mt-0.5 h-0.5 w-4 rounded-full bg-primary" />
@@ -306,7 +310,31 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
               )}
             </Link>
 
-            {/* 5. Perfil Pro */}
+            <Link
+              href="/planning"
+              prefetch={true}
+              onClick={() => setOptimisticTab("planning")}
+              className={cn(
+                "group relative flex w-full flex-1 flex-col items-center justify-center rounded-xl px-1 py-1.5 transition-all duration-150",
+                effectivePlanningActive
+                  ? "bg-primary/10 font-semibold text-primary"
+                  : "font-medium text-muted-foreground hover:text-foreground",
+              )}
+              aria-label="Meu planejamento"
+              aria-current={effectivePlanningActive ? "page" : undefined}
+              title="Organize seus próprios planos e ciclos de treino"
+            >
+              <CalendarDays className="size-5 transition-transform duration-150 group-active:scale-90" />
+              <span className="mt-0.5 font-heading text-[11px] leading-tight tracking-tight">
+                <span className="lg:hidden">Planejar</span>
+                <span className="hidden lg:inline">Meu planejamento</span>
+              </span>
+              {effectivePlanningActive && (
+                <span className="mt-0.5 h-0.5 w-4 rounded-full bg-primary" />
+              )}
+            </Link>
+
+            {/* Perfil Pro */}
             <Link
               href="/profile"
               prefetch={true}

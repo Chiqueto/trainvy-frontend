@@ -22,6 +22,7 @@ const links = [
   { href: "/admin/subscriptions", label: "Assinaturas", icon: CreditCard },
   { href: "/admin/plans", label: "Planos Comerciais", icon: Layers },
   { href: "/admin/audit", label: "Auditoria", icon: History },
+  { href: "/admin/feature-terms", label: "Aceites de IA e 3D", icon: History },
 ];
 
 export async function AdminDashboardLayout({

@@ -21,6 +21,7 @@ vi.mock("nuqs", () => ({
 describe("BottomNav — Task 2.8.2 Mobile Polish & Route-derived State", () => {
   beforeEach(() => {
     mockPathname = "/";
+    localStorage.clear();
     vi.clearAllMocks();
   });
 
@@ -126,7 +127,7 @@ describe("BottomNav — Task 2.8.2 Mobile Polish & Route-derived State", () => {
       render(<BottomNav isCoach={true} />);
 
       expect(screen.getByText("Alunos")).toBeDefined();
-      expect(screen.getByText("Prescrições")).toBeDefined();
+      expect(screen.getByText("Modelos")).toBeDefined();
       expect(screen.getByText("Coach")).toBeDefined();
       expect(screen.getByText("Meu Treino")).toBeDefined();
       expect(screen.getByText("Perfil")).toBeDefined();
@@ -136,7 +137,20 @@ describe("BottomNav — Task 2.8.2 Mobile Polish & Route-derived State", () => {
 
       const meuTreinoLink = screen.getByRole("link", { name: /Meu Treino/i });
       expect(meuTreinoLink.getAttribute("href")).toBe("/");
+      expect(screen.getByRole("link", { name: "Modelos de treino" }).getAttribute("href")).toBe("/personal/modelos");
+      expect(screen.getByRole("link", { name: "Meu planejamento" }).getAttribute("href")).toBe("/planning");
     });
+
+    it.each(["/planning", "/planning/plans/new", "/workout-plans/plan-1"])(
+      "marca o planejamento pessoal em %s sem ativar Modelos ou Meu Treino",
+      (pathname) => {
+        mockPathname = pathname;
+        render(<BottomNav isCoach={true} />);
+        expect(screen.getByRole("link", { name: "Meu planejamento" }).getAttribute("aria-current")).toBe("page");
+        expect(screen.getByRole("link", { name: "Modelos de treino" }).getAttribute("aria-current")).toBeNull();
+        expect(screen.getByRole("link", { name: "Meu Treino" }).getAttribute("aria-current")).toBeNull();
+      },
+    );
 
     it("ativa 'Alunos' quando na rota /personal e infere automaticamente modo coach", () => {
       mockPathname = "/personal";

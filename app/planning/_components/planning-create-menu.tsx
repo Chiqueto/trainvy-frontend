@@ -36,6 +36,14 @@ export function PlanningCreateMenu() {
           >
             <Link
               role="menuitem"
+              href="/planning?chat_open=true&chat_initial_message=Crie%20um%20treino%20para%20mim"
+              onClick={() => setIsOpen(false)}
+              className="flex min-h-12 items-center gap-2.5 rounded-xl px-3 text-xs font-semibold hover:bg-accent"
+            >
+              <Sparkles className="size-4 text-primary" /> Gerar treino com IA
+            </Link>
+            <Link
+              role="menuitem"
               href="/planning/plans/new?ai=true"
               onClick={() => setIsOpen(false)}
               className="flex min-h-12 items-center gap-2.5 rounded-xl px-3 text-left font-heading text-xs font-medium transition hover:bg-accent border border-primary/20 bg-primary/5 mb-1"

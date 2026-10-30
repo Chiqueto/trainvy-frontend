@@ -320,7 +320,7 @@ export function TemplatesList({
                 {/* Rodapé do Card com CTA Principal: Alocar para Aluno */}
                 <div className="pt-5 mt-4 border-t border-border/60 flex items-center justify-between gap-3">
                   <span className="text-[11px] text-muted-foreground">
-                    Pronto para prescrever
+                    Base reutilizável
                   </span>
 
                   <Button
@@ -328,7 +328,7 @@ export function TemplatesList({
                     className="h-10 rounded-xl px-4 font-heading font-semibold text-xs flex items-center gap-1.5 shadow-xs"
                   >
                     <Send className="size-3.5" />
-                    <span>Alocar para Aluno</span>
+                    <span>Usar com aluno</span>
                   </Button>
                 </div>
               </div>

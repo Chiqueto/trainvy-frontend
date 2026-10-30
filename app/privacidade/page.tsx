@@ -54,6 +54,9 @@ export default function PrivacyPage() {
             <li>
               <strong>Registros de treinamento:</strong> Planos de treino, sessões executadas, séries, repetições, cargas, percepção de esforço (RIR), anotações e histórico de consistência.
             </li>
+            <li>
+              <strong>Aceites de IA e 3D:</strong> Conta, data e hora, recurso, versão, texto integral e hash do aviso, IP da conexão à API e navegador informado. O IP pode identificar um servidor intermediário quando há proxy. Também registramos autorizações de uso vinculadas ao aceite para auditoria, consultáveis pela administração autorizada.
+            </li>
           </ul>
         </section>
 
@@ -62,7 +65,7 @@ export default function PrivacyPage() {
             2. Como utilizamos as informações
           </h2>
           <p>
-            Suas informações são utilizadas exclusivamente para calcular métricas de progresso, ordenar rotações de treino, manter streaks de consistência e fornecer o assistente virtual de periodização (Coach IA).
+            Suas informações são utilizadas para calcular métricas de progresso, ordenar rotações de treino, manter streaks de consistência e fornecer o assistente virtual de periodização (Coach IA). Os registros de aceite documentam os avisos apresentados e sua manifestação de vontade, permitem verificar a versão aceita e apoiam auditoria e exercício regular de direitos. O aceite dos avisos de IA e 3D não altera a preferência separada de acesso ao histórico de treinos pela IA.
           </p>
           <p>
             <strong>Não vendemos</strong> nem compartilhamos seus dados pessoais com anunciantes terceiros.

@@ -109,10 +109,10 @@ describe("Chat — Trainvy Planning Coach V1 & Task 2.8 Persistent Chat", () => 
     });
   });
 
-  it("exibe branding Organizador de Treinos e Acessar Trainvy no modo embedded", () => {
+  it("exibe branding Coach IA e Acessar Trainvy no modo embedded", () => {
     render(<Chat embedded={true} />);
 
-    expect(screen.getByText("Organizador de Treinos")).toBeDefined();
+    expect(screen.getByText("Coach IA")).toBeDefined();
     const trainvyLink = screen.getByRole("link", { name: /Acessar Trainvy/i });
     expect(trainvyLink).toBeDefined();
     expect(trainvyLink.getAttribute("href")).toBe("/");

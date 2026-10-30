@@ -164,13 +164,15 @@ export function CoachPrescriptionsList({
   return (
     <div className="flex flex-col gap-4">
       {/* Top CTA Bar */}
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="max-w-2xl">
           <h2 className="font-heading text-sm font-bold text-foreground">
             Prescrições de Treino
           </h2>
-          <p className="text-xs text-muted-foreground">
-            Planejamentos elaborados especificamente para {athleteName}
+          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+            Treinos preparados para {athleteName}, com exercícios, séries,
+            repetições e orientações. Salve como rascunho para ajustar; depois,
+            revise, aprove e envie para o aluno aceitar no planejamento dele.
           </p>
         </div>
 

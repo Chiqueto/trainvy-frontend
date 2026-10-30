@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { X, Send, User, Check, Loader2, Sparkles, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -38,6 +39,7 @@ export function AllocateTemplateModal({
   athletes,
   onSuccess,
 }: AllocateTemplateModalProps) {
+  const router = useRouter();
   const [selectedAthleteId, setSelectedAthleteId] = useState<string>("");
   const [notes, setNotes] = useState<string>("");
   const [isPending, startTransition] = useTransition();
@@ -65,6 +67,7 @@ export function AllocateTemplateModal({
         );
         onSuccess?.();
         onClose();
+        router.push(`/personal/alunos/${selectedAthleteId}?tab=prescriptions`);
       } else {
         toast.error(res.error);
       }
@@ -72,7 +75,7 @@ export function AllocateTemplateModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-xs p-0 sm:p-4 animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-xs p-0 sm:p-4 animate-in fade-in duration-200">
       <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-t-3xl sm:rounded-2xl border border-border bg-card p-6 shadow-2xl flex flex-col gap-5">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border/50 pb-4">
@@ -82,17 +85,18 @@ export function AllocateTemplateModal({
             </div>
             <div>
               <h2 className="font-heading text-lg font-bold text-foreground">
-                Alocar Modelo para Aluno
+                Preparar prescrição para aluno
               </h2>
               <p className="text-xs text-muted-foreground">
-                Cria um rascunho. Revise e aprove a versão final antes de enviar
-                ao aluno.
+                Crie um rascunho a partir deste modelo. Na próxima tela,
+                personalize o treino, revise e aprove antes de enviar ao aluno.
               </p>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
+            aria-label="Fechar preparação da prescrição"
             className="size-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
           >
             <X className="size-4" />
@@ -219,7 +223,7 @@ export function AllocateTemplateModal({
             {isPending ? (
               <div className="flex items-center gap-2">
                 <Loader2 className="size-4 animate-spin" />
-                <span>Alocando...</span>
+                <span>Criando rascunho...</span>
               </div>
             ) : (
               <div className="flex items-center gap-2">

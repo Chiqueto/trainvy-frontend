@@ -4818,6 +4818,114 @@ export type ReviewProfessionalRegistration500 = {
   code: string;
 };
 
+export type GetFeatureTerms200Feature =
+  (typeof GetFeatureTerms200Feature)[keyof typeof GetFeatureTerms200Feature];
+
+export const GetFeatureTerms200Feature = {
+  AI_WORKOUT: "AI_WORKOUT",
+  EXERCISE_3D: "EXERCISE_3D",
+} as const;
+
+export type GetFeatureTerms200 = {
+  feature: GetFeatureTerms200Feature;
+  version: string;
+  title: string;
+  text: string;
+  textHash: string;
+  accepted: boolean;
+  /** @nullable */
+  acceptanceId: string | null;
+  /** @nullable */
+  acceptedAt: string | null;
+};
+
+export type GetFeatureTerms401 = {
+  error: string;
+  code: string;
+};
+
+export type GetFeatureTerms409 = {
+  error: string;
+  code: string;
+};
+
+export type GetFeatureTerms428 = {
+  error: string;
+  code: string;
+};
+
+export type AcceptFeatureTermsBody = {
+  accepted: boolean;
+  /** @maxLength 100 */
+  version: string;
+  /** @pattern ^[a-f0-9]{64}$ */
+  textHash: string;
+};
+
+export type AcceptFeatureTerms200Feature =
+  (typeof AcceptFeatureTerms200Feature)[keyof typeof AcceptFeatureTerms200Feature];
+
+export const AcceptFeatureTerms200Feature = {
+  AI_WORKOUT: "AI_WORKOUT",
+  EXERCISE_3D: "EXERCISE_3D",
+} as const;
+
+export type AcceptFeatureTerms200 = {
+  feature: AcceptFeatureTerms200Feature;
+  version: string;
+  title: string;
+  text: string;
+  textHash: string;
+  accepted: boolean;
+  /** @nullable */
+  acceptanceId: string | null;
+  /** @nullable */
+  acceptedAt: string | null;
+};
+
+export type AcceptFeatureTerms401 = {
+  error: string;
+  code: string;
+};
+
+export type AcceptFeatureTerms409 = {
+  error: string;
+  code: string;
+};
+
+export type AcceptFeatureTerms428 = {
+  error: string;
+  code: string;
+};
+
+export type AuthorizeFeatureAccessBody = {
+  /**
+   * @minLength 1
+   * @maxLength 255
+   */
+  context: string;
+};
+
+export type AuthorizeFeatureAccess200 = {
+  authorized: boolean;
+  eventId: string;
+};
+
+export type AuthorizeFeatureAccess401 = {
+  error: string;
+  code: string;
+};
+
+export type AuthorizeFeatureAccess409 = {
+  error: string;
+  code: string;
+};
+
+export type AuthorizeFeatureAccess428 = {
+  error: string;
+  code: string;
+};
+
 export type CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay =
   (typeof CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay)[keyof typeof CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay];
 
@@ -9044,6 +9152,89 @@ export type CreateCoachWorkoutPlanTemplateFromPlan404 = {
 };
 
 export type CreateCoachWorkoutPlanTemplateFromPlan500 = {
+  error: string;
+  code: string;
+};
+
+export type ListFeatureTermsEvidenceParams = {
+  /**
+   * @minLength 1
+   */
+  userId?: string;
+  feature?: ListFeatureTermsEvidenceFeature;
+  /**
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  cursor?: string;
+  /**
+   * @minimum 1
+   * @maximum 100
+   */
+  limit?: number;
+};
+
+export type ListFeatureTermsEvidenceFeature =
+  (typeof ListFeatureTermsEvidenceFeature)[keyof typeof ListFeatureTermsEvidenceFeature];
+
+export const ListFeatureTermsEvidenceFeature = {
+  AI_WORKOUT: "AI_WORKOUT",
+  EXERCISE_3D: "EXERCISE_3D",
+} as const;
+
+export type ListFeatureTermsEvidence200ItemsItemRecentAccessEventsItem = {
+  id: string;
+  context: string;
+  createdAt: string;
+};
+
+export type ListFeatureTermsEvidence200ItemsItem = {
+  id: string;
+  userId: string;
+  feature: string;
+  version: string;
+  textHash: string;
+  title: string;
+  text: string;
+  acceptedAt: string;
+  ipAddress: string;
+  /** @nullable */
+  userAgent: string | null;
+  accessCount: number;
+  recentAccessEvents: ListFeatureTermsEvidence200ItemsItemRecentAccessEventsItem[];
+};
+
+export type ListFeatureTermsEvidence200 = {
+  items: ListFeatureTermsEvidence200ItemsItem[];
+  /** @nullable */
+  nextCursor: string | null;
+};
+
+export type ListFeatureTermsEvidence400 = {
+  error: string;
+  code: string;
+};
+
+export type ListFeatureTermsEvidence401 = {
+  error: string;
+  code: string;
+};
+
+export type ListFeatureTermsEvidence403 = {
+  error: string;
+  code: string;
+};
+
+export type ListFeatureTermsEvidence404 = {
+  error: string;
+  code: string;
+};
+
+export type ListFeatureTermsEvidence409 = {
+  error: string;
+  code: string;
+};
+
+export type ListFeatureTermsEvidence500 = {
   error: string;
   code: string;
 };
@@ -20096,6 +20287,182 @@ export const reviewProfessionalRegistration = async (
 };
 
 /**
+ * @summary status authenticated feature acknowledgement
+ */
+export type getFeatureTermsResponse200 = {
+  data: GetFeatureTerms200;
+  status: 200;
+};
+
+export type getFeatureTermsResponse401 = {
+  data: GetFeatureTerms401;
+  status: 401;
+};
+
+export type getFeatureTermsResponse409 = {
+  data: GetFeatureTerms409;
+  status: 409;
+};
+
+export type getFeatureTermsResponse428 = {
+  data: GetFeatureTerms428;
+  status: 428;
+};
+
+export type getFeatureTermsResponseSuccess = getFeatureTermsResponse200 & {
+  headers: Headers;
+};
+export type getFeatureTermsResponseError = (
+  | getFeatureTermsResponse401
+  | getFeatureTermsResponse409
+  | getFeatureTermsResponse428
+) & {
+  headers: Headers;
+};
+
+export type getFeatureTermsResponse =
+  | getFeatureTermsResponseSuccess
+  | getFeatureTermsResponseError;
+
+export const getGetFeatureTermsUrl = (
+  feature: "AI_WORKOUT" | "EXERCISE_3D",
+) => {
+  return `/me/feature-terms/${feature}`;
+};
+
+export const getFeatureTerms = async (
+  feature: "AI_WORKOUT" | "EXERCISE_3D",
+  options?: RequestInit,
+): Promise<getFeatureTermsResponse> => {
+  return customFetch<getFeatureTermsResponse>(getGetFeatureTermsUrl(feature), {
+    ...options,
+    method: "GET",
+  });
+};
+
+/**
+ * @summary accept authenticated feature acknowledgement
+ */
+export type acceptFeatureTermsResponse200 = {
+  data: AcceptFeatureTerms200;
+  status: 200;
+};
+
+export type acceptFeatureTermsResponse401 = {
+  data: AcceptFeatureTerms401;
+  status: 401;
+};
+
+export type acceptFeatureTermsResponse409 = {
+  data: AcceptFeatureTerms409;
+  status: 409;
+};
+
+export type acceptFeatureTermsResponse428 = {
+  data: AcceptFeatureTerms428;
+  status: 428;
+};
+
+export type acceptFeatureTermsResponseSuccess =
+  acceptFeatureTermsResponse200 & {
+    headers: Headers;
+  };
+export type acceptFeatureTermsResponseError = (
+  | acceptFeatureTermsResponse401
+  | acceptFeatureTermsResponse409
+  | acceptFeatureTermsResponse428
+) & {
+  headers: Headers;
+};
+
+export type acceptFeatureTermsResponse =
+  | acceptFeatureTermsResponseSuccess
+  | acceptFeatureTermsResponseError;
+
+export const getAcceptFeatureTermsUrl = (
+  feature: "AI_WORKOUT" | "EXERCISE_3D",
+) => {
+  return `/me/feature-terms/${feature}/accept`;
+};
+
+export const acceptFeatureTerms = async (
+  feature: "AI_WORKOUT" | "EXERCISE_3D",
+  acceptFeatureTermsBody: AcceptFeatureTermsBody,
+  options?: RequestInit,
+): Promise<acceptFeatureTermsResponse> => {
+  return customFetch<acceptFeatureTermsResponse>(
+    getAcceptFeatureTermsUrl(feature),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(acceptFeatureTermsBody),
+    },
+  );
+};
+
+/**
+ * @summary access authenticated feature acknowledgement
+ */
+export type authorizeFeatureAccessResponse200 = {
+  data: AuthorizeFeatureAccess200;
+  status: 200;
+};
+
+export type authorizeFeatureAccessResponse401 = {
+  data: AuthorizeFeatureAccess401;
+  status: 401;
+};
+
+export type authorizeFeatureAccessResponse409 = {
+  data: AuthorizeFeatureAccess409;
+  status: 409;
+};
+
+export type authorizeFeatureAccessResponse428 = {
+  data: AuthorizeFeatureAccess428;
+  status: 428;
+};
+
+export type authorizeFeatureAccessResponseSuccess =
+  authorizeFeatureAccessResponse200 & {
+    headers: Headers;
+  };
+export type authorizeFeatureAccessResponseError = (
+  | authorizeFeatureAccessResponse401
+  | authorizeFeatureAccessResponse409
+  | authorizeFeatureAccessResponse428
+) & {
+  headers: Headers;
+};
+
+export type authorizeFeatureAccessResponse =
+  | authorizeFeatureAccessResponseSuccess
+  | authorizeFeatureAccessResponseError;
+
+export const getAuthorizeFeatureAccessUrl = (
+  feature: "AI_WORKOUT" | "EXERCISE_3D",
+) => {
+  return `/me/feature-terms/${feature}/access`;
+};
+
+export const authorizeFeatureAccess = async (
+  feature: "AI_WORKOUT" | "EXERCISE_3D",
+  authorizeFeatureAccessBody: AuthorizeFeatureAccessBody,
+  options?: RequestInit,
+): Promise<authorizeFeatureAccessResponse> => {
+  return customFetch<authorizeFeatureAccessResponse>(
+    getAuthorizeFeatureAccessUrl(feature),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(authorizeFeatureAccessBody),
+    },
+  );
+};
+
+/**
  * @summary Criar rascunho de prescrição de treino para um aluno
  */
 export type createWorkoutPrescriptionDraftResponse201 = {
@@ -22037,6 +22404,94 @@ export const createCoachWorkoutPlanTemplateFromPlan = async (
       method: "POST",
       headers: { "Content-Type": "application/json", ...options?.headers },
       body: JSON.stringify(createCoachWorkoutPlanTemplateFromPlanBody),
+    },
+  );
+};
+
+/**
+ * @summary Read restricted acknowledgement evidence and recent access events
+ */
+export type listFeatureTermsEvidenceResponse200 = {
+  data: ListFeatureTermsEvidence200;
+  status: 200;
+};
+
+export type listFeatureTermsEvidenceResponse400 = {
+  data: ListFeatureTermsEvidence400;
+  status: 400;
+};
+
+export type listFeatureTermsEvidenceResponse401 = {
+  data: ListFeatureTermsEvidence401;
+  status: 401;
+};
+
+export type listFeatureTermsEvidenceResponse403 = {
+  data: ListFeatureTermsEvidence403;
+  status: 403;
+};
+
+export type listFeatureTermsEvidenceResponse404 = {
+  data: ListFeatureTermsEvidence404;
+  status: 404;
+};
+
+export type listFeatureTermsEvidenceResponse409 = {
+  data: ListFeatureTermsEvidence409;
+  status: 409;
+};
+
+export type listFeatureTermsEvidenceResponse500 = {
+  data: ListFeatureTermsEvidence500;
+  status: 500;
+};
+
+export type listFeatureTermsEvidenceResponseSuccess =
+  listFeatureTermsEvidenceResponse200 & {
+    headers: Headers;
+  };
+export type listFeatureTermsEvidenceResponseError = (
+  | listFeatureTermsEvidenceResponse400
+  | listFeatureTermsEvidenceResponse401
+  | listFeatureTermsEvidenceResponse403
+  | listFeatureTermsEvidenceResponse404
+  | listFeatureTermsEvidenceResponse409
+  | listFeatureTermsEvidenceResponse500
+) & {
+  headers: Headers;
+};
+
+export type listFeatureTermsEvidenceResponse =
+  | listFeatureTermsEvidenceResponseSuccess
+  | listFeatureTermsEvidenceResponseError;
+
+export const getListFeatureTermsEvidenceUrl = (
+  params?: ListFeatureTermsEvidenceParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/admin/feature-terms?${stringifiedParams}`
+    : `/admin/feature-terms`;
+};
+
+export const listFeatureTermsEvidence = async (
+  params?: ListFeatureTermsEvidenceParams,
+  options?: RequestInit,
+): Promise<listFeatureTermsEvidenceResponse> => {
+  return customFetch<listFeatureTermsEvidenceResponse>(
+    getListFeatureTermsEvidenceUrl(params),
+    {
+      ...options,
+      method: "GET",
     },
   );
 };

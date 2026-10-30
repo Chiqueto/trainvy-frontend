@@ -3,6 +3,12 @@ import { useEffect } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Exercise3DViewer } from "../app/_components/exercise-3d/exercise-3d-viewer";
 
+// Viewer controls are tested after consent; the real gate has its own regression suite.
+vi.mock("../app/_components/feature-consent", () => ({
+  FeatureConsentGate: ({ children }: { children: import("react").ReactNode }) =>
+    children,
+}));
+
 vi.mock("next/dynamic", () => ({
   default: () =>
     function MockScene(props: {

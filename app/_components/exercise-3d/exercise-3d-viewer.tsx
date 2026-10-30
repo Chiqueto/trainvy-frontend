@@ -13,6 +13,7 @@ import { RotateCcw, Expand, Pause, Play, Rotate3D } from "lucide-react";
 import { toast } from "sonner";
 import { EXERCISE_ANIMATIONS, type ExerciseAnimation } from "./exercises";
 import { ANATOMY_COLORS } from "./anatomy-material";
+import { FeatureConsentGate } from "../feature-consent";
 
 const Scene = dynamic(() => import("./exercise-scene"), { ssr: false });
 type View = "perspective" | "front" | "side" | "back";
@@ -46,7 +47,7 @@ export function Exercise3DViewer(props: {
   compact?: boolean;
   inDialog?: boolean;
 }) {
-  return <Viewer key={props.exercise} {...props} />;
+  return <FeatureConsentGate key={props.exercise} feature="EXERCISE_3D" context={`exercise-3d:${props.exercise}`}><Viewer {...props} /></FeatureConsentGate>;
 }
 
 function phaseLabel(phase: number, exercise: ExerciseAnimation) {

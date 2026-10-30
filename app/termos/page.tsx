@@ -48,7 +48,7 @@ export default function TermsPage() {
 
         <section className="space-y-3 text-xs sm:text-sm text-muted-foreground leading-relaxed">
           <h2 className="font-heading text-base font-semibold text-foreground">
-            2. Isenção de Responsabilidade Médica
+            2. Limitações e orientação profissional
           </h2>
           <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-xs text-amber-200 leading-relaxed">
             <strong>AVISO IMPORTANTE:</strong> O Trainvy não é um dispositivo médico e suas sugestões não substituem consultas médicas, exames pré-participação ou a orientação presencial de profissionais de Educação Física e Fisioterapia.
@@ -63,7 +63,10 @@ export default function TermsPage() {
             3. Execução dos Exercícios e Cargas
           </h2>
           <p>
-            A seleção de cargas, cadência e execução técnica é de responsabilidade exclusiva do praticante. As ilustrações fornecidas no catálogo RepDB Free são posições anatômicas de referência (início e pico de contração), e não constituem gravação biomecânica individualizada.
+            Cargas, cadência e execução devem considerar suas condições e a orientação de um profissional habilitado. As ilustrações do catálogo e animações 3D são referências educativas simplificadas, podem conter imprecisões e não avaliam sua execução. As cores musculares são ilustrativas e não representam EMG ou intensidade real de esforço.
+          </p>
+          <p>
+            A geração pessoal de treinos com IA e a visualização 3D exigem aceites separados, registrados na sua conta. Sugestões da IA podem conter erros, continuam editáveis e não recebem aprovação profissional pelo simples aceite ou salvamento. Recomenda-se revisão profissional antes de executar. O aceite não implica renúncia a direitos nem exclui responsabilidades legais do Trainvy.
           </p>
         </section>
 

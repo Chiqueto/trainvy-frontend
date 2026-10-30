@@ -119,10 +119,12 @@ export default async function PlanningPage() {
 
         <div className="flex flex-col gap-0.5">
           <h1 className="font-heading text-xl font-bold tracking-tight text-foreground">
-            Rotinas de Treino
+            {isCoach ? "Meu planejamento" : "Rotinas de Treino"}
           </h1>
           <p className="font-heading text-xs text-muted-foreground">
-            Gerencie seus planos, divisões e ciclos de treino
+            {isCoach
+              ? "Organize seus próprios planos, divisões e ciclos. Para prescrever aos alunos, acesse Alunos ou Modelos."
+              : "Gerencie seus planos, divisões e ciclos de treino"}
           </p>
         </div>
       </header>
