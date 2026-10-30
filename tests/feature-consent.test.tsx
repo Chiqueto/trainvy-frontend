@@ -4,7 +4,7 @@ import {
   FeatureConsentGate,
   useFeatureConsent,
 } from "../app/_components/feature-consent";
-import { useState } from "react";
+import { StrictMode, useState } from "react";
 import {
   acceptFeatureTermsAction,
   authorizeFeatureAccessAction,
@@ -34,7 +34,9 @@ function mount() {
   );
 }
 async function open() {
-  fireEvent.click(screen.getByRole("button", { name: "Continuar para o 3D" }));
+  fireEvent.click(
+    await screen.findByRole("button", { name: "Continuar para o 3D" }),
+  );
   await screen.findByRole("dialog");
 }
 describe("feature acknowledgements", () => {
@@ -144,10 +146,10 @@ describe("feature acknowledgements", () => {
       data: { ...terms, accepted: true },
     });
     mount();
-    fireEvent.click(
-      screen.getByRole("button", { name: "Continuar para o 3D" }),
-    );
     await screen.findByText("Conteúdo 3D");
+    expect(
+      screen.queryByRole("button", { name: "Continuar para o 3D" }),
+    ).toBeNull();
     expect(screen.queryByRole("dialog")).toBeNull();
     expect(acceptFeatureTermsAction).not.toHaveBeenCalled();
     expect(authorizeFeatureAccessAction).toHaveBeenCalledOnce();
@@ -161,10 +163,132 @@ describe("feature acknowledgements", () => {
       new Error("Indisponível"),
     );
     mount();
-    fireEvent.click(
-      screen.getByRole("button", { name: "Continuar para o 3D" }),
-    );
     await screen.findByText("Indisponível");
     expect(screen.queryByText("Conteúdo 3D")).toBeNull();
+  });
+  it("does not mount or audit the scene while acceptance is being checked", async () => {
+    let resolve!: (
+      value: Awaited<ReturnType<typeof getFeatureTermsAction>>,
+    ) => void;
+    vi.mocked(getFeatureTermsAction).mockReturnValueOnce(
+      new Promise((r) => {
+        resolve = r;
+      }),
+    );
+    mount();
+    expect(screen.queryByText("Conteúdo 3D")).toBeNull();
+    expect(
+      screen.queryByRole("button", { name: "Continuar para o 3D" }),
+    ).toBeNull();
+    expect(authorizeFeatureAccessAction).not.toHaveBeenCalled();
+    resolve({ success: true, data: { ...terms, accepted: true } });
+    await screen.findByText("Conteúdo 3D");
+  });
+  it("reuses acceptance on remount, but revalidates the server and audits each resource", async () => {
+    vi.mocked(getFeatureTermsAction).mockResolvedValue({
+      success: true,
+      data: { ...terms, accepted: true },
+    });
+    const first = render(
+      <FeatureConsentGate
+        feature="EXERCISE_3D"
+        context="exercise-3d:leg-extension"
+      >
+        <span>Extensora</span>
+      </FeatureConsentGate>,
+    );
+    await screen.findByText("Extensora");
+    first.unmount();
+    render(
+      <FeatureConsentGate
+        feature="EXERCISE_3D"
+        context="exercise-3d:seated-leg-curl"
+      >
+        <span>Flexora</span>
+      </FeatureConsentGate>,
+    );
+    await screen.findByText("Flexora");
+    expect(getFeatureTermsAction).toHaveBeenCalledTimes(2);
+    expect(authorizeFeatureAccessAction).toHaveBeenCalledTimes(2);
+    expect(authorizeFeatureAccessAction).toHaveBeenLastCalledWith(
+      "EXERCISE_3D",
+      "exercise-3d:seated-leg-curl",
+    );
+    expect(acceptFeatureTermsAction).not.toHaveBeenCalled();
+  });
+  it("requires a new acknowledgement when the current server version is not accepted", async () => {
+    vi.mocked(getFeatureTermsAction).mockResolvedValueOnce({
+      success: true,
+      data: { ...terms, accepted: true },
+    });
+    const first = render(
+      <FeatureConsentGate feature="EXERCISE_3D" context="old">
+        <span>Antigo</span>
+      </FeatureConsentGate>,
+    );
+    await screen.findByText("Antigo");
+    first.unmount();
+    vi.mocked(getFeatureTermsAction).mockResolvedValue({
+      success: true,
+      data: { ...terms, version: "v2", textHash: "b".repeat(64) },
+    });
+    mount();
+    await open();
+    expect(screen.queryByText("Conteúdo 3D")).toBeNull();
+    expect(authorizeFeatureAccessAction).toHaveBeenCalledOnce();
+    expect(acceptFeatureTermsAction).not.toHaveBeenCalled();
+  });
+  it("ignores late responses from an unmounted resource", async () => {
+    let resolve!: (
+      value: Awaited<ReturnType<typeof getFeatureTermsAction>>,
+    ) => void;
+    vi.mocked(getFeatureTermsAction).mockReturnValueOnce(
+      new Promise((r) => {
+        resolve = r;
+      }),
+    );
+    const view = render(
+      <FeatureConsentGate feature="EXERCISE_3D" context="old">
+        <span>Antigo</span>
+      </FeatureConsentGate>,
+    );
+    view.rerender(
+      <FeatureConsentGate feature="EXERCISE_3D" context="new">
+        <span>Novo</span>
+      </FeatureConsentGate>,
+    );
+    await screen.findByRole("button", { name: "Continuar para o 3D" });
+    resolve({ success: true, data: { ...terms, accepted: true } });
+    await waitFor(() => expect(getFeatureTermsAction).toHaveBeenCalledTimes(2));
+    expect(screen.queryByText("Antigo")).toBeNull();
+    expect(screen.queryByText("Novo")).toBeNull();
+    expect(authorizeFeatureAccessAction).not.toHaveBeenCalled();
+  });
+  it("keeps the scene blocked when revalidation fails and permits a retry", async () => {
+    vi.mocked(getFeatureTermsAction).mockResolvedValueOnce({
+      success: false,
+      error: "Sem conexão",
+    });
+    mount();
+    await screen.findByText("Sem conexão");
+    expect(screen.queryByText("Conteúdo 3D")).toBeNull();
+    expect(authorizeFeatureAccessAction).not.toHaveBeenCalled();
+    await open();
+    expect(screen.getByRole("checkbox").getAttribute("checked")).toBeNull();
+  });
+  it("does not duplicate audited access during StrictMode effect replay", async () => {
+    vi.mocked(getFeatureTermsAction).mockResolvedValue({
+      success: true,
+      data: { ...terms, accepted: true },
+    });
+    render(
+      <StrictMode>
+        <FeatureConsentGate feature="EXERCISE_3D" context="strict">
+          <span>Conteúdo 3D</span>
+        </FeatureConsentGate>
+      </StrictMode>,
+    );
+    await screen.findByText("Conteúdo 3D");
+    expect(authorizeFeatureAccessAction).toHaveBeenCalledOnce();
   });
 });

@@ -10,6 +10,7 @@ Esta atualização substitui a restrição de geração **pessoal** descrita no 
 - Perguntas gerais e importação de fichas continuam disponíveis sem aceitar geração pessoal. A importação em `/planning/ai-generate` mantém seu contrato de extração; geração pessoal ocorre no chat. Profissionais verificados mantêm o fluxo profissional existente.
 - O componente compartilhado `Exercise3DViewer` exige aceite separado de `EXERCISE_3D` e autorização auditada antes de montar o visualizador e carregar a cena/modelo. Isso cobre exercício, laboratório, preview e demonstração pública da landing; na landing o visitante precisa entrar em uma conta para registrar o aceite. As animações e a anatomia não foram alteradas ou certificadas nesta tarefa.
 - Aceites são reutilizados pela mesma conta enquanto versão e SHA-256 do texto/título forem os mesmos. Alterar qualquer um exige novo aceite. O aceite de IA/3D não modifica a preferência LGPD de acesso ao histórico.
+- Correção de 30/10/2026: ao montar o visualizador 3D, o gate consulta automaticamente o aceite vigente no servidor. Se já aceito, registra a autorização de acesso e monta a cena sem exigir o botão “Continuar para o 3D”. Durante a consulta a cena permanece desmontada. Sem aceite vigente, mantém o fluxo explícito de leitura/checkbox; falhas de consulta ou autorização mantêm o bloqueio e permitem tentar novamente. Cada exercício revalida a conta e os termos; não há cache de autorização em localStorage. Respostas tardias de componentes desmontados são ignoradas.
 
 ## Evidência e acesso
 

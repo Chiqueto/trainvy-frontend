@@ -167,27 +167,85 @@ export function FeatureConsentGate({
   context: string;
   children: ReactNode;
 }) {
+  // A different resource must get its own server authorization before mounting.
+  return (
+    <ConsentGate
+      key={`${feature}:${context}`}
+      feature={feature}
+      context={context}
+    >
+      {children}
+    </ConsentGate>
+  );
+}
+
+function ConsentGate({
+  feature,
+  context,
+  children,
+}: {
+  feature: Feature;
+  context: string;
+  children: ReactNode;
+}) {
   const { requestConsent, dialog } = useFeatureConsent();
   const [authorized, setAuthorized] = useState(false);
-  const [busy, setBusy] = useState(false);
+  const [busy, setBusy] = useState(true);
   const [error, setError] = useState("");
+  const mounted = useRef(false);
+  useEffect(() => {
+    let active = true;
+    mounted.current = true;
+    // Revalidate the current account/version on every opening. Do not treat a
+    // browser cache or an earlier resource's authorization as consent evidence.
+    async function restoreAcceptance() {
+      try {
+        const status = await getFeatureTermsAction(feature);
+        if (!active) return;
+        if (!status.success) throw new Error(status.error);
+        if (status.data.accepted) {
+          const access = await authorizeFeatureAccessAction(feature, context);
+          if (!active) return;
+          if (!access.success) throw new Error(access.error);
+          setAuthorized(true);
+        }
+      } catch (err) {
+        if (active)
+          setError(
+            err instanceof Error
+              ? err.message
+              : "Não foi possível verificar seu aceite.",
+          );
+      } finally {
+        if (active) setBusy(false);
+      }
+    }
+    void restoreAcceptance();
+    return () => {
+      active = false;
+      mounted.current = false;
+    };
+  }, [feature, context]);
   async function open() {
     setBusy(true);
     setError("");
     try {
       if (await requestConsent(feature)) {
+        if (!mounted.current) return;
         const result = await authorizeFeatureAccessAction(feature, context);
+        if (!mounted.current) return;
         if (!result.success) throw new Error(result.error);
         setAuthorized(true);
       }
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Não foi possível verificar seu aceite.",
-      );
+      if (mounted.current)
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Não foi possível verificar seu aceite.",
+        );
     } finally {
-      setBusy(false);
+      if (mounted.current) setBusy(false);
     }
   }
   return (
@@ -196,18 +254,22 @@ export function FeatureConsentGate({
         children
       ) : (
         <div className="space-y-3 rounded-xl border bg-background p-4 text-foreground">
-          <p className="text-sm">
-            Para abrir a demonstração 3D, leia e aceite o aviso sobre seus
-            limites. O aceite fica registrado na sua conta.
-          </p>
+          {busy ? (
+            <p role="status" className="text-sm">
+              Verificando seu acesso ao 3D...
+            </p>
+          ) : (
+            <p className="text-sm">
+              Para abrir a demonstração 3D, leia e aceite o aviso sobre seus
+              limites. O aceite fica registrado na sua conta.
+            </p>
+          )}
           {error && (
             <p role="alert" className="text-sm text-destructive">
               {error}
             </p>
           )}
-          <Button disabled={busy} onClick={open}>
-            {busy ? "Verificando..." : "Continuar para o 3D"}
-          </Button>
+          {!busy && <Button onClick={open}>Continuar para o 3D</Button>}
         </div>
       )}
       {dialog}
