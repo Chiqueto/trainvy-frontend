@@ -49,13 +49,13 @@ const rows = [
     1,
     1,
   ),
-  exercise("second", "Cadeira Abdutora", 1, 3),
+  exercise("second", "Cadeira Adutora", 1, 3),
   exercise("first", "Supino Declinado com Halteres", 1, 2),
   exercise("third", "Power Clean", 4, 4),
 ];
 afterEach(cleanup);
 describe("3D implementation queue", () => {
-  it("removes the implemented leg extension while preserving the next pending hip thrust", () => {
+  it("removes the implemented leg extension while preserving the next pending adductor machine", () => {
     const queue = implementationQueue([
       exercise(
         "00000000-0000-4000-8000-000000000110",
@@ -81,15 +81,16 @@ describe("3D implementation queue", () => {
       exercise("00000000-0000-4000-8000-000000000109", "Leg Press Horizontal", 1, 18),
       exercise("00000000-0000-4000-8000-000000000113", "Stiff", 1, 19),
       exercise("00000000-0000-4000-8000-000000000114", "Elevação Pélvica", 1, 20),
+      exercise("00000000-0000-4000-8000-000000000115", "Cadeira Abdutora", 1, 21),
       exercise(
-        "00000000-0000-4000-8000-000000000115",
-        "Cadeira Abdutora",
+        "00000000-0000-4000-8000-000000000116",
+        "Cadeira Adutora",
         1,
-        21,
+        22,
       ),
     ]);
     expect([...queue.entries()]).toEqual([
-      ["00000000-0000-4000-8000-000000000115", 1],
+      ["00000000-0000-4000-8000-000000000116", 1],
     ]);
   });
   it("excludes available animations and gives pending exercises stable positions", () => {
@@ -129,7 +130,7 @@ describe("3D implementation queue", () => {
       target: { value: "name:asc" },
     });
     expect(within(table).getAllByRole("row")[1].textContent).toContain(
-      "Cadeira Abdutora",
+      "Cadeira Adutora",
     );
     expect(within(table).getByText("#2 na fila")).toBeTruthy();
   });

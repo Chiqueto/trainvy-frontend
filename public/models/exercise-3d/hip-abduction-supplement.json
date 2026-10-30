@@ -1,0 +1,52 @@
+{
+  "asset": "hip-abduction-supplement.glb",
+  "sha256": "fdfa19a207437bc91d46d403a0dbf55ac7c3f3d35945543e2dbe2dccb007516c",
+  "baseAssetSha256": "323df2cbdb70a8875ebc1a9a8cc03b983a379f1c02789181254177f4ae4e1a0c",
+  "sourceSha256": "4c19df534d5d84aabbce08604306aa0485b43e8a2483c72a95b569e1dfea2279",
+  "source": "Z-Anatomy / BodyParts3D",
+  "license": "CC-BY-SA-4.0",
+  "bones": [
+    "sled",
+    "thigh_L",
+    "shin_L",
+    "foot_L",
+    "thigh_R",
+    "shin_R",
+    "foot_R",
+    "upperArm_L",
+    "forearm_L",
+    "hand_L",
+    "upperArm_R",
+    "forearm_R",
+    "hand_R",
+    "elbow_L",
+    "elbow_R",
+    "hip_L",
+    "shoulder_L",
+    "hip_R",
+    "shoulder_R",
+    "wrist_L",
+    "wrist_R"
+  ],
+  "structures": [
+    {
+      "name": "Tensor_fasciae_latael",
+      "vertices": 933
+    },
+    {
+      "name": "Gluteus_minimus_musclel",
+      "vertices": 3127
+    },
+    {
+      "name": "Tensor_fasciae_lataer",
+      "vertices": 933
+    },
+    {
+      "name": "Gluteus_minimus_muscler",
+      "vertices": 3127
+    }
+  ],
+  "vertices": 8120,
+  "triangles": 16224,
+  "bytes": 262300
+}

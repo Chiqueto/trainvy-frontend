@@ -12,13 +12,15 @@ import {
 import { Bone, Group, Skeleton, SkinnedMesh, type BufferGeometry } from "three";
 import { createFlyMuscleMask } from "./fly-muscles";
 import { createPecDeckMuscleMask } from "./pec-deck-muscles";
+import { HipAbductionSupplement } from "./hip-abduction-supplement";
 import { HipThrustBench, HipThrustBarPad } from "./hip-thrust-bench";
 import { createSmithBenchMuscleMask } from "./smith-bench-muscles";
 import { SmithMachineFrame, SmithBarbell } from "./smith-machine";
 import { PecDeckMachine, type PecDeckMachineHandle } from "./pec-deck-machine";
 import { createMachineChestPressMuscleMask } from "./machine-chest-press-muscles";
 import { MachineChestPress, type MachineChestPressHandle } from "./machine-chest-press";
-import { createSmithSquatMuscleMask } from "./smith-squat-muscles";
+import { createHipMachineMuscleAttribute } from "./hip-machine-muscles";
+import { HipAbductionMachine, type HipAbductionMachineHandle } from "./hip-abduction-machine";
 import { LegExtensionMachine, type LegExtensionMachineHandle } from "./leg-extension-machine";
 import { SeatedLegCurlMachine, type SeatedLegCurlMachineHandle } from "./seated-leg-curl-machine";
 import { ProneLegCurlMachine, type ProneLegCurlMachineHandle } from "./prone-leg-curl-machine";
@@ -471,6 +473,7 @@ function Athlete({
   const horizontalLegPressMachine = useRef<HorizontalLegPressMachineHandle>(null);
   const legPress45Machine = useRef<LegPress45MachineHandle>(null);
   const hackSquatMachine = useRef<HackSquatMachineHandle>(null);
+  const hipAbductionMachine = useRef<HipAbductionMachineHandle>(null);
   const proneLegCurlMachine = useRef<ProneLegCurlMachineHandle>(null);
   const rig = useMemo(() => {
     const scene = clone(source);
@@ -486,7 +489,7 @@ function Athlete({
         object.geometry.setAttribute("_flymuscles", createFlyMuscleMask(object.geometry));
         object.geometry.setAttribute("_smithbenchmuscles", createSmithBenchMuscleMask(object.geometry));
         object.geometry.setAttribute("_machinechestpressmuscles", createMachineChestPressMuscleMask(object.geometry));
-        object.geometry.setAttribute("_smithsquatmuscles",createSmithSquatMuscleMask(object.geometry));
+        object.geometry.setAttribute("_hipmachinemuscles",createHipMachineMuscleAttribute(object.geometry));
         object.geometry.setAttribute("_legdetailmuscles", createLegDetailMuscleAttribute(object.geometry));
         object.geometry.setAttribute("_lowerbodymuscles", createLowerBodyMuscleAttribute(object.geometry));
         geometries.add(object.geometry);
@@ -535,12 +538,16 @@ function Athlete({
     hackSquatMachine.current?.update(pose);
     legPress45Machine.current?.update(pose);
     horizontalLegPressMachine.current?.update(pose);
+    hipAbductionMachine.current?.update(pose);
     rig.scene.updateMatrixWorld(true);
   });
   return (
     <>
       <primitive object={rig.scene} dispose={null} />
-      {exercise === "horizontal-leg-press" ? (
+      {exercise === "hip-abduction" && <HipAbductionSupplement athlete={rig.scene} material={rig.material} />}
+      {exercise === "hip-abduction" ? (
+        <HipAbductionMachine ref={hipAbductionMachine} />
+      ) : exercise === "horizontal-leg-press" ? (
         <HorizontalLegPressMachine ref={horizontalLegPressMachine} />
       ) : exercise === "leg-press-45" ? (
         <LegPress45Machine ref={legPress45Machine} />
@@ -609,6 +616,15 @@ function getCameraParams(
       case "side": return { position: [-3.7, 1.4, 0.05], target };
       case "back": return { position: [-2.7, 0.35, -1.8], target };
       default: return { position: [-2.7, 1.9, 2.5], target };
+    }
+  }
+  if (exercise === "hip-abduction") {
+    const target: [number, number, number] = [0.15, 0.8, 0.2];
+    switch (view) {
+      case "front": return { position: [0.15, 1.4, 3.8], target };
+      case "side": return { position: [-3.7, 1.4, 0.2], target };
+      case "back": return { position: [-1.4, 1.6, -3.5], target };
+      default: return { position: [-2.7, 1.9, 2.9], target };
     }
   }
   if (exercise === "stiff") {

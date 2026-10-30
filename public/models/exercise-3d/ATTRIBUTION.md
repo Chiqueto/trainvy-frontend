@@ -51,6 +51,29 @@ The semantic selection is preserved in `scripts/assets/incline-muscle-map.json`;
 the adapted GLB and selection remain CC BY-SA 4.0. Colours are illustrative, not
 measurements of muscle activation.
 
+## Seated hip abduction — hip-abduction-supplement.glb
+
+This exercise-specific supplement adapts the bilateral **gluteus minimus** and
+**tensor fasciae latae** from the same Z-Anatomy / BodyParts3D muscular FBX.
+Z-Anatomy anatomy/design/3D: **Gauthier Kervyn**. FBX distribution: **Lluís Vinent Juanico**.
+BodyParts3D © **The Database Center for Life Science / Kousaku Okubo**.
+Source: https://github.com/LluisV/Z-Anatomy/tree/PC-Version/Resources/Models/FBX
+
+The supplement is distributed under **CC BY-SA 4.0**:
+https://creativecommons.org/licenses/by-sa/4.0/
+See `LICENSE-CC-BY-SA-4.0.txt` and `UPSTREAM-NOTICES.txt` in this directory.
+Adaptations: selection of these four native meshes, neutral-pose coordinate
+retargeting, welded vertices, smooth normals, fibre shading, skinning to the
+existing athlete rig and meshopt compression. The imported shapes are not
+procedural anatomical substitutes. The deep gluteus minimus can be occluded by
+superficial muscles. Display colours are illustrative, not measurements.
+
+`hip-abduction-supplement.json` records the named structures, source and output
+SHA-256 hashes, rig order and base asset checksum. Reproduction:
+`scripts/create-hip-abduction-supplement.mjs <MuscularSystem100.fbx>`.
+The shared `trainvy-athlete.glb` is unchanged. This supplement is loaded only
+for seated hip abduction and does not alter the license of application code.
+
 ## Previous model — anatomical-lifter.glb
 
 The following notice is retained for the previous, source-derived prototype, which is no longer

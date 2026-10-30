@@ -1,3 +1,4 @@
+import { getHipAbductionPose } from "./hip-abduction-pose";
 import { getHipThrustPose } from "./hip-thrust-pose";
 import { getStiffPose } from "./stiff-pose";
 import { getHorizontalLegPressPose } from "./horizontal-leg-press-pose";
@@ -87,6 +88,7 @@ export function getExercisePose(
   if (exercise === "leg-press-45") return getLegPress45Pose(depth);
   if (exercise === "horizontal-leg-press") return getHorizontalLegPressPose(depth);
   if (exercise === "hip-thrust") return getHipThrustPose(depth);
+  if (exercise === "hip-abduction") return getHipAbductionPose(depth);
   if (exercise === "stiff") return getStiffPose(depth);
   const p = MathUtils.clamp(depth, 0, 1);
   const squat = exercise === "squat";
@@ -370,7 +372,7 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
       const { side, hip, knee, ankle, footRotation, shoulder, elbow, wrist } =
         limb;
       const suffix = side < 0 ? "L" : "R";
-      if (exercise === "hip-thrust" || exercise === "stiff" || exercise === "horizontal-leg-press" || exercise === "leg-press-45" || exercise === "hack-squat" || exercise === "prone-leg-curl" || exercise === "seated-leg-curl" || exercise === "leg-extension" || exercise === "decline-bench-press" || exercise === "pec-deck" || exercise === "machine-fly" || exercise === "machine-chest-press") {
+      if (exercise === "hip-abduction" || exercise === "hip-thrust" || exercise === "stiff" || exercise === "horizontal-leg-press" || exercise === "leg-press-45" || exercise === "hack-squat" || exercise === "prone-leg-curl" || exercise === "seated-leg-curl" || exercise === "leg-extension" || exercise === "decline-bench-press" || exercise === "pec-deck" || exercise === "machine-fly" || exercise === "machine-chest-press") {
         const restHip = rest.get(`thigh_${suffix}`)!;
         const restKnee = rest.get(`shin_${suffix}`)!;
         const restAnkle = rest.get(`foot_${suffix}`)!;
