@@ -39,7 +39,7 @@ describe("seated leg extension", () => {
     for (const name of [
       "Cadeira Flexora Unilateral",
       "Cadeira Extensora Unilateral",
-      "Mesa Flexora",
+      "Mesa Flexora Unilateral",
     ])
       expect(getExerciseAnimation(null, name)).toBeNull();
   });

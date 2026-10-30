@@ -49,13 +49,13 @@ const rows = [
     1,
     1,
   ),
-  exercise("second", "Mesa Flexora", 1, 3),
+  exercise("second", "Agachamento Hack na Máquina", 1, 3),
   exercise("first", "Supino Declinado com Halteres", 1, 2),
   exercise("third", "Power Clean", 4, 4),
 ];
 afterEach(cleanup);
 describe("3D implementation queue", () => {
-  it("removes the implemented leg extension while preserving the next pending prone leg curl", () => {
+  it("removes the implemented leg extension while preserving the next pending hack squat", () => {
     const queue = implementationQueue([
       exercise(
         "00000000-0000-4000-8000-000000000110",
@@ -70,9 +70,21 @@ describe("3D implementation queue", () => {
         14,
       ),
       exercise("00000000-0000-4000-8000-000000000112", "Mesa Flexora", 1, 15),
+      exercise(
+        "d3b3f492-65fa-4038-851f-6f46b69e9fb4",
+        "Agachamento no Smith",
+        1,
+        16,
+      ),
+      exercise(
+        "7bd5b49f-252c-43a2-83a8-816d6401f6cb",
+        "Agachamento Hack na Máquina",
+        1,
+        17,
+      ),
     ]);
     expect([...queue.entries()]).toEqual([
-      ["00000000-0000-4000-8000-000000000112", 1],
+      ["7bd5b49f-252c-43a2-83a8-816d6401f6cb", 1],
     ]);
   });
   it("excludes available animations and gives pending exercises stable positions", () => {
@@ -112,7 +124,7 @@ describe("3D implementation queue", () => {
       target: { value: "name:asc" },
     });
     expect(within(table).getAllByRole("row")[1].textContent).toContain(
-      "Mesa Flexora",
+      "Agachamento Hack na Máquina",
     );
     expect(within(table).getByText("#2 na fila")).toBeTruthy();
   });

@@ -48,7 +48,7 @@ describe("exercise 3D scope", () => {
       undefined,
       "custom-supino",
       "00000000-0000-4000-8000-000000000106",
-      "00000000-0000-4000-8000-000000000112",
+      "7bd5b49f-252c-43a2-83a8-816d6401f6cb",
     ]) {
       expect(getExerciseAnimation(id)).toBeNull();
     }

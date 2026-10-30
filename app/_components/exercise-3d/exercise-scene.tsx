@@ -22,6 +22,8 @@ import { createLegExtensionMuscleMask } from "./leg-extension-muscles";
 import { LegExtensionMachine, type LegExtensionMachineHandle } from "./leg-extension-machine";
 import { createSeatedLegCurlMuscleMask } from "./seated-leg-curl-muscles";
 import { SeatedLegCurlMachine, type SeatedLegCurlMachineHandle } from "./seated-leg-curl-machine";
+import { createProneLegCurlMuscleMask } from "./prone-leg-curl-muscles";
+import { ProneLegCurlMachine, type ProneLegCurlMachineHandle } from "./prone-leg-curl-machine";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
 import modelManifest from "../../../public/models/exercise-3d/model-manifest.json";
 import { createTissueMaterial } from "./anatomy-material";
@@ -463,6 +465,7 @@ function Athlete({
   const machineChestPress = useRef<MachineChestPressHandle>(null);
   const legExtensionMachine = useRef<LegExtensionMachineHandle>(null);
   const seatedLegCurlMachine = useRef<SeatedLegCurlMachineHandle>(null);
+  const proneLegCurlMachine = useRef<ProneLegCurlMachineHandle>(null);
   const rig = useMemo(() => {
     const scene = clone(source);
     const { material, setAppearance } = createTissueMaterial();
@@ -480,6 +483,7 @@ function Athlete({
         object.geometry.setAttribute("_smithsquatmuscles",createSmithSquatMuscleMask(object.geometry));
         object.geometry.setAttribute("_legextensionmuscles", createLegExtensionMuscleMask(object.geometry));
         object.geometry.setAttribute("_seatedlegcurlmuscles", createSeatedLegCurlMuscleMask(object.geometry));
+        object.geometry.setAttribute("_pronelegcurlmuscles", createProneLegCurlMuscleMask(object.geometry));
         geometries.add(object.geometry);
         object.material = material;
         object.castShadow = true;
@@ -522,12 +526,15 @@ function Athlete({
     machineChestPress.current?.update(pose);
     legExtensionMachine.current?.update(pose);
     seatedLegCurlMachine.current?.update(pose);
+    proneLegCurlMachine.current?.update(pose);
     rig.scene.updateMatrixWorld(true);
   });
   return (
     <>
       <primitive object={rig.scene} dispose={null} />
-      {exercise === "seated-leg-curl" ? (
+      {exercise === "prone-leg-curl" ? (
+        <ProneLegCurlMachine ref={proneLegCurlMachine} />
+      ) : exercise === "seated-leg-curl" ? (
         <SeatedLegCurlMachine ref={seatedLegCurlMachine} />
       ) : exercise === "leg-extension" ? (
         <LegExtensionMachine ref={legExtensionMachine} />
@@ -580,6 +587,15 @@ function getCameraParams(
   exercise: ExerciseAnimation,
   view: SceneProps["view"],
 ): { position: [number, number, number]; target: [number, number, number] } {
+  if (exercise === "prone-leg-curl") {
+    const target: [number,number,number]=[0.1,0.72,0];
+    switch(view) {
+      case "front": return {position:[0,1.6,3.6],target};
+      case "side": return {position:[-3.5,1.2,0],target};
+      case "back": return {position:[0,2,-3.5],target};
+      default: return {position:[-2.5,1.8,-2.6],target};
+    }
+  }
   if (exercise === "leg-extension" || exercise === "seated-leg-curl") {
     const target: [number, number, number] = [0.12, 0.75, 0.3];
     switch (view) {

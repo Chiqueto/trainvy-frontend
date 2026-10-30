@@ -51,6 +51,12 @@ export function Exercise3DViewer(props: {
 }
 
 function phaseLabel(phase: number, exercise: ExerciseAnimation) {
+  if (exercise === "prone-leg-curl") {
+    if (phase < 0.04 || phase >= 0.99) return "Joelhos flexionados";
+    if (phase < 0.48) return "Descida controlada";
+    if (phase < 0.54) return "Pausa na extensão";
+    return "Flexão dos joelhos";
+  }
   if (exercise === "seated-leg-curl") {
     if (phase < 0.04 || phase >= 0.99) return "Joelhos flexionados";
     if (phase < 0.48) return "Extensão controlada";
