@@ -18,6 +18,8 @@ import { PecDeckMachine, type PecDeckMachineHandle } from "./pec-deck-machine";
 import { createMachineChestPressMuscleMask } from "./machine-chest-press-muscles";
 import { MachineChestPress, type MachineChestPressHandle } from "./machine-chest-press";
 import { createSmithSquatMuscleMask } from "./smith-squat-muscles";
+import { createLegExtensionMuscleMask } from "./leg-extension-muscles";
+import { LegExtensionMachine, type LegExtensionMachineHandle } from "./leg-extension-machine";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
 import modelManifest from "../../../public/models/exercise-3d/model-manifest.json";
 import { createTissueMaterial } from "./anatomy-material";
@@ -457,6 +459,7 @@ function Athlete({
   const rightDumbbell = useRef<Group>(null);
   const pecDeckMachine = useRef<PecDeckMachineHandle>(null);
   const machineChestPress = useRef<MachineChestPressHandle>(null);
+  const legExtensionMachine = useRef<LegExtensionMachineHandle>(null);
   const rig = useMemo(() => {
     const scene = clone(source);
     const { material, setAppearance } = createTissueMaterial();
@@ -472,6 +475,7 @@ function Athlete({
         object.geometry.setAttribute("_smithbenchmuscles", createSmithBenchMuscleMask(object.geometry));
         object.geometry.setAttribute("_machinechestpressmuscles", createMachineChestPressMuscleMask(object.geometry));
         object.geometry.setAttribute("_smithsquatmuscles",createSmithSquatMuscleMask(object.geometry));
+        object.geometry.setAttribute("_legextensionmuscles", createLegExtensionMuscleMask(object.geometry));
         geometries.add(object.geometry);
         object.material = material;
         object.castShadow = true;
@@ -512,12 +516,15 @@ function Athlete({
     rightDumbbell.current?.quaternion.copy(pose.limbs[1].handRotation);
     pecDeckMachine.current?.update(pose);
     machineChestPress.current?.update(pose);
+    legExtensionMachine.current?.update(pose);
     rig.scene.updateMatrixWorld(true);
   });
   return (
     <>
       <primitive object={rig.scene} dispose={null} />
-      {exercise === "machine-chest-press" ? (
+      {exercise === "leg-extension" ? (
+        <LegExtensionMachine ref={legExtensionMachine} />
+      ) : exercise === "machine-chest-press" ? (
         <MachineChestPress ref={machineChestPress} />
       ) : exercise === "machine-fly" ? (
         <PecDeckMachine ref={pecDeckMachine} handGrips />
@@ -566,6 +573,15 @@ function getCameraParams(
   exercise: ExerciseAnimation,
   view: SceneProps["view"],
 ): { position: [number, number, number]; target: [number, number, number] } {
+  if (exercise === "leg-extension") {
+    const target: [number, number, number] = [0.12, 0.75, 0.3];
+    switch (view) {
+      case "front": return { position: [0.12, 1.25, 3.65], target };
+      case "side": return { position: [-3.2, 1.15, 0.3], target };
+      case "back": return { position: [-0.4, 1.6, -3.1], target };
+      default: return { position: [-2.4, 1.8, 2.8], target };
+    }
+  }
   if(exercise === "pec-deck" || exercise === "machine-fly") {
     const target: [number,number,number]=[0,0.86,0.03];
     switch(view) {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Quaternion, Vector3 } from "three";
+import { Quaternion } from "three";
 import { getExerciseAnimation } from "../app/_components/exercise-3d/exercises";
 import {
   ARM_LENGTH,
@@ -67,16 +67,16 @@ describe("machine chest press (supino reto na máquina)", () => {
     const queue = implementationQueue([
       fixture(id, "Supino Reto na Máquina", 11),
       fixture(
-        "d555deb1-6eef-436d-8377-9427ac267697",
-        "Crucifixo com Halteres",
-        12,
+        "00000000-0000-4000-8000-000000000111",
+        "Cadeira Flexora",
+        14,
       ),
     ]);
     expect(queue.has(id)).toBe(false);
-    expect(queue.get("d555deb1-6eef-436d-8377-9427ac267697")).toBe(1);
+    expect(queue.get("00000000-0000-4000-8000-000000000111")).toBe(1);
   });
 
-  it("maintains stable seated posture, bone lengths, and scapular-plane elbow kinematics throughout repetition", () => {
+  it("maintains stable seated posture, bone lengths, and frontal-plane elbow opening throughout repetition", () => {
     const extended = getExercisePose("machine-chest-press", 0);
     const stretched = getExercisePose("machine-chest-press", 1);
 
@@ -115,13 +115,13 @@ describe("machine chest press (supino reto na máquina)", () => {
           6,
         );
 
-        // Elbow positioned below shoulder height (preventing shoulder impingement)
+        // Illustrative elbow position stays below shoulder height.
         expect(limb.elbow.y).toBeLessThan(limb.shoulder.y);
 
-        // Elbow flare angle relative to downward torso vector stays in scapular plane (~20° to 65°)
-        const torsoDown = new Vector3(0, -1, 0);
-        const upperArm = limb.elbow.clone().sub(limb.shoulder).normalize();
-        const flareDeg = (Math.acos(torsoDown.dot(upperArm)) * 180) / Math.PI;
+        // Measure lateral opening in the frontal (XY) projection. A 3D angle
+        // against torso-down also includes the forward reach of the press.
+        const upperArm = limb.elbow.clone().sub(limb.shoulder);
+        const flareDeg = Math.atan2(Math.abs(upperArm.x), -upperArm.y) * 180 / Math.PI;
         expect(flareDeg).toBeGreaterThan(18);
         expect(flareDeg).toBeLessThan(65);
       }

@@ -49,12 +49,19 @@ const rows = [
     1,
     1,
   ),
-  exercise("second", "Cadeira Extensora", 1, 3),
+  exercise("second", "Cadeira Flexora", 1, 3),
   exercise("first", "Supino Declinado com Halteres", 1, 2),
   exercise("third", "Power Clean", 4, 4),
 ];
 afterEach(cleanup);
 describe("3D implementation queue", () => {
+  it("removes the implemented leg extension while preserving the next pending leg curl", () => {
+    const queue = implementationQueue([
+      exercise("00000000-0000-4000-8000-000000000110", "Cadeira Extensora", 1, 13),
+      exercise("00000000-0000-4000-8000-000000000111", "Cadeira Flexora", 1, 14),
+    ]);
+    expect([...queue.entries()]).toEqual([["00000000-0000-4000-8000-000000000111", 1]]);
+  });
   it("excludes available animations and gives pending exercises stable positions", () => {
     const queue = implementationQueue(rows);
     expect(queue.has(rows[0].id)).toBe(false);
@@ -92,7 +99,7 @@ describe("3D implementation queue", () => {
       target: { value: "name:asc" },
     });
     expect(within(table).getAllByRole("row")[1].textContent).toContain(
-      "Cadeira Extensora",
+      "Cadeira Flexora",
     );
     expect(within(table).getByText("#2 na fila")).toBeTruthy();
   });

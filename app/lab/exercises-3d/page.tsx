@@ -23,6 +23,7 @@ import type { GetExerciseMedia200 } from "@/app/_lib/api/fetch-generated";
 import { Button } from "@/components/ui/button";
 
 const LAB_MEDIA_DATA: Record<ExerciseAnimation, GetExerciseMedia200> = {
+  "leg-extension": { exerciseId: EXERCISE_ANIMATIONS["leg-extension"].id, hasMedia: false, mediaType: null, startImagePath: null, endImagePath: null, motionPath: null, attributionName: null, attributionUrl: null, instructions: EXERCISE_ANIMATIONS["leg-extension"].instructions },
   "flat-dumbbell-fly": { exerciseId: EXERCISE_ANIMATIONS["flat-dumbbell-fly"].id, hasMedia: false, mediaType: null, startImagePath: null, endImagePath: null, motionPath: null, attributionName: null, attributionUrl: null, instructions: EXERCISE_ANIMATIONS["flat-dumbbell-fly"].instructions },
   "machine-chest-press": {
     exerciseId: EXERCISE_ANIMATIONS["machine-chest-press"].id,
@@ -162,6 +163,12 @@ export default function Exercise3DLab() {
       cues: string[];
     }
   > = {
+    "leg-extension": {
+      primary: "Quadríceps — reto femoral e vastos lateral, medial e intermédio",
+      secondary: "Bíceps femoral — coativação estabilizadora, sem esforço equivalente",
+      cadence: "Retorno controlado, pausa breve na flexão e extensão suave dos joelhos.",
+      cues: ["Alinhe os joelhos ao eixo da máquina.", "Costas e quadril apoiados; mãos nas alças laterais.", "Rolo acima dos tornozelos; estenda sem impulso ou travamento brusco."],
+    },
     "machine-fly": { primary: "Peitoral maior", secondary: "Deltoide anterior e bíceps braquial", cadence: "Abertura controlada, pausa breve e fechamento suave.", cues: ["Costas no encosto e pés no chão.", "Segure os pegadores, sem apoio de antebraço.", "Mantenha os cotovelos levemente flexionados durante todo o arco."] },
     "flat-dumbbell-fly": { primary: "Peitoral maior", secondary: "Deltoide anterior e bíceps braquial", cadence: "Abertura controlada, pausa breve e fechamento suave.", cues: ["Tronco e pés apoiados.", "Abra os braços em arco com cotovelos levemente flexionados.", "Retorne pela mesma trajetória sem bater os halteres."] },
     "machine-chest-press": {
@@ -301,10 +308,9 @@ export default function Exercise3DLab() {
           </h1>
         </div>
         <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">
-          Explore a anatomia do agachamento, supino reto com barra, supino inclinado com
-          halteres, supino reto com halteres, supino inclinado com barra e supino declinado com barra
-          em qualquer ângulo. Aproxime os detalhes, acompanhe a trajetória vertical dos antebraços
-          com peso apoiado sobre o antebraço e compare os grupos musculares destacados em cada movimento.
+          Explore os exercícios disponíveis em qualquer ângulo. Aproxime os
+          detalhes, acompanhe os movimentos e seus apoios e compare os grupos
+          musculares destacados em cada execução.
         </p>
       </header>
 

@@ -3,6 +3,7 @@ import { MACHINE_CHEST_PRESS_INSTRUCTIONS } from "./machine-chest-press-instruct
 import { PEC_DECK_INSTRUCTIONS } from "./pec-deck-instructions";
 import { SMITH_BENCH_INSTRUCTIONS } from "./smith-bench-instructions";
 import { SMITH_SQUAT_INSTRUCTIONS } from "./smith-squat-instructions";
+import { LEG_EXTENSION_INSTRUCTIONS } from "./leg-extension-instructions";
 
 export type ExerciseAnimation =
   | "squat"
@@ -16,7 +17,8 @@ export type ExerciseAnimation =
   | "flat-dumbbell-fly"
   | "smith-bench-press"
   | "machine-chest-press"
-  | "smith-squat";
+  | "smith-squat"
+  | "leg-extension";
 
 export interface ExerciseDefinition {
   name: string;
@@ -31,6 +33,16 @@ export interface ExerciseDefinition {
 }
 
 export const EXERCISE_ANIMATIONS = {
+  "leg-extension": {
+    name: "Cadeira Extensora",
+    equipment: "Máquina extensora com encosto, alças laterais e rolo anterior às pernas",
+    id: "00000000-0000-4000-8000-000000000110",
+    instructions: LEG_EXTENSION_INSTRUCTIONS,
+    muscles: {
+      primary: ["Quadríceps — reto femoral e vastos lateral, medial e intermédio"],
+      secondary: ["Bíceps femoral — coativação estabilizadora"],
+    },
+  },
   "flat-dumbbell-fly": {
     name: "Crucifixo reto com halteres", equipment: "Banco reto e dois halteres",
     id: "d555deb1-6eef-436d-8377-9427ac267697",
@@ -164,6 +176,7 @@ export function getExerciseAnimation(
   id?: string | null,
   name?: string | null,
 ): ExerciseAnimation | null {
+  if (id === EXERCISE_ANIMATIONS["leg-extension"].id) return "leg-extension";
   if (id === EXERCISE_ANIMATIONS["flat-dumbbell-fly"].id) return "flat-dumbbell-fly";
   if (id === EXERCISE_ANIMATIONS["smith-bench-press"].id)
     return "smith-bench-press";
@@ -196,6 +209,7 @@ export function getExerciseAnimation(
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
+    if (["cadeira extensora", "extensora", "leg extension", "seated leg extension", "extensao de joelhos na maquina"].includes(normalized)) return "leg-extension";
 
     if (
       [
