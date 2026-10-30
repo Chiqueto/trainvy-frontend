@@ -1,3 +1,4 @@
+import { getHackSquatPose } from "./hack-squat-pose";
 import { Bone, MathUtils, Matrix4, Quaternion, Vector3 } from "three";
 import type { ExerciseAnimation } from "./exercises";
 import { getLegExtensionPose } from "./leg-extension-pose";
@@ -78,6 +79,7 @@ export function getExercisePose(
   if (exercise === "leg-extension") return getLegExtensionPose(depth);
   if (exercise === "seated-leg-curl") return getSeatedLegCurlPose(depth);
   if (exercise === "prone-leg-curl") return getProneLegCurlPose(depth);
+  if (exercise === "hack-squat") return getHackSquatPose(depth);
   const p = MathUtils.clamp(depth, 0, 1);
   const squat = exercise === "squat";
   const smithSquat = exercise === "smith-squat";
@@ -360,7 +362,7 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
       const { side, hip, knee, ankle, footRotation, shoulder, elbow, wrist } =
         limb;
       const suffix = side < 0 ? "L" : "R";
-      if (exercise === "prone-leg-curl" || exercise === "seated-leg-curl" || exercise === "leg-extension" || exercise === "decline-bench-press" || exercise === "pec-deck" || exercise === "machine-fly" || exercise === "machine-chest-press") {
+      if (exercise === "hack-squat" || exercise === "prone-leg-curl" || exercise === "seated-leg-curl" || exercise === "leg-extension" || exercise === "decline-bench-press" || exercise === "pec-deck" || exercise === "machine-fly" || exercise === "machine-chest-press") {
         const restHip = rest.get(`thigh_${suffix}`)!;
         const restKnee = rest.get(`shin_${suffix}`)!;
         const restAnkle = rest.get(`foot_${suffix}`)!;
@@ -451,7 +453,7 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
         restNormal,
         posedNormal,
       );
-      if (exercise === "machine-fly" || exercise === "prone-leg-curl") {
+      if (exercise === "machine-fly" || exercise === "prone-leg-curl" || exercise === "hack-squat") {
         bones.get(`forearm_${suffix}`)!.quaternion.copy(limb.handRotation);
         wristSupport?.quaternion.copy(limb.handRotation);
       }

@@ -51,7 +51,8 @@ export function createTissueMaterial() {
         varying float vLegExtensionMuscles;
         attribute float _seatedlegcurlmuscles;
         varying float vSeatedLegCurlMuscles;
-        attribute float _pronelegcurlmuscles;
+        attribute vec2 _pronehackmuscles;
+        varying float vHackSquatMuscles;
         varying float vProneLegCurlMuscles;
         varying float vSmithSquatMuscles;
         varying vec2 vTissue;
@@ -62,7 +63,7 @@ export function createTissueMaterial() {
       .replace(
         "#include <uv_vertex>",
         `#include <uv_vertex>
-        vTissue = uv; vFibre = uv1; vFlyMuscles = _flymuscles; vLegExtensionMuscles = _legextensionmuscles; vSeatedLegCurlMuscles = _seatedlegcurlmuscles; vProneLegCurlMuscles = _pronelegcurlmuscles;
+        vTissue = uv; vFibre = uv1; vFlyMuscles = _flymuscles; vLegExtensionMuscles = _legextensionmuscles; vSeatedLegCurlMuscles = _seatedlegcurlmuscles; vProneLegCurlMuscles = _pronehackmuscles.x; vHackSquatMuscles = _pronehackmuscles.y;
         vExerciseMuscles = _exercisemuscles; vPecDeckMuscles = _pecdeckmuscles; vSmithBenchMuscles = _smithbenchmuscles; vMachineChestPressMuscles = _machinechestpressmuscles; vSmithSquatMuscles = _smithsquatmuscles; vRestSurface = position;`,
       );
     shader.fragmentShader = shader.fragmentShader
@@ -72,7 +73,7 @@ export function createTissueMaterial() {
         varying vec2 vTissue; varying vec2 vFibre;
         varying vec3 vExerciseMuscles; varying vec3 vRestSurface;
         varying float vPecDeckMuscles; varying float vFlyMuscles; varying float vSmithBenchMuscles; varying float vMachineChestPressMuscles;
-        varying float vSmithSquatMuscles; varying float vLegExtensionMuscles; varying float vSeatedLegCurlMuscles; varying float vProneLegCurlMuscles;
+        varying float vSmithSquatMuscles; varying float vLegExtensionMuscles; varying float vSeatedLegCurlMuscles; varying float vProneLegCurlMuscles; varying float vHackSquatMuscles;
         uniform float exerciseMode; uniform float highlightMuscles;
         uniform vec3 neutralTissue; uniform vec3 primaryTissue; uniform vec3 secondaryTissue;`,
       )
@@ -113,6 +114,7 @@ export function createTissueMaterial() {
         if (exerciseMode > 8.5 && exerciseMode < 9.5) mask = vLegExtensionMuscles;
         if (exerciseMode > 9.5 && exerciseMode < 10.5) mask = vSeatedLegCurlMuscles;
         if (exerciseMode > 10.5 && exerciseMode < 11.5) mask = vProneLegCurlMuscles;
+        if (exerciseMode > 11.5 && exerciseMode < 12.5) mask = vHackSquatMuscles;
         float selected = smoothstep(0.12, 0.40, mask) * highlightMuscles;
         float primary = smoothstep(0.72, 0.93, mask);
         // Constant categorical colours, never a measurement of activation.
@@ -144,7 +146,7 @@ export function createTissueMaterial() {
           + (1.0-tissue) * (1.0-smoothstep(0.02,0.12,dot(diffuseColor.rgb,vec3(0.333)))) * 0.28, 0.38, 0.88);`,
       );
   };
-  material.customProgramCacheKey = () => "trainvy-atelier-tissue-v13-prone-leg-curl";
+  material.customProgramCacheKey = () => "trainvy-atelier-tissue-v14-hack-squat";
   const setAppearance = (exercise: ExerciseAnimation, highlighted = true) => {
     const modes: Record<ExerciseAnimation, number> = {
       squat: 0,
@@ -159,6 +161,7 @@ export function createTissueMaterial() {
       "leg-extension": 9,
       "seated-leg-curl": 10,
       "prone-leg-curl": 11,
+      "hack-squat": 12,
       "flat-dumbbell-fly": 7,
       "smith-bench-press": 5,
       "machine-chest-press": 6,

@@ -23,6 +23,13 @@ import type { GetExerciseMedia200 } from "@/app/_lib/api/fetch-generated";
 import { Button } from "@/components/ui/button";
 
 const LAB_MEDIA_DATA: Record<ExerciseAnimation, GetExerciseMedia200> = {
+  "hack-squat": {
+    exerciseId: EXERCISE_ANIMATIONS["hack-squat"].id,
+    hasMedia: false, mediaType: null,
+    startImagePath: null, endImagePath: null, motionPath: null,
+    attributionName: null, attributionUrl: null,
+    instructions: EXERCISE_ANIMATIONS["hack-squat"].instructions,
+  },
   "prone-leg-curl": { exerciseId: EXERCISE_ANIMATIONS["prone-leg-curl"].id, hasMedia: false, mediaType: null, startImagePath: null, endImagePath: null, motionPath: null, attributionName: null, attributionUrl: null, instructions: EXERCISE_ANIMATIONS["prone-leg-curl"].instructions },
   "seated-leg-curl": { exerciseId: EXERCISE_ANIMATIONS["seated-leg-curl"].id, hasMedia: false, mediaType: null, startImagePath: null, endImagePath: null, motionPath: null, attributionName: null, attributionUrl: null, instructions: EXERCISE_ANIMATIONS["seated-leg-curl"].instructions },
   "leg-extension": { exerciseId: EXERCISE_ANIMATIONS["leg-extension"].id, hasMedia: false, mediaType: null, startImagePath: null, endImagePath: null, motionPath: null, attributionName: null, attributionUrl: null, instructions: EXERCISE_ANIMATIONS["leg-extension"].instructions },
@@ -165,6 +172,16 @@ export default function Exercise3DLab() {
       cues: string[];
     }
   > = {
+    "hack-squat": {
+      primary: EXERCISE_ANIMATIONS["hack-squat"].muscles.primary.join(", "),
+      secondary: EXERCISE_ANIMATIONS["hack-squat"].muscles.secondary.join(", "),
+      cadence: "Descida controlada, pausa breve e subida suave.",
+      cues: [
+        "Costas e ombros apoiados no trenó.",
+        "Pés inteiros na plataforma e joelhos na direção dos pés.",
+        "Suba sem travar os joelhos e use as travas ao terminar.",
+      ],
+    },
     "prone-leg-curl": {
       primary: "Isquiotibiais — bíceps femoral, semitendíneo e semimembranáceo",
       secondary: "Gastrocnêmio, sartório e grácil",

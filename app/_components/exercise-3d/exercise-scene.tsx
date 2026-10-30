@@ -9,7 +9,7 @@ import {
   RoundedBox,
   useGLTF,
 } from "@react-three/drei";
-import { Bone, Group, Skeleton, SkinnedMesh, type BufferGeometry } from "three";
+import { BufferAttribute, Bone, Group, Skeleton, SkinnedMesh, type BufferGeometry } from "three";
 import { createFlyMuscleMask } from "./fly-muscles";
 import { createPecDeckMuscleMask } from "./pec-deck-muscles";
 import { createSmithBenchMuscleMask } from "./smith-bench-muscles";
@@ -24,6 +24,8 @@ import { createSeatedLegCurlMuscleMask } from "./seated-leg-curl-muscles";
 import { SeatedLegCurlMachine, type SeatedLegCurlMachineHandle } from "./seated-leg-curl-machine";
 import { createProneLegCurlMuscleMask } from "./prone-leg-curl-muscles";
 import { ProneLegCurlMachine, type ProneLegCurlMachineHandle } from "./prone-leg-curl-machine";
+import { HackSquatMachine, type HackSquatMachineHandle } from "./hack-squat-machine";
+import { createHackSquatMuscleMask } from "./hack-squat-muscles";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
 import modelManifest from "../../../public/models/exercise-3d/model-manifest.json";
 import { createTissueMaterial } from "./anatomy-material";
@@ -465,6 +467,7 @@ function Athlete({
   const machineChestPress = useRef<MachineChestPressHandle>(null);
   const legExtensionMachine = useRef<LegExtensionMachineHandle>(null);
   const seatedLegCurlMachine = useRef<SeatedLegCurlMachineHandle>(null);
+  const hackSquatMachine = useRef<HackSquatMachineHandle>(null);
   const proneLegCurlMachine = useRef<ProneLegCurlMachineHandle>(null);
   const rig = useMemo(() => {
     const scene = clone(source);
@@ -483,7 +486,15 @@ function Athlete({
         object.geometry.setAttribute("_smithsquatmuscles",createSmithSquatMuscleMask(object.geometry));
         object.geometry.setAttribute("_legextensionmuscles", createLegExtensionMuscleMask(object.geometry));
         object.geometry.setAttribute("_seatedlegcurlmuscles", createSeatedLegCurlMuscleMask(object.geometry));
-        object.geometry.setAttribute("_pronelegcurlmuscles", createProneLegCurlMuscleMask(object.geometry));
+        const prone = createProneLegCurlMuscleMask(object.geometry);
+        const hack = createHackSquatMuscleMask(object.geometry);
+        // Pack independent categorical maps into one slot to stay within WebGL limits.
+        const packed = new Float32Array(prone.count * 2);
+        for (let i = 0; i < prone.count; i++) {
+          packed[i * 2] = prone.getX(i);
+          packed[i * 2 + 1] = hack.getX(i);
+        }
+        object.geometry.setAttribute("_pronehackmuscles", new BufferAttribute(packed, 2));
         geometries.add(object.geometry);
         object.material = material;
         object.castShadow = true;
@@ -527,12 +538,15 @@ function Athlete({
     legExtensionMachine.current?.update(pose);
     seatedLegCurlMachine.current?.update(pose);
     proneLegCurlMachine.current?.update(pose);
+    hackSquatMachine.current?.update(pose);
     rig.scene.updateMatrixWorld(true);
   });
   return (
     <>
       <primitive object={rig.scene} dispose={null} />
-      {exercise === "prone-leg-curl" ? (
+      {exercise === "hack-squat" ? (
+        <HackSquatMachine ref={hackSquatMachine} />
+      ) : exercise === "prone-leg-curl" ? (
         <ProneLegCurlMachine ref={proneLegCurlMachine} />
       ) : exercise === "seated-leg-curl" ? (
         <SeatedLegCurlMachine ref={seatedLegCurlMachine} />
@@ -587,6 +601,15 @@ function getCameraParams(
   exercise: ExerciseAnimation,
   view: SceneProps["view"],
 ): { position: [number, number, number]; target: [number, number, number] } {
+  if (exercise === "hack-squat") {
+    const target: [number, number, number] = [0, 0.9, -0.12];
+    switch (view) {
+      case "front": return { position: [0, 1.7, 3.8], target };
+      case "side": return { position: [-3.7, 1.5, -0.12], target };
+      case "back": return { position: [0, 2, -3.8], target };
+      default: return { position: [-2.8, 1.9, 3], target };
+    }
+  }
   if (exercise === "prone-leg-curl") {
     const target: [number,number,number]=[0.1,0.72,0];
     switch(view) {

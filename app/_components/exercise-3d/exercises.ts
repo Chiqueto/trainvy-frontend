@@ -1,3 +1,4 @@
+import { HACK_SQUAT_INSTRUCTIONS } from "./hack-squat-instructions";
 import { FLAT_DUMBBELL_FLY_INSTRUCTIONS } from "./flat-dumbbell-fly-instructions";
 import { MACHINE_CHEST_PRESS_INSTRUCTIONS } from "./machine-chest-press-instructions";
 import { PEC_DECK_INSTRUCTIONS } from "./pec-deck-instructions";
@@ -22,7 +23,8 @@ export type ExerciseAnimation =
   | "smith-squat"
   | "leg-extension"
   | "seated-leg-curl"
-  | "prone-leg-curl";
+  | "prone-leg-curl"
+  | "hack-squat";
 
 export interface ExerciseDefinition {
   name: string;
@@ -37,6 +39,16 @@ export interface ExerciseDefinition {
 }
 
 export const EXERCISE_ANIMATIONS = {
+  "hack-squat": {
+    name: "Agachamento Hack na Máquina",
+    equipment: "Hack com trenó inclinado a 45°, encosto e plataforma",
+    id: "7bd5b49f-252c-43a2-83a8-816d6401f6cb",
+    instructions: HACK_SQUAT_INSTRUCTIONS,
+    muscles: {
+      primary: ["Quadríceps", "Glúteo máximo"],
+      secondary: ["Adutor magno", "Reto abdominal e oblíquo externo", "Eretores da coluna"],
+    },
+  },
   "prone-leg-curl": {
     name: "Mesa Flexora",
     equipment: "Mesa flexora deitada com banco articulado e rolo posterior às pernas",
@@ -200,6 +212,7 @@ export function getExerciseAnimation(
   id?: string | null,
   name?: string | null,
 ): ExerciseAnimation | null {
+  if (id === EXERCISE_ANIMATIONS["hack-squat"].id) return "hack-squat";
   if (id === EXERCISE_ANIMATIONS["prone-leg-curl"].id) return "prone-leg-curl";
   if (id === EXERCISE_ANIMATIONS["seated-leg-curl"].id) return "seated-leg-curl";
   if (id === EXERCISE_ANIMATIONS["leg-extension"].id) return "leg-extension";
@@ -235,6 +248,8 @@ export function getExerciseAnimation(
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
+    if (["agachamento hack na maquina", "agachamento hack", "hack squat", "hack squat machine"].includes(normalized))
+      return "hack-squat";
     if (["mesa flexora", "flexora deitada", "flexao de joelhos deitado", "prone leg curl", "lying leg curl"].includes(normalized)) return "prone-leg-curl";
     if (["cadeira flexora", "flexora sentada", "flexao de joelhos na maquina sentada", "seated leg curl"].includes(normalized)) return "seated-leg-curl";
     if (["cadeira extensora", "extensora", "leg extension", "seated leg extension", "extensao de joelhos na maquina"].includes(normalized)) return "leg-extension";
