@@ -23,6 +23,11 @@ import type { GetExerciseMedia200 } from "@/app/_lib/api/fetch-generated";
 import { Button } from "@/components/ui/button";
 
 const LAB_MEDIA_DATA: Record<ExerciseAnimation, GetExerciseMedia200> = {
+  "horizontal-leg-press": {
+    exerciseId: EXERCISE_ANIMATIONS["horizontal-leg-press"].id, hasMedia: false, mediaType: null,
+    startImagePath: null, endImagePath: null, motionPath: null, attributionName: null, attributionUrl: null,
+    instructions: EXERCISE_ANIMATIONS["horizontal-leg-press"].instructions,
+  },
   "leg-press-45": {
     exerciseId: EXERCISE_ANIMATIONS["leg-press-45"].id, hasMedia: false, mediaType: null,
     startImagePath: null, endImagePath: null, motionPath: null, attributionName: null, attributionUrl: null,
@@ -177,6 +182,12 @@ export default function Exercise3DLab() {
       cues: string[];
     }
   > = {
+    "horizontal-leg-press": {
+      primary: EXERCISE_ANIMATIONS["horizontal-leg-press"].muscles.primary.join(", "),
+      secondary: EXERCISE_ANIMATIONS["horizontal-leg-press"].muscles.secondary.join(", "),
+      cadence: "Retorno controlado, pausa breve e extensão suave.",
+      cues: ["Costas e pelve apoiadas no banco fixo.", "Pés inteiros acompanham a plataforma horizontal.", "Joelhos na direção dos pés; não bata as placas da torre."],
+    },
     "leg-press-45": {
       primary: EXERCISE_ANIMATIONS["leg-press-45"].muscles.primary.join(", "),
       secondary: EXERCISE_ANIMATIONS["leg-press-45"].muscles.secondary.join(", "),

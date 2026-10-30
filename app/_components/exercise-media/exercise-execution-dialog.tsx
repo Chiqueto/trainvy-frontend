@@ -28,6 +28,7 @@ import { SMITH_SQUAT_INSTRUCTIONS } from "../exercise-3d/smith-squat-instruction
 import { LEG_EXTENSION_INSTRUCTIONS } from "../exercise-3d/leg-extension-instructions";
 import { SEATED_LEG_CURL_INSTRUCTIONS } from "../exercise-3d/seated-leg-curl-instructions";
 import { PRONE_LEG_CURL_INSTRUCTIONS } from "../exercise-3d/prone-leg-curl-instructions";
+import { HORIZONTAL_LEG_PRESS_INSTRUCTIONS } from "../exercise-3d/horizontal-leg-press-instructions";
 import { LEG_PRESS_45_INSTRUCTIONS } from "../exercise-3d/leg-press-45-instructions";
 import { HACK_SQUAT_INSTRUCTIONS } from "../exercise-3d/hack-squat-instructions";
 
@@ -71,6 +72,7 @@ const FALLBACK_3D_INSTRUCTIONS: Record<
   "prone-leg-curl": PRONE_LEG_CURL_INSTRUCTIONS,
   "hack-squat": HACK_SQUAT_INSTRUCTIONS,
   "leg-press-45": LEG_PRESS_45_INSTRUCTIONS,
+  "horizontal-leg-press": HORIZONTAL_LEG_PRESS_INSTRUCTIONS,
   squat: {
     description:
       "Exercício composto multiarticular dominante de joelho e quadril, fundamental para desenvolvimento de membros inferiores e core.",

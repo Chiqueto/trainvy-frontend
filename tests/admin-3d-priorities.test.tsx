@@ -49,13 +49,13 @@ const rows = [
     1,
     1,
   ),
-  exercise("second", "Leg Press Horizontal", 1, 3),
+  exercise("second", "Stiff", 1, 3),
   exercise("first", "Supino Declinado com Halteres", 1, 2),
   exercise("third", "Power Clean", 4, 4),
 ];
 afterEach(cleanup);
 describe("3D implementation queue", () => {
-  it("removes the implemented leg extension while preserving the next pending horizontal leg press", () => {
+  it("removes the implemented leg extension while preserving the next pending stiff", () => {
     const queue = implementationQueue([
       exercise(
         "00000000-0000-4000-8000-000000000110",
@@ -78,15 +78,16 @@ describe("3D implementation queue", () => {
       ),
       exercise("7bd5b49f-252c-43a2-83a8-816d6401f6cb", "Agachamento Hack na Máquina", 1, 17),
       exercise("00000000-0000-4000-8000-000000000108", "Leg Press 45", 1, 17),
+      exercise("00000000-0000-4000-8000-000000000109", "Leg Press Horizontal", 1, 18),
       exercise(
-        "00000000-0000-4000-8000-000000000109",
-        "Leg Press Horizontal",
+        "00000000-0000-4000-8000-000000000113",
+        "Stiff",
         1,
-        18,
+        19,
       ),
     ]);
     expect([...queue.entries()]).toEqual([
-      ["00000000-0000-4000-8000-000000000109", 1],
+      ["00000000-0000-4000-8000-000000000113", 1],
     ]);
   });
   it("excludes available animations and gives pending exercises stable positions", () => {
@@ -126,7 +127,7 @@ describe("3D implementation queue", () => {
       target: { value: "name:asc" },
     });
     expect(within(table).getAllByRole("row")[1].textContent).toContain(
-      "Leg Press Horizontal",
+      "Power Clean",
     );
     expect(within(table).getByText("#2 na fila")).toBeTruthy();
   });

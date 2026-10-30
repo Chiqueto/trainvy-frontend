@@ -1,3 +1,4 @@
+import { HORIZONTAL_LEG_PRESS_INSTRUCTIONS } from "./horizontal-leg-press-instructions";
 import { LEG_PRESS_45_INSTRUCTIONS } from "./leg-press-45-instructions";
 import { HACK_SQUAT_INSTRUCTIONS } from "./hack-squat-instructions";
 import { FLAT_DUMBBELL_FLY_INSTRUCTIONS } from "./flat-dumbbell-fly-instructions";
@@ -26,7 +27,8 @@ export type ExerciseAnimation =
   | "seated-leg-curl"
   | "prone-leg-curl"
   | "hack-squat"
-  | "leg-press-45";
+  | "leg-press-45"
+  | "horizontal-leg-press";
 
 export interface ExerciseDefinition {
   name: string;
@@ -41,6 +43,11 @@ export interface ExerciseDefinition {
 }
 
 export const EXERCISE_ANIMATIONS = {
+  "horizontal-leg-press": {
+    name: "Leg Press Horizontal", equipment: "Máquina sentada com encosto fixo, plataforma horizontal móvel e torre seletora",
+    id: "00000000-0000-4000-8000-000000000109", instructions: HORIZONTAL_LEG_PRESS_INSTRUCTIONS,
+    muscles: { primary: ["Quadríceps", "Glúteo máximo"], secondary: ["Adutor magno", "Isquiotibiais", "Gastrocnêmio", "Tibial anterior"] },
+  },
   "leg-press-45": {
     name: "Leg Press 45°", equipment: "Leg press com trilhos a 45°, encosto reclinado e plataforma móvel",
     id: "00000000-0000-4000-8000-000000000108", instructions: LEG_PRESS_45_INSTRUCTIONS,
@@ -219,6 +226,7 @@ export function getExerciseAnimation(
   id?: string | null,
   name?: string | null,
 ): ExerciseAnimation | null {
+  if (id === EXERCISE_ANIMATIONS["horizontal-leg-press"].id) return "horizontal-leg-press";
   if (id === EXERCISE_ANIMATIONS["leg-press-45"].id) return "leg-press-45";
   if (id === EXERCISE_ANIMATIONS["hack-squat"].id) return "hack-squat";
   if (id === EXERCISE_ANIMATIONS["prone-leg-curl"].id) return "prone-leg-curl";
@@ -256,6 +264,7 @@ export function getExerciseAnimation(
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
+    if (["leg press horizontal", "prensa de pernas horizontal", "horizontal leg press", "seated horizontal leg press"].includes(normalized)) return "horizontal-leg-press";
     if (["leg press 45", "leg press 45°", "leg press 45 graus", "leg press inclinado", "45 degree leg press"].includes(normalized)) return "leg-press-45";
     if (["agachamento hack na maquina", "agachamento hack", "hack squat", "hack squat machine"].includes(normalized))
       return "hack-squat";

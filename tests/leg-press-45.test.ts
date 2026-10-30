@@ -68,8 +68,8 @@ describe("inclined bilateral leg press", () => {
       "45 degree leg press",
     ])
       expect(getExerciseAnimation(null, name)).toBe("leg-press-45");
+    expect(getExerciseAnimation(null, "Leg Press Horizontal")).toBe("horizontal-leg-press");
     for (const name of [
-      "Leg Press Horizontal",
       "Leg Press Vertical",
       "Leg press unilateral",
       "Leg press",

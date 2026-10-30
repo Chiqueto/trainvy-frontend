@@ -9,7 +9,7 @@ import {
   RoundedBox,
   useGLTF,
 } from "@react-three/drei";
-import { BufferAttribute, Bone, Group, Skeleton, SkinnedMesh, type BufferGeometry } from "three";
+import { Bone, Group, Skeleton, SkinnedMesh, type BufferGeometry } from "three";
 import { createFlyMuscleMask } from "./fly-muscles";
 import { createPecDeckMuscleMask } from "./pec-deck-muscles";
 import { createSmithBenchMuscleMask } from "./smith-bench-muscles";
@@ -22,14 +22,13 @@ import { createLegExtensionMuscleMask } from "./leg-extension-muscles";
 import { LegExtensionMachine, type LegExtensionMachineHandle } from "./leg-extension-machine";
 import { createSeatedLegCurlMuscleMask } from "./seated-leg-curl-muscles";
 import { SeatedLegCurlMachine, type SeatedLegCurlMachineHandle } from "./seated-leg-curl-machine";
-import { createProneLegCurlMuscleMask } from "./prone-leg-curl-muscles";
 import { ProneLegCurlMachine, type ProneLegCurlMachineHandle } from "./prone-leg-curl-machine";
 import { HackSquatMachine, type HackSquatMachineHandle } from "./hack-squat-machine";
-import { createHackSquatMuscleMask } from "./hack-squat-muscles";
 import { LegPress45Machine, type LegPress45MachineHandle } from "./leg-press-45-machine";
-import { createLegPress45MuscleMask } from "./leg-press-45-muscles";
+import { HorizontalLegPressMachine, type HorizontalLegPressMachineHandle } from "./horizontal-leg-press-machine";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
 import modelManifest from "../../../public/models/exercise-3d/model-manifest.json";
+import { createLowerBodyMuscleAttribute } from "./lower-body-muscles";
 import { createTissueMaterial } from "./anatomy-material";
 import {
   createPoseDriver,
@@ -469,6 +468,7 @@ function Athlete({
   const machineChestPress = useRef<MachineChestPressHandle>(null);
   const legExtensionMachine = useRef<LegExtensionMachineHandle>(null);
   const seatedLegCurlMachine = useRef<SeatedLegCurlMachineHandle>(null);
+  const horizontalLegPressMachine = useRef<HorizontalLegPressMachineHandle>(null);
   const legPress45Machine = useRef<LegPress45MachineHandle>(null);
   const hackSquatMachine = useRef<HackSquatMachineHandle>(null);
   const proneLegCurlMachine = useRef<ProneLegCurlMachineHandle>(null);
@@ -489,17 +489,7 @@ function Athlete({
         object.geometry.setAttribute("_smithsquatmuscles",createSmithSquatMuscleMask(object.geometry));
         object.geometry.setAttribute("_legextensionmuscles", createLegExtensionMuscleMask(object.geometry));
         object.geometry.setAttribute("_seatedlegcurlmuscles", createSeatedLegCurlMuscleMask(object.geometry));
-        const prone = createProneLegCurlMuscleMask(object.geometry);
-        const hack = createHackSquatMuscleMask(object.geometry);
-        const press = createLegPress45MuscleMask(object.geometry);
-        // Pack independent categorical maps into one slot to stay within WebGL limits.
-        const packed = new Float32Array(prone.count * 3);
-        for (let i = 0; i < prone.count; i++) {
-          packed[i * 3] = prone.getX(i);
-          packed[i * 3 + 1] = hack.getX(i);
-          packed[i * 3 + 2] = press.getX(i);
-        }
-        object.geometry.setAttribute("_lowerbodymuscles", new BufferAttribute(packed, 3));
+        object.geometry.setAttribute("_lowerbodymuscles", createLowerBodyMuscleAttribute(object.geometry));
         geometries.add(object.geometry);
         object.material = material;
         object.castShadow = true;
@@ -545,12 +535,15 @@ function Athlete({
     proneLegCurlMachine.current?.update(pose);
     hackSquatMachine.current?.update(pose);
     legPress45Machine.current?.update(pose);
+    horizontalLegPressMachine.current?.update(pose);
     rig.scene.updateMatrixWorld(true);
   });
   return (
     <>
       <primitive object={rig.scene} dispose={null} />
-      {exercise === "leg-press-45" ? (
+      {exercise === "horizontal-leg-press" ? (
+        <HorizontalLegPressMachine ref={horizontalLegPressMachine} />
+      ) : exercise === "leg-press-45" ? (
         <LegPress45Machine ref={legPress45Machine} />
       ) : exercise === "hack-squat" ? (
         <HackSquatMachine ref={hackSquatMachine} />
@@ -609,6 +602,15 @@ function getCameraParams(
   exercise: ExerciseAnimation,
   view: SceneProps["view"],
 ): { position: [number, number, number]; target: [number, number, number] } {
+  if (exercise === "horizontal-leg-press") {
+    const target: [number, number, number] = [0.15, 0.82, 0.02];
+    switch (view) {
+      case "front": return { position: [0.15, 3.4, 3.2], target };
+      case "side": return { position: [-3.7, 1.65, 0.02], target };
+      case "back": return { position: [0.15, 2, -3.8], target };
+      default: return { position: [-3.8, 1.9, 0.02], target };
+    }
+  }
   if (exercise === "leg-press-45") {
     const target: [number, number, number] = [0, 0.8, -0.25];
     switch (view) {
