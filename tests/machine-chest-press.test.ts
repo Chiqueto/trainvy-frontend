@@ -67,13 +67,13 @@ describe("machine chest press (supino reto na máquina)", () => {
     const queue = implementationQueue([
       fixture(id, "Supino Reto na Máquina", 11),
       fixture(
-        "00000000-0000-4000-8000-000000000113",
-        "Stiff",
-        19,
+        "00000000-0000-4000-8000-000000000114",
+        "Elevação Pélvica",
+        20,
       ),
     ]);
     expect(queue.has(id)).toBe(false);
-    expect(queue.get("00000000-0000-4000-8000-000000000113")).toBe(1);
+    expect(queue.get("00000000-0000-4000-8000-000000000114")).toBe(1);
   });
 
   it("maintains stable seated posture, bone lengths, and frontal-plane elbow opening throughout repetition", () => {

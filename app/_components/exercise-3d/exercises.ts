@@ -1,3 +1,4 @@
+import { STIFF_INSTRUCTIONS } from "./stiff-instructions";
 import { HORIZONTAL_LEG_PRESS_INSTRUCTIONS } from "./horizontal-leg-press-instructions";
 import { LEG_PRESS_45_INSTRUCTIONS } from "./leg-press-45-instructions";
 import { HACK_SQUAT_INSTRUCTIONS } from "./hack-squat-instructions";
@@ -28,7 +29,8 @@ export type ExerciseAnimation =
   | "prone-leg-curl"
   | "hack-squat"
   | "leg-press-45"
-  | "horizontal-leg-press";
+  | "horizontal-leg-press"
+  | "stiff";
 
 export interface ExerciseDefinition {
   name: string;
@@ -43,6 +45,11 @@ export interface ExerciseDefinition {
 }
 
 export const EXERCISE_ANIMATIONS = {
+  stiff: {
+    name: "Stiff", equipment: "Barra livre, pegada pronada e pés no chão",
+    id: "00000000-0000-4000-8000-000000000113", instructions: STIFF_INSTRUCTIONS,
+    muscles: { primary: ["Isquiotibiais — cabeça longa do bíceps femoral, semitendíneo e semimembranáceo", "Glúteo máximo"], secondary: ["Eretores da coluna", "Oblíquo externo", "Adutor magno", "Flexores dos dedos e estabilizadores do punho"] },
+  },
   "horizontal-leg-press": {
     name: "Leg Press Horizontal", equipment: "Máquina sentada com encosto fixo, plataforma horizontal móvel e torre seletora",
     id: "00000000-0000-4000-8000-000000000109", instructions: HORIZONTAL_LEG_PRESS_INSTRUCTIONS,
@@ -226,6 +233,7 @@ export function getExerciseAnimation(
   id?: string | null,
   name?: string | null,
 ): ExerciseAnimation | null {
+  if (id === EXERCISE_ANIMATIONS.stiff.id) return "stiff";
   if (id === EXERCISE_ANIMATIONS["horizontal-leg-press"].id) return "horizontal-leg-press";
   if (id === EXERCISE_ANIMATIONS["leg-press-45"].id) return "leg-press-45";
   if (id === EXERCISE_ANIMATIONS["hack-squat"].id) return "hack-squat";
@@ -264,6 +272,7 @@ export function getExerciseAnimation(
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
+    if (["stiff", "stiff com barra", "stiff-leg deadlift", "stiff leg deadlift", "levantamento terra com pernas quase estendidas"].includes(normalized)) return "stiff";
     if (["leg press horizontal", "prensa de pernas horizontal", "horizontal leg press", "seated horizontal leg press"].includes(normalized)) return "horizontal-leg-press";
     if (["leg press 45", "leg press 45°", "leg press 45 graus", "leg press inclinado", "45 degree leg press"].includes(normalized)) return "leg-press-45";
     if (["agachamento hack na maquina", "agachamento hack", "hack squat", "hack squat machine"].includes(normalized))

@@ -23,6 +23,11 @@ import type { GetExerciseMedia200 } from "@/app/_lib/api/fetch-generated";
 import { Button } from "@/components/ui/button";
 
 const LAB_MEDIA_DATA: Record<ExerciseAnimation, GetExerciseMedia200> = {
+  stiff: {
+    exerciseId: EXERCISE_ANIMATIONS.stiff.id, hasMedia: false, mediaType: null,
+    startImagePath: null, endImagePath: null, motionPath: null, attributionName: null, attributionUrl: null,
+    instructions: EXERCISE_ANIMATIONS.stiff.instructions,
+  },
   "horizontal-leg-press": {
     exerciseId: EXERCISE_ANIMATIONS["horizontal-leg-press"].id, hasMedia: false, mediaType: null,
     startImagePath: null, endImagePath: null, motionPath: null, attributionName: null, attributionUrl: null,
@@ -182,6 +187,12 @@ export default function Exercise3DLab() {
       cues: string[];
     }
   > = {
+    stiff: {
+      primary: EXERCISE_ANIMATIONS.stiff.muscles.primary.join(", "),
+      secondary: EXERCISE_ANIMATIONS.stiff.muscles.secondary.join(", "),
+      cadence: "Descida controlada, pausa breve e extensão suave do quadril.",
+      cues: ["Leve o quadril para trás, mantendo a leve flexão dos joelhos.", "Barra próxima das pernas, braços alongados e pés apoiados.", "Limite a descida ao controle do tronco; não hiperestenda no topo."],
+    },
     "horizontal-leg-press": {
       primary: EXERCISE_ANIMATIONS["horizontal-leg-press"].muscles.primary.join(", "),
       secondary: EXERCISE_ANIMATIONS["horizontal-leg-press"].muscles.secondary.join(", "),

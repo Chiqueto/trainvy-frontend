@@ -18,9 +18,7 @@ import { PecDeckMachine, type PecDeckMachineHandle } from "./pec-deck-machine";
 import { createMachineChestPressMuscleMask } from "./machine-chest-press-muscles";
 import { MachineChestPress, type MachineChestPressHandle } from "./machine-chest-press";
 import { createSmithSquatMuscleMask } from "./smith-squat-muscles";
-import { createLegExtensionMuscleMask } from "./leg-extension-muscles";
 import { LegExtensionMachine, type LegExtensionMachineHandle } from "./leg-extension-machine";
-import { createSeatedLegCurlMuscleMask } from "./seated-leg-curl-muscles";
 import { SeatedLegCurlMachine, type SeatedLegCurlMachineHandle } from "./seated-leg-curl-machine";
 import { ProneLegCurlMachine, type ProneLegCurlMachineHandle } from "./prone-leg-curl-machine";
 import { HackSquatMachine, type HackSquatMachineHandle } from "./hack-squat-machine";
@@ -28,6 +26,7 @@ import { LegPress45Machine, type LegPress45MachineHandle } from "./leg-press-45-
 import { HorizontalLegPressMachine, type HorizontalLegPressMachineHandle } from "./horizontal-leg-press-machine";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
 import modelManifest from "../../../public/models/exercise-3d/model-manifest.json";
+import { createLegDetailMuscleAttribute } from "./leg-detail-muscles";
 import { createLowerBodyMuscleAttribute } from "./lower-body-muscles";
 import { createTissueMaterial } from "./anatomy-material";
 import {
@@ -487,8 +486,7 @@ function Athlete({
         object.geometry.setAttribute("_smithbenchmuscles", createSmithBenchMuscleMask(object.geometry));
         object.geometry.setAttribute("_machinechestpressmuscles", createMachineChestPressMuscleMask(object.geometry));
         object.geometry.setAttribute("_smithsquatmuscles",createSmithSquatMuscleMask(object.geometry));
-        object.geometry.setAttribute("_legextensionmuscles", createLegExtensionMuscleMask(object.geometry));
-        object.geometry.setAttribute("_seatedlegcurlmuscles", createSeatedLegCurlMuscleMask(object.geometry));
+        object.geometry.setAttribute("_legdetailmuscles", createLegDetailMuscleAttribute(object.geometry));
         object.geometry.setAttribute("_lowerbodymuscles", createLowerBodyMuscleAttribute(object.geometry));
         geometries.add(object.geometry);
         object.material = material;
@@ -602,6 +600,15 @@ function getCameraParams(
   exercise: ExerciseAnimation,
   view: SceneProps["view"],
 ): { position: [number, number, number]; target: [number, number, number] } {
+  if (exercise === "stiff") {
+    const target: [number, number, number] = [0, 0.9, 0.1];
+    switch (view) {
+      case "front": return { position: [0, 1.7, 4.3], target };
+      case "side": return { position: [-4.1, 1.55, 0.1], target };
+      case "back": return { position: [0, 1.8, -4.2], target };
+      default: return { position: [-2.5, 1.65, 2.5], target };
+    }
+  }
   if (exercise === "horizontal-leg-press") {
     const target: [number, number, number] = [0.15, 0.82, 0.02];
     switch (view) {
