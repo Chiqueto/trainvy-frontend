@@ -12,6 +12,7 @@ import {
 import { Bone, Group, Skeleton, SkinnedMesh, type BufferGeometry } from "three";
 import { createFlyMuscleMask } from "./fly-muscles";
 import { createPecDeckMuscleMask } from "./pec-deck-muscles";
+import { HipThrustBench, HipThrustBarPad } from "./hip-thrust-bench";
 import { createSmithBenchMuscleMask } from "./smith-bench-muscles";
 import { SmithMachineFrame, SmithBarbell } from "./smith-machine";
 import { PecDeckMachine, type PecDeckMachineHandle } from "./pec-deck-machine";
@@ -577,6 +578,7 @@ function Athlete({
       ) : (
         <group ref={bar}>
           <Barbell />
+          {exercise === "hip-thrust" && <HipThrustBarPad />}
         </group>
       )}
     </>
@@ -600,6 +602,15 @@ function getCameraParams(
   exercise: ExerciseAnimation,
   view: SceneProps["view"],
 ): { position: [number, number, number]; target: [number, number, number] } {
+  if (exercise === "hip-thrust") {
+    const target: [number, number, number] = [0, 0.5, 0.05];
+    switch (view) {
+      case "front": return { position: [0, 2.2, 3.6], target };
+      case "side": return { position: [-3.7, 1.4, 0.05], target };
+      case "back": return { position: [-2.7, 0.35, -1.8], target };
+      default: return { position: [-2.7, 1.9, 2.5], target };
+    }
+  }
   if (exercise === "stiff") {
     const target: [number, number, number] = [0, 0.9, 0.1];
     switch (view) {
@@ -867,6 +878,7 @@ export default function ExerciseScene(props: SceneProps) {
       {(props.exercise === "incline-dumbbell-press" ||
         props.exercise === "incline-bench-press") && <InclineBench />}
       {props.exercise === "decline-bench-press" && <DeclineBench />}
+      {props.exercise === "hip-thrust" && <HipThrustBench />}
       {props.exercise === "smith-squat" && <SmithMachineFrame />}
 
       <Suspense fallback={null}>

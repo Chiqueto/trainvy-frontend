@@ -28,6 +28,7 @@ import { SMITH_SQUAT_INSTRUCTIONS } from "../exercise-3d/smith-squat-instruction
 import { LEG_EXTENSION_INSTRUCTIONS } from "../exercise-3d/leg-extension-instructions";
 import { SEATED_LEG_CURL_INSTRUCTIONS } from "../exercise-3d/seated-leg-curl-instructions";
 import { PRONE_LEG_CURL_INSTRUCTIONS } from "../exercise-3d/prone-leg-curl-instructions";
+import { HIP_THRUST_INSTRUCTIONS } from "../exercise-3d/hip-thrust-instructions";
 import { STIFF_INSTRUCTIONS } from "../exercise-3d/stiff-instructions";
 import { HORIZONTAL_LEG_PRESS_INSTRUCTIONS } from "../exercise-3d/horizontal-leg-press-instructions";
 import { LEG_PRESS_45_INSTRUCTIONS } from "../exercise-3d/leg-press-45-instructions";
@@ -74,6 +75,7 @@ const FALLBACK_3D_INSTRUCTIONS: Record<
   "hack-squat": HACK_SQUAT_INSTRUCTIONS,
   "leg-press-45": LEG_PRESS_45_INSTRUCTIONS,
   "horizontal-leg-press": HORIZONTAL_LEG_PRESS_INSTRUCTIONS,
+  "hip-thrust": HIP_THRUST_INSTRUCTIONS,
   stiff: STIFF_INSTRUCTIONS,
   squat: {
     description:

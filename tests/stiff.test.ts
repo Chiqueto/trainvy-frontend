@@ -1,3 +1,4 @@
+import { createHipThrustMuscleMask } from "../app/_components/exercise-3d/hip-thrust-muscles";
 // @vitest-environment node
 import { readFile } from "node:fs/promises";
 import { beforeAll, describe, expect, it } from "vitest";
@@ -159,8 +160,9 @@ describe("barbell stiff-leg hip hinge", () => {
       createLegExtensionMuscleMask(mesh.geometry),
       createSeatedLegCurlMuscleMask(mesh.geometry),
       createStiffMuscleMask(mesh.geometry),
+      createHipThrustMuscleMask(mesh.geometry),
     ];
-    expect(packed.itemSize).toBe(3);
+    expect(packed.itemSize).toBe(4);
     for (let i = 0; i < packed.count; i++)
       for (const [channel, mask] of masks.entries())
         expect(packed.getComponent(i, channel)).toBe(mask.getX(i));

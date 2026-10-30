@@ -23,6 +23,9 @@ import type { GetExerciseMedia200 } from "@/app/_lib/api/fetch-generated";
 import { Button } from "@/components/ui/button";
 
 const LAB_MEDIA_DATA: Record<ExerciseAnimation, GetExerciseMedia200> = {
+  "hip-thrust": {
+    exerciseId: EXERCISE_ANIMATIONS["hip-thrust"].id, hasMedia: false, mediaType: null, startImagePath: null, endImagePath: null, motionPath: null, attributionName: null, attributionUrl: null, instructions: EXERCISE_ANIMATIONS["hip-thrust"].instructions,
+  },
   stiff: {
     exerciseId: EXERCISE_ANIMATIONS.stiff.id, hasMedia: false, mediaType: null,
     startImagePath: null, endImagePath: null, motionPath: null, attributionName: null, attributionUrl: null,
@@ -187,6 +190,12 @@ export default function Exercise3DLab() {
       cues: string[];
     }
   > = {
+    "hip-thrust": {
+      primary: EXERCISE_ANIMATIONS["hip-thrust"].muscles.primary.join(", "),
+      secondary: EXERCISE_ANIMATIONS["hip-thrust"].muscles.secondary.join(", "),
+      cadence: "Descida controlada, pausa breve e extensão suave do quadril.",
+      cues: ["Apoie a parte superior das costas no banco firme.", "Mantenha os pés inteiros no chão e estabilize a barra acolchoada.", "Alinhe tronco e coxas no alto sem arquear a lombar."],
+    },
     stiff: {
       primary: EXERCISE_ANIMATIONS.stiff.muscles.primary.join(", "),
       secondary: EXERCISE_ANIMATIONS.stiff.muscles.secondary.join(", "),
