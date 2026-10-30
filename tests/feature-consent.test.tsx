@@ -1,10 +1,23 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  fireEvent,
+  render as baseRender,
+  screen,
+  waitFor,
+} from "@testing-library/react";
+import { FeatureConsentProvider } from "../app/_components/feature-consent-provider";
+import { authClient } from "../app/_lib/auth-client";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   FeatureConsentGate,
   useFeatureConsent,
 } from "../app/_components/feature-consent";
 import { StrictMode, useState } from "react";
+vi.mock("../app/_lib/auth-client", () => ({
+  authClient: { useSession: vi.fn(() => ({ data: null })) },
+}));
+function render(ui: React.ReactNode) {
+  return baseRender(ui, { wrapper: FeatureConsentProvider });
+}
 import {
   acceptFeatureTermsAction,
   authorizeFeatureAccessAction,
@@ -40,6 +53,65 @@ async function open() {
   await screen.findByRole("dialog");
 }
 describe("feature acknowledgements", () => {
+  it("loads terms once on login and clears acceptance when the session changes", async () => {
+    const session = (id: string) => ({
+      data: { user: { id }, session: { id } },
+    });
+    vi.mocked(authClient.useSession).mockReturnValue(
+      session("A") as ReturnType<typeof authClient.useSession>,
+    );
+    vi.mocked(getFeatureTermsAction).mockImplementation(async (feature) => ({
+      success: true,
+      data: { ...terms, feature, accepted: true },
+    }));
+    const view = render(<span>Início</span>);
+    await waitFor(() => expect(getFeatureTermsAction).toHaveBeenCalledTimes(2));
+    view.rerender(
+      <FeatureConsentGate feature="EXERCISE_3D" context="one">
+        <span>Primeiro</span>
+      </FeatureConsentGate>,
+    );
+    await screen.findByText("Primeiro");
+    expect(getFeatureTermsAction).toHaveBeenCalledTimes(2);
+    vi.mocked(authClient.useSession).mockReturnValue(
+      session("B") as ReturnType<typeof authClient.useSession>,
+    );
+    vi.mocked(getFeatureTermsAction).mockImplementation(async (feature) => ({
+      success: true,
+      data: { ...terms, feature },
+    }));
+    view.rerender(
+      <FeatureConsentGate feature="EXERCISE_3D" context="two">
+        <span>Segundo</span>
+      </FeatureConsentGate>,
+    );
+    await screen.findByRole("button", { name: "Continuar para o 3D" });
+    expect(screen.queryByText("Segundo")).toBeNull();
+    expect(getFeatureTermsAction).toHaveBeenCalledTimes(4);
+    expect(authorizeFeatureAccessAction).toHaveBeenCalledOnce();
+  });
+  it("shares a newly saved acceptance with the next exercise", async () => {
+    const view = render(
+      <FeatureConsentGate feature="EXERCISE_3D" context="one">
+        <span>Primeiro</span>
+      </FeatureConsentGate>,
+    );
+    await open();
+    fireEvent.click(screen.getByRole("checkbox"));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Aceitar e continuar" }),
+    );
+    await screen.findByText("Primeiro");
+    view.rerender(
+      <FeatureConsentGate feature="EXERCISE_3D" context="two">
+        <span>Segundo</span>
+      </FeatureConsentGate>,
+    );
+    await screen.findByText("Segundo");
+    expect(getFeatureTermsAction).toHaveBeenCalledOnce();
+    expect(acceptFeatureTermsAction).toHaveBeenCalledOnce();
+    expect(authorizeFeatureAccessAction).toHaveBeenCalledTimes(2);
+  });
   it("does not reopen consent after cancellation while status is loading", async () => {
     let resolveStatus!: (
       value: Awaited<ReturnType<typeof getFeatureTermsAction>>,
@@ -78,6 +150,9 @@ describe("feature acknowledgements", () => {
   });
   beforeEach(() => {
     vi.resetAllMocks();
+    vi.mocked(authClient.useSession).mockReturnValue({
+      data: null,
+    } as ReturnType<typeof authClient.useSession>);
     vi.mocked(getFeatureTermsAction).mockResolvedValue({
       success: true,
       data: terms,
@@ -184,7 +259,7 @@ describe("feature acknowledgements", () => {
     resolve({ success: true, data: { ...terms, accepted: true } });
     await screen.findByText("Conteúdo 3D");
   });
-  it("reuses acceptance on remount, but revalidates the server and audits each resource", async () => {
+  it("reuses session acceptance across resources and audits each access", async () => {
     vi.mocked(getFeatureTermsAction).mockResolvedValue({
       success: true,
       data: { ...terms, accepted: true },
@@ -198,8 +273,7 @@ describe("feature acknowledgements", () => {
       </FeatureConsentGate>,
     );
     await screen.findByText("Extensora");
-    first.unmount();
-    render(
+    first.rerender(
       <FeatureConsentGate
         feature="EXERCISE_3D"
         context="exercise-3d:seated-leg-curl"
@@ -208,7 +282,7 @@ describe("feature acknowledgements", () => {
       </FeatureConsentGate>,
     );
     await screen.findByText("Flexora");
-    expect(getFeatureTermsAction).toHaveBeenCalledTimes(2);
+    expect(getFeatureTermsAction).toHaveBeenCalledTimes(1);
     expect(authorizeFeatureAccessAction).toHaveBeenCalledTimes(2);
     expect(authorizeFeatureAccessAction).toHaveBeenLastCalledWith(
       "EXERCISE_3D",
@@ -257,12 +331,14 @@ describe("feature acknowledgements", () => {
         <span>Novo</span>
       </FeatureConsentGate>,
     );
-    await screen.findByRole("button", { name: "Continuar para o 3D" });
     resolve({ success: true, data: { ...terms, accepted: true } });
-    await waitFor(() => expect(getFeatureTermsAction).toHaveBeenCalledTimes(2));
+    await screen.findByText("Novo");
+    expect(getFeatureTermsAction).toHaveBeenCalledTimes(1);
     expect(screen.queryByText("Antigo")).toBeNull();
-    expect(screen.queryByText("Novo")).toBeNull();
-    expect(authorizeFeatureAccessAction).not.toHaveBeenCalled();
+    expect(authorizeFeatureAccessAction).toHaveBeenCalledExactlyOnceWith(
+      "EXERCISE_3D",
+      "new",
+    );
   });
   it("keeps the scene blocked when revalidation fails and permits a retry", async () => {
     vi.mocked(getFeatureTermsAction).mockResolvedValueOnce({
