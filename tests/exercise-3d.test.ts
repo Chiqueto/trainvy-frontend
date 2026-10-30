@@ -320,6 +320,35 @@ describe("smith squat kinematics", () => {
   });
 });
 
+describe("decline bench bar path", () => {
+  it("lowers toward the lower chest with tucked elbows and stacked forearms", () => {
+    const top = getExercisePose("decline-bench-press", 0);
+    const bottom = getExercisePose("decline-bench-press", 1);
+    const inverse = bottom.tilt.clone().invert();
+    for (const limb of bottom.limbs) {
+      const upper = limb.elbow.clone().sub(limb.shoulder).applyQuaternion(inverse);
+      // Local +Y is headward: elbows must stay footward of the shoulders.
+      expect(upper.y).toBeLessThan(-0.1);
+      const abduction = Math.atan2(Math.abs(upper.x), -upper.y) * 180 / Math.PI;
+      expect(abduction).toBeGreaterThan(45);
+      expect(abduction).toBeLessThan(70);
+      const forearm = limb.wrist.clone().sub(limb.elbow).normalize();
+      expect(forearm.y).toBeGreaterThan(0.995);
+      const chestOffset = bottom.bar.clone().sub(limb.shoulder).applyQuaternion(inverse);
+      expect(chestOffset.y).toBeLessThan(-0.2);
+      expect(chestOffset.y).toBeGreaterThan(-0.3);
+    }
+    expect(bottom.bar.z).toBeGreaterThan(top.bar.z);
+    for (let step = 0; step <= 100; step++) {
+      const pose = getExercisePose("decline-bench-press", step / 100);
+      for (const limb of pose.limbs) {
+        expect(pose.bar.z).toBeGreaterThan(limb.shoulder.z);
+        expect(limb.elbow.clone().sub(limb.shoulder).applyQuaternion(inverse).y).toBeLessThan(0);
+      }
+    }
+  });
+});
+
 describe("decline bench leg support", () => {
   it("bends knees above the hips with feet secured in a neutral ankle position throughout the press", () => {
     const start = getExercisePose("decline-bench-press", 0);

@@ -265,7 +265,7 @@ export default function Exercise3DLab() {
       cues: [
         "Banco declinado a -18° com pernas e tornozelos travados com firmeza nos roletes de apoio.",
         "Antebraços verticais sustentando o peso da barra no terço inferior do esterno.",
-        "Menor solicitação no deltoide anterior com ênfase no feixe inferior/esternal do peitoral.",
+        "Cotovelos abaixo da linha dos ombros; a barra desce ao peito, sem acompanhar o rosto.",
       ],
     },
   };

@@ -10,6 +10,8 @@ export const FOREARM_LENGTH = v(0.025, -0.265, 0.03).length();
 export const INCLINE_BENCH_ANGLE = Math.PI / 6; // 30° conforme literatura biomecânica para maximizar feixe clavicular sem sobrecarga excessiva no deltoide anterior
 export const DECLINE_BENCH_ANGLE = -Math.PI / 10; // Existing illustrative bench setting (-18°), not a universal optimum.
 export const DECLINE_ROLLER_RADIUS = 0.055;
+const DECLINE_BAR_TOP = v(0, 0.88, -0.06);
+const DECLINE_BAR_BOTTOM = v(0, 0.58, 0.08);
 export const SMITH_RAIL_Z = -0.035; // Posição longitudinal dos trilhos guias verticais da máquina Smith
 
 /** Direction plus a surface normal fixes axial roll as well as segment aim. */
@@ -115,7 +117,7 @@ export function getExercisePose(
     : inclineBarbell
       ? v(0, MathUtils.lerp(1.26, 0.89, p), MathUtils.lerp(0.04, 0.14, p))
       : declineBarbell
-        ? v(0, MathUtils.lerp(0.83, 0.55, p), MathUtils.lerp(-0.22, -0.19, p))
+        ? DECLINE_BAR_TOP.clone().lerp(DECLINE_BAR_BOTTOM, p)
         : smithBarbell
           ? v(0, MathUtils.lerp(1.035, 0.655, p), -0.035)
         : v(
@@ -215,6 +217,17 @@ export function getExercisePose(
         FOREARM_LENGTH,
         v(side, -0.7, -0.4),
       );
+    } else if (declineBarbell) {
+      // Lower sternum, footward of the shoulders. The old negative-Z path
+      // lowered beside the head. Keep the elbows in the bottom stacking plane.
+      grip = bar.clone().add(v(side * 0.45, 0, 0));
+      wrist = grip.clone().add(v(0, -0.004, -0.012));
+      const bottomWrist = DECLINE_BAR_BOTTOM.clone().add(v(side * 0.45, -0.004, -0.012));
+      const bottomElbow = bottomWrist.clone().add(v(0, -FOREARM_LENGTH, 0));
+      elbow = solveJoint(
+        shoulder, wrist, ARM_LENGTH, FOREARM_LENGTH,
+        bottomElbow.sub(shoulder),
+      );
     } else if (flatDumbbell) {
       // Supino reto com halteres:
       // O peso é sustentado verticalmente pelo antebraço (sem momento de flexão no tríceps).
@@ -246,20 +259,18 @@ export function getExercisePose(
       // o antebraço fique vertical diretamente sob a barra, sustentando a carga
       // por meio da estrutura óssea e direcionando o torque para o peitoral maior.
       const gripX =
-        side * (inclineBarbell ? 0.42 : declineBarbell ? 0.465 : 0.45);
+        side * (inclineBarbell ? 0.42 : 0.45);
       grip = bar.clone().add(v(gripX, 0, 0));
       wrist = grip.clone().add(v(0, -0.004, -0.012));
 
       const bottomPole = v(
-        side * (inclineBarbell ? 0.05 : declineBarbell ? -0.05 : smithBarbell ? 0.05 : 0.0),
+        side * (inclineBarbell ? 0.05 : smithBarbell ? 0.05 : 0.0),
         -0.95,
         inclineBarbell ? -0.05 : -0.05,
       );
       const topPole = inclineBarbell
         ? v(side * 0.25, -0.8, -0.4)
-        : declineBarbell
-          ? v(side * 0.15, -0.9, -0.05)
-          : v(side * 0.25, -0.85, 0.15);
+        : v(side * 0.25, -0.85, 0.15);
       const pole = topPole.clone().lerp(bottomPole, p).normalize();
       elbow = solveJoint(shoulder, wrist, ARM_LENGTH, FOREARM_LENGTH, pole);
     }

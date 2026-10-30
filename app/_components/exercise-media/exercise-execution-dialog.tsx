@@ -112,8 +112,8 @@ const FALLBACK_3D_INSTRUCTIONS: Record<
     setup:
       "Deite-se no banco declinado travando os pés e pernas com firmeza sob os roletes acolchoados para máxima estabilidade. Retraia as escápulas contra o estofado e segure a barra com pegada que mantenha os antebraços verticais no fundo.",
     execution:
-      "Tire a barra do suporte e desça de forma controlada até tocar o terço inferior do esterno (linha submamilar), com antebraços verticais sob a carga. Empurre a barra de forma fluida de volta à posição inicial.",
-    tips: "A declinação a -18° reduz a sobrecarga no deltoide anterior e foca a contração na porção inferior e média do peitoral. Mantenha os cotovelos a cerca de 45° a 70° do tronco sem abri-los a 90°.",
+      "Desça a barra de forma controlada em direção à parte inferior do peito, mantendo os cotovelos abaixo da linha dos ombros e os antebraços aproximadamente verticais no fundo. Faça uma pausa breve sem quicar e empurre para cima, retornando sobre a região dos ombros sem levar a barra ao rosto.",
+    tips: "Mantenha as escápulas apoiadas e os cotovelos moderadamente próximos ao tronco, sem abri-los na linha do rosto. Os -18° são a regulagem desta ilustração, não um ângulo ideal universal; adapte pegada e amplitude à sua anatomia.",
   },
   "smith-bench-press": {
     description:
