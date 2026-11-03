@@ -23,6 +23,17 @@ vi.mock("next/navigation", () => ({
   }),
 }));
 
+// Chat controls are tested after consent; the real gate has its own regression suite.
+vi.mock("@/app/_components/feature-consent", () => ({
+  FeatureConsentGate: ({ children }: { children: import("react").ReactNode }) =>
+    children,
+  useFeatureConsent: () => ({
+    requestConsent: vi.fn().mockResolvedValue(true),
+    cancelConsent: vi.fn(),
+    dialog: null,
+  }),
+}));
+
 // Mock nuqs
 const mockSetChatParams = vi.fn();
 let mockChatParams = {

@@ -8,7 +8,6 @@ import {
 } from "@/app/_lib/api/fetch-generated";
 import { readReturnToCookie } from "@/app/_lib/auth-return-to";
 import { OnboardingForm } from "./_components/onboarding-form";
-import { Chat } from "@/app/_components/chat";
 
 export const dynamic = "force-dynamic";
 
@@ -47,15 +46,6 @@ export default async function OnboardingPage() {
   if (trainData.status === 401) redirect("/auth");
   if (trainData.status !== 200 && trainData.status !== 404) {
     throw new Error("Não foi possível carregar seus dados. Tente novamente.");
-  }
-
-  if (process.env.ONBOARDING_AI_ENABLED === "true") {
-    return (
-      <div className="grid lg:grid-cols-2">
-        <OnboardingForm />
-        <Chat embedded initialMessage="Quero começar a melhorar minha saúde!" />
-      </div>
-    );
   }
 
   return <OnboardingForm />;

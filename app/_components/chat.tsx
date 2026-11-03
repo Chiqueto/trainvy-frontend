@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useChat } from "@ai-sdk/react";
-import { useFeatureConsent } from "./feature-consent";
+import { FeatureConsentGate, useFeatureConsent } from "./feature-consent";
 import { fetchWithFeatureConsent } from "@/app/_lib/feature-consent-transport";
 import { getProfessionalChatModeAction } from "@/app/personal/_verification-actions";
 import {
@@ -1414,7 +1414,17 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
         />
 
         <div className="absolute inset-x-4 bottom-4 top-24 sm:top-36 flex flex-col">
-          {chatContent}
+          <FeatureConsentGate
+            feature="AI_WORKOUT"
+            context={
+              activeConversationIdRef.current
+                ? `chat:${activeConversationIdRef.current}`
+                : "chat"
+            }
+            onClose={handleClose}
+          >
+            {chatContent}
+          </FeatureConsentGate>
         </div>
       </div>
       {modalElement}

@@ -41,9 +41,6 @@ vi.mock("@/app/_lib/api/fetch-generated", () => ({
   getUserTrainData: mocks.getUserTrainData,
   upsertUserTrainData: mocks.upsertUserTrainData,
 }));
-vi.mock("@/app/_components/chat", () => ({
-  Chat: () => <div>Chat com IA</div>,
-}));
 
 import OnboardingPage from "@/app/onboarding/page";
 import { OnboardingForm } from "@/app/onboarding/_components/onboarding-form";
@@ -58,7 +55,6 @@ const input = {
 };
 beforeEach(() => {
   vi.clearAllMocks();
-  vi.stubEnv("ONBOARDING_AI_ENABLED", "");
   mocks.getSession.mockResolvedValue({ data: { user: { id: "athlete" } } });
   mocks.getCommercialContext.mockResolvedValue({
     status: 200,
@@ -73,26 +69,14 @@ afterEach(() => {
   vi.unstubAllEnvs();
 });
 
-describe("onboarding sem IA, com integração preservada", () => {
-  it.each(["", "false"])(
-    "usa o formulário por padrão e com flag %s",
-    async (flag) => {
-      vi.stubEnv("ONBOARDING_AI_ENABLED", flag);
-      render(await OnboardingPage());
-      expect(
-        screen.getByRole("button", { name: "Concluir cadastro" }),
-      ).toBeDefined();
-      expect(screen.queryByText("Chat com IA")).toBeNull();
-      expect(mocks.upsertUserTrainData).not.toHaveBeenCalled();
-    },
-  );
-  it("preserva o chat e permite concluir o cadastro pelo formulário", async () => {
-    vi.stubEnv("ONBOARDING_AI_ENABLED", "true");
+describe("onboarding sem IA", () => {
+  it("usa exclusivamente o formulário sem dependência de IA", async () => {
     render(await OnboardingPage());
-    expect(screen.getByText("Chat com IA")).toBeDefined();
     expect(
-      screen.queryByRole("button", { name: "Concluir cadastro" }),
-    ).not.toBeNull();
+      screen.getByRole("button", { name: "Concluir cadastro" }),
+    ).toBeDefined();
+    expect(screen.queryByText("Chat com IA")).toBeNull();
+    expect(mocks.upsertUserTrainData).not.toHaveBeenCalled();
   });
   it("aceita o perfil ainda não cadastrado como 404", async () => {
     mocks.getUserTrainData.mockResolvedValue({ status: 404 });

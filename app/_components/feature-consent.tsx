@@ -8,7 +8,9 @@ import {
   type ReactNode,
 } from "react";
 import { Dialog } from "radix-ui";
+import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   acceptFeatureTermsAction,
   authorizeFeatureAccessAction,
@@ -166,10 +168,14 @@ export function FeatureConsentGate({
   feature,
   context,
   children,
+  onClose,
+  className,
 }: {
   feature: Feature;
   context: string;
   children: ReactNode;
+  onClose?: () => void;
+  className?: string;
 }) {
   // A different resource must get its own server authorization before mounting.
   return (
@@ -177,6 +183,8 @@ export function FeatureConsentGate({
       key={`${feature}:${context}`}
       feature={feature}
       context={context}
+      onClose={onClose}
+      className={className}
     >
       {children}
     </ConsentGate>
@@ -187,10 +195,14 @@ function ConsentGate({
   feature,
   context,
   children,
+  onClose,
+  className,
 }: {
   feature: Feature;
   context: string;
   children: ReactNode;
+  onClose?: () => void;
+  className?: string;
 }) {
   const cache = useFeatureTermsCache();
   const { requestConsent, dialog } = useFeatureConsent();
@@ -257,20 +269,45 @@ function ConsentGate({
       if (mounted.current) setBusy(false);
     }
   }
+
+  const is3D = feature === "EXERCISE_3D";
+  const checkingText = is3D
+    ? "Verificando seu acesso ao 3D..."
+    : "Verificando seu acesso ao Coach IA...";
+  const promptText = is3D
+    ? "Para abrir a demonstração 3D, leia e aceite o aviso sobre seus limites. O aceite fica registrado na sua conta."
+    : "Para usar o Coach IA, leia e aceite o aviso sobre seus limites. O aceite fica registrado na sua conta.";
+  const buttonText = is3D ? "Continuar para o 3D" : "Continuar para o Coach IA";
+
   return (
     <>
       {authorized ? (
         children
       ) : (
-        <div className="space-y-3 rounded-xl border bg-background p-4 text-foreground">
+        <div className={cn("space-y-3 rounded-xl border bg-background p-4 text-foreground", className)}>
+          {onClose && (
+            <div className="flex items-center justify-between pb-1 border-b border-border">
+              <span className="font-heading text-sm font-semibold">
+                {is3D ? "Visualização 3D" : "Coach IA"}
+              </span>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={onClose}
+                className="size-7"
+                type="button"
+              >
+                <X className="size-4" />
+              </Button>
+            </div>
+          )}
           {busy ? (
             <p role="status" className="text-sm">
-              Verificando seu acesso ao 3D...
+              {checkingText}
             </p>
           ) : (
             <p className="text-sm">
-              Para abrir a demonstração 3D, leia e aceite o aviso sobre seus
-              limites. O aceite fica registrado na sua conta.
+              {promptText}
             </p>
           )}
           {error && (
@@ -278,7 +315,7 @@ function ConsentGate({
               {error}
             </p>
           )}
-          {!busy && <Button onClick={open}>Continuar para o 3D</Button>}
+          {!busy && <Button type="button" onClick={open}>{buttonText}</Button>}
         </div>
       )}
       {dialog}
