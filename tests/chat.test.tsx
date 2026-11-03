@@ -96,6 +96,20 @@ describe("Chat — Trainvy Planning Coach V1 & Task 2.8 Persistent Chat", () => 
           json: () => Promise.resolve({ conversations: [] }),
         });
       }
+      if (url.includes("/ai/quota")) {
+        return Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              currentDailyCount: 2,
+              remainingDailyQuota: 3,
+              dailyLimit: 5,
+              resetAt: "2026-11-04T00:00:00.000Z",
+              isAthlete: true,
+              planName: "Atleta Grátis",
+            }),
+        });
+      }
       return Promise.resolve({
         ok: true,
         json: () => Promise.resolve({}),
@@ -672,6 +686,52 @@ describe("Chat — Trainvy Planning Coach V1 & Task 2.8 Persistent Chat", () => 
       expect(
         screen.getByText(/Proposta aprovada — salvando.../i),
       ).toBeDefined();
+    });
+  });
+
+  describe("Controle de Cota Diária e Limite de Uso", () => {
+    it("exibe badge de cota com mensagens restantes para o aluno", async () => {
+      render(<Chat embedded={false} />);
+
+      expect(await screen.findByText(/3\/5 msgs hoje/i)).toBeDefined();
+    });
+
+    it("bloqueia o envio e exibe alerta visual quando a cota diária é esgotada", async () => {
+      global.fetch = vi.fn().mockImplementation((url: string) => {
+        if (url.includes("/ai/conversations")) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({ conversations: [] }),
+          });
+        }
+        if (url.includes("/ai/quota")) {
+          return Promise.resolve({
+            ok: true,
+            json: () =>
+              Promise.resolve({
+                currentDailyCount: 5,
+                remainingDailyQuota: 0,
+                dailyLimit: 5,
+                resetAt: "2026-11-04T00:00:00.000Z",
+                isAthlete: true,
+                planName: "Atleta Grátis",
+              }),
+          });
+        }
+        return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+      });
+
+      render(<Chat embedded={false} />);
+
+      expect(await screen.findByText(/0\/5 msgs hoje/i)).toBeDefined();
+      expect(
+        screen.getByText(/Você atingiu o limite gratuito de/i),
+      ).toBeDefined();
+
+      const input = screen.getByPlaceholderText(
+        /Limite diário de 5 msgs atingido/i,
+      );
+      expect(input.hasAttribute("disabled")).toBe(true);
     });
   });
 });

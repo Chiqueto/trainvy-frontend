@@ -130,7 +130,9 @@ export function PlansList({ initial }: { initial: ListAdminPlans200Item[] }) {
                       </div>
                       {e.limitValue !== null && (
                         <span className="font-mono text-[11px] font-bold text-primary">
-                          limite: {e.limitValue}
+                          {e.entitlement === "AI_CHAT"
+                            ? `limite: ${e.limitValue} msgs/dia`
+                            : `limite: ${e.limitValue}`}
                         </span>
                       )}
                     </li>

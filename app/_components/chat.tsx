@@ -26,7 +26,9 @@ import {
   Paperclip,
   FileText,
   Square,
+  Lock,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Streamdown } from "streamdown";
 import "streamdown/styles.css";
 import { useForm } from "react-hook-form";
@@ -400,7 +402,29 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
   const [quotaErrorMessage, setQuotaErrorMessage] = useState<string | null>(
     null,
   );
+  const [quota, setQuota] = useState<{
+    currentDailyCount: number;
+    remainingDailyQuota: number;
+    dailyLimit: number;
+    resetAt: string;
+    isAthlete: boolean;
+    planName: string | null;
+  } | null>(null);
   const pendingMessageRef = useRef<string>("");
+
+  const fetchQuota = useCallback(async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ai/quota`, {
+        credentials: "include",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setQuota(data);
+      }
+    } catch {
+      // Ignora erro silenciosamente
+    }
+  }, []);
 
   const {
     messages,
@@ -424,12 +448,28 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
           activeConversationIdRef.current = newConvId;
           setActiveConversationId(newConvId);
         }
+        const quotaRemaining = response.headers.get("x-ai-quota-remaining");
+        const quotaLimit = response.headers.get("x-ai-quota-limit");
+        const quotaReset = response.headers.get("x-ai-quota-reset");
+        if (quotaRemaining !== null && quotaLimit !== null) {
+          const rem = Number(quotaRemaining);
+          const lim = Number(quotaLimit);
+          setQuota((prev) => ({
+            currentDailyCount: lim - rem,
+            remainingDailyQuota: rem,
+            dailyLimit: lim,
+            resetAt: quotaReset || prev?.resetAt || "",
+            isAthlete: prev?.isAthlete ?? true,
+            planName: prev?.planName ?? null,
+          }));
+        }
         return response;
       },
       body: () => getChatRequestBody(activeConversationIdRef.current),
     }),
     onFinish: () => {
       fetchConversations();
+      fetchQuota();
     },
     onError: (error) => {
       const msg = error?.message || "";
@@ -447,7 +487,12 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
         msg.includes("AI_MINUTE_LIMIT_EXCEEDED")
       ) {
         setQuotaErrorMessage(
-          "Você atingiu o limite do Coach IA nesta versão de testes. Seu acesso será renovado automaticamente à meia-noite UTC (21h Brasília).",
+          msg.includes("Você atingiu o")
+            ? msg
+            : "Você atingiu o limite diário gratuito de mensagens do Coach IA. Seu acesso será renovado automaticamente à meia-noite UTC (21h Brasília).",
+        );
+        setQuota((prev) =>
+          prev ? { ...prev, remainingDailyQuota: 0 } : null,
         );
       } else {
         setQuotaErrorMessage(
@@ -488,12 +533,13 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
     return () => clearInterval(timer);
   }, [isLoading]);
 
-  // Carrega conversas ao abrir o chat ou na montagem
+  // Carrega conversas e status de cota ao abrir o chat ou na montagem
   useEffect(() => {
     if (embedded || chatParams.chat_open) {
       fetchConversations();
+      fetchQuota();
     }
-  }, [embedded, chatParams.chat_open, fetchConversations]);
+  }, [embedded, chatParams.chat_open, fetchConversations, fetchQuota]);
 
   useEffect(() => {
     if (embedded && initialMessage && !initialMessageSentRef.current) {
@@ -728,11 +774,30 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
                 </span>
               </div>
             </div>
-            {activeConversationTitle && (
-              <span className="max-w-[150px] truncate text-[11px] text-muted-foreground sm:max-w-[220px]">
-                {activeConversationTitle}
-              </span>
-            )}
+            <div className="flex items-center gap-2">
+              {activeConversationTitle && (
+                <span className="max-w-[150px] truncate text-[11px] text-muted-foreground sm:max-w-[200px]">
+                  {activeConversationTitle}
+                </span>
+              )}
+              {quota && (
+                <span
+                  className={cn(
+                    "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium tracking-tight",
+                    quota.remainingDailyQuota <= 0
+                      ? "bg-destructive/15 text-destructive font-semibold"
+                      : quota.remainingDailyQuota <= 2
+                        ? "bg-amber-500/15 text-amber-700 dark:text-amber-400"
+                        : "bg-primary/10 text-primary",
+                  )}
+                  title={`Limite diário: ${quota.dailyLimit} mensagens. Renova às 21h Brasília.`}
+                >
+                  {quota.remainingDailyQuota <= 0
+                    ? `0/${quota.dailyLimit} msgs hoje`
+                    : `${quota.remainingDailyQuota}/${quota.dailyLimit} msgs hoje`}
+                </span>
+              )}
+            </div>
           </div>
         </div>
 
@@ -1238,6 +1303,17 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
           </div>
         )}
 
+        {quota && quota.remainingDailyQuota <= 0 && !quotaErrorMessage && (
+          <div className="mx-5 mb-1 rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-900 dark:text-amber-200 flex items-center justify-between gap-2 animate-in fade-in duration-200">
+            <div className="flex items-center gap-2">
+              <Lock className="size-4 shrink-0 text-amber-600 dark:text-amber-400" />
+              <span>
+                Você atingiu o limite gratuito de <strong>{quota.dailyLimit} mensagens</strong> hoje. Seu acesso renova automaticamente à meia-noite UTC (21h Brasília).
+              </span>
+            </div>
+          </div>
+        )}
+
         {/* Input de arquivo oculto */}
         <input
           type="file"
@@ -1325,7 +1401,10 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
                 type="button"
                 variant="ghost"
                 size="icon"
-                disabled={isLoading}
+                disabled={
+                  isLoading ||
+                  (quota !== null && quota.remainingDailyQuota <= 0)
+                }
                 onClick={() => fileInputRef.current?.click()}
                 className="size-[42px] shrink-0 rounded-full text-muted-foreground hover:bg-secondary hover:text-foreground"
                 title="Anexar documento ou imagem"
@@ -1337,7 +1416,10 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
                 type="button"
                 variant="ghost"
                 size="icon"
-                disabled={isLoading}
+                disabled={
+                  isLoading ||
+                  (quota !== null && quota.remainingDailyQuota <= 0)
+                }
                 onClick={handleToggleVoiceRecord}
                 className="size-[42px] shrink-0 rounded-full text-muted-foreground hover:bg-secondary hover:text-foreground"
                 title="Gravar mensagem de voz"
@@ -1353,12 +1435,18 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
                     <FormControl>
                       <Input
                         {...field}
-                        placeholder={
-                          pendingAttachments.length > 0
-                            ? "Adicione uma instrução para o anexo..."
-                            : "Digite sua mensagem ou envie um áudio/documento"
+                        disabled={
+                          isLoading ||
+                          (quota !== null && quota.remainingDailyQuota <= 0)
                         }
-                        className="rounded-full border-border bg-secondary px-4 py-3 font-heading text-sm text-foreground placeholder:text-muted-foreground"
+                        placeholder={
+                          quota && quota.remainingDailyQuota <= 0
+                            ? `Limite diário de ${quota.dailyLimit} msgs atingido. Renova às 21h.`
+                            : pendingAttachments.length > 0
+                              ? "Adicione uma instrução para o anexo..."
+                              : "Digite sua mensagem ou envie um áudio/documento"
+                        }
+                        className="rounded-full border-border bg-secondary px-4 py-3 font-heading text-sm text-foreground placeholder:text-muted-foreground disabled:opacity-60"
                       />
                     </FormControl>
                   </FormItem>
@@ -1369,7 +1457,8 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
                 disabled={
                   (!form.watch("message").trim() &&
                     pendingAttachments.length === 0) ||
-                  isLoading
+                  isLoading ||
+                  (quota !== null && quota.remainingDailyQuota <= 0)
                 }
                 size="icon"
                 className="size-[42px] shrink-0 rounded-full"

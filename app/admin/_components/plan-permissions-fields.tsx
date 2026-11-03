@@ -63,6 +63,34 @@ export function PlanPermissionsFields({
                   />
                 </label>
               )}
+              {key === "AI_CHAT" && current && (
+                <label className="mt-2 flex flex-col gap-1 text-xs text-muted-foreground">
+                  Limite diário de mensagens (vazio = padrão do sistema)
+                  <input
+                    type="number"
+                    min={0}
+                    max={2147483647}
+                    step={1}
+                    value={current.limitValue ?? ""}
+                    onChange={(event) =>
+                      onChange(
+                        value.map((e) =>
+                          e.entitlement === key
+                            ? {
+                                ...e,
+                                limitValue:
+                                  event.target.value === ""
+                                    ? null
+                                    : Number(event.target.value),
+                              }
+                            : e,
+                        ),
+                      )
+                    }
+                    className="h-11 rounded-lg border border-input bg-background px-3 text-sm"
+                  />
+                </label>
+              )}
               {key === "SOURCE_LIBRARY" && (
                 <p className="mt-1 text-[11px] text-muted-foreground">
                   Recurso futuro; a biblioteca ainda não está disponível.
