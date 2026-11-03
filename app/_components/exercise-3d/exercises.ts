@@ -1,3 +1,4 @@
+import { SUMO_DUMBBELL_INSTRUCTIONS } from "./sumo-dumbbell-instructions";
 import { GOBLET_SQUAT_INSTRUCTIONS } from "./goblet-squat-instructions";
 import { HIP_ABDUCTION_INSTRUCTIONS } from "./hip-abduction-instructions";
 import { HIP_THRUST_INSTRUCTIONS } from "./hip-thrust-instructions";
@@ -36,7 +37,8 @@ export type ExerciseAnimation =
   | "stiff"
   | "hip-thrust"
   | "hip-abduction"
-  | "goblet-squat";
+  | "goblet-squat"
+  | "sumo-dumbbell-squat";
 
 export interface ExerciseDefinition {
   name: string;
@@ -51,6 +53,7 @@ export interface ExerciseDefinition {
 }
 
 export const EXERCISE_ANIMATIONS = {
+  "sumo-dumbbell-squat": { name: "Agachamento Sumô com Halter", equipment: "Um halter vertical suspenso pela cabeça superior entre as pernas", id: "67ed4623-adca-4008-8ecb-ccf19808a5f4", instructions: SUMO_DUMBBELL_INSTRUCTIONS, muscles: { primary: ["Quadríceps", "Glúteo máximo", "Adutores — magno e longo"], secondary: ["Isquiotibiais", "Glúteo médio", "Reto abdominal e oblíquo externo", "Eretores da coluna", "Flexores dos dedos e estabilizadores do punho"] } },
   "goblet-squat": {
     name: "Agachamento Goblet",
     equipment: "Halter vertical sustentado junto ao peito em pegada cálice",
@@ -259,6 +262,7 @@ export function getExerciseAnimation(
   id?: string | null,
   name?: string | null,
 ): ExerciseAnimation | null {
+  if (id === EXERCISE_ANIMATIONS["sumo-dumbbell-squat"].id) return "sumo-dumbbell-squat";
   if (id === EXERCISE_ANIMATIONS["goblet-squat"].id) return "goblet-squat";
   if (id === EXERCISE_ANIMATIONS["hip-thrust"].id) return "hip-thrust";
   if (id === EXERCISE_ANIMATIONS["hip-abduction"].id) return "hip-abduction";
@@ -301,6 +305,7 @@ export function getExerciseAnimation(
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
+    if (["agachamento sumo com halter", "sumo squat com halter", "dumbbell sumo squat", "sumo dumbbell squat"].includes(normalized)) return "sumo-dumbbell-squat";
     if (["agachamento goblet", "goblet squat", "agachamento calice", "agachamento com halter no peito"].includes(normalized)) return "goblet-squat";
     if (["elevacao pelvica", "elevacao pelvica com barra", "barbell hip thrust", "hip thrust com barra"].includes(normalized)) return "hip-thrust";
     if (["cadeira abdutora", "abducao de quadril na maquina sentada", "seated hip abduction", "seated hip abduction machine"].includes(normalized)) return "hip-abduction";

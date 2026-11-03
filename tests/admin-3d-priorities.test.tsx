@@ -82,6 +82,7 @@ describe("3D implementation queue", () => {
       exercise("00000000-0000-4000-8000-000000000113", "Stiff", 1, 19),
       exercise("00000000-0000-4000-8000-000000000114", "Elevação Pélvica", 1, 20),
       exercise("00000000-0000-4000-8000-000000000115", "Cadeira Abdutora", 1, 21),
+      exercise("67ed4623-adca-4008-8ecb-ccf19808a5f4", "Dumbbell sumo squat", 1, 22),
       exercise(
         "00000000-0000-4000-8000-000000000116",
         "Cadeira Adutora",

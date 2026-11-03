@@ -20,6 +20,7 @@ import { PecDeckMachine, type PecDeckMachineHandle } from "./pec-deck-machine";
 import { createMachineChestPressMuscleMask } from "./machine-chest-press-muscles";
 import { MachineChestPress, type MachineChestPressHandle } from "./machine-chest-press";
 import { createHipMachineMuscleAttribute } from "./hip-machine-muscles";
+import { SumoDumbbell } from "./sumo-dumbbell-equipment";
 import { createGobletSquatMuscleMask } from "./goblet-squat-muscles";
 import { HipAbductionMachine, type HipAbductionMachineHandle } from "./hip-abduction-machine";
 import { LegExtensionMachine, type LegExtensionMachineHandle } from "./leg-extension-machine";
@@ -627,6 +628,8 @@ function Athlete({
         <group ref={bar}>
           <SmithBarbell />
         </group>
+      ) : exercise === "sumo-dumbbell-squat" ? (
+        <group ref={bar}><SumoDumbbell /></group>
       ) : exercise === "goblet-squat" ? (
         <group ref={bar}>
           <GobletDumbbell />
@@ -754,6 +757,15 @@ function getCameraParams(
     }
   }
 
+  if (exercise === "sumo-dumbbell-squat") {
+    const target: [number, number, number] = [0, 0.85, 0.1];
+    switch (view) {
+      case "front": return { position: [0, 1.6, 4.1], target };
+      case "side": return { position: [-3.9, 1.5, 0.1], target };
+      case "back": return { position: [0, 1.8, -4.1], target };
+      default: return { position: [-2.7, 1.7, 2.8], target };
+    }
+  }
   if (exercise === "goblet-squat") {
     const target: [number, number, number] = [0, 0.78, 0];
     switch (view) {

@@ -265,9 +265,9 @@ describe("goblet squat 3D kinematics and anatomy", () => {
     expect(mask.itemSize).toBe(1);
     expect(mask.count).toBe(mesh.geometry.attributes.position.count);
 
-    // Verify hip machine muscle attribute remains untouched as 2 components
+    // Verify hip machine maps keep independent Smith, abductor and sumo channels
     const hipAttr = createHipMachineMuscleAttribute(mesh.geometry);
-    expect(hipAttr.itemSize).toBe(2);
+    expect(hipAttr.itemSize).toBe(3);
   });
 
   it("sets the material shader mode for goblet-squat", () => {

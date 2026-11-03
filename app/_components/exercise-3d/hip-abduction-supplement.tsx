@@ -53,8 +53,8 @@ export function HipAbductionSupplement({
         name,
         new BufferAttribute(new Float32Array(count * size), size),
       );
-    const selection = new BufferAttribute(new Float32Array(count * 2), 2);
-    for (let i = 0; i < count; i++) selection.setXY(i, 0, 1);
+    const selection = new BufferAttribute(new Float32Array(count * 3), 3);
+    for (let i = 0; i < count; i++) selection.setXYZ(i, 0, 1, 0);
     geometry.setAttribute("_hipmachinemuscles", selection);
     const result = new SkinnedMesh(geometry, material);
     result.bind(base.skeleton, base.bindMatrix);

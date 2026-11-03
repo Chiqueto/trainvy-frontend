@@ -1,3 +1,4 @@
+import { createSumoDumbbellMuscleMask } from "../app/_components/exercise-3d/sumo-dumbbell-muscles";
 // @vitest-environment node
 import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
@@ -159,12 +160,14 @@ describe("supported seated hip abduction", () => {
 
   it("keeps Smith and abductor selections independent while using one GPU attribute", () => {
     const packed = createHipMachineMuscleAttribute(mesh.geometry);
+    const sumo = createSumoDumbbellMuscleMask(mesh.geometry);
     const smith = createSmithSquatMuscleMask(mesh.geometry),
       abduction = createHipAbductionMuscleMask(mesh.geometry);
-    expect(packed.itemSize).toBe(2);
+    expect(packed.itemSize).toBe(3);
     for (let i = 0; i < packed.count; i++) {
       expect(packed.getX(i)).toBe(smith.getX(i));
       expect(packed.getY(i)).toBe(abduction.getX(i));
+      expect(packed.getZ(i)).toBe(sumo.getX(i));
     }
   });
 
