@@ -60,6 +60,7 @@ export const EXERCISE_ANIMATIONS = {
       primary: ["Quadríceps", "Glúteo máximo"],
       secondary: [
         "Adutor magno",
+        "Isquiotibiais",
         "Reto abdominal e oblíquo externo",
         "Eretores da coluna",
         "Deltoide anterior",
