@@ -1,3 +1,4 @@
+import { GOBLET_SQUAT_INSTRUCTIONS } from "./goblet-squat-instructions";
 import { HIP_ABDUCTION_INSTRUCTIONS } from "./hip-abduction-instructions";
 import { HIP_THRUST_INSTRUCTIONS } from "./hip-thrust-instructions";
 import { STIFF_INSTRUCTIONS } from "./stiff-instructions";
@@ -34,7 +35,8 @@ export type ExerciseAnimation =
   | "horizontal-leg-press"
   | "stiff"
   | "hip-thrust"
-  | "hip-abduction";
+  | "hip-abduction"
+  | "goblet-squat";
 
 export interface ExerciseDefinition {
   name: string;
@@ -49,6 +51,23 @@ export interface ExerciseDefinition {
 }
 
 export const EXERCISE_ANIMATIONS = {
+  "goblet-squat": {
+    name: "Agachamento Goblet",
+    equipment: "Halter vertical sustentado junto ao peito em pegada cálice",
+    id: "9e9f7973-098d-432d-8745-ee8c126fe576",
+    instructions: GOBLET_SQUAT_INSTRUCTIONS,
+    muscles: {
+      primary: ["Quadríceps", "Glúteo máximo"],
+      secondary: [
+        "Adutor magno",
+        "Reto abdominal e oblíquo externo",
+        "Eretores da coluna",
+        "Deltoide anterior",
+        "Bíceps braquial",
+        "Flexores do antebraço",
+      ],
+    },
+  },
   "hip-abduction": { name: "Cadeira Abdutora", equipment: "Máquina abdutora sentada, encosto, almofadas externas e apoios móveis dos pés", id: "00000000-0000-4000-8000-000000000115", instructions: HIP_ABDUCTION_INSTRUCTIONS, muscles: { primary: ["Abdutores do quadril — glúteos médio/mínimo e tensor da fáscia lata"], secondary: ["Glúteo máximo"] } },
   "hip-thrust": { name: "Elevação Pélvica", equipment: "Barra acolchoada, banco firme e pés no chão", id: "00000000-0000-4000-8000-000000000114", instructions: HIP_THRUST_INSTRUCTIONS, muscles: { primary: ["Glúteo máximo"], secondary: ["Isquiotibiais", "Quadríceps", "Adutor magno", "Glúteo médio", "Reto abdominal, oblíquo externo e eretores da coluna"] } },
   stiff: {
@@ -239,6 +258,7 @@ export function getExerciseAnimation(
   id?: string | null,
   name?: string | null,
 ): ExerciseAnimation | null {
+  if (id === EXERCISE_ANIMATIONS["goblet-squat"].id) return "goblet-squat";
   if (id === EXERCISE_ANIMATIONS["hip-thrust"].id) return "hip-thrust";
   if (id === EXERCISE_ANIMATIONS["hip-abduction"].id) return "hip-abduction";
   if (id === EXERCISE_ANIMATIONS.stiff.id) return "stiff";
@@ -280,6 +300,7 @@ export function getExerciseAnimation(
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
+    if (["agachamento goblet", "goblet squat", "agachamento calice", "agachamento com halter no peito"].includes(normalized)) return "goblet-squat";
     if (["elevacao pelvica", "elevacao pelvica com barra", "barbell hip thrust", "hip thrust com barra"].includes(normalized)) return "hip-thrust";
     if (["cadeira abdutora", "abducao de quadril na maquina sentada", "seated hip abduction", "seated hip abduction machine"].includes(normalized)) return "hip-abduction";
     if (["stiff", "stiff com barra", "stiff-leg deadlift", "stiff leg deadlift", "levantamento terra com pernas quase estendidas"].includes(normalized)) return "stiff";
