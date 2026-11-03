@@ -465,6 +465,10 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
         restNormal,
         posedNormal,
       );
+      if (exercise === "goblet-squat") {
+        wristSupport?.quaternion.copy(bones.get(`forearm_${suffix}`)!.quaternion);
+        bones.get(`hand_${suffix}`)!.quaternion.copy(bones.get(`forearm_${suffix}`)!.quaternion);
+      }
       if (exercise === "machine-fly" || exercise === "prone-leg-curl" || exercise === "hack-squat" || exercise === "leg-press-45" || exercise === "horizontal-leg-press" || exercise === "stiff" || exercise === "hip-thrust") {
         bones.get(`forearm_${suffix}`)!.quaternion.copy(limb.handRotation);
         wristSupport?.quaternion.copy(limb.handRotation);
@@ -486,8 +490,11 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
       }
       const hand = bones.get(`hand_${suffix}`)!;
       hand.position.copy(wrist);
-      // The new hands are sculpted around the horizontal bar in their bind pose.
-      hand.quaternion.copy(limb.handRotation);
+      if (exercise === "goblet-squat") {
+        hand.quaternion.copy(bones.get(`forearm_${suffix}`)!.quaternion);
+      } else {
+        hand.quaternion.copy(limb.handRotation);
+      }
     }
     return pose;
   };

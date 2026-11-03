@@ -213,27 +213,34 @@ function Dumbbell() {
 function GobletDumbbell() {
   return (
     <group>
+      {/* Barra de pegada central cromada com ranhuras */}
       <mesh castShadow>
-        <cylinderGeometry args={[0.014, 0.014, 0.22, 20]} />
+        <cylinderGeometry args={[0.015, 0.015, 0.24, 24]} />
         <meshStandardMaterial
           color="#cbd5e1"
-          metalness={0.85}
-          roughness={0.3}
+          metalness={0.9}
+          roughness={0.25}
         />
       </mesh>
+      {/* Cabeças hexagonais emborrachadas nas extremidades */}
       {[-1, 1].map((side) => (
-        <group key={side} position={[0, side * 0.1, 0]}>
+        <group key={side} position={[0, side * 0.11, 0]}>
           <mesh castShadow>
-            <cylinderGeometry args={[0.09, 0.09, 0.08, 6]} />
+            <cylinderGeometry args={[0.085, 0.085, 0.08, 6]} />
             <meshStandardMaterial
-              color="#222c3c"
-              roughness={0.7}
-              metalness={0.15}
+              color="#1e293b"
+              roughness={0.8}
+              metalness={0.1}
             />
           </mesh>
-          <mesh position={[0, side * 0.042, 0]}>
-            <cylinderGeometry args={[0.048, 0.048, 0.008, 6]} />
-            <meshStandardMaterial color="#f97316" roughness={0.6} />
+          {/* Chanfro da extremidade hexagonal */}
+          <mesh position={[0, side * 0.041, 0]}>
+            <cylinderGeometry args={[0.075, 0.082, 0.01, 6]} />
+            <meshStandardMaterial
+              color="#0f172a"
+              roughness={0.85}
+              metalness={0.05}
+            />
           </mesh>
         </group>
       ))}

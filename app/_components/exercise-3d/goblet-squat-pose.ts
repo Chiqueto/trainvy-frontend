@@ -23,8 +23,8 @@ export function getGobletSquatPose(depth: number) {
       .applyQuaternion(tilt)
       .add(hipCenter);
 
-  // Center of the dumbbell resting vertically in front of upper chest
-  const gobletCenter = body(v(0, 0.06, 0.34));
+  // Center of the dumbbell resting vertically against upper chest
+  const gobletCenter = body(v(0, 0.06, 0.28));
 
   const limbs = [-1, 1].map((side) => {
     const hip = body(v(side * 0.14, -0.28, 0.08));
@@ -34,10 +34,10 @@ export function getGobletSquatPose(depth: number) {
     const footRotation = new Quaternion();
 
     const shoulder = body(v(side * 0.215, 0.224, 0.132));
-    // Hands cupped under the top bell of the dumbbell, right against the sides of the handle
-    const wrist = body(v(side * 0.09, 0.06, 0.34));
-    // Elbows tucked down and slightly forward
-    const elbowPole = v(side * 0.25, -0.9, 0.25).applyQuaternion(tilt).normalize();
+    // Hands cupped firmly against the sides and base of the top bell of the dumbbell
+    const wrist = body(v(side * 0.08, 0.06, 0.28));
+    // Elbows tucked naturally down toward the ribs
+    const elbowPole = v(side * 0.25, -0.85, 0.18).applyQuaternion(tilt).normalize();
     const elbow = solveJoint(
       shoulder,
       wrist,
