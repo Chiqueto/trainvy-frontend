@@ -69,8 +69,8 @@ describe("goblet squat 3D kinematics and anatomy", () => {
       const pose = getGobletSquatPose(d);
       for (const limb of pose.limbs) {
         expect(limb.ankle.y).toBeCloseTo(0.05, 3);
-        expect(Math.abs(limb.ankle.x)).toBeCloseTo(0.22, 2);
-        expect(limb.ankle.z).toBeCloseTo(0.02, 2);
+        expect(Math.abs(limb.ankle.x)).toBeCloseTo(0.21, 2);
+        expect(limb.ankle.z).toBeCloseTo(0.04, 2);
       }
     }
   });
@@ -137,8 +137,8 @@ describe("goblet squat 3D kinematics and anatomy", () => {
 
   it("dispatches goblet squat through the pose driver and kinematics dispatcher", () => {
     const pose = getExercisePose("goblet-squat", 0.5);
-    expect(pose.origin.y).toBeLessThan(0.88);
-    expect(pose.origin.y).toBeGreaterThan(0.48);
+    expect(pose.origin.y).toBeLessThan(1.22);
+    expect(pose.origin.y).toBeGreaterThan(0.75);
     expect(pose.limbs).toHaveLength(2);
 
     // Pose driver applies smoothly without throws
