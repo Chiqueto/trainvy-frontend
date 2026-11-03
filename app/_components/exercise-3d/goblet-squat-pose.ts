@@ -23,8 +23,12 @@ export function getGobletSquatPose(depth: number) {
       .applyQuaternion(tilt)
       .add(hipCenter);
 
-  // Center of the dumbbell resting vertically against upper chest
-  const gobletCenter = body(v(0, 0.06, 0.28));
+  // Center of the dumbbell resting vertically against upper chest:
+  // Top bell is at +0.11m relative to center; lowering dumbbell center to -0.02m
+  // places the underside of the top bell (+0.07m to +0.09m) directly into the athlete's cupped palms (wrist at +0.06m).
+  // Both dumbbell and wrists are synchronized at z = 0.335 in body space,
+  // giving the rear bell face 1.5 cm clearance from the sternum while the hands firmly cup the bell.
+  const gobletCenter = body(v(0, -0.02, 0.335));
 
   const limbs = [-1, 1].map((side) => {
     const hip = body(v(side * 0.14, -0.28, 0.08));
@@ -35,7 +39,7 @@ export function getGobletSquatPose(depth: number) {
 
     const shoulder = body(v(side * 0.215, 0.224, 0.132));
     // Hands cupped firmly against the sides and base of the top bell of the dumbbell
-    const wrist = body(v(side * 0.08, 0.06, 0.28));
+    const wrist = body(v(side * 0.072, 0.06, 0.335));
     // Elbows tucked naturally down toward the ribs
     const elbowPole = v(side * 0.25, -0.85, 0.18).applyQuaternion(tilt).normalize();
     const elbow = solveJoint(

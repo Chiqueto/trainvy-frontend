@@ -146,6 +146,60 @@ describe("goblet squat 3D kinematics and anatomy", () => {
     expect(driverResult.origin.y).toBeCloseTo(pose.origin.y, 3);
   });
 
+  it("verifies hand and dumbbell alignment in goblet squat with no chest clipping", () => {
+    const top = apply("goblet-squat", 0);
+    const handL = mesh.skeleton.bones.find((b) => b.name === "hand_L")!;
+    const sled = mesh.skeleton.bones.find((b) => b.name === "sled")!;
+    mesh.skeleton.update();
+    handL.updateMatrixWorld(true);
+    sled.updateMatrixWorld(true);
+
+    const pos = mesh.geometry.attributes.position;
+    const sIdx = mesh.geometry.attributes.skinIndex;
+    const sW = mesh.geometry.attributes.skinWeight;
+    const handLIdx = mesh.skeleton.bones.indexOf(handL);
+    const bInv = mesh.skeleton.boneInverses[handLIdx];
+    const bMat = handL.matrixWorld;
+
+    let hSum = new Vector3();
+    let count = 0;
+    const vTemp = new Vector3();
+
+    for (let i = 0; i < pos.count; i++) {
+      for (let k = 0; k < 4; k++) {
+        if (sIdx.getComponent(i, k) === handLIdx && sW.getComponent(i, k) > 0.8) {
+          vTemp.set(pos.getX(i), pos.getY(i), pos.getZ(i));
+          vTemp.applyMatrix4(bInv).applyMatrix4(bMat);
+          hSum.add(vTemp);
+          count++;
+        }
+      }
+    }
+    const hAvg = hSum.clone().divideScalar(count);
+
+    // 1. Z alignment: hand center and dumbbell shaft are aligned to within 5mm
+    expect(Math.abs(hAvg.z - top.bar.z)).toBeLessThan(0.005);
+
+    // 2. Y alignment: hand cups the base of the top bell (top bell is at bar.y + 0.11, underside is at +0.07 to +0.09)
+    const yOffset = hAvg.y - top.bar.y;
+    expect(yOffset).toBeGreaterThan(0.07);
+    expect(yOffset).toBeLessThan(0.11);
+
+    // 3. Chest clearance: posterior dumbbell bell face does not clip into the chest
+    let chestFrontZ = -Infinity;
+    for (let i = 0; i < pos.count; i++) {
+      const y = pos.getY(i);
+      const z = pos.getZ(i);
+      if (Math.abs(pos.getX(i)) < 0.08 && y > 1.18 && y < 1.32 && z > 0.1) {
+        vTemp.set(pos.getX(i), y, z);
+        vTemp.applyMatrix4(mesh.skeleton.boneInverses[0]).applyMatrix4(sled.matrixWorld);
+        if (vTemp.z > chestFrontZ) chestFrontZ = vTemp.z;
+      }
+    }
+    const dumbbellRearFaceZ = top.bar.z - 0.085;
+    expect(dumbbellRearFaceZ).toBeGreaterThan(chestFrontZ);
+  });
+
   it("loads the muscle map with matching athlete asset hash and valid selections", () => {
     expect(map.baseAssetSha256).toBe(manifest.sha256);
     expect(map.selections.length).toBe(34);
