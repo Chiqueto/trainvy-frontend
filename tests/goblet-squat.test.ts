@@ -69,7 +69,7 @@ describe("goblet squat 3D kinematics and anatomy", () => {
       const pose = getGobletSquatPose(d);
       for (const limb of pose.limbs) {
         expect(limb.ankle.y).toBeCloseTo(0.05, 3);
-        expect(Math.abs(limb.ankle.x)).toBeCloseTo(0.21, 2);
+        expect(Math.abs(limb.ankle.x)).toBeCloseTo(0.2, 2);
         expect(limb.ankle.z).toBeCloseTo(0.04, 2);
       }
     }

@@ -374,7 +374,7 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
       const { side, hip, knee, ankle, footRotation, shoulder, elbow, wrist } =
         limb;
       const suffix = side < 0 ? "L" : "R";
-      if (exercise === "goblet-squat" || exercise === "hip-abduction" || exercise === "hip-thrust" || exercise === "stiff" || exercise === "horizontal-leg-press" || exercise === "leg-press-45" || exercise === "hack-squat" || exercise === "prone-leg-curl" || exercise === "seated-leg-curl" || exercise === "leg-extension" || exercise === "decline-bench-press" || exercise === "pec-deck" || exercise === "machine-fly" || exercise === "machine-chest-press") {
+      if (exercise === "hip-abduction" || exercise === "hip-thrust" || exercise === "stiff" || exercise === "horizontal-leg-press" || exercise === "leg-press-45" || exercise === "hack-squat" || exercise === "prone-leg-curl" || exercise === "seated-leg-curl" || exercise === "leg-extension" || exercise === "decline-bench-press" || exercise === "pec-deck" || exercise === "machine-fly" || exercise === "machine-chest-press") {
         const restHip = rest.get(`thigh_${suffix}`)!;
         const restKnee = rest.get(`shin_${suffix}`)!;
         const restAnkle = rest.get(`foot_${suffix}`)!;
