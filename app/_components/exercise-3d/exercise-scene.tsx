@@ -20,6 +20,7 @@ import { PecDeckMachine, type PecDeckMachineHandle } from "./pec-deck-machine";
 import { createMachineChestPressMuscleMask } from "./machine-chest-press-muscles";
 import { MachineChestPress, type MachineChestPressHandle } from "./machine-chest-press";
 import { createHipMachineMuscleAttribute } from "./hip-machine-muscles";
+import { createGobletSquatMuscleMask } from "./goblet-squat-muscles";
 import { HipAbductionMachine, type HipAbductionMachineHandle } from "./hip-abduction-machine";
 import { LegExtensionMachine, type LegExtensionMachineHandle } from "./leg-extension-machine";
 import { SeatedLegCurlMachine, type SeatedLegCurlMachineHandle } from "./seated-leg-curl-machine";
@@ -201,6 +202,37 @@ function Dumbbell() {
           </mesh>
           <mesh position={[side * 0.04, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
             <cylinderGeometry args={[0.045, 0.045, 0.008, 6]} />
+            <meshStandardMaterial color="#f97316" roughness={0.6} />
+          </mesh>
+        </group>
+      ))}
+    </group>
+  );
+}
+
+function GobletDumbbell() {
+  return (
+    <group>
+      <mesh castShadow>
+        <cylinderGeometry args={[0.014, 0.014, 0.22, 20]} />
+        <meshStandardMaterial
+          color="#cbd5e1"
+          metalness={0.85}
+          roughness={0.3}
+        />
+      </mesh>
+      {[-1, 1].map((side) => (
+        <group key={side} position={[0, side * 0.1, 0]}>
+          <mesh castShadow>
+            <cylinderGeometry args={[0.09, 0.09, 0.08, 6]} />
+            <meshStandardMaterial
+              color="#222c3c"
+              roughness={0.7}
+              metalness={0.15}
+            />
+          </mesh>
+          <mesh position={[0, side * 0.042, 0]}>
+            <cylinderGeometry args={[0.048, 0.048, 0.008, 6]} />
             <meshStandardMaterial color="#f97316" roughness={0.6} />
           </mesh>
         </group>
@@ -490,6 +522,7 @@ function Athlete({
         object.geometry.setAttribute("_smithbenchmuscles", createSmithBenchMuscleMask(object.geometry));
         object.geometry.setAttribute("_machinechestpressmuscles", createMachineChestPressMuscleMask(object.geometry));
         object.geometry.setAttribute("_hipmachinemuscles",createHipMachineMuscleAttribute(object.geometry));
+        object.geometry.setAttribute("_gobletsquatmuscles", createGobletSquatMuscleMask(object.geometry));
         object.geometry.setAttribute("_legdetailmuscles", createLegDetailMuscleAttribute(object.geometry));
         object.geometry.setAttribute("_lowerbodymuscles", createLowerBodyMuscleAttribute(object.geometry));
         geometries.add(object.geometry);
@@ -526,6 +559,11 @@ function Athlete({
     const depth = getExerciseDepth(phase);
     const pose = rig.applyPose(exercise, depth);
     bar.current?.position.copy(pose.bar);
+    if (exercise === "goblet-squat") {
+      bar.current?.quaternion.copy(pose.tilt);
+    } else {
+      bar.current?.quaternion.identity();
+    }
     leftDumbbell.current?.position.copy(pose.limbs[0].grip);
     rightDumbbell.current?.position.copy(pose.limbs[1].grip);
     leftDumbbell.current?.quaternion.copy(pose.limbs[0].handRotation);
@@ -581,6 +619,10 @@ function Athlete({
       ) : exercise === "smith-squat" ? (
         <group ref={bar}>
           <SmithBarbell />
+        </group>
+      ) : exercise === "goblet-squat" ? (
+        <group ref={bar}>
+          <GobletDumbbell />
         </group>
       ) : (
         <group ref={bar}>
@@ -702,6 +744,21 @@ function getCameraParams(
       case "perspective":
       default:
         return { position: [2.3, 1.55, 2.7], target };
+    }
+  }
+
+  if (exercise === "goblet-squat") {
+    const target: [number, number, number] = [0, 0.78, 0];
+    switch (view) {
+      case "front":
+        return { position: [0, 1.15, 3.1], target: [0, 0.82, 0] };
+      case "side":
+        return { position: [2.9, 0.95, 0], target };
+      case "back":
+        return { position: [-0.35, 1.25, -2.9], target };
+      case "perspective":
+      default:
+        return { position: [2.1, 1.35, 2.4], target };
     }
   }
 

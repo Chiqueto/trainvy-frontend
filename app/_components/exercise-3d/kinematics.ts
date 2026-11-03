@@ -1,3 +1,4 @@
+import { getGobletSquatPose } from "./goblet-squat-pose";
 import { getHipAbductionPose } from "./hip-abduction-pose";
 import { getHipThrustPose } from "./hip-thrust-pose";
 import { getStiffPose } from "./stiff-pose";
@@ -80,6 +81,7 @@ export function getExercisePose(
   exercise: ExerciseAnimation,
   depth: number,
 ): ReturnType<typeof getFlatDumbbellFlyPose> {
+  if (exercise === "goblet-squat") return getGobletSquatPose(depth);
   if (exercise === "flat-dumbbell-fly") return getFlatDumbbellFlyPose(depth);
   if (exercise === "leg-extension") return getLegExtensionPose(depth);
   if (exercise === "seated-leg-curl") return getSeatedLegCurlPose(depth);
@@ -463,7 +465,7 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
         restNormal,
         posedNormal,
       );
-      if (exercise === "machine-fly" || exercise === "prone-leg-curl" || exercise === "hack-squat" || exercise === "leg-press-45" || exercise === "horizontal-leg-press" || exercise === "stiff" || exercise === "hip-thrust") {
+      if (exercise === "goblet-squat" || exercise === "machine-fly" || exercise === "prone-leg-curl" || exercise === "hack-squat" || exercise === "leg-press-45" || exercise === "horizontal-leg-press" || exercise === "stiff" || exercise === "hip-thrust") {
         bones.get(`forearm_${suffix}`)!.quaternion.copy(limb.handRotation);
         wristSupport?.quaternion.copy(limb.handRotation);
       }

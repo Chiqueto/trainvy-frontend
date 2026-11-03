@@ -23,6 +23,7 @@ import type { GetExerciseMedia200 } from "@/app/_lib/api/fetch-generated";
 import { Button } from "@/components/ui/button";
 
 const LAB_MEDIA_DATA: Record<ExerciseAnimation, GetExerciseMedia200> = {
+  "goblet-squat": { exerciseId: EXERCISE_ANIMATIONS["goblet-squat"].id, hasMedia: false, mediaType: null, startImagePath: null, endImagePath: null, motionPath: null, attributionName: null, attributionUrl: null, instructions: EXERCISE_ANIMATIONS["goblet-squat"].instructions },
   "hip-abduction": { exerciseId: EXERCISE_ANIMATIONS["hip-abduction"].id, hasMedia: false, mediaType: null, startImagePath: null, endImagePath: null, motionPath: null, attributionName: null, attributionUrl: null, instructions: EXERCISE_ANIMATIONS["hip-abduction"].instructions },
   "hip-thrust": {
     exerciseId: EXERCISE_ANIMATIONS["hip-thrust"].id, hasMedia: false, mediaType: null, startImagePath: null, endImagePath: null, motionPath: null, attributionName: null, attributionUrl: null, instructions: EXERCISE_ANIMATIONS["hip-thrust"].instructions,
@@ -191,6 +192,7 @@ export default function Exercise3DLab() {
       cues: string[];
     }
   > = {
+    "goblet-squat": { primary: EXERCISE_ANIMATIONS["goblet-squat"].muscles.primary.join(", "), secondary: EXERCISE_ANIMATIONS["goblet-squat"].muscles.secondary.join(", "), cadence: "Descida controlada (excêntrica ~2s), pausa breve embaixo e subida suave empurrando o solo.", cues: ["Mantenha o halter firme colado ao peito.", "Mantenha o peito aberto e tronco ereto.", "Joelhos na direção dos dedos dos pés; desça entre as pernas."] },
     "hip-abduction": { primary: EXERCISE_ANIMATIONS["hip-abduction"].muscles.primary.join(", "), secondary: EXERCISE_ANIMATIONS["hip-abduction"].muscles.secondary.join(", "), cadence: "Fechamento controlado e abertura suave contra a carga.", cues: ["Mantenha costas e pelve apoiadas.", "Empurre as almofadas externas sem balançar o tronco.", "Pés acompanham os suportes móveis; não bata as placas."] },
     "hip-thrust": {
       primary: EXERCISE_ANIMATIONS["hip-thrust"].muscles.primary.join(", "),
