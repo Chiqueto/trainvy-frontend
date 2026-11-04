@@ -9,6 +9,7 @@ import { EXERCISE_ANIMATIONS, getExerciseAnimation } from "../app/_components/ex
 import { createDeadliftMuscleMask } from "../app/_components/exercise-3d/deadlift-muscles";
 import { createStiffMuscleMask } from "../app/_components/exercise-3d/stiff-muscles";
 import atlas from "../app/_components/exercise-3d/sumo-dumbbell-muscle-map.json";
+import upperBack from "../app/_components/exercise-3d/deadlift-upper-back-map.json";
 
 let mesh: SkinnedMesh;
 let apply: ReturnType<typeof createPoseDriver>;
@@ -33,6 +34,9 @@ describe("conventional deadlift", () => {
     const bottom = getExercisePose("deadlift", 1);
     expect(bottom.bar.y).toBeCloseTo(0.2, 5);
     expect(bottom.bar.y).toBeLessThan(top.bar.y);
+    expect(bottom.bar.z).toBeLessThan(0.28);
+    expect(bottom.limbs[0].knee.z - bottom.limbs[0].ankle.z).toBeLessThan(0.10);
+    expect(bottom.limbs[0].knee.z - bottom.limbs[0].ankle.z).toBeGreaterThan(0);
     expect(bottom.limbs[0].hip.y).toBeLessThan(top.limbs[0].hip.y - 0.2);
     for (let i = 0; i <= 100; i++) {
       const pose = getExercisePose("deadlift", i / 100);
@@ -55,6 +59,19 @@ describe("conventional deadlift", () => {
     expect(mask.getX(quad.indices[0])).toBe(1);
     expect(stiff.getX(quad.indices[0])).toBe(0);
     expect(mask.getX(hamstring.indices[0])).toBe(1);
+  });
+  it("shows the latissimus and trapezius as secondary participants", () => {
+    const mask = createDeadliftMuscleMask(mesh.geometry);
+    for (const label of ["Latissimus_dorsi_muscle", "Descending_part_of_trapezius_muscle", "Transverse_part_of_trapezius_muscle", "Ascending_part_of_trapezius_muscle"]) {
+      for (const side of ["l", "r"]) {
+        const surfaces = upperBack.selections.filter(s => s.name === label + side);
+        expect(surfaces.length).toBeGreaterThan(0);
+        for (const surface of surfaces) {
+          expect(surface.confidence).toBeGreaterThanOrEqual(0.8);
+          expect(mask.getX(surface.indices[0])).toBeCloseTo(0.45);
+        }
+      }
+    }
   });
   it("keeps the skinned feet grounded and the bar clear of non-hand tissue", () => {
     const pos = mesh.geometry.attributes.position, indices = mesh.geometry.attributes.skinIndex, weights = mesh.geometry.attributes.skinWeight;

@@ -14,9 +14,9 @@ export function getDeadliftPose(depth: number) {
   const armReach = Math.sqrt(ARM_LENGTH ** 2 + FOREARM_LENGTH ** 2 +
     2 * ARM_LENGTH * FOREARM_LENGTH * Math.cos(MathUtils.degToRad(8)));
   const p = MathUtils.clamp(depth, 0, 1);
-  const hipCenter = v(0, MathUtils.lerp(0.9, 0.61, p), MathUtils.lerp(0.08, -0.2, p));
+  const hipCenter = v(0, MathUtils.lerp(0.9, 0.61, p), MathUtils.lerp(0.08, -0.25, p));
   const barY = MathUtils.lerp(0.88, 0.2, p);
-  const barZ = MathUtils.lerp(0.25, 0.32, p);
+  const barZ = MathUtils.lerp(0.25, 0.27, p);
   const shoulderAt = (angle: number) => v(0.215, 0.504, 0.052)
     .applyAxisAngle(v(1, 0, 0), angle).add(hipCenter);
   let angle = 0;

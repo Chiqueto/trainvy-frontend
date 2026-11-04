@@ -1,5 +1,6 @@
 import { BufferAttribute, type BufferGeometry } from "three";
 import atlas from "./sumo-dumbbell-muscle-map.json";
+import upperBack from "./deadlift-upper-back-map.json";
 import manifest from "../../../public/models/exercise-3d/model-manifest.json";
 
 // Explicit conventional-deadlift selection. Atlas provides only surface identities,
@@ -9,6 +10,7 @@ const secondary = /^(?:Adductor_magnus|Rectus_abdominis_muscle|External_abdomina
 
 export function createDeadliftMuscleMask(geometry: BufferGeometry) {
   if (atlas.baseAssetSha256 !== manifest.sha256) throw new Error("Deadlift mask does not match athlete asset");
+  if (upperBack.baseAssetSha256 !== manifest.sha256) throw new Error("Deadlift back mask does not match athlete asset");
   const values = new Float32Array(geometry.getAttribute("position").count);
   for (const surface of atlas.selections) {
     const role = primary.test(surface.name) ? 1 : secondary.test(surface.name) ? 0.45 : 0;
@@ -16,6 +18,12 @@ export function createDeadliftMuscleMask(geometry: BufferGeometry) {
     for (const index of surface.indices) {
       if (index >= values.length) throw new Error("Deadlift mask exceeds athlete geometry");
       values[index] = role;
+    }
+  }
+  for (const surface of upperBack.selections) {
+    for (const index of surface.indices) {
+      if (index >= values.length) throw new Error("Deadlift back mask exceeds athlete geometry");
+      values[index] = Math.max(values[index], 0.45);
     }
   }
   return new BufferAttribute(values, 1);
