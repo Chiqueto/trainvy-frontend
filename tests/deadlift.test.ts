@@ -24,7 +24,7 @@ describe("conventional deadlift", () => {
   it("recognizes its own variant without conflating nearby exercises", () => {
     expect(getExerciseAnimation(EXERCISE_ANIMATIONS.deadlift.id)).toBe("deadlift");
     expect(getExerciseAnimation(null, "Levantamento Terra")).toBe("deadlift");
-    expect(getExerciseAnimation(null, "Levantamento Terra Sumô")).toBeNull();
+    expect(getExerciseAnimation(null, "Levantamento Terra Sumô")).toBe("sumo-deadlift");
     expect(getExerciseAnimation(null, "Romanian deadlift")).toBeNull();
     expect(getExerciseAnimation(null, "Stiff")).toBe("stiff");
   });

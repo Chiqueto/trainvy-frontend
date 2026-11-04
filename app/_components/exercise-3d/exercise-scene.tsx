@@ -21,7 +21,7 @@ import { createMachineChestPressMuscleMask } from "./machine-chest-press-muscles
 import { MachineChestPress, type MachineChestPressHandle } from "./machine-chest-press";
 import { createHipMachineMuscleAttribute } from "./hip-machine-muscles";
 import { SumoDumbbell } from "./sumo-dumbbell-equipment";
-import { createGobletSquatMuscleMask } from "./goblet-squat-muscles";
+import { createGobletSumoDeadliftAttribute } from "./sumo-deadlift-muscles";
 import { HipAbductionMachine, type HipAbductionMachineHandle } from "./hip-abduction-machine";
 import { LegExtensionMachine, type LegExtensionMachineHandle } from "./leg-extension-machine";
 import { SeatedLegCurlMachine, type SeatedLegCurlMachineHandle } from "./seated-leg-curl-machine";
@@ -530,7 +530,7 @@ function Athlete({
         object.geometry.setAttribute("_smithbenchmuscles", createSmithBenchMuscleMask(object.geometry));
         object.geometry.setAttribute("_machinechestpressmuscles", createMachineChestPressMuscleMask(object.geometry));
         object.geometry.setAttribute("_hipmachinemuscles",createHipMachineMuscleAttribute(object.geometry));
-        object.geometry.setAttribute("_gobletsquatmuscles", createGobletSquatMuscleMask(object.geometry));
+        object.geometry.setAttribute("_gobletsquatmuscles", createGobletSumoDeadliftAttribute(object.geometry));
         object.geometry.setAttribute("_legdetailmuscles", createLegDetailMuscleAttribute(object.geometry));
         object.geometry.setAttribute("_lowerbodymuscles", createLowerBodyMuscleAttribute(object.geometry));
         geometries.add(object.geometry);
@@ -564,7 +564,7 @@ function Athlete({
   }, [rig, onReady]);
   useFrame((_, delta) => {
     const phase = tick(delta);
-    const depth = exercise === "deadlift" ? 1 - getExerciseDepth(phase) : getExerciseDepth(phase);
+    const depth = exercise === "deadlift" || exercise === "sumo-deadlift" ? 1 - getExerciseDepth(phase) : getExerciseDepth(phase);
     const pose = rig.applyPose(exercise, depth);
     bar.current?.position.copy(pose.bar);
     if (exercise === "goblet-squat") {
@@ -679,7 +679,7 @@ function getCameraParams(
       default: return { position: [-2.7, 1.9, 2.9], target };
     }
   }
-  if (exercise === "stiff" || exercise === "deadlift") {
+  if (exercise === "stiff" || exercise === "deadlift" || exercise === "sumo-deadlift") {
     const target: [number, number, number] = [0, 0.9, 0.1];
     switch (view) {
       case "front": return { position: [0, 1.7, 4.3], target };

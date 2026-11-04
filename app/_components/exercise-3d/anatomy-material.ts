@@ -48,7 +48,8 @@ export function createTissueMaterial() {
         varying float vMachineChestPressMuscles;
         attribute vec4 _hipmachinemuscles;
         varying float vDeadliftMuscles;
-        attribute float _gobletsquatmuscles;
+        attribute vec2 _gobletsquatmuscles;
+        varying float vSumoDeadliftMuscles;
         attribute vec4 _legdetailmuscles;
         varying float vStiffMuscles; varying float vHipThrustMuscles;
         varying float vLegExtensionMuscles;
@@ -68,13 +69,13 @@ export function createTissueMaterial() {
         "#include <uv_vertex>",
         `#include <uv_vertex>
         vTissue = uv; vFibre = uv1; vFlyMuscles = _flymuscles; vLegExtensionMuscles = _legdetailmuscles.x; vSeatedLegCurlMuscles = _legdetailmuscles.y; vStiffMuscles = _legdetailmuscles.z; vHipThrustMuscles = _legdetailmuscles.w; vProneLegCurlMuscles = _lowerbodymuscles.x; vHackSquatMuscles = _lowerbodymuscles.y; vLegPress45Muscles = _lowerbodymuscles.z; vHorizontalLegPressMuscles = _lowerbodymuscles.w;
-        vExerciseMuscles = _exercisemuscles; vPecDeckMuscles = _pecdeckmuscles; vSmithBenchMuscles = _smithbenchmuscles; vMachineChestPressMuscles = _machinechestpressmuscles; vSmithSquatMuscles = _hipmachinemuscles.x; vHipAbductionMuscles = _hipmachinemuscles.y; vSumoDumbbellMuscles = _hipmachinemuscles.z; vDeadliftMuscles = _hipmachinemuscles.w; vGobletSquatMuscles = _gobletsquatmuscles; vRestSurface = position;`,
+        vExerciseMuscles = _exercisemuscles; vPecDeckMuscles = _pecdeckmuscles; vSmithBenchMuscles = _smithbenchmuscles; vMachineChestPressMuscles = _machinechestpressmuscles; vSmithSquatMuscles = _hipmachinemuscles.x; vHipAbductionMuscles = _hipmachinemuscles.y; vSumoDumbbellMuscles = _hipmachinemuscles.z; vDeadliftMuscles = _hipmachinemuscles.w; vGobletSquatMuscles = _gobletsquatmuscles.x; vSumoDeadliftMuscles = _gobletsquatmuscles.y; vRestSurface = position;`,
       );
     shader.fragmentShader = shader.fragmentShader
       .replace(
         "#include <common>",
         `#include <common>
-        varying vec2 vTissue; varying vec2 vFibre; varying float vDeadliftMuscles;
+        varying vec2 vTissue; varying vec2 vFibre; varying float vDeadliftMuscles; varying float vSumoDeadliftMuscles;
         varying vec3 vExerciseMuscles; varying vec3 vRestSurface;
         varying float vPecDeckMuscles; varying float vFlyMuscles; varying float vSmithBenchMuscles; varying float vMachineChestPressMuscles;
         varying float vSmithSquatMuscles; varying float vHipAbductionMuscles; varying float vGobletSquatMuscles; varying float vSumoDumbbellMuscles; varying float vLegExtensionMuscles; varying float vSeatedLegCurlMuscles; varying float vProneLegCurlMuscles; varying float vHackSquatMuscles; varying float vLegPress45Muscles; varying float vHorizontalLegPressMuscles; varying float vStiffMuscles; varying float vHipThrustMuscles;
@@ -124,6 +125,7 @@ export function createTissueMaterial() {
         if (exerciseMode > 16.5 && exerciseMode < 17.5) mask = vHipAbductionMuscles;
         if (exerciseMode > 18.5 && exerciseMode < 19.5) mask = vSumoDumbbellMuscles;
         if (exerciseMode > 19.5 && exerciseMode < 20.5) mask = vDeadliftMuscles;
+        if (exerciseMode > 20.5 && exerciseMode < 21.5) mask = vSumoDeadliftMuscles;
         if (exerciseMode > 17.5 && exerciseMode < 18.5) mask = vGobletSquatMuscles;
         if (exerciseMode > 15.5 && exerciseMode < 16.5) mask = vHipThrustMuscles;
         if (exerciseMode > 14.5 && exerciseMode < 15.5) mask = vStiffMuscles;
@@ -158,7 +160,7 @@ export function createTissueMaterial() {
           + (1.0-tissue) * (1.0-smoothstep(0.02,0.12,dot(diffuseColor.rgb,vec3(0.333)))) * 0.28, 0.38, 0.88);`,
       );
   };
-  material.customProgramCacheKey = () => "trainvy-atelier-tissue-v22-deadlift";
+  material.customProgramCacheKey = () => "trainvy-atelier-tissue-v23-sumo-deadlift";
   const setAppearance = (exercise: ExerciseAnimation, highlighted = true) => {
     const modes: Record<ExerciseAnimation, number> = {
       squat: 0,
@@ -182,6 +184,7 @@ export function createTissueMaterial() {
       "goblet-squat": 18,
       "sumo-dumbbell-squat": 19,
       deadlift: 20,
+      "sumo-deadlift": 21,
       "flat-dumbbell-fly": 7,
       "smith-bench-press": 5,
       "machine-chest-press": 6,

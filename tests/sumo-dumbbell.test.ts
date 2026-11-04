@@ -61,10 +61,10 @@ describe("wide stance squat with a suspended dumbbell", () => {
     for (const name of [
       "Agachamento sumô com barra",
       "Sumo squat",
-      "Sumo deadlift",
       "Agachamento sumô com kettlebell",
     ])
       expect(getExerciseAnimation(null, name)).toBeNull();
+    expect(getExerciseAnimation(null, "Sumo deadlift")).toBe("sumo-deadlift");
   });
 
   it("uses a wider fixed stance than Goblet, tracks the toes and preserves the real limb lengths", () => {

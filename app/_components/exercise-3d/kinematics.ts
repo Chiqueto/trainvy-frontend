@@ -1,5 +1,6 @@
 import { getSumoDumbbellPose } from "./sumo-dumbbell-pose";
 import { getDeadliftPose } from "./deadlift-pose";
+import { getSumoDeadliftPose } from "./sumo-deadlift-pose";
 import { getGobletSquatPose } from "./goblet-squat-pose";
 import { getHipAbductionPose } from "./hip-abduction-pose";
 import { getHipThrustPose } from "./hip-thrust-pose";
@@ -85,6 +86,7 @@ export function getExercisePose(
 ): ReturnType<typeof getFlatDumbbellFlyPose> {
   if (exercise === "sumo-dumbbell-squat") return getSumoDumbbellPose(depth);
   if (exercise === "deadlift") return getDeadliftPose(depth);
+  if (exercise === "sumo-deadlift") return getSumoDeadliftPose(depth);
   if (exercise === "goblet-squat") return getGobletSquatPose(depth);
   if (exercise === "flat-dumbbell-fly") return getFlatDumbbellFlyPose(depth);
   if (exercise === "leg-extension") return getLegExtensionPose(depth);
@@ -378,7 +380,7 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
       const { side, hip, knee, ankle, footRotation, shoulder, elbow, wrist } =
         limb;
       const suffix = side < 0 ? "L" : "R";
-      if (exercise === "deadlift" || exercise === "sumo-dumbbell-squat" || exercise === "hip-abduction" || exercise === "hip-thrust" || exercise === "stiff" || exercise === "horizontal-leg-press" || exercise === "leg-press-45" || exercise === "hack-squat" || exercise === "prone-leg-curl" || exercise === "seated-leg-curl" || exercise === "leg-extension" || exercise === "decline-bench-press" || exercise === "pec-deck" || exercise === "machine-fly" || exercise === "machine-chest-press") {
+      if (exercise === "sumo-deadlift" || exercise === "deadlift" || exercise === "sumo-dumbbell-squat" || exercise === "hip-abduction" || exercise === "hip-thrust" || exercise === "stiff" || exercise === "horizontal-leg-press" || exercise === "leg-press-45" || exercise === "hack-squat" || exercise === "prone-leg-curl" || exercise === "seated-leg-curl" || exercise === "leg-extension" || exercise === "decline-bench-press" || exercise === "pec-deck" || exercise === "machine-fly" || exercise === "machine-chest-press") {
         const restHip = rest.get(`thigh_${suffix}`)!;
         const restKnee = rest.get(`shin_${suffix}`)!;
         const restAnkle = rest.get(`foot_${suffix}`)!;
@@ -469,7 +471,7 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
         restNormal,
         posedNormal,
       );
-      if (exercise === "deadlift" || exercise === "sumo-dumbbell-squat" || exercise === "goblet-squat" || exercise === "machine-fly" || exercise === "prone-leg-curl" || exercise === "hack-squat" || exercise === "leg-press-45" || exercise === "horizontal-leg-press" || exercise === "stiff" || exercise === "hip-thrust") {
+      if (exercise === "sumo-deadlift" || exercise === "deadlift" || exercise === "sumo-dumbbell-squat" || exercise === "goblet-squat" || exercise === "machine-fly" || exercise === "prone-leg-curl" || exercise === "hack-squat" || exercise === "leg-press-45" || exercise === "horizontal-leg-press" || exercise === "stiff" || exercise === "hip-thrust") {
         bones.get(`forearm_${suffix}`)!.quaternion.copy(limb.handRotation);
         wristSupport?.quaternion.copy(limb.handRotation);
       }
