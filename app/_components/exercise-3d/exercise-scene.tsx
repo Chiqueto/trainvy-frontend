@@ -564,7 +564,7 @@ function Athlete({
   }, [rig, onReady]);
   useFrame((_, delta) => {
     const phase = tick(delta);
-    const depth = getExerciseDepth(phase);
+    const depth = exercise === "deadlift" ? 1 - getExerciseDepth(phase) : getExerciseDepth(phase);
     const pose = rig.applyPose(exercise, depth);
     bar.current?.position.copy(pose.bar);
     if (exercise === "goblet-squat") {
@@ -679,7 +679,7 @@ function getCameraParams(
       default: return { position: [-2.7, 1.9, 2.9], target };
     }
   }
-  if (exercise === "stiff") {
+  if (exercise === "stiff" || exercise === "deadlift") {
     const target: [number, number, number] = [0, 0.9, 0.1];
     switch (view) {
       case "front": return { position: [0, 1.7, 4.3], target };

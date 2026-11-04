@@ -67,7 +67,6 @@ describe("barbell stiff-leg hip hinge", () => {
       "Levantamento terra romeno",
       "Stiff com halteres",
       "Stiff unilateral",
-      "Levantamento terra",
     ])
       expect(getExerciseAnimation(null, name)).toBeNull();
   });
