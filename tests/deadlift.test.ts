@@ -34,9 +34,10 @@ describe("conventional deadlift", () => {
     const bottom = getExercisePose("deadlift", 1);
     expect(bottom.bar.y).toBeCloseTo(0.2, 5);
     expect(bottom.bar.y).toBeLessThan(top.bar.y);
-    expect(bottom.bar.z).toBeLessThan(0.28);
-    expect(bottom.limbs[0].knee.z - bottom.limbs[0].ankle.z).toBeLessThan(0.10);
+    expect(bottom.bar.z).toBeLessThan(0.24);
+    expect(bottom.limbs[0].knee.z - bottom.limbs[0].ankle.z).toBeGreaterThan(0.04);
     expect(bottom.limbs[0].knee.z - bottom.limbs[0].ankle.z).toBeGreaterThan(0);
+    expect(Math.abs(bottom.limbs[0].shoulder.z - bottom.bar.z)).toBeLessThan(0.04);
     expect(bottom.limbs[0].hip.y).toBeLessThan(top.limbs[0].hip.y - 0.2);
     for (let i = 0; i <= 100; i++) {
       const pose = getExercisePose("deadlift", i / 100);
@@ -95,6 +96,7 @@ describe("conventional deadlift", () => {
       expect(ground).toBeGreaterThan(-0.012);
       expect(ground).toBeLessThan(0.012);
       expect(shaftGap, closest).toBeGreaterThan(-0.004);
+      if (depth === 1) expect(shaftGap).toBeLessThan(0.025);
       expect(Math.max(...gripGap)).toBeLessThan(0.012);
     }
   });
