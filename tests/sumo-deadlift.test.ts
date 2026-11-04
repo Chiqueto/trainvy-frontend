@@ -60,7 +60,7 @@ describe("sumo deadlift", () => {
     expect(mask.getX(hamstring.indices[0])).toBe(1);
     expect(createDeadliftMuscleMask(mesh.geometry).getX(hamstring.indices[0])).toBeCloseTo(0.45);
     const packed = createGobletSumoDeadliftAttribute(mesh.geometry), goblet = createGobletSquatMuscleMask(mesh.geometry);
-    expect(packed.itemSize).toBe(2);
+    expect(packed.itemSize).toBe(3);
     for (let i = 0; i < packed.count; i++) {
       expect(packed.getX(i)).toBe(goblet.getX(i));
       expect(packed.getY(i)).toBe(mask.getX(i));

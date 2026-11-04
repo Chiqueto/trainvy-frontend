@@ -2,6 +2,7 @@ import { BufferAttribute, type BufferGeometry } from "three";
 import atlas from "./sumo-dumbbell-muscle-map.json";
 import manifest from "../../../public/models/exercise-3d/model-manifest.json";
 import { createGobletSquatMuscleMask } from "./goblet-squat-muscles";
+import { createStandingCalfMuscleMask } from "./standing-calf-muscles";
 
 // Explicit sumo-deadlift selection. Atlas provides only surface identities,
 // never the roles; these roles were reviewed independently for this exercise.
@@ -25,7 +26,8 @@ export function createSumoDeadliftMuscleMask(geometry: BufferGeometry) {
 export function createGobletSumoDeadliftAttribute(geometry: BufferGeometry) {
   const goblet = createGobletSquatMuscleMask(geometry);
   const sumo = createSumoDeadliftMuscleMask(geometry);
-  const packed = new BufferAttribute(new Float32Array(goblet.count * 2), 2);
-  for (let i = 0; i < goblet.count; i++) packed.setXY(i, goblet.getX(i), sumo.getX(i));
+  const calf = createStandingCalfMuscleMask(geometry);
+  const packed = new BufferAttribute(new Float32Array(goblet.count * 3), 3);
+  for (let i = 0; i < goblet.count; i++) packed.setXYZ(i, goblet.getX(i), sumo.getX(i), calf.getX(i));
   return packed;
 }
