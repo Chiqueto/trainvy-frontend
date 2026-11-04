@@ -1,6 +1,6 @@
 // Service Worker do Trainvy (PWA) — Hardening & Privacy-First Security
-// Versão do cache: v2 (substitui e purga v1 legada para eliminar HTML autenticado em cache)
-const CACHE_NAME = "trainvy-static-v2";
+// Versão do cache: v3 (inclui suporte a Web Push Notifications)
+const CACHE_NAME = "trainvy-static-v3";
 
 // ALLOWLIST RESTRITA: Somente recursos estáticos públicos e independentes de sessão.
 // NUNCA incluir "/", "/profile", "/admin" ou qualquer rota HTML autenticada aqui!
@@ -122,3 +122,54 @@ self.addEventListener("fetch", (event) => {
     );
   }
 });
+
+// ─── Push Notifications ────────────────────────────────────────────
+
+self.addEventListener("push", (event) => {
+  if (!event.data) return;
+
+  let payload = {};
+  try {
+    payload = event.data.json();
+  } catch (err) {
+    payload = {
+      title: "Trainvy",
+      body: event.data.text(),
+    };
+  }
+
+  const title = payload.title || "Trainvy";
+  const options = {
+    body: payload.body || "",
+    icon: "/icon-192.png",
+    badge: "/symbol.png",
+    tag: payload.type || "trainvy-notification",
+    renotify: true,
+    data: {
+      url: payload.url || "/",
+      notificationId: payload.notificationId,
+    },
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+
+  const targetUrl = event.notification.data?.url || "/";
+
+  event.waitUntil(
+    clients
+      .matchAll({ type: "window", includeUncontrolled: true })
+      .then((clientList) => {
+        for (const client of clientList) {
+          if (new URL(client.url).origin === self.location.origin) {
+            return client.focus().then(() => client.navigate(targetUrl));
+          }
+        }
+        return clients.openWindow(targetUrl);
+      }),
+  );
+});
+

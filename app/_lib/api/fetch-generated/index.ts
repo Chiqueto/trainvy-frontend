@@ -3379,6 +3379,38 @@ export type PatchAiConsent500 = {
   code: string;
 };
 
+export type GetAiQuota200 = {
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  currentDailyCount: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  remainingDailyQuota: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  dailyLimit: number;
+  resetAt: string;
+  isAthlete: boolean;
+  /** @nullable */
+  planName: string | null;
+};
+
+export type GetAiQuota401 = {
+  error: string;
+  code: string;
+};
+
+export type GetAiQuota500 = {
+  error: string;
+  code: string;
+};
+
 export type ListPublicPlansParams = {
   audience: ListPublicPlansAudience;
 };
@@ -16295,6 +16327,189 @@ export type GetExerciseEvolution500 = {
   code: string;
 };
 
+export type RegisterPushSubscriptionBody = {
+  endpoint: string;
+  /** @minLength 1 */
+  p256dh: string;
+  /** @minLength 1 */
+  auth: string;
+  userAgent?: string;
+};
+
+export type RegisterPushSubscription201 = {
+  id: string;
+};
+
+export type RegisterPushSubscription401 = {
+  error: string;
+  code: string;
+};
+
+export type RegisterPushSubscription500 = {
+  error: string;
+  code: string;
+};
+
+export type RevokePushSubscriptionBody = {
+  endpoint: string;
+};
+
+export type RevokePushSubscription200 = {
+  success: boolean;
+};
+
+export type RevokePushSubscription401 = {
+  error: string;
+  code: string;
+};
+
+export type RevokePushSubscription500 = {
+  error: string;
+  code: string;
+};
+
+export type ListNotificationsParams = {
+  cursor?: string;
+  /**
+   * @minimum 1
+   * @maximum 50
+   */
+  limit?: number;
+};
+
+export type ListNotifications200NotificationsItem = {
+  id: string;
+  type: string;
+  title: string;
+  body: string;
+  data: unknown | null;
+  /**
+   * @nullable
+   * @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+   */
+  readAt: string | null;
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$ */
+  sentAt: string;
+};
+
+export type ListNotifications200 = {
+  notifications: ListNotifications200NotificationsItem[];
+  unreadCount: number;
+  /** @nullable */
+  nextCursor: string | null;
+};
+
+export type ListNotifications401 = {
+  error: string;
+  code: string;
+};
+
+export type ListNotifications500 = {
+  error: string;
+  code: string;
+};
+
+export type MarkNotificationRead200 = {
+  success: boolean;
+};
+
+export type MarkNotificationRead401 = {
+  error: string;
+  code: string;
+};
+
+export type MarkNotificationRead404 = {
+  error: string;
+  code: string;
+};
+
+export type MarkNotificationRead500 = {
+  error: string;
+  code: string;
+};
+
+export type MarkAllNotificationsRead200 = {
+  success: boolean;
+  count: number;
+};
+
+export type MarkAllNotificationsRead401 = {
+  error: string;
+  code: string;
+};
+
+export type MarkAllNotificationsRead500 = {
+  error: string;
+  code: string;
+};
+
+export type GetNotificationPreferences200 = {
+  streakReminder: boolean;
+  /**
+   * @minimum 0
+   * @maximum 23
+   */
+  streakReminderHour: number;
+  coachLinked: boolean;
+  workoutAssigned: boolean;
+};
+
+export type GetNotificationPreferences401 = {
+  error: string;
+  code: string;
+};
+
+export type GetNotificationPreferences500 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateNotificationPreferencesBody = {
+  streakReminder?: boolean;
+  /**
+   * @minimum 0
+   * @maximum 23
+   */
+  streakReminderHour?: number;
+  coachLinked?: boolean;
+  workoutAssigned?: boolean;
+};
+
+export type UpdateNotificationPreferences200 = {
+  streakReminder: boolean;
+  /**
+   * @minimum 0
+   * @maximum 23
+   */
+  streakReminderHour: number;
+  coachLinked: boolean;
+  workoutAssigned: boolean;
+};
+
+export type UpdateNotificationPreferences401 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateNotificationPreferences500 = {
+  error: string;
+  code: string;
+};
+
+export type CronStreakReminders200 = {
+  sent: number;
+};
+
+export type CronStreakReminders401 = {
+  error: string;
+  code: string;
+};
+
+export type CronStreakReminders500 = {
+  error: string;
+  code: string;
+};
+
 /**
  * @summary List workout plans
  */
@@ -18766,6 +18981,51 @@ export const patchAiConsent = async (
     method: "PATCH",
     headers: { "Content-Type": "application/json", ...options?.headers },
     body: JSON.stringify(patchAiConsentBody),
+  });
+};
+
+/**
+ * @summary Get AI usage quota and limits for authenticated user
+ */
+export type getAiQuotaResponse200 = {
+  data: GetAiQuota200;
+  status: 200;
+};
+
+export type getAiQuotaResponse401 = {
+  data: GetAiQuota401;
+  status: 401;
+};
+
+export type getAiQuotaResponse500 = {
+  data: GetAiQuota500;
+  status: 500;
+};
+
+export type getAiQuotaResponseSuccess = getAiQuotaResponse200 & {
+  headers: Headers;
+};
+export type getAiQuotaResponseError = (
+  | getAiQuotaResponse401
+  | getAiQuotaResponse500
+) & {
+  headers: Headers;
+};
+
+export type getAiQuotaResponse =
+  | getAiQuotaResponseSuccess
+  | getAiQuotaResponseError;
+
+export const getGetAiQuotaUrl = () => {
+  return `/ai/quota`;
+};
+
+export const getAiQuota = async (
+  options?: RequestInit,
+): Promise<getAiQuotaResponse> => {
+  return customFetch<getAiQuotaResponse>(getGetAiQuotaUrl(), {
+    ...options,
+    method: "GET",
   });
 };
 
@@ -26302,4 +26562,421 @@ export const getExerciseEvolution = async (
       method: "GET",
     },
   );
+};
+
+/**
+ * @summary Register a push subscription for the current device
+ */
+export type registerPushSubscriptionResponse201 = {
+  data: RegisterPushSubscription201;
+  status: 201;
+};
+
+export type registerPushSubscriptionResponse401 = {
+  data: RegisterPushSubscription401;
+  status: 401;
+};
+
+export type registerPushSubscriptionResponse500 = {
+  data: RegisterPushSubscription500;
+  status: 500;
+};
+
+export type registerPushSubscriptionResponseSuccess =
+  registerPushSubscriptionResponse201 & {
+    headers: Headers;
+  };
+export type registerPushSubscriptionResponseError = (
+  | registerPushSubscriptionResponse401
+  | registerPushSubscriptionResponse500
+) & {
+  headers: Headers;
+};
+
+export type registerPushSubscriptionResponse =
+  | registerPushSubscriptionResponseSuccess
+  | registerPushSubscriptionResponseError;
+
+export const getRegisterPushSubscriptionUrl = () => {
+  return `/push-subscriptions/`;
+};
+
+export const registerPushSubscription = async (
+  registerPushSubscriptionBody: RegisterPushSubscriptionBody,
+  options?: RequestInit,
+): Promise<registerPushSubscriptionResponse> => {
+  return customFetch<registerPushSubscriptionResponse>(
+    getRegisterPushSubscriptionUrl(),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(registerPushSubscriptionBody),
+    },
+  );
+};
+
+/**
+ * @summary Revoke a push subscription
+ */
+export type revokePushSubscriptionResponse200 = {
+  data: RevokePushSubscription200;
+  status: 200;
+};
+
+export type revokePushSubscriptionResponse401 = {
+  data: RevokePushSubscription401;
+  status: 401;
+};
+
+export type revokePushSubscriptionResponse500 = {
+  data: RevokePushSubscription500;
+  status: 500;
+};
+
+export type revokePushSubscriptionResponseSuccess =
+  revokePushSubscriptionResponse200 & {
+    headers: Headers;
+  };
+export type revokePushSubscriptionResponseError = (
+  | revokePushSubscriptionResponse401
+  | revokePushSubscriptionResponse500
+) & {
+  headers: Headers;
+};
+
+export type revokePushSubscriptionResponse =
+  | revokePushSubscriptionResponseSuccess
+  | revokePushSubscriptionResponseError;
+
+export const getRevokePushSubscriptionUrl = () => {
+  return `/push-subscriptions/`;
+};
+
+export const revokePushSubscription = async (
+  revokePushSubscriptionBody: RevokePushSubscriptionBody,
+  options?: RequestInit,
+): Promise<revokePushSubscriptionResponse> => {
+  return customFetch<revokePushSubscriptionResponse>(
+    getRevokePushSubscriptionUrl(),
+    {
+      ...options,
+      method: "DELETE",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(revokePushSubscriptionBody),
+    },
+  );
+};
+
+/**
+ * @summary List user notifications with cursor pagination
+ */
+export type listNotificationsResponse200 = {
+  data: ListNotifications200;
+  status: 200;
+};
+
+export type listNotificationsResponse401 = {
+  data: ListNotifications401;
+  status: 401;
+};
+
+export type listNotificationsResponse500 = {
+  data: ListNotifications500;
+  status: 500;
+};
+
+export type listNotificationsResponseSuccess = listNotificationsResponse200 & {
+  headers: Headers;
+};
+export type listNotificationsResponseError = (
+  | listNotificationsResponse401
+  | listNotificationsResponse500
+) & {
+  headers: Headers;
+};
+
+export type listNotificationsResponse =
+  | listNotificationsResponseSuccess
+  | listNotificationsResponseError;
+
+export const getListNotificationsUrl = (params?: ListNotificationsParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/notifications/?${stringifiedParams}`
+    : `/notifications/`;
+};
+
+export const listNotifications = async (
+  params?: ListNotificationsParams,
+  options?: RequestInit,
+): Promise<listNotificationsResponse> => {
+  return customFetch<listNotificationsResponse>(
+    getListNotificationsUrl(params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Mark a single notification as read
+ */
+export type markNotificationReadResponse200 = {
+  data: MarkNotificationRead200;
+  status: 200;
+};
+
+export type markNotificationReadResponse401 = {
+  data: MarkNotificationRead401;
+  status: 401;
+};
+
+export type markNotificationReadResponse404 = {
+  data: MarkNotificationRead404;
+  status: 404;
+};
+
+export type markNotificationReadResponse500 = {
+  data: MarkNotificationRead500;
+  status: 500;
+};
+
+export type markNotificationReadResponseSuccess =
+  markNotificationReadResponse200 & {
+    headers: Headers;
+  };
+export type markNotificationReadResponseError = (
+  | markNotificationReadResponse401
+  | markNotificationReadResponse404
+  | markNotificationReadResponse500
+) & {
+  headers: Headers;
+};
+
+export type markNotificationReadResponse =
+  | markNotificationReadResponseSuccess
+  | markNotificationReadResponseError;
+
+export const getMarkNotificationReadUrl = (id: string) => {
+  return `/notifications/${id}/read`;
+};
+
+export const markNotificationRead = async (
+  id: string,
+  options?: RequestInit,
+): Promise<markNotificationReadResponse> => {
+  return customFetch<markNotificationReadResponse>(
+    getMarkNotificationReadUrl(id),
+    {
+      ...options,
+      method: "PATCH",
+    },
+  );
+};
+
+/**
+ * @summary Mark all notifications as read
+ */
+export type markAllNotificationsReadResponse200 = {
+  data: MarkAllNotificationsRead200;
+  status: 200;
+};
+
+export type markAllNotificationsReadResponse401 = {
+  data: MarkAllNotificationsRead401;
+  status: 401;
+};
+
+export type markAllNotificationsReadResponse500 = {
+  data: MarkAllNotificationsRead500;
+  status: 500;
+};
+
+export type markAllNotificationsReadResponseSuccess =
+  markAllNotificationsReadResponse200 & {
+    headers: Headers;
+  };
+export type markAllNotificationsReadResponseError = (
+  | markAllNotificationsReadResponse401
+  | markAllNotificationsReadResponse500
+) & {
+  headers: Headers;
+};
+
+export type markAllNotificationsReadResponse =
+  | markAllNotificationsReadResponseSuccess
+  | markAllNotificationsReadResponseError;
+
+export const getMarkAllNotificationsReadUrl = () => {
+  return `/notifications/read-all`;
+};
+
+export const markAllNotificationsRead = async (
+  options?: RequestInit,
+): Promise<markAllNotificationsReadResponse> => {
+  return customFetch<markAllNotificationsReadResponse>(
+    getMarkAllNotificationsReadUrl(),
+    {
+      ...options,
+      method: "POST",
+    },
+  );
+};
+
+/**
+ * @summary Get current user notification preferences
+ */
+export type getNotificationPreferencesResponse200 = {
+  data: GetNotificationPreferences200;
+  status: 200;
+};
+
+export type getNotificationPreferencesResponse401 = {
+  data: GetNotificationPreferences401;
+  status: 401;
+};
+
+export type getNotificationPreferencesResponse500 = {
+  data: GetNotificationPreferences500;
+  status: 500;
+};
+
+export type getNotificationPreferencesResponseSuccess =
+  getNotificationPreferencesResponse200 & {
+    headers: Headers;
+  };
+export type getNotificationPreferencesResponseError = (
+  | getNotificationPreferencesResponse401
+  | getNotificationPreferencesResponse500
+) & {
+  headers: Headers;
+};
+
+export type getNotificationPreferencesResponse =
+  | getNotificationPreferencesResponseSuccess
+  | getNotificationPreferencesResponseError;
+
+export const getGetNotificationPreferencesUrl = () => {
+  return `/notification-preferences/`;
+};
+
+export const getNotificationPreferences = async (
+  options?: RequestInit,
+): Promise<getNotificationPreferencesResponse> => {
+  return customFetch<getNotificationPreferencesResponse>(
+    getGetNotificationPreferencesUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Update current user notification preferences
+ */
+export type updateNotificationPreferencesResponse200 = {
+  data: UpdateNotificationPreferences200;
+  status: 200;
+};
+
+export type updateNotificationPreferencesResponse401 = {
+  data: UpdateNotificationPreferences401;
+  status: 401;
+};
+
+export type updateNotificationPreferencesResponse500 = {
+  data: UpdateNotificationPreferences500;
+  status: 500;
+};
+
+export type updateNotificationPreferencesResponseSuccess =
+  updateNotificationPreferencesResponse200 & {
+    headers: Headers;
+  };
+export type updateNotificationPreferencesResponseError = (
+  | updateNotificationPreferencesResponse401
+  | updateNotificationPreferencesResponse500
+) & {
+  headers: Headers;
+};
+
+export type updateNotificationPreferencesResponse =
+  | updateNotificationPreferencesResponseSuccess
+  | updateNotificationPreferencesResponseError;
+
+export const getUpdateNotificationPreferencesUrl = () => {
+  return `/notification-preferences/`;
+};
+
+export const updateNotificationPreferences = async (
+  updateNotificationPreferencesBody: UpdateNotificationPreferencesBody,
+  options?: RequestInit,
+): Promise<updateNotificationPreferencesResponse> => {
+  return customFetch<updateNotificationPreferencesResponse>(
+    getUpdateNotificationPreferencesUrl(),
+    {
+      ...options,
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(updateNotificationPreferencesBody),
+    },
+  );
+};
+
+/**
+ * @summary Send streak reminder push notifications (Vercel Cron)
+ */
+export type cronStreakRemindersResponse200 = {
+  data: CronStreakReminders200;
+  status: 200;
+};
+
+export type cronStreakRemindersResponse401 = {
+  data: CronStreakReminders401;
+  status: 401;
+};
+
+export type cronStreakRemindersResponse500 = {
+  data: CronStreakReminders500;
+  status: 500;
+};
+
+export type cronStreakRemindersResponseSuccess =
+  cronStreakRemindersResponse200 & {
+    headers: Headers;
+  };
+export type cronStreakRemindersResponseError = (
+  | cronStreakRemindersResponse401
+  | cronStreakRemindersResponse500
+) & {
+  headers: Headers;
+};
+
+export type cronStreakRemindersResponse =
+  | cronStreakRemindersResponseSuccess
+  | cronStreakRemindersResponseError;
+
+export const getCronStreakRemindersUrl = () => {
+  return `/cron/streak-reminders`;
+};
+
+export const cronStreakReminders = async (
+  options?: RequestInit,
+): Promise<cronStreakRemindersResponse> => {
+  return customFetch<cronStreakRemindersResponse>(getCronStreakRemindersUrl(), {
+    ...options,
+    method: "GET",
+  });
 };
