@@ -14,6 +14,7 @@ import { GamificationThemeSelector } from "./_components/gamification-theme-sele
 import Link from "next/link";
 import { FeedbackButton } from "./_components/feedback-button";
 import { PwaInstallCard } from "@/app/_components/pwa/pwa-install-card";
+import { PushNotificationCard } from "@/app/_components/pwa/push-notification-card";
 import { Logo } from "@/app/_components/logo";
 import { ProfileMetricsSection } from "./_components/profile-metrics-section";
 import { SportsProfileSection } from "./_components/sports-profile-section";
@@ -153,6 +154,9 @@ export default async function ProfilePage() {
 
         {/* Instalação do Aplicativo (PWA) */}
         <PwaInstallCard />
+
+        {/* Notificações Push */}
+        <PushNotificationCard />
 
         {/* Feedback do Beta */}
         <FeedbackButton />

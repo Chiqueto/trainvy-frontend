@@ -158,10 +158,13 @@ Primeira opção: PostgreSQL + pgvector, evitando nova infraestrutura sem necess
 | `GOOGLE_GENERATIVE_AI_API_KEY` | `...` | Gemini API Key |
 | `NODE_ENV` | `production` | Ambiente de execução |
 
-## PWA — IMPLEMENTADO
+## PWA & Notificações Push — IMPLEMENTADO
 
 - **Manifesto**: `app/manifest.ts` exportando `MetadataRoute.Manifest` com display `standalone`, orientação `portrait`, tema dark (`#09090b`), shortcuts para rotas principais (`/`, `/planning`, `/history`, `/stats`) e ícones de alta resolução (192x192 e 512x512, inclusive maskable).
-- **Service Worker**: `public/sw.js` com cache estático para fontes, ícones e mídias de exercícios (`/exercise-media/`), estratégia de navegação com fallback offline amigável e bypass estrito (network-only) para rotas dinâmicas `/api/` e autenticação.
+- **Service Worker**: `public/sw.js` (cache v3) com cache estático para fontes, ícones e mídias de exercícios (`/exercise-media/`), estratégia de navegação com fallback offline amigável e bypass estrito (network-only) para rotas dinâmicas `/api/` e autenticação.
+- **Web Push Notifications**: Padrão W3C com autenticação VAPID ECDSA P-256 e entrega via Push API. Handlers nativos `push` e `notificationclick` no SW com foco de abas existentes e navegação inteligente.
+- **Preferências Granulares**: `NotificationPreferences` com controle para lembrete de streak (`streakReminder`), treinador vinculado (`coachLinked`) e treinos atribuídos (`workoutAssigned`).
+- **Cron de Lembrete de Streak**: Vercel Cron diário em `/cron/streak-reminders` autenticado via `CRON_SECRET`, utilizando a função pura `calculateWorkoutStreak` para avisar apenas usuários com streak ativo que ainda não treinaram no dia.
 - **Provider & Hooks**: `app/_components/pwa/pwa-provider.tsx` com `useSyncExternalStore` para detecção reativa de modo standalone e iOS sem cascading renders, escuta do evento `beforeinstallprompt` e registro do SW em produção.
 - **UI & Instalação**: `app/_components/pwa/pwa-install-card.tsx` disponível em `/profile` com CTA de instalação em um clique para Android/Desktop/Chrome e guia passo a passo nativo para iOS ("Compartilhar -> Adicionar à Tela de Início").
 - **Metadata & Viewport**: `app/layout.tsx` configurado com `themeColor`, `viewportFit: cover`, `apple-touch-icon` e `appleWebApp: { capable: true, statusBarStyle: "black-translucent" }`.
