@@ -45,7 +45,7 @@ export function HipAbductionSupplement({
       ["_flymuscles", 1],
       ["_smithbenchmuscles", 1],
       ["_machinechestpressmuscles", 1],
-      ["_gobletsquatmuscles", 3],
+      ["_gobletsquatmuscles", 4],
       ["_legdetailmuscles", 4],
       ["_lowerbodymuscles", 4],
     ] as const)

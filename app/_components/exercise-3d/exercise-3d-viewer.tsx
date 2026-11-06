@@ -51,7 +51,7 @@ export function Exercise3DViewer(props: {
 }
 
 function phaseLabel(phase: number, exercise: ExerciseAnimation) {
-  if (exercise === "standing-calf") {
+  if (exercise === "standing-calf" || exercise === "seated-calf") {
     if (phase < 0.04 || phase >= 0.99) return "Calcanhares elevados";
     if (phase < 0.48) return "Descida controlada";
     if (phase < 0.54) return "Pausa embaixo";

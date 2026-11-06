@@ -48,8 +48,8 @@ export function createTissueMaterial() {
         varying float vMachineChestPressMuscles;
         attribute vec4 _hipmachinemuscles;
         varying float vDeadliftMuscles;
-        attribute vec3 _gobletsquatmuscles;
-        varying float vStandingCalfMuscles;
+        attribute vec4 _gobletsquatmuscles;
+        varying float vStandingCalfMuscles; varying float vSeatedCalfMuscles;
         varying float vSumoDeadliftMuscles;
         attribute vec4 _legdetailmuscles;
         varying float vStiffMuscles; varying float vHipThrustMuscles;
@@ -70,13 +70,13 @@ export function createTissueMaterial() {
         "#include <uv_vertex>",
         `#include <uv_vertex>
         vTissue = uv; vFibre = uv1; vFlyMuscles = _flymuscles; vLegExtensionMuscles = _legdetailmuscles.x; vSeatedLegCurlMuscles = _legdetailmuscles.y; vStiffMuscles = _legdetailmuscles.z; vHipThrustMuscles = _legdetailmuscles.w; vProneLegCurlMuscles = _lowerbodymuscles.x; vHackSquatMuscles = _lowerbodymuscles.y; vLegPress45Muscles = _lowerbodymuscles.z; vHorizontalLegPressMuscles = _lowerbodymuscles.w;
-        vExerciseMuscles = _exercisemuscles; vPecDeckMuscles = _pecdeckmuscles; vSmithBenchMuscles = _smithbenchmuscles; vMachineChestPressMuscles = _machinechestpressmuscles; vSmithSquatMuscles = _hipmachinemuscles.x; vHipAbductionMuscles = _hipmachinemuscles.y; vSumoDumbbellMuscles = _hipmachinemuscles.z; vDeadliftMuscles = _hipmachinemuscles.w; vGobletSquatMuscles = _gobletsquatmuscles.x; vSumoDeadliftMuscles = _gobletsquatmuscles.y; vStandingCalfMuscles = _gobletsquatmuscles.z; vRestSurface = position;`,
+        vExerciseMuscles = _exercisemuscles; vPecDeckMuscles = _pecdeckmuscles; vSmithBenchMuscles = _smithbenchmuscles; vMachineChestPressMuscles = _machinechestpressmuscles; vSmithSquatMuscles = _hipmachinemuscles.x; vHipAbductionMuscles = _hipmachinemuscles.y; vSumoDumbbellMuscles = _hipmachinemuscles.z; vDeadliftMuscles = _hipmachinemuscles.w; vGobletSquatMuscles = _gobletsquatmuscles.x; vSumoDeadliftMuscles = _gobletsquatmuscles.y; vStandingCalfMuscles = _gobletsquatmuscles.z; vSeatedCalfMuscles = _gobletsquatmuscles.w; vRestSurface = position;`,
       );
     shader.fragmentShader = shader.fragmentShader
       .replace(
         "#include <common>",
         `#include <common>
-        varying vec2 vTissue; varying vec2 vFibre; varying float vDeadliftMuscles; varying float vSumoDeadliftMuscles; varying float vStandingCalfMuscles;
+        varying vec2 vTissue; varying vec2 vFibre; varying float vDeadliftMuscles; varying float vSumoDeadliftMuscles; varying float vStandingCalfMuscles; varying float vSeatedCalfMuscles;
         varying vec3 vExerciseMuscles; varying vec3 vRestSurface;
         varying float vPecDeckMuscles; varying float vFlyMuscles; varying float vSmithBenchMuscles; varying float vMachineChestPressMuscles;
         varying float vSmithSquatMuscles; varying float vHipAbductionMuscles; varying float vGobletSquatMuscles; varying float vSumoDumbbellMuscles; varying float vLegExtensionMuscles; varying float vSeatedLegCurlMuscles; varying float vProneLegCurlMuscles; varying float vHackSquatMuscles; varying float vLegPress45Muscles; varying float vHorizontalLegPressMuscles; varying float vStiffMuscles; varying float vHipThrustMuscles;
@@ -128,6 +128,7 @@ export function createTissueMaterial() {
         if (exerciseMode > 19.5 && exerciseMode < 20.5) mask = vDeadliftMuscles;
         if (exerciseMode > 20.5 && exerciseMode < 21.5) mask = vSumoDeadliftMuscles;
         if (exerciseMode > 21.5 && exerciseMode < 22.5) mask = vStandingCalfMuscles;
+        if (exerciseMode > 22.5 && exerciseMode < 23.5) mask = vSeatedCalfMuscles;
         if (exerciseMode > 17.5 && exerciseMode < 18.5) mask = vGobletSquatMuscles;
         if (exerciseMode > 15.5 && exerciseMode < 16.5) mask = vHipThrustMuscles;
         if (exerciseMode > 14.5 && exerciseMode < 15.5) mask = vStiffMuscles;
@@ -162,7 +163,7 @@ export function createTissueMaterial() {
           + (1.0-tissue) * (1.0-smoothstep(0.02,0.12,dot(diffuseColor.rgb,vec3(0.333)))) * 0.28, 0.38, 0.88);`,
       );
   };
-  material.customProgramCacheKey = () => "trainvy-atelier-tissue-v24-standing-calf";
+  material.customProgramCacheKey = () => "trainvy-atelier-tissue-v25-seated-calf";
   const setAppearance = (exercise: ExerciseAnimation, highlighted = true) => {
     const modes: Record<ExerciseAnimation, number> = {
       squat: 0,
@@ -188,6 +189,7 @@ export function createTissueMaterial() {
       deadlift: 20,
       "sumo-deadlift": 21,
       "standing-calf": 22,
+      "seated-calf": 23,
       "flat-dumbbell-fly": 7,
       "smith-bench-press": 5,
       "machine-chest-press": 6,

@@ -31,6 +31,7 @@ import { PRONE_LEG_CURL_INSTRUCTIONS } from "../exercise-3d/prone-leg-curl-instr
 import { SUMO_DUMBBELL_INSTRUCTIONS } from "../exercise-3d/sumo-dumbbell-instructions";
 import { DEADLIFT_INSTRUCTIONS } from "../exercise-3d/deadlift-instructions";
 import { SUMO_DEADLIFT_INSTRUCTIONS } from "../exercise-3d/sumo-deadlift-instructions";
+import { SEATED_CALF_INSTRUCTIONS } from "../exercise-3d/seated-calf-instructions";
 import { STANDING_CALF_INSTRUCTIONS } from "../exercise-3d/standing-calf-instructions";
 import { GOBLET_SQUAT_INSTRUCTIONS } from "../exercise-3d/goblet-squat-instructions";
 import { HIP_ABDUCTION_INSTRUCTIONS } from "../exercise-3d/hip-abduction-instructions";
@@ -85,6 +86,7 @@ const FALLBACK_3D_INSTRUCTIONS: Record<
   deadlift: DEADLIFT_INSTRUCTIONS,
   "sumo-deadlift": SUMO_DEADLIFT_INSTRUCTIONS,
   "standing-calf": STANDING_CALF_INSTRUCTIONS,
+  "seated-calf": SEATED_CALF_INSTRUCTIONS,
   "goblet-squat": GOBLET_SQUAT_INSTRUCTIONS,
   "hip-abduction": HIP_ABDUCTION_INSTRUCTIONS,
   "hip-thrust": HIP_THRUST_INSTRUCTIONS,

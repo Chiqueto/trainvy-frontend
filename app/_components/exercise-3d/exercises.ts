@@ -1,6 +1,7 @@
 import { SUMO_DUMBBELL_INSTRUCTIONS } from "./sumo-dumbbell-instructions";
 import { DEADLIFT_INSTRUCTIONS } from "./deadlift-instructions";
 import { SUMO_DEADLIFT_INSTRUCTIONS } from "./sumo-deadlift-instructions";
+import { SEATED_CALF_INSTRUCTIONS } from "./seated-calf-instructions";
 import { STANDING_CALF_INSTRUCTIONS } from "./standing-calf-instructions";
 import { GOBLET_SQUAT_INSTRUCTIONS } from "./goblet-squat-instructions";
 import { HIP_ABDUCTION_INSTRUCTIONS } from "./hip-abduction-instructions";
@@ -40,6 +41,7 @@ export type ExerciseAnimation =
   | "stiff"
   | "deadlift"
   | "sumo-deadlift"
+  | "seated-calf"
   | "standing-calf"
   | "hip-thrust"
   | "hip-abduction"
@@ -59,6 +61,7 @@ export interface ExerciseDefinition {
 }
 
 export const EXERCISE_ANIMATIONS = {
+  "seated-calf": { name:"Panturrilha Sentado", equipment:"Máquina sentada com almofadas sobre as coxas e plataforma", id:"00000000-0000-4000-8000-000000000118", instructions:SEATED_CALF_INSTRUCTIONS, muscles:{primary:["Sóleo (ênfase)","Gastrocnêmios medial e lateral (menor ênfase)"],secondary:["Fibulares (não individualizados na malha)"]}},
   "standing-calf": { name: "Panturrilha em Pé", equipment: "Máquina com almofadas nos ombros e plataforma para os antepés", id: "00000000-0000-4000-8000-000000000117", instructions: STANDING_CALF_INSTRUCTIONS, muscles: { primary: ["Gastrocnêmios medial e lateral", "Sóleo"], secondary: ["Tibial anterior", "Fibulares (não individualizados na malha)"] } },
   "sumo-deadlift": { name: "Levantamento Terra Sumô", equipment: "Barra livre, base ampla e pegada dentro dos joelhos", id: "00000000-0000-4000-8000-000000000141", instructions: SUMO_DEADLIFT_INSTRUCTIONS, muscles: { primary: ["Quadríceps", "Glúteo máximo", "Adutores magno e longo"], secondary: ["Isquiotibiais", "Reto abdominal e oblíquo externo", "Eretores da coluna", "Flexores dos dedos e estabilizadores do punho"] } },
   deadlift: { name: "Levantamento Terra", equipment: "Barra livre, pegada pronada e anilhas apoiadas no chão", id: "00000000-0000-4000-8000-000000000140", instructions: DEADLIFT_INSTRUCTIONS, muscles: { primary: ["Quadríceps", "Glúteo máximo", "Isquiotibiais"], secondary: ["Adutor magno", "Reto abdominal e oblíquo externo", "Eretores da coluna", "Latíssimo do dorso e trapézio", "Flexores dos dedos e estabilizadores do punho"] } },
@@ -278,6 +281,7 @@ export function getExerciseAnimation(
   if (id === EXERCISE_ANIMATIONS.stiff.id) return "stiff";
   if (id === EXERCISE_ANIMATIONS.deadlift.id) return "deadlift";
   if (id === EXERCISE_ANIMATIONS["sumo-deadlift"].id) return "sumo-deadlift";
+  if (id === EXERCISE_ANIMATIONS["seated-calf"].id) return "seated-calf";
   if (id === EXERCISE_ANIMATIONS["standing-calf"].id) return "standing-calf";
   if (id === EXERCISE_ANIMATIONS["horizontal-leg-press"].id) return "horizontal-leg-press";
   if (id === EXERCISE_ANIMATIONS["leg-press-45"].id) return "leg-press-45";
@@ -324,6 +328,7 @@ export function getExerciseAnimation(
     if (["stiff", "stiff com barra", "stiff-leg deadlift", "stiff leg deadlift", "levantamento terra com pernas quase estendidas"].includes(normalized)) return "stiff";
     if (["levantamento terra", "levantamento terra convencional", "levantamento terra com barra", "deadlift", "conventional deadlift"].includes(normalized)) return "deadlift";
     if (["levantamento terra sumo", "terra sumo", "sumo deadlift", "sumo barbell deadlift"].includes(normalized)) return "sumo-deadlift";
+    if (["panturrilha sentado","panturrilha sentada","elevacao de panturrilhas sentado","seated calf raise"].includes(normalized)) return "seated-calf";
     if (["panturrilha em pe", "elevacao de panturrilhas em pe", "standing calf raise", "standing machine calf raise"].includes(normalized)) return "standing-calf";
     if (["leg press horizontal", "prensa de pernas horizontal", "horizontal leg press", "seated horizontal leg press"].includes(normalized)) return "horizontal-leg-press";
     if (["leg press 45", "leg press 45°", "leg press 45 graus", "leg press inclinado", "45 degree leg press"].includes(normalized)) return "leg-press-45";

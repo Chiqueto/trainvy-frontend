@@ -1,6 +1,7 @@
 import { getSumoDumbbellPose } from "./sumo-dumbbell-pose";
 import { getDeadliftPose } from "./deadlift-pose";
 import { getSumoDeadliftPose } from "./sumo-deadlift-pose";
+import { getSeatedCalfPose } from "./seated-calf-pose";
 import { getStandingCalfPose } from "./standing-calf-pose";
 import { getGobletSquatPose } from "./goblet-squat-pose";
 import { getHipAbductionPose } from "./hip-abduction-pose";
@@ -88,6 +89,7 @@ export function getExercisePose(
   if (exercise === "sumo-dumbbell-squat") return getSumoDumbbellPose(depth);
   if (exercise === "deadlift") return getDeadliftPose(depth);
   if (exercise === "sumo-deadlift") return getSumoDeadliftPose(depth);
+  if (exercise === "seated-calf") return getSeatedCalfPose(depth);
   if (exercise === "standing-calf") return getStandingCalfPose(depth);
   if (exercise === "goblet-squat") return getGobletSquatPose(depth);
   if (exercise === "flat-dumbbell-fly") return getFlatDumbbellFlyPose(depth);

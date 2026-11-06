@@ -21,6 +21,7 @@ import { createMachineChestPressMuscleMask } from "./machine-chest-press-muscles
 import { MachineChestPress, type MachineChestPressHandle } from "./machine-chest-press";
 import { createHipMachineMuscleAttribute } from "./hip-machine-muscles";
 import { SumoDumbbell } from "./sumo-dumbbell-equipment";
+import { SeatedCalfMachine, type SeatedCalfMachineHandle } from "./seated-calf-machine";
 import { StandingCalfMachine, type StandingCalfMachineHandle } from "./standing-calf-machine";
 import { createGobletSumoDeadliftAttribute } from "./sumo-deadlift-muscles";
 import { HipAbductionMachine, type HipAbductionMachineHandle } from "./hip-abduction-machine";
@@ -508,6 +509,7 @@ function Athlete({
   const leftDumbbell = useRef<Group>(null);
   const rightDumbbell = useRef<Group>(null);
   const pecDeckMachine = useRef<PecDeckMachineHandle>(null);
+  const seatedCalfMachine = useRef<SeatedCalfMachineHandle>(null);
   const standingCalfMachine = useRef<StandingCalfMachineHandle>(null);
   const machineChestPress = useRef<MachineChestPressHandle>(null);
   const legExtensionMachine = useRef<LegExtensionMachineHandle>(null);
@@ -588,13 +590,14 @@ function Athlete({
     horizontalLegPressMachine.current?.update(pose);
     hipAbductionMachine.current?.update(pose);
     standingCalfMachine.current?.update(pose);
+    seatedCalfMachine.current?.update(pose);
     rig.scene.updateMatrixWorld(true);
   });
   return (
     <>
       <primitive object={rig.scene} dispose={null} />
       {exercise === "hip-abduction" && <HipAbductionSupplement athlete={rig.scene} material={rig.material} />}
-      {exercise === "standing-calf" ? (
+      {exercise === "seated-calf" ? (<SeatedCalfMachine ref={seatedCalfMachine} />) : exercise === "standing-calf" ? (
         <StandingCalfMachine ref={standingCalfMachine} />
       ) : exercise === "hip-abduction" ? (
         <HipAbductionMachine ref={hipAbductionMachine} />
@@ -666,6 +669,13 @@ function getCameraParams(
   exercise: ExerciseAnimation,
   view: SceneProps["view"],
 ): { position: [number, number, number]; target: [number, number, number] } {
+  if (exercise === "seated-calf") {
+    const target:[number,number,number]=[0,.75,.20];
+    if(view==="side")return {position:[-3,1.3,.20],target};
+    if(view==="front")return {position:[0,1.5,3.4],target};
+    if(view==="back")return {position:[0,1.4,-3.2],target};
+    return {position:[-2.5,1.8,2.7],target};
+  }
   if (exercise === "standing-calf") {
     const target: [number, number, number] = [0, 1.05, 0.02];
     switch (view) {

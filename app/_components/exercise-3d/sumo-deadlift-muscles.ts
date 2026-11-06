@@ -2,6 +2,7 @@ import { BufferAttribute, type BufferGeometry } from "three";
 import atlas from "./sumo-dumbbell-muscle-map.json";
 import manifest from "../../../public/models/exercise-3d/model-manifest.json";
 import { createGobletSquatMuscleMask } from "./goblet-squat-muscles";
+import { createSeatedCalfMuscleMask } from "./seated-calf-muscles";
 import { createStandingCalfMuscleMask } from "./standing-calf-muscles";
 
 // Explicit sumo-deadlift selection. Atlas provides only surface identities,
@@ -27,7 +28,8 @@ export function createGobletSumoDeadliftAttribute(geometry: BufferGeometry) {
   const goblet = createGobletSquatMuscleMask(geometry);
   const sumo = createSumoDeadliftMuscleMask(geometry);
   const calf = createStandingCalfMuscleMask(geometry);
-  const packed = new BufferAttribute(new Float32Array(goblet.count * 3), 3);
-  for (let i = 0; i < goblet.count; i++) packed.setXYZ(i, goblet.getX(i), sumo.getX(i), calf.getX(i));
+  const seated = createSeatedCalfMuscleMask(geometry);
+  const packed = new BufferAttribute(new Float32Array(goblet.count * 4), 4);
+  for (let i = 0; i < goblet.count; i++) packed.setXYZW(i, goblet.getX(i), sumo.getX(i), calf.getX(i), seated.getX(i));
   return packed;
 }

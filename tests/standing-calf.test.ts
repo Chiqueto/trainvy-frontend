@@ -23,7 +23,7 @@ describe("standing calf raise machine",()=>{
   it("selects the exact machine variant, not seated or unilateral exercises",()=>{
     expect(getExerciseAnimation(EXERCISE_ANIMATIONS["standing-calf"].id)).toBe("standing-calf");
     expect(getExerciseAnimation(null,"Panturrilha em Pé")).toBe("standing-calf");
-    expect(getExerciseAnimation(null,"Panturrilha Sentado")).toBeNull();
+    expect(getExerciseAnimation(null,"Panturrilha Sentado")).toBe("seated-calf");
     expect(getExerciseAnimation(null,"Panturrilha Unilateral em Pé")).toBeNull();
   });
   it("keeps forefoot contact, bone lengths, straight knees and synchronized shoulder travel",()=>{
@@ -50,7 +50,7 @@ describe("standing calf raise machine",()=>{
       expect(surface.confidence).toBeGreaterThanOrEqual(0.8);
       expect(mask.getX(surface.indices[0])).toBe(1);
     }
-    expect(packed.itemSize).toBe(3);
+    expect(packed.itemSize).toBe(4);
     for(let i=0;i<mask.count;i++)expect(packed.getZ(i)).toBe(mask.getX(i));
   });
   it("keeps the skinned model finite throughout the motion",()=>{
