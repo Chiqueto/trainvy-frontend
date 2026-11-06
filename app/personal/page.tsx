@@ -3,7 +3,6 @@ import { LegalConsent } from "@/app/_components/legal-consent";
 import { getProfessionalRegistration } from "@/app/_lib/api/fetch-generated";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Layers, Dumbbell, ArrowRight } from "lucide-react";
 import { BottomNav } from "@/app/_components/bottom-nav";
 
 import {
@@ -45,10 +44,8 @@ export default async function PersonalPage() {
       <div className="personal-workspace min-h-svh bg-background pb-24">
         <main className="mx-auto max-w-lg p-5 space-y-5">
           <PersonalHeader />
-          <section className="space-y-3 rounded-xl border p-4"><h1 className="font-semibold">Modo demonstração e rascunhos</h1><p className="text-sm text-muted-foreground">Explore o catálogo e monte rascunhos. Para convidar alunos ou enviar prescrições, ative suas credenciais abaixo.</p><Link className="block underline" href="/planning">Criar e revisar rascunhos</Link><Link className="block underline" href="/planning?chat_open=true">Testar o copiloto de IA</Link></section>
           <LegalConsent />
           <ProfessionalRegistrationForm registration={registration} />
-          <Link className="text-sm underline" href="/personal/arquivo">Arquivo de prescrições anteriores</Link>
         </main>
         <BottomNav isCoach={true} activePage="athletes" />
       </div>
@@ -91,7 +88,9 @@ export default async function PersonalPage() {
     <div className="personal-workspace flex min-h-svh min-w-0 flex-col bg-background pb-24 lg:pb-8">
       <main className="mx-auto w-full max-w-lg px-5 py-4 flex flex-col gap-5">
         <PersonalHeader />
-        <Link className="text-sm underline" href="/personal/arquivo">Arquivo de prescrições anteriores</Link>
+        <Link className="text-sm underline" href="/personal/arquivo">
+          Arquivo de prescrições anteriores
+        </Link>
         <Link
           className="text-xs underline text-muted-foreground"
           href="/personal/verification"

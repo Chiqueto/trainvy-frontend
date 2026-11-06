@@ -57,6 +57,7 @@ export function CoachAiPrescriptionModal({
 }: CoachAiPrescriptionModalProps) {
   const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [generationError, setGenerationError] = useState("");
 
   // Anexo de arquivo (PDF ou imagem de ficha antiga)
   const [attachedFile, setAttachedFile] = useState<{
@@ -138,22 +139,32 @@ export function CoachAiPrescriptionModal({
     }
 
     setIsGenerating(true);
+    setGenerationError("");
+    try {
+      const res = await generateCoachPrescriptionWithAiAction({
+        athleteId,
+        prompt: effectivePrompt,
+        fileUrl: attachedFile?.dataUrl,
+        mediaType: attachedFile?.mediaType,
+        filename: attachedFile?.filename,
+      });
 
-    const res = await generateCoachPrescriptionWithAiAction({
-      athleteId,
-      prompt: effectivePrompt,
-      fileUrl: attachedFile?.dataUrl,
-      mediaType: attachedFile?.mediaType,
-      filename: attachedFile?.filename,
-    });
-
-    if (res.success && res.data) {
-      setGeneratedDraft(res.data);
-      toast.success("Proposta em rascunho gerada. Revise antes de aprovar.");
-    } else {
-      toast.error(res.error || "Não foi possível gerar a prescrição com IA.");
+      if (res.success && res.data) {
+        setGeneratedDraft(res.data);
+        toast.success("Proposta em rascunho gerada. Revise antes de aprovar.");
+      } else {
+        const error =
+          res.error || "Não foi possível gerar a prescrição com IA.";
+        setGenerationError(error);
+        toast.error(error);
+      }
+    } catch {
+      setGenerationError(
+        "Não foi possível gerar a prescrição. Tente novamente.",
+      );
+    } finally {
+      setIsGenerating(false);
     }
-    setIsGenerating(false);
   };
 
   const handleApply = () => {
@@ -380,6 +391,14 @@ export function CoachAiPrescriptionModal({
               )}
 
               {/* Mensagem de Erro */}
+              {generationError && (
+                <p
+                  role="alert"
+                  className="rounded-xl border border-destructive/30 bg-destructive/5 p-3 text-sm leading-relaxed text-destructive"
+                >
+                  {generationError}
+                </p>
+              )}
             </>
           ) : (
             /* Visualização da Prescrição Gerada */

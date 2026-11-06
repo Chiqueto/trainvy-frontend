@@ -12,6 +12,7 @@ import {
   type SubmitProfessionalRegistrationBody,
 } from "@/app/_lib/api/fetch-generated";
 import { Button } from "@/components/ui/button";
+import { maskCpf, maskCref } from "@/app/_lib/professional-input-masks";
 
 const states = [
   "AC",
@@ -43,7 +44,7 @@ const states = [
   "TO",
 ] as const;
 const labels: Record<string, string> = {
-  UNVERIFIED_SANDBOX: "Modo demonstração e rascunhos",
+  UNVERIFIED_SANDBOX: "Preencha seu cadastro profissional para continuar",
   DECLARED_ACTIVE: "Credenciais declaradas — sujeito a auditoria",
   VERIFIED_ADMIN: "Verificado pela administração",
   SUSPENDED_FRAUD: "Suspenso — revisão administrativa necessária",
@@ -59,6 +60,8 @@ export function ProfessionalRegistrationForm({
   registration: GetProfessionalRegistration200;
 }) {
   const router = useRouter();
+  const [cpf, setCpf] = useState("");
+  const [cref, setCref] = useState(maskCref(registration?.cref ?? ""));
   const [term, setTerm] = useState<{
     version: string;
     contentHash: string;
@@ -123,14 +126,14 @@ export function ProfessionalRegistrationForm({
           try {
             if (!term) throw new Error("Termo indisponível");
             const result = await declareProfessionalCredentials({
-              cpf: String(form.get("cpf")),
+              cpf: cpf.replace(/\D/g, ""),
               acceptance: {
                 accepted: true,
                 version: term.version,
                 contentHash: term.contentHash,
               },
               fullName: String(form.get("fullName")),
-              cref: String(form.get("cref")),
+              cref,
               region: String(
                 form.get("region"),
               ) as SubmitProfessionalRegistrationBody["region"],
@@ -141,7 +144,10 @@ export function ProfessionalRegistrationForm({
                 ? "Declaração registrada. Recursos profissionais liberados conforme seu plano."
                 : "Revise os dados. Se necessário, procure o suporte.",
             );
-            if (result.status === 200) router.refresh();
+            if (result.status === 200) {
+              setCpf("");
+              router.refresh();
+            }
           } catch {
             setMessage("Não foi possível enviar. Tente novamente.");
           } finally {
@@ -169,6 +175,11 @@ export function ProfessionalRegistrationForm({
             inputMode="numeric"
             autoComplete="off"
             placeholder="000.000.000-00"
+            maxLength={14}
+            pattern="[0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{2}"
+            value={cpf}
+            onChange={(event) => setCpf(maskCpf(event.target.value))}
+            disabled={busy}
           />
         </label>
         <label className="grid gap-1 text-sm">
@@ -178,7 +189,13 @@ export function ProfessionalRegistrationForm({
             name="cref"
             required
             pattern="[0-9]{6}-[GP]"
-            defaultValue={registration?.cref}
+            placeholder="123456-G"
+            maxLength={8}
+            autoCapitalize="characters"
+            autoComplete="off"
+            value={cref}
+            onChange={(event) => setCref(maskCref(event.target.value))}
+            disabled={busy}
           />
         </label>
         <label className="grid gap-1 text-sm">
