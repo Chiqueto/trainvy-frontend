@@ -1,3 +1,4 @@
+import { PlanLegalLabel } from "@/app/_components/plan-legal-label";
 import { redirect } from "next/navigation";
 import { authClient } from "@/app/_lib/auth-client";
 import { headers } from "next/headers";
@@ -98,6 +99,7 @@ export default async function WorkoutDayPage({
             ? "Treino de Hoje"
             : WEEKDAY_TITLE_LABELS[weekDay]}
         </h1>
+        <PlanLegalLabel data={workoutDayData.data} />
         <div className="size-6" />
       </div>
 

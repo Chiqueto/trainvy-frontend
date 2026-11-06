@@ -1,3 +1,5 @@
+import { PlanLegalLabel } from "@/app/_components/plan-legal-label";
+import { ApproveAiPlan } from "@/app/_components/approve-ai-plan";
 import { redirect } from "next/navigation";
 import { authClient } from "@/app/_lib/auth-client";
 import { headers } from "next/headers";
@@ -103,6 +105,8 @@ export default async function WorkoutPlanPage({
             <h1 className="font-heading text-2xl font-semibold leading-[1.05] text-white">
               Rotina de Treinos
             </h1>
+        <PlanLegalLabel data={workoutPlanData.data} />
+        {workoutPlanData.data.prescriptionStatus === "DRAFT_AI" && <ApproveAiPlan id={workoutPlanData.data.id} updatedAt={workoutPlanData.data.updatedAt} />}
           </div>
           {isCoach && <SavePlanAsTemplateButton planId={id} planName={name} />}
         </div>

@@ -241,6 +241,10 @@ export function WorkoutSessionTracker({
     sessionExerciseId: string,
     newExerciseId: string,
   ) => {
+    if (sessionData.allowStudentSubstitution === false) {
+      toast.error("O profissional não autorizou substituições nesta ficha.");
+      return;
+    }
     handleMutationStart();
     try {
       const res = await substituteSessionExerciseAction(

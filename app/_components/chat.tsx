@@ -1393,6 +1393,7 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
           </div>
         ) : (
           <Form {...form}>
+            <p className="px-4 py-2 text-xs leading-relaxed text-muted-foreground">Assistente informativo baseado em IA. Pode cometer erros e não substitui a avaliação presencial de um Profissional de Educação Física ou médico.</p>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
               className="flex items-center gap-2 border-t border-border p-4 sm:p-5"

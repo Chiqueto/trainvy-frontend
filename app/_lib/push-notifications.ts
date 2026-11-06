@@ -52,11 +52,6 @@ export async function subscribeToPush(): Promise<{ success: boolean; error?: str
     return { success: false, error: "Push notifications não suportadas neste dispositivo ou navegador." };
   }
 
-  const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
-  if (!vapidPublicKey) {
-    return { success: false, error: "Chave pública VAPID não configurada." };
-  }
-
   try {
     const permission = await Notification.requestPermission();
     if (permission !== "granted") {
@@ -67,6 +62,16 @@ export async function subscribeToPush(): Promise<{ success: boolean; error?: str
             ? "Permissão para notificações foi negada no navegador. Habilite nas configurações do site."
             : "Permissão para notificações não foi autorizada.",
       };
+    }
+
+    const configResponse = await fetch("/api/push-config", { cache: "no-store" });
+    if (!configResponse.ok) {
+      return { success: false, error: "Notificações indisponíveis temporariamente. Tente novamente mais tarde." };
+    }
+    const config: { publicKey?: string } = await configResponse.json();
+    const vapidPublicKey = config.publicKey;
+    if (!vapidPublicKey) {
+      return { success: false, error: "Não foi possível carregar a configuração de notificações." };
     }
 
     const registration = await navigator.serviceWorker.ready;

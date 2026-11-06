@@ -53,6 +53,7 @@ export function HistorySessionDetail({
             <h1 className="font-heading text-2xl font-semibold text-foreground">
               {title}
             </h1>
+            {session.prescribedCrefSnapshot && <p className="mt-2 text-xs text-muted-foreground">Prescrito por: {session.prescribedCrefSnapshot}</p>}
             {session.timePrecision === "DATE_ONLY" && session.sessionDate ? (
               <span className="mt-1 block text-sm text-muted-foreground">
                 {formatDateOnly(session.sessionDate, { long: true })}

@@ -458,6 +458,7 @@ export function AthleteAiWorkoutPlanModal({ isOpen, onClose }: Props) {
                 sua lista ou envie uma ficha legível.
               </p>
             )}
+            <p className="rounded-lg border p-3 text-sm">Confira se os dados extraídos da sua ficha estão exatos antes de salvar, especialmente séries, repetições e cargas.</p>
             <label className="flex items-start gap-2 text-sm">
               <input
                 type="checkbox"

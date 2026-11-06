@@ -367,6 +367,7 @@ function Viewer({
             </>
           )}
         </div>
+        {!inDialog && <p className="border-t border-white/10 pt-3 text-xs leading-relaxed text-slate-300">Representação biomecânica ilustrativa. A amplitude e postura ideais variam conforme sua individualidade biológica. Em caso de dor ou desconforto articular, interrompa o exercício.</p>}
         <details className="border-t border-white/6 pt-3 text-[10px] leading-relaxed text-slate-500">
           <summary className="cursor-pointer select-none hover:text-slate-300">
             Sobre esta visualização

@@ -1,4 +1,5 @@
 "use client";
+import { LegalConsent } from "@/app/_components/legal-consent";
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -14,6 +15,7 @@ import {
 
 export function OnboardingForm() {
   const router = useRouter();
+  const [legalReady, setLegalReady] = useState(false);
   const [error, setError] = useState("");
   const [pending, startTransition] = useTransition();
 
@@ -36,11 +38,13 @@ export function OnboardingForm() {
           </p>
         </header>
 
+        <LegalConsent onReady={setLegalReady} />
         <form
           className="space-y-5 rounded-2xl border border-border bg-card p-5"
           onSubmit={(event) => {
             event.preventDefault();
             if (pending) return;
+            if (!legalReady) { setError("Leia e aceite os termos e o consentimento de saúde."); return; }
             setError("");
             const input = Object.fromEntries(new FormData(event.currentTarget));
             const parsed = onboardingSchema.safeParse(input);

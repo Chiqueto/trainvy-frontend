@@ -1,3 +1,5 @@
+import { LegalConsent } from "@/app/_components/legal-consent";
+import { PrivacyRights } from "./_components/privacy-rights";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { authClient } from "@/app/_lib/auth-client";
@@ -136,6 +138,8 @@ export default async function ProfilePage() {
           />
         )}
 
+        <LegalConsent />
+        <PrivacyRights />
         <SportsProfileSection />
         <ProfileMetricsSection
           weightInGrams={data?.weightInGrams}

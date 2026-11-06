@@ -100,7 +100,7 @@ export interface ExerciseAnatomyReviewInput {
    * @maxLength 40
    */
   version: string;
-  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$ */
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$ */
   reviewedAt: string;
   /**
    * @minLength 1
@@ -221,7 +221,7 @@ export interface ExerciseAnatomyReview {
    * @maxLength 40
    */
   version: string;
-  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$ */
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$ */
   reviewedAt: string;
   /**
    * @minLength 1
@@ -626,6 +626,12 @@ export type GetWorkoutPlan200WorkoutDaysItem = {
 };
 
 export type GetWorkoutPlan200 = {
+  updatedAt: string;
+  originType: string;
+  prescriptionStatus: string;
+  /** @nullable */
+  prescribedCrefSnapshot: string | null;
+  allowStudentSubstitution: boolean;
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
   name: string;
@@ -956,6 +962,11 @@ export type GetWorkoutDay200SessionsItem = {
 };
 
 export type GetWorkoutDay200 = {
+  originType: string;
+  prescriptionStatus: string;
+  /** @nullable */
+  prescribedCrefSnapshot: string | null;
+  allowStudentSubstitution: boolean;
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
   name: string;
@@ -1255,6 +1266,7 @@ export type StartWorkoutSession201ExercisesItem = {
   /** @nullable */
   alternative2ExerciseNameSnapshot?: string | null;
   wasSubstituted?: boolean;
+  substitutedByStudent?: boolean;
   /** @nullable */
   substitutedAt?: string | null;
   /** @nullable */
@@ -1309,16 +1321,16 @@ export type StartWorkoutSession500 = {
 };
 
 export type UpdateWorkoutSessionBody = {
-  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$ */
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$ */
   completedAt: string;
 };
 
 export type UpdateWorkoutSession200 = {
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
-  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$ */
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$ */
   startedAt: string;
-  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$ */
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$ */
   completedAt: string;
 };
 
@@ -3016,6 +3028,11 @@ export type GetUserTrainData401 = {
   code: string;
 };
 
+export type GetUserTrainData403 = {
+  error: string;
+  code: string;
+};
+
 export type GetUserTrainData404 = {
   error: string;
   code: string;
@@ -3094,6 +3111,11 @@ export type UpsertUserTrainData401 = {
   code: string;
 };
 
+export type UpsertUserTrainData403 = {
+  error: string;
+  code: string;
+};
+
 export type UpsertUserTrainData500 = {
   error: string;
   code: string;
@@ -3135,6 +3157,11 @@ export type UpdateGamificationTheme401 = {
   code: string;
 };
 
+export type UpdateGamificationTheme403 = {
+  error: string;
+  code: string;
+};
+
 export type UpdateGamificationTheme500 = {
   error: string;
   code: string;
@@ -3160,6 +3187,11 @@ export type GetUserMetricsHistory200Item = {
 };
 
 export type GetUserMetricsHistory401 = {
+  error: string;
+  code: string;
+};
+
+export type GetUserMetricsHistory403 = {
   error: string;
   code: string;
 };
@@ -3583,6 +3615,7 @@ export type GetCommercialContext200ProfessionalVerification = {
   status: string;
   /** @nullable */
   validUntil: string | null;
+  crefVerificationStatus?: string;
 } | null;
 
 export type GetCommercialContext200AccountType =
@@ -4350,6 +4383,7 @@ export type GetProfessionalRegistration200 = {
    * @maxLength 160
    */
   category: string;
+  crefVerificationStatus?: string;
   userId: string;
   status: string;
   revision: number;
@@ -4488,6 +4522,7 @@ export type SubmitProfessionalRegistration200 = {
    * @maxLength 160
    */
   category: string;
+  crefVerificationStatus?: string;
   userId: string;
   status: string;
   revision: number;
@@ -4618,6 +4653,7 @@ export type ListProfessionalRegistrations200Item = {
    * @maxLength 160
    */
   category: string;
+  crefVerificationStatus?: string;
   userId: string;
   status: string;
   revision: number;
@@ -4730,10 +4766,7 @@ export const ReviewProfessionalRegistrationBodyIdentityVerificationMethod = {
 } as const;
 
 export type ReviewProfessionalRegistrationBody = {
-  /**
-   * @maximum 9007199254740991
-   * @exclusiveMinimum 0
-   */
+  /** @maximum 9007199254740991 */
   revision: number;
   result: ReviewProfessionalRegistrationBodyResult;
   /** @maxLength 500 */
@@ -4752,7 +4785,7 @@ export type ReviewProfessionalRegistrationBody = {
   identityEvidenceReference: string;
   registrationActive: boolean;
   scopeConfirmed: boolean;
-  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$ */
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$ */
   checkedAt: string;
   /**
    * @minLength 3
@@ -4808,6 +4841,7 @@ export type ReviewProfessionalRegistration200 = {
    * @maxLength 160
    */
   category: string;
+  crefVerificationStatus?: string;
   userId: string;
   status: string;
   revision: number;
@@ -4958,6 +4992,876 @@ export type AuthorizeFeatureAccess428 = {
   code: string;
 };
 
+export type GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemWeekDay =
+  (typeof GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemWeekDay)[keyof typeof GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemWeekDay];
+
+export const GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemWeekDay = {
+  MONDAY: "MONDAY",
+  TUESDAY: "TUESDAY",
+  WEDNESDAY: "WEDNESDAY",
+  THURSDAY: "THURSDAY",
+  FRIDAY: "FRIDAY",
+  SATURDAY: "SATURDAY",
+  SUNDAY: "SUNDAY",
+} as const;
+
+export type GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMin?: number | null;
+    /**
+     * @minimum 1
+     * @maximum 10000
+     * @nullable
+     */
+    repsMax?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 10
+     * @nullable
+     */
+    targetRir?: number | null;
+    /**
+     * @minimum 0
+     * @maximum 2000000
+     * @nullable
+     */
+    targetLoadInGrams?: number | null;
+    /**
+     * @minLength 1
+     * @maxLength 80
+     * @nullable
+     */
+    tempo?: string | null;
+    name: string;
+    order: number;
+    /** @nullable */
+    exerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseId?: string | null;
+    /** @nullable */
+    alternative1ExerciseName?: string | null;
+    /** @nullable */
+    alternative2ExerciseId?: string | null;
+    /** @nullable */
+    alternative2ExerciseName?: string | null;
+    sets: number;
+    warmupSets: number;
+    reps: number;
+    restTimeInSeconds: number;
+  };
+
+export type GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItem = {
+  name: string;
+  order: number;
+  weekDay: GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemWeekDay;
+  isRest: boolean;
+  estimatedDurationInSeconds: number;
+  /** @nullable */
+  coverImageUrl?: string | null;
+  exercises: GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItem[];
+};
+
+export type GetMyArchivedPrescriptions200ItemPayload = {
+  workoutDays: GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItem[];
+};
+
+export type GetMyArchivedPrescriptions200Item = {
+  id: string;
+  athleteId: string;
+  name: string;
+  /** @nullable */
+  notes: string | null;
+  approvedAt: string;
+  /** @nullable */
+  prescribedCrefSnapshot: string | null;
+  payload: GetMyArchivedPrescriptions200ItemPayload;
+};
+
+export type GetMyArchivedPrescriptions400 = {
+  code: string;
+  error: string;
+};
+
+export type GetMyArchivedPrescriptions401 = {
+  code: string;
+  error: string;
+};
+
+export type GetMyArchivedPrescriptions403 = {
+  code: string;
+  error: string;
+};
+
+export type GetMyArchivedPrescriptions404 = {
+  code: string;
+  error: string;
+};
+
+export type GetMyArchivedPrescriptions409 = {
+  code: string;
+  error: string;
+};
+
+export type GetMyArchivedPrescriptions500 = {
+  code: string;
+  error: string;
+};
+
+export type ApproveAiWorkoutPlanBody = {
+  reviewed: boolean;
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$ */
+  expectedUpdatedAt: string;
+};
+
+export type ApproveAiWorkoutPlan200 = {
+  success: boolean;
+};
+
+export type ApproveAiWorkoutPlan400 = {
+  code: string;
+  error: string;
+};
+
+export type ApproveAiWorkoutPlan401 = {
+  code: string;
+  error: string;
+};
+
+export type ApproveAiWorkoutPlan403 = {
+  code: string;
+  error: string;
+};
+
+export type ApproveAiWorkoutPlan404 = {
+  code: string;
+  error: string;
+};
+
+export type ApproveAiWorkoutPlan409 = {
+  code: string;
+  error: string;
+};
+
+export type ApproveAiWorkoutPlan500 = {
+  code: string;
+  error: string;
+};
+
+export type ExportMyData200 = {
+  json: string;
+};
+
+export type ExportMyData400 = {
+  code: string;
+  error: string;
+};
+
+export type ExportMyData401 = {
+  code: string;
+  error: string;
+};
+
+export type ExportMyData403 = {
+  code: string;
+  error: string;
+};
+
+export type ExportMyData404 = {
+  code: string;
+  error: string;
+};
+
+export type ExportMyData409 = {
+  code: string;
+  error: string;
+};
+
+export type ExportMyData500 = {
+  code: string;
+  error: string;
+};
+
+export type RevokeHealthConsent200 = {
+  success: boolean;
+};
+
+export type RevokeHealthConsent400 = {
+  code: string;
+  error: string;
+};
+
+export type RevokeHealthConsent401 = {
+  code: string;
+  error: string;
+};
+
+export type RevokeHealthConsent403 = {
+  code: string;
+  error: string;
+};
+
+export type RevokeHealthConsent404 = {
+  code: string;
+  error: string;
+};
+
+export type RevokeHealthConsent409 = {
+  code: string;
+  error: string;
+};
+
+export type RevokeHealthConsent500 = {
+  code: string;
+  error: string;
+};
+
+export type EraseMyAccountBodyConfirmation =
+  (typeof EraseMyAccountBodyConfirmation)[keyof typeof EraseMyAccountBodyConfirmation];
+
+export const EraseMyAccountBodyConfirmation = {
+  EXCLUIR_MINHA_CONTA: "EXCLUIR MINHA CONTA",
+} as const;
+
+export type EraseMyAccountBody = {
+  confirmation: EraseMyAccountBodyConfirmation;
+};
+
+export type EraseMyAccount200 = {
+  success: boolean;
+};
+
+export type EraseMyAccount400 = {
+  code: string;
+  error: string;
+};
+
+export type EraseMyAccount401 = {
+  code: string;
+  error: string;
+};
+
+export type EraseMyAccount403 = {
+  code: string;
+  error: string;
+};
+
+export type EraseMyAccount404 = {
+  code: string;
+  error: string;
+};
+
+export type EraseMyAccount409 = {
+  code: string;
+  error: string;
+};
+
+export type EraseMyAccount500 = {
+  code: string;
+  error: string;
+};
+
+export type ListLegalDocuments200ItemClassification =
+  (typeof ListLegalDocuments200ItemClassification)[keyof typeof ListLegalDocuments200ItemClassification];
+
+export const ListLegalDocuments200ItemClassification = {
+  OBRIGATORIO_LEI: "OBRIGATORIO_LEI",
+  RECOMENDAVEL_RISCO: "RECOMENDAVEL_RISCO",
+  OPCIONAL: "OPCIONAL",
+} as const;
+
+export type ListLegalDocuments200Item = {
+  id: string;
+  slug: string;
+  title: string;
+  category: string;
+  classification: ListLegalDocuments200ItemClassification;
+  targetAudience: string;
+  version: string;
+  contentMd: string;
+  requiresClickwrap: boolean;
+  isActive: boolean;
+  updatedAt: string;
+  contentHash: string;
+  accepted?: boolean;
+};
+
+export type ListLegalDocuments400 = {
+  code: string;
+  error: string;
+};
+
+export type ListLegalDocuments401 = {
+  code: string;
+  error: string;
+};
+
+export type ListLegalDocuments403 = {
+  code: string;
+  error: string;
+};
+
+export type ListLegalDocuments404 = {
+  code: string;
+  error: string;
+};
+
+export type ListLegalDocuments409 = {
+  code: string;
+  error: string;
+};
+
+export type ListLegalDocuments500 = {
+  code: string;
+  error: string;
+};
+
+export type GetMyLegalDocuments200ItemClassification =
+  (typeof GetMyLegalDocuments200ItemClassification)[keyof typeof GetMyLegalDocuments200ItemClassification];
+
+export const GetMyLegalDocuments200ItemClassification = {
+  OBRIGATORIO_LEI: "OBRIGATORIO_LEI",
+  RECOMENDAVEL_RISCO: "RECOMENDAVEL_RISCO",
+  OPCIONAL: "OPCIONAL",
+} as const;
+
+export type GetMyLegalDocuments200Item = {
+  id: string;
+  slug: string;
+  title: string;
+  category: string;
+  classification: GetMyLegalDocuments200ItemClassification;
+  targetAudience: string;
+  version: string;
+  contentMd: string;
+  requiresClickwrap: boolean;
+  isActive: boolean;
+  updatedAt: string;
+  contentHash: string;
+  accepted?: boolean;
+};
+
+export type GetMyLegalDocuments400 = {
+  code: string;
+  error: string;
+};
+
+export type GetMyLegalDocuments401 = {
+  code: string;
+  error: string;
+};
+
+export type GetMyLegalDocuments403 = {
+  code: string;
+  error: string;
+};
+
+export type GetMyLegalDocuments404 = {
+  code: string;
+  error: string;
+};
+
+export type GetMyLegalDocuments409 = {
+  code: string;
+  error: string;
+};
+
+export type GetMyLegalDocuments500 = {
+  code: string;
+  error: string;
+};
+
+export type AcceptLegalDocumentBody = {
+  /** @maxLength 50 */
+  version: string;
+  /** @pattern ^[a-f0-9]{64}$ */
+  contentHash: string;
+  accepted: boolean;
+};
+
+export type AcceptLegalDocument200 = {
+  success: boolean;
+};
+
+export type AcceptLegalDocument400 = {
+  code: string;
+  error: string;
+};
+
+export type AcceptLegalDocument401 = {
+  code: string;
+  error: string;
+};
+
+export type AcceptLegalDocument403 = {
+  code: string;
+  error: string;
+};
+
+export type AcceptLegalDocument404 = {
+  code: string;
+  error: string;
+};
+
+export type AcceptLegalDocument409 = {
+  code: string;
+  error: string;
+};
+
+export type AcceptLegalDocument500 = {
+  code: string;
+  error: string;
+};
+
+export type DeclareProfessionalCredentialsBodyRegion =
+  (typeof DeclareProfessionalCredentialsBodyRegion)[keyof typeof DeclareProfessionalCredentialsBodyRegion];
+
+export const DeclareProfessionalCredentialsBodyRegion = {
+  AC: "AC",
+  AL: "AL",
+  AP: "AP",
+  AM: "AM",
+  BA: "BA",
+  CE: "CE",
+  DF: "DF",
+  ES: "ES",
+  GO: "GO",
+  MA: "MA",
+  MT: "MT",
+  MS: "MS",
+  MG: "MG",
+  PA: "PA",
+  PB: "PB",
+  PR: "PR",
+  PE: "PE",
+  PI: "PI",
+  RJ: "RJ",
+  RN: "RN",
+  RS: "RS",
+  RO: "RO",
+  RR: "RR",
+  SC: "SC",
+  SP: "SP",
+  SE: "SE",
+  TO: "TO",
+} as const;
+
+export type DeclareProfessionalCredentialsBodyAcceptance = {
+  /** @maxLength 50 */
+  version: string;
+  /** @pattern ^[a-f0-9]{64}$ */
+  contentHash: string;
+  accepted: boolean;
+};
+
+export type DeclareProfessionalCredentialsBody = {
+  /**
+   * @minLength 5
+   * @maxLength 180
+   */
+  fullName: string;
+  /** @pattern ^\d{6}-[GP]$ */
+  cref: string;
+  region: DeclareProfessionalCredentialsBodyRegion;
+  /**
+   * @minLength 3
+   * @maxLength 160
+   */
+  category: string;
+  cpf: string;
+  acceptance: DeclareProfessionalCredentialsBodyAcceptance;
+};
+
+export type DeclareProfessionalCredentials200 = {
+  success: boolean;
+};
+
+export type DeclareProfessionalCredentials400 = {
+  code: string;
+  error: string;
+};
+
+export type DeclareProfessionalCredentials401 = {
+  code: string;
+  error: string;
+};
+
+export type DeclareProfessionalCredentials403 = {
+  code: string;
+  error: string;
+};
+
+export type DeclareProfessionalCredentials404 = {
+  code: string;
+  error: string;
+};
+
+export type DeclareProfessionalCredentials409 = {
+  code: string;
+  error: string;
+};
+
+export type DeclareProfessionalCredentials500 = {
+  code: string;
+  error: string;
+};
+
+export type GetAdminComplianceParams = {
+  /**
+   * @maxLength 180
+   */
+  q?: string;
+  /**
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  cursor?: string;
+};
+
+export type GetAdminCompliance200DocumentsItemClassification =
+  (typeof GetAdminCompliance200DocumentsItemClassification)[keyof typeof GetAdminCompliance200DocumentsItemClassification];
+
+export const GetAdminCompliance200DocumentsItemClassification = {
+  OBRIGATORIO_LEI: "OBRIGATORIO_LEI",
+  RECOMENDAVEL_RISCO: "RECOMENDAVEL_RISCO",
+  OPCIONAL: "OPCIONAL",
+} as const;
+
+export type GetAdminCompliance200DocumentsItem = {
+  id: string;
+  slug: string;
+  title: string;
+  category: string;
+  classification: GetAdminCompliance200DocumentsItemClassification;
+  targetAudience: string;
+  version: string;
+  contentMd: string;
+  requiresClickwrap: boolean;
+  isActive: boolean;
+  updatedAt: string;
+  contentHash: string;
+  accepted?: boolean;
+};
+
+export type GetAdminCompliance200ItemsItemClassification =
+  (typeof GetAdminCompliance200ItemsItemClassification)[keyof typeof GetAdminCompliance200ItemsItemClassification];
+
+export const GetAdminCompliance200ItemsItemClassification = {
+  OBRIGATORIO_LEI: "OBRIGATORIO_LEI",
+  RECOMENDAVEL_RISCO: "RECOMENDAVEL_RISCO",
+  OPCIONAL: "OPCIONAL",
+} as const;
+
+export type GetAdminCompliance200ItemsItemImplementationStatus =
+  (typeof GetAdminCompliance200ItemsItemImplementationStatus)[keyof typeof GetAdminCompliance200ItemsItemImplementationStatus];
+
+export const GetAdminCompliance200ItemsItemImplementationStatus = {
+  IMPLEMENTED: "IMPLEMENTED",
+  PARTIAL: "PARTIAL",
+  PENDING: "PENDING",
+} as const;
+
+export type GetAdminCompliance200ItemsItem = {
+  id: string;
+  code: string;
+  module: string;
+  title: string;
+  classification: GetAdminCompliance200ItemsItemClassification;
+  legalBasis: string;
+  descriptionMd: string;
+  implementationStatus: GetAdminCompliance200ItemsItemImplementationStatus;
+};
+
+export type GetAdminCompliance200ProfessionalsItemCrefVerificationStatus =
+  (typeof GetAdminCompliance200ProfessionalsItemCrefVerificationStatus)[keyof typeof GetAdminCompliance200ProfessionalsItemCrefVerificationStatus];
+
+export const GetAdminCompliance200ProfessionalsItemCrefVerificationStatus = {
+  UNVERIFIED_SANDBOX: "UNVERIFIED_SANDBOX",
+  DECLARED_ACTIVE: "DECLARED_ACTIVE",
+  VERIFIED_ADMIN: "VERIFIED_ADMIN",
+  SUSPENDED_FRAUD: "SUSPENDED_FRAUD",
+} as const;
+
+export type GetAdminCompliance200ProfessionalsItem = {
+  userId: string;
+  fullName: string;
+  /** @nullable */
+  cpf: string | null;
+  cref: string;
+  region: string;
+  crefVerificationStatus: GetAdminCompliance200ProfessionalsItemCrefVerificationStatus;
+  /** @nullable */
+  crefDeclaredAt: string | null;
+  /** @nullable */
+  verifiedAt: string | null;
+};
+
+export type GetAdminCompliance200ExercisesItem = {
+  id: string;
+  name: string;
+  biomechanicalReviewStatus: string;
+  /** @nullable */
+  reviewedByProfessionalName: string | null;
+  /** @nullable */
+  reviewedByCref: string | null;
+  /** @nullable */
+  reviewedAt: string | null;
+  /** @nullable */
+  safetyDisclaimerMd: string | null;
+};
+
+export type GetAdminCompliance200AcceptancesItem = {
+  id: string;
+  userId: string;
+  documentSlug: string;
+  documentVersion: string;
+  contentHash: string;
+  acceptedAt: string;
+  /** @nullable */
+  revokedAt: string | null;
+  ipAddress: string;
+  /** @nullable */
+  userAgent: string | null;
+};
+
+export type GetAdminCompliance200 = {
+  documents: GetAdminCompliance200DocumentsItem[];
+  items: GetAdminCompliance200ItemsItem[];
+  professionals: GetAdminCompliance200ProfessionalsItem[];
+  exercises: GetAdminCompliance200ExercisesItem[];
+  acceptances: GetAdminCompliance200AcceptancesItem[];
+};
+
+export type GetAdminCompliance400 = {
+  code: string;
+  error: string;
+};
+
+export type GetAdminCompliance401 = {
+  code: string;
+  error: string;
+};
+
+export type GetAdminCompliance403 = {
+  code: string;
+  error: string;
+};
+
+export type GetAdminCompliance404 = {
+  code: string;
+  error: string;
+};
+
+export type GetAdminCompliance409 = {
+  code: string;
+  error: string;
+};
+
+export type GetAdminCompliance500 = {
+  code: string;
+  error: string;
+};
+
+export type EditLegalDocumentBody = {
+  /** @maxLength 50 */
+  expectedVersion: string;
+  /**
+   * @minLength 20
+   * @maxLength 200000
+   */
+  contentMd: string;
+  /**
+   * @minLength 3
+   * @maxLength 200
+   */
+  title: string;
+};
+
+export type EditLegalDocument200 = {
+  success: boolean;
+};
+
+export type EditLegalDocument400 = {
+  code: string;
+  error: string;
+};
+
+export type EditLegalDocument401 = {
+  code: string;
+  error: string;
+};
+
+export type EditLegalDocument403 = {
+  code: string;
+  error: string;
+};
+
+export type EditLegalDocument404 = {
+  code: string;
+  error: string;
+};
+
+export type EditLegalDocument409 = {
+  code: string;
+  error: string;
+};
+
+export type EditLegalDocument500 = {
+  code: string;
+  error: string;
+};
+
+export type UpdateComplianceItemBodyImplementationStatus =
+  (typeof UpdateComplianceItemBodyImplementationStatus)[keyof typeof UpdateComplianceItemBodyImplementationStatus];
+
+export const UpdateComplianceItemBodyImplementationStatus = {
+  IMPLEMENTED: "IMPLEMENTED",
+  PARTIAL: "PARTIAL",
+  PENDING: "PENDING",
+} as const;
+
+export type UpdateComplianceItemBody = {
+  implementationStatus: UpdateComplianceItemBodyImplementationStatus;
+};
+
+export type UpdateComplianceItem200 = {
+  success: boolean;
+};
+
+export type UpdateComplianceItem400 = {
+  code: string;
+  error: string;
+};
+
+export type UpdateComplianceItem401 = {
+  code: string;
+  error: string;
+};
+
+export type UpdateComplianceItem403 = {
+  code: string;
+  error: string;
+};
+
+export type UpdateComplianceItem404 = {
+  code: string;
+  error: string;
+};
+
+export type UpdateComplianceItem409 = {
+  code: string;
+  error: string;
+};
+
+export type UpdateComplianceItem500 = {
+  code: string;
+  error: string;
+};
+
+export type AuditComplianceProfessionalBodyStatus =
+  (typeof AuditComplianceProfessionalBodyStatus)[keyof typeof AuditComplianceProfessionalBodyStatus];
+
+export const AuditComplianceProfessionalBodyStatus = {
+  VERIFIED_ADMIN: "VERIFIED_ADMIN",
+  SUSPENDED_FRAUD: "SUSPENDED_FRAUD",
+} as const;
+
+export type AuditComplianceProfessionalBody = {
+  status: AuditComplianceProfessionalBodyStatus;
+};
+
+export type AuditComplianceProfessional200 = {
+  success: boolean;
+};
+
+export type AuditComplianceProfessional400 = {
+  code: string;
+  error: string;
+};
+
+export type AuditComplianceProfessional401 = {
+  code: string;
+  error: string;
+};
+
+export type AuditComplianceProfessional403 = {
+  code: string;
+  error: string;
+};
+
+export type AuditComplianceProfessional404 = {
+  code: string;
+  error: string;
+};
+
+export type AuditComplianceProfessional409 = {
+  code: string;
+  error: string;
+};
+
+export type AuditComplianceProfessional500 = {
+  code: string;
+  error: string;
+};
+
+export type ReviewComplianceExerciseBodyStatus =
+  (typeof ReviewComplianceExerciseBodyStatus)[keyof typeof ReviewComplianceExerciseBodyStatus];
+
+export const ReviewComplianceExerciseBodyStatus = {
+  PENDING_REVIEW: "PENDING_REVIEW",
+  REVIEWED_APPROVED: "REVIEWED_APPROVED",
+} as const;
+
+export type ReviewComplianceExerciseBody = {
+  /**
+   * @minLength 5
+   * @maxLength 180
+   */
+  professionalName: string;
+  /** @pattern ^\d{6}-[GP]\/[A-Z]{2}$ */
+  cref: string;
+  status: ReviewComplianceExerciseBodyStatus;
+  /** @maxLength 4000 */
+  safetyDisclaimerMd: string;
+};
+
+export type ReviewComplianceExercise200 = {
+  success: boolean;
+};
+
+export type ReviewComplianceExercise400 = {
+  code: string;
+  error: string;
+};
+
+export type ReviewComplianceExercise401 = {
+  code: string;
+  error: string;
+};
+
+export type ReviewComplianceExercise403 = {
+  code: string;
+  error: string;
+};
+
+export type ReviewComplianceExercise404 = {
+  code: string;
+  error: string;
+};
+
+export type ReviewComplianceExercise409 = {
+  code: string;
+  error: string;
+};
+
+export type ReviewComplianceExercise500 = {
+  code: string;
+  error: string;
+};
+
 export type CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay =
   (typeof CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay)[keyof typeof CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay];
 
@@ -5071,6 +5975,7 @@ export type CreateWorkoutPrescriptionDraftBodyWorkoutDaysItem = {
 };
 
 export type CreateWorkoutPrescriptionDraftBody = {
+  allowStudentSubstitution?: boolean;
   athleteId: string;
   /**
    * @minLength 1
@@ -5201,6 +6106,11 @@ export type CreateWorkoutPrescriptionDraft201Payload = {
 };
 
 export type CreateWorkoutPrescriptionDraft201 = {
+  originType?: string;
+  prescriptionStatus?: string;
+  /** @nullable */
+  prescribedCrefSnapshot?: string | null;
+  allowStudentSubstitution?: boolean;
   id: string;
   coachId: string;
   athleteId: string;
@@ -5372,6 +6282,7 @@ export type UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItem = {
 };
 
 export type UpdateWorkoutPrescriptionDraftBody = {
+  allowStudentSubstitution?: boolean;
   /**
    * @minLength 1
    * @maxLength 100
@@ -5382,10 +6293,7 @@ export type UpdateWorkoutPrescriptionDraftBody = {
    * @nullable
    */
   notes?: string | null;
-  /**
-   * @maximum 9007199254740991
-   * @exclusiveMinimum 0
-   */
+  /** @maximum 9007199254740991 */
   version: number;
   /** @minItems 1 */
   workoutDays: UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItem[];
@@ -5506,6 +6414,11 @@ export type UpdateWorkoutPrescriptionDraft200Payload = {
 };
 
 export type UpdateWorkoutPrescriptionDraft200 = {
+  originType?: string;
+  prescriptionStatus?: string;
+  /** @nullable */
+  prescribedCrefSnapshot?: string | null;
+  allowStudentSubstitution?: boolean;
   id: string;
   coachId: string;
   athleteId: string;
@@ -5679,6 +6592,11 @@ export type GetCoachPrescriptionDetails200Payload = {
 };
 
 export type GetCoachPrescriptionDetails200 = {
+  originType?: string;
+  prescriptionStatus?: string;
+  /** @nullable */
+  prescribedCrefSnapshot?: string | null;
+  allowStudentSubstitution?: boolean;
   id: string;
   coachId: string;
   athleteId: string;
@@ -5738,10 +6656,7 @@ export type GetCoachPrescriptionDetails500 = {
 };
 
 export type SendWorkoutPrescriptionBody = {
-  /**
-   * @maximum 9007199254740991
-   * @exclusiveMinimum 0
-   */
+  /** @maximum 9007199254740991 */
   version: number;
   approval: boolean;
 };
@@ -5860,6 +6775,11 @@ export type SendWorkoutPrescription200Payload = {
 };
 
 export type SendWorkoutPrescription200 = {
+  originType?: string;
+  prescriptionStatus?: string;
+  /** @nullable */
+  prescribedCrefSnapshot?: string | null;
+  allowStudentSubstitution?: boolean;
   id: string;
   coachId: string;
   athleteId: string;
@@ -6032,6 +6952,11 @@ export type CancelWorkoutPrescription200Payload = {
 };
 
 export type CancelWorkoutPrescription200 = {
+  originType?: string;
+  prescriptionStatus?: string;
+  /** @nullable */
+  prescribedCrefSnapshot?: string | null;
+  allowStudentSubstitution?: boolean;
   id: string;
   coachId: string;
   athleteId: string;
@@ -6206,6 +7131,11 @@ export type ListCoachAthletePrescriptions200ItemPayload = {
 };
 
 export type ListCoachAthletePrescriptions200Item = {
+  originType?: string;
+  prescriptionStatus?: string;
+  /** @nullable */
+  prescribedCrefSnapshot?: string | null;
+  allowStudentSubstitution?: boolean;
   id: string;
   coachId: string;
   athleteId: string;
@@ -6379,6 +7309,11 @@ export type ListAthletePrescriptions200ItemPayload = {
 };
 
 export type ListAthletePrescriptions200Item = {
+  originType?: string;
+  prescriptionStatus?: string;
+  /** @nullable */
+  prescribedCrefSnapshot?: string | null;
+  allowStudentSubstitution?: boolean;
   id: string;
   coachId: string;
   athleteId: string;
@@ -6552,6 +7487,11 @@ export type GetAthletePrescriptionDetails200Payload = {
 };
 
 export type GetAthletePrescriptionDetails200 = {
+  originType?: string;
+  prescriptionStatus?: string;
+  /** @nullable */
+  prescribedCrefSnapshot?: string | null;
+  allowStudentSubstitution?: boolean;
   id: string;
   coachId: string;
   athleteId: string;
@@ -6726,6 +7666,11 @@ export type AcceptWorkoutPrescription200PrescriptionPayload = {
 };
 
 export type AcceptWorkoutPrescription200Prescription = {
+  originType?: string;
+  prescriptionStatus?: string;
+  /** @nullable */
+  prescribedCrefSnapshot?: string | null;
+  allowStudentSubstitution?: boolean;
   id: string;
   coachId: string;
   athleteId: string;
@@ -6905,6 +7850,11 @@ export type DeclineWorkoutPrescription200Payload = {
 };
 
 export type DeclineWorkoutPrescription200 = {
+  originType?: string;
+  prescriptionStatus?: string;
+  /** @nullable */
+  prescribedCrefSnapshot?: string | null;
+  allowStudentSubstitution?: boolean;
   id: string;
   coachId: string;
   athleteId: string;
@@ -7044,6 +7994,8 @@ export type GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItem = {
 };
 
 export type GenerateCoachPrescriptionDraftWithAi200 = {
+  prescriptionId: string;
+  version: number;
   status: GenerateCoachPrescriptionDraftWithAi200Status;
   name: string;
   /** @nullable */
@@ -7690,6 +8642,7 @@ export type GetCoachAthleteProgressSessionDetail200ExercisesItem = {
   /** @nullable */
   alternative2ExerciseNameSnapshot?: string | null;
   wasSubstituted?: boolean;
+  substitutedByStudent?: boolean;
   /** @nullable */
   substitutedAt?: string | null;
   planned: GetCoachAthleteProgressSessionDetail200ExercisesItemPlanned;
@@ -7698,6 +8651,8 @@ export type GetCoachAthleteProgressSessionDetail200ExercisesItem = {
 };
 
 export type GetCoachAthleteProgressSessionDetail200 = {
+  /** @nullable */
+  prescribedCrefSnapshot?: string | null;
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
   origin: GetCoachAthleteProgressSessionDetail200Origin;
@@ -9005,6 +9960,11 @@ export type AllocateCoachWorkoutPlanTemplate200PrescriptionPayload = {
 };
 
 export type AllocateCoachWorkoutPlanTemplate200Prescription = {
+  originType?: string;
+  prescriptionStatus?: string;
+  /** @nullable */
+  prescribedCrefSnapshot?: string | null;
+  allowStudentSubstitution?: boolean;
   id: string;
   coachId: string;
   athleteId: string;
@@ -9314,7 +10274,7 @@ export const UpdateAdminExerciseMusclesBodySecondaryMuscleGroupsItem = {
 } as const;
 
 export type UpdateAdminExerciseMusclesBody = {
-  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$ */
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$ */
   expectedUpdatedAt: string;
   /**
    * @minItems 1
@@ -9362,7 +10322,7 @@ export type UpdateAdminExerciseMuscles200MusclesItem = {
 export type UpdateAdminExerciseMuscles200 = {
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
-  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$ */
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$ */
   updatedAt: string;
   muscles: UpdateAdminExerciseMuscles200MusclesItem[];
 };
@@ -9818,10 +10778,7 @@ export type ListAdminExercises200ItemPriority3d = {
    * @maximum 5
    */
   tier: number;
-  /**
-   * @maximum 9007199254740991
-   * @exclusiveMinimum 0
-   */
+  /** @maximum 9007199254740991 */
   order: number;
   batch: string;
   reason: string;
@@ -10330,6 +11287,7 @@ export type GetAdminUser200CommercialContextProfessionalVerification = {
   status: string;
   /** @nullable */
   validUntil: string | null;
+  crefVerificationStatus?: string;
 } | null;
 
 export type GetAdminUser200CommercialContextAccountType =
@@ -11015,6 +11973,7 @@ export type ListAdminAuditAction =
   (typeof ListAdminAuditAction)[keyof typeof ListAdminAuditAction];
 
 export const ListAdminAuditAction = {
+  COMPLIANCE_UPDATED: "COMPLIANCE_UPDATED",
   PROFESSIONAL_VERIFICATION_POLICY_UPDATED:
     "PROFESSIONAL_VERIFICATION_POLICY_UPDATED",
   EXERCISE_MUSCLES_UPDATED: "EXERCISE_MUSCLES_UPDATED",
@@ -11041,6 +12000,7 @@ export type ListAdminAudit200ItemsItemAction =
   (typeof ListAdminAudit200ItemsItemAction)[keyof typeof ListAdminAudit200ItemsItemAction];
 
 export const ListAdminAudit200ItemsItemAction = {
+  COMPLIANCE_UPDATED: "COMPLIANCE_UPDATED",
   PROFESSIONAL_VERIFICATION_POLICY_UPDATED:
     "PROFESSIONAL_VERIFICATION_POLICY_UPDATED",
   EXERCISE_MUSCLES_UPDATED: "EXERCISE_MUSCLES_UPDATED",
@@ -11977,6 +12937,9 @@ export type GetExerciseMedia200Instructions = {
 } | null;
 
 export type GetExerciseMedia200 = {
+  biomechanicalReviewStatus?: string;
+  /** @nullable */
+  safetyDisclaimerMd?: string | null;
   anatomy?: ExerciseAnatomyReview | null;
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   exerciseId: string;
@@ -12293,6 +13256,7 @@ export type GetActiveWorkoutSession200SessionExercisesItem = {
   /** @nullable */
   alternative2ExerciseNameSnapshot?: string | null;
   wasSubstituted?: boolean;
+  substitutedByStudent?: boolean;
   /** @nullable */
   substitutedAt?: string | null;
   /**
@@ -12326,6 +13290,11 @@ export type GetActiveWorkoutSession200SessionExercisesItem = {
 };
 
 export type GetActiveWorkoutSession200 = {
+  originType?: string;
+  prescriptionStatus?: string;
+  /** @nullable */
+  prescribedCrefSnapshot?: string | null;
+  allowStudentSubstitution?: boolean;
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
   origin?: GetActiveWorkoutSession200Origin;
@@ -12503,6 +13472,7 @@ export type GetWorkoutSession200SessionExercisesItem = {
   /** @nullable */
   alternative2ExerciseNameSnapshot?: string | null;
   wasSubstituted?: boolean;
+  substitutedByStudent?: boolean;
   /** @nullable */
   substitutedAt?: string | null;
   /**
@@ -12536,6 +13506,11 @@ export type GetWorkoutSession200SessionExercisesItem = {
 };
 
 export type GetWorkoutSession200 = {
+  originType?: string;
+  prescriptionStatus?: string;
+  /** @nullable */
+  prescribedCrefSnapshot?: string | null;
+  allowStudentSubstitution?: boolean;
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
   origin?: GetWorkoutSession200Origin;
@@ -13108,6 +14083,7 @@ export type AddExerciseToWorkoutSession201 = {
   /** @nullable */
   alternative2ExerciseNameSnapshot?: string | null;
   wasSubstituted?: boolean;
+  substitutedByStudent?: boolean;
   /** @nullable */
   substitutedAt?: string | null;
   /**
@@ -13330,6 +14306,7 @@ export type SubstituteSessionExercise200 = {
   /** @nullable */
   alternative2ExerciseNameSnapshot?: string | null;
   wasSubstituted?: boolean;
+  substitutedByStudent?: boolean;
   /** @nullable */
   substitutedAt?: string | null;
   /**
@@ -14032,9 +15009,9 @@ export type CreateForgottenWorkoutDraftBody = {
   workoutPlanId?: string;
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   workoutDayId?: string;
-  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$ */
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$ */
   startedAt?: string;
-  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$ */
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$ */
   completedAt?: string;
   /** @minItems 1 */
   exercises: CreateForgottenWorkoutDraftBodyExercisesItem[];
@@ -14590,12 +15567,12 @@ export type UpdateForgottenWorkoutDraftBody = {
   workoutDayId?: string | null;
   /**
    * @nullable
-   * @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$
+   * @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$
    */
   startedAt?: string | null;
   /**
    * @nullable
-   * @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$
+   * @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$
    */
   completedAt?: string | null;
   /** @minItems 1 */
@@ -16047,6 +17024,7 @@ export type GetWorkoutHistorySession200ExercisesItem = {
   /** @nullable */
   alternative2ExerciseNameSnapshot?: string | null;
   wasSubstituted?: boolean;
+  substitutedByStudent?: boolean;
   /** @nullable */
   substitutedAt?: string | null;
   planned: GetWorkoutHistorySession200ExercisesItemPlanned;
@@ -16055,6 +17033,8 @@ export type GetWorkoutHistorySession200ExercisesItem = {
 };
 
 export type GetWorkoutHistorySession200 = {
+  /** @nullable */
+  prescribedCrefSnapshot?: string | null;
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
   origin: GetWorkoutHistorySession200Origin;
@@ -16385,10 +17365,10 @@ export type ListNotifications200NotificationsItem = {
   data: unknown | null;
   /**
    * @nullable
-   * @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+   * @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$
    */
   readAt: string | null;
-  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$ */
+  /** @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z))$ */
   sentAt: string;
 };
 
@@ -18422,6 +19402,11 @@ export type getUserTrainDataResponse401 = {
   status: 401;
 };
 
+export type getUserTrainDataResponse403 = {
+  data: GetUserTrainData403;
+  status: 403;
+};
+
 export type getUserTrainDataResponse404 = {
   data: GetUserTrainData404;
   status: 404;
@@ -18437,6 +19422,7 @@ export type getUserTrainDataResponseSuccess = getUserTrainDataResponse200 & {
 };
 export type getUserTrainDataResponseError = (
   | getUserTrainDataResponse401
+  | getUserTrainDataResponse403
   | getUserTrainDataResponse404
   | getUserTrainDataResponse500
 ) & {
@@ -18473,6 +19459,11 @@ export type upsertUserTrainDataResponse401 = {
   status: 401;
 };
 
+export type upsertUserTrainDataResponse403 = {
+  data: UpsertUserTrainData403;
+  status: 403;
+};
+
 export type upsertUserTrainDataResponse500 = {
   data: UpsertUserTrainData500;
   status: 500;
@@ -18484,6 +19475,7 @@ export type upsertUserTrainDataResponseSuccess =
   };
 export type upsertUserTrainDataResponseError = (
   | upsertUserTrainDataResponse401
+  | upsertUserTrainDataResponse403
   | upsertUserTrainDataResponse500
 ) & {
   headers: Headers;
@@ -18522,6 +19514,11 @@ export type updateGamificationThemeResponse401 = {
   status: 401;
 };
 
+export type updateGamificationThemeResponse403 = {
+  data: UpdateGamificationTheme403;
+  status: 403;
+};
+
 export type updateGamificationThemeResponse500 = {
   data: UpdateGamificationTheme500;
   status: 500;
@@ -18533,6 +19530,7 @@ export type updateGamificationThemeResponseSuccess =
   };
 export type updateGamificationThemeResponseError = (
   | updateGamificationThemeResponse401
+  | updateGamificationThemeResponse403
   | updateGamificationThemeResponse500
 ) & {
   headers: Headers;
@@ -18574,6 +19572,11 @@ export type getUserMetricsHistoryResponse401 = {
   status: 401;
 };
 
+export type getUserMetricsHistoryResponse403 = {
+  data: GetUserMetricsHistory403;
+  status: 403;
+};
+
 export type getUserMetricsHistoryResponse500 = {
   data: GetUserMetricsHistory500;
   status: 500;
@@ -18585,6 +19588,7 @@ export type getUserMetricsHistoryResponseSuccess =
   };
 export type getUserMetricsHistoryResponseError = (
   | getUserMetricsHistoryResponse401
+  | getUserMetricsHistoryResponse403
   | getUserMetricsHistoryResponse500
 ) & {
   headers: Headers;
@@ -20718,6 +21722,1008 @@ export const authorizeFeatureAccess = async (
       method: "POST",
       headers: { "Content-Type": "application/json", ...options?.headers },
       body: JSON.stringify(authorizeFeatureAccessBody),
+    },
+  );
+};
+
+export type getMyArchivedPrescriptionsResponse200 = {
+  data: GetMyArchivedPrescriptions200Item[];
+  status: 200;
+};
+
+export type getMyArchivedPrescriptionsResponse400 = {
+  data: GetMyArchivedPrescriptions400;
+  status: 400;
+};
+
+export type getMyArchivedPrescriptionsResponse401 = {
+  data: GetMyArchivedPrescriptions401;
+  status: 401;
+};
+
+export type getMyArchivedPrescriptionsResponse403 = {
+  data: GetMyArchivedPrescriptions403;
+  status: 403;
+};
+
+export type getMyArchivedPrescriptionsResponse404 = {
+  data: GetMyArchivedPrescriptions404;
+  status: 404;
+};
+
+export type getMyArchivedPrescriptionsResponse409 = {
+  data: GetMyArchivedPrescriptions409;
+  status: 409;
+};
+
+export type getMyArchivedPrescriptionsResponse500 = {
+  data: GetMyArchivedPrescriptions500;
+  status: 500;
+};
+
+export type getMyArchivedPrescriptionsResponseSuccess =
+  getMyArchivedPrescriptionsResponse200 & {
+    headers: Headers;
+  };
+export type getMyArchivedPrescriptionsResponseError = (
+  | getMyArchivedPrescriptionsResponse400
+  | getMyArchivedPrescriptionsResponse401
+  | getMyArchivedPrescriptionsResponse403
+  | getMyArchivedPrescriptionsResponse404
+  | getMyArchivedPrescriptionsResponse409
+  | getMyArchivedPrescriptionsResponse500
+) & {
+  headers: Headers;
+};
+
+export type getMyArchivedPrescriptionsResponse =
+  | getMyArchivedPrescriptionsResponseSuccess
+  | getMyArchivedPrescriptionsResponseError;
+
+export const getGetMyArchivedPrescriptionsUrl = () => {
+  return `/coach/prescriptions/archive`;
+};
+
+export const getMyArchivedPrescriptions = async (
+  options?: RequestInit,
+): Promise<getMyArchivedPrescriptionsResponse> => {
+  return customFetch<getMyArchivedPrescriptionsResponse>(
+    getGetMyArchivedPrescriptionsUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export type approveAiWorkoutPlanResponse200 = {
+  data: ApproveAiWorkoutPlan200;
+  status: 200;
+};
+
+export type approveAiWorkoutPlanResponse400 = {
+  data: ApproveAiWorkoutPlan400;
+  status: 400;
+};
+
+export type approveAiWorkoutPlanResponse401 = {
+  data: ApproveAiWorkoutPlan401;
+  status: 401;
+};
+
+export type approveAiWorkoutPlanResponse403 = {
+  data: ApproveAiWorkoutPlan403;
+  status: 403;
+};
+
+export type approveAiWorkoutPlanResponse404 = {
+  data: ApproveAiWorkoutPlan404;
+  status: 404;
+};
+
+export type approveAiWorkoutPlanResponse409 = {
+  data: ApproveAiWorkoutPlan409;
+  status: 409;
+};
+
+export type approveAiWorkoutPlanResponse500 = {
+  data: ApproveAiWorkoutPlan500;
+  status: 500;
+};
+
+export type approveAiWorkoutPlanResponseSuccess =
+  approveAiWorkoutPlanResponse200 & {
+    headers: Headers;
+  };
+export type approveAiWorkoutPlanResponseError = (
+  | approveAiWorkoutPlanResponse400
+  | approveAiWorkoutPlanResponse401
+  | approveAiWorkoutPlanResponse403
+  | approveAiWorkoutPlanResponse404
+  | approveAiWorkoutPlanResponse409
+  | approveAiWorkoutPlanResponse500
+) & {
+  headers: Headers;
+};
+
+export type approveAiWorkoutPlanResponse =
+  | approveAiWorkoutPlanResponseSuccess
+  | approveAiWorkoutPlanResponseError;
+
+export const getApproveAiWorkoutPlanUrl = (id: string) => {
+  return `/workout-plans/${id}/approve`;
+};
+
+export const approveAiWorkoutPlan = async (
+  id: string,
+  approveAiWorkoutPlanBody: ApproveAiWorkoutPlanBody,
+  options?: RequestInit,
+): Promise<approveAiWorkoutPlanResponse> => {
+  return customFetch<approveAiWorkoutPlanResponse>(
+    getApproveAiWorkoutPlanUrl(id),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(approveAiWorkoutPlanBody),
+    },
+  );
+};
+
+export type exportMyDataResponse200 = {
+  data: ExportMyData200;
+  status: 200;
+};
+
+export type exportMyDataResponse400 = {
+  data: ExportMyData400;
+  status: 400;
+};
+
+export type exportMyDataResponse401 = {
+  data: ExportMyData401;
+  status: 401;
+};
+
+export type exportMyDataResponse403 = {
+  data: ExportMyData403;
+  status: 403;
+};
+
+export type exportMyDataResponse404 = {
+  data: ExportMyData404;
+  status: 404;
+};
+
+export type exportMyDataResponse409 = {
+  data: ExportMyData409;
+  status: 409;
+};
+
+export type exportMyDataResponse500 = {
+  data: ExportMyData500;
+  status: 500;
+};
+
+export type exportMyDataResponseSuccess = exportMyDataResponse200 & {
+  headers: Headers;
+};
+export type exportMyDataResponseError = (
+  | exportMyDataResponse400
+  | exportMyDataResponse401
+  | exportMyDataResponse403
+  | exportMyDataResponse404
+  | exportMyDataResponse409
+  | exportMyDataResponse500
+) & {
+  headers: Headers;
+};
+
+export type exportMyDataResponse =
+  | exportMyDataResponseSuccess
+  | exportMyDataResponseError;
+
+export const getExportMyDataUrl = () => {
+  return `/me/privacy/export`;
+};
+
+export const exportMyData = async (
+  options?: RequestInit,
+): Promise<exportMyDataResponse> => {
+  return customFetch<exportMyDataResponse>(getExportMyDataUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export type revokeHealthConsentResponse200 = {
+  data: RevokeHealthConsent200;
+  status: 200;
+};
+
+export type revokeHealthConsentResponse400 = {
+  data: RevokeHealthConsent400;
+  status: 400;
+};
+
+export type revokeHealthConsentResponse401 = {
+  data: RevokeHealthConsent401;
+  status: 401;
+};
+
+export type revokeHealthConsentResponse403 = {
+  data: RevokeHealthConsent403;
+  status: 403;
+};
+
+export type revokeHealthConsentResponse404 = {
+  data: RevokeHealthConsent404;
+  status: 404;
+};
+
+export type revokeHealthConsentResponse409 = {
+  data: RevokeHealthConsent409;
+  status: 409;
+};
+
+export type revokeHealthConsentResponse500 = {
+  data: RevokeHealthConsent500;
+  status: 500;
+};
+
+export type revokeHealthConsentResponseSuccess =
+  revokeHealthConsentResponse200 & {
+    headers: Headers;
+  };
+export type revokeHealthConsentResponseError = (
+  | revokeHealthConsentResponse400
+  | revokeHealthConsentResponse401
+  | revokeHealthConsentResponse403
+  | revokeHealthConsentResponse404
+  | revokeHealthConsentResponse409
+  | revokeHealthConsentResponse500
+) & {
+  headers: Headers;
+};
+
+export type revokeHealthConsentResponse =
+  | revokeHealthConsentResponseSuccess
+  | revokeHealthConsentResponseError;
+
+export const getRevokeHealthConsentUrl = () => {
+  return `/me/privacy/revoke-health`;
+};
+
+export const revokeHealthConsent = async (
+  options?: RequestInit,
+): Promise<revokeHealthConsentResponse> => {
+  return customFetch<revokeHealthConsentResponse>(getRevokeHealthConsentUrl(), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export type eraseMyAccountResponse200 = {
+  data: EraseMyAccount200;
+  status: 200;
+};
+
+export type eraseMyAccountResponse400 = {
+  data: EraseMyAccount400;
+  status: 400;
+};
+
+export type eraseMyAccountResponse401 = {
+  data: EraseMyAccount401;
+  status: 401;
+};
+
+export type eraseMyAccountResponse403 = {
+  data: EraseMyAccount403;
+  status: 403;
+};
+
+export type eraseMyAccountResponse404 = {
+  data: EraseMyAccount404;
+  status: 404;
+};
+
+export type eraseMyAccountResponse409 = {
+  data: EraseMyAccount409;
+  status: 409;
+};
+
+export type eraseMyAccountResponse500 = {
+  data: EraseMyAccount500;
+  status: 500;
+};
+
+export type eraseMyAccountResponseSuccess = eraseMyAccountResponse200 & {
+  headers: Headers;
+};
+export type eraseMyAccountResponseError = (
+  | eraseMyAccountResponse400
+  | eraseMyAccountResponse401
+  | eraseMyAccountResponse403
+  | eraseMyAccountResponse404
+  | eraseMyAccountResponse409
+  | eraseMyAccountResponse500
+) & {
+  headers: Headers;
+};
+
+export type eraseMyAccountResponse =
+  | eraseMyAccountResponseSuccess
+  | eraseMyAccountResponseError;
+
+export const getEraseMyAccountUrl = () => {
+  return `/me/privacy/account`;
+};
+
+export const eraseMyAccount = async (
+  eraseMyAccountBody: EraseMyAccountBody,
+  options?: RequestInit,
+): Promise<eraseMyAccountResponse> => {
+  return customFetch<eraseMyAccountResponse>(getEraseMyAccountUrl(), {
+    ...options,
+    method: "DELETE",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(eraseMyAccountBody),
+  });
+};
+
+export type listLegalDocumentsResponse200 = {
+  data: ListLegalDocuments200Item[];
+  status: 200;
+};
+
+export type listLegalDocumentsResponse400 = {
+  data: ListLegalDocuments400;
+  status: 400;
+};
+
+export type listLegalDocumentsResponse401 = {
+  data: ListLegalDocuments401;
+  status: 401;
+};
+
+export type listLegalDocumentsResponse403 = {
+  data: ListLegalDocuments403;
+  status: 403;
+};
+
+export type listLegalDocumentsResponse404 = {
+  data: ListLegalDocuments404;
+  status: 404;
+};
+
+export type listLegalDocumentsResponse409 = {
+  data: ListLegalDocuments409;
+  status: 409;
+};
+
+export type listLegalDocumentsResponse500 = {
+  data: ListLegalDocuments500;
+  status: 500;
+};
+
+export type listLegalDocumentsResponseSuccess =
+  listLegalDocumentsResponse200 & {
+    headers: Headers;
+  };
+export type listLegalDocumentsResponseError = (
+  | listLegalDocumentsResponse400
+  | listLegalDocumentsResponse401
+  | listLegalDocumentsResponse403
+  | listLegalDocumentsResponse404
+  | listLegalDocumentsResponse409
+  | listLegalDocumentsResponse500
+) & {
+  headers: Headers;
+};
+
+export type listLegalDocumentsResponse =
+  | listLegalDocumentsResponseSuccess
+  | listLegalDocumentsResponseError;
+
+export const getListLegalDocumentsUrl = () => {
+  return `/legal/documents`;
+};
+
+export const listLegalDocuments = async (
+  options?: RequestInit,
+): Promise<listLegalDocumentsResponse> => {
+  return customFetch<listLegalDocumentsResponse>(getListLegalDocumentsUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export type getMyLegalDocumentsResponse200 = {
+  data: GetMyLegalDocuments200Item[];
+  status: 200;
+};
+
+export type getMyLegalDocumentsResponse400 = {
+  data: GetMyLegalDocuments400;
+  status: 400;
+};
+
+export type getMyLegalDocumentsResponse401 = {
+  data: GetMyLegalDocuments401;
+  status: 401;
+};
+
+export type getMyLegalDocumentsResponse403 = {
+  data: GetMyLegalDocuments403;
+  status: 403;
+};
+
+export type getMyLegalDocumentsResponse404 = {
+  data: GetMyLegalDocuments404;
+  status: 404;
+};
+
+export type getMyLegalDocumentsResponse409 = {
+  data: GetMyLegalDocuments409;
+  status: 409;
+};
+
+export type getMyLegalDocumentsResponse500 = {
+  data: GetMyLegalDocuments500;
+  status: 500;
+};
+
+export type getMyLegalDocumentsResponseSuccess =
+  getMyLegalDocumentsResponse200 & {
+    headers: Headers;
+  };
+export type getMyLegalDocumentsResponseError = (
+  | getMyLegalDocumentsResponse400
+  | getMyLegalDocumentsResponse401
+  | getMyLegalDocumentsResponse403
+  | getMyLegalDocumentsResponse404
+  | getMyLegalDocumentsResponse409
+  | getMyLegalDocumentsResponse500
+) & {
+  headers: Headers;
+};
+
+export type getMyLegalDocumentsResponse =
+  | getMyLegalDocumentsResponseSuccess
+  | getMyLegalDocumentsResponseError;
+
+export const getGetMyLegalDocumentsUrl = () => {
+  return `/me/legal-documents`;
+};
+
+export const getMyLegalDocuments = async (
+  options?: RequestInit,
+): Promise<getMyLegalDocumentsResponse> => {
+  return customFetch<getMyLegalDocumentsResponse>(getGetMyLegalDocumentsUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export type acceptLegalDocumentResponse200 = {
+  data: AcceptLegalDocument200;
+  status: 200;
+};
+
+export type acceptLegalDocumentResponse400 = {
+  data: AcceptLegalDocument400;
+  status: 400;
+};
+
+export type acceptLegalDocumentResponse401 = {
+  data: AcceptLegalDocument401;
+  status: 401;
+};
+
+export type acceptLegalDocumentResponse403 = {
+  data: AcceptLegalDocument403;
+  status: 403;
+};
+
+export type acceptLegalDocumentResponse404 = {
+  data: AcceptLegalDocument404;
+  status: 404;
+};
+
+export type acceptLegalDocumentResponse409 = {
+  data: AcceptLegalDocument409;
+  status: 409;
+};
+
+export type acceptLegalDocumentResponse500 = {
+  data: AcceptLegalDocument500;
+  status: 500;
+};
+
+export type acceptLegalDocumentResponseSuccess =
+  acceptLegalDocumentResponse200 & {
+    headers: Headers;
+  };
+export type acceptLegalDocumentResponseError = (
+  | acceptLegalDocumentResponse400
+  | acceptLegalDocumentResponse401
+  | acceptLegalDocumentResponse403
+  | acceptLegalDocumentResponse404
+  | acceptLegalDocumentResponse409
+  | acceptLegalDocumentResponse500
+) & {
+  headers: Headers;
+};
+
+export type acceptLegalDocumentResponse =
+  | acceptLegalDocumentResponseSuccess
+  | acceptLegalDocumentResponseError;
+
+export const getAcceptLegalDocumentUrl = (id: string) => {
+  return `/me/legal-documents/${id}/accept`;
+};
+
+export const acceptLegalDocument = async (
+  id: string,
+  acceptLegalDocumentBody: AcceptLegalDocumentBody,
+  options?: RequestInit,
+): Promise<acceptLegalDocumentResponse> => {
+  return customFetch<acceptLegalDocumentResponse>(
+    getAcceptLegalDocumentUrl(id),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(acceptLegalDocumentBody),
+    },
+  );
+};
+
+export type declareProfessionalCredentialsResponse200 = {
+  data: DeclareProfessionalCredentials200;
+  status: 200;
+};
+
+export type declareProfessionalCredentialsResponse400 = {
+  data: DeclareProfessionalCredentials400;
+  status: 400;
+};
+
+export type declareProfessionalCredentialsResponse401 = {
+  data: DeclareProfessionalCredentials401;
+  status: 401;
+};
+
+export type declareProfessionalCredentialsResponse403 = {
+  data: DeclareProfessionalCredentials403;
+  status: 403;
+};
+
+export type declareProfessionalCredentialsResponse404 = {
+  data: DeclareProfessionalCredentials404;
+  status: 404;
+};
+
+export type declareProfessionalCredentialsResponse409 = {
+  data: DeclareProfessionalCredentials409;
+  status: 409;
+};
+
+export type declareProfessionalCredentialsResponse500 = {
+  data: DeclareProfessionalCredentials500;
+  status: 500;
+};
+
+export type declareProfessionalCredentialsResponseSuccess =
+  declareProfessionalCredentialsResponse200 & {
+    headers: Headers;
+  };
+export type declareProfessionalCredentialsResponseError = (
+  | declareProfessionalCredentialsResponse400
+  | declareProfessionalCredentialsResponse401
+  | declareProfessionalCredentialsResponse403
+  | declareProfessionalCredentialsResponse404
+  | declareProfessionalCredentialsResponse409
+  | declareProfessionalCredentialsResponse500
+) & {
+  headers: Headers;
+};
+
+export type declareProfessionalCredentialsResponse =
+  | declareProfessionalCredentialsResponseSuccess
+  | declareProfessionalCredentialsResponseError;
+
+export const getDeclareProfessionalCredentialsUrl = () => {
+  return `/me/professional-declaration`;
+};
+
+export const declareProfessionalCredentials = async (
+  declareProfessionalCredentialsBody: DeclareProfessionalCredentialsBody,
+  options?: RequestInit,
+): Promise<declareProfessionalCredentialsResponse> => {
+  return customFetch<declareProfessionalCredentialsResponse>(
+    getDeclareProfessionalCredentialsUrl(),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(declareProfessionalCredentialsBody),
+    },
+  );
+};
+
+export type getAdminComplianceResponse200 = {
+  data: GetAdminCompliance200;
+  status: 200;
+};
+
+export type getAdminComplianceResponse400 = {
+  data: GetAdminCompliance400;
+  status: 400;
+};
+
+export type getAdminComplianceResponse401 = {
+  data: GetAdminCompliance401;
+  status: 401;
+};
+
+export type getAdminComplianceResponse403 = {
+  data: GetAdminCompliance403;
+  status: 403;
+};
+
+export type getAdminComplianceResponse404 = {
+  data: GetAdminCompliance404;
+  status: 404;
+};
+
+export type getAdminComplianceResponse409 = {
+  data: GetAdminCompliance409;
+  status: 409;
+};
+
+export type getAdminComplianceResponse500 = {
+  data: GetAdminCompliance500;
+  status: 500;
+};
+
+export type getAdminComplianceResponseSuccess =
+  getAdminComplianceResponse200 & {
+    headers: Headers;
+  };
+export type getAdminComplianceResponseError = (
+  | getAdminComplianceResponse400
+  | getAdminComplianceResponse401
+  | getAdminComplianceResponse403
+  | getAdminComplianceResponse404
+  | getAdminComplianceResponse409
+  | getAdminComplianceResponse500
+) & {
+  headers: Headers;
+};
+
+export type getAdminComplianceResponse =
+  | getAdminComplianceResponseSuccess
+  | getAdminComplianceResponseError;
+
+export const getGetAdminComplianceUrl = (params?: GetAdminComplianceParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/admin/compliance?${stringifiedParams}`
+    : `/admin/compliance`;
+};
+
+export const getAdminCompliance = async (
+  params?: GetAdminComplianceParams,
+  options?: RequestInit,
+): Promise<getAdminComplianceResponse> => {
+  return customFetch<getAdminComplianceResponse>(
+    getGetAdminComplianceUrl(params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export type editLegalDocumentResponse200 = {
+  data: EditLegalDocument200;
+  status: 200;
+};
+
+export type editLegalDocumentResponse400 = {
+  data: EditLegalDocument400;
+  status: 400;
+};
+
+export type editLegalDocumentResponse401 = {
+  data: EditLegalDocument401;
+  status: 401;
+};
+
+export type editLegalDocumentResponse403 = {
+  data: EditLegalDocument403;
+  status: 403;
+};
+
+export type editLegalDocumentResponse404 = {
+  data: EditLegalDocument404;
+  status: 404;
+};
+
+export type editLegalDocumentResponse409 = {
+  data: EditLegalDocument409;
+  status: 409;
+};
+
+export type editLegalDocumentResponse500 = {
+  data: EditLegalDocument500;
+  status: 500;
+};
+
+export type editLegalDocumentResponseSuccess = editLegalDocumentResponse200 & {
+  headers: Headers;
+};
+export type editLegalDocumentResponseError = (
+  | editLegalDocumentResponse400
+  | editLegalDocumentResponse401
+  | editLegalDocumentResponse403
+  | editLegalDocumentResponse404
+  | editLegalDocumentResponse409
+  | editLegalDocumentResponse500
+) & {
+  headers: Headers;
+};
+
+export type editLegalDocumentResponse =
+  | editLegalDocumentResponseSuccess
+  | editLegalDocumentResponseError;
+
+export const getEditLegalDocumentUrl = (id: string) => {
+  return `/admin/compliance/documents/${id}`;
+};
+
+export const editLegalDocument = async (
+  id: string,
+  editLegalDocumentBody: EditLegalDocumentBody,
+  options?: RequestInit,
+): Promise<editLegalDocumentResponse> => {
+  return customFetch<editLegalDocumentResponse>(getEditLegalDocumentUrl(id), {
+    ...options,
+    method: "PUT",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(editLegalDocumentBody),
+  });
+};
+
+export type updateComplianceItemResponse200 = {
+  data: UpdateComplianceItem200;
+  status: 200;
+};
+
+export type updateComplianceItemResponse400 = {
+  data: UpdateComplianceItem400;
+  status: 400;
+};
+
+export type updateComplianceItemResponse401 = {
+  data: UpdateComplianceItem401;
+  status: 401;
+};
+
+export type updateComplianceItemResponse403 = {
+  data: UpdateComplianceItem403;
+  status: 403;
+};
+
+export type updateComplianceItemResponse404 = {
+  data: UpdateComplianceItem404;
+  status: 404;
+};
+
+export type updateComplianceItemResponse409 = {
+  data: UpdateComplianceItem409;
+  status: 409;
+};
+
+export type updateComplianceItemResponse500 = {
+  data: UpdateComplianceItem500;
+  status: 500;
+};
+
+export type updateComplianceItemResponseSuccess =
+  updateComplianceItemResponse200 & {
+    headers: Headers;
+  };
+export type updateComplianceItemResponseError = (
+  | updateComplianceItemResponse400
+  | updateComplianceItemResponse401
+  | updateComplianceItemResponse403
+  | updateComplianceItemResponse404
+  | updateComplianceItemResponse409
+  | updateComplianceItemResponse500
+) & {
+  headers: Headers;
+};
+
+export type updateComplianceItemResponse =
+  | updateComplianceItemResponseSuccess
+  | updateComplianceItemResponseError;
+
+export const getUpdateComplianceItemUrl = (id: string) => {
+  return `/admin/compliance/items/${id}`;
+};
+
+export const updateComplianceItem = async (
+  id: string,
+  updateComplianceItemBody: UpdateComplianceItemBody,
+  options?: RequestInit,
+): Promise<updateComplianceItemResponse> => {
+  return customFetch<updateComplianceItemResponse>(
+    getUpdateComplianceItemUrl(id),
+    {
+      ...options,
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(updateComplianceItemBody),
+    },
+  );
+};
+
+export type auditComplianceProfessionalResponse200 = {
+  data: AuditComplianceProfessional200;
+  status: 200;
+};
+
+export type auditComplianceProfessionalResponse400 = {
+  data: AuditComplianceProfessional400;
+  status: 400;
+};
+
+export type auditComplianceProfessionalResponse401 = {
+  data: AuditComplianceProfessional401;
+  status: 401;
+};
+
+export type auditComplianceProfessionalResponse403 = {
+  data: AuditComplianceProfessional403;
+  status: 403;
+};
+
+export type auditComplianceProfessionalResponse404 = {
+  data: AuditComplianceProfessional404;
+  status: 404;
+};
+
+export type auditComplianceProfessionalResponse409 = {
+  data: AuditComplianceProfessional409;
+  status: 409;
+};
+
+export type auditComplianceProfessionalResponse500 = {
+  data: AuditComplianceProfessional500;
+  status: 500;
+};
+
+export type auditComplianceProfessionalResponseSuccess =
+  auditComplianceProfessionalResponse200 & {
+    headers: Headers;
+  };
+export type auditComplianceProfessionalResponseError = (
+  | auditComplianceProfessionalResponse400
+  | auditComplianceProfessionalResponse401
+  | auditComplianceProfessionalResponse403
+  | auditComplianceProfessionalResponse404
+  | auditComplianceProfessionalResponse409
+  | auditComplianceProfessionalResponse500
+) & {
+  headers: Headers;
+};
+
+export type auditComplianceProfessionalResponse =
+  | auditComplianceProfessionalResponseSuccess
+  | auditComplianceProfessionalResponseError;
+
+export const getAuditComplianceProfessionalUrl = (id: string) => {
+  return `/admin/compliance/professionals/${id}`;
+};
+
+export const auditComplianceProfessional = async (
+  id: string,
+  auditComplianceProfessionalBody: AuditComplianceProfessionalBody,
+  options?: RequestInit,
+): Promise<auditComplianceProfessionalResponse> => {
+  return customFetch<auditComplianceProfessionalResponse>(
+    getAuditComplianceProfessionalUrl(id),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(auditComplianceProfessionalBody),
+    },
+  );
+};
+
+export type reviewComplianceExerciseResponse200 = {
+  data: ReviewComplianceExercise200;
+  status: 200;
+};
+
+export type reviewComplianceExerciseResponse400 = {
+  data: ReviewComplianceExercise400;
+  status: 400;
+};
+
+export type reviewComplianceExerciseResponse401 = {
+  data: ReviewComplianceExercise401;
+  status: 401;
+};
+
+export type reviewComplianceExerciseResponse403 = {
+  data: ReviewComplianceExercise403;
+  status: 403;
+};
+
+export type reviewComplianceExerciseResponse404 = {
+  data: ReviewComplianceExercise404;
+  status: 404;
+};
+
+export type reviewComplianceExerciseResponse409 = {
+  data: ReviewComplianceExercise409;
+  status: 409;
+};
+
+export type reviewComplianceExerciseResponse500 = {
+  data: ReviewComplianceExercise500;
+  status: 500;
+};
+
+export type reviewComplianceExerciseResponseSuccess =
+  reviewComplianceExerciseResponse200 & {
+    headers: Headers;
+  };
+export type reviewComplianceExerciseResponseError = (
+  | reviewComplianceExerciseResponse400
+  | reviewComplianceExerciseResponse401
+  | reviewComplianceExerciseResponse403
+  | reviewComplianceExerciseResponse404
+  | reviewComplianceExerciseResponse409
+  | reviewComplianceExerciseResponse500
+) & {
+  headers: Headers;
+};
+
+export type reviewComplianceExerciseResponse =
+  | reviewComplianceExerciseResponseSuccess
+  | reviewComplianceExerciseResponseError;
+
+export const getReviewComplianceExerciseUrl = (id: string) => {
+  return `/admin/compliance/exercises/${id}`;
+};
+
+export const reviewComplianceExercise = async (
+  id: string,
+  reviewComplianceExerciseBody: ReviewComplianceExerciseBody,
+  options?: RequestInit,
+): Promise<reviewComplianceExerciseResponse> => {
+  return customFetch<reviewComplianceExerciseResponse>(
+    getReviewComplianceExerciseUrl(id),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(reviewComplianceExerciseBody),
     },
   );
 };

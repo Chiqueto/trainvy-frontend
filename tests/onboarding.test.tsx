@@ -1,4 +1,10 @@
 import React from "react";
+vi.mock("@/app/_components/legal-consent", () => ({
+  LegalConsent: ({ onReady }: { onReady?: (ready: boolean) => void }) => {
+    React.useEffect(() => { onReady?.(true); }, [onReady]);
+    return null;
+  },
+}));
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   cleanup,

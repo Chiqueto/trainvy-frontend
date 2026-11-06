@@ -32,6 +32,8 @@ interface CoachAiPrescriptionModalProps {
   isOpen: boolean;
   onClose: () => void;
   onApplyPrescription: (data: {
+    prescriptionId: string;
+    version: number;
     name: string;
     notes?: string | null;
     workoutDays: WorkoutPlanDraftDay[];
@@ -193,6 +195,8 @@ export function CoachAiPrescriptionModal({
     );
 
     onApplyPrescription({
+      prescriptionId: generatedDraft.prescriptionId,
+      version: generatedDraft.version,
       name: generatedDraft.name,
       notes: generatedDraft.notes,
       workoutDays: mappedDays,

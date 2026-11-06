@@ -99,6 +99,8 @@ export default async function EditPrescriptionPage({
           athleteName={athleteData.name}
           initialData={{
             id: prescriptionData.id,
+            originType: prescriptionData.originType,
+            allowStudentSubstitution: prescriptionData.allowStudentSubstitution,
             name: prescriptionData.name,
             notes: prescriptionData.notes,
             version: prescriptionData.version,

@@ -34,6 +34,8 @@ import { Input } from "@/components/ui/input";
 import { CoachAiPrescriptionModal } from "./coach-ai-prescription-modal";
 
 export interface InitialPrescriptionData {
+  originType?: string;
+  allowStudentSubstitution?: boolean;
   id?: string;
   name: string;
   notes?: string | null;
@@ -76,6 +78,8 @@ export function CoachPrescriptionBuilder({
   const router = useRouter();
   const [name, setName] = useState(initialData?.name ?? "");
   const [notes, setNotes] = useState(initialData?.notes ?? "");
+  const [allowStudentSubstitution, setAllowStudentSubstitution] = useState(initialData?.allowStudentSubstitution ?? true);
+  const [aiAssisted, setAiAssisted] = useState(initialData?.originType === "PROFESSIONAL_AI_ASSISTED");
 
   const [days, setDays] = useState<WorkoutPlanDraftDay[]>(() => {
     if (initialData?.workoutDays && initialData.workoutDays.length > 0) {
@@ -254,6 +258,7 @@ export function CoachPrescriptionBuilder({
             body: {
               name: name.trim(),
               notes: notes.trim() || null,
+              allowStudentSubstitution,
               workoutDays: serializedWorkoutDays,
               version: savedDraft.version!,
             },
@@ -274,6 +279,7 @@ export function CoachPrescriptionBuilder({
             athleteId,
             name: name.trim(),
             notes: notes.trim() || null,
+            allowStudentSubstitution,
             workoutDays: serializedWorkoutDays,
           });
 
@@ -321,6 +327,8 @@ export function CoachPrescriptionBuilder({
       className="flex min-w-0 flex-col gap-6 disabled:opacity-80"
     >
       {/* Banner de Prescrição Assistida por IA */}
+      {aiAssisted && <p className="rounded-lg border p-3 text-sm">Sugestão gerada por IA — Revisão e aprovação profissional obrigatória antes de liberar ao aluno.</p>}
+      <label className="flex items-start gap-2 text-sm"><input type="checkbox" checked={allowStudentSubstitution} onChange={(e) => setAllowStudentSubstitution(e.target.checked)} />Permitir substituições de exercícios pelo aluno durante a sessão, mantendo a ficha original.</label>
       <section className="relative overflow-hidden rounded-3xl border border-primary/20 bg-linear-to-r from-primary/10 via-primary/5 to-transparent p-5 shadow-xs">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="space-y-1">
@@ -783,7 +791,7 @@ export function CoachPrescriptionBuilder({
           ) : (
             <Send className="size-3.5" />
           )}
-          <span>Aprovar esta versão e enviar ao aluno</span>
+          <span>Revisar e Aprovar Prescrição</span>
         </Button>
       </div>
 
@@ -793,6 +801,8 @@ export function CoachPrescriptionBuilder({
         isOpen={isAiModalOpen}
         onClose={() => setIsAiModalOpen(false)}
         onApplyPrescription={(generated) => {
+          setAiAssisted(true);
+          setSavedDraft({ id: generated.prescriptionId, version: generated.version });
           setName(generated.name);
           if (generated.notes) {
             setNotes(generated.notes);

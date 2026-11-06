@@ -66,7 +66,7 @@ describe("Salvar prescrição do personal", () => {
     } as Awaited<ReturnType<typeof sendPrescriptionAction>>);
     renderBuilder();
     fireEvent.click(
-      screen.getByRole("button", { name: /aprovar esta versão e enviar/i }),
+      screen.getByRole("button", { name: /revisar e aprovar prescrição/i }),
     );
     await waitFor(() => expect(push).toHaveBeenCalled());
     expect(createPrescriptionDraftAction).toHaveBeenCalledWith(
@@ -124,7 +124,7 @@ describe("Salvar prescrição do personal", () => {
       >);
     renderBuilder();
     const button = screen.getByRole("button", {
-      name: /aprovar esta versão e enviar/i,
+      name: /revisar e aprovar prescrição/i,
     });
     fireEvent.click(button);
     await waitFor(() =>

@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { PlanLegalLabel } from "@/app/_components/plan-legal-label";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AlertCircle } from "lucide-react";
@@ -131,6 +132,7 @@ export default async function WorkoutSessionPage({
       </div>
 
       {/* Tracker Interativo */}
+      <PlanLegalLabel data={{ originType: sessionResponse.data.originType ?? "PERSONAL_SELF_LOG", prescriptionStatus: sessionResponse.data.prescriptionStatus ?? "APPROVED_PRESCRIBED", prescribedCrefSnapshot: sessionResponse.data.prescribedCrefSnapshot ?? null }} />
       <WorkoutSessionTracker
         session={sessionResponse.data}
         coachInfo={coachInfo}

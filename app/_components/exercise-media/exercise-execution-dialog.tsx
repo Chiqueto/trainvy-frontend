@@ -293,6 +293,11 @@ export function ExerciseExecutionDialog({
         aria-modal="true"
         aria-labelledby="execution-dialog-title"
       >
+        <div className="shrink-0 border-b bg-muted/30 px-5 py-3 text-xs leading-relaxed">
+          Representação biomecânica ilustrativa. A amplitude e postura ideais variam conforme sua individualidade biológica. Em caso de dor ou desconforto articular, interrompa o exercício.
+          {data?.biomechanicalReviewStatus === "REVIEWED_APPROVED" && <p className="mt-2 font-semibold">Demonstração revisada tecnicamente</p>}
+          {data?.safetyDisclaimerMd && <p className="mt-2">{data.safetyDisclaimerMd}</p>}
+        </div>
         {/* Cabeçalho */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-border/60 bg-muted/20">
           <div className="space-y-0.5 pr-2">

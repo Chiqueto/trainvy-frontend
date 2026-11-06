@@ -1,4 +1,5 @@
 import { ProfessionalRegistrationForm } from "./_components/professional-registration-form";
+import { LegalConsent } from "@/app/_components/legal-consent";
 import { getProfessionalRegistration } from "@/app/_lib/api/fetch-generated";
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -44,7 +45,10 @@ export default async function PersonalPage() {
       <div className="personal-workspace min-h-svh bg-background pb-24">
         <main className="mx-auto max-w-lg p-5 space-y-5">
           <PersonalHeader />
+          <section className="space-y-3 rounded-xl border p-4"><h1 className="font-semibold">Modo demonstração e rascunhos</h1><p className="text-sm text-muted-foreground">Explore o catálogo e monte rascunhos. Para convidar alunos ou enviar prescrições, ative suas credenciais abaixo.</p><Link className="block underline" href="/planning">Criar e revisar rascunhos</Link><Link className="block underline" href="/planning?chat_open=true">Testar o copiloto de IA</Link></section>
+          <LegalConsent />
           <ProfessionalRegistrationForm registration={registration} />
+          <Link className="text-sm underline" href="/personal/arquivo">Arquivo de prescrições anteriores</Link>
         </main>
         <BottomNav isCoach={true} activePage="athletes" />
       </div>
@@ -87,19 +91,14 @@ export default async function PersonalPage() {
     <div className="personal-workspace flex min-h-svh min-w-0 flex-col bg-background pb-24 lg:pb-8">
       <main className="mx-auto w-full max-w-lg px-5 py-4 flex flex-col gap-5">
         <PersonalHeader />
-        {!commercialRes.data.crefVerificationRequired && (
-          <p className="rounded-xl border border-amber-500/40 bg-amber-500/10 p-3 text-sm">
-            Modo de testes: a exigência de CREF verificado está desativada. Isso
-            não altera a situação do seu cadastro profissional.
-          </p>
-        )}
+        <Link className="text-sm underline" href="/personal/arquivo">Arquivo de prescrições anteriores</Link>
         <Link
           className="text-xs underline text-muted-foreground"
           href="/personal/verification"
         >
-          {registration?.status === "VERIFIED"
-            ? "CREF verificado · consultar cadastro e validade"
-            : "CREF em modo de testes · consultar cadastro"}
+          {registration?.crefVerificationStatus === "VERIFIED_ADMIN"
+            ? "CREF conferido pela administração · consultar cadastro"
+            : "CREF declarado · consultar cadastro"}
         </Link>
 
         {activeCount === 0 && invitations.length === 0 && (

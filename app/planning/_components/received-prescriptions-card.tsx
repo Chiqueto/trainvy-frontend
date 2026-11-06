@@ -59,6 +59,7 @@ export interface AthletePrescriptionPayload {
 }
 
 export interface AthletePrescriptionItem {
+  prescribedCrefSnapshot?: string | null;
   id: string;
   coachId: string;
   coachName?: string;
@@ -257,6 +258,7 @@ export function ReceivedPrescriptionsCard({
                 <h3 className="font-heading text-lg font-bold text-foreground">
                   {selectedPrescription.name}
                 </h3>
+                <p className="text-xs text-muted-foreground">Prescrito por: {selectedPrescription.prescribedCrefSnapshot ?? "Identificação profissional pendente"}</p>
                 {selectedPrescription.status === "SENT" && (
                   <Badge
                     variant="outline"

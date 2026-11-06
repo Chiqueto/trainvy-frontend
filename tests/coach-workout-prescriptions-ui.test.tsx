@@ -362,7 +362,7 @@ describe("TASK 6.2B — Coach Workout Prescriptions UI & UX Hardening", () => {
 
       // Clica em Salvar e Enviar
       const sendBtn = screen.getByRole("button", {
-        name: /aprovar esta versão e enviar ao aluno/i,
+        name: /revisar e aprovar prescrição/i,
       });
       fireEvent.click(sendBtn);
 

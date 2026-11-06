@@ -1,5 +1,7 @@
 "use client";
-import { submitProfessionalRegistrationAction } from "../_verification-actions";
+import { declareProfessionalCredentialsAction as declareProfessionalCredentials, getMyLegalDocumentsAction as getMyLegalDocuments } from "@/app/_actions/legal";
+import { useEffect } from "react";
+import { Streamdown } from "streamdown";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -38,6 +40,10 @@ const states = [
   "TO",
 ] as const;
 const labels: Record<string, string> = {
+  UNVERIFIED_SANDBOX: "Modo demonstração e rascunhos",
+  DECLARED_ACTIVE: "Credenciais declaradas — sujeito a auditoria",
+  VERIFIED_ADMIN: "Verificado pela administração",
+  SUSPENDED_FRAUD: "Suspenso — revisão administrativa necessária",
   PENDING_VERIFICATION: "Aguardando verificação",
   VERIFIED: "Verificado",
   REJECTED: "Rejeitado",
@@ -50,6 +56,8 @@ export function ProfessionalRegistrationForm({
   registration: GetProfessionalRegistration200;
 }) {
   const router = useRouter();
+  const [term, setTerm] = useState<{ version: string; contentHash: string; contentMd: string } | null>(null);
+  useEffect(() => { getMyLegalDocuments().then((res) => { if (res.status === 200) setTerm(res.data.find((d) => d.slug === "declaracao-responsabilidade-cref") ?? null); }).catch(() => setMessage("Falha ao carregar o termo.")); }, []);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   return (
@@ -59,7 +67,7 @@ export function ProfessionalRegistrationForm({
           Verificação profissional
         </h1>
         <p className="text-sm text-muted-foreground">
-          {labels[registration?.status ?? "PENDING_VERIFICATION"]}
+          {labels[registration?.crefVerificationStatus ?? registration?.status ?? "UNVERIFIED_SANDBOX"]}
         </p>
       </div>
       {registration && (
@@ -78,9 +86,8 @@ export function ProfessionalRegistrationForm({
         </p>
       )}
       <p className="text-sm text-muted-foreground">
-        Informe seu nome conforme o registro. A equipe confere titularidade,
-        situação e habilitação em fonte oficial. O preenchimento do CREF não
-        libera os recursos profissionais.
+        Declare CPF e CREF/UF e aceite a responsabilidade técnica para liberar
+        prescrições conforme seu plano. A declaração está sujeita a auditoria.
       </p>
       <form
         className="grid gap-3"
@@ -90,7 +97,10 @@ export function ProfessionalRegistrationForm({
           setMessage("");
           const form = new FormData(e.currentTarget);
           try {
-            const result = await submitProfessionalRegistrationAction({
+            if (!term) throw new Error("Termo indisponível");
+            const result = await declareProfessionalCredentials({
+              cpf: String(form.get("cpf")),
+              acceptance: { accepted: true, version: term.version, contentHash: term.contentHash },
               fullName: String(form.get("fullName")),
               cref: String(form.get("cref")),
               region: String(
@@ -100,7 +110,7 @@ export function ProfessionalRegistrationForm({
             });
             setMessage(
               result.status === 200
-                ? "Cadastro enviado para revisão."
+                ? "Declaração registrada. Recursos profissionais liberados conforme seu plano."
                 : "Revise os dados. Se necessário, procure o suporte.",
             );
             if (result.status === 200) router.refresh();
@@ -122,13 +132,14 @@ export function ProfessionalRegistrationForm({
             defaultValue={registration?.fullName}
           />
         </label>
+        <label className="grid gap-1 text-sm">CPF<input className="rounded-lg border bg-background p-3" name="cpf" required inputMode="numeric" autoComplete="off" placeholder="000.000.000-00" /></label>
         <label className="grid gap-1 text-sm">
           CREF (ex.: 123456-G)
           <input
             className="rounded-lg border bg-background p-3"
             name="cref"
             required
-            pattern="[0-9]{4,8}-[GgPp]"
+            pattern="[0-9]{6}-[GP]"
             defaultValue={registration?.cref}
           />
         </label>
@@ -157,12 +168,10 @@ export function ProfessionalRegistrationForm({
             defaultValue={registration?.category}
           />
         </label>
-        <p className="text-xs text-muted-foreground">
-          Não inclua CPF, documentos de saúde ou dados de alunos. Alterar o
-          cadastro exige uma nova revisão.
-        </p>
-        <Button disabled={busy}>
-          {busy ? "Enviando…" : "Enviar para verificação"}
+        {term && <details><summary>Termo de Responsabilidade · v{term.version}</summary><Streamdown>{term.contentMd}</Streamdown></details>}
+        <label className="flex gap-2 text-sm"><input type="checkbox" required />Declaro registro ativo e aceito o Termo de Responsabilidade Profissional.</label>
+        <Button disabled={busy || !term}>
+          {busy ? "Enviando…" : "Ativar credenciais profissionais"}
         </Button>
         <p role="status" className="text-sm">
           {message}
