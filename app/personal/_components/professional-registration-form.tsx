@@ -1,7 +1,10 @@
 "use client";
-import { declareProfessionalCredentialsAction as declareProfessionalCredentials, getMyLegalDocumentsAction as getMyLegalDocuments } from "@/app/_actions/legal";
+import {
+  declareProfessionalCredentialsAction as declareProfessionalCredentials,
+  getMyLegalDocumentsAction as getMyLegalDocuments,
+} from "@/app/_actions/legal";
 import { useEffect } from "react";
-import { Streamdown } from "streamdown";
+import { LegalDocumentReader } from "@/app/_components/legal-document-reader";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -56,8 +59,23 @@ export function ProfessionalRegistrationForm({
   registration: GetProfessionalRegistration200;
 }) {
   const router = useRouter();
-  const [term, setTerm] = useState<{ version: string; contentHash: string; contentMd: string } | null>(null);
-  useEffect(() => { getMyLegalDocuments().then((res) => { if (res.status === 200) setTerm(res.data.find((d) => d.slug === "declaracao-responsabilidade-cref") ?? null); }).catch(() => setMessage("Falha ao carregar o termo.")); }, []);
+  const [term, setTerm] = useState<{
+    version: string;
+    contentHash: string;
+    contentMd: string;
+  } | null>(null);
+  useEffect(() => {
+    getMyLegalDocuments()
+      .then((res) => {
+        if (res.status === 200)
+          setTerm(
+            res.data.find(
+              (d) => d.slug === "declaracao-responsabilidade-cref",
+            ) ?? null,
+          );
+      })
+      .catch(() => setMessage("Falha ao carregar o termo."));
+  }, []);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   return (
@@ -67,7 +85,13 @@ export function ProfessionalRegistrationForm({
           Verificação profissional
         </h1>
         <p className="text-sm text-muted-foreground">
-          {labels[registration?.crefVerificationStatus ?? registration?.status ?? "UNVERIFIED_SANDBOX"]}
+          {
+            labels[
+              registration?.crefVerificationStatus ??
+                registration?.status ??
+                "UNVERIFIED_SANDBOX"
+            ]
+          }
         </p>
       </div>
       {registration && (
@@ -100,7 +124,11 @@ export function ProfessionalRegistrationForm({
             if (!term) throw new Error("Termo indisponível");
             const result = await declareProfessionalCredentials({
               cpf: String(form.get("cpf")),
-              acceptance: { accepted: true, version: term.version, contentHash: term.contentHash },
+              acceptance: {
+                accepted: true,
+                version: term.version,
+                contentHash: term.contentHash,
+              },
               fullName: String(form.get("fullName")),
               cref: String(form.get("cref")),
               region: String(
@@ -132,7 +160,17 @@ export function ProfessionalRegistrationForm({
             defaultValue={registration?.fullName}
           />
         </label>
-        <label className="grid gap-1 text-sm">CPF<input className="rounded-lg border bg-background p-3" name="cpf" required inputMode="numeric" autoComplete="off" placeholder="000.000.000-00" /></label>
+        <label className="grid gap-1 text-sm">
+          CPF
+          <input
+            className="rounded-lg border bg-background p-3"
+            name="cpf"
+            required
+            inputMode="numeric"
+            autoComplete="off"
+            placeholder="000.000.000-00"
+          />
+        </label>
         <label className="grid gap-1 text-sm">
           CREF (ex.: 123456-G)
           <input
@@ -168,8 +206,25 @@ export function ProfessionalRegistrationForm({
             defaultValue={registration?.category}
           />
         </label>
-        {term && <details><summary>Termo de Responsabilidade · v{term.version}</summary><Streamdown>{term.contentMd}</Streamdown></details>}
-        <label className="flex gap-2 text-sm"><input type="checkbox" required />Declaro registro ativo e aceito o Termo de Responsabilidade Profissional.</label>
+        {term && (
+          <LegalDocumentReader
+            document={{
+              ...term,
+              title: "Declaração de Habilitação e Responsabilidade Técnica",
+            }}
+          />
+        )}
+        <label className="flex items-start gap-3 text-sm leading-relaxed">
+          <input
+            className="mt-1 size-4 shrink-0"
+            type="checkbox"
+            required
+            disabled={busy}
+          />
+          Declaro sob as penas da lei que possuo registro ativo no CREF
+          informado e assumo responsabilidade técnica exclusiva pelas
+          prescrições realizadas.
+        </label>
         <Button disabled={busy || !term}>
           {busy ? "Enviando…" : "Ativar credenciais profissionais"}
         </Button>

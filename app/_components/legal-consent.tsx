@@ -1,12 +1,16 @@
-"use client";
+﻿"use client";
+
 import { useEffect, useState } from "react";
-import { Streamdown } from "streamdown";
 import type { GetMyLegalDocuments200Item } from "@/app/_lib/api/fetch-generated";
 import {
   acceptLegalDocumentAction as acceptLegalDocument,
   getMyLegalDocumentsAction as getMyLegalDocuments,
 } from "@/app/_actions/legal";
 import { Button } from "@/components/ui/button";
+import { LegalDocumentReader } from "./legal-document-reader";
+
+const documentKey = (d: GetMyLegalDocuments200Item) =>
+  `${d.id}:${d.version}:${d.contentHash}`;
 
 export function LegalConsent({
   onReady,
@@ -14,93 +18,184 @@ export function LegalConsent({
   onReady?: (ready: boolean) => void;
 }) {
   const [documents, setDocuments] = useState<GetMyLegalDocuments200Item[]>([]);
+  const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     let active = true;
     getMyLegalDocuments()
       .then((res) => {
-        if (active && res.status === 200)
-          setDocuments(
-            res.data.filter((d) => d.targetAudience !== "PROFESSIONAL"),
-          );
+        if (!active) return;
+        if (res.status !== 200) throw new Error("Failed to load documents");
+        setDocuments(
+          res.data.filter((d) => d.targetAudience !== "PROFESSIONAL"),
+        );
       })
       .catch(() => {
         if (active)
           setMessage(
             "Não foi possível carregar os termos. Recarregue a página.",
           );
+      })
+      .finally(() => {
+        if (active) setLoading(false);
       });
     return () => {
       active = false;
     };
   }, []);
-  const ready =
-    documents.length > 0 &&
-    documents.filter((d) => d.requiresClickwrap).every((d) => d.accepted);
+
+  const pending = documents.filter((d) => d.requiresClickwrap && !d.accepted);
+  const ready = documents.length > 0 && pending.length === 0;
   useEffect(() => {
     onReady?.(ready);
   }, [ready, onReady]);
+
+  const core = pending.filter(
+    (d) => d.category === "TERMS_OF_USE" || d.category === "PRIVACY_POLICY",
+  );
+  const groups = [
+    ...(core.length
+      ? [
+          {
+            documents: core,
+            label:
+              "Li e estou de acordo com os Termos de Uso e a Política de Privacidade do Trainvy.",
+          },
+        ]
+      : []),
+    ...pending
+      .filter((d) => !core.includes(d))
+      .map((d) => ({
+        documents: [d],
+        label:
+          d.category === "HEALTH_PARQ_CONSENT"
+            ? "Declaro ciência do Termo de Prontidão Física (PAR-Q) e autorizo expressamente o tratamento dos meus dados de saúde e físicos, inclusive pelo assistente de IA."
+            : `Li o documento “${d.title}” e estou de acordo com seu conteúdo.`,
+      })),
+  ];
+
   return (
-    <section className="w-full space-y-3 rounded-xl border bg-card p-4">
+    <section
+      className="w-full min-w-0 space-y-4 rounded-xl border bg-card p-4"
+      aria-busy={loading || busy}
+    >
       <h2 className="font-semibold">Termos e consentimento de saúde</h2>
-      {documents.map((d) => (
-        <div key={`${d.id}:${d.version}`} className="space-y-2">
-          <details>
-            <summary className="cursor-pointer text-sm">
-              {d.title} · v{d.version}
-              {d.accepted && " · Aceito"}
-            </summary>
-            <div className="max-h-80 overflow-auto py-3 text-sm">
-              <Streamdown>{d.contentMd}</Streamdown>
-            </div>
-          </details>
-          {!d.accepted && (
-            <form
-              className="space-y-2"
-              onSubmit={async (e) => {
-                e.preventDefault();
-                setBusy(true);
-                try {
-                  const res = await acceptLegalDocument(d.slug, {
-                    version: d.version,
-                    contentHash: d.contentHash,
-                    accepted: true,
-                  });
-                  if (res.status === 200)
-                    setDocuments((docs) =>
-                      docs.map((item) =>
-                        item.id === d.id ? { ...item, accepted: true } : item,
-                      ),
-                    );
-                    else {
-                      setMessage(res.data.error);
-                      if (res.status === 409) {
-                        const latest = await getMyLegalDocuments();
-                        if (latest.status === 200) setDocuments(latest.data.filter((item) => item.targetAudience !== "PROFESSIONAL"));
-                      }
-                    }
-                } catch {
-                  setMessage("Falha ao registrar aceite.");
-                } finally {
-                  setBusy(false);
+      <p className="text-sm text-muted-foreground">
+        Leia os documentos completos e confirme os aceites pendentes para
+        continuar.
+      </p>
+      {loading && (
+        <p role="status" className="text-sm">
+          Carregando documentos...
+        </p>
+      )}
+      <div className="space-y-2">
+        {documents.map((d) => (
+          <div key={documentKey(d)} className="space-y-1 rounded-lg border p-3">
+            <LegalDocumentReader document={d} />
+            <p className="text-xs text-muted-foreground">
+              Versão {d.version} ·{" "}
+              {d.accepted
+                ? "Aceito"
+                : d.requiresClickwrap
+                  ? "Aceite pendente"
+                  : "Para sua leitura"}
+            </p>
+          </div>
+        ))}
+      </div>
+      {pending.length > 0 && (
+        <form
+          className="space-y-3"
+          onSubmit={async (event) => {
+            event.preventDefault();
+            if (busy || !pending.every((d) => checked[documentKey(d)])) return;
+            setBusy(true);
+            setMessage("");
+            try {
+              for (const d of pending) {
+                const res = await acceptLegalDocument(d.slug, {
+                  version: d.version,
+                  contentHash: d.contentHash,
+                  accepted: true,
+                });
+                if (res.status !== 200) {
+                  setMessage(res.data.error);
+                  if (res.status === 409) {
+                    setChecked({});
+                    setDocuments([]);
+                    const latest = await getMyLegalDocuments();
+                    if (latest.status === 200)
+                      setDocuments(
+                        latest.data.filter(
+                          (item) => item.targetAudience !== "PROFESSIONAL",
+                        ),
+                      );
+                  }
+                  return;
                 }
-              }}
+                setDocuments((docs) =>
+                  docs.map((item) =>
+                    documentKey(item) === documentKey(d)
+                      ? { ...item, accepted: true }
+                      : item,
+                  ),
+                );
+              }
+              setMessage("Aceites registrados com sucesso.");
+            } catch {
+              setMessage(
+                "Falha ao registrar aceite. Tente novamente; os aceites já confirmados foram preservados.",
+              );
+            } finally {
+              setBusy(false);
+            }
+          }}
+        >
+          {groups.map((group) => (
+            <label
+              key={group.documents.map(documentKey).join("|")}
+              className="flex items-start gap-3 rounded-lg border p-3 text-sm leading-relaxed"
             >
-              <label className="flex items-start gap-2 rounded-lg border p-3 text-sm">
-                <input className="mt-1" type="checkbox" required />
-                {d.category === "HEALTH_PARQ_CONSENT"
-                  ? "Li as perguntas de prontidão e autorizo especificamente o tratamento dos meus dados físicos e de saúde e seu processamento por IA, conforme este termo."
-                  : `Li e aceito ${d.title}.`}
-              </label>
-              <Button type="submit" size="sm" disabled={busy}>
-                Registrar aceite
-              </Button>
-            </form>
-          )}
-        </div>
-      ))}
-      <p role="status" className="text-sm">
+              <input
+                className="mt-1 size-4 shrink-0"
+                type="checkbox"
+                required
+                disabled={busy}
+                checked={group.documents.every(
+                  (d) => !!checked[documentKey(d)],
+                )}
+                onChange={(event) => {
+                  const value = event.target.checked;
+                  setChecked((previous) => ({
+                    ...previous,
+                    ...Object.fromEntries(
+                      group.documents.map((d) => [documentKey(d), value]),
+                    ),
+                  }));
+                }}
+              />
+              <span>{group.label}</span>
+            </label>
+          ))}
+          <Button
+            type="submit"
+            className="w-full whitespace-normal"
+            disabled={busy || !pending.every((d) => checked[documentKey(d)])}
+          >
+            {busy ? "Registrando aceites..." : "Registrar aceite"}
+          </Button>
+        </form>
+      )}
+      {ready && (
+        <p className="text-sm text-muted-foreground">
+          Todos os aceites obrigatórios estão em dia.
+        </p>
+      )}
+      <p role="status" className="text-sm" aria-live="polite">
         {message}
       </p>
     </section>

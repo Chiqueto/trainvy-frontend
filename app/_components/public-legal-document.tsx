@@ -19,7 +19,7 @@ export async function PublicLegalDocument({ slug }: { slug: string }) {
             Versão {document.version} · Atualizado em{" "}
             {new Date(document.updatedAt).toLocaleDateString("pt-BR")}
           </p>
-          <Streamdown>{document.contentMd}</Streamdown>
+          <Streamdown mode="static">{document.contentMd}</Streamdown>
         </>
       ) : (
         <p>Documento ainda não publicado.</p>

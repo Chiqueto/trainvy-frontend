@@ -49,6 +49,16 @@ beforeEach(() => {
 });
 afterEach(cleanup);
 describe("Consentimento destacado", () => {
+  it("opens the complete document in an accessible modal", async () => {
+    render(<LegalConsent />);
+    fireEvent.click(
+      await screen.findByRole("button", { name: document.title }),
+    );
+    expect(screen.getByRole("dialog")).toBeTruthy();
+    expect(screen.getByText(document.contentMd)).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Fechar leitura" }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+  });
   it("starts unchecked and only unlocks after an explicit, server-confirmed acceptance", async () => {
     const ready = vi.fn();
     render(<LegalConsent onReady={ready} />);
@@ -77,5 +87,89 @@ describe("Consentimento destacado", () => {
     fireEvent.click(screen.getByRole("button", { name: "Registrar aceite" }));
     await screen.findByText("Leia a versão atual.");
     expect(ready).toHaveBeenLastCalledWith(false);
+    expect((screen.getByRole("checkbox") as HTMLInputElement).checked).toBe(
+      false,
+    );
+    expect(getMyLegalDocumentsAction).toHaveBeenCalledTimes(2);
+  });
+  it("groups terms and privacy, keeps health separate, and submits each version and hash", async () => {
+    const terms = {
+      ...document,
+      id: "terms",
+      slug: "termos-de-uso",
+      category: "TERMS_OF_USE",
+      title: "Termos",
+    };
+    const privacy = {
+      ...document,
+      id: "privacy",
+      slug: "politica-de-privacidade",
+      category: "PRIVACY_POLICY",
+      title: "Privacidade",
+    };
+    vi.mocked(getMyLegalDocumentsAction).mockResolvedValue({
+      status: 200,
+      data: [terms, privacy, document],
+    });
+    const ready = vi.fn();
+    render(<LegalConsent onReady={ready} />);
+    const core = await screen.findByRole("checkbox", {
+      name: "Li e estou de acordo com os Termos de Uso e a Política de Privacidade do Trainvy.",
+    });
+    const health = screen.getByRole("checkbox", {
+      name: /Declaro ciência do Termo de Prontidão Física/,
+    });
+    expect(screen.getAllByRole("checkbox")).toHaveLength(2);
+    fireEvent.click(core);
+    expect(
+      (
+        screen.getByRole("button", {
+          name: "Registrar aceite",
+        }) as HTMLButtonElement
+      ).disabled,
+    ).toBe(true);
+    fireEvent.click(health);
+    fireEvent.click(screen.getByRole("button", { name: "Registrar aceite" }));
+    await waitFor(() => expect(ready).toHaveBeenLastCalledWith(true));
+    expect(acceptLegalDocumentAction).toHaveBeenCalledTimes(3);
+    for (const d of [terms, privacy, document])
+      expect(acceptLegalDocumentAction).toHaveBeenCalledWith(d.slug, {
+        accepted: true,
+        version: d.version,
+        contentHash: d.contentHash,
+      });
+  });
+  it("preserves server-confirmed acceptances and retries only the remaining documents", async () => {
+    const ai = {
+      ...document,
+      id: "ai",
+      slug: "diretrizes-ia-seguranca",
+      title: "Aviso de IA",
+      category: "AI_DISCLAIMER",
+    };
+    vi.mocked(getMyLegalDocumentsAction).mockResolvedValue({
+      status: 200,
+      data: [document, ai],
+    });
+    vi.mocked(acceptLegalDocumentAction)
+      .mockResolvedValueOnce({ status: 200, data: { success: true } })
+      .mockRejectedValueOnce(new Error("Offline"));
+    const ready = vi.fn();
+    render(<LegalConsent onReady={ready} />);
+    await screen.findByRole("checkbox", { name: /Declaro ciência/ });
+    screen
+      .getAllByRole("checkbox")
+      .forEach((checkbox) => fireEvent.click(checkbox));
+    fireEvent.click(screen.getByRole("button", { name: "Registrar aceite" }));
+    await screen.findByText(/Falha ao registrar aceite/);
+    expect(ready).toHaveBeenLastCalledWith(false);
+    expect(screen.getAllByRole("checkbox")).toHaveLength(1);
+    fireEvent.click(screen.getByRole("button", { name: "Registrar aceite" }));
+    await waitFor(() => expect(ready).toHaveBeenLastCalledWith(true));
+    expect(acceptLegalDocumentAction).toHaveBeenNthCalledWith(3, ai.slug, {
+      accepted: true,
+      version: ai.version,
+      contentHash: ai.contentHash,
+    });
   });
 });
