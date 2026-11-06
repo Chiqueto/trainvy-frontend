@@ -289,7 +289,15 @@ export function CoachAiPrescriptionModal({
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   className="w-full rounded-2xl border border-input bg-background p-3 text-xs placeholder:text-muted-foreground focus:outline-hidden focus:ring-1 focus:ring-primary resize-none min-h-[90px]"
+                  aria-describedby="professional-ai-context"
                 />
+                <p
+                  id="professional-ai-context"
+                  className="text-xs leading-relaxed text-muted-foreground"
+                >
+                  A proposta usa suas instruções e anexos. O perfil de saúde e o
+                  histórico do aluno não são incluídos automaticamente.
+                </p>
               </div>
 
               {/* Anexo de Arquivo Oculto */}

@@ -19,10 +19,10 @@ vi.mock("@/app/_hooks/use-voice-recorder", () => ({
 }));
 afterEach(cleanup);
 beforeEach(() => vi.clearAllMocks());
-describe("Professional AI consent errors", () => {
-  it("keeps the student's actionable consent message visible and preserves the coach's input", async () => {
+describe("Professional AI authoring", () => {
+  it("keeps authorization errors visible and preserves the coach's input", async () => {
     const message =
-      "O aluno precisa aceitar a versão atual do termo de saúde e IA. Peça a ele que acesse o próprio perfil e registre o aceite para continuar.";
+      "O vínculo com este aluno foi revogado. Não é possível gerar a prescrição.";
     vi.mocked(generateCoachPrescriptionWithAiAction).mockResolvedValue({
       success: false,
       error: message,
@@ -51,5 +51,65 @@ describe("Professional AI consent errors", () => {
         ).disabled,
       ).toBe(false),
     );
+  });
+  it("generates a professional draft without a student consent step and returns it for review", async () => {
+    const onApplyPrescription = vi.fn();
+    vi.mocked(generateCoachPrescriptionWithAiAction).mockResolvedValue({
+      success: true,
+      data: {
+        prescriptionId: "professional-draft",
+        version: 1,
+        status: "DRAFT",
+        name: "Treino do personal",
+        workoutDays: [
+          {
+            name: "Treino A",
+            weekDay: "MONDAY",
+            isRest: false,
+            estimatedDurationInMinutes: 45,
+            exercises: [
+              {
+                name: "Supino",
+                sets: 3,
+                warmupSets: 1,
+                reps: 10,
+                restTimeInSeconds: 60,
+              },
+            ],
+          },
+        ],
+      },
+    });
+    render(
+      <CoachAiPrescriptionModal
+        athleteId="athlete"
+        athleteName="Aluno"
+        isOpen
+        onClose={vi.fn()}
+        onApplyPrescription={onApplyPrescription}
+      />,
+    );
+    expect(
+      screen.getByText(/A proposta usa suas instruções e anexos/),
+    ).toBeTruthy();
+    fireEvent.change(screen.getByRole("textbox"), {
+      target: { value: "Rotina do personal" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Gerar com Coach AI" }));
+    const apply = await screen.findByRole("button", {
+      name: "Aplicar ao Construtor",
+    });
+    expect(screen.queryByRole("alert")).toBeNull();
+    expect(screen.queryByRole("checkbox")).toBeNull();
+    expect(onApplyPrescription).not.toHaveBeenCalled();
+    fireEvent.click(apply);
+    expect(onApplyPrescription).toHaveBeenCalledWith(
+      expect.objectContaining({
+        prescriptionId: "professional-draft",
+        version: 1,
+        name: "Treino do personal",
+      }),
+    );
+    expect(generateCoachPrescriptionWithAiAction).toHaveBeenCalledTimes(1);
   });
 });
