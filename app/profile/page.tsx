@@ -17,6 +17,7 @@ import Link from "next/link";
 import { FeedbackButton } from "./_components/feedback-button";
 import { PwaInstallCard } from "@/app/_components/pwa/pwa-install-card";
 import { PushNotificationCard } from "@/app/_components/pwa/push-notification-card";
+import { NotificationHub } from "@/app/_components/notification-hub";
 import { Logo } from "@/app/_components/logo";
 import { ProfileMetricsSection } from "./_components/profile-metrics-section";
 import { SportsProfileSection } from "./_components/sports-profile-section";
@@ -160,6 +161,7 @@ export default async function ProfilePage() {
         <PwaInstallCard />
 
         {/* Notificações Push */}
+        <NotificationHub variant="card" />
         <PushNotificationCard />
 
         {/* Feedback do Beta */}

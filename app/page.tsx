@@ -19,6 +19,7 @@ import { ConsistencyTracker } from "./_components/consistency-tracker";
 import { StartFreeWorkoutButton } from "./_components/start-free-workout-button";
 import { WorkoutDayCard } from "./_components/workout-day-card";
 import { Logo } from "./_components/logo";
+import { NotificationHub } from "./_components/notification-hub";
 import { HomeBodyMetricsCard } from "./_components/home-body-metrics-card";
 import { WebEntry } from "./_components/landing/web-entry";
 import type { Metadata, Viewport } from "next";
@@ -146,7 +147,10 @@ export default async function Home() {
           />
         </div>
 
-        <Logo size="md" light className="relative" asLink />
+        <div className="relative flex w-full items-center justify-between">
+          <Logo size="md" light asLink />
+          <NotificationHub />
+        </div>
 
         <div className="relative flex w-full items-end justify-between">
           <div className="flex flex-col gap-1.5">

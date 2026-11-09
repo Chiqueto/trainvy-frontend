@@ -30,7 +30,9 @@ export function isPushSupported(): boolean {
   );
 }
 
-export function getPushPermissionState(): NotificationPermission | "unsupported" {
+export function getPushPermissionState():
+  | NotificationPermission
+  | "unsupported" {
   if (!isPushSupported()) return "unsupported";
   return Notification.permission;
 }
@@ -38,7 +40,8 @@ export function getPushPermissionState(): NotificationPermission | "unsupported"
 export async function isCurrentlySubscribed(): Promise<boolean> {
   if (!isPushSupported()) return false;
   try {
-    const registration = await navigator.serviceWorker.ready;
+    const registration = await navigator.serviceWorker.getRegistration();
+    if (!registration?.active) return false;
     const subscription = await registration.pushManager.getSubscription();
     return subscription !== null;
   } catch (err) {
@@ -47,9 +50,16 @@ export async function isCurrentlySubscribed(): Promise<boolean> {
   }
 }
 
-export async function subscribeToPush(): Promise<{ success: boolean; error?: string }> {
+export async function subscribeToPush(): Promise<{
+  success: boolean;
+  error?: string;
+}> {
   if (!isPushSupported()) {
-    return { success: false, error: "Push notifications não suportadas neste dispositivo ou navegador." };
+    return {
+      success: false,
+      error:
+        "Push notifications não suportadas neste dispositivo ou navegador.",
+    };
   }
 
   try {
@@ -64,23 +74,51 @@ export async function subscribeToPush(): Promise<{ success: boolean; error?: str
       };
     }
 
-    const configResponse = await fetch("/api/push-config", { cache: "no-store" });
+    const configResponse = await fetch("/api/push-config", {
+      cache: "no-store",
+    });
     if (!configResponse.ok) {
-      return { success: false, error: "Notificações indisponíveis temporariamente. Tente novamente mais tarde." };
+      return {
+        success: false,
+        error:
+          "Notificações indisponíveis temporariamente. Tente novamente mais tarde.",
+      };
     }
     const config: { publicKey?: string } = await configResponse.json();
     const vapidPublicKey = config.publicKey;
     if (!vapidPublicKey) {
-      return { success: false, error: "Não foi possível carregar a configuração de notificações." };
+      return {
+        success: false,
+        error: "Não foi possível carregar a configuração de notificações.",
+      };
     }
 
-    const registration = await navigator.serviceWorker.ready;
+    // Development does not register the worker through PwaProvider.
+    // Ensure registration here and bound the wait so the button cannot hang forever.
+    await navigator.serviceWorker.register("/sw.js");
+    let readyTimeout: ReturnType<typeof setTimeout> | undefined;
+    const registration = await Promise.race([
+      navigator.serviceWorker.ready,
+      new Promise<never>((_, reject) => {
+        readyTimeout = setTimeout(
+          () =>
+            reject(
+              new Error(
+                "Não foi possível iniciar as notificações. Recarregue a página e tente novamente.",
+              ),
+            ),
+          10000,
+        );
+      }),
+    ]).finally(() => clearTimeout(readyTimeout));
     let subscription = await registration.pushManager.getSubscription();
 
     if (!subscription) {
       subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(vapidPublicKey) as BufferSource,
+        applicationServerKey: urlBase64ToUint8Array(
+          vapidPublicKey,
+        ) as BufferSource,
       });
     }
 
@@ -88,7 +126,10 @@ export async function subscribeToPush(): Promise<{ success: boolean; error?: str
     const authKey = subscription.getKey("auth");
 
     if (!p256dhKey || !authKey) {
-      return { success: false, error: "Falha ao obter chaves da inscrição do navegador." };
+      return {
+        success: false,
+        error: "Falha ao obter chaves da inscrição do navegador.",
+      };
     }
 
     const baseUrl = process.env.NEXT_PUBLIC_API_URL || "/backend";
@@ -119,21 +160,28 @@ export async function subscribeToPush(): Promise<{ success: boolean; error?: str
     console.error("Erro ao inscrever para notificações push:", err);
     return {
       success: false,
-      error: err instanceof Error ? err.message : "Erro desconhecido ao ativar notificações.",
+      error:
+        err instanceof Error
+          ? err.message
+          : "Erro desconhecido ao ativar notificações.",
     };
   }
 }
 
-export async function unsubscribeFromPush(): Promise<{ success: boolean; error?: string }> {
+export async function unsubscribeFromPush(): Promise<{
+  success: boolean;
+  error?: string;
+}> {
   if (!isPushSupported()) return { success: true };
 
   try {
-    const registration = await navigator.serviceWorker.ready;
+    const registration = await navigator.serviceWorker.getRegistration();
+    if (!registration) return { success: true };
     const subscription = await registration.pushManager.getSubscription();
 
     if (subscription) {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || "/backend";
-      await fetch(`${baseUrl}/push-subscriptions`, {
+      const response = await fetch(`${baseUrl}/push-subscriptions`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -142,7 +190,11 @@ export async function unsubscribeFromPush(): Promise<{ success: boolean; error?:
         body: JSON.stringify({
           endpoint: subscription.endpoint,
         }),
-      }).catch((e) => console.warn("Erro ao revogar no backend:", e));
+      });
+      if (!response.ok)
+        throw new Error(
+          "Não foi possível desativar as notificações no servidor. Tente novamente.",
+        );
 
       await subscription.unsubscribe();
     }
@@ -152,7 +204,8 @@ export async function unsubscribeFromPush(): Promise<{ success: boolean; error?:
     console.error("Erro ao cancelar inscrição push:", err);
     return {
       success: false,
-      error: err instanceof Error ? err.message : "Erro ao desativar notificações.",
+      error:
+        err instanceof Error ? err.message : "Erro ao desativar notificações.",
     };
   }
 }
