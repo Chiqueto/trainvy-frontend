@@ -28,6 +28,7 @@ import {
 } from "./_components/coach-prescriptions-list";
 import { RetryButton } from "./_components/retry-button";
 import { CoachAthleteEvolutionDashboard } from "./_components/coach-athlete-evolution-dashboard";
+import { WorkspaceError } from "../../_components/workspace-error";
 
 interface AthleteDetailsPageProps {
   params: Promise<{
@@ -158,14 +159,16 @@ export default async function AthleteDetailsPage({
 
   // Busca prescrições deste aluno
   let prescriptions: PrescriptionListItem[] = [];
+  let prescriptionsFailed = false;
   try {
     const prescRes = await listCoachAthletePrescriptions(athleteId, {
       cache: "no-store",
     });
     if (prescRes.status === 200 && Array.isArray(prescRes.data)) {
       prescriptions = prescRes.data as unknown as PrescriptionListItem[];
-    }
+    } else prescriptionsFailed = true;
   } catch (err) {
+    prescriptionsFailed = true;
     console.error("Failed to load athlete prescriptions:", err);
   }
 
@@ -180,7 +183,7 @@ export default async function AthleteDetailsPage({
 
   return (
     <div className="personal-workspace flex min-h-svh min-w-0 flex-col bg-background pb-24 lg:pb-8">
-      <main className="mx-auto w-full max-w-lg px-5 py-4 flex flex-col gap-5">
+      <main className="mx-auto w-full max-w-6xl px-5 py-4 flex flex-col gap-5">
         {/* Header com Navegação de Retorno */}
         <div className="flex items-center justify-between">
           <Link
@@ -238,7 +241,7 @@ export default async function AthleteDetailsPage({
 
         {/* Conteúdo da Tab Selecionada */}
         {currentTab === "prescriptions" ? (
-          <CoachPrescriptionsList
+          prescriptionsFailed ? <WorkspaceError message="Não foi possível carregar as prescrições deste aluno." /> : <CoachPrescriptionsList
             athleteId={athleteId}
             athleteName={athleteData.name}
             prescriptions={prescriptions}

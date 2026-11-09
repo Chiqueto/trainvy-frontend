@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createInvitationAction } from "../_actions";
+import { trackProductEvent } from "@/app/_lib/product-events";
 
 interface InviteStudentModalProps {
   isFull: boolean;
@@ -44,6 +45,7 @@ export function InviteStudentModal({ isFull }: InviteStudentModalProps) {
         toast.error(res.error);
       } else {
         toast.success("Convite gerado com sucesso!");
+        trackProductEvent("Coach invitation created");
         setGeneratedToken(res.data.token);
         setExpiresAt(res.data.expiresAt);
       }

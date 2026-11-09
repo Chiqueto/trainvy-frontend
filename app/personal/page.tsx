@@ -18,13 +18,16 @@ import { InvitationsList } from "./_components/invitations-list";
 import { InviteStudentModal } from "./_components/invite-student-modal";
 import { PersonalHeader } from "./_components/personal-header";
 import { PersonalQuotaCard } from "./_components/personal-quota-card";
+import { WorkspaceError } from "./_components/workspace-error";
+import { ProfessionalWorkspaceEvent } from "@/app/_components/product-event";
 
 export default async function PersonalPage() {
   await requireAccountSetup();
 
   const commercialRes = await getCommercialContext({ cache: "no-store" });
   if (commercialRes.status !== 200 || !commercialRes.data) {
-    redirect("/profile");
+    if (commercialRes.status === 401) redirect("/auth");
+    throw new Error("Não foi possível consultar o acesso profissional.");
   }
 
   const { accountType, plan, subscription, entitlements } = commercialRes.data;
@@ -39,6 +42,7 @@ export default async function PersonalPage() {
   });
   const registration =
     registrationRes.status === 200 ? registrationRes.data : null;
+  if (registrationRes.status !== 200) throw new Error("Não foi possível consultar o cadastro profissional.");
   if (!commercialRes.data.professionalAccessGranted)
     return (
       <div className="personal-workspace min-h-svh bg-background pb-24">
@@ -70,9 +74,16 @@ export default async function PersonalPage() {
   }
 
   const [athletesRes, invitationsRes] = await Promise.all([
-    listCoachAthletes({ cache: "no-store" }),
-    listCoachInvitations({ cache: "no-store" }),
+    listCoachAthletes({ cache: "no-store" }).catch(() => null),
+    listCoachInvitations({ cache: "no-store" }).catch(() => null),
   ]);
+
+  if (athletesRes?.status !== 200 || invitationsRes?.status !== 200) return (
+    <div className="personal-workspace min-h-svh bg-background pb-24">
+      <main className="mx-auto w-full max-w-6xl space-y-5 px-5 py-4"><PersonalHeader /><WorkspaceError message="Não foi possível carregar alunos e convites." /></main>
+      <BottomNav isCoach activePage="athletes" />
+    </div>
+  );
 
   const athletes = athletesRes.status === 200 ? athletesRes.data.athletes : [];
   const activeCount =
@@ -86,7 +97,7 @@ export default async function PersonalPage() {
 
   return (
     <div className="personal-workspace flex min-h-svh min-w-0 flex-col bg-background pb-24 lg:pb-8">
-      <main className="mx-auto w-full max-w-lg px-5 py-4 flex flex-col gap-5">
+      <main className="mx-auto w-full max-w-6xl px-5 py-4 flex flex-col gap-5">
         <PersonalHeader />
         <Link className="text-sm underline" href="/personal/arquivo">
           Arquivo de prescrições anteriores
@@ -120,6 +131,7 @@ export default async function PersonalPage() {
           </div>
         </div>
 
+        <ProfessionalWorkspaceEvent />
         <AthletesList
           athletes={athletes}
           summary={summary}

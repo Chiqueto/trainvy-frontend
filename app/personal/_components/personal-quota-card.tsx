@@ -10,7 +10,7 @@ export function PersonalQuotaCard({
   limit,
 }: PersonalQuotaCardProps) {
   const isUnlimited = limit === null || limit === undefined;
-  const percentage = isUnlimited ? 0 : Math.min(100, Math.round((activeCount / limit) * 100));
+  const percentage = isUnlimited ? 0 : limit === 0 ? 100 : Math.min(100, Math.round((activeCount / limit) * 100));
   const remaining = isUnlimited ? null : Math.max(0, limit - activeCount);
   const isFull = !isUnlimited && activeCount >= limit;
 

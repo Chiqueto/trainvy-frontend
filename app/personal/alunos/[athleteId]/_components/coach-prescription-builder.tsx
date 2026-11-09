@@ -1,4 +1,5 @@
 "use client";
+import { trackProductEvent } from "@/app/_lib/product-events";
 import { AdvancedPrescriptionFields } from "@/app/planning/_components/advanced-prescription-fields";
 import { serializeAdvancedPrescription } from "@/app/planning/_lib/workout-plan-builder";
 
@@ -306,6 +307,7 @@ export function CoachPrescriptionBuilder({
             toast.error(`Rascunho salvo. ${sendRes.error}`);
             return;
           }
+          trackProductEvent("Prescription sent");
         }
 
         toast.success(

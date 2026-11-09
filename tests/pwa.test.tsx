@@ -78,11 +78,12 @@ describe("PWA — Progressive Web App Foundation (Task 4.X.1 Hardening)", () => 
       expect(content).not.toContain("token");
     });
 
-    it("sw.js utiliza versão v2 e purga caches legados na ativação", () => {
+    it("sw.js versiona os assets e purga caches legados na ativação", () => {
       expect(fs.existsSync(swPath)).toBe(true);
       const content = fs.readFileSync(swPath, "utf8");
 
-      expect(content).toContain("trainvy-static-v2");
+      expect(content).toMatch(/const CACHE_NAME = "trainvy-static-v\d+"/);
+      expect(content).toContain('name.startsWith("trainvy-") && name !== CACHE_NAME');
       expect(content).toContain("caches.delete");
       // Previne precache de páginas HTML privadas
       expect(content).not.toMatch(/PRECACHE_ASSETS\s*=\s*\[[^\]]*"\/"/);

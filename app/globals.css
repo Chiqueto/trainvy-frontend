@@ -137,6 +137,15 @@
 }
 
 /* A single navigation tree keeps the same destinations on every screen. */
+.app-navigation > div > a,
+.app-navigation > div > button,
+.app-navigation > div > div {
+  min-width: 0;
+}
+.personal-workspace main,
+.personal-workspace main > * {
+  min-width: 0;
+}
 @media (min-width: 768px) {
   .personal-workspace main {
     max-width: 80rem;

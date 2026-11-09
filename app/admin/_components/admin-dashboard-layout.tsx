@@ -9,11 +9,13 @@ import {
   Shield,
   Dumbbell,
   Sparkles,
+  MessageSquare,
 } from "lucide-react";
 import { requireAdminPage } from "@/app/admin/_lib/server";
 import { Logo } from "@/app/_components/logo";
 
 const links = [
+  { href: "/admin/feedback", label: "Feedbacks e suporte", icon: MessageSquare },
   { href: "/admin/compliance", label: "Jur?dico e governan?a", icon: Shield },
   { href: "/admin/professionals", label: "Verificação CREF", icon: Shield },
   { href: "/admin", label: "Visão Geral", icon: LayoutDashboard },

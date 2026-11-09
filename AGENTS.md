@@ -48,3 +48,13 @@ Este arquivo é o ponto de entrada obrigatório para qualquer agente que trabalh
 ## Segredos e exemplos de ambiente
 
 - Nunca inserir chaves reais, tokens ou segredos em `.env.example`, codigo, testes ou documentacao. Usar campos vazios ou placeholders claramente ficticios; valores reais ficam apenas no ambiente local ignorado pelo Git ou no provedor de deploy.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

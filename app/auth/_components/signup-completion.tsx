@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AlertCircle, ArrowUpRight, Dumbbell, RotateCcw } from "lucide-react";
 import { finishSignup } from "../_actions";
+import { trackProductEvent } from "@/app/_lib/product-events";
 import styles from "./auth.module.css";
 
 const messages: Record<string, string> = {
@@ -30,7 +31,7 @@ export function SignupCompletion({ returnTo }: { returnTo?: string | null }) {
     finishSignup(returnTo)
       .then((result) => {
         if (!current) return;
-        if (result.success) router.replace(result.destination);
+        if (result.success) { trackProductEvent("Signup completed"); router.replace(result.destination); }
         else setCode(result.code);
       })
       .catch(() => {

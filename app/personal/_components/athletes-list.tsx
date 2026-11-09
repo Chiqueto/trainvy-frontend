@@ -305,7 +305,7 @@ export function AthletesList({
           </Button>
         </div>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {filteredAthletes.map((ath) => {
             const isConfirming = confirmingLinkId === ath.linkId;
 
@@ -329,7 +329,7 @@ export function AthletesList({
             return (
               <div
                 key={ath.linkId}
-                className="group relative rounded-2xl border border-border/70 bg-card p-4 flex flex-col gap-3 shadow-xs hover:border-primary/40 hover:bg-card/90 transition-all"
+                className="group relative min-w-0 rounded-2xl border border-border/70 bg-card p-4 flex flex-col gap-3 shadow-xs hover:border-primary/40 hover:bg-card/90 transition-all"
               >
                 {/* Linha Superior: Avatar, Nome, E-mail e Chevron */}
                 <div className="flex items-start justify-between gap-3">
@@ -523,7 +523,7 @@ export function AthletesList({
                 </div>
 
                 {/* Linha Inferior: Ações Rápidas (Prescrever, Incentivar WhatsApp, Ver Painel) */}
-                <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/40">
+                <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-border/40">
                   <div className="flex items-center gap-2">
                     {/* Botão de Prescrição Rápida */}
                     {!hasPlan ? (

@@ -201,7 +201,7 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
         </span>
       </Link>
       <div className={cn(
-        "mx-auto grid w-full items-end justify-items-center",
+        "mx-auto grid min-w-0 w-full items-end justify-items-center",
         effectiveIsCoach ? "max-w-xl grid-cols-6" : "max-w-lg grid-cols-5",
       )}>
         {effectiveIsCoach ? (

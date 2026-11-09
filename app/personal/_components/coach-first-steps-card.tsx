@@ -78,11 +78,11 @@ export function CoachFirstStepsCard({ isFull }: CoachFirstStepsCardProps) {
                 2
               </span>
               <h3 className="font-heading text-xs font-bold text-foreground">
-                Prescreva com IA
+                Prepare a primeira ficha
               </h3>
             </div>
             <p className="text-[11px] text-muted-foreground leading-normal">
-              Crie rotinas e periodizações completas em segundos com seu assistente.
+              Monte uma ficha manual ou use a IA, se incluída no plano. Revise antes de enviar.
             </p>
           </div>
         </div>
@@ -99,7 +99,7 @@ export function CoachFirstStepsCard({ isFull }: CoachFirstStepsCardProps) {
               </h3>
             </div>
             <p className="text-[11px] text-muted-foreground leading-normal">
-              Veja séries concluídas, cargas e histórico em tempo real de cada aluno.
+              Consulte séries concluídas, cargas e histórico compartilhados por cada aluno.
             </p>
           </div>
         </div>

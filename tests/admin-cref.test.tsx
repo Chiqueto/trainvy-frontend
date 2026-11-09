@@ -4,7 +4,6 @@ import { ProfessionalVerificationPolicyCard } from "@/app/admin/professionals/po
 import { ProfessionalCrefSearch } from "@/app/admin/professionals/search";
 import { ProfessionalReview } from "@/app/admin/professionals/review";
 import {
-  updateProfessionalVerificationPolicyAction,
   reviewProfessionalRegistrationAction,
 } from "@/app/admin/professionals/_actions";
 const { refresh } = vi.hoisted(() => ({ refresh: vi.fn() }));
@@ -13,70 +12,13 @@ vi.mock("@/app/admin/professionals/_actions", () => ({
   updateProfessionalVerificationPolicyAction: vi.fn(),
   reviewProfessionalRegistrationAction: vi.fn(),
 }));
-const policy = {
-  required: true,
-  revision: 3,
-  updatedAt: null,
-  updatedByUserId: null,
-};
 describe("Admin CREF controls", () => {
   beforeEach(() => vi.clearAllMocks());
-  it("only saves the test flag after the admin submits the change", async () => {
-    vi.mocked(updateProfessionalVerificationPolicyAction).mockResolvedValue({
-      status: 200,
-      data: { ...policy, required: false, revision: 4 },
-    });
-    render(<ProfessionalVerificationPolicyCard policy={policy} />);
-    expect(
-      (
-        screen.getByRole("switch", {
-          name: "Exigir CREF verificado",
-        }) as HTMLInputElement
-      ).checked,
-    ).toBe(true);
-    fireEvent.click(screen.getByRole("switch"));
-    expect(updateProfessionalVerificationPolicyAction).not.toHaveBeenCalled();
-    fireEvent.click(
-      screen.getByRole("button", { name: "Salvar configuração" }),
-    );
-    await waitFor(() =>
-      expect(updateProfessionalVerificationPolicyAction).toHaveBeenCalledWith({
-        required: false,
-        revision: 3,
-        reason: "Fase de testes da plataforma",
-      }),
-    );
-    expect(await screen.findByText("Configuração salva.")).toBeDefined();
-    expect(refresh).toHaveBeenCalled();
-  });
-  it("clearly identifies the active test mode without claiming verification", () => {
-    render(
-      <ProfessionalVerificationPolicyCard
-        policy={{ ...policy, required: false }}
-      />,
-    );
-    expect(screen.getByText(/Modo de testes ativo/)).toBeDefined();
-    expect((screen.getByRole("switch") as HTMLInputElement).checked).toBe(
-      false,
-    );
-    expect(
-      screen
-        .getByRole("link", { name: "Buscar e validar CREFs" })
-        .getAttribute("href"),
-    ).toBe("/admin/professionals");
-  });
-  it("keeps the pending selection visible when the backend rejects a stale revision", async () => {
-    vi.mocked(updateProfessionalVerificationPolicyAction).mockResolvedValue({
-      status: 409,
-      data: { code: "CONCURRENCY_CONFLICT", error: "A configuração mudou." },
-    });
-    render(<ProfessionalVerificationPolicyCard policy={policy} />);
-    fireEvent.click(screen.getByRole("switch"));
-    fireEvent.click(
-      screen.getByRole("button", { name: "Salvar configuração" }),
-    );
-    expect(await screen.findByText("A configuração mudou.")).toBeDefined();
-    expect(refresh).not.toHaveBeenCalled();
+  it("explains declared access without a verification switch", () => {
+    render(<ProfessionalVerificationPolicyCard />);
+    expect(screen.queryByRole("switch")).toBeNull();
+    expect(screen.getByText(/informe CPF, CREF/)).toBeDefined();
+    expect(screen.getByRole("link", { name: "Consultar cadastros e conferir CREFs" }).getAttribute("href")).toBe("/admin/professionals");
   });
   it("searches local registrations by name/number and UF and links the correct official source", () => {
     render(<ProfessionalCrefSearch q="987654-G" region="SP" />);

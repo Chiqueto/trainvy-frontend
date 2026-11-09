@@ -1,5 +1,7 @@
 "use client";
 
+import { trackProductEvent } from "@/app/_lib/product-events";
+
 import { toast } from "sonner";
 
 import { useState, useTransition } from "react";
@@ -122,6 +124,7 @@ export function ReceivedPrescriptionsCard({
       }
 
       toast.success("Prescrição aceita com sucesso!");
+      trackProductEvent("Prescription accepted");
       setAcceptedSuccess({
         planId: res.data.workoutPlanId,
         planName: res.data.workoutPlanName,

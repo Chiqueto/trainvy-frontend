@@ -55,18 +55,24 @@ export function CoachAthleteAiInsightsView({
       setIsLoading(true);
       setError(null);
 
-      const res = await fetchCoachAthleteProgressInsightsAction({
-        athleteId,
-        weeksCount: range,
-        tz: timezone,
-      });
+      setInsights(null);
+      try {
+        const res = await fetchCoachAthleteProgressInsightsAction({
+          athleteId,
+          weeksCount: range,
+          tz: timezone,
+        });
 
-      if (res.success) {
-        setInsights(res.data);
-      } else {
-        setError(res.error);
+        if (res.success) {
+          setInsights(res.data);
+        } else {
+          setError(res.error);
+        }
+      } catch {
+        setError("Não foi possível carregar a análise. Tente novamente.");
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     },
     [athleteId, timezone],
   );
@@ -77,7 +83,6 @@ export function CoachAthleteAiInsightsView({
 
   const handleRangeChange = (range: EvolutionRange) => {
     onSelectWeeksCount(range);
-    void loadInsights(range);
   };
 
   const getStatusBadge = (
@@ -121,11 +126,11 @@ export function CoachAthleteAiInsightsView({
           </div>
           <div>
             <h3 className="font-heading text-sm font-bold text-foreground flex items-center gap-1.5">
-              <span>Diagnóstico Inteligente da IA</span>
+              <span>Análise de evolução com IA</span>
               <Sparkles className="size-3.5 text-primary" />
             </h3>
             <p className="text-[11px] text-muted-foreground">
-              Análise biomecânica, desequilíbrios e diretrizes para prescrição
+              Resumo dos registros e sugestões para revisão do profissional
             </p>
           </div>
         </div>
@@ -212,7 +217,10 @@ export function CoachAthleteAiInsightsView({
               <span className="font-heading text-xs font-bold uppercase tracking-wider text-muted-foreground">
                 Resumo Geral da Fase
               </span>
-              <Badge variant="outline" className="text-[11px] font-semibold gap-1">
+              <Badge
+                variant="outline"
+                className="text-[11px] font-semibold gap-1"
+              >
                 <Zap className="size-3 text-primary" />
                 <span>{insights.consistencyAssessment}</span>
               </Badge>

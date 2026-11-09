@@ -63,9 +63,9 @@ export function PlanPermissionsFields({
                   />
                 </label>
               )}
-              {key === "AI_CHAT" && current && (
+              {(key === "AI_CHAT" || key === "AI_PLAN_GENERATION") && current && (
                 <label className="mt-2 flex flex-col gap-1 text-xs text-muted-foreground">
-                  Limite diário de mensagens (vazio = padrão do sistema)
+                  Cota diária compartilhada de IA (chat, fichas e análises; vazio = padrão)
                   <input
                     type="number"
                     min={0}

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ChevronRight, MessageSquareHeart } from "lucide-react";
 import { FeedbackDialog } from "./feedback-dialog";
+import { supportUrl } from "@/app/_lib/support";
 
 export function FeedbackButton() {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,6 +30,7 @@ export function FeedbackButton() {
         </div>
         <ChevronRight className="size-4 text-muted-foreground group-hover:text-foreground transition-colors" />
       </button>
+      <a href={supportUrl()} className="w-full rounded-xl border border-border p-4 text-center text-sm underline">Falar com o suporte por e-mail</a>
 
       <FeedbackDialog isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </>

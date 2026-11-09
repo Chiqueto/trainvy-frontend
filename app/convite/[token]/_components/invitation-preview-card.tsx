@@ -44,6 +44,9 @@ export function InvitationPreviewCard({
   const [isPending, startTransition] = useTransition();
   const [errorBanner, setErrorBanner] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [acceptedCoachName, setAcceptedCoachName] = useState<string | null>(
+    null,
+  );
 
   const handleAccept = () => {
     setErrorBanner(null);
@@ -52,6 +55,7 @@ export function InvitationPreviewCard({
       if (!res.success) {
         setErrorBanner(res.error);
       } else {
+        setAcceptedCoachName(res.coachName);
         setIsSuccess(true);
         setTimeout(() => {
           router.push("/profile");
@@ -63,34 +67,6 @@ export function InvitationPreviewCard({
   const handleDecline = () => {
     router.push("/");
   };
-
-  // 1. Estado Inválido / Expirado / Cancelado
-  if (!isValid || !coach) {
-    return (
-      <div className="rounded-3xl border border-destructive/20 bg-card p-6 sm:p-8 flex flex-col items-center text-center gap-4 shadow-xl max-w-md w-full">
-        <div className="flex size-14 items-center justify-center rounded-2xl bg-destructive/10 text-destructive">
-          <AlertCircle className="size-8" />
-        </div>
-
-        <div className="space-y-1.5">
-          <h1 className="font-heading text-xl font-bold text-foreground">
-            Convite Indisponível
-          </h1>
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            {message ?? "Este link de convite é inválido, expirou ou foi cancelado pelo treinador."}
-          </p>
-        </div>
-
-        <div className="w-full pt-2">
-          <Link href="/">
-            <Button variant="outline" className="w-full h-11 rounded-xl font-heading font-semibold text-xs">
-              Ir para a Página Inicial
-            </Button>
-          </Link>
-        </div>
-      </div>
-    );
-  }
 
   // 2. Estado de Sucesso após Aceite
   if (isSuccess) {
@@ -105,7 +81,11 @@ export function InvitationPreviewCard({
             Vínculo Estabelecido!
           </h1>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            Agora você está conectado com <strong>{coach.name}</strong>. Redirecionando para seu perfil...
+            Agora você está conectado com{" "}
+            <strong>
+              {acceptedCoachName ?? coach?.name ?? "seu treinador"}
+            </strong>
+            . Redirecionando para seu perfil...
           </p>
         </div>
 
@@ -113,6 +93,38 @@ export function InvitationPreviewCard({
           <Link href="/profile">
             <Button className="w-full h-11 rounded-xl font-heading font-bold text-xs">
               Acessar Meu Perfil
+            </Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // 1. Estado Inválido / Expirado / Cancelado
+  if (!isValid || !coach) {
+    return (
+      <div className="rounded-3xl border border-destructive/20 bg-card p-6 sm:p-8 flex flex-col items-center text-center gap-4 shadow-xl max-w-md w-full">
+        <div className="flex size-14 items-center justify-center rounded-2xl bg-destructive/10 text-destructive">
+          <AlertCircle className="size-8" />
+        </div>
+
+        <div className="space-y-1.5">
+          <h1 className="font-heading text-xl font-bold text-foreground">
+            Convite Indisponível
+          </h1>
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            {message ??
+              "Este link de convite é inválido, expirou ou foi cancelado pelo treinador."}
+          </p>
+        </div>
+
+        <div className="w-full pt-2">
+          <Link href="/">
+            <Button
+              variant="outline"
+              className="w-full h-11 rounded-xl font-heading font-semibold text-xs"
+            >
+              Ir para a Página Inicial
             </Button>
           </Link>
         </div>
@@ -154,7 +166,10 @@ export function InvitationPreviewCard({
         <ul className="text-muted-foreground space-y-1.5 pl-6 list-disc">
           <li>Você mantém a posse de todos os seus treinos e histórico.</li>
           <li>O vínculo permite que o treinador acompanhe sua rotina.</li>
-          <li>Você pode encerrar o relacionamento a qualquer momento pelo seu perfil.</li>
+          <li>
+            Você pode encerrar o relacionamento a qualquer momento pelo seu
+            perfil.
+          </li>
         </ul>
       </div>
 
@@ -188,10 +203,14 @@ export function InvitationPreviewCard({
       ) : currentUser.accountType === "COACH" && currentUser.id !== coach.id ? (
         <div className="flex flex-col gap-3 text-center">
           <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 p-3 text-xs text-amber-500">
-            Sua conta atual é do tipo Treinador (COACH). Convites de alunos devem ser aceitos por contas de atleta.
+            Sua conta atual é do tipo Treinador (COACH). Convites de alunos
+            devem ser aceitos por contas de atleta.
           </div>
           <Link href="/profile">
-            <Button variant="outline" className="w-full h-11 rounded-xl font-heading font-semibold text-xs">
+            <Button
+              variant="outline"
+              className="w-full h-11 rounded-xl font-heading font-semibold text-xs"
+            >
               Ir para o Perfil
             </Button>
           </Link>

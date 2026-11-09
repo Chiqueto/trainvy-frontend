@@ -10,6 +10,7 @@ import {
 import type { Metadata } from "next";
 import { getCommercialContext } from "@/app/_lib/api/fetch-generated";
 import styles from "../_components/auth.module.css";
+import { supportUrl } from "@/app/_lib/support";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Bem-vindo ao Trainvy | Trainvy" };
@@ -52,6 +53,7 @@ export default async function WelcomePage() {
           após liberação da assinatura.
         </p>
       )}
+      {!active && <a href={supportUrl("Solicitar liberação do plano profissional Trainvy")} className={styles.secondaryLink}>Solicitar liberação ao suporte</a>}
       <div className={styles.welcomeFeatures}>
         <div>
           <Users size={19} />

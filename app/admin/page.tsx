@@ -1,6 +1,5 @@
 import {
   getAdminOverview,
-  getProfessionalVerificationPolicy,
 } from "@/app/_lib/api/fetch-generated";
 import { ProfessionalVerificationPolicyCard } from "./professionals/policy-card";
 import { readAdmin } from "@/app/admin/_lib/server";
@@ -9,16 +8,10 @@ import { AdminDashboardLayout } from "@/app/admin/_components/admin-dashboard-la
 
 export default async function AdminPage() {
   const overview = await readAdmin(getAdminOverview({ cache: "no-store" }));
-  const policy = await readAdmin(
-    getProfessionalVerificationPolicy({ cache: "no-store" }),
-  );
 
   return (
     <AdminDashboardLayout>
-      <ProfessionalVerificationPolicyCard
-        key={policy.revision}
-        policy={policy}
-      />
+      <ProfessionalVerificationPolicyCard />
       <AdminOverview data={overview} />
     </AdminDashboardLayout>
   );

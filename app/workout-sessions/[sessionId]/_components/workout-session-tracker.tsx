@@ -1,5 +1,7 @@
 "use client";
 
+import { trackProductEvent } from "@/app/_lib/product-events";
+
 import { useCallback, useEffect, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -330,6 +332,7 @@ export function WorkoutSessionTracker({
         setShowConfirmModal(false);
         setShowPendingSetsModal(false);
         toast.success("Treino concluído com sucesso!");
+        trackProductEvent("Workout completed");
         router.push(`/workout-sessions/${sessionData.id}/summary`);
       }
     });
