@@ -1,4 +1,5 @@
 "use client";
+import { AiFeature } from "@/app/_components/ai-availability-provider";
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -234,30 +235,34 @@ export function WorkoutPlanBuilder({
   return (
     <div className="flex flex-col gap-6">
       {/* Banner de Geração com IA / Importação de Ficha */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-2xl border border-primary/30 bg-primary/5 shadow-xs">
-        <div className="flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary shrink-0">
-            <Sparkles className="size-5" />
+      <AiFeature capability="planning">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-2xl border border-primary/30 bg-primary/5 shadow-xs">
+          <div className="flex items-center gap-3">
+            <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary shrink-0">
+              <Sparkles className="size-5" />
+            </div>
+            <div>
+              <h4 className="font-heading text-xs font-bold text-foreground">
+                Organize seus exercícios ou importe sua ficha com IA
+              </h4>
+              <p className="text-[11px] text-muted-foreground">
+                Fale por voz ou anexe o PDF/foto da sua ficha antiga da academia
+              </p>
+            </div>
           </div>
-          <div>
-            <h4 className="font-heading text-xs font-bold text-foreground">
-              Organize seus exercícios ou importe sua ficha com IA
-            </h4>
-            <p className="text-[11px] text-muted-foreground">
-              Fale por voz ou anexe o PDF/foto da sua ficha antiga da academia
-            </p>
-          </div>
+          <AiFeature capability="planning">
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => setIsAiModalOpen(true)}
+              className="h-8 px-3 rounded-xl font-heading text-xs font-bold gap-1.5 shadow-sm"
+            >
+              <Sparkles className="size-3.5" />
+              <span>Gerar com IA</span>
+            </Button>
+          </AiFeature>
         </div>
-        <Button
-          type="button"
-          size="sm"
-          onClick={() => setIsAiModalOpen(true)}
-          className="h-8 px-3 rounded-xl font-heading text-xs font-bold gap-1.5 shadow-sm"
-        >
-          <Sparkles className="size-3.5" />
-          <span>Gerar com IA</span>
-        </Button>
-      </div>
+      </AiFeature>
 
       <section className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-5">
         <label className="flex flex-col gap-2 text-sm font-medium">
@@ -349,16 +354,18 @@ export function WorkoutPlanBuilder({
                 <span>{allExpanded ? "Recolher todos" : "Expandir todos"}</span>
               </Button>
             )}
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setIsAiModalOpen(true)}
-              className="gap-1.5 rounded-full font-heading text-xs text-primary border-primary/30 hover:bg-primary/10"
-            >
-              <Sparkles className="size-3.5" />
-              <span>Gerar com IA</span>
-            </Button>
+            <AiFeature capability="planning">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setIsAiModalOpen(true)}
+                className="gap-1.5 rounded-full font-heading text-xs text-primary border-primary/30 hover:bg-primary/10"
+              >
+                <Sparkles className="size-3.5" />
+                <span>Gerar com IA</span>
+              </Button>
+            </AiFeature>
             <Button
               type="button"
               variant="outline"
@@ -761,18 +768,20 @@ export function WorkoutPlanBuilder({
               : "Criar plano e adicionar etapa"}
       </Button>
 
-      <AthleteAiWorkoutPlanModal
-        isOpen={isAiModalOpen}
-        onClose={() => setIsAiModalOpen(false)}
-        onApplyPlan={(data) => {
-          if (data.name) setName(data.name);
-          if (data.notes) setNotes(data.notes);
-          if (data.workoutDays?.length) {
-            setDays(data.workoutDays);
-            setExpandedDayIds(new Set());
-          }
-        }}
-      />
+      <AiFeature capability="planning">
+        <AthleteAiWorkoutPlanModal
+          isOpen={isAiModalOpen}
+          onClose={() => setIsAiModalOpen(false)}
+          onApplyPlan={(data) => {
+            if (data.name) setName(data.name);
+            if (data.notes) setNotes(data.notes);
+            if (data.workoutDays?.length) {
+              setDays(data.workoutDays);
+              setExpandedDayIds(new Set());
+            }
+          }}
+        />
+      </AiFeature>
     </div>
   );
 }

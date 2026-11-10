@@ -1,4 +1,8 @@
 "use client";
+import {
+  AiFeature,
+  useAiAvailability,
+} from "@/app/_components/ai-availability-provider";
 
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -59,6 +63,9 @@ export function CoachAthleteEvolutionDashboard({
   athleteName,
 }: CoachAthleteEvolutionDashboardProps) {
   const [subTab, setSubTab] = useState<EvolutionSubTab>("overview");
+  const { planningEnabled } = useAiAvailability();
+  const visibleSubTab =
+    subTab === "insights" && !planningEnabled ? "overview" : subTab;
   const [weeksCount, setWeeksCount] = useState<EvolutionRange>(4);
   const [timezone] = useState<string>(() => {
     try {
@@ -73,14 +80,22 @@ export function CoachAthleteEvolutionDashboard({
     useState<GetCoachAthleteProgressOverview200 | null>(null);
   const [isLoadingOverview, setIsLoadingOverview] = useState(true);
   const [overviewStatus, setOverviewStatus] = useState<number | null>(null);
-  const [overviewErrorCode, setOverviewErrorCode] = useState<string | null>(null);
+  const [overviewErrorCode, setOverviewErrorCode] = useState<string | null>(
+    null,
+  );
   const [overviewError, setOverviewError] = useState<string | null>(null);
 
   // Estados de Sessões
-  const [sessions, setSessions] = useState<ListCoachAthleteProgressSessions200ItemsItem[]>([]);
-  const [sessionsNextCursor, setSessionsNextCursor] = useState<string | null>(null);
+  const [sessions, setSessions] = useState<
+    ListCoachAthleteProgressSessions200ItemsItem[]
+  >([]);
+  const [sessionsNextCursor, setSessionsNextCursor] = useState<string | null>(
+    null,
+  );
   const [sessionsHasMore, setSessionsHasMore] = useState(false);
-  const [sessionsOrigin, setSessionsOrigin] = useState<"ALL" | "PLANNED" | "FREE">("ALL");
+  const [sessionsOrigin, setSessionsOrigin] = useState<
+    "ALL" | "PLANNED" | "FREE"
+  >("ALL");
   const [isLoadingSessions, setIsLoadingSessions] = useState(false);
   const [isLoadingMoreSessions, setIsLoadingMoreSessions] = useState(false);
 
@@ -142,13 +157,13 @@ export function CoachAthleteEvolutionDashboard({
   );
 
   useEffect(() => {
-    if (subTab === "sessions") {
+    if (visibleSubTab === "sessions") {
       const timer = window.setTimeout(() => {
         void loadSessions(sessionsOrigin);
       }, 0);
       return () => window.clearTimeout(timer);
     }
-  }, [subTab, sessionsOrigin, loadSessions]);
+  }, [visibleSubTab, sessionsOrigin, loadSessions]);
 
   // Paginação de Sessões
   const handleLoadMoreSessions = async () => {
@@ -213,7 +228,8 @@ export function CoachAthleteEvolutionDashboard({
             Compartilhamento Não Autorizado
           </h2>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            Este aluno ainda não autorizou o compartilhamento do histórico de treinos.
+            Este aluno ainda não autorizou o compartilhamento do histórico de
+            treinos.
           </p>
         </div>
 
@@ -224,15 +240,20 @@ export function CoachAthleteEvolutionDashboard({
           </div>
           <ol className="text-xs text-muted-foreground list-decimal list-inside space-y-1 leading-relaxed">
             <li>Acessar o Trainvy pelo seu próprio login de atleta.</li>
-            <li>Navegar até a aba <strong>Perfil</strong>.</li>
-            <li>Na seção <strong>Meu Treinador</strong>, localizar <strong>Compartilhamento de evolução</strong>.</li>
+            <li>
+              Navegar até a aba <strong>Perfil</strong>.
+            </li>
+            <li>
+              Na seção <strong>Meu Treinador</strong>, localizar{" "}
+              <strong>Compartilhamento de evolução</strong>.
+            </li>
             <li>Ativar a chave de autorização.</li>
           </ol>
         </div>
 
         <p className="text-[11px] text-muted-foreground italic">
-          Por motivos de privacidade e conformidade LGPD/GDPR, métricas e sessões
-          permanecem estritamente privadas até a concessão explícita.
+          Por motivos de privacidade e conformidade LGPD/GDPR, métricas e
+          sessões permanecem estritamente privadas até a concessão explícita.
         </p>
       </div>
     );
@@ -307,7 +328,7 @@ export function CoachAthleteEvolutionDashboard({
           type="button"
           onClick={() => setSubTab("overview")}
           className={`h-8 rounded-xl font-heading text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
-            subTab === "overview"
+            visibleSubTab === "overview"
               ? "bg-card text-foreground shadow-xs"
               : "text-muted-foreground hover:text-foreground"
           }`}
@@ -316,24 +337,26 @@ export function CoachAthleteEvolutionDashboard({
           <span>Resumo</span>
         </button>
 
-        <button
-          type="button"
-          onClick={() => setSubTab("insights")}
-          className={`h-8 rounded-xl font-heading text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
-            subTab === "insights"
-              ? "bg-card text-foreground shadow-xs"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <Sparkles className="size-3.5 text-primary" />
-          <span>Diagnóstico IA</span>
-        </button>
+        <AiFeature capability="planning">
+          <button
+            type="button"
+            onClick={() => setSubTab("insights")}
+            className={`h-8 rounded-xl font-heading text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
+              visibleSubTab === "insights"
+                ? "bg-card text-foreground shadow-xs"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Sparkles className="size-3.5 text-primary" />
+            <span>Diagnóstico IA</span>
+          </button>
+        </AiFeature>
 
         <button
           type="button"
           onClick={() => setSubTab("sessions")}
           className={`h-8 rounded-xl font-heading text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
-            subTab === "sessions"
+            visibleSubTab === "sessions"
               ? "bg-card text-foreground shadow-xs"
               : "text-muted-foreground hover:text-foreground"
           }`}
@@ -346,7 +369,7 @@ export function CoachAthleteEvolutionDashboard({
           type="button"
           onClick={() => setSubTab("exercises")}
           className={`h-8 rounded-xl font-heading text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
-            subTab === "exercises"
+            visibleSubTab === "exercises"
               ? "bg-card text-foreground shadow-xs"
               : "text-muted-foreground hover:text-foreground"
           }`}
@@ -357,7 +380,7 @@ export function CoachAthleteEvolutionDashboard({
       </div>
 
       {/* SUB-VIEW 1: RESUMO & GRÁFICOS */}
-      {subTab === "overview" && (
+      {visibleSubTab === "overview" && (
         <div className="space-y-5 animate-in fade-in duration-200">
           {/* Seletor de Período Temporal */}
           <div className="flex items-center justify-between">
@@ -456,35 +479,40 @@ export function CoachAthleteEvolutionDashboard({
           </div>
 
           {/* Banner de Acesso Rápido ao Diagnóstico com IA */}
-          <button
-            type="button"
-            onClick={() => setSubTab("insights")}
-            className="w-full text-left rounded-3xl border border-primary/30 bg-gradient-to-r from-primary/10 via-card to-card p-4 shadow-xs hover:border-primary/50 transition-all group flex items-center justify-between gap-3"
-          >
-            <div className="flex items-center gap-3">
-              <div className="flex size-10 items-center justify-center rounded-2xl bg-primary/20 text-primary group-hover:scale-105 transition-transform shrink-0">
-                <Brain className="size-5" />
+          <AiFeature capability="planning">
+            <button
+              type="button"
+              onClick={() => setSubTab("insights")}
+              className="w-full text-left rounded-3xl border border-primary/30 bg-gradient-to-r from-primary/10 via-card to-card p-4 shadow-xs hover:border-primary/50 transition-all group flex items-center justify-between gap-3"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex size-10 items-center justify-center rounded-2xl bg-primary/20 text-primary group-hover:scale-105 transition-transform shrink-0">
+                  <Brain className="size-5" />
+                </div>
+                <div>
+                  <p className="font-heading text-xs font-bold text-foreground flex items-center gap-1.5">
+                    <span>Diagnóstico Inteligente com IA</span>
+                    <Sparkles className="size-3.5 text-primary" />
+                  </p>
+                  <p className="text-[11px] text-muted-foreground">
+                    Identifique desequilíbrios musculares, platôs e
+                    recomendações para a próxima prescrição
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="font-heading text-xs font-bold text-foreground flex items-center gap-1.5">
-                  <span>Diagnóstico Inteligente com IA</span>
-                  <Sparkles className="size-3.5 text-primary" />
-                </p>
-                <p className="text-[11px] text-muted-foreground">
-                  Identifique desequilíbrios musculares, platôs e recomendações para a próxima prescrição
-                </p>
-              </div>
-            </div>
-            <span className="text-xs font-semibold text-primary flex items-center gap-1 shrink-0 group-hover:translate-x-0.5 transition-transform">
-              <span>Ver Análise</span>
-              <ArrowRight className="size-3.5" />
-            </span>
-          </button>
+              <span className="text-xs font-semibold text-primary flex items-center gap-1 shrink-0 group-hover:translate-x-0.5 transition-transform">
+                <span>Ver Análise</span>
+                <ArrowRight className="size-3.5" />
+              </span>
+            </button>
+          </AiFeature>
 
           {/* Gráfico 1: Volume Semanal */}
           <div className="rounded-3xl border border-border bg-card p-1 shadow-xs overflow-hidden">
             <WeeklyVolumeChart
-              weeks={weekly.weeks as unknown as GetWeeklyTrainingAnalytics200WeeksItem[]}
+              weeks={
+                weekly.weeks as unknown as GetWeeklyTrainingAnalytics200WeeksItem[]
+              }
             />
           </div>
 
@@ -498,17 +526,19 @@ export function CoachAthleteEvolutionDashboard({
       )}
 
       {/* SUB-VIEW 2: DIAGNÓSTICO E INSIGHTS COM IA */}
-      {subTab === "insights" && (
-        <CoachAthleteAiInsightsView
-          athleteId={athleteId}
-          athleteName={athleteName}
-          weeksCount={weeksCount}
-          onSelectWeeksCount={setWeeksCount}
-        />
+      {visibleSubTab === "insights" && (
+        <AiFeature capability="planning">
+          <CoachAthleteAiInsightsView
+            athleteId={athleteId}
+            athleteName={athleteName}
+            weeksCount={weeksCount}
+            onSelectWeeksCount={setWeeksCount}
+          />
+        </AiFeature>
       )}
 
       {/* SUB-VIEW 3: SESSÕES CONCLUÍDAS */}
-      {subTab === "sessions" && (
+      {visibleSubTab === "sessions" && (
         <div className="space-y-4 animate-in fade-in duration-200">
           {/* Filtros de Origem */}
           <div className="flex items-center justify-between">
@@ -558,7 +588,8 @@ export function CoachAthleteEvolutionDashboard({
                 Nenhum treino concluído encontrado
               </p>
               <p className="text-xs text-muted-foreground">
-                Não há sessões concluídas dentro do período e escopo autorizados.
+                Não há sessões concluídas dentro do período e escopo
+                autorizados.
               </p>
             </div>
           )}
@@ -650,7 +681,7 @@ export function CoachAthleteEvolutionDashboard({
       )}
 
       {/* SUB-VIEW 3: EVOLUÇÃO POR EXERCÍCIO */}
-      {subTab === "exercises" && (
+      {visibleSubTab === "exercises" && (
         <div className="animate-in fade-in duration-200">
           <CoachProgressExerciseView athleteId={athleteId} />
         </div>

@@ -24,6 +24,7 @@ export const entitlementLabels: Record<
   SOURCE_LIBRARY: "Biblioteca de fontes",
 };
 export const actionLabels: Record<ListAdminAuditAction, string> = {
+  AI_AVAILABILITY_UPDATED: "Disponibilidade da IA alterada",
   COMPLIANCE_UPDATED: "Atualizou governança jurídica",
   PROFESSIONAL_VERIFICATION_POLICY_UPDATED: "Exigência de CREF alterada",
   EXERCISE_MUSCLES_UPDATED: "Corrigiu músculos de exercício",

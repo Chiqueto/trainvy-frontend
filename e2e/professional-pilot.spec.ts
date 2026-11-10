@@ -39,7 +39,10 @@ test("declared professional uses the dashboard on desktop and mobile; pending ac
       page.getByRole("button", { name: "Convidar novo aluno" }),
     ).toBeVisible();
     await expect(
-      page.getByText("Piloto E2E athlete", { exact: true }),
+      page
+        .locator(`a[href="/personal/alunos/${fixtures().users.athlete.id}"]`)
+        .filter({ hasText: "Piloto E2E athlete", visible: true })
+        .first(),
     ).toBeVisible();
     const layout = await page.evaluate(() => ({
       width: document.documentElement.scrollWidth,
@@ -75,7 +78,9 @@ test("student reads inbox and admin can see feedback without a CREF requirement 
 }) => {
   const student = await asRole(browser, "athlete", true);
   await student.page.goto("/");
-  await student.page.getByRole("button", { name: /^Notificações/ }).click();
+  await student.page
+    .getByRole("button", { name: /^Notificações, 1 não lidas$/ })
+    .click();
   await expect(
     student.page.getByText("Aviso piloto E2E", { exact: true }),
   ).toBeVisible();
@@ -203,4 +208,145 @@ test("invitation, approved prescription and student acceptance cross the real AP
     other.context.close(),
     basic.context.close(),
   ]);
+});
+
+test("admin independently controls AI offers and access for professionals and students", async ({
+  browser,
+}) => {
+  test.setTimeout(180000);
+  const admin = await asRole(browser, "admin");
+  const coach = await asRole(browser, "coach");
+  const student = await asRole(browser, "athlete", true);
+  const guest = await browser.newContext({ baseURL });
+  const landing = await guest.newPage();
+  try {
+    for (const [professional, athlete] of [
+      [false, false],
+      [true, false],
+      [false, true],
+      [true, true],
+    ]) {
+      await admin.page.goto("/admin");
+      const professionalSwitch = admin.page.getByRole("switch", {
+        name: "IA para profissionais",
+      });
+      const athleteSwitch = admin.page.getByRole("switch", {
+        name: "IA para alunos",
+      });
+      if (
+        ((await professionalSwitch.getAttribute("aria-checked")) === "true") !==
+        professional
+      )
+        await professionalSwitch.click();
+      if (
+        ((await athleteSwitch.getAttribute("aria-checked")) === "true") !==
+        athlete
+      )
+        await athleteSwitch.click();
+      await admin.page
+        .getByRole("button", { name: "Salvar disponibilidade da IA" })
+        .click();
+      await expect(
+        admin.page.getByText("Configuração salva.", { exact: true }),
+      ).toBeVisible({ timeout: 15000 });
+      const policy = await admin.context.request.get("/backend/features/ai");
+      expect(await policy.json()).toEqual({
+        professionalAiEnabled: professional,
+        athleteAiEnabled: athlete,
+      });
+      await landing.goto("/");
+      if (athlete)
+        await expect(
+          landing.getByRole("heading", { name: /Inteligência no plano/ }),
+        ).toBeVisible();
+      else if (professional)
+        await expect(
+          landing.getByRole("heading", { name: "IA para quem prescreve." }),
+        ).toBeVisible();
+      else {
+        await expect(
+          landing.getByRole("heading", {
+            name: "Seu planejamento. Suas escolhas.",
+          }),
+        ).toBeVisible();
+        await expect(
+          landing.getByText("COACH AI", { exact: true }),
+        ).toHaveCount(0);
+      }
+      await student.page.goto("/");
+      if (athlete)
+        await expect(
+          student.page.getByRole("button", { name: "Coach", exact: true }),
+        ).toBeVisible();
+      else {
+        await expect(
+          student.page.getByRole("button", { name: "Coach", exact: true }),
+        ).toHaveCount(0);
+        const blocked = await student.context.request.post("/backend/ai/", {
+          data: {
+            messages: [
+              {
+                id: "flag-test",
+                role: "user",
+                parts: [{ type: "text", text: "Teste de bloqueio" }],
+              },
+            ],
+          },
+        });
+        expect(blocked.status()).toBe(503);
+        expect((await blocked.json()).code).toBe("AI_DISABLED");
+      }
+      await coach.page.goto(
+        `/personal/alunos/${fixtures().users.athlete.id}/prescrever`,
+      );
+      if (professional)
+        await expect(
+          coach.page.getByRole("button", {
+            name: "Prescrever com IA",
+            exact: true,
+          }),
+        ).toBeVisible();
+      else {
+        await expect(
+          coach.page.getByRole("button", {
+            name: "Prescrever com IA",
+            exact: true,
+          }),
+        ).toHaveCount(0);
+        const blocked = await coach.context.request.post(
+          "/backend/coach/prescriptions/ai-generate",
+          {
+            data: {
+              athleteId: fixtures().users.athlete.id,
+              prompt: "Teste de bloqueio",
+            },
+          },
+        );
+        expect(blocked.status()).toBe(503);
+        expect((await blocked.json()).code).toBe("AI_DISABLED");
+      }
+      const plans = await guest.request.get(
+        "/backend/commercial/plans?audience=COACH",
+      );
+      if (!professional)
+        expect(
+          (await plans.json()).every(
+            (plan: { entitlements: { entitlement: string }[] }) =>
+              plan.entitlements.every(
+                (permission) =>
+                  !["AI_CHAT", "AI_PLAN_GENERATION"].includes(
+                    permission.entitlement,
+                  ),
+              ),
+          ),
+        ).toBe(true);
+    }
+  } finally {
+    await Promise.all([
+      admin.context.close(),
+      coach.context.close(),
+      student.context.close(),
+      guest.close(),
+    ]);
+  }
 });

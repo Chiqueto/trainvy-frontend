@@ -253,7 +253,7 @@ export function PlanningHub({
                   Nenhum plano de treino cadastrado
                 </p>
                 <p className="max-w-xs text-xs text-muted-foreground">
-                  Crie seu primeiro plano de treino ou solicite um ao Coach AI.
+                  Crie seu primeiro plano de treino.
                 </p>
                 <Link
                   href="/planning/plans/new"

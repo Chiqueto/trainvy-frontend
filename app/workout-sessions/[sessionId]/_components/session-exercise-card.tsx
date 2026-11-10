@@ -1,4 +1,5 @@
 "use client";
+import { AiFeature } from "@/app/_components/ai-availability-provider";
 
 import { useEffect, useMemo, useState, useTransition } from "react";
 import {
@@ -285,16 +286,18 @@ export function SessionExerciseCard({
 
             {/* Botão de Coach IA do Exercício */}
             {!isReadOnly && onOpenAi && (
-              <button
-                type="button"
-                onClick={onOpenAi}
-                title="Pedir ajuda ao Coach IA para este exercício"
-                aria-label={`Ajuda do Coach IA para ${exercise.exerciseNameSnapshot}`}
-                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-heading font-semibold text-primary bg-primary/10 hover:bg-primary/20 border border-primary/25 transition-colors cursor-pointer"
-              >
-                <Sparkles className="size-3 text-primary" />
-                <span>Coach IA</span>
-              </button>
+              <AiFeature capability="chat">
+                <button
+                  type="button"
+                  onClick={onOpenAi}
+                  title="Pedir ajuda ao Coach IA para este exercício"
+                  aria-label={`Ajuda do Coach IA para ${exercise.exerciseNameSnapshot}`}
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-heading font-semibold text-primary bg-primary/10 hover:bg-primary/20 border border-primary/25 transition-colors cursor-pointer"
+                >
+                  <Sparkles className="size-3 text-primary" />
+                  <span>Coach IA</span>
+                </button>
+              </AiFeature>
             )}
           </div>
 

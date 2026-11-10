@@ -10,6 +10,10 @@ import { PwaInstallPrompt } from "@/app/_components/pwa/pwa-install-prompt";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { FeatureConsentProvider } from "@/app/_components/feature-consent-provider";
+import {
+  AiAvailabilityProvider,
+  AiFeature,
+} from "@/app/_components/ai-availability-provider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -89,11 +93,15 @@ export default function RootLayout({
           <PwaProvider>
             <NuqsAdapter>
               <FeatureConsentProvider>
-                {children}
-                <PwaInstallPrompt />
-                <Suspense>
-                  <Chat />
-                </Suspense>
+                <AiAvailabilityProvider>
+                  {children}
+                  <PwaInstallPrompt />
+                  <Suspense>
+                    <AiFeature capability="chat">
+                      <Chat />
+                    </AiFeature>
+                  </Suspense>
+                </AiAvailabilityProvider>
               </FeatureConsentProvider>
             </NuqsAdapter>
           </PwaProvider>

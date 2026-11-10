@@ -4,6 +4,12 @@ import React from "react";
 import { BottomNav } from "@/app/_components/bottom-nav";
 
 let mockPathname = "/";
+const ai = vi.hoisted(() => ({ enabled: true }));
+vi.mock("@/app/_components/ai-availability-provider", () => ({
+  useAiAvailability: () => ({ enabled: ai.enabled, chatEnabled: ai.enabled }),
+  AiFeature: ({ children }: { children: React.ReactNode }) =>
+    ai.enabled ? children : null,
+}));
 
 vi.mock("next/navigation", () => ({
   usePathname: () => mockPathname,
@@ -21,12 +27,20 @@ vi.mock("nuqs", () => ({
 describe("BottomNav — Task 2.8.2 Mobile Polish & Route-derived State", () => {
   beforeEach(() => {
     mockPathname = "/";
+    ai.enabled = true;
     localStorage.clear();
     vi.clearAllMocks();
   });
 
   afterEach(() => {
     cleanup();
+  });
+
+  it("oculta o Coach e mantém a navegação manual quando a IA está desligada", () => {
+    ai.enabled = false;
+    render(<BottomNav />);
+    expect(screen.queryByRole("button", { name: /Coach/i })).toBeNull();
+    expect(screen.getByRole("link", { name: /Perfil/i })).toBeDefined();
   });
 
   it("renderiza todos os 5 destinos com labels visíveis e hrefs corretos", () => {
@@ -137,8 +151,16 @@ describe("BottomNav — Task 2.8.2 Mobile Polish & Route-derived State", () => {
 
       const meuTreinoLink = screen.getByRole("link", { name: /Meu Treino/i });
       expect(meuTreinoLink.getAttribute("href")).toBe("/");
-      expect(screen.getByRole("link", { name: "Modelos de treino" }).getAttribute("href")).toBe("/personal/modelos");
-      expect(screen.getByRole("link", { name: "Meu planejamento" }).getAttribute("href")).toBe("/planning");
+      expect(
+        screen
+          .getByRole("link", { name: "Modelos de treino" })
+          .getAttribute("href"),
+      ).toBe("/personal/modelos");
+      expect(
+        screen
+          .getByRole("link", { name: "Meu planejamento" })
+          .getAttribute("href"),
+      ).toBe("/planning");
     });
 
     it.each(["/planning", "/planning/plans/new", "/workout-plans/plan-1"])(
@@ -146,9 +168,21 @@ describe("BottomNav — Task 2.8.2 Mobile Polish & Route-derived State", () => {
       (pathname) => {
         mockPathname = pathname;
         render(<BottomNav isCoach={true} />);
-        expect(screen.getByRole("link", { name: "Meu planejamento" }).getAttribute("aria-current")).toBe("page");
-        expect(screen.getByRole("link", { name: "Modelos de treino" }).getAttribute("aria-current")).toBeNull();
-        expect(screen.getByRole("link", { name: "Meu Treino" }).getAttribute("aria-current")).toBeNull();
+        expect(
+          screen
+            .getByRole("link", { name: "Meu planejamento" })
+            .getAttribute("aria-current"),
+        ).toBe("page");
+        expect(
+          screen
+            .getByRole("link", { name: "Modelos de treino" })
+            .getAttribute("aria-current"),
+        ).toBeNull();
+        expect(
+          screen
+            .getByRole("link", { name: "Meu Treino" })
+            .getAttribute("aria-current"),
+        ).toBeNull();
       },
     );
 
@@ -171,4 +205,3 @@ describe("BottomNav — Task 2.8.2 Mobile Polish & Route-derived State", () => {
     });
   });
 });
-

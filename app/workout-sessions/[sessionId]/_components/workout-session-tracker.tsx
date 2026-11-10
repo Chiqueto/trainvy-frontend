@@ -1,4 +1,5 @@
 "use client";
+import { AiFeature } from "@/app/_components/ai-availability-provider";
 
 import { trackProductEvent } from "@/app/_lib/product-events";
 
@@ -59,13 +60,19 @@ export function WorkoutSessionTracker({
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showPendingSetsModal, setShowPendingSetsModal] = useState(false);
-  const [pendingSetsMessage, setPendingSetsMessage] = useState<string | null>(null);
+  const [pendingSetsMessage, setPendingSetsMessage] = useState<string | null>(
+    null,
+  );
   const [showExerciseSelector, setShowExerciseSelector] = useState(false);
   const [pendingMutationsCount, setPendingMutationsCount] = useState(0);
 
   const [showAiDrawer, setShowAiDrawer] = useState(false);
-  const [focusedExerciseId, setFocusedExerciseId] = useState<string | null>(null);
-  const [focusedExerciseName, setFocusedExerciseName] = useState<string | null>(null);
+  const [focusedExerciseId, setFocusedExerciseId] = useState<string | null>(
+    null,
+  );
+  const [focusedExerciseName, setFocusedExerciseName] = useState<string | null>(
+    null,
+  );
 
   const handleOpenAiDrawer = useCallback(
     (exerciseId?: string, exerciseName?: string) => {
@@ -186,7 +193,9 @@ export function WorkoutSessionTracker({
           order: res.data.order,
           revision: (res.data as any).revision ?? 0,
           plannedExerciseId:
-            (res.data as any).plannedExerciseId ?? res.data.exerciseId ?? exerciseId,
+            (res.data as any).plannedExerciseId ??
+            res.data.exerciseId ??
+            exerciseId,
           plannedExerciseNameSnapshot:
             (res.data as any).plannedExerciseNameSnapshot ??
             res.data.exerciseNameSnapshot,
@@ -275,12 +284,14 @@ export function WorkoutSessionTracker({
                   substitutedAt: res.data.substitutedAt ?? null,
                   hasMedia: res.data.hasMedia ?? ex.hasMedia,
                   alternative1ExerciseId:
-                    res.data.alternative1ExerciseId ?? ex.alternative1ExerciseId,
+                    res.data.alternative1ExerciseId ??
+                    ex.alternative1ExerciseId,
                   alternative1ExerciseNameSnapshot:
                     res.data.alternative1ExerciseNameSnapshot ??
                     ex.alternative1ExerciseNameSnapshot,
                   alternative2ExerciseId:
-                    res.data.alternative2ExerciseId ?? ex.alternative2ExerciseId,
+                    res.data.alternative2ExerciseId ??
+                    ex.alternative2ExerciseId,
                   alternative2ExerciseNameSnapshot:
                     res.data.alternative2ExerciseNameSnapshot ??
                     ex.alternative2ExerciseNameSnapshot,
@@ -295,7 +306,8 @@ export function WorkoutSessionTracker({
   };
 
   const handleOpenFinishModal = () => {
-    if (isReadOnly || isFinishing || isCancelling || pendingMutationsCount > 0) return;
+    if (isReadOnly || isFinishing || isCancelling || pendingMutationsCount > 0)
+      return;
 
     // Dispara blur no elemento atualmente em foco para acionar persistência do draft
     if (
@@ -339,7 +351,8 @@ export function WorkoutSessionTracker({
   };
 
   const handleConfirmCancel = () => {
-    if (isReadOnly || isCancelling || isFinishing || pendingMutationsCount > 0) return;
+    if (isReadOnly || isCancelling || isFinishing || pendingMutationsCount > 0)
+      return;
 
     startCancelTransition(async () => {
       const res = await cancelWorkoutSessionAction(sessionData.id);
@@ -356,8 +369,6 @@ export function WorkoutSessionTracker({
 
   return (
     <div className="flex flex-col gap-5 p-5">
-
-
       {/* Banner de Conclusão / Acesso à Tela Bonitinha */}
       {isReadOnly && (
         <div className="flex items-center justify-between gap-3 rounded-2xl border border-primary/30 bg-gradient-to-r from-primary/15 via-primary/5 to-card p-4 shadow-sm">
@@ -410,16 +421,18 @@ export function WorkoutSessionTracker({
                   Salvando...
                 </span>
               )}
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => handleOpenAiDrawer()}
-                className="rounded-full border-primary/30 bg-primary/10 px-3 py-1 font-heading text-xs font-semibold text-primary hover:bg-primary/20 hover:border-primary/50 cursor-pointer"
-              >
-                <Sparkles className="mr-1.5 size-3.5 text-primary" />
-                <span>Coach IA</span>
-              </Button>
+              <AiFeature capability="chat">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleOpenAiDrawer()}
+                  className="rounded-full border-primary/30 bg-primary/10 px-3 py-1 font-heading text-xs font-semibold text-primary hover:bg-primary/20 hover:border-primary/50 cursor-pointer"
+                >
+                  <Sparkles className="mr-1.5 size-3.5 text-primary" />
+                  <span>Coach IA</span>
+                </Button>
+              </AiFeature>
               <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 font-heading text-xs font-semibold text-primary">
                 <span className="relative flex size-2">
                   <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-75" />
@@ -447,7 +460,8 @@ export function WorkoutSessionTracker({
 
         {isReadOnly && (
           <div className="rounded-lg bg-muted/60 p-2.5 text-xs text-muted-foreground">
-            Esta sessão foi finalizada e os registros estão em modo somente leitura.
+            Esta sessão foi finalizada e os registros estão em modo somente
+            leitura.
           </div>
         )}
       </div>
@@ -478,7 +492,9 @@ export function WorkoutSessionTracker({
           <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border p-8 text-center">
             <Dumbbell className="size-8 text-muted-foreground/60 mb-2" />
             <p className="font-heading text-sm font-semibold text-foreground">
-              {isFreeWorkout ? "Nenhum exercício adicionado" : "Dia de descanso"}
+              {isFreeWorkout
+                ? "Nenhum exercício adicionado"
+                : "Dia de descanso"}
             </p>
             <p className="text-xs text-muted-foreground mt-1">
               {isFreeWorkout
@@ -508,10 +524,7 @@ export function WorkoutSessionTracker({
                 onRemoveExercise={handleRemoveExercise}
                 onSubstituteExercise={handleSubstituteExercise}
                 onOpenAi={() =>
-                  handleOpenAiDrawer(
-                    exercise.id,
-                    exercise.exerciseNameSnapshot,
-                  )
+                  handleOpenAiDrawer(exercise.id, exercise.exerciseNameSnapshot)
                 }
                 onError={(msg) => toast.error(msg)}
                 onMutationStart={handleMutationStart}
@@ -715,7 +728,8 @@ export function WorkoutSessionTracker({
                 Cancelar este treino?
               </h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Esta sessão será descartada e excluída permanentemente. Nenhuma série registrada será salva no histórico.
+                Esta sessão será descartada e excluída permanentemente. Nenhuma
+                série registrada será salva no histórico.
               </p>
             </div>
 
@@ -752,11 +766,13 @@ export function WorkoutSessionTracker({
 
       {/* Botão Flutuante (FAB) com a cara do Coach */}
       {!isReadOnly && !showAiDrawer && (
-        <SessionCoachFloatingButton
-          onClick={() => handleOpenAiDrawer()}
-          coachImage={coachInfo.image}
-          coachName={coachInfo.name}
-        />
+        <AiFeature capability="chat">
+          <SessionCoachFloatingButton
+            onClick={() => handleOpenAiDrawer()}
+            coachImage={coachInfo.image}
+            coachName={coachInfo.name}
+          />
+        </AiFeature>
       )}
 
       {/* Modal de Seleção de Exercícios */}
@@ -767,15 +783,16 @@ export function WorkoutSessionTracker({
       />
 
       {/* Drawer do Assistente de Treino IA */}
-      <SessionAiAssistantDrawer
-        isOpen={showAiDrawer}
-        onClose={() => setShowAiDrawer(false)}
-        sessionId={sessionData.id}
-        selectedExerciseId={focusedExerciseId}
-        selectedExerciseName={focusedExerciseName}
-        onSetsConfirmed={handleSetsConfirmedFromAi}
-      />
+      <AiFeature capability="chat">
+        <SessionAiAssistantDrawer
+          isOpen={showAiDrawer}
+          onClose={() => setShowAiDrawer(false)}
+          sessionId={sessionData.id}
+          selectedExerciseId={focusedExerciseId}
+          selectedExerciseName={focusedExerciseName}
+          onSetsConfirmed={handleSetsConfirmedFromAi}
+        />
+      </AiFeature>
     </div>
   );
 }
-

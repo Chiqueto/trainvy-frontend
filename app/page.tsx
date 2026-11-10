@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Trainvy — Seu próximo nível começa aqui",
     description:
-      "Treinos, evolução, Coach AI e anatomia em movimento. Descubra o Trainvy.",
+      "Treinos, evolução e anatomia em movimento. Descubra o Trainvy.",
     locale: "pt_BR",
     type: "website",
   },
@@ -69,8 +69,11 @@ export default async function Home() {
 
   const today = dayjs();
   const [homeData, trainData, activeSessionResponse] = await Promise.all([
-    getHomeData(today.format("YYYY-MM-DD"), { timezoneOffset: today.utcOffset() }, { cache: "no-store" }),
-
+    getHomeData(
+      today.format("YYYY-MM-DD"),
+      { timezoneOffset: today.utcOffset() },
+      { cache: "no-store" },
+    ),
 
     getUserTrainData({ cache: "no-store" }),
     getActiveWorkoutSession().catch(() => null),

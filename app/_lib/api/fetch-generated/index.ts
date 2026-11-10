@@ -2526,6 +2526,11 @@ export type ConfirmWorkoutImport500 = {
   code: string;
 };
 
+export type ConfirmWorkoutImport503 = {
+  error: string;
+  code: string;
+};
+
 export type GetPlanningOverview200ActiveContext =
   | {
       type: "NONE";
@@ -2700,6 +2705,11 @@ export type GetPlanningOverview500 = {
   code: string;
 };
 
+export type GetPlanningOverview503 = {
+  error: string;
+  code: string;
+};
+
 export type GenerateWorkoutPlanDraftWithAiBody = {
   /**
    * @minLength 2
@@ -2857,6 +2867,11 @@ export type GenerateWorkoutPlanDraftWithAi429 = {
 };
 
 export type GenerateWorkoutPlanDraftWithAi500 = {
+  error: string;
+  code: string;
+};
+
+export type GenerateWorkoutPlanDraftWithAi503 = {
   error: string;
   code: string;
 };
@@ -3293,6 +3308,11 @@ export type GetAiConversations500 = {
   code: string;
 };
 
+export type GetAiConversations503 = {
+  error: string;
+  code: string;
+};
+
 export type PostAiConversationsBody = {
   /** @minLength 1 */
   title?: string;
@@ -3312,6 +3332,11 @@ export type PostAiConversations401 = {
 };
 
 export type PostAiConversations500 = {
+  error: string;
+  code: string;
+};
+
+export type PostAiConversations503 = {
   error: string;
   code: string;
 };
@@ -3345,6 +3370,11 @@ export type GetAiConversationsId500 = {
   code: string;
 };
 
+export type GetAiConversationsId503 = {
+  error: string;
+  code: string;
+};
+
 export type DeleteAiConversationsId200 = {
   success: boolean;
   message: string;
@@ -3361,6 +3391,11 @@ export type DeleteAiConversationsId404 = {
 };
 
 export type DeleteAiConversationsId500 = {
+  error: string;
+  code: string;
+};
+
+export type DeleteAiConversationsId503 = {
   error: string;
   code: string;
 };
@@ -3386,6 +3421,11 @@ export type GetAiConsent500 = {
   code: string;
 };
 
+export type GetAiConsent503 = {
+  error: string;
+  code: string;
+};
+
 export type PatchAiConsentBody = {
   aiTrainingHistoryAccess: boolean;
 };
@@ -3407,6 +3447,11 @@ export type PatchAiConsent404 = {
 };
 
 export type PatchAiConsent500 = {
+  error: string;
+  code: string;
+};
+
+export type PatchAiConsent503 = {
   error: string;
   code: string;
 };
@@ -3439,6 +3484,11 @@ export type GetAiQuota401 = {
 };
 
 export type GetAiQuota500 = {
+  error: string;
+  code: string;
+};
+
+export type GetAiQuota503 = {
   error: string;
   code: string;
 };
@@ -3518,6 +3568,11 @@ export type ListPublicPlans500 = {
   code: string;
 };
 
+export type ListPublicPlans503 = {
+  error: string;
+  code: string;
+};
+
 export type CreateSignupIntentBodyAccountType =
   (typeof CreateSignupIntentBodyAccountType)[keyof typeof CreateSignupIntentBodyAccountType];
 
@@ -3565,6 +3620,11 @@ export type CreateSignupIntent500 = {
   code: string;
 };
 
+export type CreateSignupIntent503 = {
+  error: string;
+  code: string;
+};
+
 export type CompleteSignupBody = {
   /** @pattern ^[A-Za-z0-9_-]{43}$ */
   token: string;
@@ -3604,6 +3664,11 @@ export type CompleteSignup409 = {
 };
 
 export type CompleteSignup500 = {
+  error: string;
+  code: string;
+};
+
+export type CompleteSignup503 = {
   error: string;
   code: string;
 };
@@ -3727,6 +3792,11 @@ export type GetCommercialContext409 = {
 };
 
 export type GetCommercialContext500 = {
+  error: string;
+  code: string;
+};
+
+export type GetCommercialContext503 = {
   error: string;
   code: string;
 };
@@ -5960,6 +6030,91 @@ export type ListAdminFeedback500 = {
   code: string;
 };
 
+export type GetPublicAiAvailability200 = {
+  professionalAiEnabled: boolean;
+  athleteAiEnabled: boolean;
+};
+
+export type GetAdminAiAvailability200 = {
+  professionalAiEnabled: boolean;
+  athleteAiEnabled: boolean;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  revision: number;
+  /**
+   * @nullable
+   * @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+   */
+  updatedAt: string | null;
+};
+
+export type GetAdminAiAvailability401 = {
+  error: string;
+  code: string;
+};
+
+export type GetAdminAiAvailability403 = {
+  error: string;
+  code: string;
+};
+
+export type GetAdminAiAvailability409 = {
+  error: string;
+  code: string;
+};
+
+export type GetAdminAiAvailability500 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateAdminAiAvailabilityBody = {
+  professionalAiEnabled: boolean;
+  athleteAiEnabled: boolean;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  revision: number;
+};
+
+export type UpdateAdminAiAvailability200 = {
+  professionalAiEnabled: boolean;
+  athleteAiEnabled: boolean;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  revision: number;
+  /**
+   * @nullable
+   * @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+   */
+  updatedAt: string | null;
+};
+
+export type UpdateAdminAiAvailability401 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateAdminAiAvailability403 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateAdminAiAvailability409 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateAdminAiAvailability500 = {
+  error: string;
+  code: string;
+};
+
 export type CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay =
   (typeof CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay)[keyof typeof CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay];
 
@@ -6268,6 +6423,11 @@ export type CreateWorkoutPrescriptionDraft429 = {
 };
 
 export type CreateWorkoutPrescriptionDraft500 = {
+  error: string;
+  code: string;
+};
+
+export type CreateWorkoutPrescriptionDraft503 = {
   error: string;
   code: string;
 };
@@ -6588,6 +6748,11 @@ export type UpdateWorkoutPrescriptionDraft500 = {
   code: string;
 };
 
+export type UpdateWorkoutPrescriptionDraft503 = {
+  error: string;
+  code: string;
+};
+
 export type GetCoachPrescriptionDetails200Status =
   (typeof GetCoachPrescriptionDetails200Status)[keyof typeof GetCoachPrescriptionDetails200Status];
 
@@ -6767,6 +6932,11 @@ export type GetCoachPrescriptionDetails429 = {
 };
 
 export type GetCoachPrescriptionDetails500 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachPrescriptionDetails503 = {
   error: string;
   code: string;
 };
@@ -6962,6 +7132,11 @@ export type SendWorkoutPrescription500 = {
   code: string;
 };
 
+export type SendWorkoutPrescription503 = {
+  error: string;
+  code: string;
+};
+
 export type CancelWorkoutPrescription200Status =
   (typeof CancelWorkoutPrescription200Status)[keyof typeof CancelWorkoutPrescription200Status];
 
@@ -7140,6 +7315,11 @@ export type CancelWorkoutPrescription429 = {
 };
 
 export type CancelWorkoutPrescription500 = {
+  error: string;
+  code: string;
+};
+
+export type CancelWorkoutPrescription503 = {
   error: string;
   code: string;
 };
@@ -7328,6 +7508,11 @@ export type ListCoachAthletePrescriptions500 = {
   code: string;
 };
 
+export type ListCoachAthletePrescriptions503 = {
+  error: string;
+  code: string;
+};
+
 export type ListAthletePrescriptions200ItemStatus =
   (typeof ListAthletePrescriptions200ItemStatus)[keyof typeof ListAthletePrescriptions200ItemStatus];
 
@@ -7511,6 +7696,11 @@ export type ListAthletePrescriptions500 = {
   code: string;
 };
 
+export type ListAthletePrescriptions503 = {
+  error: string;
+  code: string;
+};
+
 export type GetAthletePrescriptionDetails200Status =
   (typeof GetAthletePrescriptionDetails200Status)[keyof typeof GetAthletePrescriptionDetails200Status];
 
@@ -7690,6 +7880,11 @@ export type GetAthletePrescriptionDetails429 = {
 };
 
 export type GetAthletePrescriptionDetails500 = {
+  error: string;
+  code: string;
+};
+
+export type GetAthletePrescriptionDetails503 = {
   error: string;
   code: string;
 };
@@ -7885,6 +8080,11 @@ export type AcceptWorkoutPrescription500 = {
   code: string;
 };
 
+export type AcceptWorkoutPrescription503 = {
+  error: string;
+  code: string;
+};
+
 export type DeclineWorkoutPrescription200Status =
   (typeof DeclineWorkoutPrescription200Status)[keyof typeof DeclineWorkoutPrescription200Status];
 
@@ -8067,6 +8267,11 @@ export type DeclineWorkoutPrescription500 = {
   code: string;
 };
 
+export type DeclineWorkoutPrescription503 = {
+  error: string;
+  code: string;
+};
+
 export type GenerateCoachPrescriptionDraftWithAiBody = {
   athleteId: string;
   /** @minLength 2 */
@@ -8192,6 +8397,11 @@ export type GenerateCoachPrescriptionDraftWithAi500 = {
   code: string;
 };
 
+export type GenerateCoachPrescriptionDraftWithAi503 = {
+  error: string;
+  code: string;
+};
+
 /**
  * @nullable
  */
@@ -8249,6 +8459,11 @@ export type GetAthleteCoachProgressSharing429 = {
 };
 
 export type GetAthleteCoachProgressSharing500 = {
+  error: string;
+  code: string;
+};
+
+export type GetAthleteCoachProgressSharing503 = {
   error: string;
   code: string;
 };
@@ -8315,6 +8530,11 @@ export type UpdateAthleteCoachProgressSharing429 = {
 };
 
 export type UpdateAthleteCoachProgressSharing500 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateAthleteCoachProgressSharing503 = {
   error: string;
   code: string;
 };
@@ -8486,6 +8706,11 @@ export type GetCoachAthleteProgressOverview500 = {
   code: string;
 };
 
+export type GetCoachAthleteProgressOverview503 = {
+  error: string;
+  code: string;
+};
+
 export type ListCoachAthleteProgressSessionsParams = {
   cursor?: string;
   /**
@@ -8602,6 +8827,11 @@ export type ListCoachAthleteProgressSessions429 = {
 };
 
 export type ListCoachAthleteProgressSessions500 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachAthleteProgressSessions503 = {
   error: string;
   code: string;
 };
@@ -8890,6 +9120,11 @@ export type GetCoachAthleteProgressSessionDetail500 = {
   code: string;
 };
 
+export type GetCoachAthleteProgressSessionDetail503 = {
+  error: string;
+  code: string;
+};
+
 export type ListCoachAthleteProgressExercisesParams = {
   q?: string;
   onlyWithHistory?: ListCoachAthleteProgressExercisesOnlyWithHistory;
@@ -8977,6 +9212,11 @@ export type ListCoachAthleteProgressExercises429 = {
 };
 
 export type ListCoachAthleteProgressExercises500 = {
+  error: string;
+  code: string;
+};
+
+export type ListCoachAthleteProgressExercises503 = {
   error: string;
   code: string;
 };
@@ -9222,6 +9462,11 @@ export type GetCoachAthleteProgressExerciseEvolution500 = {
   code: string;
 };
 
+export type GetCoachAthleteProgressExerciseEvolution503 = {
+  error: string;
+  code: string;
+};
+
 export type GetCoachAthleteProgressInsightsParams = {
   tz?: string;
   /**
@@ -9288,6 +9533,11 @@ export type GetCoachAthleteProgressInsights429 = {
 };
 
 export type GetCoachAthleteProgressInsights500 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachAthleteProgressInsights503 = {
   error: string;
   code: string;
 };
@@ -12175,6 +12425,7 @@ export type ListAdminAuditAction =
   (typeof ListAdminAuditAction)[keyof typeof ListAdminAuditAction];
 
 export const ListAdminAuditAction = {
+  AI_AVAILABILITY_UPDATED: "AI_AVAILABILITY_UPDATED",
   COMPLIANCE_UPDATED: "COMPLIANCE_UPDATED",
   PROFESSIONAL_VERIFICATION_POLICY_UPDATED:
     "PROFESSIONAL_VERIFICATION_POLICY_UPDATED",
@@ -12202,6 +12453,7 @@ export type ListAdminAudit200ItemsItemAction =
   (typeof ListAdminAudit200ItemsItemAction)[keyof typeof ListAdminAudit200ItemsItemAction];
 
 export const ListAdminAudit200ItemsItemAction = {
+  AI_AVAILABILITY_UPDATED: "AI_AVAILABILITY_UPDATED",
   COMPLIANCE_UPDATED: "COMPLIANCE_UPDATED",
   PROFESSIONAL_VERIFICATION_POLICY_UPDATED:
     "PROFESSIONAL_VERIFICATION_POLICY_UPDATED",
@@ -19292,6 +19544,11 @@ export type confirmWorkoutImportResponse500 = {
   status: 500;
 };
 
+export type confirmWorkoutImportResponse503 = {
+  data: ConfirmWorkoutImport503;
+  status: 503;
+};
+
 export type confirmWorkoutImportResponseSuccess =
   confirmWorkoutImportResponse201 & {
     headers: Headers;
@@ -19303,6 +19560,7 @@ export type confirmWorkoutImportResponseError = (
   | confirmWorkoutImportResponse404
   | confirmWorkoutImportResponse409
   | confirmWorkoutImportResponse500
+  | confirmWorkoutImportResponse503
 ) & {
   headers: Headers;
 };
@@ -19358,6 +19616,11 @@ export type getPlanningOverviewResponse500 = {
   status: 500;
 };
 
+export type getPlanningOverviewResponse503 = {
+  data: GetPlanningOverview503;
+  status: 503;
+};
+
 export type getPlanningOverviewResponseSuccess =
   getPlanningOverviewResponse200 & {
     headers: Headers;
@@ -19367,6 +19630,7 @@ export type getPlanningOverviewResponseError = (
   | getPlanningOverviewResponse404
   | getPlanningOverviewResponse409
   | getPlanningOverviewResponse500
+  | getPlanningOverviewResponse503
 ) & {
   headers: Headers;
 };
@@ -19431,6 +19695,11 @@ export type generateWorkoutPlanDraftWithAiResponse500 = {
   status: 500;
 };
 
+export type generateWorkoutPlanDraftWithAiResponse503 = {
+  data: GenerateWorkoutPlanDraftWithAi503;
+  status: 503;
+};
+
 export type generateWorkoutPlanDraftWithAiResponseSuccess =
   generateWorkoutPlanDraftWithAiResponse200 & {
     headers: Headers;
@@ -19443,6 +19712,7 @@ export type generateWorkoutPlanDraftWithAiResponseError = (
   | generateWorkoutPlanDraftWithAiResponse409
   | generateWorkoutPlanDraftWithAiResponse429
   | generateWorkoutPlanDraftWithAiResponse500
+  | generateWorkoutPlanDraftWithAiResponse503
 ) & {
   headers: Headers;
 };
@@ -19879,6 +20149,11 @@ export type getAiConversationsResponse500 = {
   status: 500;
 };
 
+export type getAiConversationsResponse503 = {
+  data: GetAiConversations503;
+  status: 503;
+};
+
 export type getAiConversationsResponseSuccess =
   getAiConversationsResponse200 & {
     headers: Headers;
@@ -19887,6 +20162,7 @@ export type getAiConversationsResponseError = (
   | getAiConversationsResponse401
   | getAiConversationsResponse404
   | getAiConversationsResponse500
+  | getAiConversationsResponse503
 ) & {
   headers: Headers;
 };
@@ -19942,6 +20218,11 @@ export type postAiConversationsResponse500 = {
   status: 500;
 };
 
+export type postAiConversationsResponse503 = {
+  data: PostAiConversations503;
+  status: 503;
+};
+
 export type postAiConversationsResponseSuccess =
   postAiConversationsResponse201 & {
     headers: Headers;
@@ -19949,6 +20230,7 @@ export type postAiConversationsResponseSuccess =
 export type postAiConversationsResponseError = (
   | postAiConversationsResponse401
   | postAiConversationsResponse500
+  | postAiConversationsResponse503
 ) & {
   headers: Headers;
 };
@@ -19996,6 +20278,11 @@ export type getAiConversationsIdResponse500 = {
   status: 500;
 };
 
+export type getAiConversationsIdResponse503 = {
+  data: GetAiConversationsId503;
+  status: 503;
+};
+
 export type getAiConversationsIdResponseSuccess =
   getAiConversationsIdResponse200 & {
     headers: Headers;
@@ -20004,6 +20291,7 @@ export type getAiConversationsIdResponseError = (
   | getAiConversationsIdResponse401
   | getAiConversationsIdResponse404
   | getAiConversationsIdResponse500
+  | getAiConversationsIdResponse503
 ) & {
   headers: Headers;
 };
@@ -20052,6 +20340,11 @@ export type deleteAiConversationsIdResponse500 = {
   status: 500;
 };
 
+export type deleteAiConversationsIdResponse503 = {
+  data: DeleteAiConversationsId503;
+  status: 503;
+};
+
 export type deleteAiConversationsIdResponseSuccess =
   deleteAiConversationsIdResponse200 & {
     headers: Headers;
@@ -20060,6 +20353,7 @@ export type deleteAiConversationsIdResponseError = (
   | deleteAiConversationsIdResponse401
   | deleteAiConversationsIdResponse404
   | deleteAiConversationsIdResponse500
+  | deleteAiConversationsIdResponse503
 ) & {
   headers: Headers;
 };
@@ -20108,6 +20402,11 @@ export type getAiConsentResponse500 = {
   status: 500;
 };
 
+export type getAiConsentResponse503 = {
+  data: GetAiConsent503;
+  status: 503;
+};
+
 export type getAiConsentResponseSuccess = getAiConsentResponse200 & {
   headers: Headers;
 };
@@ -20115,6 +20414,7 @@ export type getAiConsentResponseError = (
   | getAiConsentResponse401
   | getAiConsentResponse404
   | getAiConsentResponse500
+  | getAiConsentResponse503
 ) & {
   headers: Headers;
 };
@@ -20159,6 +20459,11 @@ export type patchAiConsentResponse500 = {
   status: 500;
 };
 
+export type patchAiConsentResponse503 = {
+  data: PatchAiConsent503;
+  status: 503;
+};
+
 export type patchAiConsentResponseSuccess = patchAiConsentResponse200 & {
   headers: Headers;
 };
@@ -20166,6 +20471,7 @@ export type patchAiConsentResponseError = (
   | patchAiConsentResponse401
   | patchAiConsentResponse404
   | patchAiConsentResponse500
+  | patchAiConsentResponse503
 ) & {
   headers: Headers;
 };
@@ -20208,12 +20514,18 @@ export type getAiQuotaResponse500 = {
   status: 500;
 };
 
+export type getAiQuotaResponse503 = {
+  data: GetAiQuota503;
+  status: 503;
+};
+
 export type getAiQuotaResponseSuccess = getAiQuotaResponse200 & {
   headers: Headers;
 };
 export type getAiQuotaResponseError = (
   | getAiQuotaResponse401
   | getAiQuotaResponse500
+  | getAiQuotaResponse503
 ) & {
   headers: Headers;
 };
@@ -20265,6 +20577,11 @@ export type listPublicPlansResponse500 = {
   status: 500;
 };
 
+export type listPublicPlansResponse503 = {
+  data: ListPublicPlans503;
+  status: 503;
+};
+
 export type listPublicPlansResponseSuccess = listPublicPlansResponse200 & {
   headers: Headers;
 };
@@ -20274,6 +20591,7 @@ export type listPublicPlansResponseError = (
   | listPublicPlansResponse404
   | listPublicPlansResponse409
   | listPublicPlansResponse500
+  | listPublicPlansResponse503
 ) & {
   headers: Headers;
 };
@@ -20338,6 +20656,11 @@ export type createSignupIntentResponse500 = {
   status: 500;
 };
 
+export type createSignupIntentResponse503 = {
+  data: CreateSignupIntent503;
+  status: 503;
+};
+
 export type createSignupIntentResponseSuccess =
   createSignupIntentResponse201 & {
     headers: Headers;
@@ -20348,6 +20671,7 @@ export type createSignupIntentResponseError = (
   | createSignupIntentResponse404
   | createSignupIntentResponse409
   | createSignupIntentResponse500
+  | createSignupIntentResponse503
 ) & {
   headers: Headers;
 };
@@ -20402,6 +20726,11 @@ export type completeSignupResponse500 = {
   status: 500;
 };
 
+export type completeSignupResponse503 = {
+  data: CompleteSignup503;
+  status: 503;
+};
+
 export type completeSignupResponseSuccess = completeSignupResponse200 & {
   headers: Headers;
 };
@@ -20411,6 +20740,7 @@ export type completeSignupResponseError = (
   | completeSignupResponse404
   | completeSignupResponse409
   | completeSignupResponse500
+  | completeSignupResponse503
 ) & {
   headers: Headers;
 };
@@ -20465,6 +20795,11 @@ export type getCommercialContextResponse500 = {
   status: 500;
 };
 
+export type getCommercialContextResponse503 = {
+  data: GetCommercialContext503;
+  status: 503;
+};
+
 export type getCommercialContextResponseSuccess =
   getCommercialContextResponse200 & {
     headers: Headers;
@@ -20475,6 +20810,7 @@ export type getCommercialContextResponseError = (
   | getCommercialContextResponse404
   | getCommercialContextResponse409
   | getCommercialContextResponse500
+  | getCommercialContextResponse503
 ) & {
   headers: Headers;
 };
@@ -23051,6 +23387,153 @@ export const listAdminFeedback = async (
   );
 };
 
+export type getPublicAiAvailabilityResponse200 = {
+  data: GetPublicAiAvailability200;
+  status: 200;
+};
+
+export type getPublicAiAvailabilityResponseSuccess =
+  getPublicAiAvailabilityResponse200 & {
+    headers: Headers;
+  };
+export type getPublicAiAvailabilityResponse =
+  getPublicAiAvailabilityResponseSuccess;
+
+export const getGetPublicAiAvailabilityUrl = () => {
+  return `/features/ai`;
+};
+
+export const getPublicAiAvailability = async (
+  options?: RequestInit,
+): Promise<getPublicAiAvailabilityResponse> => {
+  return customFetch<getPublicAiAvailabilityResponse>(
+    getGetPublicAiAvailabilityUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export type getAdminAiAvailabilityResponse200 = {
+  data: GetAdminAiAvailability200;
+  status: 200;
+};
+
+export type getAdminAiAvailabilityResponse401 = {
+  data: GetAdminAiAvailability401;
+  status: 401;
+};
+
+export type getAdminAiAvailabilityResponse403 = {
+  data: GetAdminAiAvailability403;
+  status: 403;
+};
+
+export type getAdminAiAvailabilityResponse409 = {
+  data: GetAdminAiAvailability409;
+  status: 409;
+};
+
+export type getAdminAiAvailabilityResponse500 = {
+  data: GetAdminAiAvailability500;
+  status: 500;
+};
+
+export type getAdminAiAvailabilityResponseSuccess =
+  getAdminAiAvailabilityResponse200 & {
+    headers: Headers;
+  };
+export type getAdminAiAvailabilityResponseError = (
+  | getAdminAiAvailabilityResponse401
+  | getAdminAiAvailabilityResponse403
+  | getAdminAiAvailabilityResponse409
+  | getAdminAiAvailabilityResponse500
+) & {
+  headers: Headers;
+};
+
+export type getAdminAiAvailabilityResponse =
+  | getAdminAiAvailabilityResponseSuccess
+  | getAdminAiAvailabilityResponseError;
+
+export const getGetAdminAiAvailabilityUrl = () => {
+  return `/admin/ai-availability`;
+};
+
+export const getAdminAiAvailability = async (
+  options?: RequestInit,
+): Promise<getAdminAiAvailabilityResponse> => {
+  return customFetch<getAdminAiAvailabilityResponse>(
+    getGetAdminAiAvailabilityUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export type updateAdminAiAvailabilityResponse200 = {
+  data: UpdateAdminAiAvailability200;
+  status: 200;
+};
+
+export type updateAdminAiAvailabilityResponse401 = {
+  data: UpdateAdminAiAvailability401;
+  status: 401;
+};
+
+export type updateAdminAiAvailabilityResponse403 = {
+  data: UpdateAdminAiAvailability403;
+  status: 403;
+};
+
+export type updateAdminAiAvailabilityResponse409 = {
+  data: UpdateAdminAiAvailability409;
+  status: 409;
+};
+
+export type updateAdminAiAvailabilityResponse500 = {
+  data: UpdateAdminAiAvailability500;
+  status: 500;
+};
+
+export type updateAdminAiAvailabilityResponseSuccess =
+  updateAdminAiAvailabilityResponse200 & {
+    headers: Headers;
+  };
+export type updateAdminAiAvailabilityResponseError = (
+  | updateAdminAiAvailabilityResponse401
+  | updateAdminAiAvailabilityResponse403
+  | updateAdminAiAvailabilityResponse409
+  | updateAdminAiAvailabilityResponse500
+) & {
+  headers: Headers;
+};
+
+export type updateAdminAiAvailabilityResponse =
+  | updateAdminAiAvailabilityResponseSuccess
+  | updateAdminAiAvailabilityResponseError;
+
+export const getUpdateAdminAiAvailabilityUrl = () => {
+  return `/admin/ai-availability`;
+};
+
+export const updateAdminAiAvailability = async (
+  updateAdminAiAvailabilityBody: UpdateAdminAiAvailabilityBody,
+  options?: RequestInit,
+): Promise<updateAdminAiAvailabilityResponse> => {
+  return customFetch<updateAdminAiAvailabilityResponse>(
+    getUpdateAdminAiAvailabilityUrl(),
+    {
+      ...options,
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(updateAdminAiAvailabilityBody),
+    },
+  );
+};
+
 /**
  * @summary Criar rascunho de prescrição de treino para um aluno
  */
@@ -23094,6 +23577,11 @@ export type createWorkoutPrescriptionDraftResponse500 = {
   status: 500;
 };
 
+export type createWorkoutPrescriptionDraftResponse503 = {
+  data: CreateWorkoutPrescriptionDraft503;
+  status: 503;
+};
+
 export type createWorkoutPrescriptionDraftResponseSuccess =
   createWorkoutPrescriptionDraftResponse201 & {
     headers: Headers;
@@ -23106,6 +23594,7 @@ export type createWorkoutPrescriptionDraftResponseError = (
   | createWorkoutPrescriptionDraftResponse409
   | createWorkoutPrescriptionDraftResponse429
   | createWorkoutPrescriptionDraftResponse500
+  | createWorkoutPrescriptionDraftResponse503
 ) & {
   headers: Headers;
 };
@@ -23176,6 +23665,11 @@ export type updateWorkoutPrescriptionDraftResponse500 = {
   status: 500;
 };
 
+export type updateWorkoutPrescriptionDraftResponse503 = {
+  data: UpdateWorkoutPrescriptionDraft503;
+  status: 503;
+};
+
 export type updateWorkoutPrescriptionDraftResponseSuccess =
   updateWorkoutPrescriptionDraftResponse200 & {
     headers: Headers;
@@ -23188,6 +23682,7 @@ export type updateWorkoutPrescriptionDraftResponseError = (
   | updateWorkoutPrescriptionDraftResponse409
   | updateWorkoutPrescriptionDraftResponse429
   | updateWorkoutPrescriptionDraftResponse500
+  | updateWorkoutPrescriptionDraftResponse503
 ) & {
   headers: Headers;
 };
@@ -23259,6 +23754,11 @@ export type getCoachPrescriptionDetailsResponse500 = {
   status: 500;
 };
 
+export type getCoachPrescriptionDetailsResponse503 = {
+  data: GetCoachPrescriptionDetails503;
+  status: 503;
+};
+
 export type getCoachPrescriptionDetailsResponseSuccess =
   getCoachPrescriptionDetailsResponse200 & {
     headers: Headers;
@@ -23271,6 +23771,7 @@ export type getCoachPrescriptionDetailsResponseError = (
   | getCoachPrescriptionDetailsResponse409
   | getCoachPrescriptionDetailsResponse429
   | getCoachPrescriptionDetailsResponse500
+  | getCoachPrescriptionDetailsResponse503
 ) & {
   headers: Headers;
 };
@@ -23339,6 +23840,11 @@ export type sendWorkoutPrescriptionResponse500 = {
   status: 500;
 };
 
+export type sendWorkoutPrescriptionResponse503 = {
+  data: SendWorkoutPrescription503;
+  status: 503;
+};
+
 export type sendWorkoutPrescriptionResponseSuccess =
   sendWorkoutPrescriptionResponse200 & {
     headers: Headers;
@@ -23351,6 +23857,7 @@ export type sendWorkoutPrescriptionResponseError = (
   | sendWorkoutPrescriptionResponse409
   | sendWorkoutPrescriptionResponse429
   | sendWorkoutPrescriptionResponse500
+  | sendWorkoutPrescriptionResponse503
 ) & {
   headers: Headers;
 };
@@ -23422,6 +23929,11 @@ export type cancelWorkoutPrescriptionResponse500 = {
   status: 500;
 };
 
+export type cancelWorkoutPrescriptionResponse503 = {
+  data: CancelWorkoutPrescription503;
+  status: 503;
+};
+
 export type cancelWorkoutPrescriptionResponseSuccess =
   cancelWorkoutPrescriptionResponse200 & {
     headers: Headers;
@@ -23434,6 +23946,7 @@ export type cancelWorkoutPrescriptionResponseError = (
   | cancelWorkoutPrescriptionResponse409
   | cancelWorkoutPrescriptionResponse429
   | cancelWorkoutPrescriptionResponse500
+  | cancelWorkoutPrescriptionResponse503
 ) & {
   headers: Headers;
 };
@@ -23502,6 +24015,11 @@ export type listCoachAthletePrescriptionsResponse500 = {
   status: 500;
 };
 
+export type listCoachAthletePrescriptionsResponse503 = {
+  data: ListCoachAthletePrescriptions503;
+  status: 503;
+};
+
 export type listCoachAthletePrescriptionsResponseSuccess =
   listCoachAthletePrescriptionsResponse200 & {
     headers: Headers;
@@ -23514,6 +24032,7 @@ export type listCoachAthletePrescriptionsResponseError = (
   | listCoachAthletePrescriptionsResponse409
   | listCoachAthletePrescriptionsResponse429
   | listCoachAthletePrescriptionsResponse500
+  | listCoachAthletePrescriptionsResponse503
 ) & {
   headers: Headers;
 };
@@ -23582,6 +24101,11 @@ export type listAthletePrescriptionsResponse500 = {
   status: 500;
 };
 
+export type listAthletePrescriptionsResponse503 = {
+  data: ListAthletePrescriptions503;
+  status: 503;
+};
+
 export type listAthletePrescriptionsResponseSuccess =
   listAthletePrescriptionsResponse200 & {
     headers: Headers;
@@ -23594,6 +24118,7 @@ export type listAthletePrescriptionsResponseError = (
   | listAthletePrescriptionsResponse409
   | listAthletePrescriptionsResponse429
   | listAthletePrescriptionsResponse500
+  | listAthletePrescriptionsResponse503
 ) & {
   headers: Headers;
 };
@@ -23661,6 +24186,11 @@ export type getAthletePrescriptionDetailsResponse500 = {
   status: 500;
 };
 
+export type getAthletePrescriptionDetailsResponse503 = {
+  data: GetAthletePrescriptionDetails503;
+  status: 503;
+};
+
 export type getAthletePrescriptionDetailsResponseSuccess =
   getAthletePrescriptionDetailsResponse200 & {
     headers: Headers;
@@ -23673,6 +24203,7 @@ export type getAthletePrescriptionDetailsResponseError = (
   | getAthletePrescriptionDetailsResponse409
   | getAthletePrescriptionDetailsResponse429
   | getAthletePrescriptionDetailsResponse500
+  | getAthletePrescriptionDetailsResponse503
 ) & {
   headers: Headers;
 };
@@ -23741,6 +24272,11 @@ export type acceptWorkoutPrescriptionResponse500 = {
   status: 500;
 };
 
+export type acceptWorkoutPrescriptionResponse503 = {
+  data: AcceptWorkoutPrescription503;
+  status: 503;
+};
+
 export type acceptWorkoutPrescriptionResponseSuccess =
   acceptWorkoutPrescriptionResponse200 & {
     headers: Headers;
@@ -23753,6 +24289,7 @@ export type acceptWorkoutPrescriptionResponseError = (
   | acceptWorkoutPrescriptionResponse409
   | acceptWorkoutPrescriptionResponse429
   | acceptWorkoutPrescriptionResponse500
+  | acceptWorkoutPrescriptionResponse503
 ) & {
   headers: Headers;
 };
@@ -23821,6 +24358,11 @@ export type declineWorkoutPrescriptionResponse500 = {
   status: 500;
 };
 
+export type declineWorkoutPrescriptionResponse503 = {
+  data: DeclineWorkoutPrescription503;
+  status: 503;
+};
+
 export type declineWorkoutPrescriptionResponseSuccess =
   declineWorkoutPrescriptionResponse200 & {
     headers: Headers;
@@ -23833,6 +24375,7 @@ export type declineWorkoutPrescriptionResponseError = (
   | declineWorkoutPrescriptionResponse409
   | declineWorkoutPrescriptionResponse429
   | declineWorkoutPrescriptionResponse500
+  | declineWorkoutPrescriptionResponse503
 ) & {
   headers: Headers;
 };
@@ -23901,6 +24444,11 @@ export type generateCoachPrescriptionDraftWithAiResponse500 = {
   status: 500;
 };
 
+export type generateCoachPrescriptionDraftWithAiResponse503 = {
+  data: GenerateCoachPrescriptionDraftWithAi503;
+  status: 503;
+};
+
 export type generateCoachPrescriptionDraftWithAiResponseSuccess =
   generateCoachPrescriptionDraftWithAiResponse200 & {
     headers: Headers;
@@ -23913,6 +24461,7 @@ export type generateCoachPrescriptionDraftWithAiResponseError = (
   | generateCoachPrescriptionDraftWithAiResponse409
   | generateCoachPrescriptionDraftWithAiResponse429
   | generateCoachPrescriptionDraftWithAiResponse500
+  | generateCoachPrescriptionDraftWithAiResponse503
 ) & {
   headers: Headers;
 };
@@ -23978,6 +24527,11 @@ export type getAthleteCoachProgressSharingResponse500 = {
   status: 500;
 };
 
+export type getAthleteCoachProgressSharingResponse503 = {
+  data: GetAthleteCoachProgressSharing503;
+  status: 503;
+};
+
 export type getAthleteCoachProgressSharingResponseSuccess =
   getAthleteCoachProgressSharingResponse200 & {
     headers: Headers;
@@ -23989,6 +24543,7 @@ export type getAthleteCoachProgressSharingResponseError = (
   | getAthleteCoachProgressSharingResponse404
   | getAthleteCoachProgressSharingResponse429
   | getAthleteCoachProgressSharingResponse500
+  | getAthleteCoachProgressSharingResponse503
 ) & {
   headers: Headers;
 };
@@ -24051,6 +24606,11 @@ export type updateAthleteCoachProgressSharingResponse500 = {
   status: 500;
 };
 
+export type updateAthleteCoachProgressSharingResponse503 = {
+  data: UpdateAthleteCoachProgressSharing503;
+  status: 503;
+};
+
 export type updateAthleteCoachProgressSharingResponseSuccess =
   updateAthleteCoachProgressSharingResponse200 & {
     headers: Headers;
@@ -24062,6 +24622,7 @@ export type updateAthleteCoachProgressSharingResponseError = (
   | updateAthleteCoachProgressSharingResponse404
   | updateAthleteCoachProgressSharingResponse429
   | updateAthleteCoachProgressSharingResponse500
+  | updateAthleteCoachProgressSharingResponse503
 ) & {
   headers: Headers;
 };
@@ -24127,6 +24688,11 @@ export type getCoachAthleteProgressOverviewResponse500 = {
   status: 500;
 };
 
+export type getCoachAthleteProgressOverviewResponse503 = {
+  data: GetCoachAthleteProgressOverview503;
+  status: 503;
+};
+
 export type getCoachAthleteProgressOverviewResponseSuccess =
   getCoachAthleteProgressOverviewResponse200 & {
     headers: Headers;
@@ -24138,6 +24704,7 @@ export type getCoachAthleteProgressOverviewResponseError = (
   | getCoachAthleteProgressOverviewResponse404
   | getCoachAthleteProgressOverviewResponse429
   | getCoachAthleteProgressOverviewResponse500
+  | getCoachAthleteProgressOverviewResponse503
 ) & {
   headers: Headers;
 };
@@ -24217,6 +24784,11 @@ export type listCoachAthleteProgressSessionsResponse500 = {
   status: 500;
 };
 
+export type listCoachAthleteProgressSessionsResponse503 = {
+  data: ListCoachAthleteProgressSessions503;
+  status: 503;
+};
+
 export type listCoachAthleteProgressSessionsResponseSuccess =
   listCoachAthleteProgressSessionsResponse200 & {
     headers: Headers;
@@ -24228,6 +24800,7 @@ export type listCoachAthleteProgressSessionsResponseError = (
   | listCoachAthleteProgressSessionsResponse404
   | listCoachAthleteProgressSessionsResponse429
   | listCoachAthleteProgressSessionsResponse500
+  | listCoachAthleteProgressSessionsResponse503
 ) & {
   headers: Headers;
 };
@@ -24307,6 +24880,11 @@ export type getCoachAthleteProgressSessionDetailResponse500 = {
   status: 500;
 };
 
+export type getCoachAthleteProgressSessionDetailResponse503 = {
+  data: GetCoachAthleteProgressSessionDetail503;
+  status: 503;
+};
+
 export type getCoachAthleteProgressSessionDetailResponseSuccess =
   getCoachAthleteProgressSessionDetailResponse200 & {
     headers: Headers;
@@ -24318,6 +24896,7 @@ export type getCoachAthleteProgressSessionDetailResponseError = (
   | getCoachAthleteProgressSessionDetailResponse404
   | getCoachAthleteProgressSessionDetailResponse429
   | getCoachAthleteProgressSessionDetailResponse500
+  | getCoachAthleteProgressSessionDetailResponse503
 ) & {
   headers: Headers;
 };
@@ -24385,6 +24964,11 @@ export type listCoachAthleteProgressExercisesResponse500 = {
   status: 500;
 };
 
+export type listCoachAthleteProgressExercisesResponse503 = {
+  data: ListCoachAthleteProgressExercises503;
+  status: 503;
+};
+
 export type listCoachAthleteProgressExercisesResponseSuccess =
   listCoachAthleteProgressExercisesResponse200 & {
     headers: Headers;
@@ -24396,6 +24980,7 @@ export type listCoachAthleteProgressExercisesResponseError = (
   | listCoachAthleteProgressExercisesResponse404
   | listCoachAthleteProgressExercisesResponse429
   | listCoachAthleteProgressExercisesResponse500
+  | listCoachAthleteProgressExercisesResponse503
 ) & {
   headers: Headers;
 };
@@ -24475,6 +25060,11 @@ export type getCoachAthleteProgressExerciseEvolutionResponse500 = {
   status: 500;
 };
 
+export type getCoachAthleteProgressExerciseEvolutionResponse503 = {
+  data: GetCoachAthleteProgressExerciseEvolution503;
+  status: 503;
+};
+
 export type getCoachAthleteProgressExerciseEvolutionResponseSuccess =
   getCoachAthleteProgressExerciseEvolutionResponse200 & {
     headers: Headers;
@@ -24486,6 +25076,7 @@ export type getCoachAthleteProgressExerciseEvolutionResponseError = (
   | getCoachAthleteProgressExerciseEvolutionResponse404
   | getCoachAthleteProgressExerciseEvolutionResponse429
   | getCoachAthleteProgressExerciseEvolutionResponse500
+  | getCoachAthleteProgressExerciseEvolutionResponse503
 ) & {
   headers: Headers;
 };
@@ -24571,6 +25162,11 @@ export type getCoachAthleteProgressInsightsResponse500 = {
   status: 500;
 };
 
+export type getCoachAthleteProgressInsightsResponse503 = {
+  data: GetCoachAthleteProgressInsights503;
+  status: 503;
+};
+
 export type getCoachAthleteProgressInsightsResponseSuccess =
   getCoachAthleteProgressInsightsResponse200 & {
     headers: Headers;
@@ -24582,6 +25178,7 @@ export type getCoachAthleteProgressInsightsResponseError = (
   | getCoachAthleteProgressInsightsResponse404
   | getCoachAthleteProgressInsightsResponse429
   | getCoachAthleteProgressInsightsResponse500
+  | getCoachAthleteProgressInsightsResponse503
 ) & {
   headers: Headers;
 };

@@ -37,7 +37,8 @@ export function CoachFirstStepsCard({ isFull }: CoachFirstStepsCardProps) {
             Comece sua Consultoria no Trainvy
           </h2>
           <p className="font-heading text-xs text-muted-foreground leading-relaxed">
-            Siga o roteiro rápido para conectar seus alunos e prescrever treinos de alto nível:
+            Siga o roteiro rápido para conectar seus alunos e prescrever treinos
+            de alto nível:
           </p>
         </div>
 
@@ -65,7 +66,8 @@ export function CoachFirstStepsCard({ isFull }: CoachFirstStepsCardProps) {
               </h3>
             </div>
             <p className="text-[11px] text-muted-foreground leading-normal">
-              Gere um link exclusivo e envie pelo WhatsApp. O aluno se conecta na hora.
+              Gere um link exclusivo e envie pelo WhatsApp. O aluno se conecta
+              na hora.
             </p>
           </div>
         </div>
@@ -82,7 +84,7 @@ export function CoachFirstStepsCard({ isFull }: CoachFirstStepsCardProps) {
               </h3>
             </div>
             <p className="text-[11px] text-muted-foreground leading-normal">
-              Monte uma ficha manual ou use a IA, se incluída no plano. Revise antes de enviar.
+              Monte uma ficha, revise os exercícios e envie para o aluno.
             </p>
           </div>
         </div>
@@ -99,7 +101,8 @@ export function CoachFirstStepsCard({ isFull }: CoachFirstStepsCardProps) {
               </h3>
             </div>
             <p className="text-[11px] text-muted-foreground leading-normal">
-              Consulte séries concluídas, cargas e histórico compartilhados por cada aluno.
+              Consulte séries concluídas, cargas e histórico compartilhados por
+              cada aluno.
             </p>
           </div>
         </div>

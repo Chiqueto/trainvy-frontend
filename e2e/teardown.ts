@@ -17,7 +17,11 @@ export default function teardown() {
     ],
     {
       cwd: path.resolve(process.env.E2E_API_DIRECTORY || "../trainvy-api"),
-      env: { ...process.env, ...fixtureEnvironment },
+      env: {
+        ...process.env,
+        ...fixtureEnvironment,
+        E2E_AI_POLICY_BEFORE: JSON.stringify(data.aiPolicyBefore),
+      },
       stdio: "pipe",
     },
   );

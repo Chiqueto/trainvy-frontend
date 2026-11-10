@@ -1,4 +1,5 @@
 "use client";
+import { AiFeature } from "@/app/_components/ai-availability-provider";
 
 import { useState } from "react";
 import { Box, CircleHelp, Info, Zap } from "lucide-react";
@@ -61,14 +62,16 @@ export function ExerciseCard({ exercise }: ExerciseCardProps) {
             <span>{has3D ? "Ver 3D" : "Ver execução"}</span>
           </button>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={handleHelp}
-          title="Perguntar para IA"
-        >
-          <CircleHelp className="size-5 text-muted-foreground" />
-        </Button>
+        <AiFeature capability="chat">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleHelp}
+            title="Perguntar para IA"
+          >
+            <CircleHelp className="size-5 text-muted-foreground" />
+          </Button>
+        </AiFeature>
       </div>
 
       <div className="flex flex-wrap items-center gap-1.5">

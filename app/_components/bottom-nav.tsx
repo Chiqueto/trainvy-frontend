@@ -1,4 +1,8 @@
 "use client";
+import {
+  AiFeature,
+  useAiAvailability,
+} from "@/app/_components/ai-availability-provider";
 
 import { Suspense, useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
@@ -51,6 +55,7 @@ function readCoachPreference() {
 }
 
 export function BottomNav({ activePage, isCoach }: BottomNavProps) {
+  const { chatEnabled: aiEnabled } = useAiAvailability();
   const pathname = usePathname();
 
   const isPersonalRoute = Boolean(
@@ -85,14 +90,14 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
 
   const isTemplatesRoute = Boolean(
     pathname &&
-      (pathname === "/personal/modelos" ||
-        pathname.startsWith("/personal/modelos/")),
+    (pathname === "/personal/modelos" ||
+      pathname.startsWith("/personal/modelos/")),
   );
 
   const isExercisesRoute = Boolean(
     pathname &&
-      (pathname === "/personal/exercicios" ||
-        pathname.startsWith("/personal/exercicios/")),
+    (pathname === "/personal/exercicios" ||
+      pathname.startsWith("/personal/exercicios/")),
   );
 
   // Mapeamentos de estado ativo por rota e prop
@@ -200,10 +205,18 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
           </span>
         </span>
       </Link>
-      <div className={cn(
-        "mx-auto grid min-w-0 w-full items-end justify-items-center",
-        effectiveIsCoach ? "max-w-xl grid-cols-6" : "max-w-lg grid-cols-5",
-      )}>
+      <div
+        className={cn(
+          "mx-auto grid min-w-0 w-full items-end justify-items-center",
+          effectiveIsCoach
+            ? aiEnabled
+              ? "max-w-xl grid-cols-6"
+              : "max-w-xl grid-cols-5"
+            : aiEnabled
+              ? "max-w-lg grid-cols-5"
+              : "max-w-lg grid-cols-4",
+        )}
+      >
         {effectiveIsCoach ? (
           <>
             {/* 1. Alunos (Gestão Pro do Personal) */}
@@ -267,18 +280,20 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
             </Link>
 
             {/* 3. Trainvy AI Pro */}
-            <Suspense
-              fallback={
-                <div className="flex w-full flex-1 flex-col items-center justify-center -mt-3.5">
-                  <div className="size-11 rounded-full bg-primary/80" />
-                  <span className="mt-1 font-heading text-[11px] text-muted-foreground">
-                    Coach
-                  </span>
-                </div>
-              }
-            >
-              <ChatOpenButton />
-            </Suspense>
+            <AiFeature>
+              <Suspense
+                fallback={
+                  <div className="flex w-full flex-1 flex-col items-center justify-center -mt-3.5">
+                    <div className="size-11 rounded-full bg-primary/80" />
+                    <span className="mt-1 font-heading text-[11px] text-muted-foreground">
+                      Coach
+                    </span>
+                  </div>
+                }
+              >
+                <ChatOpenButton />
+              </Suspense>
+            </AiFeature>
 
             {/* 4. Meu Treino (Rotina pessoal de atleta do Personal) */}
             <Link
@@ -428,18 +443,20 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
             </Link>
 
             {/* 3. Trainvy AI */}
-            <Suspense
-              fallback={
-                <div className="flex w-full flex-1 flex-col items-center justify-center -mt-3.5">
-                  <div className="size-11 rounded-full bg-primary/80" />
-                  <span className="mt-1 font-heading text-[11px] text-muted-foreground">
-                    Coach
-                  </span>
-                </div>
-              }
-            >
-              <ChatOpenButton />
-            </Suspense>
+            <AiFeature>
+              <Suspense
+                fallback={
+                  <div className="flex w-full flex-1 flex-col items-center justify-center -mt-3.5">
+                    <div className="size-11 rounded-full bg-primary/80" />
+                    <span className="mt-1 font-heading text-[11px] text-muted-foreground">
+                      Coach
+                    </span>
+                  </div>
+                }
+              >
+                <ChatOpenButton />
+              </Suspense>
+            </AiFeature>
 
             {/* 4. Evolução */}
             <Link
@@ -504,7 +521,10 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
         )}
       </div>
       <div className="hidden lg:flex mt-auto pt-4 border-t border-border/70">
-        <ThemeToggle showLabel className="w-full justify-start px-3 py-2.5 rounded-xl text-left" />
+        <ThemeToggle
+          showLabel
+          className="w-full justify-start px-3 py-2.5 rounded-xl text-left"
+        />
       </div>
     </nav>
   );

@@ -18,6 +18,7 @@ import { authClient } from "@/app/_lib/auth-client";
 import type { ListPublicPlans200Item } from "@/app/_lib/api/fetch-generated";
 import { beginSignup, loadCoachPlans } from "../_actions";
 import styles from "./auth.module.css";
+import { useAiAvailability } from "@/app/_components/ai-availability-provider";
 
 const labels: Record<string, string> = {
   COACH_DASHBOARD: "Área do personal",
@@ -40,6 +41,7 @@ export function SignupForm({
   initialAccountType?: "ATHLETE" | "COACH";
 }) {
   const router = useRouter();
+  const { professionalAiEnabled } = useAiAvailability();
   const [type, setType] = useState<"ATHLETE" | "COACH">(initialAccountType);
   const [plans, setPlans] = useState<ListPublicPlans200Item[]>([]);
   const [planCode, setPlanCode] = useState("");
@@ -72,7 +74,7 @@ export function SignupForm({
     return () => {
       current = false;
     };
-  }, [type, retry]);
+  }, [type, retry, professionalAiEnabled]);
 
   function chooseType(value: "ATHLETE" | "COACH") {
     if (value === type) return;

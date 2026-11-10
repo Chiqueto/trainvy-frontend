@@ -33,6 +33,36 @@ import {
 import { Logo } from "../logo";
 import type { ExerciseAnimation } from "../exercise-3d/exercises";
 import styles from "./landing.module.css";
+import { useAiAvailability } from "../ai-availability-provider";
+
+function PlanningFeatureCard({ professional }: { professional: boolean }) {
+  return (
+    <article className={styles.featureCard} data-spotlight data-reveal>
+      <span className={styles.featureIcon}>
+        {professional ? <Sparkles /> : <Dumbbell />}
+      </span>
+      <h3>
+        {professional
+          ? "IA para quem prescreve."
+          : "Seu planejamento. Suas escolhas."}
+      </h3>
+      <p>
+        {professional
+          ? "Profissionais com plano compatível podem preparar rascunhos com IA, revisar cada detalhe e aprovar o envio ao aluno."
+          : "Monte sua rotina, ajuste os exercícios e receba as prescrições do seu personal. Os treinos continuam editáveis."}
+      </p>
+      <div className={styles.aiVisual}>
+        <span>
+          {professional ? "PARA PROFISSIONAIS" : "PLANEJAMENTO MANUAL"}
+        </span>
+        <div className={styles.aiAnswer}>
+          <Layers3 size={20} />
+          <p>Organize os treinos e acompanhe sua evolução.</p>
+        </div>
+      </div>
+    </article>
+  );
+}
 
 const Viewer = dynamic(
   () =>
@@ -245,6 +275,25 @@ function WorkoutPhone() {
 }
 
 export function LandingPage() {
+  const { professionalAiEnabled, athleteAiEnabled } = useAiAvailability();
+  const anyAi = professionalAiEnabled || athleteAiEnabled;
+  const visibleQuestions = questions
+    .filter(
+      ([question]) => anyAi || question !== "A IA decide meu treino sozinha?",
+    )
+    .map(([question, answer], index) =>
+      index === 0
+        ? [
+            question,
+            "Sim. A conta de atleta começa sem mensalidade. Você pode organizar seus treinos, registrar séries e acompanhar sua evolução. A gestão de alunos depende do plano profissional.",
+          ]
+        : question === "A IA decide meu treino sozinha?" && !athleteAiEnabled
+          ? [
+              "Como o profissional usa a IA?",
+              "Quando habilitada e incluída no plano, a IA auxilia o profissional a preparar rascunhos. O profissional revisa e aprova antes de enviar ao aluno.",
+            ]
+          : [question, answer],
+    );
   const root = useRef<HTMLDivElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [paused, setPaused] = useState(false);
@@ -670,55 +719,59 @@ export function LandingPage() {
                 <Chart />
               </div>
             </article>
-            <article
-              className={`${styles.featureCard} ${styles.aiCard}`}
-              data-spotlight
-              data-reveal
-            >
-              <span className={styles.featureIcon}>
-                <Sparkles />
-              </span>
-              <h3>
-                Inteligência no plano.
-                <br />
-                Você no controle.
-              </h3>
-              <p>
-                Converse com o Coach AI, explore propostas e edite seu
-                planejamento antes de colocar em prática.
-              </p>
-              <div className={styles.aiVisual}>
-                <span>
-                  COACH AI <Sparkles size={13} />
+            {athleteAiEnabled ? (
+              <article
+                className={`${styles.featureCard} ${styles.aiCard}`}
+                data-spotlight
+                data-reveal
+              >
+                <span className={styles.featureIcon}>
+                  <Sparkles />
                 </span>
-                <div className={styles.aiQuestion}>
-                  Tenho 3 dias na semana.
+                <h3>
+                  Inteligência no plano.
                   <br />
-                  Vamos organizar meu treino?
-                </div>
-                <div className={styles.aiAnswer}>
+                  Você no controle.
+                </h3>
+                <p>
+                  Converse com o Coach AI, explore propostas e edite seu
+                  planejamento antes de colocar em prática.
+                </p>
+                <div className={styles.aiVisual}>
                   <span>
-                    <Sparkles size={15} /> COACH AI
+                    COACH AI <Sparkles size={13} />
                   </span>
-                  <p>
-                    Vamos criar uma proposta para a sua rotina. Você revisa cada
-                    detalhe.
-                  </p>
-                  <div>
-                    <Layers3 size={16} />
+                  <div className={styles.aiQuestion}>
+                    Tenho 3 dias na semana.
+                    <br />
+                    Vamos organizar meu treino?
+                  </div>
+                  <div className={styles.aiAnswer}>
                     <span>
-                      Plano de treino
-                      <strong>Rascunho · pronto para revisar</strong>
+                      <Sparkles size={15} /> COACH AI
                     </span>
-                    <ArrowUpRight size={15} />
+                    <p>
+                      Vamos criar uma proposta para a sua rotina. Você revisa
+                      cada detalhe.
+                    </p>
+                    <div>
+                      <Layers3 size={16} />
+                      <span>
+                        Plano de treino
+                        <strong>Rascunho · pronto para revisar</strong>
+                      </span>
+                      <ArrowUpRight size={15} />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </article>
+              </article>
+            ) : (
+              <PlanningFeatureCard professional={professionalAiEnabled} />
+            )}
           </div>
           <p className={styles.demoNote}>
-            Prévias ilustrativas da experiência. A disponibilidade de IA depende
-            do plano e dos limites da conta.
+            Prévias ilustrativas. Os recursos apresentados dependem da
+            disponibilidade e do plano da conta.
           </p>
         </section>
 
@@ -1101,7 +1154,7 @@ export function LandingPage() {
             </p>
           </div>
           <div className={styles.faqList}>
-            {questions.map(([question, answer]) => (
+            {visibleQuestions.map(([question, answer]) => (
               <details key={question}>
                 <summary>
                   {question}

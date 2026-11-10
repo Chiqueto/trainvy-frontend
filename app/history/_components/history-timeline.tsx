@@ -1,4 +1,5 @@
 "use client";
+import { AiFeature } from "@/app/_components/ai-availability-provider";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -172,13 +173,15 @@ export function HistoryTimeline({
             Seus treinos concluídos
           </p>
         </div>
-        <Link
-          href="/?chat_open=true&chat_initial_message=Esqueci%20de%20marcar%20um%20treino%20passado"
-          className="inline-flex items-center gap-1.5 rounded-xl border border-primary/30 bg-primary/10 px-3 py-2 text-xs font-semibold text-primary transition hover:bg-primary/20"
-        >
-          <CalendarPlus className="size-3.5" />
-          <span>Treino Esquecido</span>
-        </Link>
+        <AiFeature capability="chat">
+          <Link
+            href="/?chat_open=true&chat_initial_message=Esqueci%20de%20marcar%20um%20treino%20passado"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-primary/30 bg-primary/10 px-3 py-2 text-xs font-semibold text-primary transition hover:bg-primary/20"
+          >
+            <CalendarPlus className="size-3.5" />
+            <span>Treino Esquecido</span>
+          </Link>
+        </AiFeature>
       </header>
 
       <div
