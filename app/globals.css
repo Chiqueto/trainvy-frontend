@@ -137,6 +137,9 @@
 }
 
 /* A single navigation tree keeps the same destinations on every screen. */
+body:has(.app-navigation) {
+  --workout-builder-bottom: calc(5.75rem + env(safe-area-inset-bottom, 0px));
+}
 .app-navigation > div > a,
 .app-navigation > div > button,
 .app-navigation > div > div {
@@ -155,6 +158,7 @@
 
 @media (min-width: 1024px) {
   body:has(.app-navigation) {
+    --workout-builder-bottom: 1.5rem;
     padding-left: 15rem;
   }
   .app-navigation {

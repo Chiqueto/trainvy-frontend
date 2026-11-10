@@ -52,11 +52,42 @@ import { PeriodizationForm } from "@/app/planning/_components/periodization-form
 import { WorkoutPlanBuilder } from "@/app/planning/_components/workout-plan-builder";
 import {
   createInitialWorkoutDays,
+  duplicateDraftWorkoutDay,
   serializeWorkoutDays,
   validateWorkoutPlanDraft,
 } from "@/app/planning/_lib/workout-plan-builder";
 
 describe("WorkoutPlanBuilder — lógica de contrato", () => {
+  it("duplica parâmetros e referências do catálogo sem reutilizar IDs de registros salvos", () => {
+    const original = {
+      ...createInitialWorkoutDays()[0],
+      id: "saved-day",
+      exercises: [
+        {
+          id: "saved-exercise",
+          exerciseId: "catalog-1",
+          alternative1ExerciseId: "catalog-2",
+          name: "Remada",
+          sets: 4,
+          reps: 8,
+          restTimeInSeconds: 90,
+          targetRir: 2,
+        },
+      ],
+    };
+    const copy = duplicateDraftWorkoutDay(original);
+    expect(copy.id).toBeUndefined();
+    expect(copy.clientId).not.toBe(original.clientId);
+    expect(copy.exercises[0]).toMatchObject({
+      exerciseId: "catalog-1",
+      alternative1ExerciseId: "catalog-2",
+      sets: 4,
+      targetRir: 2,
+    });
+    expect(copy.exercises[0].id).toBeUndefined();
+    copy.exercises[0].sets = 2;
+    expect(original.exercises[0].sets).toBe(4);
+  });
   it("inicia com três treinos sequenciais independentes de dias da semana", () => {
     const days = createInitialWorkoutDays();
     expect(days).toHaveLength(3);
@@ -178,6 +209,48 @@ describe("WorkoutPlanBuilder — interface", () => {
       exerciseId: "catalog-0",
       order: 0,
     });
+  });
+
+  it("permite duplicar e revisar sem gravar até confirmar", async () => {
+    render(<WorkoutPlanBuilder mode="standalone" />);
+    configureMonday();
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "Duplicar Treino A - Peito e Tríceps",
+      }),
+    );
+    expect(screen.getAllByRole("article")).toHaveLength(4);
+    fireEvent.click(screen.getByRole("button", { name: "Revisar ficha" }));
+    expect(screen.getByRole("dialog")).toBeDefined();
+    expect(mocks.createStandaloneWorkoutPlanAction).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "Voltar à edição" }));
+    expect(screen.getByDisplayValue("Plano novo")).toBeDefined();
+    fireEvent.click(screen.getByRole("button", { name: "Revisar ficha" }));
+    fireEvent.click(screen.getByRole("button", { name: "Confirmar e salvar" }));
+    await waitFor(() =>
+      expect(mocks.createStandaloneWorkoutPlanAction).toHaveBeenCalledOnce(),
+    );
+    expect(
+      mocks.createStandaloneWorkoutPlanAction.mock.calls[0][0].workoutDays,
+    ).toHaveLength(4);
+  });
+
+  it("preserva o preenchimento e permite tentar novamente após falha de conexão", async () => {
+    mocks.createStandaloneWorkoutPlanAction.mockRejectedValueOnce(
+      new Error("offline"),
+    );
+    render(<WorkoutPlanBuilder mode="standalone" />);
+    configureMonday();
+    fireEvent.click(screen.getByRole("button", { name: "Criar plano" }));
+    await waitFor(() =>
+      expect(screen.getByRole("alert").textContent).toContain(
+        "Seus dados continuam aqui",
+      ),
+    );
+    expect(screen.getByDisplayValue("Plano novo")).toBeDefined();
+    expect(mocks.push).not.toHaveBeenCalled();
+    fireEvent.click(await screen.findByRole("button", { name: "Criar plano" }));
+    await waitFor(() => expect(mocks.push).toHaveBeenCalledWith("/planning"));
   });
 
   it("oferece ativação explícita no standalone", async () => {
@@ -350,23 +423,22 @@ describe("WorkoutPlanBuilder — interface", () => {
     });
   });
 
-  it("inicia com cards recolhidos e expande ao clicar na setinha", () => {
+  it("abre o primeiro treino para orientar o início e permite recolher os cards", () => {
     render(<WorkoutPlanBuilder mode="standalone" />);
     const articles = screen.getAllByRole("article");
     expect(articles).toHaveLength(3);
 
-    // Inicialmente recolhidos: inputs internos não estão visíveis
-    expect(within(articles[0]).queryByLabelText("Nome do treino")).toBeNull();
-    expect(within(articles[0]).getByRole("button", { name: "Expandir treino" })).toBeDefined();
-
-    // Clica para expandir o primeiro treino
-    fireEvent.click(within(articles[0]).getByRole("button", { name: "Expandir treino" }));
+    expect(within(articles[1]).queryByLabelText("Nome do treino")).toBeNull();
     expect(within(articles[0]).getByLabelText("Nome do treino")).toBeDefined();
     expect(within(articles[0]).getByLabelText("Duração (min)")).toBeDefined();
-    expect(within(articles[0]).getByRole("button", { name: "Recolher treino" })).toBeDefined();
+    expect(
+      within(articles[0]).getByRole("button", { name: "Recolher treino" }),
+    ).toBeDefined();
 
     // Clica para recolher novamente
-    fireEvent.click(within(articles[0]).getByRole("button", { name: "Recolher treino" }));
+    fireEvent.click(
+      within(articles[0]).getByRole("button", { name: "Recolher treino" }),
+    );
     expect(within(articles[0]).queryByLabelText("Nome do treino")).toBeNull();
   });
 
@@ -380,7 +452,9 @@ describe("WorkoutPlanBuilder — interface", () => {
       expect(within(card).getByLabelText("Nome do treino")).toBeDefined();
     });
 
-    const collapseAllBtn = screen.getByRole("button", { name: "Recolher todos" });
+    const collapseAllBtn = screen.getByRole("button", {
+      name: "Recolher todos",
+    });
     fireEvent.click(collapseAllBtn);
 
     articles.forEach((card) => {
@@ -405,8 +479,8 @@ describe("WorkoutPlanBuilder — interface", () => {
     expect(articles).toHaveLength(4);
     // O último treino (recém adicionado) está expandido
     expect(within(articles[3]).getByLabelText("Nome do treino")).toBeDefined();
-    // Os anteriores continuam recolhidos
-    expect(within(articles[0]).queryByLabelText("Nome do treino")).toBeNull();
+    // O primeiro treino continua aberto, sem perder o conteúdo.
+    expect(within(articles[0]).getByLabelText("Nome do treino")).toBeDefined();
   });
 
   it("não salva nomes livres de exercícios em rascunhos novos", () => {

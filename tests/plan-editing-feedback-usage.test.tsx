@@ -99,7 +99,6 @@ describe("Editing saved plans", () => {
       (screen.getByLabelText("Nome do plano *") as HTMLInputElement).value,
     ).toBe("Plano atual");
     const card = screen.getByRole("article");
-    fireEvent.click(within(card).getByRole("button", { name: "Expandir treino" }));
     fireEvent.change(within(card).getByLabelText("Séries válidas"), {
       target: { value: "5" },
     });
@@ -135,11 +134,6 @@ describe("Editing saved plans", () => {
       error: "Conclua sua sessão",
     });
     render(<WorkoutPlanBuilder mode="edit" initialPlan={plan} />);
-    fireEvent.click(
-      within(screen.getByRole("article")).getByRole("button", {
-        name: "Expandir treino",
-      }),
-    );
     fireEvent.click(
       within(screen.getByRole("article")).getByRole("button", {
         name: "Exercício: Supino",

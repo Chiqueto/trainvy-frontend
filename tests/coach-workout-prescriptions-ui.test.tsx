@@ -365,6 +365,13 @@ describe("TASK 6.2B — Coach Workout Prescriptions UI & UX Hardening", () => {
         name: /revisar e aprovar prescrição/i,
       });
       fireEvent.click(sendBtn);
+      expect(sendPrescriptionAction).not.toHaveBeenCalled();
+      fireEvent.click(
+        screen.getByRole("checkbox", { name: /Revisei os exercícios/ }),
+      );
+      fireEvent.click(
+        screen.getByRole("button", { name: "Confirmar e enviar ao aluno" }),
+      );
 
       await waitFor(() => {
         expect(createPrescriptionDraftAction).toHaveBeenCalledWith(

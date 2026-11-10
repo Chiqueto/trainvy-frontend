@@ -6,9 +6,11 @@ import { serializeAdvancedPrescription } from "@/app/planning/_lib/workout-plan-
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { useHydrated } from "@/lib/use-hydrated";
 import { toast } from "sonner";
 import {
   ArrowDown,
+  Copy,
   ArrowUp,
   LoaderCircle,
   Plus,
@@ -24,13 +26,20 @@ import {
 } from "@/app/personal/_actions";
 import {
   createDraftExercise,
+  duplicateDraftWorkoutDay,
   createDraftWorkoutDay,
+  createClientDayId,
   createInitialWorkoutDays,
   validateWorkoutPlanDraft,
   WEEK_DAYS,
   type WorkoutPlanDraftDay,
   type WorkoutPlanDraftExercise,
 } from "@/app/planning/_lib/workout-plan-builder";
+import { CatalogExercisePicker } from "@/app/planning/_components/catalog-exercise-picker";
+import {
+  WorkoutPlanReviewDialog,
+  WorkoutPlanSummary,
+} from "@/app/planning/_components/workout-plan-review-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CoachAiPrescriptionModal } from "./coach-ai-prescription-modal";
@@ -78,6 +87,7 @@ export function CoachPrescriptionBuilder({
   initialData,
 }: CoachPrescriptionBuilderProps) {
   const router = useRouter();
+  const hydrated = useHydrated();
   const [name, setName] = useState(initialData?.name ?? "");
   const [notes, setNotes] = useState(initialData?.notes ?? "");
   const [allowStudentSubstitution, setAllowStudentSubstitution] = useState(
@@ -90,6 +100,7 @@ export function CoachPrescriptionBuilder({
   const [days, setDays] = useState<WorkoutPlanDraftDay[]>(() => {
     if (initialData?.workoutDays && initialData.workoutDays.length > 0) {
       return initialData.workoutDays.map((d) => ({
+        clientId: createClientDayId(),
         name: d.name,
         weekDay: d.weekDay,
         isRest: d.isRest,
@@ -116,6 +127,12 @@ export function CoachPrescriptionBuilder({
     id: initialData?.id,
     version: initialData?.version,
   });
+  const [reviewOpen, setReviewOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  function reportError(message: string) {
+    setError(message);
+    toast.error(message);
+  }
   const [isAiModalOpen, setIsAiModalOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
@@ -130,6 +147,15 @@ export function CoachPrescriptionBuilder({
   function addWorkout() {
     const nextLetter = String.fromCharCode(65 + (days.length % 26));
     setDays((current) => [...current, createDraftWorkoutDay(nextLetter)]);
+  }
+
+  function duplicateWorkout(index: number) {
+    const copy = duplicateDraftWorkoutDay(days[index]);
+    setDays((current) => [
+      ...current.slice(0, index + 1),
+      copy,
+      ...current.slice(index + 1),
+    ]);
   }
 
   function removeWorkout(index: number) {
@@ -228,7 +254,10 @@ export function CoachPrescriptionBuilder({
     }));
   }
 
-  async function handleSave(sendImmediately: boolean = false) {
+  async function handleSave(
+    sendImmediately: boolean = false,
+    reviewed = false,
+  ) {
     if (isPending) return;
     const validationError =
       validateWorkoutPlanDraft(name, days, undefined, undefined, {
@@ -245,10 +274,16 @@ export function CoachPrescriptionBuilder({
         ? "Adicione um dia de treino com exercícios antes de enviar."
         : null);
     if (validationError) {
-      toast.error(validationError);
+      reportError(validationError);
       return;
     }
 
+    setError(null);
+    if (sendImmediately && !reviewed) {
+      setReviewOpen(true);
+      return;
+    }
+    setReviewOpen(false);
     startTransition(async () => {
       try {
         const serializedWorkoutDays = serializeDaysForApi();
@@ -271,7 +306,7 @@ export function CoachPrescriptionBuilder({
           });
 
           if (!updateRes.success) {
-            toast.error(updateRes.error);
+            reportError(updateRes.error);
             return;
           }
           reviewedVersion = updateRes.data.version;
@@ -290,7 +325,7 @@ export function CoachPrescriptionBuilder({
           });
 
           if (!createRes.success) {
-            toast.error(createRes.error);
+            reportError(createRes.error);
             return;
           }
           savedPrescriptionId = createRes.data.id;
@@ -309,7 +344,7 @@ export function CoachPrescriptionBuilder({
             version: reviewedVersion!,
           });
           if (!sendRes.success) {
-            toast.error(`Rascunho salvo. ${sendRes.error}`);
+            reportError(`Rascunho salvo. ${sendRes.error}`);
             return;
           }
           trackProductEvent("Prescription sent");
@@ -323,14 +358,15 @@ export function CoachPrescriptionBuilder({
         router.push(`/personal/alunos/${athleteId}?tab=prescriptions`);
         router.refresh();
       } catch {
-        toast.error("Não foi possível concluir a operação. Tente novamente.");
+        reportError("Não foi possível concluir a operação. Tente novamente.");
       }
     });
   }
 
   return (
     <fieldset
-      disabled={isPending}
+      disabled={!hydrated || isPending}
+      aria-busy={!hydrated || isPending}
       className="flex min-w-0 flex-col gap-6 disabled:opacity-80"
     >
       {/* Banner de Prescrição Assistida por IA */}
@@ -474,7 +510,7 @@ export function CoachPrescriptionBuilder({
           {days.map((day, dayIndex) => {
             return (
               <div
-                key={dayIndex}
+                key={day.clientId ?? day.id ?? dayIndex}
                 className="rounded-3xl border border-border/80 bg-card p-5 shadow-xs space-y-4 transition-colors"
               >
                 {/* Header do Dia */}
@@ -491,6 +527,17 @@ export function CoachPrescriptionBuilder({
                   </div>
 
                   <div className="flex items-center gap-1">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      aria-label={`Duplicar ${day.name}`}
+                      title="Duplicar treino"
+                      onClick={() => duplicateWorkout(dayIndex)}
+                      className="size-8 rounded-lg"
+                    >
+                      <Copy className="size-3.5" />
+                    </Button>
                     <Button
                       type="button"
                       variant="ghost"
@@ -619,16 +666,30 @@ export function CoachPrescriptionBuilder({
                             <span className="flex size-6 shrink-0 items-center justify-center rounded-lg bg-muted text-[11px] font-mono font-bold text-muted-foreground">
                               {exerciseIndex + 1}
                             </span>
-                            <Input
-                              value={exercise.name}
-                              onChange={(e) =>
-                                updateExercise(dayIndex, exerciseIndex, {
-                                  name: e.target.value,
-                                })
-                              }
-                              placeholder="Nome do exercício (ex: Supino Inclinado)"
-                              className="h-9 flex-1 rounded-xl text-xs font-medium"
-                            />
+                            <div className="min-w-0 flex-1 space-y-2">
+                              <Input
+                                aria-label={`Nome do exercício ${exerciseIndex + 1} de ${day.name}`}
+                                value={exercise.name}
+                                onChange={(e) =>
+                                  updateExercise(dayIndex, exerciseIndex, {
+                                    name: e.target.value,
+                                  })
+                                }
+                                placeholder="Nome do exercício (ex: Supino Inclinado)"
+                                className="h-9 flex-1 rounded-xl text-xs font-medium"
+                              />
+                              <CatalogExercisePicker
+                                label="Buscar no catálogo"
+                                name={undefined}
+                                disabled={isPending}
+                                onSelect={(selected) => {
+                                  if (selected)
+                                    updateExercise(dayIndex, exerciseIndex, {
+                                      name: selected.name,
+                                    });
+                                }}
+                              />
+                            </div>
                             <div className="flex items-center gap-0.5 shrink-0">
                               <Button
                                 type="button"
@@ -789,35 +850,62 @@ export function CoachPrescriptionBuilder({
       </section>
 
       {/* Rodapé Fixo / Ações de Envio e Rascunho */}
-      <div className="sticky bottom-24 lg:bottom-6 z-20 flex flex-col sm:flex-row items-center gap-2.5 rounded-2xl border border-border/80 bg-background/95 p-3.5 shadow-lg backdrop-blur-md">
-        <Button
-          type="button"
-          variant="outline"
-          disabled={isPending}
-          onClick={() => handleSave(false)}
-          className="w-full sm:flex-1 h-11 rounded-xl font-heading text-xs font-semibold border-border/80"
-        >
-          {isPending && (
-            <LoaderCircle className="size-3.5 animate-spin mr-1.5" />
-          )}
-          <span>Salvar Rascunho</span>
-        </Button>
+      <div
+        className="sticky z-20 space-y-2 rounded-2xl border border-border/80 bg-background/95 p-3.5 shadow-lg backdrop-blur-md"
+        style={{ bottom: "var(--workout-builder-bottom, 1rem)" }}
+      >
+        {error && (
+          <p role="alert" className="text-sm text-destructive">
+            {error}
+          </p>
+        )}
+        <WorkoutPlanSummary days={days} />
+        <div className="flex flex-col items-center gap-2.5 sm:flex-row">
+          <Button
+            type="button"
+            variant="outline"
+            disabled={isPending}
+            onClick={() => handleSave(false)}
+            className="w-full sm:flex-1 h-11 rounded-xl font-heading text-xs font-semibold border-border/80"
+          >
+            {isPending && (
+              <LoaderCircle className="size-3.5 animate-spin mr-1.5" />
+            )}
+            <span>Salvar Rascunho</span>
+          </Button>
 
-        <Button
-          type="button"
-          variant="default"
-          disabled={isPending}
-          onClick={() => handleSave(true)}
-          className="w-full sm:flex-1 h-11 rounded-xl font-heading text-xs font-bold gap-2 shadow-sm"
-        >
-          {isPending ? (
-            <LoaderCircle className="size-3.5 animate-spin" />
-          ) : (
-            <Send className="size-3.5" />
-          )}
-          <span>Revisar e Aprovar Prescrição</span>
-        </Button>
+          <Button
+            type="button"
+            variant="default"
+            disabled={isPending}
+            onClick={() => handleSave(true)}
+            className="w-full sm:flex-1 h-11 rounded-xl font-heading text-xs font-bold gap-2 shadow-sm"
+          >
+            {isPending ? (
+              <LoaderCircle className="size-3.5 animate-spin" />
+            ) : (
+              <Send className="size-3.5" />
+            )}
+            <span>Revisar e Aprovar Prescrição</span>
+          </Button>
+        </div>
       </div>
+      {reviewOpen && (
+        <WorkoutPlanReviewDialog
+          name={name}
+          days={days.map((day) => ({
+            ...day,
+            weekDay: day.weekDay ?? "MONDAY",
+          }))}
+          notes={notes}
+          recipient={athleteName}
+          allowStudentSubstitution={allowStudentSubstitution}
+          confirmLabel="Confirmar e enviar ao aluno"
+          onClose={() => setReviewOpen(false)}
+          onConfirm={() => void handleSave(true, true)}
+          pending={isPending}
+        />
+      )}
 
       <AiFeature capability="planning">
         <CoachAiPrescriptionModal

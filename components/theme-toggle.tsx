@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useHydrated } from "@/lib/use-hydrated";
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -10,13 +10,12 @@ interface ThemeToggleProps {
   showLabel?: boolean;
 }
 
-export function ThemeToggle({ className, showLabel = false }: ThemeToggleProps) {
+export function ThemeToggle({
+  className,
+  showLabel = false,
+}: ThemeToggleProps) {
   const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useHydrated();
 
   if (!mounted) {
     return (
@@ -48,26 +47,29 @@ export function ThemeToggle({ className, showLabel = false }: ThemeToggleProps) 
         className,
       )}
     >
-      <div className="relative size-4">
+      <div
+        className="relative inline-flex size-4 shrink-0 items-center justify-center"
+        aria-hidden="true"
+      >
         <Sun
           className={cn(
-            "size-4 transition-all duration-300",
+            "absolute inset-0 m-auto size-4 transition-all duration-300",
             isDark
-              ? "rotate-90 scale-0 opacity-0 absolute inset-0"
+              ? "rotate-90 scale-0 opacity-0"
               : "rotate-0 scale-100 opacity-100 text-amber-500",
           )}
         />
         <Moon
           className={cn(
-            "size-4 transition-all duration-300",
+            "absolute inset-0 m-auto size-4 transition-all duration-300",
             isDark
               ? "rotate-0 scale-100 opacity-100 text-primary"
-              : "-rotate-90 scale-0 opacity-0 absolute inset-0",
+              : "-rotate-90 scale-0 opacity-0",
           )}
         />
       </div>
       {showLabel && (
-        <span className="font-heading text-xs font-medium text-foreground">
+        <span className="font-heading text-xs font-medium leading-none text-foreground">
           {isDark ? "Modo Escuro" : "Modo Claro"}
         </span>
       )}

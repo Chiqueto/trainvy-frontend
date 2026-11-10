@@ -26,6 +26,224 @@ async function asRole(browser: Browser, role: string, mobile = false) {
   return { context, page: await context.newPage() };
 }
 
+test("manual creation selects, duplicates, reviews and saves an inactive plan on mobile", async ({
+  browser,
+}) => {
+  const { context, page } = await asRole(browser, "athlete", true);
+  try {
+    await page.goto("/planning/plans/new");
+    await page.getByLabel("Nome do plano *").fill("Ficha manual E2E");
+    for (let index = 0; index < 2; index++)
+      await page
+        .getByRole("article")
+        .last()
+        .getByRole("button", { name: "Remover treino", exact: true })
+        .click();
+    const first = page.getByRole("article").first();
+    await expect(first.getByLabel("Nome do treino")).toBeVisible();
+    await first
+      .getByRole("button", {
+        name: "Exercício: Selecionar exercício",
+        exact: true,
+      })
+      .click();
+    await page
+      .getByRole("textbox", { name: "Buscar exercícios" })
+      .fill("Supino Reto com Barra");
+    await page
+      .getByRole("button", {
+        name: "Selecionar Supino Reto com Barra",
+        exact: true,
+      })
+      .click();
+    await first.getByRole("button", { name: /^Duplicar/ }).click();
+    await expect(page.getByRole("article")).toHaveCount(2);
+    await expect(
+      page.getByLabel("Tornar este meu plano atual"),
+    ).not.toBeChecked();
+    const before = await context.request.get("/backend/planning/overview");
+    expect(
+      (await before.json()).plans.some(
+        (plan: { name: string }) => plan.name === "Ficha manual E2E",
+      ),
+    ).toBe(false);
+    await page
+      .getByRole("button", { name: "Revisar ficha", exact: true })
+      .click();
+    await expect(page.getByRole("dialog")).toBeVisible();
+    await expect(
+      page
+        .getByRole("dialog")
+        .getByText("Este plano será salvo sem ser ativado."),
+    ).toBeVisible();
+    await page.getByRole("button", { name: "Voltar à edição" }).click();
+    await expect(page.getByLabel("Nome do plano *")).toHaveValue(
+      "Ficha manual E2E",
+    );
+    const layout = await page.evaluate(() => ({
+      width: document.documentElement.scrollWidth,
+      viewport: innerWidth,
+    }));
+    expect(layout.width).toBeLessThanOrEqual(layout.viewport);
+    await page.screenshot({
+      path: ".tmp/workout-builder-mobile.png",
+      fullPage: true,
+      style: "nextjs-portal { display: none !important; }",
+    });
+    await page
+      .getByRole("button", { name: "Revisar ficha", exact: true })
+      .click();
+    await page.getByRole("button", { name: "Confirmar e salvar" }).click();
+    await expect(page).toHaveURL(/\/planning$/);
+    const overview = await context.request.get("/backend/planning/overview");
+    const plan = (await overview.json()).plans.find(
+      (item: { name: string }) => item.name === "Ficha manual E2E",
+    );
+    expect(plan).toBeDefined();
+    const details = await context.request.get(
+      `/backend/workout-plans/${plan.id}/edit`,
+    );
+    expect(details.ok()).toBe(true);
+    const saved = await details.json();
+    expect(saved.isActive).toBe(false);
+    expect(saved.workoutDays).toHaveLength(2);
+    expect(saved.workoutDays[0].id).not.toBe(saved.workoutDays[1].id);
+    expect(saved.workoutDays[0].exercises[0].id).not.toBe(
+      saved.workoutDays[1].exercises[0].id,
+    );
+  } finally {
+    await context.close();
+  }
+});
+
+test("theme toggle keeps its icon and label vertically aligned in light and dark navbar", async ({
+  browser,
+}) => {
+  const { context, page } = await asRole(browser, "coach");
+  try {
+    await page.goto("/personal");
+    const nav = page.getByRole("navigation", {
+      name: "Navegação principal",
+      exact: true,
+    });
+    const toggle = nav.getByRole("button", { name: /^Mudar para modo/ });
+    for (const theme of ["dark", "light"] as const) {
+      const label =
+        theme === "dark" ? "Mudar para modo claro" : "Mudar para modo escuro";
+      if ((await toggle.getAttribute("aria-label")) !== label)
+        await toggle.click();
+      await expect(toggle).toHaveAttribute("aria-label", label);
+      await expect
+        .poll(async () =>
+          toggle.evaluate((button) => {
+            const icon = [...button.querySelectorAll("svg")].find(
+              (item) => Number(getComputedStyle(item).opacity) > 0.99,
+            );
+            const text = button.querySelector("span");
+            if (!icon || !text) return 100;
+            const a = icon.getBoundingClientRect(),
+              b = text.getBoundingClientRect();
+            return Math.abs(a.y + a.height / 2 - (b.y + b.height / 2));
+          }),
+        )
+        .toBeLessThanOrEqual(0.5);
+      await nav.screenshot({
+        path: `.tmp/navbar-${theme}.png`,
+        style: "nextjs-portal { display: none !important; }",
+      });
+    }
+  } finally {
+    await context.close();
+  }
+});
+
+test("professional creates a manual prescription from the catalog and explicitly reviews before sending", async ({
+  browser,
+}) => {
+  const coach = await asRole(browser, "coach");
+  const student = await asRole(browser, "athlete", true);
+  const athleteId = fixtures().users.athlete.id;
+  const title = "Prescrição manual revisada E2E";
+  try {
+    await coach.page.goto(`/personal/alunos/${athleteId}/prescrever`);
+    await coach.page.getByLabel("Nome do Planejamento *").fill(title);
+    for (let index = 0; index < 2; index++)
+      await coach.page
+        .getByTitle("Excluir dia", { exact: true })
+        .last()
+        .click();
+    await coach.page
+      .getByRole("button", {
+        name: "Buscar no catálogo: Selecionar exercício",
+        exact: true,
+      })
+      .click();
+    await coach.page
+      .getByRole("textbox", { name: "Buscar exercícios" })
+      .fill("Supino Reto com Barra");
+    await coach.page
+      .getByRole("button", {
+        name: "Selecionar Supino Reto com Barra",
+        exact: true,
+      })
+      .click();
+    await coach.page
+      .getByRole("button", {
+        name: "Revisar e Aprovar Prescrição",
+        exact: true,
+      })
+      .click();
+    const dialog = coach.page.getByRole("dialog");
+    await expect(
+      dialog.getByText(
+        /Confira os treinos antes de enviar para Piloto E2E athlete/,
+      ),
+    ).toBeVisible();
+    await expect(
+      dialog.getByRole("button", { name: "Confirmar e enviar ao aluno" }),
+    ).toBeDisabled();
+    const drafts = await coach.context.request.get(
+      `/backend/coach/athletes/${athleteId}/prescriptions`,
+    );
+    expect(
+      (await drafts.json()).some(
+        (draft: { name: string }) => draft.name === title,
+      ),
+    ).toBe(false);
+    await dialog
+      .getByRole("checkbox", { name: /Revisei os exercícios/ })
+      .check();
+    await dialog
+      .getByRole("button", { name: "Confirmar e enviar ao aluno" })
+      .click();
+    await expect(coach.page).toHaveURL(
+      new RegExp(`/personal/alunos/${athleteId}\\?tab=prescriptions$`),
+      { timeout: 15000 },
+    );
+    await student.page.goto("/planning");
+    await expect(student.page.getByText(title, { exact: true })).toBeVisible();
+    await student.page
+      .getByRole("button", { name: "Aceitar Prescrição", exact: true })
+      .click();
+    await expect(
+      student.page.getByText("Prescrição aceita com sucesso!", { exact: true }),
+    ).toBeVisible();
+    const accepted = await coach.context.request.get(
+      `/backend/coach/athletes/${athleteId}/prescriptions`,
+    );
+    expect(
+      (await accepted.json()).find(
+        (item: { name: string }) => item.name === title,
+      ),
+    ).toMatchObject({
+      status: "ACCEPTED",
+      approvedByUserId: fixtures().users.coach.id,
+    });
+  } finally {
+    await Promise.all([coach.context.close(), student.context.close()]);
+  }
+});
+
 test("declared professional uses the dashboard on desktop and mobile; pending access has support", async ({
   browser,
 }) => {
@@ -79,7 +297,7 @@ test("student reads inbox and admin can see feedback without a CREF requirement 
   const student = await asRole(browser, "athlete", true);
   await student.page.goto("/");
   await student.page
-    .getByRole("button", { name: /^Notificações, 1 não lidas$/ })
+    .getByRole("button", { name: /^Notificações, [1-9]\d* não lidas$/ })
     .click();
   await expect(
     student.page.getByText("Aviso piloto E2E", { exact: true }),

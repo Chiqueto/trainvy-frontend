@@ -3,12 +3,15 @@ import { AiFeature } from "@/app/_components/ai-availability-provider";
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { useHydrated } from "@/lib/use-hydrated";
 import {
   ArrowDown,
   ArrowUp,
   ChevronDown,
   ChevronsUpDown,
   Dumbbell,
+  Copy,
+  Eye,
   LoaderCircle,
   Plus,
   Sparkles,
@@ -22,6 +25,7 @@ import {
 } from "@/app/planning/_actions";
 import {
   createDraftExercise,
+  duplicateDraftWorkoutDay,
   createDraftWorkoutDay,
   createInitialWorkoutDays,
   deserializeWorkoutDays,
@@ -30,6 +34,10 @@ import {
   type WorkoutPlanDraftDay,
   type WorkoutPlanDraftExercise,
 } from "@/app/planning/_lib/workout-plan-builder";
+import {
+  WorkoutPlanReviewDialog,
+  WorkoutPlanSummary,
+} from "./workout-plan-review-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AthleteAiWorkoutPlanModal } from "./athlete-ai-workout-plan-modal";
@@ -53,6 +61,7 @@ export function WorkoutPlanBuilder({
   defaultExpandedAll = false,
 }: WorkoutPlanBuilderProps) {
   const router = useRouter();
+  const hydrated = useHydrated();
   const [name, setName] = useState(initialPlan?.name ?? "");
   const [activate, setActivate] = useState(false);
   const [plannedStartDate, setPlannedStartDate] = useState("");
@@ -67,10 +76,13 @@ export function WorkoutPlanBuilder({
     if (defaultExpandedAll) {
       return new Set(days.map((d, i) => d.clientId ?? d.id ?? String(i)));
     }
-    return new Set<string>();
+    return new Set<string>(
+      days[0] ? [days[0].clientId ?? days[0].id ?? "0"] : [],
+    );
   });
   const [error, setError] = useState<string>();
   const [isPending, startTransition] = useTransition();
+  const [reviewOpen, setReviewOpen] = useState(false);
   const [isAiModalOpen, setIsAiModalOpen] = useState(initialOpenAi);
 
   function toggleDayExpand(dayKey: string) {
@@ -113,6 +125,16 @@ export function WorkoutPlanBuilder({
     setDays((current) => [...current, newDay]);
     const key = newDay.clientId ?? newDay.id ?? String(days.length);
     setExpandedDayIds((current) => new Set(current).add(key));
+  }
+
+  function duplicateWorkout(index: number) {
+    const copy = duplicateDraftWorkoutDay(days[index]);
+    setDays((current) => [
+      ...current.slice(0, index + 1),
+      copy,
+      ...current.slice(index + 1),
+    ]);
+    setExpandedDayIds((current) => new Set(current).add(copy.clientId!));
   }
 
   function removeWorkout(index: number) {
@@ -165,7 +187,8 @@ export function WorkoutPlanBuilder({
     updateDay(dayIndex, { exercises });
   }
 
-  function submit() {
+  function submit(reviewOnly = false) {
+    if (isPending) return;
     const validationError = validateWorkoutPlanDraft(
       name,
       days,
@@ -176,7 +199,7 @@ export function WorkoutPlanBuilder({
       setError(validationError);
       const dayIndexWithErr = days.findIndex(
         (d, idx) =>
-          validationError.includes(d.name.trim()) ||
+          (!!d.name.trim() && validationError.includes(d.name.trim())) ||
           validationError.includes(`Treino ${idx + 1}`),
       );
       if (dayIndexWithErr >= 0) {
@@ -194,46 +217,61 @@ export function WorkoutPlanBuilder({
     }
 
     setError(undefined);
+    if (reviewOnly) {
+      setReviewOpen(true);
+      return;
+    }
     startTransition(async () => {
-      const workoutDays = serializeWorkoutDays(days);
-      const result =
-        mode === "edit" && initialPlan
-          ? await editWorkoutPlanAction(initialPlan.id, {
-              name: name.trim(),
-              workoutDays,
-            })
-          : mode === "standalone"
-            ? await createStandaloneWorkoutPlanAction({
+      try {
+        const workoutDays = serializeWorkoutDays(days);
+        const result =
+          mode === "edit" && initialPlan
+            ? await editWorkoutPlanAction(initialPlan.id, {
                 name: name.trim(),
                 workoutDays,
-                activate,
               })
-            : await createWorkoutPlanInPeriodizationAction(periodizationId!, {
-                name: name.trim(),
-                workoutDays,
-                plannedStartDate: plannedStartDate || null,
-                plannedEndDate: plannedEndDate || null,
-                notes: notes.trim() || null,
-              });
+            : mode === "standalone"
+              ? await createStandaloneWorkoutPlanAction({
+                  name: name.trim(),
+                  workoutDays,
+                  activate,
+                })
+              : await createWorkoutPlanInPeriodizationAction(periodizationId!, {
+                  name: name.trim(),
+                  workoutDays,
+                  plannedStartDate: plannedStartDate || null,
+                  plannedEndDate: plannedEndDate || null,
+                  notes: notes.trim() || null,
+                });
 
-      if (!result.success) {
-        setError(result.error);
-        return;
+        if (!result.success) {
+          setError(result.error);
+          return;
+        }
+
+        const destination =
+          mode === "edit" && initialPlan
+            ? `/workout-plans/${initialPlan.id}`
+            : mode === "standalone"
+              ? "/planning"
+              : `/planning/periodizations/${periodizationId}`;
+        router.push(destination);
+        router.refresh();
+      } catch {
+        setError(
+          "Não foi possível salvar. Seus dados continuam aqui; tente novamente.",
+        );
       }
-
-      const destination =
-        mode === "edit" && initialPlan
-          ? `/workout-plans/${initialPlan.id}`
-          : mode === "standalone"
-            ? "/planning"
-            : `/planning/periodizations/${periodizationId}`;
-      router.push(destination);
-      router.refresh();
     });
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <fieldset
+      disabled={!hydrated || isPending}
+      aria-busy={!hydrated || isPending}
+      aria-label="Editor de plano de treino"
+      className="flex min-w-0 flex-col gap-6"
+    >
       {/* Banner de Geração com IA / Importação de Ficha */}
       <AiFeature capability="planning">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-2xl border border-primary/30 bg-primary/5 shadow-xs">
@@ -390,7 +428,7 @@ export function WorkoutPlanBuilder({
               className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4 transition-all shadow-xs"
             >
               <div
-                className="flex items-center justify-between gap-2 cursor-pointer select-none"
+                className="flex flex-col items-stretch gap-2 cursor-pointer select-none sm:flex-row sm:items-center sm:justify-between"
                 onClick={() => toggleDayExpand(dayKey)}
                 role="button"
                 tabIndex={0}
@@ -430,9 +468,18 @@ export function WorkoutPlanBuilder({
                 </div>
 
                 <div
-                  className="flex shrink-0 items-center gap-0.5"
+                  className="flex shrink-0 items-center self-end gap-0.5 sm:self-auto"
                   onClick={(e) => e.stopPropagation()}
                 >
+                  <button
+                    type="button"
+                    aria-label={`Duplicar ${day.name}`}
+                    onClick={() => duplicateWorkout(dayIndex)}
+                    disabled={isPending}
+                    className="flex size-8 items-center justify-center rounded-full hover:bg-accent"
+                  >
+                    <Copy className="size-4" />
+                  </button>
                   <button
                     type="button"
                     aria-label={`Mover treino para cima`}
@@ -741,32 +788,70 @@ export function WorkoutPlanBuilder({
         </Button>
       </section>
 
-      {error && (
-        <p
-          role="alert"
-          className="rounded-xl bg-destructive/10 p-3 text-sm text-destructive"
-        >
-          {error}
-        </p>
-      )}
-
-      <Button
-        type="button"
-        className="h-12 w-full rounded-full text-sm font-semibold"
-        disabled={isPending}
-        onClick={submit}
+      <div
+        className="sticky z-20 space-y-2 rounded-2xl border border-border bg-background/95 p-3 shadow-lg backdrop-blur-md"
+        style={{ bottom: "var(--workout-builder-bottom, 1rem)" }}
       >
-        {isPending && <LoaderCircle className="animate-spin" />}
-        {isPending
-          ? mode === "edit"
-            ? "Salvando..."
-            : "Criando..."
-          : mode === "edit"
-            ? "Salvar alterações"
-            : mode === "standalone"
-              ? "Criar plano"
-              : "Criar plano e adicionar etapa"}
-      </Button>
+        {error && (
+          <p
+            role="alert"
+            className="rounded-xl bg-destructive/10 p-3 text-sm text-destructive"
+          >
+            {error}
+          </p>
+        )}
+
+        <WorkoutPlanSummary days={days} />
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => submit(true)}
+            disabled={isPending}
+            className="h-12 rounded-full sm:flex-1"
+          >
+            <Eye className="size-4" />
+            Revisar ficha
+          </Button>{" "}
+          <Button
+            type="button"
+            className="h-12 w-full rounded-full text-sm font-semibold sm:flex-1"
+            disabled={isPending}
+            onClick={() => submit()}
+          >
+            {isPending && <LoaderCircle className="animate-spin" />}
+            {isPending
+              ? mode === "edit"
+                ? "Salvando..."
+                : "Criando..."
+              : mode === "edit"
+                ? "Salvar alterações"
+                : mode === "standalone"
+                  ? "Criar plano"
+                  : "Criar plano e adicionar etapa"}
+          </Button>
+        </div>
+      </div>
+      {reviewOpen && (
+        <WorkoutPlanReviewDialog
+          name={name}
+          days={days}
+          notes={
+            mode === "standalone"
+              ? activate
+                ? "Este plano será definido como seu plano atual."
+                : "Este plano será salvo sem ser ativado."
+              : notes
+          }
+          confirmLabel="Confirmar e salvar"
+          onClose={() => setReviewOpen(false)}
+          onConfirm={() => {
+            setReviewOpen(false);
+            submit();
+          }}
+          pending={isPending}
+        />
+      )}
 
       <AiFeature capability="planning">
         <AthleteAiWorkoutPlanModal
@@ -782,6 +867,6 @@ export function WorkoutPlanBuilder({
           }}
         />
       </AiFeature>
-    </div>
+    </fieldset>
   );
 }

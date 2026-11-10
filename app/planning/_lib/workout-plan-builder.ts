@@ -72,6 +72,21 @@ export function createDraftWorkoutDay(letter: string): WorkoutPlanDraftDay {
   };
 }
 
+export function duplicateDraftWorkoutDay(
+  day: WorkoutPlanDraftDay,
+): WorkoutPlanDraftDay {
+  return {
+    ...day,
+    id: undefined,
+    clientId: createClientDayId(),
+    name: `${day.name.trim() || "Treino"} (cópia)`,
+    exercises: day.exercises.map((exercise) => ({
+      ...exercise,
+      id: undefined,
+    })),
+  };
+}
+
 export function createInitialWorkoutDays(): WorkoutPlanDraftDay[] {
   return [
     {

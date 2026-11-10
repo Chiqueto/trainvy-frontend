@@ -9,6 +9,26 @@ import {
 } from "@/app/personal/_actions";
 
 const { push } = vi.hoisted(() => ({ push: vi.fn() }));
+const catalog = vi.hoisted(() => ({
+  refresh: vi.fn(async () => []),
+  exercises: [
+    {
+      id: "catalog-remada",
+      name: "Remada no cabo",
+      muscles: [],
+      ownerUserId: null,
+      hasMedia: false,
+    },
+  ],
+}));
+vi.mock("@/app/_lib/hooks/use-exercise-catalog", () => ({
+  useExerciseCatalog: () => ({
+    exercises: catalog.exercises,
+    search: () => catalog.exercises,
+    isSyncing: false,
+    refresh: catalog.refresh,
+  }),
+}));
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push, refresh: vi.fn() }),
 }));
@@ -53,6 +73,15 @@ function renderBuilder(data = initialData) {
   );
 }
 
+function approveReview() {
+  fireEvent.click(
+    screen.getByRole("checkbox", { name: /Revisei os exercícios/ }),
+  );
+  fireEvent.click(
+    screen.getByRole("button", { name: "Confirmar e enviar ao aluno" }),
+  );
+}
+
 describe("Salvar prescrição do personal", () => {
   beforeEach(() => vi.clearAllMocks());
 
@@ -68,6 +97,15 @@ describe("Salvar prescrição do personal", () => {
     fireEvent.click(
       screen.getByRole("button", { name: /revisar e aprovar prescrição/i }),
     );
+    expect(createPrescriptionDraftAction).not.toHaveBeenCalled();
+    expect(
+      (
+        screen.getByRole("button", {
+          name: "Confirmar e enviar ao aluno",
+        }) as HTMLButtonElement
+      ).disabled,
+    ).toBe(true);
+    approveReview();
     await waitFor(() => expect(push).toHaveBeenCalled());
     expect(createPrescriptionDraftAction).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -108,6 +146,22 @@ describe("Salvar prescrição do personal", () => {
     expect(push).not.toHaveBeenCalled();
   });
 
+  it("busca um exercício no catálogo e mantém a edição manual disponível", async () => {
+    renderBuilder();
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "Buscar no catálogo: Selecionar exercício",
+      }),
+    );
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Selecionar Remada no cabo" }),
+    );
+    const input = screen.getByLabelText("Nome do exercício 1 de Treino A");
+    expect((input as HTMLInputElement).value).toBe("Remada no cabo");
+    fireEvent.change(input, { target: { value: "Remada adaptada" } });
+    expect((input as HTMLInputElement).value).toBe("Remada adaptada");
+  });
+
   it("reutiliza o rascunho e sua versão quando o envio falha", async () => {
     vi.mocked(createPrescriptionDraftAction).mockResolvedValue({
       success: true,
@@ -127,6 +181,7 @@ describe("Salvar prescrição do personal", () => {
       name: /revisar e aprovar prescrição/i,
     });
     fireEvent.click(button);
+    approveReview();
     await waitFor(() =>
       expect(toast.error).toHaveBeenCalledWith(
         "Rascunho salvo. Falha no envio",
@@ -136,6 +191,7 @@ describe("Salvar prescrição do personal", () => {
       expect(button.closest("fieldset")?.disabled).toBe(false),
     );
     fireEvent.click(button);
+    approveReview();
     await waitFor(() => expect(push).toHaveBeenCalled());
     expect(createPrescriptionDraftAction).toHaveBeenCalledTimes(1);
     expect(updatePrescriptionDraftAction).toHaveBeenCalledWith(
