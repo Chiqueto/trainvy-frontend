@@ -1,3 +1,4 @@
+import { getHangPowerCleanPose } from "./hang-power-clean-pose";
 import { getSumoDumbbellPose } from "./sumo-dumbbell-pose";
 import { getDeadliftPose } from "./deadlift-pose";
 import { getSumoDeadliftPose } from "./sumo-deadlift-pose";
@@ -58,6 +59,12 @@ export function getExerciseDepth(phase: number) {
   );
 }
 
+export function getExerciseProgress(exercise:ExerciseAnimation, phase:number){
+  if(exercise==="hang-power-clean")return ((phase%1)+1)%1;
+  const depth=getExerciseDepth(phase);
+  return exercise==="deadlift"||exercise==="sumo-deadlift"?1-depth:depth;
+}
+
 /** Two-bone IK with a pole vector, retaining segment lengths at every frame. */
 export function solveJoint(
   start: Vector3,
@@ -86,6 +93,7 @@ export function getExercisePose(
   exercise: ExerciseAnimation,
   depth: number,
 ): ReturnType<typeof getFlatDumbbellFlyPose> {
+  if (exercise === "hang-power-clean") return getHangPowerCleanPose(depth);
   if (exercise === "sumo-dumbbell-squat") return getSumoDumbbellPose(depth);
   if (exercise === "deadlift") return getDeadliftPose(depth);
   if (exercise === "sumo-deadlift") return getSumoDeadliftPose(depth);
@@ -384,7 +392,7 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
       const { side, hip, knee, ankle, footRotation, shoulder, elbow, wrist } =
         limb;
       const suffix = side < 0 ? "L" : "R";
-      if (exercise === "sumo-deadlift" || exercise === "deadlift" || exercise === "sumo-dumbbell-squat" || exercise === "hip-abduction" || exercise === "hip-thrust" || exercise === "stiff" || exercise === "horizontal-leg-press" || exercise === "leg-press-45" || exercise === "hack-squat" || exercise === "prone-leg-curl" || exercise === "seated-leg-curl" || exercise === "leg-extension" || exercise === "decline-bench-press" || exercise === "pec-deck" || exercise === "machine-fly" || exercise === "machine-chest-press") {
+      if (exercise === "hang-power-clean" || exercise === "sumo-deadlift" || exercise === "deadlift" || exercise === "sumo-dumbbell-squat" || exercise === "hip-abduction" || exercise === "hip-thrust" || exercise === "stiff" || exercise === "horizontal-leg-press" || exercise === "leg-press-45" || exercise === "hack-squat" || exercise === "prone-leg-curl" || exercise === "seated-leg-curl" || exercise === "leg-extension" || exercise === "decline-bench-press" || exercise === "pec-deck" || exercise === "machine-fly" || exercise === "machine-chest-press") {
         const restHip = rest.get(`thigh_${suffix}`)!;
         const restKnee = rest.get(`shin_${suffix}`)!;
         const restAnkle = rest.get(`foot_${suffix}`)!;

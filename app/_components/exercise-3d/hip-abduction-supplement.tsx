@@ -41,7 +41,7 @@ export function HipAbductionSupplement({
     const geometry = source.geometry.clone();
     const count = geometry.attributes.position.count;
     for (const [name, size] of [
-      ["_pecdeckmuscles", 1],
+      ["_pecdeckmuscles", 2],
       ["_flymuscles", 1],
       ["_smithbenchmuscles", 1],
       ["_machinechestpressmuscles", 1],

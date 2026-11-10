@@ -11,6 +11,7 @@ import {
 } from "react";
 import { RotateCcw, Expand, Pause, Play, Rotate3D } from "lucide-react";
 import { toast } from "sonner";
+import { getHangPowerCleanPhaseLabel } from "./hang-power-clean-pose";
 import { EXERCISE_ANIMATIONS, type ExerciseAnimation } from "./exercises";
 import { ANATOMY_COLORS } from "./anatomy-material";
 import { FeatureConsentGate } from "../feature-consent";
@@ -51,6 +52,7 @@ export function Exercise3DViewer(props: {
 }
 
 function phaseLabel(phase: number, exercise: ExerciseAnimation) {
+  if(exercise === "hang-power-clean")return getHangPowerCleanPhaseLabel(phase);
   if (exercise === "standing-calf" || exercise === "seated-calf") {
     if (phase < 0.04 || phase >= 0.99) return "Calcanhares elevados";
     if (phase < 0.48) return "Descida controlada";

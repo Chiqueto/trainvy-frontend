@@ -11,7 +11,7 @@ import {
 } from "@react-three/drei";
 import { Bone, Group, Skeleton, SkinnedMesh, type BufferGeometry } from "three";
 import { createFlyMuscleMask } from "./fly-muscles";
-import { createPecDeckMuscleMask } from "./pec-deck-muscles";
+import { createPecDeckHangCleanAttribute } from "./hang-power-clean-muscles";
 import { HipAbductionSupplement } from "./hip-abduction-supplement";
 import { HipThrustBench, HipThrustBarPad } from "./hip-thrust-bench";
 import { createSmithBenchMuscleMask } from "./smith-bench-muscles";
@@ -38,7 +38,7 @@ import { createLowerBodyMuscleAttribute } from "./lower-body-muscles";
 import { createTissueMaterial } from "./anatomy-material";
 import {
   createPoseDriver,
-  getExerciseDepth,
+  getExerciseProgress,
   INCLINE_BENCH_ANGLE,
   DECLINE_BENCH_ANGLE,
   DECLINE_ROLLER_RADIUS,
@@ -529,7 +529,7 @@ function Athlete({
       if (object instanceof Bone) bones.set(object.name, object);
       if (object instanceof SkinnedMesh) {
         object.geometry = object.geometry.clone();
-        object.geometry.setAttribute("_pecdeckmuscles",createPecDeckMuscleMask(object.geometry));
+        object.geometry.setAttribute("_pecdeckmuscles",createPecDeckHangCleanAttribute(object.geometry));
         object.geometry.setAttribute("_flymuscles", createFlyMuscleMask(object.geometry));
         object.geometry.setAttribute("_smithbenchmuscles", createSmithBenchMuscleMask(object.geometry));
         object.geometry.setAttribute("_machinechestpressmuscles", createMachineChestPressMuscleMask(object.geometry));
@@ -568,7 +568,7 @@ function Athlete({
   }, [rig, onReady]);
   useFrame((_, delta) => {
     const phase = tick(delta);
-    const depth = exercise === "deadlift" || exercise === "sumo-deadlift" ? 1 - getExerciseDepth(phase) : getExerciseDepth(phase);
+    const depth = getExerciseProgress(exercise,phase);
     const pose = rig.applyPose(exercise, depth);
     bar.current?.position.copy(pose.bar);
     if (exercise === "goblet-squat") {
@@ -669,6 +669,13 @@ function getCameraParams(
   exercise: ExerciseAnimation,
   view: SceneProps["view"],
 ): { position: [number, number, number]; target: [number, number, number] } {
+  if(exercise === "hang-power-clean") {
+    const target:[number,number,number]=[0,.95,.05];
+    if(view==="front")return {position:[0,1.9,4],target};
+    if(view==="side")return {position:[-4,1.4,.05],target};
+    if(view==="back")return {position:[0,1.8,-4],target};
+    return {position:[-3,2,3.2],target};
+  }
   if (exercise === "seated-calf") {
     const target:[number,number,number]=[0,.75,.20];
     if(view==="side")return {position:[-3,1.3,.20],target};

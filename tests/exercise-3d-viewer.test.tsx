@@ -46,6 +46,11 @@ function motionPreference(matches = false) {
   );
 }
 describe("Anatomical viewer controls", () => {
+  it("shows the LPO catch phase when scrubbing Hang Power Clean", async () => {
+    render(<Exercise3DViewer exercise="hang-power-clean" />);
+    fireEvent.change(screen.getByRole("slider",{name:"Posição do movimento"}),{target:{value:"450"}});
+    expect(screen.getByText("Recepção em agachamento parcial")).toBeDefined();
+  });
   beforeEach(() => {
     vi.clearAllMocks();
     motionPreference();
