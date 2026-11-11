@@ -30,10 +30,7 @@ export function getHangPowerCleanPhaseLabel(phase: number) {
 /** A full cycle, not a squat-style depth: hang, extension, turnover, power catch, recovery, reset. */
 export function getHangPowerCleanPose(phase: number) {
   const p = MathUtils.clamp(phase, 0, 1);
-  if (p <= 0.32) {
-    const depth = 0.34 * MathUtils.smoothstep(p, 0.08, 0.28);
-    return getDeadliftPose(depth);
-  }
+  const carry = getDeadliftPose(0.34 * MathUtils.smoothstep(p, 0.08, 0.28));
   const hang = getDeadliftPose(0.34),
     top = getDeadliftPose(0);
   const rack = (hipY: number, hipZ: number, angle: number) =>
@@ -93,6 +90,13 @@ export function getHangPowerCleanPose(phase: number) {
     b = keys[Math.max(0, end)];
   const t = a === b ? 0 : MathUtils.smoothstep(p, a[0], b[0]);
   const k = a.map((n, i) => MathUtils.lerp(n, b[i], t));
+  if (p <= 0.32) {
+    k[1] = carry.limbs[0].hip.y;
+    k[2] = carry.limbs[0].hip.z;
+    k[3] = 2 * Math.atan2(carry.tilt.x, carry.tilt.w);
+    k[4] = carry.bar.y;
+    k[5] = carry.bar.z;
+  }
   const hipCenter = v(0, k[1], k[2]),
     tilt = new Quaternion().setFromAxisAngle(v(1, 0, 0), k[3]);
   const body = (point: Vector3) =>
@@ -113,7 +117,8 @@ export function getHangPowerCleanPose(phase: number) {
     .sub(v(0, -0.05, 0.16).applyQuaternion(footRotation))
     .add(v(0, k[8], 0));
   // A small unloaded-foot reposition avoids dragging planted soles during the reset.
-  if(p>.82&&p<.92)ankleCenter.y+=.02*Math.sin(Math.PI*(p-.82)/.10);
+  if (p > 0.82 && p < 0.92)
+    ankleCenter.y += 0.02 * Math.sin((Math.PI * (p - 0.82)) / 0.1);
   const limbs = [-1].map((side) => {
     const hip = hipCenter.clone().setX(side * 0.14),
       ankle = ankleCenter.clone().setX(side * k[7]);
@@ -123,11 +128,41 @@ export function getHangPowerCleanPose(phase: number) {
     let handRotation = new Quaternion(),
       wrist = grip.clone(),
       elbow = shoulder.clone();
-    const pole = v(
-      side * MathUtils.lerp(0.4, 0.05, k[9]),
-      MathUtils.lerp(0, 0.16, k[9]),
-      MathUtils.lerp(-1, 1, k[9]),
-    );
+    const elbowPole = (target: Vector3) => {
+      const axis = target.clone().sub(shoulder).normalize();
+      // A lateral reference cannot collapse as the forearm passes through horizontal.
+      const outside = v(side, 0, 0)
+        .addScaledVector(axis, -axis.x * side)
+        .normalize();
+      const around = outside.clone().cross(axis).normalize();
+      const angleFor = (guide: Vector3) =>
+        Math.atan2(guide.dot(around), guide.dot(outside));
+      const pullAngle = angleFor(v(side * 0.25, 0, -1));
+      const rackAngle = -2.5;
+      let swivel = pullAngle;
+      if (p > 0.37 && p < 0.395)
+        swivel = MathUtils.lerp(
+          pullAngle,
+          0,
+          MathUtils.smoothstep(p, 0.37, 0.395),
+        );
+      else if (p >= 0.395 && p < 0.43)
+        swivel = MathUtils.lerp(
+          0,
+          rackAngle,
+          MathUtils.smoothstep(p, 0.395, 0.43),
+        );
+      else if (p >= 0.43 && p <= 0.68) swivel = rackAngle;
+      else if (p > 0.68 && p < 0.82)
+        swivel = MathUtils.lerp(
+          rackAngle,
+          pullAngle,
+          MathUtils.smoothstep(p, 0.68, 0.82),
+        );
+      return outside
+        .multiplyScalar(Math.cos(swivel))
+        .addScaledVector(around, Math.sin(swivel));
+    };
     for (let i = 0; i < 12; i++) {
       wrist = grip
         .clone()
@@ -149,14 +184,26 @@ export function getHangPowerCleanPose(phase: number) {
         grip.y = bar.y;
         wrist.y += Math.max(0, delta);
       }
-      elbow = solveJoint(shoulder, wrist, ARM_LENGTH, FOREARM_LENGTH, pole);
-      handRotation = frame(wrist.clone().sub(elbow), v(0, 0, 1)).multiply(
-        frame(v(side * 0.025, -0.265, 0.03), v(0, 0, 1)).invert(),
+      elbow = solveJoint(
+        shoulder,
+        wrist,
+        ARM_LENGTH,
+        FOREARM_LENGTH,
+        elbowPole(wrist),
+      );
+      handRotation = frame(wrist.clone().sub(elbow), v(1, 0, 0)).multiply(
+        frame(v(side * 0.025, -0.265, 0.03), v(1, 0, 0)).invert(),
       );
     }
     // Closed grip stays on the shaft; wrist orientation follows the forearm through turnover.
     wrist = grip.clone().sub(v(0, 0.004, 0.012).applyQuaternion(handRotation));
-    elbow = solveJoint(shoulder, wrist, ARM_LENGTH, FOREARM_LENGTH, pole);
+    elbow = solveJoint(
+      shoulder,
+      wrist,
+      ARM_LENGTH,
+      FOREARM_LENGTH,
+      elbowPole(wrist),
+    );
     return {
       side,
       hip,
