@@ -223,6 +223,97 @@ export function ThemeSticker({ theme, className = "" }: ThemeStickerProps) {
         </div>
       );
 
+    case "GAMES":
+      return (
+        <div
+          className={`relative flex items-center justify-center rounded-2xl border-2 border-indigo-400/40 bg-gradient-to-br from-indigo-500/20 via-violet-500/10 to-fuchsia-500/20 p-3 shadow-lg shadow-indigo-500/10 ${className}`}
+        >
+          {/* Controle Gamer Retrô + Espada 8-bit */}
+          <svg
+            viewBox="0 0 120 120"
+            className="size-20 drop-shadow-md sm:size-24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            {/* Aura Cibernética */}
+            <circle cx="60" cy="60" r="46" fill="url(#game_aura)" opacity="0.35" />
+            {/* Corpo do Controle */}
+            <rect x="22" y="42" width="76" height="46" rx="16" fill="#1E1B4B" stroke="#818CF8" strokeWidth="2.5" />
+            {/* D-Pad (Direcional em Cruz) */}
+            <path
+              d="M38 56H44V50H48V56H54V60H48V66H44V60H38V56Z"
+              fill="#A5B4FC"
+            />
+            {/* Botões de Ação (A, B, X, Y) */}
+            <circle cx="72" cy="54" r="3" fill="#EC4899" />
+            <circle cx="80" cy="62" r="3" fill="#3B82F6" />
+            <circle cx="68" cy="62" r="3" fill="#10B981" />
+            <circle cx="76" cy="70" r="3" fill="#F59E0B" />
+            {/* Espada de Pixel / Cristais de XP no topo */}
+            <path
+              d="M60 14L63 24L73 27L63 30L60 40L57 30L47 27L57 24Z"
+              fill="#FDE047"
+            />
+            <circle cx="34" cy="28" r="2.5" fill="#818CF8" />
+            <circle cx="86" cy="28" r="2.5" fill="#C084FC" />
+            <defs>
+              <radialGradient id="game_aura" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#818CF8" />
+                <stop offset="100%" stopColor="#818CF8" stopOpacity="0" />
+              </radialGradient>
+            </defs>
+          </svg>
+          <div className="absolute -bottom-2 rounded-full border border-indigo-400/50 bg-indigo-950/90 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-indigo-300 shadow">
+            LEVEL UP! 🎮
+          </div>
+        </div>
+      );
+
+    case "MAROMBA_BR":
+      return (
+        <div
+          className={`relative flex items-center justify-center rounded-2xl border-2 border-lime-400/40 bg-gradient-to-br from-lime-500/20 via-emerald-500/10 to-amber-500/20 p-3 shadow-lg shadow-lime-500/10 ${className}`}
+        >
+          {/* Haltere Pesado com Asas / Coroa Maromba */}
+          <svg
+            viewBox="0 0 120 120"
+            className="size-20 drop-shadow-md sm:size-24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            {/* Brilho Dourado */}
+            <circle cx="60" cy="60" r="46" fill="url(#maromba_aura)" opacity="0.3" />
+            {/* Barra do Haltere Central */}
+            <rect x="36" y="56" width="48" height="8" rx="2" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="1" />
+            {/* Anilhas Esquerdas */}
+            <rect x="22" y="40" width="8" height="40" rx="3" fill="#84CC16" stroke="#4D7C0F" strokeWidth="1.5" />
+            <rect x="30" y="46" width="6" height="28" rx="2" fill="#A3E635" />
+            {/* Anilhas Direitas */}
+            <rect x="90" y="40" width="8" height="40" rx="3" fill="#84CC16" stroke="#4D7C0F" strokeWidth="1.5" />
+            <rect x="84" y="46" width="6" height="28" rx="2" fill="#A3E635" />
+            {/* Presilhas */}
+            <rect x="34" y="52" width="4" height="16" rx="1" fill="#FEF08A" />
+            <rect x="82" y="52" width="4" height="16" rx="1" fill="#FEF08A" />
+            {/* Raio de Potência no Topo */}
+            <path
+              d="M62 16L52 34H62L58 48L72 30H60L66 16Z"
+              fill="#FACC15"
+              stroke="#CA8A04"
+              strokeWidth="1.5"
+            />
+            <defs>
+              <radialGradient id="maromba_aura" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#A3E635" />
+                <stop offset="100%" stopColor="#A3E635" stopOpacity="0" />
+              </radialGradient>
+            </defs>
+          </svg>
+          <div className="absolute -bottom-2 rounded-full border border-lime-400/50 bg-lime-950/90 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-lime-300 shadow">
+            METEU O SHAPE! 🥩
+          </div>
+        </div>
+      );
+
     case "ALL":
     default:
       return (

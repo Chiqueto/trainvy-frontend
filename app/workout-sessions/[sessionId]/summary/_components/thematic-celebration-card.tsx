@@ -50,6 +50,18 @@ const THEME_ACCENTS: Record<
     badge: "bg-amber-400/20 text-amber-300 border-amber-400/30",
     text: "text-amber-300",
   },
+  GAMES: {
+    border: "border-indigo-500/40",
+    bg: "from-indigo-500/15 via-violet-500/10 to-card",
+    badge: "bg-indigo-500/20 text-indigo-400 border-indigo-500/30",
+    text: "text-indigo-400",
+  },
+  MAROMBA_BR: {
+    border: "border-lime-500/40",
+    bg: "from-lime-500/15 via-emerald-500/10 to-card",
+    badge: "bg-lime-500/20 text-lime-400 border-lime-500/30",
+    text: "text-lime-400",
+  },
 };
 
 export function ThematicCelebrationCard({

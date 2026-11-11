@@ -3388,6 +3388,8 @@ export const GetHomeData200GamificationTheme = {
   VEHICLES: "VEHICLES",
   ANIMALS: "ANIMALS",
   MOVIES_SERIES: "MOVIES_SERIES",
+  GAMES: "GAMES",
+  MAROMBA_BR: "MAROMBA_BR",
 } as const;
 
 export type GetHomeData200ConsistencyByDay = {
@@ -3543,7 +3545,9 @@ export type GetUserTrainData200 = {
     | "ANIMES"
     | "VEHICLES"
     | "ANIMALS"
-    | "MOVIES_SERIES";
+    | "MOVIES_SERIES"
+    | "GAMES"
+    | "MAROMBA_BR";
   /** @nullable */
   previousWeightInGrams?: number | null;
   /** @nullable */
@@ -3583,6 +3587,8 @@ export const UpsertUserTrainDataBodyGamificationTheme = {
   VEHICLES: "VEHICLES",
   ANIMALS: "ANIMALS",
   MOVIES_SERIES: "MOVIES_SERIES",
+  GAMES: "GAMES",
+  MAROMBA_BR: "MAROMBA_BR",
 } as const;
 
 export type UpsertUserTrainDataBody = {
@@ -3620,6 +3626,8 @@ export const UpsertUserTrainData200GamificationTheme = {
   VEHICLES: "VEHICLES",
   ANIMALS: "ANIMALS",
   MOVIES_SERIES: "MOVIES_SERIES",
+  GAMES: "GAMES",
+  MAROMBA_BR: "MAROMBA_BR",
 } as const;
 
 export type UpsertUserTrainData200 = {
@@ -3661,6 +3669,8 @@ export const UpdateGamificationThemeBodyTheme = {
   VEHICLES: "VEHICLES",
   ANIMALS: "ANIMALS",
   MOVIES_SERIES: "MOVIES_SERIES",
+  GAMES: "GAMES",
+  MAROMBA_BR: "MAROMBA_BR",
 } as const;
 
 export type UpdateGamificationThemeBody = {
@@ -3676,6 +3686,8 @@ export const UpdateGamificationTheme200GamificationTheme = {
   VEHICLES: "VEHICLES",
   ANIMALS: "ANIMALS",
   MOVIES_SERIES: "MOVIES_SERIES",
+  GAMES: "GAMES",
+  MAROMBA_BR: "MAROMBA_BR",
 } as const;
 
 export type UpdateGamificationTheme200 = {

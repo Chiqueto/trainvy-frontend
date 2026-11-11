@@ -8441,7 +8441,9 @@
                         "ANIMES",
                         "VEHICLES",
                         "ANIMALS",
-                        "MOVIES_SERIES"
+                        "MOVIES_SERIES",
+                        "GAMES",
+                        "MAROMBA_BR"
                       ]
                     },
                     "workoutStreak": {
@@ -8918,7 +8920,9 @@
                         "ANIMES",
                         "VEHICLES",
                         "ANIMALS",
-                        "MOVIES_SERIES"
+                        "MOVIES_SERIES",
+                        "GAMES",
+                        "MAROMBA_BR"
                       ]
                     },
                     "previousWeightInGrams": {
@@ -9095,7 +9099,9 @@
                       "ANIMES",
                       "VEHICLES",
                       "ANIMALS",
-                      "MOVIES_SERIES"
+                      "MOVIES_SERIES",
+                      "GAMES",
+                      "MAROMBA_BR"
                     ]
                   }
                 },
@@ -9144,7 +9150,9 @@
                         "ANIMES",
                         "VEHICLES",
                         "ANIMALS",
-                        "MOVIES_SERIES"
+                        "MOVIES_SERIES",
+                        "GAMES",
+                        "MAROMBA_BR"
                       ]
                     }
                   },
@@ -9254,7 +9262,9 @@
                       "ANIMES",
                       "VEHICLES",
                       "ANIMALS",
-                      "MOVIES_SERIES"
+                      "MOVIES_SERIES",
+                      "GAMES",
+                      "MAROMBA_BR"
                     ]
                   }
                 },
@@ -9283,7 +9293,9 @@
                         "ANIMES",
                         "VEHICLES",
                         "ANIMALS",
-                        "MOVIES_SERIES"
+                        "MOVIES_SERIES",
+                        "GAMES",
+                        "MAROMBA_BR"
                       ]
                     }
                   },
