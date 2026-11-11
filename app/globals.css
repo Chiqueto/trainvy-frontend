@@ -244,3 +244,28 @@ body:has(.app-navigation) {
     padding: 1.75rem;
   }
 }
+
+@keyframes energyPulse {
+  from {
+    stroke-dashoffset: 48;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes scanline {
+  0% {
+    top: 0%;
+    opacity: 0.2;
+  }
+  50% {
+    top: 96%;
+    opacity: 0.9;
+  }
+  100% {
+    top: 0%;
+    opacity: 0.2;
+  }
+}
+

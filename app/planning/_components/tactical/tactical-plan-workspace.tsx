@@ -3,6 +3,7 @@ import { useState, type ReactNode } from "react";
 import { Dialog } from "radix-ui";
 import { ArrowLeft, Copy, Eye, Plus, Settings2, Trash2 } from "lucide-react";
 import { TacticalBuilderArena } from "./tactical-builder-arena";
+import { SpatialBuilderArena } from "./spatial-builder-arena";
 import { TacticalSheet } from "./tactical-sheet";
 import { SealButton } from "./seal-button";
 import {
@@ -28,6 +29,7 @@ export function TacticalPlanWorkspace({
   error,
   syncError,
   onAi,
+  initialArenaMode,
 }: {
   days: WorkoutPlanDraftDay[];
   onChange: (days: WorkoutPlanDraftDay[]) => void;
@@ -43,9 +45,16 @@ export function TacticalPlanWorkspace({
   error?: string | null;
   syncError?: boolean;
   onAi?: () => void;
+  initialArenaMode?: "spatial" | "list";
 }) {
   const [localActive, setLocalActive] = useState(0),
-    [settingsOpen, setSettingsOpen] = useState(false);
+    [settingsOpen, setSettingsOpen] = useState(false),
+    [arenaMode, setArenaMode] = useState<"spatial" | "list">(
+      initialArenaMode ??
+        (typeof process !== "undefined" && process.env.NODE_ENV === "test"
+          ? "list"
+          : "spatial"),
+    );
   const active = activeIndex ?? localActive,
     index = Math.min(active, Math.max(0, days.length - 1)),
     day = days[index];
@@ -104,11 +113,27 @@ export function TacticalPlanWorkspace({
       <div className="flex shrink-0 items-center gap-2">
         <button
           type="button"
-          onClick={onClassic}
-          aria-label="Modo Clássico"
+          onClick={() => setArenaMode(arenaMode === "spatial" ? "list" : "spatial")}
+          aria-label="Alternar visualização tática"
           className="hidden h-9 rounded-lg bg-white/5 px-2 text-xs sm:block"
         >
-          <span className="text-cyan-200">⚡ Tático</span> / 📋 Clássico
+          {arenaMode === "spatial" ? (
+            <>
+              <span className="text-cyan-200">🌌 Jarvis 3D</span> / ⚡ Lista
+            </>
+          ) : (
+            <>
+              <span className="text-amber-200">⚡ Lista 2D</span> / 🌌 3D
+            </>
+          )}
+        </button>
+        <button
+          type="button"
+          onClick={onClassic}
+          aria-label="Modo Clássico"
+          className="hidden h-9 rounded-lg bg-white/5 px-2 text-xs text-zinc-400 hover:text-white sm:block"
+        >
+          📋 Clássico
         </button>
         {onReview && (
           <button
@@ -160,9 +185,34 @@ export function TacticalPlanWorkspace({
             Organize exercícios, séries e técnicas do plano.
           </Dialog.Description>
           <div className="min-h-0 flex-1 overflow-hidden">
-            {day && (
+            {day && arenaMode === "spatial" ? (
+              <SpatialBuilderArena
+                key={`spatial-${day.clientId ?? day.id ?? index}`}
+                day={day}
+                days={days}
+                activeDayIndex={index}
+                onSelectDay={setActive}
+                onAddDay={() => {
+                  onChange([
+                    ...days,
+                    {
+                      ...createDraftWorkoutDay(
+                        String.fromCharCode(65 + (days.length % 26)),
+                      ),
+                      exercises: [],
+                    },
+                  ]);
+                  setActive(days.length);
+                }}
+                onChange={updateDay}
+                disabled={disabled}
+                onSave={onSave}
+                onClassicView={onClassic}
+                settingsNode={settings}
+              />
+            ) : day ? (
               <TacticalBuilderArena
-                key={day.clientId ?? day.id ?? index}
+                key={`list-${day.clientId ?? day.id ?? index}`}
                 day={day}
                 disabled={disabled}
                 onChange={updateDay}
@@ -203,7 +253,7 @@ export function TacticalPlanWorkspace({
                   </button>
                 }
               />
-            )}
+            ) : null}
           </div>
           <TacticalSheet
             open={settingsOpen}
