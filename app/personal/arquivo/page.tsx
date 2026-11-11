@@ -1,3 +1,4 @@
+import { trainingDaysOnly } from "@/app/_lib/training-days";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getMyArchivedPrescriptions } from "@/app/_lib/api/fetch-generated";
@@ -57,12 +58,9 @@ export default async function PrescriptionArchive() {
               {p.prescribedCrefSnapshot ?? "Identificação legada indisponível"}
             </p>
             {p.notes && <Streamdown>{p.notes}</Streamdown>}
-            {p.payload.workoutDays.map((day, i) => (
+            {trainingDaysOnly(p.payload.workoutDays).map((day, i) => (
               <section key={i} className="mt-4 space-y-2">
-                <h2 className="font-semibold">
-                  {day.name}
-                  {day.isRest && " · Descanso"}
-                </h2>
+                <h2 className="font-semibold">{day.name}</h2>
                 {day.exercises.map((exercise, j) => (
                   <p className="text-sm" key={j}>
                     {exercise.name} · {exercise.sets} séries × {exercise.reps}{" "}

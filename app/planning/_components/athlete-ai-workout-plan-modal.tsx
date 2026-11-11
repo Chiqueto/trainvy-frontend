@@ -1,4 +1,5 @@
 "use client";
+import { trainingOnlyImportDraft } from "@/app/_lib/training-days";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { X, Mic, Square, FileUp } from "lucide-react";
@@ -196,7 +197,8 @@ export function AthleteAiWorkoutPlanModal({ isOpen, onClose }: Props) {
                       "Transcreva somente os dados explícitos do arquivo.",
                     ...file,
                   });
-                  if (result.success) setDraft(result.data);
+                  if (result.success)
+                    setDraft(trainingOnlyImportDraft(result.data));
                   else setError(result.error);
                 } finally {
                   setBusy(false);
@@ -219,7 +221,7 @@ export function AthleteAiWorkoutPlanModal({ isOpen, onClose }: Props) {
                   order: i,
                   name: day.name!,
                   weekDay: day.weekDay!,
-                  isRest: day.isRest!,
+                  isRest: false,
                   estimatedDurationInSeconds: day.estimatedDurationInSeconds!,
                   exercises: day.exercises.map((ex, j) => ({
                     ...ex,
@@ -304,21 +306,7 @@ export function AthleteAiWorkoutPlanModal({ isOpen, onClose }: Props) {
                     ))}
                   </select>
                 </label>
-                <label className="grid gap-1 text-sm">
-                  Tipo
-                  <select
-                    required
-                    className={inputClass}
-                    value={day.isRest === null ? "" : String(day.isRest)}
-                    onChange={(e) =>
-                      updateDay(i, "isRest", e.target.value === "true")
-                    }
-                  >
-                    <option value="">Informe</option>
-                    <option value="false">Treino</option>
-                    <option value="true">Descanso</option>
-                  </select>
-                </label>
+
                 <label className="grid gap-1 text-sm">
                   Duração informada (segundos)
                   <input
@@ -458,7 +446,10 @@ export function AthleteAiWorkoutPlanModal({ isOpen, onClose }: Props) {
                 sua lista ou envie uma ficha legível.
               </p>
             )}
-            <p className="rounded-lg border p-3 text-sm">Confira se os dados extraídos da sua ficha estão exatos antes de salvar, especialmente séries, repetições e cargas.</p>
+            <p className="rounded-lg border p-3 text-sm">
+              Confira se os dados extraídos da sua ficha estão exatos antes de
+              salvar, especialmente séries, repetições e cargas.
+            </p>
             <label className="flex items-start gap-2 text-sm">
               <input
                 type="checkbox"

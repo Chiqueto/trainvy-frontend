@@ -494,7 +494,7 @@ export function WorkoutSessionTracker({
             <p className="font-heading text-sm font-semibold text-foreground">
               {isFreeWorkout
                 ? "Nenhum exercício adicionado"
-                : "Dia de descanso"}
+                : "Nenhum exercício nesta sessão"}
             </p>
             <p className="text-xs text-muted-foreground mt-1">
               {isFreeWorkout

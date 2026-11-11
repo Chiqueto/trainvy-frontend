@@ -1,4 +1,5 @@
 "use client";
+import { trainingDaysOnly } from "@/app/_lib/training-days";
 import { serializeAdvancedPrescription } from "@/app/planning/_lib/workout-plan-builder";
 
 import { useRef, useState } from "react";
@@ -170,40 +171,40 @@ export function CoachAiPrescriptionModal({
   const handleApply = () => {
     if (!generatedDraft) return;
 
-    const mappedDays: WorkoutPlanDraftDay[] = generatedDraft.workoutDays.map(
-      (d) => ({
-        name: d.name,
-        weekDay: d.weekDay,
-        isRest: d.isRest,
-        estimatedDurationInMinutes:
-          d.estimatedDurationInMinutes || (d.isRest ? 0 : 60),
-        exercises: (d.exercises || []).map((e) => {
-          const name = e.name.trim();
-          let alt1 = e.alternative1Name?.trim() || "";
-          let alt2 = e.alternative2Name?.trim() || "";
+    const mappedDays: WorkoutPlanDraftDay[] = trainingDaysOnly(
+      generatedDraft.workoutDays,
+    ).map((d) => ({
+      name: d.name,
+      weekDay: d.weekDay,
+      isRest: d.isRest,
+      estimatedDurationInMinutes:
+        d.estimatedDurationInMinutes || (d.isRest ? 0 : 60),
+      exercises: (d.exercises || []).map((e) => {
+        const name = e.name.trim();
+        let alt1 = e.alternative1Name?.trim() || "";
+        let alt2 = e.alternative2Name?.trim() || "";
 
-          if (alt1 && alt1.toLowerCase() === name.toLowerCase()) alt1 = "";
-          if (alt2 && alt2.toLowerCase() === name.toLowerCase()) alt2 = "";
-          if (alt1 && alt2 && alt1.toLowerCase() === alt2.toLowerCase())
-            alt2 = "";
-          if (!alt1 && alt2) {
-            alt1 = alt2;
-            alt2 = "";
-          }
+        if (alt1 && alt1.toLowerCase() === name.toLowerCase()) alt1 = "";
+        if (alt2 && alt2.toLowerCase() === name.toLowerCase()) alt2 = "";
+        if (alt1 && alt2 && alt1.toLowerCase() === alt2.toLowerCase())
+          alt2 = "";
+        if (!alt1 && alt2) {
+          alt1 = alt2;
+          alt2 = "";
+        }
 
-          return {
-            name,
-            sets: e.sets || 3,
-            warmupSets: e.warmupSets ?? 0,
-            reps: e.reps || 10,
-            ...serializeAdvancedPrescription(e),
-            restTimeInSeconds: e.restTimeInSeconds || 90,
-            alternative1Name: alt1,
-            alternative2Name: alt2,
-          };
-        }),
+        return {
+          name,
+          sets: e.sets || 3,
+          warmupSets: e.warmupSets ?? 0,
+          reps: e.reps || 10,
+          ...serializeAdvancedPrescription(e),
+          restTimeInSeconds: e.restTimeInSeconds || 90,
+          alternative1Name: alt1,
+          alternative2Name: alt2,
+        };
       }),
-    );
+    }));
 
     onApplyPrescription({
       prescriptionId: generatedDraft.prescriptionId,
@@ -441,48 +442,50 @@ export function CoachAiPrescriptionModal({
               {/* Lista dos Dias Gerados */}
               <div className="space-y-2">
                 <span className="font-heading text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                  Dias Configurados ({generatedDraft.workoutDays.length})
+                  Dias Configurados (
+                  {trainingDaysOnly(generatedDraft.workoutDays).length})
                 </span>
                 <div className="space-y-2">
-                  {generatedDraft.workoutDays.map((day, idx) => (
-                    <div
-                      key={idx}
-                      className="rounded-2xl border border-border bg-card p-3 shadow-xs space-y-2"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="font-heading text-xs font-bold text-foreground">
-                          {day.name}
-                        </span>
-                        <Badge variant="outline" className="text-[10px]">
-                          {day.isRest
-                            ? "Descanso"
-                            : `${day.exercises.length} exercícios • ${day.estimatedDurationInMinutes} min`}
-                        </Badge>
-                      </div>
+                  {trainingDaysOnly(generatedDraft.workoutDays).map(
+                    (day, idx) => (
+                      <div
+                        key={idx}
+                        className="rounded-2xl border border-border bg-card p-3 shadow-xs space-y-2"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-heading text-xs font-bold text-foreground">
+                            {day.name}
+                          </span>
+                          <Badge variant="outline" className="text-[10px]">
+                            {`${day.exercises.length} exercícios • ${day.estimatedDurationInMinutes} min`}
+                          </Badge>
+                        </div>
 
-                      {!day.isRest && day.exercises.length > 0 && (
-                        <div className="space-y-1 pt-1">
-                          {day.exercises.map((ex, exIdx) => (
-                            <div
-                              key={exIdx}
-                              className="flex items-center justify-between text-[11px] text-muted-foreground"
-                            >
-                              <div className="flex items-center gap-1.5 truncate">
-                                <Dumbbell className="size-3 text-primary shrink-0" />
-                                <span className="font-medium text-foreground truncate">
-                                  {ex.name}
+                        {!day.isRest && day.exercises.length > 0 && (
+                          <div className="space-y-1 pt-1">
+                            {day.exercises.map((ex, exIdx) => (
+                              <div
+                                key={exIdx}
+                                className="flex items-center justify-between text-[11px] text-muted-foreground"
+                              >
+                                <div className="flex items-center gap-1.5 truncate">
+                                  <Dumbbell className="size-3 text-primary shrink-0" />
+                                  <span className="font-medium text-foreground truncate">
+                                    {ex.name}
+                                  </span>
+                                </div>
+                                <span className="shrink-0 font-mono text-[10px]">
+                                  {ex.warmupSets > 0 &&
+                                    `${ex.warmupSets} Aq + `}
+                                  {ex.sets}x{ex.reps} • {ex.restTimeInSeconds}s
                                 </span>
                               </div>
-                              <span className="shrink-0 font-mono text-[10px]">
-                                {ex.warmupSets > 0 && `${ex.warmupSets} Aq + `}
-                                {ex.sets}x{ex.reps} • {ex.restTimeInSeconds}s
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ),
+                  )}
                 </div>
               </div>
             </div>

@@ -10,6 +10,7 @@ import {
 } from "@/app/_components/prescription-targets";
 import type { WorkoutPlanDraftDay } from "../_lib/workout-plan-builder";
 import { WEEK_DAYS } from "../_lib/workout-plan-builder";
+import { trainingDaysOnly } from "@/app/_lib/training-days";
 
 export function WorkoutPlanSummary({ days }: { days: WorkoutPlanDraftDay[] }) {
   const training = days.filter((day) => !day.isRest);
@@ -18,8 +19,7 @@ export function WorkoutPlanSummary({ days }: { days: WorkoutPlanDraftDay[] }) {
     .filter((exercise) => exercise.name.trim());
   return (
     <p className="text-xs text-muted-foreground" aria-label="Resumo da ficha">
-      {training.length} treino(s) · {exercises.length} exercício(s) ·{" "}
-      {days.length - training.length} descanso(s)
+      {training.length} treino(s) · {exercises.length} exercício(s)
     </p>
   );
 }
@@ -96,7 +96,7 @@ export function WorkoutPlanReviewDialog({
                 {allowStudentSubstitution ? "permitidas" : "não permitidas"}.
               </p>
             )}
-            {days.map((day, index) => (
+            {trainingDaysOnly(days).map((day, index) => (
               <section
                 key={day.clientId ?? day.id ?? index}
                 className="space-y-3 rounded-2xl border p-4"
@@ -104,49 +104,41 @@ export function WorkoutPlanReviewDialog({
                 <h4 className="break-words text-sm font-semibold">
                   {index + 1}. {day.name}{" "}
                   <span className="font-normal text-muted-foreground">
-                    ·{" "}
-                    {day.isRest
-                      ? "Descanso"
-                      : `${day.estimatedDurationInMinutes} min`}
+                    · {`${day.estimatedDurationInMinutes} min`}
                     {day.weekDay &&
                       ` · ${WEEK_DAYS.find((weekDay) => weekDay.value === day.weekDay)?.label ?? day.weekDay}`}
                   </span>
                 </h4>
-                {!day.isRest && (
-                  <ol className="space-y-3">
-                    {day.exercises.map((exercise, exerciseIndex) => (
-                      <li
-                        key={exerciseIndex}
-                        className="space-y-1 border-t pt-3 text-sm"
-                      >
-                        <p className="break-words font-medium">
-                          {exerciseIndex + 1}. {exercise.name}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {exercise.sets} séries × {repetitionTarget(exercise)}{" "}
-                          reps · {exercise.restTimeInSeconds}s de descanso
-                          {exercise.warmupSets
-                            ? ` · ${exercise.warmupSets} aquecimento(s)`
-                            : ""}
-                        </p>
-                        <PrescriptionTargets
-                          value={exercise}
-                          showRange={false}
-                        />
-                        {[exercise.alternative1Name, exercise.alternative2Name]
-                          .filter((alternative) => alternative?.trim())
-                          .map((alternative, alternativeIndex) => (
-                            <p
-                              key={alternativeIndex}
-                              className="break-words text-xs text-muted-foreground"
-                            >
-                              Alternativa {alternativeIndex + 1}: {alternative}
-                            </p>
-                          ))}
-                      </li>
-                    ))}
-                  </ol>
-                )}
+                <ol className="space-y-3">
+                  {day.exercises.map((exercise, exerciseIndex) => (
+                    <li
+                      key={exerciseIndex}
+                      className="space-y-1 border-t pt-3 text-sm"
+                    >
+                      <p className="break-words font-medium">
+                        {exerciseIndex + 1}. {exercise.name}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {exercise.sets} séries × {repetitionTarget(exercise)}{" "}
+                        reps · {exercise.restTimeInSeconds}s de descanso
+                        {exercise.warmupSets
+                          ? ` · ${exercise.warmupSets} aquecimento(s)`
+                          : ""}
+                      </p>
+                      <PrescriptionTargets value={exercise} showRange={false} />
+                      {[exercise.alternative1Name, exercise.alternative2Name]
+                        .filter((alternative) => alternative?.trim())
+                        .map((alternative, alternativeIndex) => (
+                          <p
+                            key={alternativeIndex}
+                            className="break-words text-xs text-muted-foreground"
+                          >
+                            Alternativa {alternativeIndex + 1}: {alternative}
+                          </p>
+                        ))}
+                    </li>
+                  ))}
+                </ol>
               </section>
             ))}
           </div>

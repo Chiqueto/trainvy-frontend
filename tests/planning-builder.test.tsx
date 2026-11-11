@@ -52,6 +52,7 @@ import { PeriodizationForm } from "@/app/planning/_components/periodization-form
 import { WorkoutPlanBuilder } from "@/app/planning/_components/workout-plan-builder";
 import {
   createInitialWorkoutDays,
+  deserializeWorkoutDays,
   duplicateDraftWorkoutDay,
   serializeWorkoutDays,
   validateWorkoutPlanDraft,
@@ -101,7 +102,7 @@ describe("WorkoutPlanBuilder — lógica de contrato", () => {
     );
   });
 
-  it("serializa descanso, duração, exercícios e ordem no contrato Orval", () => {
+  it("serializa somente treinos e compacta a ordem sem dias de descanso", () => {
     const days = createInitialWorkoutDays();
     days[0] = {
       ...days[0],
@@ -126,11 +127,55 @@ describe("WorkoutPlanBuilder — lógica de contrato", () => {
     expect(serialized[0].exercises.map((exercise) => exercise.order)).toEqual([
       0, 1,
     ]);
+    expect(serialized).toHaveLength(2);
     expect(serialized[1]).toMatchObject({
-      isRest: true,
-      estimatedDurationInSeconds: 0,
-      exercises: [],
+      name: days[2].name,
+      order: 1,
+      isRest: false,
     });
+    expect(serialized.every((day) => day.isRest === false)).toBe(true);
+  });
+
+  it("carrega apenas treinos de um plano legado preservando os IDs e exercícios", () => {
+    const legacy = {
+      workoutDays: [
+        {
+          id: "off",
+          name: "Descanso legado",
+          weekDay: "TUESDAY",
+          isRest: true,
+          estimatedDurationInSeconds: 0,
+          coverImageUrl: null,
+          exercises: [],
+        },
+        {
+          id: "training",
+          name: "Treino A",
+          weekDay: "MONDAY",
+          isRest: false,
+          estimatedDurationInSeconds: 3600,
+          coverImageUrl: null,
+          exercises: [
+            {
+              id: "exercise",
+              name: "Remada",
+              sets: 3,
+              reps: 10,
+              restTimeInSeconds: 60,
+            },
+          ],
+        },
+      ],
+    };
+    const days = deserializeWorkoutDays(
+      legacy as Parameters<typeof deserializeWorkoutDays>[0],
+    );
+    expect(days).toHaveLength(1);
+    expect(days[0]).toMatchObject({
+      id: "training",
+      exercises: [{ id: "exercise", name: "Remada" }],
+    });
+    expect(legacy.workoutDays).toHaveLength(2);
   });
 
   it("valida plano, dia de treino e intervalo de datas", () => {
@@ -194,6 +239,7 @@ describe("WorkoutPlanBuilder — interface", () => {
 
   it("cria standalone inativo por padrão", async () => {
     render(<WorkoutPlanBuilder mode="standalone" />);
+    expect(screen.queryByLabelText(/dia de descanso/i)).toBeNull();
     configureMonday();
     fireEvent.click(screen.getByRole("button", { name: "Criar plano" }));
 

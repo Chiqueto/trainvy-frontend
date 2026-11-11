@@ -95,7 +95,6 @@ describe("Student workout organizer import", () => {
       ["Nome do plano", "Minha ficha"],
       ["Nome", "Treino A"],
       ["Dia", "MONDAY"],
-      ["Tipo", "false"],
       ["Duração informada (segundos)", "1800"],
       ["Séries", "3"],
       ["Repetições", "10"],

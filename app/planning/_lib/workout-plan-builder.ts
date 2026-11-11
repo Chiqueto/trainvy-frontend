@@ -2,6 +2,7 @@ import type {
   EditWorkoutPlanBody,
   GetEditableWorkoutPlan200,
 } from "@/app/_lib/api/fetch-generated";
+import { trainingDaysOnly } from "@/app/_lib/training-days";
 
 export const WEEK_DAYS = [
   { value: "MONDAY", label: "Segunda" },
@@ -121,7 +122,8 @@ export function validateWorkoutPlanDraft(
   options: { requireCatalogSelection?: boolean } = {},
 ): string | null {
   if (!name.trim()) return "Informe o nome do plano.";
-  if (days.length === 0) return "Adicione pelo menos um treino à sua rotina.";
+  if (trainingDaysOnly(days).length === 0)
+    return "Adicione pelo menos um treino à sua rotina.";
   if (plannedStartDate && plannedEndDate && plannedEndDate < plannedStartDate) {
     return "A data final não pode ser anterior à data inicial.";
   }
@@ -209,40 +211,36 @@ export function validateWorkoutPlanDraft(
 export function serializeWorkoutDays(
   days: WorkoutPlanDraftDay[],
 ): EditWorkoutPlanBody["workoutDays"] {
-  return days.map((day, index) => ({
+  return trainingDaysOnly(days).map((day, index) => ({
     ...(day.id ? { id: day.id } : {}),
     order: index,
     name: day.name.trim(),
     weekDay: day.weekDay ?? WEEK_DAYS[index % 7].value,
-    isRest: day.isRest ?? false,
-    estimatedDurationInSeconds: day.isRest
-      ? 0
-      : Math.round(day.estimatedDurationInMinutes * 60),
+    isRest: false,
+    estimatedDurationInSeconds: Math.round(day.estimatedDurationInMinutes * 60),
     coverImageUrl: day.coverImageUrl ?? null,
-    exercises: day.isRest
-      ? []
-      : day.exercises.map((exercise, order) => ({
-          ...(exercise.id ? { id: exercise.id } : {}),
-          exerciseId: exercise.exerciseId,
-          alternative1ExerciseId: exercise.alternative1ExerciseId,
-          alternative2ExerciseId: exercise.alternative2ExerciseId,
-          order,
-          name: exercise.name.trim(),
-          warmupSets: exercise.warmupSets ?? 0,
-          sets: exercise.sets,
-          reps: exercise.reps,
-          ...serializeAdvancedPrescription(exercise),
-          restTimeInSeconds: exercise.restTimeInSeconds,
-          alternative1Name: exercise.alternative1Name?.trim() || null,
-          alternative2Name: exercise.alternative2Name?.trim() || null,
-        })),
+    exercises: day.exercises.map((exercise, order) => ({
+      ...(exercise.id ? { id: exercise.id } : {}),
+      exerciseId: exercise.exerciseId,
+      alternative1ExerciseId: exercise.alternative1ExerciseId,
+      alternative2ExerciseId: exercise.alternative2ExerciseId,
+      order,
+      name: exercise.name.trim(),
+      warmupSets: exercise.warmupSets ?? 0,
+      sets: exercise.sets,
+      reps: exercise.reps,
+      ...serializeAdvancedPrescription(exercise),
+      restTimeInSeconds: exercise.restTimeInSeconds,
+      alternative1Name: exercise.alternative1Name?.trim() || null,
+      alternative2Name: exercise.alternative2Name?.trim() || null,
+    })),
   }));
 }
 
 export function deserializeWorkoutDays(
   plan: GetEditableWorkoutPlan200,
 ): WorkoutPlanDraftDay[] {
-  return plan.workoutDays.map((day) => ({
+  return trainingDaysOnly(plan.workoutDays).map((day) => ({
     id: day.id,
     clientId: day.id || createClientDayId(),
     name: day.name,

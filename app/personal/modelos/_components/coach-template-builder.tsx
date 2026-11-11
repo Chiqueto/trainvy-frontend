@@ -1,4 +1,5 @@
 "use client";
+import { trainingDaysOnly } from "@/app/_lib/training-days";
 import { AdvancedPrescriptionFields } from "@/app/planning/_components/advanced-prescription-fields";
 import { serializeAdvancedPrescription } from "@/app/planning/_lib/workout-plan-builder";
 
@@ -82,7 +83,7 @@ export function CoachTemplateBuilder({
 
   const [days, setDays] = useState<WorkoutPlanDraftDay[]>(() => {
     if (initialData?.workoutDays && initialData.workoutDays.length > 0) {
-      return initialData.workoutDays.map((d) => ({
+      return trainingDaysOnly(initialData.workoutDays).map((d) => ({
         name: d.name,
         weekDay: d.weekDay,
         isRest: d.isRest,
@@ -177,44 +178,40 @@ export function CoachTemplateBuilder({
   }
 
   function serializeDaysForApi() {
-    return days.map((day, dayIndex) => ({
+    return trainingDaysOnly(days).map((day, dayIndex) => ({
       name: day.name.trim(),
       order: dayIndex,
       weekDay: day.weekDay ?? "MONDAY",
-      isRest: day.isRest,
-      estimatedDurationInSeconds: day.isRest
-        ? 0
-        : Math.round(day.estimatedDurationInMinutes * 60),
-      exercises: day.isRest
-        ? []
-        : day.exercises.map((exercise, exerciseIndex) => {
-            const exName = exercise.name.trim();
-            let alt1 = exercise.alternative1Name?.trim() || null;
-            let alt2 = exercise.alternative2Name?.trim() || null;
+      isRest: false,
+      estimatedDurationInSeconds: Math.round(
+        day.estimatedDurationInMinutes * 60,
+      ),
+      exercises: day.exercises.map((exercise, exerciseIndex) => {
+        const exName = exercise.name.trim();
+        let alt1 = exercise.alternative1Name?.trim() || null;
+        let alt2 = exercise.alternative2Name?.trim() || null;
 
-            if (alt1 && alt1.toLowerCase() === exName.toLowerCase())
-              alt1 = null;
-            if (alt2 && alt2.toLowerCase() === exName.toLowerCase())
-              alt2 = null;
-            if (alt1 && alt2 && alt1.toLowerCase() === alt2.toLowerCase())
-              alt2 = null;
-            if (!alt1 && alt2) {
-              alt1 = alt2;
-              alt2 = null;
-            }
+        if (alt1 && alt1.toLowerCase() === exName.toLowerCase()) alt1 = null;
+        if (alt2 && alt2.toLowerCase() === exName.toLowerCase()) alt2 = null;
+        if (alt1 && alt2 && alt1.toLowerCase() === alt2.toLowerCase())
+          alt2 = null;
+        if (!alt1 && alt2) {
+          alt1 = alt2;
+          alt2 = null;
+        }
 
-            return {
-              name: exName,
-              order: exerciseIndex,
-              sets: exercise.sets,
-              warmupSets: exercise.warmupSets ?? 0,
-              reps: exercise.reps,
-              ...serializeAdvancedPrescription(exercise),
-              restTimeInSeconds: exercise.restTimeInSeconds,
-              alternative1ExerciseName: alt1,
-              alternative2ExerciseName: alt2,
-            };
-          }),
+        return {
+          name: exName,
+          order: exerciseIndex,
+          sets: exercise.sets,
+          warmupSets: exercise.warmupSets ?? 0,
+          reps: exercise.reps,
+          ...serializeAdvancedPrescription(exercise),
+          restTimeInSeconds: exercise.restTimeInSeconds,
+          alternative1ExerciseName: alt1,
+          alternative2ExerciseName: alt2,
+        };
+      }),
     }));
   }
 
@@ -451,238 +448,217 @@ export function CoachTemplateBuilder({
               </div>
             </div>
 
-            {/* Configurações do Dia: Descanso e Duração */}
+            {/* Duração do treino */}
             <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
-              <label className="flex items-center gap-2 cursor-pointer font-medium">
-                <input
-                  type="checkbox"
-                  checked={day.isRest}
+              <div className="flex items-center gap-1.5 ml-auto">
+                <span>Duração estimada:</span>
+                <Input
+                  type="number"
+                  min={10}
+                  max={240}
+                  value={day.estimatedDurationInMinutes}
                   onChange={(e) =>
-                    updateDay(dayIndex, { isRest: e.target.checked })
+                    updateDay(dayIndex, {
+                      estimatedDurationInMinutes: Number(e.target.value) || 60,
+                    })
                   }
-                  className="rounded border-border text-primary focus:ring-primary size-4"
+                  className="w-16 h-8 text-center text-xs rounded-lg bg-background"
                   disabled={isPending}
                 />
-                <span>Dia de descanso (off)</span>
-              </label>
-
-              {!day.isRest && (
-                <div className="flex items-center gap-1.5 ml-auto">
-                  <span>Duração estimada:</span>
-                  <Input
-                    type="number"
-                    min={10}
-                    max={240}
-                    value={day.estimatedDurationInMinutes}
-                    onChange={(e) =>
-                      updateDay(dayIndex, {
-                        estimatedDurationInMinutes:
-                          Number(e.target.value) || 60,
-                      })
-                    }
-                    className="w-16 h-8 text-center text-xs rounded-lg bg-background"
-                    disabled={isPending}
-                  />
-                  <span>min</span>
-                </div>
-              )}
+                <span>min</span>
+              </div>
             </div>
 
             {/* Lista de Exercícios do Dia */}
-            {!day.isRest && (
-              <div className="flex flex-col gap-3 pt-2">
-                {day.exercises.map((exercise, exerciseIndex) => (
-                  <div
-                    key={exerciseIndex}
-                    className="rounded-2xl border border-border/80 bg-background/50 p-4 flex flex-col gap-3"
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className="size-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
-                        {exerciseIndex + 1}
-                      </span>
+            <div className="flex flex-col gap-3 pt-2">
+              {day.exercises.map((exercise, exerciseIndex) => (
+                <div
+                  key={exerciseIndex}
+                  className="rounded-2xl border border-border/80 bg-background/50 p-4 flex flex-col gap-3"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="size-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
+                      {exerciseIndex + 1}
+                    </span>
+                    <Input
+                      value={exercise.name}
+                      onChange={(e) =>
+                        updateExercise(dayIndex, exerciseIndex, {
+                          name: e.target.value,
+                        })
+                      }
+                      placeholder="Nome do exercício (ex: Supino Reto com Barra)"
+                      className="h-10 rounded-xl bg-card font-medium text-sm flex-1"
+                      disabled={isPending}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => moveExercise(dayIndex, exerciseIndex, -1)}
+                      disabled={isPending || exerciseIndex === 0}
+                      className="size-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-30 transition-colors"
+                      title="Subir exercício"
+                    >
+                      <ArrowUp className="size-3" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => moveExercise(dayIndex, exerciseIndex, 1)}
+                      disabled={
+                        isPending || exerciseIndex === day.exercises.length - 1
+                      }
+                      className="size-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-30 transition-colors"
+                      title="Descer exercício"
+                    >
+                      <ArrowDown className="size-3" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => removeExercise(dayIndex, exerciseIndex)}
+                      disabled={isPending || day.exercises.length <= 1}
+                      className="size-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 disabled:opacity-30 transition-colors"
+                      title="Remover exercício"
+                    >
+                      <Trash2 className="size-3" />
+                    </button>
+                  </div>
+
+                  {/* Séries, Reps, Aquecimento, Descanso */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                    <div className="flex flex-col gap-1">
+                      <Label className="text-[10px] uppercase font-semibold text-muted-foreground">
+                        Séries Válidas
+                      </Label>
                       <Input
-                        value={exercise.name}
+                        type="number"
+                        min={1}
+                        max={30}
+                        value={exercise.sets}
                         onChange={(e) =>
                           updateExercise(dayIndex, exerciseIndex, {
-                            name: e.target.value,
+                            sets: Number(e.target.value) || 1,
                           })
                         }
-                        placeholder="Nome do exercício (ex: Supino Reto com Barra)"
-                        className="h-10 rounded-xl bg-card font-medium text-sm flex-1"
+                        className="h-8 rounded-lg bg-card text-center text-xs"
                         disabled={isPending}
                       />
-                      <button
-                        type="button"
-                        onClick={() =>
-                          moveExercise(dayIndex, exerciseIndex, -1)
-                        }
-                        disabled={isPending || exerciseIndex === 0}
-                        className="size-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-30 transition-colors"
-                        title="Subir exercício"
-                      >
-                        <ArrowUp className="size-3" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => moveExercise(dayIndex, exerciseIndex, 1)}
-                        disabled={
-                          isPending ||
-                          exerciseIndex === day.exercises.length - 1
-                        }
-                        className="size-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-30 transition-colors"
-                        title="Descer exercício"
-                      >
-                        <ArrowDown className="size-3" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => removeExercise(dayIndex, exerciseIndex)}
-                        disabled={isPending || day.exercises.length <= 1}
-                        className="size-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 disabled:opacity-30 transition-colors"
-                        title="Remover exercício"
-                      >
-                        <Trash2 className="size-3" />
-                      </button>
                     </div>
 
-                    {/* Séries, Reps, Aquecimento, Descanso */}
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-                      <div className="flex flex-col gap-1">
-                        <Label className="text-[10px] uppercase font-semibold text-muted-foreground">
-                          Séries Válidas
-                        </Label>
-                        <Input
-                          type="number"
-                          min={1}
-                          max={30}
-                          value={exercise.sets}
-                          onChange={(e) =>
-                            updateExercise(dayIndex, exerciseIndex, {
-                              sets: Number(e.target.value) || 1,
-                            })
-                          }
-                          className="h-8 rounded-lg bg-card text-center text-xs"
-                          disabled={isPending}
-                        />
-                      </div>
-
-                      <div className="flex flex-col gap-1">
-                        <Label className="text-[10px] uppercase font-semibold text-muted-foreground">
-                          Repetições
-                        </Label>
-                        <Input
-                          type="number"
-                          min={1}
-                          max={100}
-                          value={exercise.reps}
-                          onChange={(e) =>
-                            updateExercise(dayIndex, exerciseIndex, {
-                              reps: Number(e.target.value) || 1,
-                            })
-                          }
-                          className="h-8 rounded-lg bg-card text-center text-xs"
-                          disabled={isPending}
-                        />
-                      </div>
-
-                      <div className="flex flex-col gap-1">
-                        <Label className="text-[10px] uppercase font-semibold text-muted-foreground">
-                          Aquecimento
-                        </Label>
-                        <Input
-                          type="number"
-                          min={0}
-                          max={10}
-                          value={exercise.warmupSets ?? 0}
-                          onChange={(e) =>
-                            updateExercise(dayIndex, exerciseIndex, {
-                              warmupSets: Number(e.target.value) || 0,
-                            })
-                          }
-                          className="h-8 rounded-lg bg-card text-center text-xs"
-                          disabled={isPending}
-                        />
-                      </div>
-
-                      <div className="flex flex-col gap-1">
-                        <Label className="text-[10px] uppercase font-semibold text-muted-foreground">
-                          Descanso (seg)
-                        </Label>
-                        <Input
-                          type="number"
-                          min={10}
-                          max={600}
-                          step={5}
-                          value={exercise.restTimeInSeconds}
-                          onChange={(e) =>
-                            updateExercise(dayIndex, exerciseIndex, {
-                              restTimeInSeconds: Number(e.target.value) || 60,
-                            })
-                          }
-                          className="h-8 rounded-lg bg-card text-center text-xs"
-                          disabled={isPending}
-                        />
-                      </div>
+                    <div className="flex flex-col gap-1">
+                      <Label className="text-[10px] uppercase font-semibold text-muted-foreground">
+                        Repetições
+                      </Label>
+                      <Input
+                        type="number"
+                        min={1}
+                        max={100}
+                        value={exercise.reps}
+                        onChange={(e) =>
+                          updateExercise(dayIndex, exerciseIndex, {
+                            reps: Number(e.target.value) || 1,
+                          })
+                        }
+                        className="h-8 rounded-lg bg-card text-center text-xs"
+                        disabled={isPending}
+                      />
                     </div>
 
-                    <AdvancedPrescriptionFields
-                      value={exercise}
-                      disabled={isPending}
-                      onChange={(patch) =>
-                        updateExercise(dayIndex, exerciseIndex, patch)
-                      }
-                    />
-                    {/* Alternativas de Exercício */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 border-t border-border/40">
-                      <div className="flex flex-col gap-1">
-                        <Label className="text-[10px] text-muted-foreground">
-                          Alternativa 1 (Opcional)
-                        </Label>
-                        <Input
-                          value={exercise.alternative1Name ?? ""}
-                          onChange={(e) =>
-                            updateExercise(dayIndex, exerciseIndex, {
-                              alternative1Name: e.target.value,
-                            })
-                          }
-                          placeholder="Ex: Supino Inclinado com Halteres"
-                          className="h-8 rounded-lg bg-card text-xs"
-                          disabled={isPending}
-                        />
-                      </div>
+                    <div className="flex flex-col gap-1">
+                      <Label className="text-[10px] uppercase font-semibold text-muted-foreground">
+                        Aquecimento
+                      </Label>
+                      <Input
+                        type="number"
+                        min={0}
+                        max={10}
+                        value={exercise.warmupSets ?? 0}
+                        onChange={(e) =>
+                          updateExercise(dayIndex, exerciseIndex, {
+                            warmupSets: Number(e.target.value) || 0,
+                          })
+                        }
+                        className="h-8 rounded-lg bg-card text-center text-xs"
+                        disabled={isPending}
+                      />
+                    </div>
 
-                      <div className="flex flex-col gap-1">
-                        <Label className="text-[10px] text-muted-foreground">
-                          Alternativa 2 (Opcional)
-                        </Label>
-                        <Input
-                          value={exercise.alternative2Name ?? ""}
-                          onChange={(e) =>
-                            updateExercise(dayIndex, exerciseIndex, {
-                              alternative2Name: e.target.value,
-                            })
-                          }
-                          placeholder="Ex: Supino Máquina Vertical"
-                          className="h-8 rounded-lg bg-card text-xs"
-                          disabled={isPending}
-                        />
-                      </div>
+                    <div className="flex flex-col gap-1">
+                      <Label className="text-[10px] uppercase font-semibold text-muted-foreground">
+                        Descanso (seg)
+                      </Label>
+                      <Input
+                        type="number"
+                        min={10}
+                        max={600}
+                        step={5}
+                        value={exercise.restTimeInSeconds}
+                        onChange={(e) =>
+                          updateExercise(dayIndex, exerciseIndex, {
+                            restTimeInSeconds: Number(e.target.value) || 60,
+                          })
+                        }
+                        className="h-8 rounded-lg bg-card text-center text-xs"
+                        disabled={isPending}
+                      />
                     </div>
                   </div>
-                ))}
 
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => addExercise(dayIndex)}
-                  disabled={isPending}
-                  className="rounded-xl h-9 text-xs font-heading font-medium border-dashed border-border/80"
-                >
-                  <Plus className="size-3 mr-1" />
-                  Adicionar Exercício ao {day.name}
-                </Button>
-              </div>
-            )}
+                  <AdvancedPrescriptionFields
+                    value={exercise}
+                    disabled={isPending}
+                    onChange={(patch) =>
+                      updateExercise(dayIndex, exerciseIndex, patch)
+                    }
+                  />
+                  {/* Alternativas de Exercício */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 border-t border-border/40">
+                    <div className="flex flex-col gap-1">
+                      <Label className="text-[10px] text-muted-foreground">
+                        Alternativa 1 (Opcional)
+                      </Label>
+                      <Input
+                        value={exercise.alternative1Name ?? ""}
+                        onChange={(e) =>
+                          updateExercise(dayIndex, exerciseIndex, {
+                            alternative1Name: e.target.value,
+                          })
+                        }
+                        placeholder="Ex: Supino Inclinado com Halteres"
+                        className="h-8 rounded-lg bg-card text-xs"
+                        disabled={isPending}
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1">
+                      <Label className="text-[10px] text-muted-foreground">
+                        Alternativa 2 (Opcional)
+                      </Label>
+                      <Input
+                        value={exercise.alternative2Name ?? ""}
+                        onChange={(e) =>
+                          updateExercise(dayIndex, exerciseIndex, {
+                            alternative2Name: e.target.value,
+                          })
+                        }
+                        placeholder="Ex: Supino Máquina Vertical"
+                        className="h-8 rounded-lg bg-card text-xs"
+                        disabled={isPending}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => addExercise(dayIndex)}
+                disabled={isPending}
+                className="rounded-xl h-9 text-xs font-heading font-medium border-dashed border-border/80"
+              >
+                <Plus className="size-3 mr-1" />
+                Adicionar Exercício ao {day.name}
+              </Button>
+            </div>
           </div>
         ))}
       </div>

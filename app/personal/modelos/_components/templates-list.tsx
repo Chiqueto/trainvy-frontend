@@ -1,4 +1,5 @@
 "use client";
+import { trainingDaysOnly } from "@/app/_lib/training-days";
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
@@ -78,7 +79,7 @@ export function TemplatesList({
   );
 
   const handleOpenAllocate = (tpl: TemplateItem) => {
-    const totalExercises = tpl.payload.workoutDays.reduce(
+    const totalExercises = trainingDaysOnly(tpl.payload.workoutDays).reduce(
       (acc, d) => acc + (d.exercises?.length ?? 0),
       0,
     );
@@ -86,7 +87,7 @@ export function TemplatesList({
       id: tpl.id,
       name: tpl.name,
       description: tpl.description,
-      workoutDaysCount: tpl.payload.workoutDays.length,
+      workoutDaysCount: trainingDaysOnly(tpl.payload.workoutDays).length,
       totalExercisesCount: totalExercises,
     });
     setIsAllocateModalOpen(true);
@@ -213,7 +214,7 @@ export function TemplatesList({
       {filteredTemplates.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {filteredTemplates.map((template) => {
-            const days = template.payload.workoutDays ?? [];
+            const days = trainingDaysOnly(template.payload.workoutDays ?? []);
             const nonRestDays = days.filter((d) => !d.isRest);
             const totalExercises = days.reduce(
               (acc, d) => acc + (d.exercises?.length ?? 0),
@@ -296,19 +297,19 @@ export function TemplatesList({
 
                   {/* Resumo dos Dias de Treino */}
                   <div className="flex flex-wrap gap-1.5 pt-1">
-                    {days.slice(0, 4).map((d, dIdx) => (
-                      <span
-                        key={dIdx}
-                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-background border border-border/60 text-[11px] text-muted-foreground"
-                      >
-                        <span className="font-semibold text-foreground">
-                          {d.name}:
+                    {trainingDaysOnly(days)
+                      .slice(0, 4)
+                      .map((d, dIdx) => (
+                        <span
+                          key={dIdx}
+                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-background border border-border/60 text-[11px] text-muted-foreground"
+                        >
+                          <span className="font-semibold text-foreground">
+                            {d.name}:
+                          </span>
+                          <span>{`${d.exercises?.length ?? 0} ex`}</span>
                         </span>
-                        <span>
-                          {d.isRest ? "Off" : `${d.exercises?.length ?? 0} ex`}
-                        </span>
-                      </span>
-                    ))}
+                      ))}
                     {days.length > 4 && (
                       <span className="text-[11px] text-muted-foreground self-center">
                         +{days.length - 4} mais

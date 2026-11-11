@@ -1,4 +1,5 @@
 "use client";
+import { trainingDaysOnly } from "@/app/_lib/training-days";
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useChat } from "@ai-sdk/react";
@@ -268,8 +269,15 @@ function ToolApprovalCard({
         )}
         {!isPeriodization && Array.isArray(days) && (
           <div className="grid grid-cols-1 gap-1 text-xs text-muted-foreground">
-            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            {days.map((d: any) => (
+            {trainingDaysOnly(
+              days as {
+                isRest?: boolean;
+                name?: string;
+                weekDay?: string;
+                exercises?: unknown[];
+                estimatedDurationInSeconds?: number;
+              }[],
+            ).map((d) => (
               <div
                 key={d.weekDay}
                 className="flex items-center justify-between"
@@ -278,9 +286,7 @@ function ToolApprovalCard({
                   {d.name || d.weekDay}:
                 </span>
                 <span>
-                  {d.isRest
-                    ? "Descanso"
-                    : `${d.exercises?.length ?? 0} exercícios (${Math.round((d.estimatedDurationInSeconds ?? 0) / 60)} min)`}
+                  {`${d.exercises?.length ?? 0} exercícios (${Math.round((d.estimatedDurationInSeconds ?? 0) / 60)} min)`}
                 </span>
               </div>
             ))}
@@ -491,9 +497,7 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
             ? msg
             : "Você atingiu o limite diário gratuito de mensagens do Coach IA. Seu acesso será renovado automaticamente à meia-noite UTC (21h Brasília).",
         );
-        setQuota((prev) =>
-          prev ? { ...prev, remainingDailyQuota: 0 } : null,
-        );
+        setQuota((prev) => (prev ? { ...prev, remainingDailyQuota: 0 } : null));
       } else {
         setQuotaErrorMessage(
           "Não foi possível processar sua mensagem agora. Tente novamente em instantes.",
@@ -1308,7 +1312,9 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
             <div className="flex items-center gap-2">
               <Lock className="size-4 shrink-0 text-amber-600 dark:text-amber-400" />
               <span>
-                Você atingiu o limite gratuito de <strong>{quota.dailyLimit} mensagens</strong> hoje. Seu acesso renova automaticamente à meia-noite UTC (21h Brasília).
+                Você atingiu o limite gratuito de{" "}
+                <strong>{quota.dailyLimit} mensagens</strong> hoje. Seu acesso
+                renova automaticamente à meia-noite UTC (21h Brasília).
               </span>
             </div>
           </div>
@@ -1393,7 +1399,11 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
           </div>
         ) : (
           <Form {...form}>
-            <p className="px-4 py-2 text-xs leading-relaxed text-muted-foreground">Assistente informativo baseado em IA. Pode cometer erros e não substitui a avaliação presencial de um Profissional de Educação Física ou médico.</p>
+            <p className="px-4 py-2 text-xs leading-relaxed text-muted-foreground">
+              Assistente informativo baseado em IA. Pode cometer erros e não
+              substitui a avaliação presencial de um Profissional de Educação
+              Física ou médico.
+            </p>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
               className="flex items-center gap-2 border-t border-border p-4 sm:p-5"

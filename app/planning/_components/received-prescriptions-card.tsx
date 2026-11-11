@@ -1,4 +1,5 @@
 "use client";
+import { trainingDaysOnly } from "@/app/_lib/training-days";
 
 import { trackProductEvent } from "@/app/_lib/product-events";
 
@@ -261,7 +262,11 @@ export function ReceivedPrescriptionsCard({
                 <h3 className="font-heading text-lg font-bold text-foreground">
                   {selectedPrescription.name}
                 </h3>
-                <p className="text-xs text-muted-foreground">Prescrito por: {selectedPrescription.prescribedCrefSnapshot ?? "Identificação profissional pendente"}</p>
+                <p className="text-xs text-muted-foreground">
+                  Prescrito por:{" "}
+                  {selectedPrescription.prescribedCrefSnapshot ??
+                    "Identificação profissional pendente"}
+                </p>
                 {selectedPrescription.status === "SENT" && (
                   <Badge
                     variant="outline"
@@ -380,12 +385,11 @@ export function ReceivedPrescriptionsCard({
                     Exercícios Prescritos:
                   </span>
 
-                  {(
+                  {trainingDaysOnly(
                     selectedPrescription.payload?.days ??
-                    selectedPrescription.payload?.workoutDays ??
-                    []
+                      selectedPrescription.payload?.workoutDays ??
+                      [],
                   ).map((day, dayIdx) => {
-                    const isRest = day.isRestDay ?? day.isRest ?? false;
                     const durationMinutes =
                       day.estimatedDurationMinutes ??
                       Math.round((day.estimatedDurationInSeconds ?? 0) / 60);
@@ -400,61 +404,55 @@ export function ReceivedPrescriptionsCard({
                             {day.name}
                           </span>
                           <span className="text-[10px] font-mono text-muted-foreground">
-                            {isRest ? "Descanso" : `${durationMinutes} min`}
+                            {`${durationMinutes} min`}
                           </span>
                         </div>
 
-                        {isRest ? (
-                          <p className="text-xs text-muted-foreground italic py-1">
-                            Dia de recuperação.
-                          </p>
-                        ) : (
-                          <div className="space-y-1.5">
-                            {(day.exercises ?? []).map((ex, exIdx) => {
-                              const exName =
-                                ex.name ??
-                                ex.exerciseName ??
-                                ex.exerciseId ??
-                                `Exercício ${exIdx + 1}`;
-                              const restTime =
-                                ex.restSeconds ?? ex.restTimeInSeconds ?? 60;
-                              const warmup = ex.warmupSets ?? 0;
+                        <div className="space-y-1.5">
+                          {(day.exercises ?? []).map((ex, exIdx) => {
+                            const exName =
+                              ex.name ??
+                              ex.exerciseName ??
+                              ex.exerciseId ??
+                              `Exercício ${exIdx + 1}`;
+                            const restTime =
+                              ex.restSeconds ?? ex.restTimeInSeconds ?? 60;
+                            const warmup = ex.warmupSets ?? 0;
 
-                              return (
-                                <div
-                                  key={exIdx}
-                                  className="flex flex-col text-xs py-1.5 px-2.5 rounded-lg bg-muted/30 gap-0.5"
-                                >
-                                  <div className="flex items-center justify-between">
-                                    <span className="font-medium text-foreground">
-                                      {exName}
-                                    </span>
-                                    <span className="font-mono text-muted-foreground text-[11px]">
-                                      {warmup > 0 && (
-                                        <span className="text-amber-500 font-medium mr-1.5">
-                                          {warmup}aq +
-                                        </span>
-                                      )}
-                                      {ex.sets}x{ex.reps} • {restTime}s
-                                    </span>
-                                  </div>
-                                  {(ex.alternative1ExerciseName ||
-                                    ex.alternative2ExerciseName) && (
-                                    <p className="text-[10px] text-muted-foreground">
-                                      Alt:{" "}
-                                      {[
-                                        ex.alternative1ExerciseName,
-                                        ex.alternative2ExerciseName,
-                                      ]
-                                        .filter(Boolean)
-                                        .join(" • ")}
-                                    </p>
-                                  )}
+                            return (
+                              <div
+                                key={exIdx}
+                                className="flex flex-col text-xs py-1.5 px-2.5 rounded-lg bg-muted/30 gap-0.5"
+                              >
+                                <div className="flex items-center justify-between">
+                                  <span className="font-medium text-foreground">
+                                    {exName}
+                                  </span>
+                                  <span className="font-mono text-muted-foreground text-[11px]">
+                                    {warmup > 0 && (
+                                      <span className="text-amber-500 font-medium mr-1.5">
+                                        {warmup}aq +
+                                      </span>
+                                    )}
+                                    {ex.sets}x{ex.reps} • {restTime}s
+                                  </span>
                                 </div>
-                              );
-                            })}
-                          </div>
-                        )}
+                                {(ex.alternative1ExerciseName ||
+                                  ex.alternative2ExerciseName) && (
+                                  <p className="text-[10px] text-muted-foreground">
+                                    Alt:{" "}
+                                    {[
+                                      ex.alternative1ExerciseName,
+                                      ex.alternative2ExerciseName,
+                                    ]
+                                      .filter(Boolean)
+                                      .join(" • ")}
+                                  </p>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
                     );
                   })}

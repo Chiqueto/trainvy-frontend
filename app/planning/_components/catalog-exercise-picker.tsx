@@ -361,7 +361,7 @@ function CatalogDialog({
               <p>
                 {source === "mine" && mineCount === 0
                   ? "Você ainda não tem exercícios próprios. Cadastre-os em Meus exercícios no painel do personal."
-                  : "Nenhum exercício com esses filtros. Experimente outro grupo ou nome."}
+                  : "Nenhum exercício encontrado com esses filtros. Experimente outro grupo ou nome."}
               </p>
               <Button
                 type="button"

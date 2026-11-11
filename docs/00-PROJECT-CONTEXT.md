@@ -45,6 +45,12 @@ Fluxos atuais:
 - perfil;
 - chat Coach AI.
 
+As rotinas são sequenciais: a divisão contém somente treinos, sem cartões ou
+seletores de dia de descanso nos editores pessoal, de prescrição e de modelos.
+Entradas legadas de descanso ficam fora da divisão, das prévias e dos novos
+payloads desses editores. `isRest` permanece no contrato por compatibilidade;
+intervalos entre séries e o histórico de execuções são preservados.
+
 O onboarding por formulário coleta data de nascimento e objetivo de treino, além das medições.
 A idade é calculada na API a partir do nascimento quando conhecido. Contas antigas mantêm
 a idade legada e o acesso ao app; campos faltantes geram um aviso discreto e editável no perfil.

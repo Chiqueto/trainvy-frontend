@@ -86,6 +86,40 @@ function approveReview() {
 describe("Salvar prescrição do personal", () => {
   beforeEach(() => vi.clearAllMocks());
 
+  it("omite descanso legado do editor e salva somente a sequência de treinos", async () => {
+    vi.mocked(createPrescriptionDraftAction).mockResolvedValue({
+      success: true,
+      data: { id: "draft", version: 1 },
+    } as Awaited<ReturnType<typeof createPrescriptionDraftAction>>);
+    renderBuilder({
+      ...initialData,
+      workoutDays: [
+        {
+          ...initialData.workoutDays[0],
+          name: "Descanso legado",
+          isRest: true,
+        },
+        initialData.workoutDays[0],
+      ],
+    });
+    expect(screen.queryByText("Descanso legado")).toBeNull();
+    expect(
+      screen.queryByRole("button", { name: /dia de descanso/i }),
+    ).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: /salvar rascunho/i }));
+    await waitFor(() =>
+      expect(createPrescriptionDraftAction).toHaveBeenCalled(),
+    );
+    const days = vi.mocked(createPrescriptionDraftAction).mock.calls[0][0]
+      .workoutDays;
+    expect(days).toHaveLength(1);
+    expect(days[0]).toMatchObject({
+      name: "Treino A",
+      order: 0,
+      isRest: false,
+    });
+  });
+
   it("salva e envia o contrato completo e confirma por toast", async () => {
     vi.mocked(createPrescriptionDraftAction).mockResolvedValue({
       success: true,
@@ -393,13 +427,15 @@ describe("Salvar prescrição do personal", () => {
     },
   );
 
-  it("valida o nome dos dias de descanso antes de salvar", () => {
+  it("não salva uma rotina legada composta somente por descanso", () => {
     renderBuilder({
       ...initialData,
       workoutDays: [{ ...initialData.workoutDays[0], name: "", isRest: true }],
     });
     fireEvent.click(screen.getByRole("button", { name: /salvar rascunho/i }));
-    expect(toast.error).toHaveBeenCalledWith("Informe o nome do treino 1.");
+    expect(toast.error).toHaveBeenCalledWith(
+      "Adicione pelo menos um treino à sua rotina.",
+    );
     expect(createPrescriptionDraftAction).not.toHaveBeenCalled();
   });
 });

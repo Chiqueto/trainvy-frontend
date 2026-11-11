@@ -1,4 +1,5 @@
 "use client";
+import { trainingDaysOnly } from "@/app/_lib/training-days";
 import { AiFeature } from "@/app/_components/ai-availability-provider";
 import { trackProductEvent } from "@/app/_lib/product-events";
 import { CoachPrescriptionExerciseCard } from "./coach-prescription-exercise-card";
@@ -103,7 +104,7 @@ export function CoachPrescriptionBuilder({
 
   const [days, setDays] = useState<WorkoutPlanDraftDay[]>(() => {
     if (initialData?.workoutDays && initialData.workoutDays.length > 0) {
-      return initialData.workoutDays.map((d, index) => ({
+      return trainingDaysOnly(initialData.workoutDays).map((d, index) => ({
         clientId: createClientDayId(),
         name: d.name,
         weekDay: d.weekDay ?? WEEK_DAYS[index % 7].value,
@@ -248,50 +249,47 @@ export function CoachPrescriptionBuilder({
   }
 
   function serializeDaysForApi() {
-    return days.map((day, dayIndex) => ({
+    return trainingDaysOnly(days).map((day, dayIndex) => ({
       name: day.name.trim(),
       order: dayIndex,
       weekDay: day.weekDay ?? "MONDAY",
-      isRest: day.isRest,
-      estimatedDurationInSeconds: day.isRest
-        ? 0
-        : Math.round(day.estimatedDurationInMinutes * 60),
-      exercises: day.isRest
-        ? []
-        : day.exercises.map((exercise, exerciseIndex) => {
-            const name = exercise.name.trim();
-            const alternatives = [
-              {
-                id: exercise.alternative1ExerciseId,
-                name: exercise.alternative1Name,
-              },
-              {
-                id: exercise.alternative2ExerciseId,
-                name: exercise.alternative2Name,
-              },
-            ].filter(
-              (alternative, index, entries) =>
-                alternative.id &&
-                alternative.id !== exercise.exerciseId &&
-                entries.findIndex((entry) => entry.id === alternative.id) ===
-                  index,
-            );
+      isRest: false,
+      estimatedDurationInSeconds: Math.round(
+        day.estimatedDurationInMinutes * 60,
+      ),
+      exercises: day.exercises.map((exercise, exerciseIndex) => {
+        const name = exercise.name.trim();
+        const alternatives = [
+          {
+            id: exercise.alternative1ExerciseId,
+            name: exercise.alternative1Name,
+          },
+          {
+            id: exercise.alternative2ExerciseId,
+            name: exercise.alternative2Name,
+          },
+        ].filter(
+          (alternative, index, entries) =>
+            alternative.id &&
+            alternative.id !== exercise.exerciseId &&
+            entries.findIndex((entry) => entry.id === alternative.id) === index,
+        );
 
-            return {
-              name,
-              exerciseId: exercise.exerciseId,
-              order: exerciseIndex,
-              sets: exercise.sets,
-              warmupSets: exercise.warmupSets ?? 0,
-              reps: exercise.reps,
-              ...serializeAdvancedPrescription(exercise),
-              restTimeInSeconds: exercise.restTimeInSeconds,
-              alternative1ExerciseId: alternatives[0]?.id ?? null,
-              alternative1ExerciseName: alternatives[0]?.name ?? null,
-              alternative2ExerciseId: alternatives[1]?.id ?? null,
-              alternative2ExerciseName: alternatives[1]?.name ?? null,
-            };
-          }),
+        return {
+          name,
+          exerciseId: exercise.exerciseId,
+          order: exerciseIndex,
+          sets: exercise.sets,
+          warmupSets: exercise.warmupSets ?? 0,
+          reps: exercise.reps,
+          ...serializeAdvancedPrescription(exercise),
+          restTimeInSeconds: exercise.restTimeInSeconds,
+          alternative1ExerciseId: alternatives[0]?.id ?? null,
+          alternative1ExerciseName: alternatives[0]?.name ?? null,
+          alternative2ExerciseId: alternatives[1]?.id ?? null,
+          alternative2ExerciseName: alternatives[1]?.name ?? null,
+        };
+      }),
     }));
   }
 
@@ -586,9 +584,7 @@ export function CoachPrescriptionBuilder({
                   {day.name || "Sem nome"}
                 </span>
                 <span className="block text-[11px] text-muted-foreground">
-                  {day.isRest
-                    ? "Descanso"
-                    : `${day.exercises.filter((exercise) => exercise.exerciseId).length} exercícios · ${day.estimatedDurationInMinutes} min`}
+                  {`${day.exercises.filter((exercise) => exercise.exerciseId).length} exercícios · ${day.estimatedDurationInMinutes} min`}
                 </span>
               </span>
             </button>
@@ -667,8 +663,8 @@ export function CoachPrescriptionBuilder({
                   </div>
                 </div>
 
-                {/* Controles do Dia (Dia da Semana, Descanso, Duração) */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {/* Identificação e duração do treino */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1">
                     <label className="text-[11px] font-heading font-medium text-muted-foreground">
                       Dia da Semana
@@ -694,113 +690,84 @@ export function CoachPrescriptionBuilder({
 
                   <div className="space-y-1">
                     <label className="text-[11px] font-heading font-medium text-muted-foreground">
-                      Tipo de Dia
+                      Duração Estimada (min)
                     </label>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        updateDay(dayIndex, { isRest: !day.isRest })
+                    <Input
+                      type="number"
+                      min={1}
+                      aria-label="Duração estimada (min)"
+                      value={day.estimatedDurationInMinutes}
+                      onChange={(e) =>
+                        updateDay(dayIndex, {
+                          estimatedDurationInMinutes: Number(e.target.value),
+                        })
                       }
-                      className={`w-full h-9 rounded-xl border px-3 text-xs font-heading font-semibold flex items-center justify-center transition-colors ${
-                        day.isRest
-                          ? "bg-amber-500/10 border-amber-500/30 text-amber-500"
-                          : "bg-muted/40 border-border text-foreground hover:bg-muted"
-                      }`}
-                    >
-                      {day.isRest ? "Dia de Descanso" : "Dia de Treino"}
-                    </button>
+                      className="h-9 rounded-xl text-xs font-mono"
+                    />
                   </div>
-
-                  {!day.isRest && (
-                    <div className="space-y-1">
-                      <label className="text-[11px] font-heading font-medium text-muted-foreground">
-                        Duração Estimada (min)
-                      </label>
-                      <Input
-                        type="number"
-                        min={1}
-                        aria-label="Duração estimada (min)"
-                        value={day.estimatedDurationInMinutes}
-                        onChange={(e) =>
-                          updateDay(dayIndex, {
-                            estimatedDurationInMinutes: Number(e.target.value),
-                          })
-                        }
-                        className="h-9 rounded-xl text-xs font-mono"
-                      />
-                    </div>
-                  )}
                 </div>
 
-                {/* Lista de Exercícios (apenas se não for dia de descanso) */}
-                {!day.isRest && (
-                  <div className="space-y-3 pt-2">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div>
-                        <h3 className="text-sm font-semibold">
-                          Sequência do treino
-                        </h3>
-                        <p className="mt-1 text-xs text-muted-foreground">
-                          Selecione em lote. A ordem da seleção vira a ordem de
-                          execução.
-                        </p>
-                      </div>
-                      <CatalogExerciseBatchPicker
-                        disabled={isPending}
-                        excludeIds={day.exercises
-                          .map((exercise) => exercise.exerciseId)
-                          .filter((id): id is string => Boolean(id))}
-                        onSelect={(selected) =>
-                          addExercises(dayIndex, selected)
-                        }
-                      />
+                {/* Lista de exercícios do treino */}
+                <div className="space-y-3 pt-2">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <h3 className="text-sm font-semibold">
+                        Sequência do treino
+                      </h3>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        Selecione em lote. A ordem da seleção vira a ordem de
+                        execução.
+                      </p>
                     </div>
-                    <div className="space-y-4">
-                      {!day.exercises.length && (
-                        <p className="rounded-2xl border border-dashed p-8 text-center text-sm text-muted-foreground">
-                          Seu treino começa aqui. Adicione os exercícios da
-                          biblioteca.
-                        </p>
-                      )}
-                      {day.exercises.map((exercise, exerciseIndex) => (
-                        <CoachPrescriptionExerciseCard
-                          key={
-                            exerciseIndex +
-                            "-" +
-                            (exercise.exerciseId ?? "empty")
-                          }
-                          exercise={exercise}
-                          index={exerciseIndex}
-                          count={day.exercises.length}
-                          onChange={(patch) =>
-                            updateExercise(dayIndex, exerciseIndex, patch)
-                          }
-                          onMove={(offset) =>
-                            moveExercise(dayIndex, exerciseIndex, offset)
-                          }
-                          onRemove={() =>
-                            removeExercise(dayIndex, exerciseIndex)
-                          }
-                          onApplyDose={() => {
-                            updateDay(dayIndex, {
-                              exercises: day.exercises.map((entry) => ({
-                                ...entry,
-                                sets: exercise.sets,
-                                reps: exercise.reps,
-                                repsMin: exercise.repsMin ?? null,
-                                repsMax: exercise.repsMax ?? null,
-                                restTimeInSeconds: exercise.restTimeInSeconds,
-                              })),
-                            });
-                            toast.success(
-                              "Séries, repetições e descanso aplicados neste treino.",
-                            );
-                          }}
-                        />
-                      ))}
-                    </div>
+                    <CatalogExerciseBatchPicker
+                      disabled={isPending}
+                      excludeIds={day.exercises
+                        .map((exercise) => exercise.exerciseId)
+                        .filter((id): id is string => Boolean(id))}
+                      onSelect={(selected) => addExercises(dayIndex, selected)}
+                    />
                   </div>
-                )}
+                  <div className="space-y-4">
+                    {!day.exercises.length && (
+                      <p className="rounded-2xl border border-dashed p-8 text-center text-sm text-muted-foreground">
+                        Seu treino começa aqui. Adicione os exercícios da
+                        biblioteca.
+                      </p>
+                    )}
+                    {day.exercises.map((exercise, exerciseIndex) => (
+                      <CoachPrescriptionExerciseCard
+                        key={
+                          exerciseIndex + "-" + (exercise.exerciseId ?? "empty")
+                        }
+                        exercise={exercise}
+                        index={exerciseIndex}
+                        count={day.exercises.length}
+                        onChange={(patch) =>
+                          updateExercise(dayIndex, exerciseIndex, patch)
+                        }
+                        onMove={(offset) =>
+                          moveExercise(dayIndex, exerciseIndex, offset)
+                        }
+                        onRemove={() => removeExercise(dayIndex, exerciseIndex)}
+                        onApplyDose={() => {
+                          updateDay(dayIndex, {
+                            exercises: day.exercises.map((entry) => ({
+                              ...entry,
+                              sets: exercise.sets,
+                              reps: exercise.reps,
+                              repsMin: exercise.repsMin ?? null,
+                              repsMax: exercise.repsMax ?? null,
+                              restTimeInSeconds: exercise.restTimeInSeconds,
+                            })),
+                          });
+                          toast.success(
+                            "Séries, repetições e descanso aplicados neste treino.",
+                          );
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
               </div>
             );
           })}
@@ -881,10 +848,12 @@ export function CoachPrescriptionBuilder({
             if (generated.notes) {
               setNotes(generated.notes);
             }
-            const generatedDays = generated.workoutDays.map((day) => ({
-              ...day,
-              clientId: createClientDayId(),
-            }));
+            const generatedDays = trainingDaysOnly(generated.workoutDays).map(
+              (day) => ({
+                ...day,
+                clientId: createClientDayId(),
+              }),
+            );
             setDays(generatedDays);
             setActiveDayId(generatedDays[0]?.clientId);
             setIsAiModalOpen(false);
