@@ -273,6 +273,48 @@ export const ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export type ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemRunesItem =
+  (typeof ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemRunesItem)[keyof typeof ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemRunesItem];
+
+export const ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemRunesItem =
+  {
+    DROP_SET: "DROP_SET",
+    REST_PAUSE: "REST_PAUSE",
+    ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+    CLUSTER_SET: "CLUSTER_SET",
+    TEMPO_CONTROL: "TEMPO_CONTROL",
+  } as const;
+
+export type ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItem = {
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
@@ -283,6 +325,16 @@ export type ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItem = {
   warmupSets: number;
   sets: number;
   reps: number;
+  /**
+   * @minLength 1
+   * @maxLength 100
+   * @nullable
+   */
+  supersetGroupId?: string | null;
+  /** @maxItems 5 */
+  runes?: ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemRunesItem[];
+  /** @maxItems 100 */
+  setPrescription?: ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemSetPrescriptionItem[];
   /**
    * @minimum 1
    * @maximum 10000
@@ -364,7 +416,58 @@ export const CreateWorkoutPlanBodyWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export type CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemRunesItem =
+  (typeof CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemRunesItem)[keyof typeof CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemRunesItem];
+
+export const CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemRunesItem = {
+  DROP_SET: "DROP_SET",
+  REST_PAUSE: "REST_PAUSE",
+  ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+  CLUSTER_SET: "CLUSTER_SET",
+  TEMPO_CONTROL: "TEMPO_CONTROL",
+} as const;
+
+export type CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type CreateWorkoutPlanBodyWorkoutDaysItemExercisesItem = {
+  /**
+   * @minLength 1
+   * @maxLength 100
+   * @nullable
+   */
+  supersetGroupId?: string | null;
+  /** @maxItems 5 */
+  runes?: CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemRunesItem[];
+  /** @maxItems 100 */
+  setPrescription?: CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemSetPrescriptionItem[];
   /**
    * @minimum 1
    * @maximum 10000
@@ -475,7 +578,58 @@ export const CreateWorkoutPlan201WorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export type CreateWorkoutPlan201WorkoutDaysItemExercisesItemRunesItem =
+  (typeof CreateWorkoutPlan201WorkoutDaysItemExercisesItemRunesItem)[keyof typeof CreateWorkoutPlan201WorkoutDaysItemExercisesItemRunesItem];
+
+export const CreateWorkoutPlan201WorkoutDaysItemExercisesItemRunesItem = {
+  DROP_SET: "DROP_SET",
+  REST_PAUSE: "REST_PAUSE",
+  ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+  CLUSTER_SET: "CLUSTER_SET",
+  TEMPO_CONTROL: "TEMPO_CONTROL",
+} as const;
+
+export type CreateWorkoutPlan201WorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof CreateWorkoutPlan201WorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof CreateWorkoutPlan201WorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const CreateWorkoutPlan201WorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type CreateWorkoutPlan201WorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: CreateWorkoutPlan201WorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type CreateWorkoutPlan201WorkoutDaysItemExercisesItem = {
+  /**
+   * @minLength 1
+   * @maxLength 100
+   * @nullable
+   */
+  supersetGroupId?: string | null;
+  /** @maxItems 5 */
+  runes?: CreateWorkoutPlan201WorkoutDaysItemExercisesItemRunesItem[];
+  /** @maxItems 100 */
+  setPrescription?: CreateWorkoutPlan201WorkoutDaysItemExercisesItemSetPrescriptionItem[];
   /**
    * @minimum 1
    * @maximum 10000
@@ -696,7 +850,58 @@ export const EditWorkoutPlanBodyWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export type EditWorkoutPlanBodyWorkoutDaysItemExercisesItemRunesItem =
+  (typeof EditWorkoutPlanBodyWorkoutDaysItemExercisesItemRunesItem)[keyof typeof EditWorkoutPlanBodyWorkoutDaysItemExercisesItemRunesItem];
+
+export const EditWorkoutPlanBodyWorkoutDaysItemExercisesItemRunesItem = {
+  DROP_SET: "DROP_SET",
+  REST_PAUSE: "REST_PAUSE",
+  ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+  CLUSTER_SET: "CLUSTER_SET",
+  TEMPO_CONTROL: "TEMPO_CONTROL",
+} as const;
+
+export type EditWorkoutPlanBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof EditWorkoutPlanBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof EditWorkoutPlanBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const EditWorkoutPlanBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type EditWorkoutPlanBodyWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: EditWorkoutPlanBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type EditWorkoutPlanBodyWorkoutDaysItemExercisesItem = {
+  /**
+   * @minLength 1
+   * @maxLength 100
+   * @nullable
+   */
+  supersetGroupId?: string | null;
+  /** @maxItems 5 */
+  runes?: EditWorkoutPlanBodyWorkoutDaysItemExercisesItemRunesItem[];
+  /** @maxItems 100 */
+  setPrescription?: EditWorkoutPlanBodyWorkoutDaysItemExercisesItemSetPrescriptionItem[];
   /**
    * @minimum 1
    * @maximum 10000
@@ -878,6 +1083,45 @@ export type GetWorkoutDay200ExercisesItemAlternative2Exercise = {
   name: string;
 } | null;
 
+export type GetWorkoutDay200ExercisesItemRunesItem =
+  (typeof GetWorkoutDay200ExercisesItemRunesItem)[keyof typeof GetWorkoutDay200ExercisesItemRunesItem];
+
+export const GetWorkoutDay200ExercisesItemRunesItem = {
+  DROP_SET: "DROP_SET",
+  REST_PAUSE: "REST_PAUSE",
+  ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+  CLUSTER_SET: "CLUSTER_SET",
+  TEMPO_CONTROL: "TEMPO_CONTROL",
+} as const;
+
+export type GetWorkoutDay200ExercisesItemSetPrescriptionItemZone =
+  (typeof GetWorkoutDay200ExercisesItemSetPrescriptionItemZone)[keyof typeof GetWorkoutDay200ExercisesItemSetPrescriptionItemZone];
+
+export const GetWorkoutDay200ExercisesItemSetPrescriptionItemZone = {
+  strength: "strength",
+  hypertrophy: "hypertrophy",
+  endurance: "endurance",
+} as const;
+
+export type GetWorkoutDay200ExercisesItemSetPrescriptionItem = {
+  /**
+   * @minimum 1
+   * @maximum 10000
+   */
+  reps: number;
+  zone: GetWorkoutDay200ExercisesItemSetPrescriptionItemZone;
+  /**
+   * @minimum 1
+   * @maximum 86400
+   */
+  restSeconds: number;
+  /**
+   * @minimum 0
+   * @maximum 2000
+   */
+  load?: number;
+};
+
 export type GetWorkoutDay200ExercisesItem = {
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
@@ -908,6 +1152,16 @@ export type GetWorkoutDay200ExercisesItem = {
   sets: number;
   warmupSets: number;
   reps: number;
+  /**
+   * @minLength 1
+   * @maxLength 100
+   * @nullable
+   */
+  supersetGroupId?: string | null;
+  /** @maxItems 5 */
+  runes?: GetWorkoutDay200ExercisesItemRunesItem[];
+  /** @maxItems 100 */
+  setPrescription?: GetWorkoutDay200ExercisesItemSetPrescriptionItem[];
   /**
    * @minimum 1
    * @maximum 10000
@@ -1067,7 +1321,58 @@ export const DuplicateWorkoutPlan201WorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export type DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemRunesItem =
+  (typeof DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemRunesItem)[keyof typeof DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemRunesItem];
+
+export const DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemRunesItem = {
+  DROP_SET: "DROP_SET",
+  REST_PAUSE: "REST_PAUSE",
+  ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+  CLUSTER_SET: "CLUSTER_SET",
+  TEMPO_CONTROL: "TEMPO_CONTROL",
+} as const;
+
+export type DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type DuplicateWorkoutPlan201WorkoutDaysItemExercisesItem = {
+  /**
+   * @minLength 1
+   * @maxLength 100
+   * @nullable
+   */
+  supersetGroupId?: string | null;
+  /** @maxItems 5 */
+  runes?: DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemRunesItem[];
+  /** @maxItems 100 */
+  setPrescription?: DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemSetPrescriptionItem[];
   /**
    * @minimum 1
    * @maximum 10000
@@ -1699,7 +2004,59 @@ export const CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export type CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemRunesItem =
+  (typeof CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemRunesItem)[keyof typeof CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemRunesItem];
+
+export const CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemRunesItem =
+  {
+    DROP_SET: "DROP_SET",
+    REST_PAUSE: "REST_PAUSE",
+    ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+    CLUSTER_SET: "CLUSTER_SET",
+    TEMPO_CONTROL: "TEMPO_CONTROL",
+  } as const;
+
+export type CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItem = {
+  /**
+   * @minLength 1
+   * @maxLength 100
+   * @nullable
+   */
+  supersetGroupId?: string | null;
+  /** @maxItems 5 */
+  runes?: CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemRunesItem[];
+  /** @maxItems 100 */
+  setPrescription?: CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemSetPrescriptionItem[];
   /**
    * @minimum 1
    * @maximum 10000
@@ -1815,8 +2172,60 @@ export const CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemWeekDa
     SUNDAY: "SUNDAY",
   } as const;
 
+export type CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemRunesItem =
+  (typeof CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemRunesItem)[keyof typeof CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemRunesItem];
+
+export const CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemRunesItem =
+  {
+    DROP_SET: "DROP_SET",
+    REST_PAUSE: "REST_PAUSE",
+    ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+    CLUSTER_SET: "CLUSTER_SET",
+    TEMPO_CONTROL: "TEMPO_CONTROL",
+  } as const;
+
+export type CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minLength 1
+     * @maxLength 100
+     * @nullable
+     */
+    supersetGroupId?: string | null;
+    /** @maxItems 5 */
+    runes?: CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemRunesItem[];
+    /** @maxItems 100 */
+    setPrescription?: CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemSetPrescriptionItem[];
     /**
      * @minimum 1
      * @maximum 10000
@@ -2377,7 +2786,58 @@ export const ConfirmWorkoutImportBodyWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export type ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemRunesItem =
+  (typeof ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemRunesItem)[keyof typeof ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemRunesItem];
+
+export const ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemRunesItem = {
+  DROP_SET: "DROP_SET",
+  REST_PAUSE: "REST_PAUSE",
+  ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+  CLUSTER_SET: "CLUSTER_SET",
+  TEMPO_CONTROL: "TEMPO_CONTROL",
+} as const;
+
+export type ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItem = {
+  /**
+   * @minLength 1
+   * @maxLength 100
+   * @nullable
+   */
+  supersetGroupId?: string | null;
+  /** @maxItems 5 */
+  runes?: ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemRunesItem[];
+  /** @maxItems 100 */
+  setPrescription?: ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemSetPrescriptionItem[];
   /**
    * @minimum 1
    * @maximum 10000
@@ -3002,6 +3462,62 @@ export type GetStats401 = {
 };
 
 export type GetStats500 = {
+  error: string;
+  code: string;
+};
+
+export type GetBuilderPreferences200PreferredBuilderMode =
+  (typeof GetBuilderPreferences200PreferredBuilderMode)[keyof typeof GetBuilderPreferences200PreferredBuilderMode];
+
+export const GetBuilderPreferences200PreferredBuilderMode = {
+  tactical: "tactical",
+  classic: "classic",
+} as const;
+
+export type GetBuilderPreferences200 = {
+  preferredBuilderMode: GetBuilderPreferences200PreferredBuilderMode;
+};
+
+export type GetBuilderPreferences401 = {
+  error: string;
+  code: string;
+};
+
+export type GetBuilderPreferences500 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateBuilderPreferencesBodyPreferredBuilderMode =
+  (typeof UpdateBuilderPreferencesBodyPreferredBuilderMode)[keyof typeof UpdateBuilderPreferencesBodyPreferredBuilderMode];
+
+export const UpdateBuilderPreferencesBodyPreferredBuilderMode = {
+  tactical: "tactical",
+  classic: "classic",
+} as const;
+
+export type UpdateBuilderPreferencesBody = {
+  preferredBuilderMode: UpdateBuilderPreferencesBodyPreferredBuilderMode;
+};
+
+export type UpdateBuilderPreferences200PreferredBuilderMode =
+  (typeof UpdateBuilderPreferences200PreferredBuilderMode)[keyof typeof UpdateBuilderPreferences200PreferredBuilderMode];
+
+export const UpdateBuilderPreferences200PreferredBuilderMode = {
+  tactical: "tactical",
+  classic: "classic",
+} as const;
+
+export type UpdateBuilderPreferences200 = {
+  preferredBuilderMode: UpdateBuilderPreferences200PreferredBuilderMode;
+};
+
+export type UpdateBuilderPreferences401 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateBuilderPreferences500 = {
   error: string;
   code: string;
 };
@@ -5078,8 +5594,60 @@ export const GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export type GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRunesItem =
+  (typeof GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRunesItem];
+
+export const GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRunesItem =
+  {
+    DROP_SET: "DROP_SET",
+    REST_PAUSE: "REST_PAUSE",
+    ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+    CLUSTER_SET: "CLUSTER_SET",
+    TEMPO_CONTROL: "TEMPO_CONTROL",
+  } as const;
+
+export type GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minLength 1
+     * @maxLength 100
+     * @nullable
+     */
+    supersetGroupId?: string | null;
+    /** @maxItems 5 */
+    runes?: GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRunesItem[];
+    /** @maxItems 100 */
+    setPrescription?: GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItem[];
     /**
      * @minimum 1
      * @maximum 10000
@@ -6128,7 +6696,59 @@ export const CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export type CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRunesItem =
+  (typeof CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRunesItem)[keyof typeof CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRunesItem];
+
+export const CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRunesItem =
+  {
+    DROP_SET: "DROP_SET",
+    REST_PAUSE: "REST_PAUSE",
+    ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+    CLUSTER_SET: "CLUSTER_SET",
+    TEMPO_CONTROL: "TEMPO_CONTROL",
+  } as const;
+
+export type CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItem = {
+  /**
+   * @minLength 1
+   * @maxLength 100
+   * @nullable
+   */
+  supersetGroupId?: string | null;
+  /** @maxItems 5 */
+  runes?: CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRunesItem[];
+  /** @maxItems 100 */
+  setPrescription?: CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemSetPrescriptionItem[];
   /**
    * @minimum 1
    * @maximum 10000
@@ -6293,8 +6913,60 @@ export const CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export type CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRunesItem =
+  (typeof CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRunesItem];
+
+export const CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRunesItem =
+  {
+    DROP_SET: "DROP_SET",
+    REST_PAUSE: "REST_PAUSE",
+    ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+    CLUSTER_SET: "CLUSTER_SET",
+    TEMPO_CONTROL: "TEMPO_CONTROL",
+  } as const;
+
+export type CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minLength 1
+     * @maxLength 100
+     * @nullable
+     */
+    supersetGroupId?: string | null;
+    /** @maxItems 5 */
+    runes?: CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRunesItem[];
+    /** @maxItems 100 */
+    setPrescription?: CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemSetPrescriptionItem[];
     /**
      * @minimum 1
      * @maximum 10000
@@ -6445,7 +7117,59 @@ export const UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export type UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRunesItem =
+  (typeof UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRunesItem)[keyof typeof UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRunesItem];
+
+export const UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRunesItem =
+  {
+    DROP_SET: "DROP_SET",
+    REST_PAUSE: "REST_PAUSE",
+    ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+    CLUSTER_SET: "CLUSTER_SET",
+    TEMPO_CONTROL: "TEMPO_CONTROL",
+  } as const;
+
+export type UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItem = {
+  /**
+   * @minLength 1
+   * @maxLength 100
+   * @nullable
+   */
+  supersetGroupId?: string | null;
+  /** @maxItems 5 */
+  runes?: UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRunesItem[];
+  /** @maxItems 100 */
+  setPrescription?: UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemSetPrescriptionItem[];
   /**
    * @minimum 1
    * @maximum 10000
@@ -6614,8 +7338,60 @@ export const UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export type UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRunesItem =
+  (typeof UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRunesItem];
+
+export const UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRunesItem =
+  {
+    DROP_SET: "DROP_SET",
+    REST_PAUSE: "REST_PAUSE",
+    ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+    CLUSTER_SET: "CLUSTER_SET",
+    TEMPO_CONTROL: "TEMPO_CONTROL",
+  } as const;
+
+export type UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minLength 1
+     * @maxLength 100
+     * @nullable
+     */
+    supersetGroupId?: string | null;
+    /** @maxItems 5 */
+    runes?: UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRunesItem[];
+    /** @maxItems 100 */
+    setPrescription?: UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItem[];
     /**
      * @minimum 1
      * @maximum 10000
@@ -6802,8 +7578,60 @@ export const GetCoachPrescriptionDetails200PayloadWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export type GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRunesItem =
+  (typeof GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRunesItem];
+
+export const GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRunesItem =
+  {
+    DROP_SET: "DROP_SET",
+    REST_PAUSE: "REST_PAUSE",
+    ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+    CLUSTER_SET: "CLUSTER_SET",
+    TEMPO_CONTROL: "TEMPO_CONTROL",
+  } as const;
+
+export type GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minLength 1
+     * @maxLength 100
+     * @nullable
+     */
+    supersetGroupId?: string | null;
+    /** @maxItems 5 */
+    runes?: GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRunesItem[];
+    /** @maxItems 100 */
+    setPrescription?: GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItem[];
     /**
      * @minimum 1
      * @maximum 10000
@@ -6999,7 +7827,59 @@ export const SendWorkoutPrescription200PayloadWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export type SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRunesItem =
+  (typeof SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRunesItem];
+
+export const SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRunesItem =
+  {
+    DROP_SET: "DROP_SET",
+    REST_PAUSE: "REST_PAUSE",
+    ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+    CLUSTER_SET: "CLUSTER_SET",
+    TEMPO_CONTROL: "TEMPO_CONTROL",
+  } as const;
+
+export type SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItem = {
+  /**
+   * @minLength 1
+   * @maxLength 100
+   * @nullable
+   */
+  supersetGroupId?: string | null;
+  /** @maxItems 5 */
+  runes?: SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRunesItem[];
+  /** @maxItems 100 */
+  setPrescription?: SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItem[];
   /**
    * @minimum 1
    * @maximum 10000
@@ -7186,7 +8066,59 @@ export const CancelWorkoutPrescription200PayloadWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export type CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRunesItem =
+  (typeof CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRunesItem];
+
+export const CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRunesItem =
+  {
+    DROP_SET: "DROP_SET",
+    REST_PAUSE: "REST_PAUSE",
+    ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+    CLUSTER_SET: "CLUSTER_SET",
+    TEMPO_CONTROL: "TEMPO_CONTROL",
+  } as const;
+
+export type CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItem = {
+  /**
+   * @minLength 1
+   * @maxLength 100
+   * @nullable
+   */
+  supersetGroupId?: string | null;
+  /** @maxItems 5 */
+  runes?: CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRunesItem[];
+  /** @maxItems 100 */
+  setPrescription?: CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItem[];
   /**
    * @minimum 1
    * @maximum 10000
@@ -7374,8 +8306,60 @@ export const ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemWeekDay =
     SUNDAY: "SUNDAY",
   } as const;
 
+export type ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRunesItem =
+  (typeof ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRunesItem];
+
+export const ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRunesItem =
+  {
+    DROP_SET: "DROP_SET",
+    REST_PAUSE: "REST_PAUSE",
+    ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+    CLUSTER_SET: "CLUSTER_SET",
+    TEMPO_CONTROL: "TEMPO_CONTROL",
+  } as const;
+
+export type ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minLength 1
+     * @maxLength 100
+     * @nullable
+     */
+    supersetGroupId?: string | null;
+    /** @maxItems 5 */
+    runes?: ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRunesItem[];
+    /** @maxItems 100 */
+    setPrescription?: ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItem[];
     /**
      * @minimum 1
      * @maximum 10000
@@ -7562,8 +8546,60 @@ export const ListAthletePrescriptions200ItemPayloadWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export type ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRunesItem =
+  (typeof ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRunesItem];
+
+export const ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRunesItem =
+  {
+    DROP_SET: "DROP_SET",
+    REST_PAUSE: "REST_PAUSE",
+    ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+    CLUSTER_SET: "CLUSTER_SET",
+    TEMPO_CONTROL: "TEMPO_CONTROL",
+  } as const;
+
+export type ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minLength 1
+     * @maxLength 100
+     * @nullable
+     */
+    supersetGroupId?: string | null;
+    /** @maxItems 5 */
+    runes?: ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRunesItem[];
+    /** @maxItems 100 */
+    setPrescription?: ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItem[];
     /**
      * @minimum 1
      * @maximum 10000
@@ -7750,8 +8786,60 @@ export const GetAthletePrescriptionDetails200PayloadWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export type GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRunesItem =
+  (typeof GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRunesItem];
+
+export const GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRunesItem =
+  {
+    DROP_SET: "DROP_SET",
+    REST_PAUSE: "REST_PAUSE",
+    ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+    CLUSTER_SET: "CLUSTER_SET",
+    TEMPO_CONTROL: "TEMPO_CONTROL",
+  } as const;
+
+export type GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minLength 1
+     * @maxLength 100
+     * @nullable
+     */
+    supersetGroupId?: string | null;
+    /** @maxItems 5 */
+    runes?: GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRunesItem[];
+    /** @maxItems 100 */
+    setPrescription?: GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItem[];
     /**
      * @minimum 1
      * @maximum 10000
@@ -7939,8 +9027,60 @@ export const AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemWeekD
     SUNDAY: "SUNDAY",
   } as const;
 
+export type AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRunesItem =
+  (typeof AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRunesItem];
+
+export const AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRunesItem =
+  {
+    DROP_SET: "DROP_SET",
+    REST_PAUSE: "REST_PAUSE",
+    ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+    CLUSTER_SET: "CLUSTER_SET",
+    TEMPO_CONTROL: "TEMPO_CONTROL",
+  } as const;
+
+export type AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minLength 1
+     * @maxLength 100
+     * @nullable
+     */
+    supersetGroupId?: string | null;
+    /** @maxItems 5 */
+    runes?: AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRunesItem[];
+    /** @maxItems 100 */
+    setPrescription?: AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemSetPrescriptionItem[];
     /**
      * @minimum 1
      * @maximum 10000
@@ -8134,7 +9274,59 @@ export const DeclineWorkoutPrescription200PayloadWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export type DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRunesItem =
+  (typeof DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRunesItem];
+
+export const DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRunesItem =
+  {
+    DROP_SET: "DROP_SET",
+    REST_PAUSE: "REST_PAUSE",
+    ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+    CLUSTER_SET: "CLUSTER_SET",
+    TEMPO_CONTROL: "TEMPO_CONTROL",
+  } as const;
+
+export type DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItem = {
+  /**
+   * @minLength 1
+   * @maxLength 100
+   * @nullable
+   */
+  supersetGroupId?: string | null;
+  /** @maxItems 5 */
+  runes?: DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRunesItem[];
+  /** @maxItems 100 */
+  setPrescription?: DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItem[];
   /**
    * @minimum 1
    * @maximum 10000
@@ -8301,12 +9493,64 @@ export const GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export type GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemRunesItem =
+  (typeof GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemRunesItem)[keyof typeof GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemRunesItem];
+
+export const GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemRunesItem =
+  {
+    DROP_SET: "DROP_SET",
+    REST_PAUSE: "REST_PAUSE",
+    ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+    CLUSTER_SET: "CLUSTER_SET",
+    TEMPO_CONTROL: "TEMPO_CONTROL",
+  } as const;
+
+export type GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItem =
   {
     name: string;
     sets: number;
     warmupSets: number;
     reps: number;
+    /**
+     * @minLength 1
+     * @maxLength 100
+     * @nullable
+     */
+    supersetGroupId?: string | null;
+    /** @maxItems 5 */
+    runes?: GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemRunesItem[];
+    /** @maxItems 100 */
+    setPrescription?: GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemSetPrescriptionItem[];
     /**
      * @minimum 1
      * @maximum 10000
@@ -8877,7 +10121,59 @@ export type GetCoachAthleteProgressSessionDetail200Summary = {
   totalLoadVolumeKg: number;
 };
 
+export type GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedRunesItem =
+  (typeof GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedRunesItem)[keyof typeof GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedRunesItem];
+
+export const GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedRunesItem =
+  {
+    DROP_SET: "DROP_SET",
+    REST_PAUSE: "REST_PAUSE",
+    ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+    CLUSTER_SET: "CLUSTER_SET",
+    TEMPO_CONTROL: "TEMPO_CONTROL",
+  } as const;
+
+export type GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedSetPrescriptionItemZone =
+  (typeof GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedSetPrescriptionItemZone)[keyof typeof GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedSetPrescriptionItemZone];
+
+export const GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type GetCoachAthleteProgressSessionDetail200ExercisesItemPlanned = {
+  /**
+   * @minLength 1
+   * @maxLength 100
+   * @nullable
+   */
+  supersetGroupId?: string | null;
+  /** @maxItems 5 */
+  runes?: GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedRunesItem[];
+  /** @maxItems 100 */
+  setPrescription?: GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedSetPrescriptionItem[];
   /**
    * @minimum 1
    * @maximum 10000
@@ -9556,8 +10852,60 @@ export const ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemWeekDay =
     SUNDAY: "SUNDAY",
   } as const;
 
+export type ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRunesItem =
+  (typeof ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRunesItem];
+
+export const ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRunesItem =
+  {
+    DROP_SET: "DROP_SET",
+    REST_PAUSE: "REST_PAUSE",
+    ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+    CLUSTER_SET: "CLUSTER_SET",
+    TEMPO_CONTROL: "TEMPO_CONTROL",
+  } as const;
+
+export type ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minLength 1
+     * @maxLength 100
+     * @nullable
+     */
+    supersetGroupId?: string | null;
+    /** @maxItems 5 */
+    runes?: ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRunesItem[];
+    /** @maxItems 100 */
+    setPrescription?: ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemSetPrescriptionItem[];
     /**
      * @minimum 1
      * @maximum 10000
@@ -9670,7 +11018,59 @@ export const CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export type CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRunesItem =
+  (typeof CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRunesItem)[keyof typeof CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRunesItem];
+
+export const CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRunesItem =
+  {
+    DROP_SET: "DROP_SET",
+    REST_PAUSE: "REST_PAUSE",
+    ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+    CLUSTER_SET: "CLUSTER_SET",
+    TEMPO_CONTROL: "TEMPO_CONTROL",
+  } as const;
+
+export type CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItem = {
+  /**
+   * @minLength 1
+   * @maxLength 100
+   * @nullable
+   */
+  supersetGroupId?: string | null;
+  /** @maxItems 5 */
+  runes?: CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRunesItem[];
+  /** @maxItems 100 */
+  setPrescription?: CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemSetPrescriptionItem[];
   /**
    * @minimum 1
    * @maximum 10000
@@ -9797,8 +11197,60 @@ export const CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export type CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRunesItem =
+  (typeof CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRunesItem];
+
+export const CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRunesItem =
+  {
+    DROP_SET: "DROP_SET",
+    REST_PAUSE: "REST_PAUSE",
+    ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+    CLUSTER_SET: "CLUSTER_SET",
+    TEMPO_CONTROL: "TEMPO_CONTROL",
+  } as const;
+
+export type CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minLength 1
+     * @maxLength 100
+     * @nullable
+     */
+    supersetGroupId?: string | null;
+    /** @maxItems 5 */
+    runes?: CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRunesItem[];
+    /** @maxItems 100 */
+    setPrescription?: CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemSetPrescriptionItem[];
     /**
      * @minimum 1
      * @maximum 10000
@@ -9911,8 +11363,60 @@ export const GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export type GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRunesItem =
+  (typeof GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRunesItem];
+
+export const GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRunesItem =
+  {
+    DROP_SET: "DROP_SET",
+    REST_PAUSE: "REST_PAUSE",
+    ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+    CLUSTER_SET: "CLUSTER_SET",
+    TEMPO_CONTROL: "TEMPO_CONTROL",
+  } as const;
+
+export type GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minLength 1
+     * @maxLength 100
+     * @nullable
+     */
+    supersetGroupId?: string | null;
+    /** @maxItems 5 */
+    runes?: GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRunesItem[];
+    /** @maxItems 100 */
+    setPrescription?: GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItem[];
     /**
      * @minimum 1
      * @maximum 10000
@@ -10025,7 +11529,59 @@ export const UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export type UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRunesItem =
+  (typeof UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRunesItem)[keyof typeof UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRunesItem];
+
+export const UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRunesItem =
+  {
+    DROP_SET: "DROP_SET",
+    REST_PAUSE: "REST_PAUSE",
+    ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+    CLUSTER_SET: "CLUSTER_SET",
+    TEMPO_CONTROL: "TEMPO_CONTROL",
+  } as const;
+
+export type UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItem = {
+  /**
+   * @minLength 1
+   * @maxLength 100
+   * @nullable
+   */
+  supersetGroupId?: string | null;
+  /** @maxItems 5 */
+  runes?: UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRunesItem[];
+  /** @maxItems 100 */
+  setPrescription?: UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemSetPrescriptionItem[];
   /**
    * @minimum 1
    * @maximum 10000
@@ -10152,8 +11708,60 @@ export const UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export type UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRunesItem =
+  (typeof UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRunesItem];
+
+export const UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRunesItem =
+  {
+    DROP_SET: "DROP_SET",
+    REST_PAUSE: "REST_PAUSE",
+    ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+    CLUSTER_SET: "CLUSTER_SET",
+    TEMPO_CONTROL: "TEMPO_CONTROL",
+  } as const;
+
+export type UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minLength 1
+     * @maxLength 100
+     * @nullable
+     */
+    supersetGroupId?: string | null;
+    /** @maxItems 5 */
+    runes?: UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRunesItem[];
+    /** @maxItems 100 */
+    setPrescription?: UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemSetPrescriptionItem[];
     /**
      * @minimum 1
      * @maximum 10000
@@ -10342,8 +11950,60 @@ export const AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysIt
     SUNDAY: "SUNDAY",
   } as const;
 
+export type AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRunesItem =
+  (typeof AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRunesItem];
+
+export const AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRunesItem =
+  {
+    DROP_SET: "DROP_SET",
+    REST_PAUSE: "REST_PAUSE",
+    ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+    CLUSTER_SET: "CLUSTER_SET",
+    TEMPO_CONTROL: "TEMPO_CONTROL",
+  } as const;
+
+export type AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minLength 1
+     * @maxLength 100
+     * @nullable
+     */
+    supersetGroupId?: string | null;
+    /** @maxItems 5 */
+    runes?: AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRunesItem[];
+    /** @maxItems 100 */
+    setPrescription?: AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemSetPrescriptionItem[];
     /**
      * @minimum 1
      * @maximum 10000
@@ -10496,8 +12156,60 @@ export const CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemWeek
     SUNDAY: "SUNDAY",
   } as const;
 
+export type CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRunesItem =
+  (typeof CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRunesItem];
+
+export const CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRunesItem =
+  {
+    DROP_SET: "DROP_SET",
+    REST_PAUSE: "REST_PAUSE",
+    ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+    CLUSTER_SET: "CLUSTER_SET",
+    TEMPO_CONTROL: "TEMPO_CONTROL",
+  } as const;
+
+export type CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItem =
   {
+    /**
+     * @minLength 1
+     * @maxLength 100
+     * @nullable
+     */
+    supersetGroupId?: string | null;
+    /** @maxItems 5 */
+    runes?: CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRunesItem[];
+    /** @maxItems 100 */
+    setPrescription?: CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemSetPrescriptionItem[];
     /**
      * @minimum 1
      * @maximum 10000
@@ -16531,7 +18243,58 @@ export const GetEditableWorkoutPlan200WorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export type GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemRunesItem =
+  (typeof GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemRunesItem)[keyof typeof GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemRunesItem];
+
+export const GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemRunesItem = {
+  DROP_SET: "DROP_SET",
+  REST_PAUSE: "REST_PAUSE",
+  ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+  CLUSTER_SET: "CLUSTER_SET",
+  TEMPO_CONTROL: "TEMPO_CONTROL",
+} as const;
+
+export type GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  (typeof GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemSetPrescriptionItemZone)[keyof typeof GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemSetPrescriptionItemZone];
+
+export const GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type GetEditableWorkoutPlan200WorkoutDaysItemExercisesItem = {
+  /**
+   * @minLength 1
+   * @maxLength 100
+   * @nullable
+   */
+  supersetGroupId?: string | null;
+  /** @maxItems 5 */
+  runes?: GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemRunesItem[];
+  /** @maxItems 100 */
+  setPrescription?: GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemSetPrescriptionItem[];
   /**
    * @minimum 1
    * @maximum 10000
@@ -17305,7 +19068,58 @@ export type GetWorkoutHistorySession200Summary = {
   totalLoadVolumeKg: number;
 };
 
+export type GetWorkoutHistorySession200ExercisesItemPlannedRunesItem =
+  (typeof GetWorkoutHistorySession200ExercisesItemPlannedRunesItem)[keyof typeof GetWorkoutHistorySession200ExercisesItemPlannedRunesItem];
+
+export const GetWorkoutHistorySession200ExercisesItemPlannedRunesItem = {
+  DROP_SET: "DROP_SET",
+  REST_PAUSE: "REST_PAUSE",
+  ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+  CLUSTER_SET: "CLUSTER_SET",
+  TEMPO_CONTROL: "TEMPO_CONTROL",
+} as const;
+
+export type GetWorkoutHistorySession200ExercisesItemPlannedSetPrescriptionItemZone =
+  (typeof GetWorkoutHistorySession200ExercisesItemPlannedSetPrescriptionItemZone)[keyof typeof GetWorkoutHistorySession200ExercisesItemPlannedSetPrescriptionItemZone];
+
+export const GetWorkoutHistorySession200ExercisesItemPlannedSetPrescriptionItemZone =
+  {
+    strength: "strength",
+    hypertrophy: "hypertrophy",
+    endurance: "endurance",
+  } as const;
+
+export type GetWorkoutHistorySession200ExercisesItemPlannedSetPrescriptionItem =
+  {
+    /**
+     * @minimum 1
+     * @maximum 10000
+     */
+    reps: number;
+    zone: GetWorkoutHistorySession200ExercisesItemPlannedSetPrescriptionItemZone;
+    /**
+     * @minimum 1
+     * @maximum 86400
+     */
+    restSeconds: number;
+    /**
+     * @minimum 0
+     * @maximum 2000
+     */
+    load?: number;
+  };
+
 export type GetWorkoutHistorySession200ExercisesItemPlanned = {
+  /**
+   * @minLength 1
+   * @maxLength 100
+   * @nullable
+   */
+  supersetGroupId?: string | null;
+  /** @maxItems 5 */
+  runes?: GetWorkoutHistorySession200ExercisesItemPlannedRunesItem[];
+  /** @maxItems 100 */
+  setPrescription?: GetWorkoutHistorySession200ExercisesItemPlannedSetPrescriptionItem[];
   /**
    * @minimum 1
    * @maximum 10000
@@ -19859,6 +21673,107 @@ export const getStats = async (
     ...options,
     method: "GET",
   });
+};
+
+/**
+ * @summary Read or update the authenticated user's builder preference
+ */
+export type getBuilderPreferencesResponse200 = {
+  data: GetBuilderPreferences200;
+  status: 200;
+};
+
+export type getBuilderPreferencesResponse401 = {
+  data: GetBuilderPreferences401;
+  status: 401;
+};
+
+export type getBuilderPreferencesResponse500 = {
+  data: GetBuilderPreferences500;
+  status: 500;
+};
+
+export type getBuilderPreferencesResponseSuccess =
+  getBuilderPreferencesResponse200 & {
+    headers: Headers;
+  };
+export type getBuilderPreferencesResponseError = (
+  | getBuilderPreferencesResponse401
+  | getBuilderPreferencesResponse500
+) & {
+  headers: Headers;
+};
+
+export type getBuilderPreferencesResponse =
+  | getBuilderPreferencesResponseSuccess
+  | getBuilderPreferencesResponseError;
+
+export const getGetBuilderPreferencesUrl = () => {
+  return `/me/builder-preferences`;
+};
+
+export const getBuilderPreferences = async (
+  options?: RequestInit,
+): Promise<getBuilderPreferencesResponse> => {
+  return customFetch<getBuilderPreferencesResponse>(
+    getGetBuilderPreferencesUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Read or update the authenticated user's builder preference
+ */
+export type updateBuilderPreferencesResponse200 = {
+  data: UpdateBuilderPreferences200;
+  status: 200;
+};
+
+export type updateBuilderPreferencesResponse401 = {
+  data: UpdateBuilderPreferences401;
+  status: 401;
+};
+
+export type updateBuilderPreferencesResponse500 = {
+  data: UpdateBuilderPreferences500;
+  status: 500;
+};
+
+export type updateBuilderPreferencesResponseSuccess =
+  updateBuilderPreferencesResponse200 & {
+    headers: Headers;
+  };
+export type updateBuilderPreferencesResponseError = (
+  | updateBuilderPreferencesResponse401
+  | updateBuilderPreferencesResponse500
+) & {
+  headers: Headers;
+};
+
+export type updateBuilderPreferencesResponse =
+  | updateBuilderPreferencesResponseSuccess
+  | updateBuilderPreferencesResponseError;
+
+export const getUpdateBuilderPreferencesUrl = () => {
+  return `/me/builder-preferences`;
+};
+
+export const updateBuilderPreferences = async (
+  updateBuilderPreferencesBody: UpdateBuilderPreferencesBody,
+  options?: RequestInit,
+): Promise<updateBuilderPreferencesResponse> => {
+  return customFetch<updateBuilderPreferencesResponse>(
+    getUpdateBuilderPreferencesUrl(),
+    {
+      ...options,
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(updateBuilderPreferencesBody),
+    },
+  );
 };
 
 /**

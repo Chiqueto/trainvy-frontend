@@ -11,6 +11,7 @@ import {
 import type { WorkoutPlanDraftDay } from "../_lib/workout-plan-builder";
 import { WEEK_DAYS } from "../_lib/workout-plan-builder";
 import { trainingDaysOnly } from "@/app/_lib/training-days";
+import { RUNES } from "../_lib/tactical";
 
 export function WorkoutPlanSummary({ days }: { days: WorkoutPlanDraftDay[] }) {
   const training = days.filter((day) => !day.isRest);
@@ -126,6 +127,29 @@ export function WorkoutPlanReviewDialog({
                           : ""}
                       </p>
                       <PrescriptionTargets value={exercise} showRange={false} />
+                      {exercise.supersetGroupId && (
+                        <p className="text-xs text-violet-500">
+                          Grupo combinado{" "}
+                          {days[index].exercises
+                            .filter(
+                              (e) =>
+                                e.supersetGroupId === exercise.supersetGroupId,
+                            )
+                            .map((e) => e.name)
+                            .join(" + ")}
+                        </p>
+                      )}
+                      {!!exercise.runes?.length && (
+                        <p className="text-xs text-amber-600">
+                          {exercise.runes.map((r) => RUNES[r]).join(" · ")}
+                        </p>
+                      )}
+                      {exercise.setPrescription?.map((s, i) => (
+                        <p key={i} className="text-xs text-muted-foreground">
+                          Série {i + 1}: {s.reps} reps · {s.restSeconds}s
+                          {s.load == null ? "" : ` · ${s.load} kg`}
+                        </p>
+                      ))}
                       {[exercise.alternative1Name, exercise.alternative2Name]
                         .filter((alternative) => alternative?.trim())
                         .map((alternative, alternativeIndex) => (

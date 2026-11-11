@@ -1,3 +1,5 @@
+// Existing form coverage explicitly exercises the classic view. Tactical parity has its own suite.
+vi.mock("@/app/planning/_components/tactical/view-mode-toggle", () => ({ useBuilderMode: () => ({ builderMode: "classic", changeMode: vi.fn(), syncError: false }), ViewModeToggle: () => null }));
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { toast } from "sonner";

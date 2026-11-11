@@ -571,6 +571,64 @@
                                       "reps": {
                                         "type": "number"
                                       },
+                                      "supersetGroupId": {
+                                        "nullable": true,
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 100
+                                      },
+                                      "runes": {
+                                        "maxItems": 5,
+                                        "type": "array",
+                                        "items": {
+                                          "type": "string",
+                                          "enum": [
+                                            "DROP_SET",
+                                            "REST_PAUSE",
+                                            "ISOMETRIC_HOLD",
+                                            "CLUSTER_SET",
+                                            "TEMPO_CONTROL"
+                                          ]
+                                        }
+                                      },
+                                      "setPrescription": {
+                                        "maxItems": 100,
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "reps": {
+                                              "type": "integer",
+                                              "minimum": 1,
+                                              "maximum": 10000
+                                            },
+                                            "zone": {
+                                              "type": "string",
+                                              "enum": [
+                                                "strength",
+                                                "hypertrophy",
+                                                "endurance"
+                                              ]
+                                            },
+                                            "restSeconds": {
+                                              "type": "integer",
+                                              "minimum": 1,
+                                              "maximum": 86400
+                                            },
+                                            "load": {
+                                              "type": "number",
+                                              "minimum": 0,
+                                              "maximum": 2000
+                                            }
+                                          },
+                                          "required": [
+                                            "reps",
+                                            "zone",
+                                            "restSeconds"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      },
                                       "repsMin": {
                                         "nullable": true,
                                         "type": "integer",
@@ -764,6 +822,64 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "supersetGroupId": {
+                                "nullable": true,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 100
+                              },
+                              "runes": {
+                                "maxItems": 5,
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "enum": [
+                                    "DROP_SET",
+                                    "REST_PAUSE",
+                                    "ISOMETRIC_HOLD",
+                                    "CLUSTER_SET",
+                                    "TEMPO_CONTROL"
+                                  ]
+                                }
+                              },
+                              "setPrescription": {
+                                "maxItems": 100,
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "reps": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "zone": {
+                                      "type": "string",
+                                      "enum": [
+                                        "strength",
+                                        "hypertrophy",
+                                        "endurance"
+                                      ]
+                                    },
+                                    "restSeconds": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 86400
+                                    },
+                                    "load": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 2000
+                                    }
+                                  },
+                                  "required": [
+                                    "reps",
+                                    "zone",
+                                    "restSeconds"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
                               "repsMin": {
                                 "nullable": true,
                                 "type": "integer",
@@ -944,6 +1060,64 @@
                             "items": {
                               "type": "object",
                               "properties": {
+                                "supersetGroupId": {
+                                  "nullable": true,
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 100
+                                },
+                                "runes": {
+                                  "maxItems": 5,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "enum": [
+                                      "DROP_SET",
+                                      "REST_PAUSE",
+                                      "ISOMETRIC_HOLD",
+                                      "CLUSTER_SET",
+                                      "TEMPO_CONTROL"
+                                    ]
+                                  }
+                                },
+                                "setPrescription": {
+                                  "maxItems": 100,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "reps": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 10000
+                                      },
+                                      "zone": {
+                                        "type": "string",
+                                        "enum": [
+                                          "strength",
+                                          "hypertrophy",
+                                          "endurance"
+                                        ]
+                                      },
+                                      "restSeconds": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 86400
+                                      },
+                                      "load": {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 2000
+                                      }
+                                    },
+                                    "required": [
+                                      "reps",
+                                      "zone",
+                                      "restSeconds"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                },
                                 "repsMin": {
                                   "nullable": true,
                                   "type": "integer",
@@ -1566,6 +1740,64 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "supersetGroupId": {
+                                "nullable": true,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 100
+                              },
+                              "runes": {
+                                "maxItems": 5,
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "enum": [
+                                    "DROP_SET",
+                                    "REST_PAUSE",
+                                    "ISOMETRIC_HOLD",
+                                    "CLUSTER_SET",
+                                    "TEMPO_CONTROL"
+                                  ]
+                                }
+                              },
+                              "setPrescription": {
+                                "maxItems": 100,
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "reps": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "zone": {
+                                      "type": "string",
+                                      "enum": [
+                                        "strength",
+                                        "hypertrophy",
+                                        "endurance"
+                                      ]
+                                    },
+                                    "restSeconds": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 86400
+                                    },
+                                    "load": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 2000
+                                    }
+                                  },
+                                  "required": [
+                                    "reps",
+                                    "zone",
+                                    "restSeconds"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
                               "repsMin": {
                                 "nullable": true,
                                 "type": "integer",
@@ -2029,6 +2261,64 @@
                           },
                           "reps": {
                             "type": "number"
+                          },
+                          "supersetGroupId": {
+                            "nullable": true,
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 100
+                          },
+                          "runes": {
+                            "maxItems": 5,
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "enum": [
+                                "DROP_SET",
+                                "REST_PAUSE",
+                                "ISOMETRIC_HOLD",
+                                "CLUSTER_SET",
+                                "TEMPO_CONTROL"
+                              ]
+                            }
+                          },
+                          "setPrescription": {
+                            "maxItems": 100,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "reps": {
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 10000
+                                },
+                                "zone": {
+                                  "type": "string",
+                                  "enum": [
+                                    "strength",
+                                    "hypertrophy",
+                                    "endurance"
+                                  ]
+                                },
+                                "restSeconds": {
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 86400
+                                },
+                                "load": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 2000
+                                }
+                              },
+                              "required": [
+                                "reps",
+                                "zone",
+                                "restSeconds"
+                              ],
+                              "additionalProperties": false
+                            }
                           },
                           "repsMin": {
                             "nullable": true,
@@ -2596,6 +2886,64 @@
                             "items": {
                               "type": "object",
                               "properties": {
+                                "supersetGroupId": {
+                                  "nullable": true,
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 100
+                                },
+                                "runes": {
+                                  "maxItems": 5,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "enum": [
+                                      "DROP_SET",
+                                      "REST_PAUSE",
+                                      "ISOMETRIC_HOLD",
+                                      "CLUSTER_SET",
+                                      "TEMPO_CONTROL"
+                                    ]
+                                  }
+                                },
+                                "setPrescription": {
+                                  "maxItems": 100,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "reps": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 10000
+                                      },
+                                      "zone": {
+                                        "type": "string",
+                                        "enum": [
+                                          "strength",
+                                          "hypertrophy",
+                                          "endurance"
+                                        ]
+                                      },
+                                      "restSeconds": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 86400
+                                      },
+                                      "load": {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 2000
+                                      }
+                                    },
+                                    "required": [
+                                      "reps",
+                                      "zone",
+                                      "restSeconds"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                },
                                 "repsMin": {
                                   "nullable": true,
                                   "type": "integer",
@@ -4546,6 +4894,64 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "supersetGroupId": {
+                                "nullable": true,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 100
+                              },
+                              "runes": {
+                                "maxItems": 5,
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "enum": [
+                                    "DROP_SET",
+                                    "REST_PAUSE",
+                                    "ISOMETRIC_HOLD",
+                                    "CLUSTER_SET",
+                                    "TEMPO_CONTROL"
+                                  ]
+                                }
+                              },
+                              "setPrescription": {
+                                "maxItems": 100,
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "reps": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "zone": {
+                                      "type": "string",
+                                      "enum": [
+                                        "strength",
+                                        "hypertrophy",
+                                        "endurance"
+                                      ]
+                                    },
+                                    "restSeconds": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 86400
+                                    },
+                                    "load": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 2000
+                                    }
+                                  },
+                                  "required": [
+                                    "reps",
+                                    "zone",
+                                    "restSeconds"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
                               "repsMin": {
                                 "nullable": true,
                                 "type": "integer",
@@ -4796,6 +5202,64 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "supersetGroupId": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 100
+                                    },
+                                    "runes": {
+                                      "maxItems": 5,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "enum": [
+                                          "DROP_SET",
+                                          "REST_PAUSE",
+                                          "ISOMETRIC_HOLD",
+                                          "CLUSTER_SET",
+                                          "TEMPO_CONTROL"
+                                        ]
+                                      }
+                                    },
+                                    "setPrescription": {
+                                      "maxItems": 100,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "reps": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 10000
+                                          },
+                                          "zone": {
+                                            "type": "string",
+                                            "enum": [
+                                              "strength",
+                                              "hypertrophy",
+                                              "endurance"
+                                            ]
+                                          },
+                                          "restSeconds": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 86400
+                                          },
+                                          "load": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 2000
+                                          }
+                                        },
+                                        "required": [
+                                          "reps",
+                                          "zone",
+                                          "restSeconds"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    },
                                     "repsMin": {
                                       "nullable": true,
                                       "type": "integer",
@@ -6580,6 +7044,64 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "supersetGroupId": {
+                                "nullable": true,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 100
+                              },
+                              "runes": {
+                                "maxItems": 5,
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "enum": [
+                                    "DROP_SET",
+                                    "REST_PAUSE",
+                                    "ISOMETRIC_HOLD",
+                                    "CLUSTER_SET",
+                                    "TEMPO_CONTROL"
+                                  ]
+                                }
+                              },
+                              "setPrescription": {
+                                "maxItems": 100,
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "reps": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "zone": {
+                                      "type": "string",
+                                      "enum": [
+                                        "strength",
+                                        "hypertrophy",
+                                        "endurance"
+                                      ]
+                                    },
+                                    "restSeconds": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 86400
+                                    },
+                                    "load": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 2000
+                                    }
+                                  },
+                                  "required": [
+                                    "reps",
+                                    "zone",
+                                    "restSeconds"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
                               "repsMin": {
                                 "nullable": true,
                                 "type": "integer",
@@ -8112,6 +8634,187 @@
                     "completedWorkoutsCount",
                     "conclusionRate",
                     "totalTimeInSeconds"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me/builder-preferences": {
+      "get": {
+        "operationId": "getBuilderPreferences",
+        "summary": "Read or update the authenticated user's builder preference",
+        "tags": [
+          "Me"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "preferredBuilderMode": {
+                      "type": "string",
+                      "enum": [
+                        "tactical",
+                        "classic"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "preferredBuilderMode"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateBuilderPreferences",
+        "summary": "Read or update the authenticated user's builder preference",
+        "tags": [
+          "Me"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "preferredBuilderMode": {
+                    "type": "string",
+                    "enum": [
+                      "tactical",
+                      "classic"
+                    ]
+                  }
+                },
+                "required": [
+                  "preferredBuilderMode"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "preferredBuilderMode": {
+                      "type": "string",
+                      "enum": [
+                        "tactical",
+                        "classic"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "preferredBuilderMode"
                   ],
                   "additionalProperties": false
                 }
@@ -15327,6 +16030,64 @@
                                   "items": {
                                     "type": "object",
                                     "properties": {
+                                      "supersetGroupId": {
+                                        "nullable": true,
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 100
+                                      },
+                                      "runes": {
+                                        "maxItems": 5,
+                                        "type": "array",
+                                        "items": {
+                                          "type": "string",
+                                          "enum": [
+                                            "DROP_SET",
+                                            "REST_PAUSE",
+                                            "ISOMETRIC_HOLD",
+                                            "CLUSTER_SET",
+                                            "TEMPO_CONTROL"
+                                          ]
+                                        }
+                                      },
+                                      "setPrescription": {
+                                        "maxItems": 100,
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "reps": {
+                                              "type": "integer",
+                                              "minimum": 1,
+                                              "maximum": 10000
+                                            },
+                                            "zone": {
+                                              "type": "string",
+                                              "enum": [
+                                                "strength",
+                                                "hypertrophy",
+                                                "endurance"
+                                              ]
+                                            },
+                                            "restSeconds": {
+                                              "type": "integer",
+                                              "minimum": 1,
+                                              "maximum": 86400
+                                            },
+                                            "load": {
+                                              "type": "number",
+                                              "minimum": 0,
+                                              "maximum": 2000
+                                            }
+                                          },
+                                          "required": [
+                                            "reps",
+                                            "zone",
+                                            "restSeconds"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      },
                                       "repsMin": {
                                         "nullable": true,
                                         "type": "integer",
@@ -19221,6 +19982,64 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "supersetGroupId": {
+                                "nullable": true,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 100
+                              },
+                              "runes": {
+                                "maxItems": 5,
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "enum": [
+                                    "DROP_SET",
+                                    "REST_PAUSE",
+                                    "ISOMETRIC_HOLD",
+                                    "CLUSTER_SET",
+                                    "TEMPO_CONTROL"
+                                  ]
+                                }
+                              },
+                              "setPrescription": {
+                                "maxItems": 100,
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "reps": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "zone": {
+                                      "type": "string",
+                                      "enum": [
+                                        "strength",
+                                        "hypertrophy",
+                                        "endurance"
+                                      ]
+                                    },
+                                    "restSeconds": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 86400
+                                    },
+                                    "load": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 2000
+                                    }
+                                  },
+                                  "required": [
+                                    "reps",
+                                    "zone",
+                                    "restSeconds"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
                               "repsMin": {
                                 "nullable": true,
                                 "type": "integer",
@@ -19510,6 +20329,64 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "supersetGroupId": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 100
+                                    },
+                                    "runes": {
+                                      "maxItems": 5,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "enum": [
+                                          "DROP_SET",
+                                          "REST_PAUSE",
+                                          "ISOMETRIC_HOLD",
+                                          "CLUSTER_SET",
+                                          "TEMPO_CONTROL"
+                                        ]
+                                      }
+                                    },
+                                    "setPrescription": {
+                                      "maxItems": 100,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "reps": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 10000
+                                          },
+                                          "zone": {
+                                            "type": "string",
+                                            "enum": [
+                                              "strength",
+                                              "hypertrophy",
+                                              "endurance"
+                                            ]
+                                          },
+                                          "restSeconds": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 86400
+                                          },
+                                          "load": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 2000
+                                          }
+                                        },
+                                        "required": [
+                                          "reps",
+                                          "zone",
+                                          "restSeconds"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    },
                                     "repsMin": {
                                       "nullable": true,
                                       "type": "integer",
@@ -19894,6 +20771,64 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "supersetGroupId": {
+                                "nullable": true,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 100
+                              },
+                              "runes": {
+                                "maxItems": 5,
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "enum": [
+                                    "DROP_SET",
+                                    "REST_PAUSE",
+                                    "ISOMETRIC_HOLD",
+                                    "CLUSTER_SET",
+                                    "TEMPO_CONTROL"
+                                  ]
+                                }
+                              },
+                              "setPrescription": {
+                                "maxItems": 100,
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "reps": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "zone": {
+                                      "type": "string",
+                                      "enum": [
+                                        "strength",
+                                        "hypertrophy",
+                                        "endurance"
+                                      ]
+                                    },
+                                    "restSeconds": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 86400
+                                    },
+                                    "load": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 2000
+                                    }
+                                  },
+                                  "required": [
+                                    "reps",
+                                    "zone",
+                                    "restSeconds"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
                               "repsMin": {
                                 "nullable": true,
                                 "type": "integer",
@@ -20193,6 +21128,64 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "supersetGroupId": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 100
+                                    },
+                                    "runes": {
+                                      "maxItems": 5,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "enum": [
+                                          "DROP_SET",
+                                          "REST_PAUSE",
+                                          "ISOMETRIC_HOLD",
+                                          "CLUSTER_SET",
+                                          "TEMPO_CONTROL"
+                                        ]
+                                      }
+                                    },
+                                    "setPrescription": {
+                                      "maxItems": 100,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "reps": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 10000
+                                          },
+                                          "zone": {
+                                            "type": "string",
+                                            "enum": [
+                                              "strength",
+                                              "hypertrophy",
+                                              "endurance"
+                                            ]
+                                          },
+                                          "restSeconds": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 86400
+                                          },
+                                          "load": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 2000
+                                          }
+                                        },
+                                        "required": [
+                                          "reps",
+                                          "zone",
+                                          "restSeconds"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    },
                                     "repsMin": {
                                       "nullable": true,
                                       "type": "integer",
@@ -20688,6 +21681,64 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "supersetGroupId": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 100
+                                    },
+                                    "runes": {
+                                      "maxItems": 5,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "enum": [
+                                          "DROP_SET",
+                                          "REST_PAUSE",
+                                          "ISOMETRIC_HOLD",
+                                          "CLUSTER_SET",
+                                          "TEMPO_CONTROL"
+                                        ]
+                                      }
+                                    },
+                                    "setPrescription": {
+                                      "maxItems": 100,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "reps": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 10000
+                                          },
+                                          "zone": {
+                                            "type": "string",
+                                            "enum": [
+                                              "strength",
+                                              "hypertrophy",
+                                              "endurance"
+                                            ]
+                                          },
+                                          "restSeconds": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 86400
+                                          },
+                                          "load": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 2000
+                                          }
+                                        },
+                                        "required": [
+                                          "reps",
+                                          "zone",
+                                          "restSeconds"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    },
                                     "repsMin": {
                                       "nullable": true,
                                       "type": "integer",
@@ -21214,6 +22265,64 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "supersetGroupId": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 100
+                                    },
+                                    "runes": {
+                                      "maxItems": 5,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "enum": [
+                                          "DROP_SET",
+                                          "REST_PAUSE",
+                                          "ISOMETRIC_HOLD",
+                                          "CLUSTER_SET",
+                                          "TEMPO_CONTROL"
+                                        ]
+                                      }
+                                    },
+                                    "setPrescription": {
+                                      "maxItems": 100,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "reps": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 10000
+                                          },
+                                          "zone": {
+                                            "type": "string",
+                                            "enum": [
+                                              "strength",
+                                              "hypertrophy",
+                                              "endurance"
+                                            ]
+                                          },
+                                          "restSeconds": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 86400
+                                          },
+                                          "load": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 2000
+                                          }
+                                        },
+                                        "required": [
+                                          "reps",
+                                          "zone",
+                                          "restSeconds"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    },
                                     "repsMin": {
                                       "nullable": true,
                                       "type": "integer",
@@ -21711,6 +22820,64 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "supersetGroupId": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 100
+                                    },
+                                    "runes": {
+                                      "maxItems": 5,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "enum": [
+                                          "DROP_SET",
+                                          "REST_PAUSE",
+                                          "ISOMETRIC_HOLD",
+                                          "CLUSTER_SET",
+                                          "TEMPO_CONTROL"
+                                        ]
+                                      }
+                                    },
+                                    "setPrescription": {
+                                      "maxItems": 100,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "reps": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 10000
+                                          },
+                                          "zone": {
+                                            "type": "string",
+                                            "enum": [
+                                              "strength",
+                                              "hypertrophy",
+                                              "endurance"
+                                            ]
+                                          },
+                                          "restSeconds": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 86400
+                                          },
+                                          "load": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 2000
+                                          }
+                                        },
+                                        "required": [
+                                          "reps",
+                                          "zone",
+                                          "restSeconds"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    },
                                     "repsMin": {
                                       "nullable": true,
                                       "type": "integer",
@@ -22210,6 +23377,64 @@
                                   "items": {
                                     "type": "object",
                                     "properties": {
+                                      "supersetGroupId": {
+                                        "nullable": true,
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 100
+                                      },
+                                      "runes": {
+                                        "maxItems": 5,
+                                        "type": "array",
+                                        "items": {
+                                          "type": "string",
+                                          "enum": [
+                                            "DROP_SET",
+                                            "REST_PAUSE",
+                                            "ISOMETRIC_HOLD",
+                                            "CLUSTER_SET",
+                                            "TEMPO_CONTROL"
+                                          ]
+                                        }
+                                      },
+                                      "setPrescription": {
+                                        "maxItems": 100,
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "reps": {
+                                              "type": "integer",
+                                              "minimum": 1,
+                                              "maximum": 10000
+                                            },
+                                            "zone": {
+                                              "type": "string",
+                                              "enum": [
+                                                "strength",
+                                                "hypertrophy",
+                                                "endurance"
+                                              ]
+                                            },
+                                            "restSeconds": {
+                                              "type": "integer",
+                                              "minimum": 1,
+                                              "maximum": 86400
+                                            },
+                                            "load": {
+                                              "type": "number",
+                                              "minimum": 0,
+                                              "maximum": 2000
+                                            }
+                                          },
+                                          "required": [
+                                            "reps",
+                                            "zone",
+                                            "restSeconds"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      },
                                       "repsMin": {
                                         "nullable": true,
                                         "type": "integer",
@@ -22700,6 +23925,64 @@
                                   "items": {
                                     "type": "object",
                                     "properties": {
+                                      "supersetGroupId": {
+                                        "nullable": true,
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 100
+                                      },
+                                      "runes": {
+                                        "maxItems": 5,
+                                        "type": "array",
+                                        "items": {
+                                          "type": "string",
+                                          "enum": [
+                                            "DROP_SET",
+                                            "REST_PAUSE",
+                                            "ISOMETRIC_HOLD",
+                                            "CLUSTER_SET",
+                                            "TEMPO_CONTROL"
+                                          ]
+                                        }
+                                      },
+                                      "setPrescription": {
+                                        "maxItems": 100,
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "reps": {
+                                              "type": "integer",
+                                              "minimum": 1,
+                                              "maximum": 10000
+                                            },
+                                            "zone": {
+                                              "type": "string",
+                                              "enum": [
+                                                "strength",
+                                                "hypertrophy",
+                                                "endurance"
+                                              ]
+                                            },
+                                            "restSeconds": {
+                                              "type": "integer",
+                                              "minimum": 1,
+                                              "maximum": 86400
+                                            },
+                                            "load": {
+                                              "type": "number",
+                                              "minimum": 0,
+                                              "maximum": 2000
+                                            }
+                                          },
+                                          "required": [
+                                            "reps",
+                                            "zone",
+                                            "restSeconds"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      },
                                       "repsMin": {
                                         "nullable": true,
                                         "type": "integer",
@@ -23198,6 +24481,64 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "supersetGroupId": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 100
+                                    },
+                                    "runes": {
+                                      "maxItems": 5,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "enum": [
+                                          "DROP_SET",
+                                          "REST_PAUSE",
+                                          "ISOMETRIC_HOLD",
+                                          "CLUSTER_SET",
+                                          "TEMPO_CONTROL"
+                                        ]
+                                      }
+                                    },
+                                    "setPrescription": {
+                                      "maxItems": 100,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "reps": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 10000
+                                          },
+                                          "zone": {
+                                            "type": "string",
+                                            "enum": [
+                                              "strength",
+                                              "hypertrophy",
+                                              "endurance"
+                                            ]
+                                          },
+                                          "restSeconds": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 86400
+                                          },
+                                          "load": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 2000
+                                          }
+                                        },
+                                        "required": [
+                                          "reps",
+                                          "zone",
+                                          "restSeconds"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    },
                                     "repsMin": {
                                       "nullable": true,
                                       "type": "integer",
@@ -23701,6 +25042,64 @@
                                     "items": {
                                       "type": "object",
                                       "properties": {
+                                        "supersetGroupId": {
+                                          "nullable": true,
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 100
+                                        },
+                                        "runes": {
+                                          "maxItems": 5,
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string",
+                                            "enum": [
+                                              "DROP_SET",
+                                              "REST_PAUSE",
+                                              "ISOMETRIC_HOLD",
+                                              "CLUSTER_SET",
+                                              "TEMPO_CONTROL"
+                                            ]
+                                          }
+                                        },
+                                        "setPrescription": {
+                                          "maxItems": 100,
+                                          "type": "array",
+                                          "items": {
+                                            "type": "object",
+                                            "properties": {
+                                              "reps": {
+                                                "type": "integer",
+                                                "minimum": 1,
+                                                "maximum": 10000
+                                              },
+                                              "zone": {
+                                                "type": "string",
+                                                "enum": [
+                                                  "strength",
+                                                  "hypertrophy",
+                                                  "endurance"
+                                                ]
+                                              },
+                                              "restSeconds": {
+                                                "type": "integer",
+                                                "minimum": 1,
+                                                "maximum": 86400
+                                              },
+                                              "load": {
+                                                "type": "number",
+                                                "minimum": 0,
+                                                "maximum": 2000
+                                              }
+                                            },
+                                            "required": [
+                                              "reps",
+                                              "zone",
+                                              "restSeconds"
+                                            ],
+                                            "additionalProperties": false
+                                          }
+                                        },
                                         "repsMin": {
                                           "nullable": true,
                                           "type": "integer",
@@ -24213,6 +25612,64 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "supersetGroupId": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 100
+                                    },
+                                    "runes": {
+                                      "maxItems": 5,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "enum": [
+                                          "DROP_SET",
+                                          "REST_PAUSE",
+                                          "ISOMETRIC_HOLD",
+                                          "CLUSTER_SET",
+                                          "TEMPO_CONTROL"
+                                        ]
+                                      }
+                                    },
+                                    "setPrescription": {
+                                      "maxItems": 100,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "reps": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 10000
+                                          },
+                                          "zone": {
+                                            "type": "string",
+                                            "enum": [
+                                              "strength",
+                                              "hypertrophy",
+                                              "endurance"
+                                            ]
+                                          },
+                                          "restSeconds": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 86400
+                                          },
+                                          "load": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 2000
+                                          }
+                                        },
+                                        "required": [
+                                          "reps",
+                                          "zone",
+                                          "restSeconds"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    },
                                     "repsMin": {
                                       "nullable": true,
                                       "type": "integer",
@@ -24627,6 +26084,64 @@
                                 },
                                 "reps": {
                                   "type": "number"
+                                },
+                                "supersetGroupId": {
+                                  "nullable": true,
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 100
+                                },
+                                "runes": {
+                                  "maxItems": 5,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "enum": [
+                                      "DROP_SET",
+                                      "REST_PAUSE",
+                                      "ISOMETRIC_HOLD",
+                                      "CLUSTER_SET",
+                                      "TEMPO_CONTROL"
+                                    ]
+                                  }
+                                },
+                                "setPrescription": {
+                                  "maxItems": 100,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "reps": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 10000
+                                      },
+                                      "zone": {
+                                        "type": "string",
+                                        "enum": [
+                                          "strength",
+                                          "hypertrophy",
+                                          "endurance"
+                                        ]
+                                      },
+                                      "restSeconds": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 86400
+                                      },
+                                      "load": {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 2000
+                                      }
+                                    },
+                                    "required": [
+                                      "reps",
+                                      "zone",
+                                      "restSeconds"
+                                    ],
+                                    "additionalProperties": false
+                                  }
                                 },
                                 "repsMin": {
                                   "nullable": true,
@@ -26399,6 +27914,64 @@
                           "planned": {
                             "type": "object",
                             "properties": {
+                              "supersetGroupId": {
+                                "nullable": true,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 100
+                              },
+                              "runes": {
+                                "maxItems": 5,
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "enum": [
+                                    "DROP_SET",
+                                    "REST_PAUSE",
+                                    "ISOMETRIC_HOLD",
+                                    "CLUSTER_SET",
+                                    "TEMPO_CONTROL"
+                                  ]
+                                }
+                              },
+                              "setPrescription": {
+                                "maxItems": 100,
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "reps": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "zone": {
+                                      "type": "string",
+                                      "enum": [
+                                        "strength",
+                                        "hypertrophy",
+                                        "endurance"
+                                      ]
+                                    },
+                                    "restSeconds": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 86400
+                                    },
+                                    "load": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 2000
+                                    }
+                                  },
+                                  "required": [
+                                    "reps",
+                                    "zone",
+                                    "restSeconds"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
                               "repsMin": {
                                 "nullable": true,
                                 "type": "integer",
@@ -27998,6 +29571,64 @@
                                   "items": {
                                     "type": "object",
                                     "properties": {
+                                      "supersetGroupId": {
+                                        "nullable": true,
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 100
+                                      },
+                                      "runes": {
+                                        "maxItems": 5,
+                                        "type": "array",
+                                        "items": {
+                                          "type": "string",
+                                          "enum": [
+                                            "DROP_SET",
+                                            "REST_PAUSE",
+                                            "ISOMETRIC_HOLD",
+                                            "CLUSTER_SET",
+                                            "TEMPO_CONTROL"
+                                          ]
+                                        }
+                                      },
+                                      "setPrescription": {
+                                        "maxItems": 100,
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "reps": {
+                                              "type": "integer",
+                                              "minimum": 1,
+                                              "maximum": 10000
+                                            },
+                                            "zone": {
+                                              "type": "string",
+                                              "enum": [
+                                                "strength",
+                                                "hypertrophy",
+                                                "endurance"
+                                              ]
+                                            },
+                                            "restSeconds": {
+                                              "type": "integer",
+                                              "minimum": 1,
+                                              "maximum": 86400
+                                            },
+                                            "load": {
+                                              "type": "number",
+                                              "minimum": 0,
+                                              "maximum": 2000
+                                            }
+                                          },
+                                          "required": [
+                                            "reps",
+                                            "zone",
+                                            "restSeconds"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      },
                                       "repsMin": {
                                         "nullable": true,
                                         "type": "integer",
@@ -28304,6 +29935,64 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "supersetGroupId": {
+                                "nullable": true,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 100
+                              },
+                              "runes": {
+                                "maxItems": 5,
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "enum": [
+                                    "DROP_SET",
+                                    "REST_PAUSE",
+                                    "ISOMETRIC_HOLD",
+                                    "CLUSTER_SET",
+                                    "TEMPO_CONTROL"
+                                  ]
+                                }
+                              },
+                              "setPrescription": {
+                                "maxItems": 100,
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "reps": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "zone": {
+                                      "type": "string",
+                                      "enum": [
+                                        "strength",
+                                        "hypertrophy",
+                                        "endurance"
+                                      ]
+                                    },
+                                    "restSeconds": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 86400
+                                    },
+                                    "load": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 2000
+                                    }
+                                  },
+                                  "required": [
+                                    "reps",
+                                    "zone",
+                                    "restSeconds"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
                               "repsMin": {
                                 "nullable": true,
                                 "type": "integer",
@@ -28479,6 +30168,64 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "supersetGroupId": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 100
+                                    },
+                                    "runes": {
+                                      "maxItems": 5,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "enum": [
+                                          "DROP_SET",
+                                          "REST_PAUSE",
+                                          "ISOMETRIC_HOLD",
+                                          "CLUSTER_SET",
+                                          "TEMPO_CONTROL"
+                                        ]
+                                      }
+                                    },
+                                    "setPrescription": {
+                                      "maxItems": 100,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "reps": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 10000
+                                          },
+                                          "zone": {
+                                            "type": "string",
+                                            "enum": [
+                                              "strength",
+                                              "hypertrophy",
+                                              "endurance"
+                                            ]
+                                          },
+                                          "restSeconds": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 86400
+                                          },
+                                          "load": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 2000
+                                          }
+                                        },
+                                        "required": [
+                                          "reps",
+                                          "zone",
+                                          "restSeconds"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    },
                                     "repsMin": {
                                       "nullable": true,
                                       "type": "integer",
@@ -28795,6 +30542,64 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "supersetGroupId": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 100
+                                    },
+                                    "runes": {
+                                      "maxItems": 5,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "enum": [
+                                          "DROP_SET",
+                                          "REST_PAUSE",
+                                          "ISOMETRIC_HOLD",
+                                          "CLUSTER_SET",
+                                          "TEMPO_CONTROL"
+                                        ]
+                                      }
+                                    },
+                                    "setPrescription": {
+                                      "maxItems": 100,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "reps": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 10000
+                                          },
+                                          "zone": {
+                                            "type": "string",
+                                            "enum": [
+                                              "strength",
+                                              "hypertrophy",
+                                              "endurance"
+                                            ]
+                                          },
+                                          "restSeconds": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 86400
+                                          },
+                                          "load": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 2000
+                                          }
+                                        },
+                                        "required": [
+                                          "reps",
+                                          "zone",
+                                          "restSeconds"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    },
                                     "repsMin": {
                                       "nullable": true,
                                       "type": "integer",
@@ -29100,6 +30905,64 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "supersetGroupId": {
+                                "nullable": true,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 100
+                              },
+                              "runes": {
+                                "maxItems": 5,
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "enum": [
+                                    "DROP_SET",
+                                    "REST_PAUSE",
+                                    "ISOMETRIC_HOLD",
+                                    "CLUSTER_SET",
+                                    "TEMPO_CONTROL"
+                                  ]
+                                }
+                              },
+                              "setPrescription": {
+                                "maxItems": 100,
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "reps": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "zone": {
+                                      "type": "string",
+                                      "enum": [
+                                        "strength",
+                                        "hypertrophy",
+                                        "endurance"
+                                      ]
+                                    },
+                                    "restSeconds": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 86400
+                                    },
+                                    "load": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 2000
+                                    }
+                                  },
+                                  "required": [
+                                    "reps",
+                                    "zone",
+                                    "restSeconds"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
                               "repsMin": {
                                 "nullable": true,
                                 "type": "integer",
@@ -29285,6 +31148,64 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "supersetGroupId": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 100
+                                    },
+                                    "runes": {
+                                      "maxItems": 5,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "enum": [
+                                          "DROP_SET",
+                                          "REST_PAUSE",
+                                          "ISOMETRIC_HOLD",
+                                          "CLUSTER_SET",
+                                          "TEMPO_CONTROL"
+                                        ]
+                                      }
+                                    },
+                                    "setPrescription": {
+                                      "maxItems": 100,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "reps": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 10000
+                                          },
+                                          "zone": {
+                                            "type": "string",
+                                            "enum": [
+                                              "strength",
+                                              "hypertrophy",
+                                              "endurance"
+                                            ]
+                                          },
+                                          "restSeconds": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 86400
+                                          },
+                                          "load": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 2000
+                                          }
+                                        },
+                                        "required": [
+                                          "reps",
+                                          "zone",
+                                          "restSeconds"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    },
                                     "repsMin": {
                                       "nullable": true,
                                       "type": "integer",
@@ -29897,6 +31818,64 @@
                                     "items": {
                                       "type": "object",
                                       "properties": {
+                                        "supersetGroupId": {
+                                          "nullable": true,
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 100
+                                        },
+                                        "runes": {
+                                          "maxItems": 5,
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string",
+                                            "enum": [
+                                              "DROP_SET",
+                                              "REST_PAUSE",
+                                              "ISOMETRIC_HOLD",
+                                              "CLUSTER_SET",
+                                              "TEMPO_CONTROL"
+                                            ]
+                                          }
+                                        },
+                                        "setPrescription": {
+                                          "maxItems": 100,
+                                          "type": "array",
+                                          "items": {
+                                            "type": "object",
+                                            "properties": {
+                                              "reps": {
+                                                "type": "integer",
+                                                "minimum": 1,
+                                                "maximum": 10000
+                                              },
+                                              "zone": {
+                                                "type": "string",
+                                                "enum": [
+                                                  "strength",
+                                                  "hypertrophy",
+                                                  "endurance"
+                                                ]
+                                              },
+                                              "restSeconds": {
+                                                "type": "integer",
+                                                "minimum": 1,
+                                                "maximum": 86400
+                                              },
+                                              "load": {
+                                                "type": "number",
+                                                "minimum": 0,
+                                                "maximum": 2000
+                                              }
+                                            },
+                                            "required": [
+                                              "reps",
+                                              "zone",
+                                              "restSeconds"
+                                            ],
+                                            "additionalProperties": false
+                                          }
+                                        },
                                         "repsMin": {
                                           "nullable": true,
                                           "type": "integer",
@@ -30240,6 +32219,64 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "supersetGroupId": {
+                                      "nullable": true,
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 100
+                                    },
+                                    "runes": {
+                                      "maxItems": 5,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "enum": [
+                                          "DROP_SET",
+                                          "REST_PAUSE",
+                                          "ISOMETRIC_HOLD",
+                                          "CLUSTER_SET",
+                                          "TEMPO_CONTROL"
+                                        ]
+                                      }
+                                    },
+                                    "setPrescription": {
+                                      "maxItems": 100,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "reps": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 10000
+                                          },
+                                          "zone": {
+                                            "type": "string",
+                                            "enum": [
+                                              "strength",
+                                              "hypertrophy",
+                                              "endurance"
+                                            ]
+                                          },
+                                          "restSeconds": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 86400
+                                          },
+                                          "load": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 2000
+                                          }
+                                        },
+                                        "required": [
+                                          "reps",
+                                          "zone",
+                                          "restSeconds"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    },
                                     "repsMin": {
                                       "nullable": true,
                                       "type": "integer",
@@ -44917,6 +46954,64 @@
                             "items": {
                               "type": "object",
                               "properties": {
+                                "supersetGroupId": {
+                                  "nullable": true,
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 100
+                                },
+                                "runes": {
+                                  "maxItems": 5,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "enum": [
+                                      "DROP_SET",
+                                      "REST_PAUSE",
+                                      "ISOMETRIC_HOLD",
+                                      "CLUSTER_SET",
+                                      "TEMPO_CONTROL"
+                                    ]
+                                  }
+                                },
+                                "setPrescription": {
+                                  "maxItems": 100,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "reps": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 10000
+                                      },
+                                      "zone": {
+                                        "type": "string",
+                                        "enum": [
+                                          "strength",
+                                          "hypertrophy",
+                                          "endurance"
+                                        ]
+                                      },
+                                      "restSeconds": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 86400
+                                      },
+                                      "load": {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 2000
+                                      }
+                                    },
+                                    "required": [
+                                      "reps",
+                                      "zone",
+                                      "restSeconds"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                },
                                 "repsMin": {
                                   "nullable": true,
                                   "type": "integer",
@@ -46941,6 +49036,64 @@
                           "planned": {
                             "type": "object",
                             "properties": {
+                              "supersetGroupId": {
+                                "nullable": true,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 100
+                              },
+                              "runes": {
+                                "maxItems": 5,
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "enum": [
+                                    "DROP_SET",
+                                    "REST_PAUSE",
+                                    "ISOMETRIC_HOLD",
+                                    "CLUSTER_SET",
+                                    "TEMPO_CONTROL"
+                                  ]
+                                }
+                              },
+                              "setPrescription": {
+                                "maxItems": 100,
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "reps": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 10000
+                                    },
+                                    "zone": {
+                                      "type": "string",
+                                      "enum": [
+                                        "strength",
+                                        "hypertrophy",
+                                        "endurance"
+                                      ]
+                                    },
+                                    "restSeconds": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 86400
+                                    },
+                                    "load": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 2000
+                                    }
+                                  },
+                                  "required": [
+                                    "reps",
+                                    "zone",
+                                    "restSeconds"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
                               "repsMin": {
                                 "nullable": true,
                                 "type": "integer",

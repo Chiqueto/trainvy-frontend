@@ -15,6 +15,9 @@ export const WEEK_DAYS = [
 ] as const;
 
 export type WorkoutPlanDraftExercise = {
+  supersetGroupId?: string | null;
+  runes?: import("./tactical").Rune[];
+  setPrescription?: import("./tactical").TacticalSet[];
   repsMin?: number | null;
   repsMax?: number | null;
   targetRir?: number | null;
@@ -143,6 +146,22 @@ export function validateWorkoutPlanDraft(
       return `Adicione ao menos um exercício em ${dayLabel}.`;
     }
     for (const exercise of day.exercises) {
+      if (
+        exercise.setPrescription?.length &&
+        (exercise.setPrescription.length !== exercise.sets ||
+          exercise.setPrescription.some(
+            (s) =>
+              !Number.isInteger(s.reps) ||
+              s.reps < 1 ||
+              s.reps > 10000 ||
+              !Number.isInteger(s.restSeconds) ||
+              s.restSeconds < 1 ||
+              s.restSeconds > 86400 ||
+              (s.load != null &&
+                (!Number.isFinite(s.load) || s.load < 0 || s.load > 2000)),
+          ))
+      )
+        return `Revise a prescrição por série em ${dayLabel}.`;
       const min = exercise.repsMin ?? null,
         max = exercise.repsMax ?? null;
       if (
@@ -259,10 +278,20 @@ export function deserializeWorkoutDays(
 export function serializeAdvancedPrescription(
   exercise: Pick<
     WorkoutPlanDraftExercise,
-    "repsMin" | "repsMax" | "targetRir" | "targetLoadInGrams" | "tempo"
+    | "repsMin"
+    | "repsMax"
+    | "targetRir"
+    | "targetLoadInGrams"
+    | "tempo"
+    | "supersetGroupId"
+    | "runes"
+    | "setPrescription"
   >,
 ) {
   return {
+    supersetGroupId: exercise.supersetGroupId ?? null,
+    runes: exercise.runes ?? [],
+    setPrescription: exercise.setPrescription ?? [],
     repsMin: exercise.repsMin ?? null,
     repsMax: exercise.repsMax ?? null,
     targetRir: exercise.targetRir ?? null,

@@ -1,5 +1,15 @@
 "use client";
+import {
+  ViewModeToggle,
+  useBuilderMode,
+} from "@/app/planning/_components/tactical/view-mode-toggle";
+import { TacticalPlanWorkspace } from "@/app/planning/_components/tactical/tactical-plan-workspace";
+import { ClassicTacticalFields } from "@/app/planning/_components/tactical/classic-tactical-fields";
+import { SealButton } from "@/app/planning/_components/tactical/seal-button";
+import { patchExercise } from "@/app/planning/_lib/tactical";
+
 import { trainingDaysOnly } from "@/app/_lib/training-days";
+import { CatalogExercisePicker } from "@/app/planning/_components/catalog-exercise-picker";
 import { AdvancedPrescriptionFields } from "@/app/planning/_components/advanced-prescription-fields";
 import { serializeAdvancedPrescription } from "@/app/planning/_lib/workout-plan-builder";
 
@@ -47,6 +57,7 @@ export interface InitialTemplateData {
     isRest: boolean;
     estimatedDurationInSeconds: number;
     exercises: Array<{
+      exerciseId?: string | null;
       name: string;
       order?: number;
       sets: number;
@@ -57,6 +68,9 @@ export interface InitialTemplateData {
       targetRir?: number | null;
       targetLoadInGrams?: number | null;
       tempo?: string | null;
+      supersetGroupId?: string | null;
+      runes?: WorkoutPlanDraftExercise["runes"];
+      setPrescription?: WorkoutPlanDraftExercise["setPrescription"];
       restTimeInSeconds: number;
       alternative1ExerciseName?: string | null;
       alternative2ExerciseName?: string | null;
@@ -72,6 +86,8 @@ export function CoachTemplateBuilder({
   initialData,
 }: CoachTemplateBuilderProps) {
   const router = useRouter();
+  const [tacticalDayIndex, setTacticalDayIndex] = useState(0);
+  const { builderMode, changeMode, syncError } = useBuilderMode();
   const isEditing = Boolean(initialData?.id);
   const [name, setName] = useState(initialData?.name ?? "");
   const [description, setDescription] = useState(
@@ -92,6 +108,7 @@ export function CoachTemplateBuilder({
           Math.round(d.estimatedDurationInSeconds / 60),
         ),
         exercises: (d.exercises ?? []).map((e) => ({
+          ...e,
           name: e.name,
           sets: e.sets,
           warmupSets: e.warmupSets ?? 0,
@@ -143,7 +160,7 @@ export function CoachTemplateBuilder({
   ) {
     updateDay(dayIndex, {
       exercises: days[dayIndex].exercises.map((exercise, index) =>
-        index === exerciseIndex ? { ...exercise, ...patch } : exercise,
+        index === exerciseIndex ? patchExercise(exercise, patch) : exercise,
       ),
     });
   }
@@ -201,6 +218,9 @@ export function CoachTemplateBuilder({
         }
 
         return {
+          exerciseId: exercise.exerciseId,
+          alternative1ExerciseId: exercise.alternative1ExerciseId,
+          alternative2ExerciseId: exercise.alternative2ExerciseId,
           name: exName,
           order: exerciseIndex,
           sets: exercise.sets,
@@ -359,309 +379,338 @@ export function CoachTemplateBuilder({
       </div>
 
       {/* Dias de Treino */}
-      <div className="flex flex-col gap-5">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="font-heading text-lg font-bold text-foreground">
-              Divisão de Treinos ({days.length} dias)
-            </h3>
-            <p className="text-xs text-muted-foreground">
-              Adicione e personalize cada dia da rotina.
-            </p>
+      <ViewModeToggle
+        value={builderMode}
+        onChange={changeMode}
+        syncError={syncError}
+      />
+      {builderMode === "tactical" ? (
+        <TacticalPlanWorkspace
+          activeIndex={tacticalDayIndex}
+          onActiveChange={setTacticalDayIndex}
+          days={days}
+          onChange={setDays}
+          disabled={isPending}
+        />
+      ) : (
+        <div className="flex flex-col gap-5">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-heading text-lg font-bold text-foreground">
+                Divisão de Treinos ({days.length} dias)
+              </h3>
+              <p className="text-xs text-muted-foreground">
+                Adicione e personalize cada dia da rotina.
+              </p>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={addWorkout}
+              disabled={isPending}
+              className="rounded-xl h-10 px-4 text-xs font-heading font-semibold"
+            >
+              <Plus className="size-3.5 mr-1.5" />
+              Adicionar Dia
+            </Button>
           </div>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={addWorkout}
-            disabled={isPending}
-            className="rounded-xl h-10 px-4 text-xs font-heading font-semibold"
-          >
-            <Plus className="size-3.5 mr-1.5" />
-            Adicionar Dia
-          </Button>
-        </div>
 
-        {days.map((day, dayIndex) => (
-          <div
-            key={dayIndex}
-            className="flex flex-col gap-4 rounded-3xl border border-border bg-card p-5 sm:p-6 shadow-xs"
-          >
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/60 pb-3">
-              <div className="flex flex-1 items-center gap-2 min-w-[200px]">
-                <Input
-                  value={day.name}
-                  onChange={(e) =>
-                    updateDay(dayIndex, { name: e.target.value })
-                  }
-                  placeholder="Nome do dia (ex: Treino A - Peito)"
-                  className="font-heading font-bold text-base h-10 rounded-xl bg-background max-w-sm"
-                  disabled={isPending}
-                />
-              </div>
-
-              <div className="flex items-center gap-2">
-                <select
-                  value={day.weekDay ?? "MONDAY"}
-                  onChange={(e) =>
-                    updateDay(dayIndex, {
-                      weekDay: e.target
-                        .value as (typeof WEEK_DAYS)[number]["value"],
-                    })
-                  }
-                  className="h-9 rounded-lg border border-border bg-background px-2.5 text-xs font-heading font-medium text-foreground focus-visible:outline-none"
-                  disabled={isPending}
-                >
-                  {WEEK_DAYS.map((w) => (
-                    <option key={w.value} value={w.value}>
-                      {w.label}
-                    </option>
-                  ))}
-                </select>
-
-                <button
-                  type="button"
-                  onClick={() => moveWorkout(dayIndex, -1)}
-                  disabled={isPending || dayIndex === 0}
-                  className="size-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-40 transition-colors"
-                  title="Mover para cima"
-                >
-                  <ArrowUp className="size-3.5" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => moveWorkout(dayIndex, 1)}
-                  disabled={isPending || dayIndex === days.length - 1}
-                  className="size-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-40 transition-colors"
-                  title="Mover para baixo"
-                >
-                  <ArrowDown className="size-3.5" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => removeWorkout(dayIndex)}
-                  disabled={isPending || days.length <= 1}
-                  className="size-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 disabled:opacity-40 transition-colors"
-                  title="Excluir dia"
-                >
-                  <Trash2 className="size-3.5" />
-                </button>
-              </div>
-            </div>
-
-            {/* Duração do treino */}
-            <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
-              <div className="flex items-center gap-1.5 ml-auto">
-                <span>Duração estimada:</span>
-                <Input
-                  type="number"
-                  min={10}
-                  max={240}
-                  value={day.estimatedDurationInMinutes}
-                  onChange={(e) =>
-                    updateDay(dayIndex, {
-                      estimatedDurationInMinutes: Number(e.target.value) || 60,
-                    })
-                  }
-                  className="w-16 h-8 text-center text-xs rounded-lg bg-background"
-                  disabled={isPending}
-                />
-                <span>min</span>
-              </div>
-            </div>
-
-            {/* Lista de Exercícios do Dia */}
-            <div className="flex flex-col gap-3 pt-2">
-              {day.exercises.map((exercise, exerciseIndex) => (
-                <div
-                  key={exerciseIndex}
-                  className="rounded-2xl border border-border/80 bg-background/50 p-4 flex flex-col gap-3"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="size-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
-                      {exerciseIndex + 1}
-                    </span>
-                    <Input
-                      value={exercise.name}
-                      onChange={(e) =>
-                        updateExercise(dayIndex, exerciseIndex, {
-                          name: e.target.value,
-                        })
-                      }
-                      placeholder="Nome do exercício (ex: Supino Reto com Barra)"
-                      className="h-10 rounded-xl bg-card font-medium text-sm flex-1"
-                      disabled={isPending}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => moveExercise(dayIndex, exerciseIndex, -1)}
-                      disabled={isPending || exerciseIndex === 0}
-                      className="size-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-30 transition-colors"
-                      title="Subir exercício"
-                    >
-                      <ArrowUp className="size-3" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => moveExercise(dayIndex, exerciseIndex, 1)}
-                      disabled={
-                        isPending || exerciseIndex === day.exercises.length - 1
-                      }
-                      className="size-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-30 transition-colors"
-                      title="Descer exercício"
-                    >
-                      <ArrowDown className="size-3" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => removeExercise(dayIndex, exerciseIndex)}
-                      disabled={isPending || day.exercises.length <= 1}
-                      className="size-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 disabled:opacity-30 transition-colors"
-                      title="Remover exercício"
-                    >
-                      <Trash2 className="size-3" />
-                    </button>
-                  </div>
-
-                  {/* Séries, Reps, Aquecimento, Descanso */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-                    <div className="flex flex-col gap-1">
-                      <Label className="text-[10px] uppercase font-semibold text-muted-foreground">
-                        Séries Válidas
-                      </Label>
-                      <Input
-                        type="number"
-                        min={1}
-                        max={30}
-                        value={exercise.sets}
-                        onChange={(e) =>
-                          updateExercise(dayIndex, exerciseIndex, {
-                            sets: Number(e.target.value) || 1,
-                          })
-                        }
-                        className="h-8 rounded-lg bg-card text-center text-xs"
-                        disabled={isPending}
-                      />
-                    </div>
-
-                    <div className="flex flex-col gap-1">
-                      <Label className="text-[10px] uppercase font-semibold text-muted-foreground">
-                        Repetições
-                      </Label>
-                      <Input
-                        type="number"
-                        min={1}
-                        max={100}
-                        value={exercise.reps}
-                        onChange={(e) =>
-                          updateExercise(dayIndex, exerciseIndex, {
-                            reps: Number(e.target.value) || 1,
-                          })
-                        }
-                        className="h-8 rounded-lg bg-card text-center text-xs"
-                        disabled={isPending}
-                      />
-                    </div>
-
-                    <div className="flex flex-col gap-1">
-                      <Label className="text-[10px] uppercase font-semibold text-muted-foreground">
-                        Aquecimento
-                      </Label>
-                      <Input
-                        type="number"
-                        min={0}
-                        max={10}
-                        value={exercise.warmupSets ?? 0}
-                        onChange={(e) =>
-                          updateExercise(dayIndex, exerciseIndex, {
-                            warmupSets: Number(e.target.value) || 0,
-                          })
-                        }
-                        className="h-8 rounded-lg bg-card text-center text-xs"
-                        disabled={isPending}
-                      />
-                    </div>
-
-                    <div className="flex flex-col gap-1">
-                      <Label className="text-[10px] uppercase font-semibold text-muted-foreground">
-                        Descanso (seg)
-                      </Label>
-                      <Input
-                        type="number"
-                        min={10}
-                        max={600}
-                        step={5}
-                        value={exercise.restTimeInSeconds}
-                        onChange={(e) =>
-                          updateExercise(dayIndex, exerciseIndex, {
-                            restTimeInSeconds: Number(e.target.value) || 60,
-                          })
-                        }
-                        className="h-8 rounded-lg bg-card text-center text-xs"
-                        disabled={isPending}
-                      />
-                    </div>
-                  </div>
-
-                  <AdvancedPrescriptionFields
-                    value={exercise}
-                    disabled={isPending}
-                    onChange={(patch) =>
-                      updateExercise(dayIndex, exerciseIndex, patch)
+          {days.map((day, dayIndex) => (
+            <div
+              key={dayIndex}
+              className="flex flex-col gap-4 rounded-3xl border border-border bg-card p-5 sm:p-6 shadow-xs"
+            >
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/60 pb-3">
+                <div className="flex flex-1 items-center gap-2 min-w-[200px]">
+                  <Input
+                    value={day.name}
+                    onChange={(e) =>
+                      updateDay(dayIndex, { name: e.target.value })
                     }
+                    placeholder="Nome do dia (ex: Treino A - Peito)"
+                    className="font-heading font-bold text-base h-10 rounded-xl bg-background max-w-sm"
+                    disabled={isPending}
                   />
-                  {/* Alternativas de Exercício */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 border-t border-border/40">
-                    <div className="flex flex-col gap-1">
-                      <Label className="text-[10px] text-muted-foreground">
-                        Alternativa 1 (Opcional)
-                      </Label>
-                      <Input
-                        value={exercise.alternative1Name ?? ""}
-                        onChange={(e) =>
-                          updateExercise(dayIndex, exerciseIndex, {
-                            alternative1Name: e.target.value,
-                          })
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <select
+                    value={day.weekDay ?? "MONDAY"}
+                    onChange={(e) =>
+                      updateDay(dayIndex, {
+                        weekDay: e.target
+                          .value as (typeof WEEK_DAYS)[number]["value"],
+                      })
+                    }
+                    className="h-9 rounded-lg border border-border bg-background px-2.5 text-xs font-heading font-medium text-foreground focus-visible:outline-none"
+                    disabled={isPending}
+                  >
+                    {WEEK_DAYS.map((w) => (
+                      <option key={w.value} value={w.value}>
+                        {w.label}
+                      </option>
+                    ))}
+                  </select>
+
+                  <button
+                    type="button"
+                    onClick={() => moveWorkout(dayIndex, -1)}
+                    disabled={isPending || dayIndex === 0}
+                    className="size-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-40 transition-colors"
+                    title="Mover para cima"
+                  >
+                    <ArrowUp className="size-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => moveWorkout(dayIndex, 1)}
+                    disabled={isPending || dayIndex === days.length - 1}
+                    className="size-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-40 transition-colors"
+                    title="Mover para baixo"
+                  >
+                    <ArrowDown className="size-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => removeWorkout(dayIndex)}
+                    disabled={isPending || days.length <= 1}
+                    className="size-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 disabled:opacity-40 transition-colors"
+                    title="Excluir dia"
+                  >
+                    <Trash2 className="size-3.5" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Duração do treino */}
+              <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+                <div className="flex items-center gap-1.5 ml-auto">
+                  <span>Duração estimada:</span>
+                  <Input
+                    type="number"
+                    min={10}
+                    max={240}
+                    value={day.estimatedDurationInMinutes}
+                    onChange={(e) =>
+                      updateDay(dayIndex, {
+                        estimatedDurationInMinutes:
+                          Number(e.target.value) || 60,
+                      })
+                    }
+                    className="w-16 h-8 text-center text-xs rounded-lg bg-background"
+                    disabled={isPending}
+                  />
+                  <span>min</span>
+                </div>
+              </div>
+
+              {/* Lista de Exercícios do Dia */}
+              <div className="flex flex-col gap-3 pt-2">
+                {day.exercises.map((exercise, exerciseIndex) => (
+                  <div
+                    key={exerciseIndex}
+                    className="rounded-2xl border border-border/80 bg-background/50 p-4 flex flex-col gap-3"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="size-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
+                        {exerciseIndex + 1}
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <CatalogExercisePicker
+                          label="Exercício"
+                          name={exercise.name}
+                          disabled={isPending}
+                          onSelect={(selected) => {
+                            if (selected)
+                              updateExercise(dayIndex, exerciseIndex, {
+                                name: selected.name,
+                                exerciseId: selected.id,
+                              });
+                          }}
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          moveExercise(dayIndex, exerciseIndex, -1)
                         }
-                        placeholder="Ex: Supino Inclinado com Halteres"
-                        className="h-8 rounded-lg bg-card text-xs"
-                        disabled={isPending}
-                      />
+                        disabled={isPending || exerciseIndex === 0}
+                        className="size-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-30 transition-colors"
+                        title="Subir exercício"
+                      >
+                        <ArrowUp className="size-3" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => moveExercise(dayIndex, exerciseIndex, 1)}
+                        disabled={
+                          isPending ||
+                          exerciseIndex === day.exercises.length - 1
+                        }
+                        className="size-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-30 transition-colors"
+                        title="Descer exercício"
+                      >
+                        <ArrowDown className="size-3" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => removeExercise(dayIndex, exerciseIndex)}
+                        disabled={isPending || day.exercises.length <= 1}
+                        className="size-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 disabled:opacity-30 transition-colors"
+                        title="Remover exercício"
+                      >
+                        <Trash2 className="size-3" />
+                      </button>
                     </div>
 
-                    <div className="flex flex-col gap-1">
-                      <Label className="text-[10px] text-muted-foreground">
-                        Alternativa 2 (Opcional)
-                      </Label>
-                      <Input
-                        value={exercise.alternative2Name ?? ""}
-                        onChange={(e) =>
-                          updateExercise(dayIndex, exerciseIndex, {
-                            alternative2Name: e.target.value,
-                          })
-                        }
-                        placeholder="Ex: Supino Máquina Vertical"
-                        className="h-8 rounded-lg bg-card text-xs"
-                        disabled={isPending}
-                      />
+                    {/* Séries, Reps, Aquecimento, Descanso */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                      <div className="flex flex-col gap-1">
+                        <Label className="text-[10px] uppercase font-semibold text-muted-foreground">
+                          Séries Válidas
+                        </Label>
+                        <Input
+                          type="number"
+                          min={1}
+                          max={30}
+                          value={exercise.sets}
+                          onChange={(e) =>
+                            updateExercise(dayIndex, exerciseIndex, {
+                              sets: Number(e.target.value) || 1,
+                            })
+                          }
+                          className="h-8 rounded-lg bg-card text-center text-xs"
+                          disabled={isPending}
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-1">
+                        <Label className="text-[10px] uppercase font-semibold text-muted-foreground">
+                          Repetições
+                        </Label>
+                        <Input
+                          type="number"
+                          min={1}
+                          max={100}
+                          value={exercise.reps}
+                          onChange={(e) =>
+                            updateExercise(dayIndex, exerciseIndex, {
+                              reps: Number(e.target.value) || 1,
+                            })
+                          }
+                          className="h-8 rounded-lg bg-card text-center text-xs"
+                          disabled={isPending}
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-1">
+                        <Label className="text-[10px] uppercase font-semibold text-muted-foreground">
+                          Aquecimento
+                        </Label>
+                        <Input
+                          type="number"
+                          min={0}
+                          max={10}
+                          value={exercise.warmupSets ?? 0}
+                          onChange={(e) =>
+                            updateExercise(dayIndex, exerciseIndex, {
+                              warmupSets: Number(e.target.value) || 0,
+                            })
+                          }
+                          className="h-8 rounded-lg bg-card text-center text-xs"
+                          disabled={isPending}
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-1">
+                        <Label className="text-[10px] uppercase font-semibold text-muted-foreground">
+                          Descanso (seg)
+                        </Label>
+                        <Input
+                          type="number"
+                          min={10}
+                          max={600}
+                          step={5}
+                          value={exercise.restTimeInSeconds}
+                          onChange={(e) =>
+                            updateExercise(dayIndex, exerciseIndex, {
+                              restTimeInSeconds: Number(e.target.value) || 60,
+                            })
+                          }
+                          className="h-8 rounded-lg bg-card text-center text-xs"
+                          disabled={isPending}
+                        />
+                      </div>
+                    </div>
+
+                    <ClassicTacticalFields
+                      value={exercise}
+                      disabled={isPending}
+                      onChange={(patch) =>
+                        updateExercise(dayIndex, exerciseIndex, patch)
+                      }
+                    />
+                    <AdvancedPrescriptionFields
+                      value={exercise}
+                      disabled={isPending}
+                      onChange={(patch) =>
+                        updateExercise(dayIndex, exerciseIndex, patch)
+                      }
+                    />
+                    {/* Alternativas de Exercício */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 border-t border-border/40">
+                      <div className="flex flex-col gap-1">
+                        <Label className="text-[10px] text-muted-foreground">
+                          Alternativa 1 (Opcional)
+                        </Label>
+                        <Input
+                          value={exercise.alternative1Name ?? ""}
+                          onChange={(e) =>
+                            updateExercise(dayIndex, exerciseIndex, {
+                              alternative1Name: e.target.value,
+                            })
+                          }
+                          placeholder="Ex: Supino Inclinado com Halteres"
+                          className="h-8 rounded-lg bg-card text-xs"
+                          disabled={isPending}
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-1">
+                        <Label className="text-[10px] text-muted-foreground">
+                          Alternativa 2 (Opcional)
+                        </Label>
+                        <Input
+                          value={exercise.alternative2Name ?? ""}
+                          onChange={(e) =>
+                            updateExercise(dayIndex, exerciseIndex, {
+                              alternative2Name: e.target.value,
+                            })
+                          }
+                          placeholder="Ex: Supino Máquina Vertical"
+                          className="h-8 rounded-lg bg-card text-xs"
+                          disabled={isPending}
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
 
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => addExercise(dayIndex)}
-                disabled={isPending}
-                className="rounded-xl h-9 text-xs font-heading font-medium border-dashed border-border/80"
-              >
-                <Plus className="size-3 mr-1" />
-                Adicionar Exercício ao {day.name}
-              </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => addExercise(dayIndex)}
+                  disabled={isPending}
+                  className="rounded-xl h-9 text-xs font-heading font-medium border-dashed border-border/80"
+                >
+                  <Plus className="size-3 mr-1" />
+                  Adicionar Exercício ao {day.name}
+                </Button>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* Rodapé com Botão Salvar */}
       <div className="flex items-center justify-end gap-3 pt-4 border-t border-border/50">
@@ -670,23 +719,27 @@ export function CoachTemplateBuilder({
             Cancelar
           </Button>
         </Link>
-        <Button
-          onClick={handleSave}
-          disabled={isPending || !name.trim()}
-          className="rounded-xl h-11 px-7 font-heading font-semibold shadow-xs"
-        >
-          {isPending ? (
-            <div className="flex items-center gap-2">
-              <LoaderCircle className="size-4 animate-spin" />
-              <span>Salvando...</span>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2">
-              <Save className="size-4" />
-              <span>{isEditing ? "Salvar Alterações" : "Salvar Modelo"}</span>
-            </div>
-          )}
-        </Button>
+        {builderMode === "tactical" ? (
+          <SealButton disabled={isPending} onSave={() => void handleSave()} />
+        ) : (
+          <Button
+            onClick={handleSave}
+            disabled={isPending || !name.trim()}
+            className="rounded-xl h-11 px-7 font-heading font-semibold shadow-xs"
+          >
+            {isPending ? (
+              <div className="flex items-center gap-2">
+                <LoaderCircle className="size-4 animate-spin" />
+                <span>Salvando...</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Save className="size-4" />
+                <span>{isEditing ? "Salvar Alterações" : "Salvar Modelo"}</span>
+              </div>
+            )}
+          </Button>
+        )}
       </div>
     </div>
   );

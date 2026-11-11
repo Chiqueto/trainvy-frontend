@@ -1,4 +1,13 @@
 "use client";
+import {
+  ViewModeToggle,
+  useBuilderMode,
+} from "@/app/planning/_components/tactical/view-mode-toggle";
+import { TacticalPlanWorkspace } from "@/app/planning/_components/tactical/tactical-plan-workspace";
+import { ClassicTacticalFields } from "@/app/planning/_components/tactical/classic-tactical-fields";
+import { SealButton } from "@/app/planning/_components/tactical/seal-button";
+import { patchExercise } from "@/app/planning/_lib/tactical";
+
 import { trainingDaysOnly } from "@/app/_lib/training-days";
 import { AiFeature } from "@/app/_components/ai-availability-provider";
 import { trackProductEvent } from "@/app/_lib/product-events";
@@ -73,6 +82,9 @@ export interface InitialPrescriptionData {
       targetRir?: number | null;
       targetLoadInGrams?: number | null;
       tempo?: string | null;
+      supersetGroupId?: string | null;
+      runes?: WorkoutPlanDraftExercise["runes"];
+      setPrescription?: WorkoutPlanDraftExercise["setPrescription"];
       restTimeInSeconds: number;
       alternative1ExerciseName?: string | null;
       alternative2ExerciseName?: string | null;
@@ -92,6 +104,8 @@ export function CoachPrescriptionBuilder({
   initialData,
 }: CoachPrescriptionBuilderProps) {
   const router = useRouter();
+  const [tacticalDayIndex, setTacticalDayIndex] = useState(0);
+  const { builderMode, changeMode, syncError } = useBuilderMode();
   const hydrated = useHydrated();
   const [name, setName] = useState(initialData?.name ?? "");
   const [notes, setNotes] = useState(initialData?.notes ?? "");
@@ -206,7 +220,7 @@ export function CoachPrescriptionBuilder({
   ) {
     updateDay(dayIndex, {
       exercises: days[dayIndex].exercises.map((exercise, index) =>
-        index === exerciseIndex ? { ...exercise, ...patch } : exercise,
+        index === exerciseIndex ? patchExercise(exercise, patch) : exercise,
       ),
     });
   }
@@ -524,255 +538,290 @@ export function CoachPrescriptionBuilder({
         </span>
       </label>
       {/* Seção de Dias de Treino */}
-      <section className="space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="space-y-0.5">
-            <h2 className="font-heading text-sm font-bold text-foreground">
-              <span className="mr-2 text-primary">02</span> Monte sua divisão
-            </h2>
-            <p className="text-xs text-muted-foreground">
-              Um treino por vez. Escolha a sequência e ajuste a dose de cada
-              exercício.
-            </p>
-          </div>
+      <ViewModeToggle
+        value={builderMode}
+        onChange={changeMode}
+        syncError={syncError}
+      />
+      {builderMode === "tactical" ? (
+        <TacticalPlanWorkspace
+          activeIndex={tacticalDayIndex}
+          onActiveChange={setTacticalDayIndex}
+          days={days}
+          onChange={setDays}
+          disabled={isPending}
+        />
+      ) : (
+        <section className="space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="space-y-0.5">
+              <h2 className="font-heading text-sm font-bold text-foreground">
+                <span className="mr-2 text-primary">02</span> Monte sua divisão
+              </h2>
+              <p className="text-xs text-muted-foreground">
+                Um treino por vez. Escolha a sequência e ajuste a dose de cada
+                exercício.
+              </p>
+            </div>
 
-          <div className="flex items-center gap-2">
-            <AiFeature capability="planning">
+            <div className="flex items-center gap-2">
+              <AiFeature capability="planning">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsAiModalOpen(true)}
+                  className="h-9 rounded-xl font-heading text-xs font-semibold gap-1.5 border-primary/30 text-primary hover:bg-primary/10"
+                >
+                  <Sparkles className="size-3.5" />
+                  <span>Gerar com IA</span>
+                </Button>
+              </AiFeature>
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => setIsAiModalOpen(true)}
-                className="h-9 rounded-xl font-heading text-xs font-semibold gap-1.5 border-primary/30 text-primary hover:bg-primary/10"
+                onClick={addWorkout}
+                className="h-9 rounded-xl font-heading text-xs font-semibold gap-1.5 border-border/80"
               >
-                <Sparkles className="size-3.5" />
-                <span>Gerar com IA</span>
+                <Plus className="size-3.5 text-primary" />
+                <span>Adicionar Dia</span>
               </Button>
-            </AiFeature>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={addWorkout}
-              className="h-9 rounded-xl font-heading text-xs font-semibold gap-1.5 border-border/80"
-            >
-              <Plus className="size-3.5 text-primary" />
-              <span>Adicionar Dia</span>
-            </Button>
+            </div>
           </div>
-        </div>
 
-        <div
-          aria-label="Selecionar treino para editar"
-          className="flex gap-2 overflow-x-auto pb-2"
-        >
-          {days.map((day, index) => (
-            <button
-              key={day.clientId}
-              type="button"
-              aria-pressed={index === activeDayIndex}
-              onClick={() => setActiveDayId(day.clientId)}
-              className={`flex min-h-16 min-w-40 max-w-60 shrink-0 items-center gap-3 rounded-2xl border px-4 py-3 text-left transition ${index === activeDayIndex ? "border-primary bg-primary/10" : "border-border bg-card hover:border-primary/50"}`}
-            >
-              <span
-                className={`flex size-8 shrink-0 items-center justify-center rounded-xl text-sm font-bold ${index === activeDayIndex ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+          <div
+            aria-label="Selecionar treino para editar"
+            className="flex gap-2 overflow-x-auto pb-2"
+          >
+            {days.map((day, index) => (
+              <button
+                key={day.clientId}
+                type="button"
+                aria-pressed={index === activeDayIndex}
+                onClick={() => setActiveDayId(day.clientId)}
+                className={`flex min-h-16 min-w-40 max-w-60 shrink-0 items-center gap-3 rounded-2xl border px-4 py-3 text-left transition ${index === activeDayIndex ? "border-primary bg-primary/10" : "border-border bg-card hover:border-primary/50"}`}
               >
-                {String.fromCharCode(65 + (index % 26))}
-              </span>
-              <span className="min-w-0">
-                <span className="block truncate text-sm font-semibold">
-                  {day.name || "Sem nome"}
+                <span
+                  className={`flex size-8 shrink-0 items-center justify-center rounded-xl text-sm font-bold ${index === activeDayIndex ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+                >
+                  {String.fromCharCode(65 + (index % 26))}
                 </span>
-                <span className="block text-[11px] text-muted-foreground">
-                  {`${day.exercises.filter((exercise) => exercise.exerciseId).length} exercícios · ${day.estimatedDurationInMinutes} min`}
+                <span className="min-w-0">
+                  <span className="block truncate text-sm font-semibold">
+                    {day.name || "Sem nome"}
+                  </span>
+                  <span className="block text-[11px] text-muted-foreground">
+                    {`${day.exercises.filter((exercise) => exercise.exerciseId).length} exercícios · ${day.estimatedDurationInMinutes} min`}
+                  </span>
                 </span>
-              </span>
-            </button>
-          ))}
-        </div>
-        <div>
-          {days.slice(activeDayIndex, activeDayIndex + 1).map((day) => {
-            const dayIndex = activeDayIndex;
-            return (
-              <div
-                key={day.clientId ?? day.id ?? dayIndex}
-                className="min-w-0 rounded-3xl border border-border/80 bg-card p-4 shadow-xs space-y-5 sm:p-6"
-              >
-                {/* Header do Dia */}
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/50 pb-3">
-                  <div className="flex items-center gap-2 flex-1 min-w-[200px]">
-                    <Input
-                      aria-label="Nome do treino"
-                      value={day.name}
-                      onChange={(e) =>
-                        updateDay(dayIndex, { name: e.target.value })
-                      }
-                      placeholder={`Treino ${String.fromCharCode(65 + (dayIndex % 26))}`}
-                      className="h-9 rounded-xl text-xs font-heading font-bold max-w-xs"
-                    />
-                  </div>
-
-                  <div className="flex items-center gap-1">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      aria-label={`Duplicar ${day.name}`}
-                      title="Duplicar treino"
-                      onClick={() => duplicateWorkout(dayIndex)}
-                      className="size-8 rounded-lg"
-                    >
-                      <Copy className="size-3.5" />
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      disabled={dayIndex === 0}
-                      onClick={() => moveWorkout(dayIndex, -1)}
-                      className="size-8 rounded-lg"
-                      aria-label="Mover treino para cima"
-                      title="Mover para cima"
-                    >
-                      <ArrowUp className="size-3.5" />
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      disabled={dayIndex === days.length - 1}
-                      onClick={() => moveWorkout(dayIndex, 1)}
-                      className="size-8 rounded-lg"
-                      aria-label="Mover treino para baixo"
-                      title="Mover para baixo"
-                    >
-                      <ArrowDown className="size-3.5" />
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      disabled={days.length <= 1}
-                      onClick={() => removeWorkout(dayIndex)}
-                      className="size-8 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                      aria-label="Excluir dia"
-                      title="Excluir dia"
-                    >
-                      <Trash2 className="size-3.5" />
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Identificação e duração do treino */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="space-y-1">
-                    <label className="text-[11px] font-heading font-medium text-muted-foreground">
-                      Dia da Semana
-                    </label>
-                    <select
-                      aria-label="Dia da semana"
-                      value={day.weekDay ?? "MONDAY"}
-                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                        updateDay(dayIndex, {
-                          weekDay: e.target
-                            .value as (typeof WEEK_DAYS)[number]["value"],
-                        })
-                      }
-                      className="w-full h-9 rounded-xl border border-input bg-background px-3 text-xs font-heading focus:outline-hidden focus:ring-1 focus:ring-primary"
-                    >
-                      {WEEK_DAYS.map((w) => (
-                        <option key={w.value} value={w.value}>
-                          {w.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-[11px] font-heading font-medium text-muted-foreground">
-                      Duração Estimada (min)
-                    </label>
-                    <Input
-                      type="number"
-                      min={1}
-                      aria-label="Duração estimada (min)"
-                      value={day.estimatedDurationInMinutes}
-                      onChange={(e) =>
-                        updateDay(dayIndex, {
-                          estimatedDurationInMinutes: Number(e.target.value),
-                        })
-                      }
-                      className="h-9 rounded-xl text-xs font-mono"
-                    />
-                  </div>
-                </div>
-
-                {/* Lista de exercícios do treino */}
-                <div className="space-y-3 pt-2">
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <h3 className="text-sm font-semibold">
-                        Sequência do treino
-                      </h3>
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        Selecione em lote. A ordem da seleção vira a ordem de
-                        execução.
-                      </p>
-                    </div>
-                    <CatalogExerciseBatchPicker
-                      disabled={isPending}
-                      excludeIds={day.exercises
-                        .map((exercise) => exercise.exerciseId)
-                        .filter((id): id is string => Boolean(id))}
-                      onSelect={(selected) => addExercises(dayIndex, selected)}
-                    />
-                  </div>
-                  <div className="space-y-4">
-                    {!day.exercises.length && (
-                      <p className="rounded-2xl border border-dashed p-8 text-center text-sm text-muted-foreground">
-                        Seu treino começa aqui. Adicione os exercícios da
-                        biblioteca.
-                      </p>
-                    )}
-                    {day.exercises.map((exercise, exerciseIndex) => (
-                      <CoachPrescriptionExerciseCard
-                        key={
-                          exerciseIndex + "-" + (exercise.exerciseId ?? "empty")
+              </button>
+            ))}
+          </div>
+          <div>
+            {days.slice(activeDayIndex, activeDayIndex + 1).map((day) => {
+              const dayIndex = activeDayIndex;
+              return (
+                <div
+                  key={day.clientId ?? day.id ?? dayIndex}
+                  className="min-w-0 rounded-3xl border border-border/80 bg-card p-4 shadow-xs space-y-5 sm:p-6"
+                >
+                  {/* Header do Dia */}
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/50 pb-3">
+                    <div className="flex items-center gap-2 flex-1 min-w-[200px]">
+                      <Input
+                        aria-label="Nome do treino"
+                        value={day.name}
+                        onChange={(e) =>
+                          updateDay(dayIndex, { name: e.target.value })
                         }
-                        exercise={exercise}
-                        index={exerciseIndex}
-                        count={day.exercises.length}
-                        onChange={(patch) =>
-                          updateExercise(dayIndex, exerciseIndex, patch)
-                        }
-                        onMove={(offset) =>
-                          moveExercise(dayIndex, exerciseIndex, offset)
-                        }
-                        onRemove={() => removeExercise(dayIndex, exerciseIndex)}
-                        onApplyDose={() => {
-                          updateDay(dayIndex, {
-                            exercises: day.exercises.map((entry) => ({
-                              ...entry,
-                              sets: exercise.sets,
-                              reps: exercise.reps,
-                              repsMin: exercise.repsMin ?? null,
-                              repsMax: exercise.repsMax ?? null,
-                              restTimeInSeconds: exercise.restTimeInSeconds,
-                            })),
-                          });
-                          toast.success(
-                            "Séries, repetições e descanso aplicados neste treino.",
-                          );
-                        }}
+                        placeholder={`Treino ${String.fromCharCode(65 + (dayIndex % 26))}`}
+                        className="h-9 rounded-xl text-xs font-heading font-bold max-w-xs"
                       />
-                    ))}
+                    </div>
+
+                    <div className="flex items-center gap-1">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        aria-label={`Duplicar ${day.name}`}
+                        title="Duplicar treino"
+                        onClick={() => duplicateWorkout(dayIndex)}
+                        className="size-8 rounded-lg"
+                      >
+                        <Copy className="size-3.5" />
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        disabled={dayIndex === 0}
+                        onClick={() => moveWorkout(dayIndex, -1)}
+                        className="size-8 rounded-lg"
+                        aria-label="Mover treino para cima"
+                        title="Mover para cima"
+                      >
+                        <ArrowUp className="size-3.5" />
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        disabled={dayIndex === days.length - 1}
+                        onClick={() => moveWorkout(dayIndex, 1)}
+                        className="size-8 rounded-lg"
+                        aria-label="Mover treino para baixo"
+                        title="Mover para baixo"
+                      >
+                        <ArrowDown className="size-3.5" />
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        disabled={days.length <= 1}
+                        onClick={() => removeWorkout(dayIndex)}
+                        className="size-8 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                        aria-label="Excluir dia"
+                        title="Excluir dia"
+                      >
+                        <Trash2 className="size-3.5" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Identificação e duração do treino */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label className="text-[11px] font-heading font-medium text-muted-foreground">
+                        Dia da Semana
+                      </label>
+                      <select
+                        aria-label="Dia da semana"
+                        value={day.weekDay ?? "MONDAY"}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                          updateDay(dayIndex, {
+                            weekDay: e.target
+                              .value as (typeof WEEK_DAYS)[number]["value"],
+                          })
+                        }
+                        className="w-full h-9 rounded-xl border border-input bg-background px-3 text-xs font-heading focus:outline-hidden focus:ring-1 focus:ring-primary"
+                      >
+                        {WEEK_DAYS.map((w) => (
+                          <option key={w.value} value={w.value}>
+                            {w.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-[11px] font-heading font-medium text-muted-foreground">
+                        Duração Estimada (min)
+                      </label>
+                      <Input
+                        type="number"
+                        min={1}
+                        aria-label="Duração estimada (min)"
+                        value={day.estimatedDurationInMinutes}
+                        onChange={(e) =>
+                          updateDay(dayIndex, {
+                            estimatedDurationInMinutes: Number(e.target.value),
+                          })
+                        }
+                        className="h-9 rounded-xl text-xs font-mono"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Lista de exercícios do treino */}
+                  <div className="space-y-3 pt-2">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <div>
+                        <h3 className="text-sm font-semibold">
+                          Sequência do treino
+                        </h3>
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          Selecione em lote. A ordem da seleção vira a ordem de
+                          execução.
+                        </p>
+                      </div>
+                      <CatalogExerciseBatchPicker
+                        disabled={isPending}
+                        excludeIds={day.exercises
+                          .map((exercise) => exercise.exerciseId)
+                          .filter((id): id is string => Boolean(id))}
+                        onSelect={(selected) =>
+                          addExercises(dayIndex, selected)
+                        }
+                      />
+                    </div>
+                    <div className="space-y-4">
+                      {!day.exercises.length && (
+                        <p className="rounded-2xl border border-dashed p-8 text-center text-sm text-muted-foreground">
+                          Seu treino começa aqui. Adicione os exercícios da
+                          biblioteca.
+                        </p>
+                      )}
+                      {day.exercises.map((exercise, exerciseIndex) => (
+                        <div
+                          key={`${exerciseIndex}-classic`}
+                          className="space-y-2"
+                        >
+                          <ClassicTacticalFields
+                            value={exercise}
+                            disabled={isPending}
+                            onChange={(patch) =>
+                              updateExercise(dayIndex, exerciseIndex, patch)
+                            }
+                          />
+                          <CoachPrescriptionExerciseCard
+                            key={
+                              exerciseIndex +
+                              "-" +
+                              (exercise.exerciseId ?? "empty")
+                            }
+                            exercise={exercise}
+                            index={exerciseIndex}
+                            count={day.exercises.length}
+                            onChange={(patch) =>
+                              updateExercise(dayIndex, exerciseIndex, patch)
+                            }
+                            onMove={(offset) =>
+                              moveExercise(dayIndex, exerciseIndex, offset)
+                            }
+                            onRemove={() =>
+                              removeExercise(dayIndex, exerciseIndex)
+                            }
+                            onApplyDose={() => {
+                              updateDay(dayIndex, {
+                                exercises: day.exercises.map((entry) =>
+                                  patchExercise(entry, {
+                                    sets: exercise.sets,
+                                    reps: exercise.reps,
+                                    repsMin: exercise.repsMin ?? null,
+                                    repsMax: exercise.repsMax ?? null,
+                                    restTimeInSeconds:
+                                      exercise.restTimeInSeconds,
+                                  }),
+                                ),
+                              });
+                              toast.success(
+                                "Séries, repetições e descanso aplicados neste treino.",
+                              );
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {/* Rodapé Fixo / Ações de Envio e Rascunho */}
       <div
@@ -786,18 +835,25 @@ export function CoachPrescriptionBuilder({
         )}
         <WorkoutPlanSummary days={days} />
         <div className="flex flex-col items-center gap-2.5 sm:flex-row">
-          <Button
-            type="button"
-            variant="outline"
-            disabled={isPending}
-            onClick={() => handleSave(false)}
-            className="w-full sm:flex-1 h-11 rounded-xl font-heading text-xs font-semibold border-border/80"
-          >
-            {isPending && (
-              <LoaderCircle className="size-3.5 animate-spin mr-1.5" />
-            )}
-            <span>Salvar Rascunho</span>
-          </Button>
+          {builderMode === "tactical" ? (
+            <SealButton
+              disabled={isPending}
+              onSave={() => void handleSave(false)}
+            />
+          ) : (
+            <Button
+              type="button"
+              variant="outline"
+              disabled={isPending}
+              onClick={() => handleSave(false)}
+              className="w-full sm:flex-1 h-11 rounded-xl font-heading text-xs font-semibold border-border/80"
+            >
+              {isPending && (
+                <LoaderCircle className="size-3.5 animate-spin mr-1.5" />
+              )}
+              <span>Salvar Rascunho</span>
+            </Button>
+          )}
 
           <Button
             type="button"
