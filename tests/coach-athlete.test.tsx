@@ -152,7 +152,9 @@ describe("Coach ↔ Athlete Foundation (Task 6.1 Frontend)", () => {
       );
 
       expect(screen.getByText("Coach Rodrigo")).toBeDefined();
-      expect(screen.getByText(/Seus dados continuam sob seu controle/i)).toBeDefined();
+      expect(
+        screen.getByText(/Seus dados continuam sob seu controle/i),
+      ).toBeDefined();
       expect(
         screen.getByRole("button", {
           name: /entrar ou cadastrar-se para aceitar/i,
@@ -180,7 +182,9 @@ describe("Coach ↔ Athlete Foundation (Task 6.1 Frontend)", () => {
           name: /aceitar convite de treinador/i,
         }),
       ).toBeDefined();
-      expect(screen.getByRole("button", { name: /recusar convite/i })).toBeDefined();
+      expect(
+        screen.getByRole("button", { name: /recusar convite/i }),
+      ).toBeDefined();
     });
   });
 
@@ -231,10 +235,7 @@ describe("Coach ↔ Athlete Foundation (Task 6.1 Frontend)", () => {
 
     it("CoachPendingSubscriptionCard explica status pendente preservando treinos próprios", () => {
       render(
-        <CoachPendingSubscriptionCard
-          planName="Coach Pro"
-          status="PENDING"
-        />,
+        <CoachPendingSubscriptionCard planName="Coach Pro" status="PENDING" />,
       );
 
       expect(
@@ -243,6 +244,11 @@ describe("Coach ↔ Athlete Foundation (Task 6.1 Frontend)", () => {
       expect(
         screen.getByText(/Seus treinos pessoais continuam ativos/i),
       ).toBeDefined();
+      expect(
+        screen
+          .getByRole("link", { name: "Voltar aos Meus Treinos" })
+          .getAttribute("href"),
+      ).toBe("/meu-treino");
     });
   });
 });

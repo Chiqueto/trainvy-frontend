@@ -150,7 +150,7 @@ describe("BottomNav — Task 2.8.2 Mobile Polish & Route-derived State", () => {
       expect(alunosLink.getAttribute("href")).toBe("/personal");
 
       const meuTreinoLink = screen.getByRole("link", { name: /Meu Treino/i });
-      expect(meuTreinoLink.getAttribute("href")).toBe("/");
+      expect(meuTreinoLink.getAttribute("href")).toBe("/meu-treino");
       expect(
         screen
           .getByRole("link", { name: "Modelos de treino" })
@@ -195,8 +195,56 @@ describe("BottomNav — Task 2.8.2 Mobile Polish & Route-derived State", () => {
       expect(alunosLink.className).toContain("bg-primary/10");
     });
 
-    it("marca 'Meu Treino' como ativo na rota '/' quando no modo coach", () => {
-      mockPathname = "/";
+    it.each([
+      "/personal/alunos/aluno-1/prescrever",
+      "/personal/alunos/aluno-1/prescricoes/ficha-1/editar",
+      "/personal/alunos/aluno-1",
+      "/personal/arquivo",
+    ])(
+      "mantém Alunos ativo em %s mesmo com a indicação legada de prescrições",
+      (pathname) => {
+        mockPathname = pathname;
+        render(<BottomNav isCoach activePage="prescriptions" />);
+        expect(
+          screen
+            .getByRole("link", { name: "Alunos" })
+            .getAttribute("aria-current"),
+        ).toBe("page");
+        expect(
+          screen
+            .getByRole("link", { name: "Meu planejamento" })
+            .getAttribute("aria-current"),
+        ).toBeNull();
+        expect(
+          screen
+            .getByRole("link", { name: "Meu Treino" })
+            .getAttribute("aria-current"),
+        ).toBeNull();
+        expect(
+          screen
+            .getAllByRole("link")
+            .filter((link) => link.getAttribute("aria-current") === "page"),
+        ).toHaveLength(1);
+      },
+    );
+
+    it("mantém o cadastro profissional dentro de Perfil", () => {
+      mockPathname = "/personal/verification";
+      render(<BottomNav isCoach activePage="profile" />);
+      expect(
+        screen
+          .getByRole("link", { name: "Perfil" })
+          .getAttribute("aria-current"),
+      ).toBe("page");
+      expect(
+        screen
+          .getByRole("link", { name: "Alunos" })
+          .getAttribute("aria-current"),
+      ).toBeNull();
+    });
+
+    it("marca 'Meu Treino' como ativo na rota explícita quando no modo coach", () => {
+      mockPathname = "/meu-treino";
       render(<BottomNav isCoach={true} />);
 
       const meuTreinoLink = screen.getByRole("link", { name: /Meu Treino/i });

@@ -3,6 +3,7 @@ import { LegalConsent } from "@/app/_components/legal-consent";
 import { getProfessionalRegistration } from "@/app/_lib/api/fetch-generated";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { Archive, ArrowUpRight } from "lucide-react";
 import { BottomNav } from "@/app/_components/bottom-nav";
 
 import {
@@ -42,7 +43,8 @@ export default async function PersonalPage() {
   });
   const registration =
     registrationRes.status === 200 ? registrationRes.data : null;
-  if (registrationRes.status !== 200) throw new Error("Não foi possível consultar o cadastro profissional.");
+  if (registrationRes.status !== 200)
+    throw new Error("Não foi possível consultar o cadastro profissional.");
   if (!commercialRes.data.professionalAccessGranted)
     return (
       <div className="personal-workspace min-h-svh bg-background pb-24">
@@ -78,12 +80,16 @@ export default async function PersonalPage() {
     listCoachInvitations({ cache: "no-store" }).catch(() => null),
   ]);
 
-  if (athletesRes?.status !== 200 || invitationsRes?.status !== 200) return (
-    <div className="personal-workspace min-h-svh bg-background pb-24">
-      <main className="mx-auto w-full max-w-6xl space-y-5 px-5 py-4"><PersonalHeader /><WorkspaceError message="Não foi possível carregar alunos e convites." /></main>
-      <BottomNav isCoach activePage="athletes" />
-    </div>
-  );
+  if (athletesRes?.status !== 200 || invitationsRes?.status !== 200)
+    return (
+      <div className="personal-workspace min-h-svh bg-background pb-24">
+        <main className="mx-auto w-full max-w-6xl space-y-5 px-5 py-4">
+          <PersonalHeader />
+          <WorkspaceError message="Não foi possível carregar alunos e convites." />
+        </main>
+        <BottomNav isCoach activePage="athletes" />
+      </div>
+    );
 
   const athletes = athletesRes.status === 200 ? athletesRes.data.athletes : [];
   const activeCount =
@@ -98,38 +104,13 @@ export default async function PersonalPage() {
   return (
     <div className="personal-workspace flex min-h-svh min-w-0 flex-col bg-background pb-24 lg:pb-8">
       <main className="mx-auto w-full max-w-6xl px-5 py-4 flex flex-col gap-5">
-        <PersonalHeader />
-        <Link className="text-sm underline" href="/personal/arquivo">
-          Arquivo de prescrições anteriores
-        </Link>
-        <Link
-          className="text-xs underline text-muted-foreground"
-          href="/personal/verification"
-        >
-          {registration?.crefVerificationStatus === "VERIFIED_ADMIN"
-            ? "CREF conferido pela administração · consultar cadastro"
-            : "CREF declarado · consultar cadastro"}
-        </Link>
+        <PersonalHeader
+          actions={<InviteStudentModal isFull={isFull} compact />}
+        />
 
         {activeCount === 0 && invitations.length === 0 && (
           <CoachFirstStepsCard isFull={isFull} />
         )}
-
-        <div className="grid gap-5 lg:grid-cols-[1fr_22rem] lg:items-start">
-          <PersonalQuotaCard activeCount={activeCount} limit={limit} />
-          <div className="rounded-3xl border border-border/70 bg-card p-5 shadow-xs space-y-4">
-            <div>
-              <h2 className="font-heading text-base font-semibold">
-                Expanda sua assessoria
-              </h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Convide alunos e centralize o acompanhamento.
-              </p>
-            </div>
-            <InviteStudentModal isFull={isFull} />
-            <InvitationsList invitations={invitations} />
-          </div>
-        </div>
 
         <ProfessionalWorkspaceEvent />
         <AthletesList
@@ -138,6 +119,43 @@ export default async function PersonalPage() {
           activeCount={activeCount}
           limit={limit}
         />
+
+        <section
+          aria-label="Recursos da assessoria"
+          className="grid gap-5 lg:grid-cols-[1fr_22rem] lg:items-start"
+        >
+          <div className="space-y-4">
+            <PersonalQuotaCard activeCount={activeCount} limit={limit} />
+            <Link
+              href="/personal/arquivo"
+              className="group flex min-w-0 items-center gap-4 rounded-2xl border border-border/70 bg-card p-5 transition-colors hover:border-primary/40 hover:bg-primary/5"
+            >
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted text-muted-foreground">
+                <Archive className="size-5" />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-sm font-semibold">
+                  Prescrições arquivadas
+                </span>
+                <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">
+                  Consulte fichas de vínculos encerrados.
+                </span>
+              </span>
+              <ArrowUpRight className="size-4 shrink-0 text-muted-foreground group-hover:text-primary" />
+            </Link>
+          </div>
+          <div className="rounded-3xl border border-border/70 bg-card p-5 shadow-xs space-y-4">
+            <div>
+              <h2 className="font-heading text-base font-semibold">
+                Convites da assessoria
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Acompanhe os convites enviados aos seus alunos.
+              </p>
+            </div>
+            <InvitationsList invitations={invitations} />
+          </div>
+        </section>
       </main>
 
       <BottomNav isCoach={true} activePage="athletes" />

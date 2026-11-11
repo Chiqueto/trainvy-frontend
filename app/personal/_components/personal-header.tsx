@@ -5,17 +5,20 @@ import { usePathname } from "next/navigation";
 import { UserCheck, Settings, Users, Layers, Dumbbell } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import type { ReactNode } from "react";
 
 interface PersonalHeaderProps {
   title?: string;
   description?: string;
   activeTab?: "athletes" | "templates" | "exercises";
+  actions?: ReactNode;
 }
 
 export function PersonalHeader({
   title,
   description,
   activeTab,
+  actions,
 }: PersonalHeaderProps) {
   const pathname = usePathname();
 
@@ -59,14 +62,17 @@ export function PersonalHeader({
           Trainvy Pro · Gestão de Treinadores
         </Badge>
 
-        <Link
-          href="/profile"
-          className="flex items-center gap-1.5 text-xs font-heading font-medium text-muted-foreground hover:text-foreground transition-colors px-2.5 py-1.5 rounded-lg hover:bg-muted"
-          title="Configurações do Perfil"
-        >
-          <Settings className="size-3.5" />
-          <span>Configurações</span>
-        </Link>
+        <div className="flex flex-wrap items-center gap-2">
+          {actions}
+          <Link
+            href="/profile"
+            className="flex items-center gap-1.5 text-xs font-heading font-medium text-muted-foreground hover:text-foreground transition-colors px-2.5 py-1.5 rounded-lg hover:bg-muted"
+            title="Configurações do Perfil"
+          >
+            <Settings className="size-3.5" />
+            <span>Configurações</span>
+          </Link>
+        </div>
       </div>
 
       <div>
@@ -88,6 +94,7 @@ export function PersonalHeader({
             <Link
               key={tab.id}
               href={tab.href}
+              aria-current={isActive ? "page" : undefined}
               prefetch={true}
               className={cn(
                 "inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-heading font-medium transition-all whitespace-nowrap",
@@ -96,7 +103,14 @@ export function PersonalHeader({
                   : "text-muted-foreground hover:text-foreground hover:bg-muted/80",
               )}
             >
-              <Icon className={cn("size-4", isActive ? "text-primary-foreground" : "text-muted-foreground")} />
+              <Icon
+                className={cn(
+                  "size-4",
+                  isActive
+                    ? "text-primary-foreground"
+                    : "text-muted-foreground",
+                )}
+              />
               <span>{tab.label}</span>
             </Link>
           );
@@ -105,4 +119,3 @@ export function PersonalHeader({
     </div>
   );
 }
-

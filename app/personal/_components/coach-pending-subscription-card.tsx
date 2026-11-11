@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MY_WORKOUT_PATH } from "@/app/_lib/account-navigation";
 import { AlertCircle, Dumbbell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supportUrl } from "@/app/_lib/support";
@@ -30,8 +31,9 @@ export function CoachPendingSubscriptionCard({
 
       <p className="text-xs text-foreground/80 leading-relaxed">
         Sua conta de treinador está registrada, porém o recurso de gerenciamento
-        de alunos ainda não está ativo na sua assinatura.
-        A liberação é manual. Fale com o suporte para combinar o período de acesso e receber a confirmação de ativação.
+        de alunos ainda não está ativo na sua assinatura. A liberação é manual.
+        Fale com o suporte para combinar o período de acesso e receber a
+        confirmação de ativação.
       </p>
 
       <div className="rounded-xl border border-border/60 bg-background/50 p-3.5 text-xs text-muted-foreground space-y-1">
@@ -40,16 +42,30 @@ export function CoachPendingSubscriptionCard({
           Seus treinos pessoais continuam ativos
         </div>
         <p>
-          Você pode continuar criando seus próprios planos e registrando suas sessões
-          de treino normalmente enquanto aguarda a liberação.
+          Você pode continuar criando seus próprios planos e registrando suas
+          sessões de treino normalmente enquanto aguarda a liberação.
         </p>
       </div>
 
       <div className="pt-1">
-        <Button asChild className="mb-3 w-full h-11 rounded-xl"><a href={supportUrl("Solicitar liberação do plano profissional Trainvy")}>Solicitar liberação ao suporte</a></Button>
-        <p className="mb-3 text-xs text-muted-foreground">Não há cobrança ou renovação automática. O suporte informa as condições e o prazo de liberação pelo canal de atendimento.</p>
-        <Link href="/">
-          <Button variant="outline" className="w-full h-11 rounded-xl font-heading font-semibold text-xs">
+        <Button asChild className="mb-3 w-full h-11 rounded-xl">
+          <a
+            href={supportUrl(
+              "Solicitar liberação do plano profissional Trainvy",
+            )}
+          >
+            Solicitar liberação ao suporte
+          </a>
+        </Button>
+        <p className="mb-3 text-xs text-muted-foreground">
+          Não há cobrança ou renovação automática. O suporte informa as
+          condições e o prazo de liberação pelo canal de atendimento.
+        </p>
+        <Link href={MY_WORKOUT_PATH}>
+          <Button
+            variant="outline"
+            className="w-full h-11 rounded-xl font-heading font-semibold text-xs"
+          >
             Voltar aos Meus Treinos
           </Button>
         </Link>

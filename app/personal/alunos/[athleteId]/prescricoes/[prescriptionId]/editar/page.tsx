@@ -109,7 +109,7 @@ export default async function EditPrescriptionPage({
         />
       </main>
 
-      <BottomNav isCoach={true} activePage="prescriptions" />
+      <BottomNav isCoach={true} activePage="athletes" />
     </div>
   );
 }

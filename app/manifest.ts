@@ -42,7 +42,7 @@ export default function manifest(): MetadataRoute.Manifest {
       {
         name: "Treino do Dia",
         short_name: "Treino",
-        url: "/",
+        url: "/meu-treino",
         icons: [{ src: "/icon-192.png", sizes: "192x192" }],
       },
       {

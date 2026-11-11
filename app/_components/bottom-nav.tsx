@@ -17,6 +17,7 @@ import {
   CalendarDays,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { MY_WORKOUT_PATH } from "@/app/_lib/account-navigation";
 import { ChatOpenButton } from "@/app/_components/chat-open-button";
 import { ThemeToggle } from "@/components/theme-toggle";
 
@@ -100,26 +101,35 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
       pathname.startsWith("/personal/exercicios/")),
   );
 
+  const isVerificationRoute =
+    pathname === "/personal/verification" ||
+    pathname?.startsWith("/personal/verification/");
+
   // Mapeamentos de estado ativo por rota e prop
-  const isAthletesActive = activePage
-    ? activePage === "personal" || activePage === "athletes"
-    : Boolean(isPersonalRoute && !isTemplatesRoute && !isExercisesRoute);
+  const isAthletesActive =
+    isPersonalRoute && !isVerificationRoute
+      ? !isTemplatesRoute && !isExercisesRoute
+      : activePage === "personal" ||
+        activePage === "athletes" ||
+        (effectiveIsCoach && activePage === "prescriptions");
 
   const isTemplatesActive = activePage
     ? activePage === "templates"
     : isTemplatesRoute;
 
-  const isPlanningActive = activePage
-    ? activePage === "planning" ||
-      activePage === "calendar" ||
-      activePage === "prescriptions"
-    : Boolean(
-        pathname &&
-        (pathname === "/planning" ||
-          pathname.startsWith("/planning/") ||
-          pathname === "/workout-plans" ||
-          pathname.startsWith("/workout-plans/")),
-      );
+  const isPlanningActive = isPersonalRoute
+    ? false
+    : activePage
+      ? activePage === "planning" ||
+        activePage === "calendar" ||
+        (!effectiveIsCoach && activePage === "prescriptions")
+      : Boolean(
+          pathname &&
+          (pathname === "/planning" ||
+            pathname.startsWith("/planning/") ||
+            pathname === "/workout-plans" ||
+            pathname.startsWith("/workout-plans/")),
+        );
 
   const isEvolutionActive = activePage
     ? activePage === "stats" || activePage === "evolution"
@@ -131,23 +141,28 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
           pathname.startsWith("/history/")),
       );
 
-  const isProfileActive = activePage
-    ? activePage === "profile"
-    : Boolean(
-        pathname &&
-        (pathname === "/profile" || pathname.startsWith("/profile/")),
-      );
+  const isProfileActive =
+    isVerificationRoute ||
+    (activePage
+      ? activePage === "profile"
+      : Boolean(
+          pathname &&
+          (pathname === "/profile" || pathname.startsWith("/profile/")),
+        ));
 
-  const isHomeActive = activePage
-    ? activePage === "home" || activePage === "my-workout"
-    : Boolean(
-        pathname === "/" ||
-        (!isPlanningActive &&
-          !isEvolutionActive &&
-          !isProfileActive &&
-          !isAthletesActive &&
-          !isTemplatesActive),
-      );
+  const isHomeActive =
+    !isPersonalRoute &&
+    (activePage
+      ? activePage === "home" || activePage === "my-workout"
+      : Boolean(
+          pathname === "/" ||
+          pathname === MY_WORKOUT_PATH ||
+          (!isPlanningActive &&
+            !isEvolutionActive &&
+            !isProfileActive &&
+            !isAthletesActive &&
+            !isTemplatesActive),
+        ));
 
   const [optimisticTab, setOptimisticTab] = useState<string | null>(null);
   const [prevPathname, setPrevPathname] = useState(pathname);
@@ -297,7 +312,7 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
 
             {/* 4. Meu Treino (Rotina pessoal de atleta do Personal) */}
             <Link
-              href="/"
+              href={MY_WORKOUT_PATH}
               prefetch={true}
               onClick={() => setOptimisticTab("home")}
               className={cn(

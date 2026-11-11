@@ -1,6 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { getAccountHomePath } from "@/app/_lib/account-navigation";
 import {
   completeSignup,
   createSignupIntent,
@@ -90,7 +91,10 @@ export async function finishSignup(explicitReturnTo?: string | null) {
         jar.delete(RETURN_TO_COOKIE_NAME);
         return { success: true as const, destination: sanitizedReturnTo };
       }
-      return { success: true as const, destination: "/" };
+      return {
+        success: true as const,
+        destination: getAccountHomePath(context.data.accountType),
+      };
     }
     const token = jar.get(intentCookie)?.value;
     if (!token)
@@ -103,7 +107,10 @@ export async function finishSignup(explicitReturnTo?: string | null) {
           jar.delete(RETURN_TO_COOKIE_NAME);
           return { success: true as const, destination: sanitizedReturnTo };
         }
-        return { success: true as const, destination: "/" };
+        return {
+          success: true as const,
+          destination: getAccountHomePath(context.data.accountType),
+        };
       }
       return {
         success: false as const,

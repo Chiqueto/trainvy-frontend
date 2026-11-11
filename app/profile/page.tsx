@@ -22,6 +22,7 @@ import { Logo } from "@/app/_components/logo";
 import { ProfileMetricsSection } from "./_components/profile-metrics-section";
 import { SportsProfileSection } from "./_components/sports-profile-section";
 import { CoachAreaLinkCard } from "./_components/coach-area-link-card";
+import { ProfessionalProfileCard } from "./_components/professional-profile-card";
 import { MyCoachSection } from "./_components/my-coach-section";
 import { ThemeSelector } from "./_components/theme-selector";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -129,7 +130,14 @@ export default async function ProfilePage() {
         )}
 
         {/* Acesso rápido exclusivo para Personal Trainer */}
-        {isCoach && <CoachAreaLinkCard />}
+        {isCoach && (
+          <>
+            <CoachAreaLinkCard />
+            <ProfessionalProfileCard
+              verification={commercialData?.professionalVerification ?? null}
+            />
+          </>
+        )}
 
         {/* Meu Treinador (para atletas) */}
         {!isCoach && (

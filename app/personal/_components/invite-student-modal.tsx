@@ -18,9 +18,13 @@ import { trackProductEvent } from "@/app/_lib/product-events";
 
 interface InviteStudentModalProps {
   isFull: boolean;
+  compact?: boolean;
 }
 
-export function InviteStudentModal({ isFull }: InviteStudentModalProps) {
+export function InviteStudentModal({
+  isFull,
+  compact = false,
+}: InviteStudentModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [generatedToken, setGeneratedToken] = useState<string | null>(null);
@@ -82,10 +86,14 @@ export function InviteStudentModal({ isFull }: InviteStudentModalProps) {
       <Button
         onClick={handleOpen}
         disabled={isFull}
-        className="w-full h-12 rounded-xl font-heading font-bold text-sm flex items-center justify-center gap-2 shadow-sm"
+        className={
+          compact
+            ? "h-10 rounded-xl px-3 font-heading text-xs font-semibold"
+            : "w-full h-12 rounded-xl font-heading font-bold text-sm flex items-center justify-center gap-2 shadow-sm"
+        }
       >
         <UserPlus className="size-4" />
-        Convidar novo aluno
+        {compact ? "Convidar aluno" : "Convidar novo aluno"}
       </Button>
 
       {isOpen && (

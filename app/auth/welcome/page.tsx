@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import type { Metadata } from "next";
 import { getCommercialContext } from "@/app/_lib/api/fetch-generated";
+import { MY_WORKOUT_PATH } from "@/app/_lib/account-navigation";
 import styles from "../_components/auth.module.css";
 import { supportUrl } from "@/app/_lib/support";
 
@@ -53,7 +54,14 @@ export default async function WelcomePage() {
           após liberação da assinatura.
         </p>
       )}
-      {!active && <a href={supportUrl("Solicitar liberação do plano profissional Trainvy")} className={styles.secondaryLink}>Solicitar liberação ao suporte</a>}
+      {!active && (
+        <a
+          href={supportUrl("Solicitar liberação do plano profissional Trainvy")}
+          className={styles.secondaryLink}
+        >
+          Solicitar liberação ao suporte
+        </a>
+      )}
       <div className={styles.welcomeFeatures}>
         <div>
           <Users size={19} />
@@ -85,7 +93,10 @@ export default async function WelcomePage() {
       <Link href="/personal" className={styles.primaryButton}>
         Acessar Painel do Personal <ArrowUpRight size={18} />
       </Link>
-      <Link href="/" className={`${styles.secondaryLink} block mt-3`}>
+      <Link
+        href={MY_WORKOUT_PATH}
+        className={`${styles.secondaryLink} block mt-3`}
+      >
         Acessar meus treinos pessoais
       </Link>
     </main>

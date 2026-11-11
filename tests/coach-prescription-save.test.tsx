@@ -58,6 +58,7 @@ const initialData = {
           reps: 10,
           restTimeInSeconds: 60,
           alternative1ExerciseName: "Flexão",
+          alternative1ExerciseId: "ex-flexao",
         },
       ],
     },
@@ -117,6 +118,8 @@ describe("Salvar prescrição do personal", () => {
               expect.objectContaining({
                 order: 0,
                 sets: 3,
+                exerciseId: "ex-supino",
+                alternative1ExerciseId: "ex-flexao",
                 alternative1ExerciseName: "Flexão",
               }),
             ],
@@ -142,24 +145,100 @@ describe("Salvar prescrição do personal", () => {
     await waitFor(() =>
       expect(toast.error).toHaveBeenCalledWith("Revise as séries."),
     );
-    expect(screen.getByDisplayValue("Supino")).toBeDefined();
+    expect(
+      screen.getByRole("button", { name: "Exercício principal: Supino" }),
+    ).toBeDefined();
     expect(push).not.toHaveBeenCalled();
   });
 
-  it("busca um exercício no catálogo e mantém a edição manual disponível", async () => {
+  it("seleciona um exercício cadastrado e salva seu ID sem campo de nome livre", async () => {
+    vi.mocked(createPrescriptionDraftAction).mockResolvedValue({
+      success: true,
+      data: { id: "draft", version: 1 },
+    } as Awaited<ReturnType<typeof createPrescriptionDraftAction>>);
     renderBuilder();
     fireEvent.click(
       screen.getByRole("button", {
-        name: "Buscar no catálogo: Selecionar exercício",
+        name: "Exercício principal: Supino",
       }),
     );
     fireEvent.click(
       await screen.findByRole("button", { name: "Selecionar Remada no cabo" }),
     );
-    const input = screen.getByLabelText("Nome do exercício 1 de Treino A");
-    expect((input as HTMLInputElement).value).toBe("Remada no cabo");
-    fireEvent.change(input, { target: { value: "Remada adaptada" } });
-    expect((input as HTMLInputElement).value).toBe("Remada adaptada");
+    expect(
+      screen.getByRole("button", {
+        name: "Exercício principal: Remada no cabo",
+      }),
+    ).toBeDefined();
+    expect(
+      screen.queryByLabelText("Nome do exercício 1 de Treino A"),
+    ).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: /salvar rascunho/i }));
+    await waitFor(() =>
+      expect(createPrescriptionDraftAction).toHaveBeenCalledWith(
+        expect.objectContaining({
+          workoutDays: [
+            expect.objectContaining({
+              exercises: [
+                expect.objectContaining({
+                  exerciseId: "catalog-remada",
+                  name: "Remada no cabo",
+                  alternative1ExerciseId: "ex-flexao",
+                }),
+              ],
+            }),
+          ],
+        }),
+      ),
+    );
+  });
+
+  it("exige vincular exercícios antigos sem ID antes de salvar", () => {
+    renderBuilder({
+      ...initialData,
+      workoutDays: [
+        {
+          ...initialData.workoutDays[0],
+          exercises: [
+            { ...initialData.workoutDays[0].exercises[0], exerciseId: "" },
+          ],
+        },
+      ],
+    });
+    fireEvent.click(screen.getByRole("button", { name: /salvar rascunho/i }));
+    expect(toast.error).toHaveBeenCalledWith(
+      "Selecione todos os exercícios de Treino A no catálogo.",
+    );
+    expect(createPrescriptionDraftAction).not.toHaveBeenCalled();
+  });
+
+  it("mantém IDs e parâmetros ao duplicar um treino e editar cada cópia", async () => {
+    vi.mocked(createPrescriptionDraftAction).mockResolvedValue({
+      success: true,
+      data: { id: "draft", version: 1 },
+    } as Awaited<ReturnType<typeof createPrescriptionDraftAction>>);
+    renderBuilder();
+    fireEvent.click(screen.getByRole("button", { name: "Duplicar Treino A" }));
+    fireEvent.change(screen.getByLabelText("Séries de trabalho"), {
+      target: { value: "5" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /salvar rascunho/i }));
+    await waitFor(() =>
+      expect(createPrescriptionDraftAction).toHaveBeenCalled(),
+    );
+    const payload = vi.mocked(createPrescriptionDraftAction).mock.calls[0][0];
+    expect(payload.workoutDays.map((day) => day.exercises[0])).toEqual([
+      expect.objectContaining({
+        exerciseId: "ex-supino",
+        sets: 3,
+        alternative1ExerciseId: "ex-flexao",
+      }),
+      expect.objectContaining({
+        exerciseId: "ex-supino",
+        sets: 5,
+        alternative1ExerciseId: "ex-flexao",
+      }),
+    ]);
   });
 
   it("reutiliza o rascunho e sua versão quando o envio falha", async () => {
@@ -198,6 +277,100 @@ describe("Salvar prescrição do personal", () => {
       expect.objectContaining({
         id: "draft",
         body: expect.objectContaining({ version: 1 }),
+      }),
+    );
+  });
+
+  it("aplica séries, repetições e descanso preservando carga e aquecimento individuais", async () => {
+    vi.mocked(createPrescriptionDraftAction).mockResolvedValue({
+      success: true,
+      data: { id: "draft", version: 1 },
+    } as Awaited<ReturnType<typeof createPrescriptionDraftAction>>);
+    const exercise = initialData.workoutDays[0].exercises[0];
+    const data = {
+      ...initialData,
+      workoutDays: [
+        {
+          ...initialData.workoutDays[0],
+          exercises: [
+            { ...exercise, targetLoadInGrams: 30000 },
+            {
+              ...exercise,
+              exerciseId: "ex-remada",
+              name: "Remada",
+              sets: 4,
+              reps: 15,
+              restTimeInSeconds: 90,
+              warmupSets: 2,
+              targetLoadInGrams: 50000,
+            },
+          ],
+        },
+      ],
+    };
+    renderBuilder(data);
+    fireEvent.click(
+      screen.getAllByRole("button", {
+        name: "Aplicar séries, reps e descanso aos demais",
+      })[0],
+    );
+    fireEvent.click(screen.getByRole("button", { name: /salvar rascunho/i }));
+    await waitFor(() =>
+      expect(createPrescriptionDraftAction).toHaveBeenCalled(),
+    );
+    expect(
+      vi.mocked(createPrescriptionDraftAction).mock.calls[0][0].workoutDays[0]
+        .exercises[1],
+    ).toEqual(
+      expect.objectContaining({
+        exerciseId: "ex-remada",
+        sets: 3,
+        reps: 10,
+        restTimeInSeconds: 60,
+        warmupSets: 2,
+        targetLoadInGrams: 50000,
+      }),
+    );
+  });
+
+  it("compacta a segunda alternativa mantendo seu ID ao remover a primeira", async () => {
+    vi.mocked(createPrescriptionDraftAction).mockResolvedValue({
+      success: true,
+      data: { id: "draft", version: 1 },
+    } as Awaited<ReturnType<typeof createPrescriptionDraftAction>>);
+    const data = {
+      ...initialData,
+      workoutDays: [
+        {
+          ...initialData.workoutDays[0],
+          exercises: [
+            {
+              ...initialData.workoutDays[0].exercises[0],
+              alternative2ExerciseId: "ex-halteres",
+              alternative2ExerciseName: "Supino com halteres",
+            },
+          ],
+        },
+      ],
+    };
+    renderBuilder(data);
+    fireEvent.click(screen.getByText("Alternativas do exercício (2/2)"));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Remover alternativa 1" }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: /salvar rascunho/i }));
+    await waitFor(() =>
+      expect(createPrescriptionDraftAction).toHaveBeenCalled(),
+    );
+    expect(
+      vi.mocked(createPrescriptionDraftAction).mock.calls[0][0].workoutDays[0]
+        .exercises[0],
+    ).toEqual(
+      expect.objectContaining({
+        alternative1ExerciseId: "ex-halteres",
+        alternative1ExerciseName: "Supino com halteres",
+        alternative2ExerciseId: null,
+        alternative2ExerciseName: null,
       }),
     );
   });

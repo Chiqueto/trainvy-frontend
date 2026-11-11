@@ -1,7 +1,7 @@
 "use client";
 import { AiFeature } from "@/app/_components/ai-availability-provider";
 import { trackProductEvent } from "@/app/_lib/product-events";
-import { AdvancedPrescriptionFields } from "@/app/planning/_components/advanced-prescription-fields";
+import { CoachPrescriptionExerciseCard } from "./coach-prescription-exercise-card";
 import { serializeAdvancedPrescription } from "@/app/planning/_lib/workout-plan-builder";
 
 import { useState, useTransition } from "react";
@@ -35,7 +35,8 @@ import {
   type WorkoutPlanDraftDay,
   type WorkoutPlanDraftExercise,
 } from "@/app/planning/_lib/workout-plan-builder";
-import { CatalogExercisePicker } from "@/app/planning/_components/catalog-exercise-picker";
+import { CatalogExerciseBatchPicker } from "@/app/planning/_components/catalog-exercise-picker";
+import type { ListExercises200Item } from "@/app/_lib/api/fetch-generated";
 import {
   WorkoutPlanReviewDialog,
   WorkoutPlanSummary,
@@ -58,6 +59,9 @@ export interface InitialPrescriptionData {
     isRest: boolean;
     estimatedDurationInSeconds: number;
     exercises: Array<{
+      exerciseId?: string | null;
+      alternative1ExerciseId?: string | null;
+      alternative2ExerciseId?: string | null;
       name: string;
       order?: number;
       sets: number;
@@ -99,16 +103,19 @@ export function CoachPrescriptionBuilder({
 
   const [days, setDays] = useState<WorkoutPlanDraftDay[]>(() => {
     if (initialData?.workoutDays && initialData.workoutDays.length > 0) {
-      return initialData.workoutDays.map((d) => ({
+      return initialData.workoutDays.map((d, index) => ({
         clientId: createClientDayId(),
         name: d.name,
-        weekDay: d.weekDay,
+        weekDay: d.weekDay ?? WEEK_DAYS[index % 7].value,
         isRest: d.isRest,
         estimatedDurationInMinutes: Math.max(
           1,
           Math.round(d.estimatedDurationInSeconds / 60),
         ),
         exercises: (d.exercises ?? []).map((e) => ({
+          exerciseId: e.exerciseId,
+          alternative1ExerciseId: e.alternative1ExerciseId,
+          alternative2ExerciseId: e.alternative2ExerciseId,
           name: e.name,
           sets: e.sets,
           warmupSets: e.warmupSets ?? 0,
@@ -120,8 +127,20 @@ export function CoachPrescriptionBuilder({
         })),
       }));
     }
-    return createInitialWorkoutDays();
+    return createInitialWorkoutDays().map((day, index) => ({
+      ...day,
+      weekDay: WEEK_DAYS[(index * 2) % 7].value,
+      exercises: [],
+    }));
   });
+
+  const [activeDayId, setActiveDayId] = useState<string | undefined>(
+    days[0]?.clientId,
+  );
+  const activeDayIndex = Math.max(
+    0,
+    days.findIndex((day) => day.clientId === activeDayId),
+  );
 
   const [savedDraft, setSavedDraft] = useState({
     id: initialData?.id,
@@ -146,7 +165,11 @@ export function CoachPrescriptionBuilder({
 
   function addWorkout() {
     const nextLetter = String.fromCharCode(65 + (days.length % 26));
-    setDays((current) => [...current, createDraftWorkoutDay(nextLetter)]);
+    const day = createDraftWorkoutDay(nextLetter);
+    day.exercises = [];
+    day.weekDay = WEEK_DAYS[days.length % 7].value;
+    setDays((current) => [...current, day]);
+    setActiveDayId(day.clientId);
   }
 
   function duplicateWorkout(index: number) {
@@ -156,11 +179,13 @@ export function CoachPrescriptionBuilder({
       copy,
       ...current.slice(index + 1),
     ]);
+    setActiveDayId(copy.clientId);
   }
 
   function removeWorkout(index: number) {
     if (days.length <= 1) return;
     setDays((current) => current.filter((_, i) => i !== index));
+    setActiveDayId(days[Math.max(0, index - 1)].clientId);
   }
 
   function moveWorkout(index: number, offset: -1 | 1) {
@@ -185,14 +210,22 @@ export function CoachPrescriptionBuilder({
     });
   }
 
-  function addExercise(dayIndex: number) {
+  function addExercises(dayIndex: number, selected: ListExercises200Item[]) {
     updateDay(dayIndex, {
-      exercises: [...days[dayIndex].exercises, createDraftExercise()],
+      exercises: [
+        ...days[dayIndex].exercises.filter(
+          (exercise) => exercise.name || exercise.exerciseId,
+        ),
+        ...selected.map((exercise) => ({
+          ...createDraftExercise(),
+          exerciseId: exercise.id,
+          name: exercise.name,
+        })),
+      ],
     });
   }
 
   function removeExercise(dayIndex: number, exerciseIndex: number) {
-    if (days[dayIndex].exercises.length <= 1) return;
     updateDay(dayIndex, {
       exercises: days[dayIndex].exercises.filter((_, i) => i !== exerciseIndex),
     });
@@ -227,28 +260,36 @@ export function CoachPrescriptionBuilder({
         ? []
         : day.exercises.map((exercise, exerciseIndex) => {
             const name = exercise.name.trim();
-            let alt1 = exercise.alternative1Name?.trim() || null;
-            let alt2 = exercise.alternative2Name?.trim() || null;
-
-            if (alt1 && alt1.toLowerCase() === name.toLowerCase()) alt1 = null;
-            if (alt2 && alt2.toLowerCase() === name.toLowerCase()) alt2 = null;
-            if (alt1 && alt2 && alt1.toLowerCase() === alt2.toLowerCase())
-              alt2 = null;
-            if (!alt1 && alt2) {
-              alt1 = alt2;
-              alt2 = null;
-            }
+            const alternatives = [
+              {
+                id: exercise.alternative1ExerciseId,
+                name: exercise.alternative1Name,
+              },
+              {
+                id: exercise.alternative2ExerciseId,
+                name: exercise.alternative2Name,
+              },
+            ].filter(
+              (alternative, index, entries) =>
+                alternative.id &&
+                alternative.id !== exercise.exerciseId &&
+                entries.findIndex((entry) => entry.id === alternative.id) ===
+                  index,
+            );
 
             return {
               name,
+              exerciseId: exercise.exerciseId,
               order: exerciseIndex,
               sets: exercise.sets,
               warmupSets: exercise.warmupSets ?? 0,
               reps: exercise.reps,
               ...serializeAdvancedPrescription(exercise),
               restTimeInSeconds: exercise.restTimeInSeconds,
-              alternative1ExerciseName: alt1,
-              alternative2ExerciseName: alt2,
+              alternative1ExerciseId: alternatives[0]?.id ?? null,
+              alternative1ExerciseName: alternatives[0]?.name ?? null,
+              alternative2ExerciseId: alternatives[1]?.id ?? null,
+              alternative2ExerciseName: alternatives[1]?.name ?? null,
             };
           }),
     }));
@@ -260,9 +301,7 @@ export function CoachPrescriptionBuilder({
   ) {
     if (isPending) return;
     const validationError =
-      validateWorkoutPlanDraft(name, days, undefined, undefined, {
-        requireCatalogSelection: false,
-      }) ||
+      validateWorkoutPlanDraft(name, days) ||
       (name.trim().length > 100
         ? "O nome deve ter no máximo 100 caracteres."
         : null) ||
@@ -274,6 +313,10 @@ export function CoachPrescriptionBuilder({
         ? "Adicione um dia de treino com exercícios antes de enviar."
         : null);
     if (validationError) {
+      const invalidDay = days.find((day) =>
+        validateWorkoutPlanDraft(name || "Plano", [day]),
+      );
+      if (invalidDay) setActiveDayId(invalidDay.clientId);
       reportError(validationError);
       return;
     }
@@ -376,15 +419,6 @@ export function CoachPrescriptionBuilder({
           antes de liberar ao aluno.
         </p>
       )}
-      <label className="flex items-start gap-2 text-sm">
-        <input
-          type="checkbox"
-          checked={allowStudentSubstitution}
-          onChange={(e) => setAllowStudentSubstitution(e.target.checked)}
-        />
-        Permitir substituições de exercícios pelo aluno durante a sessão,
-        mantendo a ficha original.
-      </label>
       <AiFeature capability="planning">
         <section className="relative overflow-hidden rounded-3xl border border-primary/20 bg-linear-to-r from-primary/10 via-primary/5 to-transparent p-5 shadow-xs">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -420,6 +454,12 @@ export function CoachPrescriptionBuilder({
 
       {/* Card de Configurações Básicas da Prescrição */}
       <section className="rounded-3xl border border-border/80 bg-card p-5 shadow-xs flex flex-col gap-4">
+        <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-primary">
+          <span className="flex size-6 items-center justify-center rounded-lg bg-primary/10">
+            01
+          </span>{" "}
+          O plano do aluno
+        </div>
         <div className="space-y-1">
           <h2 className="font-heading text-sm font-bold text-foreground">
             Informações do Planejamento
@@ -468,15 +508,33 @@ export function CoachPrescriptionBuilder({
         </div>
       </section>
 
+      <label className="flex cursor-pointer items-start gap-3 rounded-xl bg-muted/40 p-3 text-xs leading-relaxed">
+        <input
+          type="checkbox"
+          className="mt-0.5 size-4 accent-primary"
+          checked={allowStudentSubstitution}
+          onChange={(e) => setAllowStudentSubstitution(e.target.checked)}
+        />
+        <span>
+          <span className="block font-semibold">
+            Permitir substituições durante a sessão
+          </span>
+          <span className="text-muted-foreground">
+            O aluno pode trocar exercícios sem alterar a ficha original. As
+            alternativas que você prescrever ficam disponíveis na execução.
+          </span>
+        </span>
+      </label>
       {/* Seção de Dias de Treino */}
       <section className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="space-y-0.5">
             <h2 className="font-heading text-sm font-bold text-foreground">
-              Estrutura Semanal
+              <span className="mr-2 text-primary">02</span> Monte sua divisão
             </h2>
             <p className="text-xs text-muted-foreground">
-              Configure os treinos e os dias de descanso
+              Um treino por vez. Escolha a sequência e ajuste a dose de cada
+              exercício.
             </p>
           </div>
 
@@ -506,17 +564,49 @@ export function CoachPrescriptionBuilder({
           </div>
         </div>
 
-        <div className="grid items-start gap-5 xl:grid-cols-2">
-          {days.map((day, dayIndex) => {
+        <div
+          aria-label="Selecionar treino para editar"
+          className="flex gap-2 overflow-x-auto pb-2"
+        >
+          {days.map((day, index) => (
+            <button
+              key={day.clientId}
+              type="button"
+              aria-pressed={index === activeDayIndex}
+              onClick={() => setActiveDayId(day.clientId)}
+              className={`flex min-h-16 min-w-40 max-w-60 shrink-0 items-center gap-3 rounded-2xl border px-4 py-3 text-left transition ${index === activeDayIndex ? "border-primary bg-primary/10" : "border-border bg-card hover:border-primary/50"}`}
+            >
+              <span
+                className={`flex size-8 shrink-0 items-center justify-center rounded-xl text-sm font-bold ${index === activeDayIndex ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+              >
+                {String.fromCharCode(65 + (index % 26))}
+              </span>
+              <span className="min-w-0">
+                <span className="block truncate text-sm font-semibold">
+                  {day.name || "Sem nome"}
+                </span>
+                <span className="block text-[11px] text-muted-foreground">
+                  {day.isRest
+                    ? "Descanso"
+                    : `${day.exercises.filter((exercise) => exercise.exerciseId).length} exercícios · ${day.estimatedDurationInMinutes} min`}
+                </span>
+              </span>
+            </button>
+          ))}
+        </div>
+        <div>
+          {days.slice(activeDayIndex, activeDayIndex + 1).map((day) => {
+            const dayIndex = activeDayIndex;
             return (
               <div
                 key={day.clientId ?? day.id ?? dayIndex}
-                className="rounded-3xl border border-border/80 bg-card p-5 shadow-xs space-y-4 transition-colors"
+                className="min-w-0 rounded-3xl border border-border/80 bg-card p-4 shadow-xs space-y-5 sm:p-6"
               >
                 {/* Header do Dia */}
                 <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/50 pb-3">
                   <div className="flex items-center gap-2 flex-1 min-w-[200px]">
                     <Input
+                      aria-label="Nome do treino"
                       value={day.name}
                       onChange={(e) =>
                         updateDay(dayIndex, { name: e.target.value })
@@ -545,6 +635,7 @@ export function CoachPrescriptionBuilder({
                       disabled={dayIndex === 0}
                       onClick={() => moveWorkout(dayIndex, -1)}
                       className="size-8 rounded-lg"
+                      aria-label="Mover treino para cima"
                       title="Mover para cima"
                     >
                       <ArrowUp className="size-3.5" />
@@ -556,6 +647,7 @@ export function CoachPrescriptionBuilder({
                       disabled={dayIndex === days.length - 1}
                       onClick={() => moveWorkout(dayIndex, 1)}
                       className="size-8 rounded-lg"
+                      aria-label="Mover treino para baixo"
                       title="Mover para baixo"
                     >
                       <ArrowDown className="size-3.5" />
@@ -567,6 +659,7 @@ export function CoachPrescriptionBuilder({
                       disabled={days.length <= 1}
                       onClick={() => removeWorkout(dayIndex)}
                       className="size-8 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                      aria-label="Excluir dia"
                       title="Excluir dia"
                     >
                       <Trash2 className="size-3.5" />
@@ -581,6 +674,7 @@ export function CoachPrescriptionBuilder({
                       Dia da Semana
                     </label>
                     <select
+                      aria-label="Dia da semana"
                       value={day.weekDay ?? "MONDAY"}
                       onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
                         updateDay(dayIndex, {
@@ -625,6 +719,7 @@ export function CoachPrescriptionBuilder({
                       <Input
                         type="number"
                         min={1}
+                        aria-label="Duração estimada (min)"
                         value={day.estimatedDurationInMinutes}
                         onChange={(e) =>
                           updateDay(dayIndex, {
@@ -640,205 +735,68 @@ export function CoachPrescriptionBuilder({
                 {/* Lista de Exercícios (apenas se não for dia de descanso) */}
                 {!day.isRest && (
                   <div className="space-y-3 pt-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-heading font-bold text-muted-foreground uppercase tracking-wider">
-                        Exercícios ({day.exercises.length})
-                      </span>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => addExercise(dayIndex)}
-                        className="h-7 px-2 text-xs font-heading font-semibold text-primary hover:bg-primary/10 gap-1"
-                      >
-                        <Plus className="size-3" />
-                        <span>Adicionar Exercício</span>
-                      </Button>
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <div>
+                        <h3 className="text-sm font-semibold">
+                          Sequência do treino
+                        </h3>
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          Selecione em lote. A ordem da seleção vira a ordem de
+                          execução.
+                        </p>
+                      </div>
+                      <CatalogExerciseBatchPicker
+                        disabled={isPending}
+                        excludeIds={day.exercises
+                          .map((exercise) => exercise.exerciseId)
+                          .filter((id): id is string => Boolean(id))}
+                        onSelect={(selected) =>
+                          addExercises(dayIndex, selected)
+                        }
+                      />
                     </div>
-
-                    <div className="space-y-2.5">
+                    <div className="space-y-4">
+                      {!day.exercises.length && (
+                        <p className="rounded-2xl border border-dashed p-8 text-center text-sm text-muted-foreground">
+                          Seu treino começa aqui. Adicione os exercícios da
+                          biblioteca.
+                        </p>
+                      )}
                       {day.exercises.map((exercise, exerciseIndex) => (
-                        <div
-                          key={exerciseIndex}
-                          className="rounded-2xl border border-border/60 bg-muted/20 p-3 space-y-2.5 transition-colors hover:border-border"
-                        >
-                          <div className="flex items-center gap-2">
-                            <span className="flex size-6 shrink-0 items-center justify-center rounded-lg bg-muted text-[11px] font-mono font-bold text-muted-foreground">
-                              {exerciseIndex + 1}
-                            </span>
-                            <div className="min-w-0 flex-1 space-y-2">
-                              <Input
-                                aria-label={`Nome do exercício ${exerciseIndex + 1} de ${day.name}`}
-                                value={exercise.name}
-                                onChange={(e) =>
-                                  updateExercise(dayIndex, exerciseIndex, {
-                                    name: e.target.value,
-                                  })
-                                }
-                                placeholder="Nome do exercício (ex: Supino Inclinado)"
-                                className="h-9 flex-1 rounded-xl text-xs font-medium"
-                              />
-                              <CatalogExercisePicker
-                                label="Buscar no catálogo"
-                                name={undefined}
-                                disabled={isPending}
-                                onSelect={(selected) => {
-                                  if (selected)
-                                    updateExercise(dayIndex, exerciseIndex, {
-                                      name: selected.name,
-                                    });
-                                }}
-                              />
-                            </div>
-                            <div className="flex items-center gap-0.5 shrink-0">
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                disabled={exerciseIndex === 0}
-                                onClick={() =>
-                                  moveExercise(dayIndex, exerciseIndex, -1)
-                                }
-                                className="size-7 rounded-lg"
-                              >
-                                <ArrowUp className="size-3" />
-                              </Button>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                disabled={
-                                  exerciseIndex === day.exercises.length - 1
-                                }
-                                onClick={() =>
-                                  moveExercise(dayIndex, exerciseIndex, 1)
-                                }
-                                className="size-7 rounded-lg"
-                              >
-                                <ArrowDown className="size-3" />
-                              </Button>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                disabled={day.exercises.length <= 1}
-                                onClick={() =>
-                                  removeExercise(dayIndex, exerciseIndex)
-                                }
-                                className="size-7 rounded-lg text-muted-foreground hover:text-destructive"
-                              >
-                                <Trash2 className="size-3" />
-                              </Button>
-                            </div>
-                          </div>
-
-                          {/* Séries de Aquecimento, Séries, Repetições e Descanso */}
-                          <div className="grid grid-cols-2 gap-3 pt-1 sm:grid-cols-4">
-                            <div className="space-y-0.5">
-                              <label className="text-[10px] font-heading font-medium text-amber-500 uppercase">
-                                Aquecimento
-                              </label>
-                              <Input
-                                type="number"
-                                min={0}
-                                value={exercise.warmupSets ?? 0}
-                                onChange={(e) =>
-                                  updateExercise(dayIndex, exerciseIndex, {
-                                    warmupSets: Number(e.target.value),
-                                  })
-                                }
-                                className="h-8 rounded-lg text-xs font-mono"
-                              />
-                            </div>
-
-                            <div className="space-y-0.5">
-                              <label className="text-[10px] font-heading font-medium text-muted-foreground uppercase">
-                                Séries
-                              </label>
-                              <Input
-                                type="number"
-                                min={1}
-                                value={exercise.sets}
-                                onChange={(e) =>
-                                  updateExercise(dayIndex, exerciseIndex, {
-                                    sets: Number(e.target.value),
-                                  })
-                                }
-                                className="h-8 rounded-lg text-xs font-mono"
-                              />
-                            </div>
-
-                            <div className="space-y-0.5">
-                              <label className="text-[10px] font-heading font-medium text-muted-foreground uppercase">
-                                Reps
-                              </label>
-                              <Input
-                                type="number"
-                                min={1}
-                                value={exercise.reps}
-                                onChange={(e) =>
-                                  updateExercise(dayIndex, exerciseIndex, {
-                                    reps: Number(e.target.value),
-                                  })
-                                }
-                                className="h-8 rounded-lg text-xs font-mono"
-                              />
-                            </div>
-
-                            <div className="space-y-0.5">
-                              <label className="text-[10px] font-heading font-medium text-muted-foreground uppercase">
-                                Descanso (s)
-                              </label>
-                              <Input
-                                type="number"
-                                min={1}
-                                value={exercise.restTimeInSeconds}
-                                onChange={(e) =>
-                                  updateExercise(dayIndex, exerciseIndex, {
-                                    restTimeInSeconds: Number(e.target.value),
-                                  })
-                                }
-                                className="h-8 rounded-lg text-xs font-mono"
-                              />
-                            </div>
-                          </div>
-
-                          <AdvancedPrescriptionFields
-                            value={exercise}
-                            disabled={isPending}
-                            onChange={(patch) =>
-                              updateExercise(dayIndex, exerciseIndex, patch)
-                            }
-                          />
-                          {/* Alternativas Fixas Prescritas */}
-                          <div className="pt-2 border-t border-border/40">
-                            <span className="text-[10px] font-heading font-medium text-muted-foreground uppercase">
-                              Alternativas Fixas (opcional)
-                            </span>
-                            <div className="mt-1 grid grid-cols-1 sm:grid-cols-2 gap-2">
-                              <Input
-                                value={exercise.alternative1Name ?? ""}
-                                onChange={(e) =>
-                                  updateExercise(dayIndex, exerciseIndex, {
-                                    alternative1Name: e.target.value,
-                                  })
-                                }
-                                placeholder="Alternativa 1 (ex: Hack Squat)"
-                                className="h-8 rounded-lg text-xs"
-                              />
-                              <Input
-                                value={exercise.alternative2Name ?? ""}
-                                onChange={(e) =>
-                                  updateExercise(dayIndex, exerciseIndex, {
-                                    alternative2Name: e.target.value,
-                                  })
-                                }
-                                placeholder="Alternativa 2 (ex: Leg Press 45°)"
-                                className="h-8 rounded-lg text-xs"
-                              />
-                            </div>
-                          </div>
-                        </div>
+                        <CoachPrescriptionExerciseCard
+                          key={
+                            exerciseIndex +
+                            "-" +
+                            (exercise.exerciseId ?? "empty")
+                          }
+                          exercise={exercise}
+                          index={exerciseIndex}
+                          count={day.exercises.length}
+                          onChange={(patch) =>
+                            updateExercise(dayIndex, exerciseIndex, patch)
+                          }
+                          onMove={(offset) =>
+                            moveExercise(dayIndex, exerciseIndex, offset)
+                          }
+                          onRemove={() =>
+                            removeExercise(dayIndex, exerciseIndex)
+                          }
+                          onApplyDose={() => {
+                            updateDay(dayIndex, {
+                              exercises: day.exercises.map((entry) => ({
+                                ...entry,
+                                sets: exercise.sets,
+                                reps: exercise.reps,
+                                repsMin: exercise.repsMin ?? null,
+                                repsMax: exercise.repsMax ?? null,
+                                restTimeInSeconds: exercise.restTimeInSeconds,
+                              })),
+                            });
+                            toast.success(
+                              "Séries, repetições e descanso aplicados neste treino.",
+                            );
+                          }}
+                        />
                       ))}
                     </div>
                   </div>
@@ -923,7 +881,12 @@ export function CoachPrescriptionBuilder({
             if (generated.notes) {
               setNotes(generated.notes);
             }
-            setDays(generated.workoutDays);
+            const generatedDays = generated.workoutDays.map((day) => ({
+              ...day,
+              clientId: createClientDayId(),
+            }));
+            setDays(generatedDays);
+            setActiveDayId(generatedDays[0]?.clientId);
             setIsAiModalOpen(false);
           }}
         />

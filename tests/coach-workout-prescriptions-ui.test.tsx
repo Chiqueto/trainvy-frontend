@@ -304,6 +304,7 @@ describe("TASK 6.2B — Coach Workout Prescriptions UI & UX Hardening", () => {
             {
               name: "Supino Reto com Barra",
               sets: 4,
+              exerciseId: "catalog-supino",
               warmupSets: 1,
               reps: 10,
               restTimeInSeconds: 90,
