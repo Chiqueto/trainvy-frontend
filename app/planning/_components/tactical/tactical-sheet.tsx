@@ -42,7 +42,7 @@ export function TacticalSheet({
               <X size={18} />
             </Dialog.Close>
           </header>
-          <div className="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain py-4">
+          <div className="no-scrollbar min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain py-4">
             {children}
           </div>
           <Dialog.Close

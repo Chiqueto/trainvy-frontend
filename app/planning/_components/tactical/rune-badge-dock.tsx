@@ -1,5 +1,5 @@
 import { useDraggable } from "@dnd-kit/core";
-import { RUNES, type Rune } from "../../_lib/tactical";
+import { RUNES, RUNE_COLORS, type Rune } from "../../_lib/tactical";
 const icons: Record<Rune, string> = {
   DROP_SET: "🔥",
   REST_PAUSE: "⚡",
@@ -30,10 +30,24 @@ function RuneToken({
       title={`${RUNES[rune]}: arraste ou toque e escolha o exercício`}
       aria-pressed={active}
       onClick={() => onSelect(rune)}
-      className={`flex size-10 shrink-0 items-center justify-center rounded-full border text-base ${active ? "border-amber-300 bg-amber-300/20 shadow-[0_0_12px_#fbbf2440]" : "border-white/10 bg-gradient-to-b from-zinc-800 to-zinc-950"}`}
-      style={{ touchAction: "pan-x pan-y" }}
+      className={`flex h-8 shrink-0 items-center justify-center gap-1 rounded-lg border px-2 text-xs ${active ? "border-current bg-white/10 motion-safe:animate-pulse shadow-[0_0_12px_currentColor]" : "border-white/10 bg-gradient-to-b from-zinc-800 to-zinc-950"}`}
+      style={{
+        touchAction: "pan-x pan-y",
+        color: active ? RUNE_COLORS[rune] : undefined,
+      }}
     >
       {icons[rune]}
+      <span className="text-[10px]">
+        {
+          {
+            DROP_SET: "Drop",
+            REST_PAUSE: "R-Pause",
+            ISOMETRIC_HOLD: "Iso",
+            CLUSTER_SET: "Cluster",
+            TEMPO_CONTROL: "Cadência",
+          }[rune]
+        }
+      </span>
     </button>
   );
 }

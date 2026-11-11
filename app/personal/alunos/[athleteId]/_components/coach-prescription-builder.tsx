@@ -84,6 +84,7 @@ export interface InitialPrescriptionData {
       tempo?: string | null;
       supersetGroupId?: string | null;
       runes?: WorkoutPlanDraftExercise["runes"];
+      runeConfig?: WorkoutPlanDraftExercise["runeConfig"];
       setPrescription?: WorkoutPlanDraftExercise["setPrescription"];
       restTimeInSeconds: number;
       alternative1ExerciseName?: string | null;

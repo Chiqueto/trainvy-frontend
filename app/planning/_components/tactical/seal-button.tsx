@@ -27,8 +27,9 @@ export function SealButton({
     >
       <Button
         type="button"
+        aria-label={sealing ? "Selando…" : "Selar treino"}
         disabled={disabled || sealing}
-        className="min-h-12 w-full rounded-xl bg-cyan-300 text-slate-950 hover:bg-cyan-200"
+        className="h-9 w-full rounded-xl bg-cyan-300 text-slate-950 hover:bg-cyan-200"
         onClick={() => {
           setSealing(true);
           haptic(20);
@@ -46,7 +47,9 @@ export function SealButton({
         ) : (
           <Check size={16} />
         )}
-        {sealing ? "Selando…" : "Selar treino"}
+        <span className="hidden sm:inline">
+          {sealing ? "Selando…" : "Selar treino"}
+        </span>
       </Button>
     </motion.div>
   );

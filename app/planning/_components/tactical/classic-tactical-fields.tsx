@@ -1,6 +1,9 @@
 import type { WorkoutPlanDraftExercise } from "../../_lib/workout-plan-builder";
 import {
   prescriptionSets,
+  toggleRune,
+  cycleRune,
+  runeLabel,
   RUNES,
   zoneFor,
   type Rune,
@@ -37,19 +40,31 @@ export function ClassicTacticalFields({
             type="button"
             key={r}
             aria-pressed={value.runes?.includes(r) ?? false}
-            onClick={() =>
-              onChange({
-                runes: value.runes?.includes(r)
-                  ? value.runes.filter((x) => x !== r)
-                  : [...(value.runes ?? []), r],
-              })
-            }
+            onClick={() => onChange(toggleRune(value, r))}
             className={`min-h-11 rounded-lg border px-2 ${value.runes?.includes(r) ? "border-primary bg-primary/10" : "border-border"}`}
           >
             {RUNES[r]}
           </button>
         ))}
       </div>
+      {!!value.runes?.length && (
+        <div
+          className="flex flex-wrap gap-2"
+          aria-label="Parâmetros das técnicas"
+        >
+          {value.runes.map((r) => (
+            <button
+              key={r}
+              type="button"
+              onClick={() => onChange(cycleRune(value, r))}
+              className="min-h-11 rounded-lg border border-border px-2"
+              title="Alternar parâmetros"
+            >
+              {runeLabel(value, r)}
+            </button>
+          ))}
+        </div>
+      )}
       {!!value.setPrescription?.length && (
         <details>
           <summary className="cursor-pointer py-2">

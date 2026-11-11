@@ -1,7 +1,7 @@
 "use client";
 import { useState, type ReactNode } from "react";
 import { Dialog } from "radix-ui";
-import { ArrowLeft, Copy, Plus, Settings2, Trash2 } from "lucide-react";
+import { ArrowLeft, Copy, Eye, Plus, Settings2, Trash2 } from "lucide-react";
 import { TacticalBuilderArena } from "./tactical-builder-arena";
 import { TacticalSheet } from "./tactical-sheet";
 import { SealButton } from "./seal-button";
@@ -97,28 +97,29 @@ export function TacticalPlanWorkspace({
       >
         <Plus size={13} />
       </button>
-      <button
-        type="button"
-        onClick={onClassic}
-        aria-label="Modo Clássico"
-        title="Modo Clássico"
-        className="ml-auto flex h-8 shrink-0 items-center gap-1 rounded-lg px-2 text-[10px] text-zinc-400"
-      >
-        ⚡<span className="text-zinc-600">/</span>📋
-      </button>
     </div>
   );
-  const footer = (
+  const actions = (
     <>
-      <div className="flex items-center gap-2">
+      <div className="flex shrink-0 items-center gap-2">
+        <button
+          type="button"
+          onClick={onClassic}
+          aria-label="Modo Clássico"
+          className="hidden h-9 rounded-lg bg-white/5 px-2 text-xs sm:block"
+        >
+          <span className="text-cyan-200">⚡ Tático</span> / 📋 Clássico
+        </button>
         {onReview && (
           <button
             type="button"
             onClick={onReview}
+            aria-label={reviewLabel}
             disabled={disabled}
-            className="min-h-11 flex-1 rounded-xl border border-white/10 px-2 text-xs text-zinc-300 disabled:opacity-40"
+            className="h-9 shrink-0 rounded-lg border border-white/10 px-2 text-xs text-zinc-300 disabled:opacity-40"
           >
-            {reviewLabel}
+            <span className="hidden sm:inline">{reviewLabel}</span>
+            <Eye size={16} className="sm:hidden" />
           </button>
         )}
         {onSave && <SealButton disabled={disabled} onSave={onSave} />}
@@ -126,13 +127,13 @@ export function TacticalPlanWorkspace({
       {error && (
         <p
           role="alert"
-          className="max-h-14 overflow-y-auto pt-1 text-xs text-rose-300"
+          className="absolute right-3 top-16 z-50 max-h-24 max-w-sm overflow-y-auto rounded-xl bg-zinc-900 p-3 text-xs text-rose-300"
         >
           {error}
         </p>
       )}
       {syncError && (
-        <p className="pt-1 text-[9px] text-amber-200">
+        <p className="absolute right-3 top-14 z-40 text-[9px] text-amber-200">
           Preferência local · sincronização indisponível
         </p>
       )}
@@ -152,33 +153,13 @@ export function TacticalPlanWorkspace({
           style={{ paddingTop: "env(safe-area-inset-top)" }}
           className="dark fixed inset-0 z-50 flex h-dvh flex-col overflow-hidden bg-zinc-950 text-zinc-100 outline-none"
         >
-          <header className="flex h-[60px] shrink-0 items-center gap-3 px-3">
-            <button
-              type="button"
-              onClick={onClassic}
-              aria-label="Voltar ao editor clássico"
-              className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white/5"
-            >
-              <ArrowLeft size={16} />
-            </button>
-            <div className="min-w-0 flex-1">
-              <Dialog.Title className="truncate text-sm font-semibold">
-                {planName || "Montar plano"}
-              </Dialog.Title>
-              <Dialog.Description className="text-[10px] text-zinc-500">
-                Tactical workout builder
-              </Dialog.Description>
-            </div>
-            <button
-              type="button"
-              aria-label="Configurações do plano"
-              onClick={() => setSettingsOpen(true)}
-              className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-white/10"
-            >
-              <Settings2 size={17} />
-            </button>
-          </header>
-          <div className="h-[calc(100dvh-60px)] min-h-0 overflow-hidden">
+          <Dialog.Title className="sr-only">
+            Montar plano · {planName}
+          </Dialog.Title>
+          <Dialog.Description className="sr-only">
+            Organize exercícios, séries e técnicas do plano.
+          </Dialog.Description>
+          <div className="min-h-0 flex-1 overflow-hidden">
             {day && (
               <TacticalBuilderArena
                 key={day.clientId ?? day.id ?? index}
@@ -186,7 +167,41 @@ export function TacticalPlanWorkspace({
                 disabled={disabled}
                 onChange={updateDay}
                 navigation={navigation}
-                footer={footer}
+                actions={actions}
+                title={
+                  <>
+                    <button
+                      type="button"
+                      onClick={onClassic}
+                      aria-label="Voltar ao editor clássico"
+                      className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white/5"
+                    >
+                      <ArrowLeft size={16} />
+                    </button>
+                    <div className="hidden min-w-0 w-44 xl:block">
+                      <span className="text-xs font-semibold">
+                        Montar Plano
+                      </span>
+                      <input
+                        aria-label="Nome do treino ativo"
+                        disabled={disabled}
+                        value={day.name}
+                        onChange={(e) => updateDay({ name: e.target.value })}
+                        className="block w-full truncate bg-transparent text-[11px] text-zinc-400 outline-none focus:text-white"
+                      />
+                    </div>
+                  </>
+                }
+                settingsAction={
+                  <button
+                    type="button"
+                    aria-label="Configurações do plano"
+                    onClick={() => setSettingsOpen(true)}
+                    className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-white/10"
+                  >
+                    <Settings2 size={15} />
+                  </button>
+                }
               />
             )}
           </div>

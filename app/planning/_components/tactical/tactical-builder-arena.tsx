@@ -5,6 +5,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type CSSProperties,
   type ReactNode,
 } from "react";
 import {
@@ -33,7 +34,16 @@ import {
   motion,
   useReducedMotion,
 } from "framer-motion";
-import { Dumbbell, Link2, Plus, Search, X } from "lucide-react";
+import {
+  Dumbbell,
+  Link2,
+  Plus,
+  Search,
+  X,
+  PersonStanding,
+  Cable,
+  Minus,
+} from "lucide-react";
 import { useExerciseCatalog } from "@/app/_lib/hooks/use-exercise-catalog";
 import { getMuscleGroupLabel } from "@/app/_lib/muscle-labels";
 import type { ListExercises200Item } from "@/app/_lib/api/fetch-generated";
@@ -44,6 +54,7 @@ import {
 } from "../../_lib/workout-plan-builder";
 import {
   haptic,
+  toggleRune,
   mergeExercises,
   normalizeGroups,
   reorderExercises,
@@ -54,7 +65,6 @@ import {
   RUNES,
   type Rune,
 } from "../../_lib/tactical";
-import { TelemetryHeader } from "./telemetry-header";
 import { TrainingBioPanel, TrainingBioDetails } from "./training-bio-panel";
 import { RuneBadgeDock } from "./rune-badge-dock";
 import { ExerciseCard } from "./exercise-card";
@@ -77,6 +87,20 @@ const searchText = (value: string) =>
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase();
+const muscleColors: Record<string, string> = {
+  CHEST: "#fb7185",
+  BACK: "#38bdf8",
+  SHOULDERS: "#c084fc",
+  BICEPS: "#fbbf24",
+  TRICEPS: "#fbbf24",
+  FOREARMS: "#fbbf24",
+  CORE: "#2dd4bf",
+  QUADRICEPS: "#a3e635",
+  HAMSTRINGS: "#a3e635",
+  GLUTES: "#a3e635",
+  CALVES: "#a3e635",
+  ADDUCTORS: "#a3e635",
+};
 function DeckCard({
   entry,
   onAdd,
@@ -110,8 +134,15 @@ function DeckCard({
       aria-label={`Adicionar ${entry.name}`}
       animate={{ y: justAdded ? -3 : 0 }}
       whileTap={{ scale: 0.96 }}
-      className="relative flex h-36 w-28 [@media(max-height:720px)]:h-28 shrink-0 snap-start flex-col overflow-hidden rounded-xl border border-white/15 bg-gradient-to-b from-zinc-800/90 to-zinc-950 p-2 shadow-lg lg:h-40 lg:w-32"
-      style={{ touchAction: "pan-x pan-y" }}
+      whileHover={{ y: -6, scale: 1.03 }}
+      title={entry.name}
+      className="relative flex h-[120px] w-[136px] shrink-0 snap-start flex-col rounded-xl border border-white/15 bg-gradient-to-b from-zinc-800/80 to-zinc-950 p-2 shadow-lg hover:border-[var(--muscle-color)]"
+      style={
+        {
+          touchAction: "pan-x pan-y",
+          "--muscle-color": muscleColors[meta.primaryMuscles[0]] ?? "#94a3b8",
+        } as CSSProperties
+      }
     >
       <div
         className={`flex w-full items-center justify-between text-[9px] ${color}`}
@@ -123,20 +154,27 @@ function DeckCard({
               ? "ϟϟ"
               : "ϟ"}
         </span>
+        <span className="max-w-20 truncate rounded bg-white/5 px-1 text-[9px] uppercase">
+          {meta.primaryMuscles.map(getMuscleGroupLabel).join(" · ")}
+        </span>
         <Plus size={12} />
       </div>
       <div
-        className={`relative mx-auto my-auto flex size-12 items-center justify-center ${color}`}
+        className={`relative mx-auto my-auto flex h-8 w-12 items-center justify-center ${color}`}
       >
         <span className="absolute inset-0 rounded-full bg-current opacity-10 blur-xl" />
-        <Dumbbell size={30} strokeWidth={1.1} />
+        {meta.equipment === "Barra" ? (
+          <Minus size={30} />
+        ) : meta.equipment === "Máquina / cabo" ? (
+          <Cable size={30} />
+        ) : meta.equipment === "Halteres" ? (
+          <Dumbbell size={30} strokeWidth={1.1} />
+        ) : (
+          <PersonStanding size={30} />
+        )}
       </div>
-      <span className="line-clamp-2 w-full text-center text-xs font-semibold leading-tight text-white">
+      <span className="line-clamp-2 min-h-8 w-full shrink-0 text-center text-xs font-medium leading-4 text-white">
         {entry.name}
-      </span>
-      <span className="mt-1 w-full truncate text-center text-[9px] text-zinc-500">
-        {meta.primaryMuscles.map(getMuscleGroupLabel).join(" · ") ||
-          meta.equipment}
       </span>
     </motion.button>
   );
@@ -158,13 +196,17 @@ export function TacticalBuilderArena({
   onChange,
   disabled = false,
   navigation,
-  footer,
+  actions,
+  title,
+  settingsAction,
 }: {
   day: WorkoutPlanDraftDay;
   onChange: (patch: Partial<WorkoutPlanDraftDay>) => void;
   disabled?: boolean;
   navigation?: ReactNode;
-  footer?: ReactNode;
+  actions?: ReactNode;
+  title?: ReactNode;
+  settingsAction?: ReactNode;
 }) {
   const { exercises: catalog, isSyncing, refresh } = useExerciseCatalog();
   const flightSequenceRef = useRef(0);
@@ -173,9 +215,11 @@ export function TacticalBuilderArena({
     [searchOpen, setSearchOpen] = useState(false);
   const [rune, setRune] = useState<Rune | null>(null),
     [announcement, setAnnouncement] = useState("");
-  const [drag, setDrag] = useState<{ label: string; type: string } | null>(
-      null,
-    ),
+  const [drag, setDrag] = useState<{
+      label: string;
+      type: string;
+      rune?: Rune;
+    } | null>(null),
     [targetIndex, setTargetIndex] = useState<number | null>(null),
     [fusion, setFusion] = useState<number | null>(null);
   const [flight, setFlight] = useState<{
@@ -254,6 +298,7 @@ export function TacticalBuilderArena({
     return () => clearTimeout(timer);
   }, [flight]);
   function commit(items: WorkoutPlanDraftExercise[]) {
+    if (disabled) return;
     const exercises = normalizeGroups(items);
     onChange({
       exercises,
@@ -298,15 +343,13 @@ export function TacticalBuilderArena({
       setImpact((n) => n + 1);
   }
   function applyRune(index: number, selected: Rune) {
-    update(index, {
-      runes: Array.from(
-        new Set([...(day.exercises[index].runes ?? []), selected]),
-      ),
-    });
+    const item = day.exercises[index];
+    update(index, toggleRune(item, selected));
     setAnnouncement(
-      `${RUNES[selected]} aplicada a ${day.exercises[index].name}`,
+      RUNES[selected] +
+        (item.runes?.includes(selected) ? " removida de " : " aplicada a ") +
+        item.name,
     );
-    setRune(null);
     haptic();
   }
   function moving(event: DragMoveEvent) {
@@ -378,6 +421,13 @@ export function TacticalBuilderArena({
       <LayoutGroup id={scope}>
         <fieldset
           disabled={disabled}
+          onKeyDown={(event) => {
+            if (event.key === "Escape" && rune) {
+              event.preventDefault();
+              event.stopPropagation();
+              setRune(null);
+            }
+          }}
           className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-zinc-950 text-zinc-100"
         >
           <legend className="sr-only">Arena tática de {day.name}</legend>
@@ -392,6 +442,7 @@ export function TacticalBuilderArena({
               const source = e.active.data.current;
               setDrag({
                 type: source?.type ?? "item",
+                rune: source?.type === "rune" ? source.rune : undefined,
                 label:
                   source?.type === "rune"
                     ? RUNES[source.rune as Rune]
@@ -405,21 +456,26 @@ export function TacticalBuilderArena({
             onDragEnd={dropped}
             onDragCancel={clearDrag}
           >
-            <header className="flex shrink-0 items-center gap-2 border-y border-white/10 bg-zinc-950/90 px-3 py-1.5 backdrop-blur-md">
-              <div className="flex min-w-0 flex-1 flex-col gap-1">
-                {navigation}
-                <TelemetryHeader compact data={data} />
-              </div>
+            <header className="no-scrollbar flex h-14 shrink-0 items-center gap-2 overflow-x-auto border-b border-white/10 bg-zinc-950 px-3">
+              {title}
+              <div className="max-w-20 sm:max-w-40 shrink-0">{navigation}</div>
               <TrainingBioPanel data={data} />
+              <span className="hidden whitespace-nowrap text-[10px] text-zinc-500 2xl:block">
+                {data.sets} séries · {groups.length} blocos
+              </span>
+              <div className="ml-auto flex shrink-0 items-center gap-2">
+                {settingsAction}
+                {actions}
+              </div>
             </header>
-            <div className="mx-auto flex min-h-0 w-full max-w-6xl flex-1 overflow-hidden">
-              <aside className="hidden w-80 shrink-0 overflow-y-auto border-r border-white/10 bg-zinc-900/25 p-5 lg:block">
+            <div className="flex min-h-0 w-full flex-1 overflow-hidden">
+              <aside className="no-scrollbar hidden w-72 shrink-0 overflow-y-auto border-r border-white/10 bg-zinc-900/25 p-4 lg:block">
                 <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-zinc-400">
                   Leitura do treino
                 </p>
                 <TrainingBioDetails data={data} />
               </aside>
-              <div className="mx-auto flex min-h-0 min-w-0 max-w-2xl flex-1 flex-col">
+              <div className="flex min-h-0 min-w-0 flex-1 flex-col">
                 <div className="flex h-7 shrink-0 items-center justify-between px-3 text-[9px] uppercase tracking-widest text-zinc-500">
                   <span>{day.name}</span>
                   <span>
@@ -430,7 +486,7 @@ export function TacticalBuilderArena({
                   ref={table}
                   data-testid="tactical-table"
                   animate={impact && !reduced ? { x: [0, -1, 1, 0] } : { x: 0 }}
-                  className="relative min-h-0 flex-1 space-y-1.5 overflow-y-auto overscroll-contain bg-[radial-gradient(#ffffff11_1px,transparent_1px)] px-2 pb-2 [background-size:16px_16px]"
+                  className="no-scrollbar relative isolate min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-contain bg-[radial-gradient(#ffffff11_1px,transparent_1px)] px-2 pb-2 [background-size:16px_16px]"
                 >
                   <SortableContext
                     items={day.exercises.map((_, i) => `item:${i}`)}
@@ -502,6 +558,7 @@ export function TacticalBuilderArena({
                                 runeOver={
                                   drag?.type === "rune" && targetIndex === index
                                 }
+                                dragRune={drag?.rune ?? null}
                                 selectedRune={rune}
                                 onApplyRune={() =>
                                   rune && applyRune(index, rune)
@@ -559,11 +616,14 @@ export function TacticalBuilderArena({
                 <section
                   data-testid="tactical-deck"
                   aria-label="Deck de exercícios"
-                  className="relative shrink-0 border-t border-white/15 bg-zinc-900/95 pb-1 shadow-[0_-12px_32px_#0004] backdrop-blur-md"
+                  className="relative z-30 h-[202px] shrink-0 border-t border-white/10 bg-gradient-to-t from-zinc-900/90 to-zinc-950/60 shadow-[0_-12px_32px_#0002] backdrop-blur-md"
                 >
-                  {rune ? (
-                    <div className="flex min-h-10 items-center justify-between gap-2 bg-amber-300/10 px-3 text-[11px] text-amber-200">
-                      <span>{RUNES[rune]} · Toque no exercício acima</span>
+                  {rune && (
+                    <div className="absolute bottom-full left-3 right-3 z-30 mb-2 flex min-h-10 items-center justify-between gap-2 rounded-xl border border-amber-300/30 bg-zinc-950/95 px-3 text-[11px] text-amber-200">
+                      <span>
+                        {RUNES[rune]} selecionado — Toque nos exercícios para
+                        aplicar ou remover
+                      </span>
                       <button
                         type="button"
                         onClick={() => setRune(null)}
@@ -573,34 +633,38 @@ export function TacticalBuilderArena({
                         <X size={15} />
                       </button>
                     </div>
-                  ) : (
-                    <div className="flex min-w-0 items-center gap-2 px-2 py-1">
-                      <RuneBadgeDock selected={rune} onSelect={setRune} />
-                      <div className="h-6 w-px shrink-0 bg-white/10" />
-                      <div className="flex min-w-0 flex-1 gap-1 overflow-x-auto">
-                        {FILTERS.map((f, i) => (
-                          <button
-                            type="button"
-                            key={f.label}
-                            aria-pressed={filter === i}
-                            onClick={() => setFilter(i)}
-                            className={`h-9 shrink-0 rounded-full px-2.5 text-[10px] ${filter === i ? "bg-cyan-300 text-zinc-950" : "bg-white/5 text-zinc-400"}`}
-                          >
-                            {f.label}
-                          </button>
-                        ))}
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setSearchOpen(!searchOpen)}
-                        aria-label="Buscar exercícios no deck"
-                        aria-expanded={searchOpen}
-                        className="flex size-10 shrink-0 items-center justify-center rounded-full bg-white/5"
-                      >
-                        <Search size={15} />
-                      </button>
-                    </div>
                   )}
+                  <div className="no-scrollbar flex h-11 min-w-0 items-center gap-2 overflow-x-auto px-2">
+                    <RuneBadgeDock
+                      selected={rune}
+                      onSelect={(value) =>
+                        setRune(rune === value ? null : value)
+                      }
+                    />
+                    <div className="h-6 w-px shrink-0 bg-white/10" />
+                    <div className="no-scrollbar flex min-w-32 flex-1 gap-1 overflow-x-auto">
+                      {FILTERS.map((f, i) => (
+                        <button
+                          type="button"
+                          key={f.label}
+                          aria-pressed={filter === i}
+                          onClick={() => setFilter(i)}
+                          className={`h-9 shrink-0 rounded-full px-2.5 text-[10px] ${filter === i ? "bg-cyan-300 text-zinc-950" : "bg-white/5 text-zinc-400"}`}
+                        >
+                          {f.label}
+                        </button>
+                      ))}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setSearchOpen(!searchOpen)}
+                      aria-label="Buscar exercícios no deck"
+                      aria-expanded={searchOpen}
+                      className="flex size-10 shrink-0 items-center justify-center rounded-full bg-white/5"
+                    >
+                      <Search size={15} />
+                    </button>
+                  </div>
                   {searchOpen && (
                     <label className="absolute bottom-full left-2 right-2 z-20 mb-1 flex items-center gap-2 rounded-xl border border-cyan-300/30 bg-zinc-950 p-2 shadow-xl">
                       <Search size={14} />
@@ -627,7 +691,7 @@ export function TacticalBuilderArena({
                     </label>
                   )}
                   <div
-                    className="flex snap-x gap-2.5 overflow-x-auto px-3 pb-1 pt-1"
+                    className="no-scrollbar flex h-[138px] snap-x items-center gap-3 overflow-x-auto px-4 py-2"
                     onWheel={(e) => {
                       if (
                         !e.shiftKey &&
@@ -673,16 +737,6 @@ export function TacticalBuilderArena({
                       "Toque para adicionar · Técnica e bi-set direto no exercício"}
                   </p>
                 </section>
-                {footer && (
-                  <footer
-                    className="shrink-0 border-t border-white/10 bg-zinc-950 px-3 py-1.5"
-                    style={{
-                      paddingBottom: "max(6px,env(safe-area-inset-bottom))",
-                    }}
-                  >
-                    {footer}
-                  </footer>
-                )}
               </div>
             </div>
             <DragOverlay dropAnimation={{ duration: 220, easing: "ease-out" }}>

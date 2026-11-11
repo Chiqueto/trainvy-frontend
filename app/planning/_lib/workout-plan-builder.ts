@@ -17,6 +17,7 @@ export const WEEK_DAYS = [
 export type WorkoutPlanDraftExercise = {
   supersetGroupId?: string | null;
   runes?: import("./tactical").Rune[];
+  runeConfig?: import("./tactical").RuneConfig;
   setPrescription?: import("./tactical").TacticalSet[];
   repsMin?: number | null;
   repsMax?: number | null;
@@ -285,12 +286,14 @@ export function serializeAdvancedPrescription(
     | "tempo"
     | "supersetGroupId"
     | "runes"
+    | "runeConfig"
     | "setPrescription"
   >,
 ) {
   return {
     supersetGroupId: exercise.supersetGroupId ?? null,
     runes: exercise.runes ?? [],
+    runeConfig: exercise.runeConfig ?? {},
     setPrescription: exercise.setPrescription ?? [],
     repsMin: exercise.repsMin ?? null,
     repsMax: exercise.repsMax ?? null,

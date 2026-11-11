@@ -571,6 +571,77 @@
                                       "reps": {
                                         "type": "number"
                                       },
+                                      "runeConfig": {
+                                        "type": "object",
+                                        "properties": {
+                                          "DROP_SET": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 3
+                                          },
+                                          "REST_PAUSE": {
+                                            "anyOf": [
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  10
+                                                ]
+                                              },
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  15
+                                                ]
+                                              },
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  20
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          "ISOMETRIC_HOLD": {
+                                            "type": "string",
+                                            "enum": [
+                                              "peak2",
+                                              "peak3",
+                                              "base2"
+                                            ]
+                                          },
+                                          "CLUSTER_SET": {
+                                            "anyOf": [
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  2
+                                                ]
+                                              },
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  3
+                                                ]
+                                              },
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  4
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          "TEMPO_CONTROL": {
+                                            "type": "string",
+                                            "enum": [
+                                              "3-0-1-0",
+                                              "4-0-1-0",
+                                              "3-1-1-0"
+                                            ]
+                                          }
+                                        },
+                                        "additionalProperties": false
+                                      },
                                       "supersetGroupId": {
                                         "nullable": true,
                                         "type": "string",
@@ -822,6 +893,77 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "runeConfig": {
+                                "type": "object",
+                                "properties": {
+                                  "DROP_SET": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 3
+                                  },
+                                  "REST_PAUSE": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          10
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          15
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          20
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "ISOMETRIC_HOLD": {
+                                    "type": "string",
+                                    "enum": [
+                                      "peak2",
+                                      "peak3",
+                                      "base2"
+                                    ]
+                                  },
+                                  "CLUSTER_SET": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          2
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          3
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          4
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "TEMPO_CONTROL": {
+                                    "type": "string",
+                                    "enum": [
+                                      "3-0-1-0",
+                                      "4-0-1-0",
+                                      "3-1-1-0"
+                                    ]
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
                               "supersetGroupId": {
                                 "nullable": true,
                                 "type": "string",
@@ -1060,6 +1202,77 @@
                             "items": {
                               "type": "object",
                               "properties": {
+                                "runeConfig": {
+                                  "type": "object",
+                                  "properties": {
+                                    "DROP_SET": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 3
+                                    },
+                                    "REST_PAUSE": {
+                                      "anyOf": [
+                                        {
+                                          "type": "number",
+                                          "enum": [
+                                            10
+                                          ]
+                                        },
+                                        {
+                                          "type": "number",
+                                          "enum": [
+                                            15
+                                          ]
+                                        },
+                                        {
+                                          "type": "number",
+                                          "enum": [
+                                            20
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    "ISOMETRIC_HOLD": {
+                                      "type": "string",
+                                      "enum": [
+                                        "peak2",
+                                        "peak3",
+                                        "base2"
+                                      ]
+                                    },
+                                    "CLUSTER_SET": {
+                                      "anyOf": [
+                                        {
+                                          "type": "number",
+                                          "enum": [
+                                            2
+                                          ]
+                                        },
+                                        {
+                                          "type": "number",
+                                          "enum": [
+                                            3
+                                          ]
+                                        },
+                                        {
+                                          "type": "number",
+                                          "enum": [
+                                            4
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    "TEMPO_CONTROL": {
+                                      "type": "string",
+                                      "enum": [
+                                        "3-0-1-0",
+                                        "4-0-1-0",
+                                        "3-1-1-0"
+                                      ]
+                                    }
+                                  },
+                                  "additionalProperties": false
+                                },
                                 "supersetGroupId": {
                                   "nullable": true,
                                   "type": "string",
@@ -1740,6 +1953,77 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "runeConfig": {
+                                "type": "object",
+                                "properties": {
+                                  "DROP_SET": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 3
+                                  },
+                                  "REST_PAUSE": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          10
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          15
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          20
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "ISOMETRIC_HOLD": {
+                                    "type": "string",
+                                    "enum": [
+                                      "peak2",
+                                      "peak3",
+                                      "base2"
+                                    ]
+                                  },
+                                  "CLUSTER_SET": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          2
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          3
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          4
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "TEMPO_CONTROL": {
+                                    "type": "string",
+                                    "enum": [
+                                      "3-0-1-0",
+                                      "4-0-1-0",
+                                      "3-1-1-0"
+                                    ]
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
                               "supersetGroupId": {
                                 "nullable": true,
                                 "type": "string",
@@ -2261,6 +2545,77 @@
                           },
                           "reps": {
                             "type": "number"
+                          },
+                          "runeConfig": {
+                            "type": "object",
+                            "properties": {
+                              "DROP_SET": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 3
+                              },
+                              "REST_PAUSE": {
+                                "anyOf": [
+                                  {
+                                    "type": "number",
+                                    "enum": [
+                                      10
+                                    ]
+                                  },
+                                  {
+                                    "type": "number",
+                                    "enum": [
+                                      15
+                                    ]
+                                  },
+                                  {
+                                    "type": "number",
+                                    "enum": [
+                                      20
+                                    ]
+                                  }
+                                ]
+                              },
+                              "ISOMETRIC_HOLD": {
+                                "type": "string",
+                                "enum": [
+                                  "peak2",
+                                  "peak3",
+                                  "base2"
+                                ]
+                              },
+                              "CLUSTER_SET": {
+                                "anyOf": [
+                                  {
+                                    "type": "number",
+                                    "enum": [
+                                      2
+                                    ]
+                                  },
+                                  {
+                                    "type": "number",
+                                    "enum": [
+                                      3
+                                    ]
+                                  },
+                                  {
+                                    "type": "number",
+                                    "enum": [
+                                      4
+                                    ]
+                                  }
+                                ]
+                              },
+                              "TEMPO_CONTROL": {
+                                "type": "string",
+                                "enum": [
+                                  "3-0-1-0",
+                                  "4-0-1-0",
+                                  "3-1-1-0"
+                                ]
+                              }
+                            },
+                            "additionalProperties": false
                           },
                           "supersetGroupId": {
                             "nullable": true,
@@ -2886,6 +3241,77 @@
                             "items": {
                               "type": "object",
                               "properties": {
+                                "runeConfig": {
+                                  "type": "object",
+                                  "properties": {
+                                    "DROP_SET": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 3
+                                    },
+                                    "REST_PAUSE": {
+                                      "anyOf": [
+                                        {
+                                          "type": "number",
+                                          "enum": [
+                                            10
+                                          ]
+                                        },
+                                        {
+                                          "type": "number",
+                                          "enum": [
+                                            15
+                                          ]
+                                        },
+                                        {
+                                          "type": "number",
+                                          "enum": [
+                                            20
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    "ISOMETRIC_HOLD": {
+                                      "type": "string",
+                                      "enum": [
+                                        "peak2",
+                                        "peak3",
+                                        "base2"
+                                      ]
+                                    },
+                                    "CLUSTER_SET": {
+                                      "anyOf": [
+                                        {
+                                          "type": "number",
+                                          "enum": [
+                                            2
+                                          ]
+                                        },
+                                        {
+                                          "type": "number",
+                                          "enum": [
+                                            3
+                                          ]
+                                        },
+                                        {
+                                          "type": "number",
+                                          "enum": [
+                                            4
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    "TEMPO_CONTROL": {
+                                      "type": "string",
+                                      "enum": [
+                                        "3-0-1-0",
+                                        "4-0-1-0",
+                                        "3-1-1-0"
+                                      ]
+                                    }
+                                  },
+                                  "additionalProperties": false
+                                },
                                 "supersetGroupId": {
                                   "nullable": true,
                                   "type": "string",
@@ -4894,6 +5320,77 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "runeConfig": {
+                                "type": "object",
+                                "properties": {
+                                  "DROP_SET": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 3
+                                  },
+                                  "REST_PAUSE": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          10
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          15
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          20
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "ISOMETRIC_HOLD": {
+                                    "type": "string",
+                                    "enum": [
+                                      "peak2",
+                                      "peak3",
+                                      "base2"
+                                    ]
+                                  },
+                                  "CLUSTER_SET": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          2
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          3
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          4
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "TEMPO_CONTROL": {
+                                    "type": "string",
+                                    "enum": [
+                                      "3-0-1-0",
+                                      "4-0-1-0",
+                                      "3-1-1-0"
+                                    ]
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
                               "supersetGroupId": {
                                 "nullable": true,
                                 "type": "string",
@@ -5202,6 +5699,77 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "runeConfig": {
+                                      "type": "object",
+                                      "properties": {
+                                        "DROP_SET": {
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 3
+                                        },
+                                        "REST_PAUSE": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                10
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                15
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                20
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "ISOMETRIC_HOLD": {
+                                          "type": "string",
+                                          "enum": [
+                                            "peak2",
+                                            "peak3",
+                                            "base2"
+                                          ]
+                                        },
+                                        "CLUSTER_SET": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                2
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                3
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                4
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "TEMPO_CONTROL": {
+                                          "type": "string",
+                                          "enum": [
+                                            "3-0-1-0",
+                                            "4-0-1-0",
+                                            "3-1-1-0"
+                                          ]
+                                        }
+                                      },
+                                      "additionalProperties": false
+                                    },
                                     "supersetGroupId": {
                                       "nullable": true,
                                       "type": "string",
@@ -7044,6 +7612,77 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "runeConfig": {
+                                "type": "object",
+                                "properties": {
+                                  "DROP_SET": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 3
+                                  },
+                                  "REST_PAUSE": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          10
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          15
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          20
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "ISOMETRIC_HOLD": {
+                                    "type": "string",
+                                    "enum": [
+                                      "peak2",
+                                      "peak3",
+                                      "base2"
+                                    ]
+                                  },
+                                  "CLUSTER_SET": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          2
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          3
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          4
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "TEMPO_CONTROL": {
+                                    "type": "string",
+                                    "enum": [
+                                      "3-0-1-0",
+                                      "4-0-1-0",
+                                      "3-1-1-0"
+                                    ]
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
                               "supersetGroupId": {
                                 "nullable": true,
                                 "type": "string",
@@ -16042,6 +16681,77 @@
                                   "items": {
                                     "type": "object",
                                     "properties": {
+                                      "runeConfig": {
+                                        "type": "object",
+                                        "properties": {
+                                          "DROP_SET": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 3
+                                          },
+                                          "REST_PAUSE": {
+                                            "anyOf": [
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  10
+                                                ]
+                                              },
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  15
+                                                ]
+                                              },
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  20
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          "ISOMETRIC_HOLD": {
+                                            "type": "string",
+                                            "enum": [
+                                              "peak2",
+                                              "peak3",
+                                              "base2"
+                                            ]
+                                          },
+                                          "CLUSTER_SET": {
+                                            "anyOf": [
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  2
+                                                ]
+                                              },
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  3
+                                                ]
+                                              },
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  4
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          "TEMPO_CONTROL": {
+                                            "type": "string",
+                                            "enum": [
+                                              "3-0-1-0",
+                                              "4-0-1-0",
+                                              "3-1-1-0"
+                                            ]
+                                          }
+                                        },
+                                        "additionalProperties": false
+                                      },
                                       "supersetGroupId": {
                                         "nullable": true,
                                         "type": "string",
@@ -19994,6 +20704,77 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "runeConfig": {
+                                "type": "object",
+                                "properties": {
+                                  "DROP_SET": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 3
+                                  },
+                                  "REST_PAUSE": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          10
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          15
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          20
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "ISOMETRIC_HOLD": {
+                                    "type": "string",
+                                    "enum": [
+                                      "peak2",
+                                      "peak3",
+                                      "base2"
+                                    ]
+                                  },
+                                  "CLUSTER_SET": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          2
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          3
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          4
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "TEMPO_CONTROL": {
+                                    "type": "string",
+                                    "enum": [
+                                      "3-0-1-0",
+                                      "4-0-1-0",
+                                      "3-1-1-0"
+                                    ]
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
                               "supersetGroupId": {
                                 "nullable": true,
                                 "type": "string",
@@ -20341,6 +21122,77 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "runeConfig": {
+                                      "type": "object",
+                                      "properties": {
+                                        "DROP_SET": {
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 3
+                                        },
+                                        "REST_PAUSE": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                10
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                15
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                20
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "ISOMETRIC_HOLD": {
+                                          "type": "string",
+                                          "enum": [
+                                            "peak2",
+                                            "peak3",
+                                            "base2"
+                                          ]
+                                        },
+                                        "CLUSTER_SET": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                2
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                3
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                4
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "TEMPO_CONTROL": {
+                                          "type": "string",
+                                          "enum": [
+                                            "3-0-1-0",
+                                            "4-0-1-0",
+                                            "3-1-1-0"
+                                          ]
+                                        }
+                                      },
+                                      "additionalProperties": false
+                                    },
                                     "supersetGroupId": {
                                       "nullable": true,
                                       "type": "string",
@@ -20783,6 +21635,77 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "runeConfig": {
+                                "type": "object",
+                                "properties": {
+                                  "DROP_SET": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 3
+                                  },
+                                  "REST_PAUSE": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          10
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          15
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          20
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "ISOMETRIC_HOLD": {
+                                    "type": "string",
+                                    "enum": [
+                                      "peak2",
+                                      "peak3",
+                                      "base2"
+                                    ]
+                                  },
+                                  "CLUSTER_SET": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          2
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          3
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          4
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "TEMPO_CONTROL": {
+                                    "type": "string",
+                                    "enum": [
+                                      "3-0-1-0",
+                                      "4-0-1-0",
+                                      "3-1-1-0"
+                                    ]
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
                               "supersetGroupId": {
                                 "nullable": true,
                                 "type": "string",
@@ -21140,6 +22063,77 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "runeConfig": {
+                                      "type": "object",
+                                      "properties": {
+                                        "DROP_SET": {
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 3
+                                        },
+                                        "REST_PAUSE": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                10
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                15
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                20
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "ISOMETRIC_HOLD": {
+                                          "type": "string",
+                                          "enum": [
+                                            "peak2",
+                                            "peak3",
+                                            "base2"
+                                          ]
+                                        },
+                                        "CLUSTER_SET": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                2
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                3
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                4
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "TEMPO_CONTROL": {
+                                          "type": "string",
+                                          "enum": [
+                                            "3-0-1-0",
+                                            "4-0-1-0",
+                                            "3-1-1-0"
+                                          ]
+                                        }
+                                      },
+                                      "additionalProperties": false
+                                    },
                                     "supersetGroupId": {
                                       "nullable": true,
                                       "type": "string",
@@ -21693,6 +22687,77 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "runeConfig": {
+                                      "type": "object",
+                                      "properties": {
+                                        "DROP_SET": {
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 3
+                                        },
+                                        "REST_PAUSE": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                10
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                15
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                20
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "ISOMETRIC_HOLD": {
+                                          "type": "string",
+                                          "enum": [
+                                            "peak2",
+                                            "peak3",
+                                            "base2"
+                                          ]
+                                        },
+                                        "CLUSTER_SET": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                2
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                3
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                4
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "TEMPO_CONTROL": {
+                                          "type": "string",
+                                          "enum": [
+                                            "3-0-1-0",
+                                            "4-0-1-0",
+                                            "3-1-1-0"
+                                          ]
+                                        }
+                                      },
+                                      "additionalProperties": false
+                                    },
                                     "supersetGroupId": {
                                       "nullable": true,
                                       "type": "string",
@@ -22277,6 +23342,77 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "runeConfig": {
+                                      "type": "object",
+                                      "properties": {
+                                        "DROP_SET": {
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 3
+                                        },
+                                        "REST_PAUSE": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                10
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                15
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                20
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "ISOMETRIC_HOLD": {
+                                          "type": "string",
+                                          "enum": [
+                                            "peak2",
+                                            "peak3",
+                                            "base2"
+                                          ]
+                                        },
+                                        "CLUSTER_SET": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                2
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                3
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                4
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "TEMPO_CONTROL": {
+                                          "type": "string",
+                                          "enum": [
+                                            "3-0-1-0",
+                                            "4-0-1-0",
+                                            "3-1-1-0"
+                                          ]
+                                        }
+                                      },
+                                      "additionalProperties": false
+                                    },
                                     "supersetGroupId": {
                                       "nullable": true,
                                       "type": "string",
@@ -22832,6 +23968,77 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "runeConfig": {
+                                      "type": "object",
+                                      "properties": {
+                                        "DROP_SET": {
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 3
+                                        },
+                                        "REST_PAUSE": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                10
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                15
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                20
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "ISOMETRIC_HOLD": {
+                                          "type": "string",
+                                          "enum": [
+                                            "peak2",
+                                            "peak3",
+                                            "base2"
+                                          ]
+                                        },
+                                        "CLUSTER_SET": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                2
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                3
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                4
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "TEMPO_CONTROL": {
+                                          "type": "string",
+                                          "enum": [
+                                            "3-0-1-0",
+                                            "4-0-1-0",
+                                            "3-1-1-0"
+                                          ]
+                                        }
+                                      },
+                                      "additionalProperties": false
+                                    },
                                     "supersetGroupId": {
                                       "nullable": true,
                                       "type": "string",
@@ -23389,6 +24596,77 @@
                                   "items": {
                                     "type": "object",
                                     "properties": {
+                                      "runeConfig": {
+                                        "type": "object",
+                                        "properties": {
+                                          "DROP_SET": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 3
+                                          },
+                                          "REST_PAUSE": {
+                                            "anyOf": [
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  10
+                                                ]
+                                              },
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  15
+                                                ]
+                                              },
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  20
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          "ISOMETRIC_HOLD": {
+                                            "type": "string",
+                                            "enum": [
+                                              "peak2",
+                                              "peak3",
+                                              "base2"
+                                            ]
+                                          },
+                                          "CLUSTER_SET": {
+                                            "anyOf": [
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  2
+                                                ]
+                                              },
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  3
+                                                ]
+                                              },
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  4
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          "TEMPO_CONTROL": {
+                                            "type": "string",
+                                            "enum": [
+                                              "3-0-1-0",
+                                              "4-0-1-0",
+                                              "3-1-1-0"
+                                            ]
+                                          }
+                                        },
+                                        "additionalProperties": false
+                                      },
                                       "supersetGroupId": {
                                         "nullable": true,
                                         "type": "string",
@@ -23937,6 +25215,77 @@
                                   "items": {
                                     "type": "object",
                                     "properties": {
+                                      "runeConfig": {
+                                        "type": "object",
+                                        "properties": {
+                                          "DROP_SET": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 3
+                                          },
+                                          "REST_PAUSE": {
+                                            "anyOf": [
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  10
+                                                ]
+                                              },
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  15
+                                                ]
+                                              },
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  20
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          "ISOMETRIC_HOLD": {
+                                            "type": "string",
+                                            "enum": [
+                                              "peak2",
+                                              "peak3",
+                                              "base2"
+                                            ]
+                                          },
+                                          "CLUSTER_SET": {
+                                            "anyOf": [
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  2
+                                                ]
+                                              },
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  3
+                                                ]
+                                              },
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  4
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          "TEMPO_CONTROL": {
+                                            "type": "string",
+                                            "enum": [
+                                              "3-0-1-0",
+                                              "4-0-1-0",
+                                              "3-1-1-0"
+                                            ]
+                                          }
+                                        },
+                                        "additionalProperties": false
+                                      },
                                       "supersetGroupId": {
                                         "nullable": true,
                                         "type": "string",
@@ -24493,6 +25842,77 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "runeConfig": {
+                                      "type": "object",
+                                      "properties": {
+                                        "DROP_SET": {
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 3
+                                        },
+                                        "REST_PAUSE": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                10
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                15
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                20
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "ISOMETRIC_HOLD": {
+                                          "type": "string",
+                                          "enum": [
+                                            "peak2",
+                                            "peak3",
+                                            "base2"
+                                          ]
+                                        },
+                                        "CLUSTER_SET": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                2
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                3
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                4
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "TEMPO_CONTROL": {
+                                          "type": "string",
+                                          "enum": [
+                                            "3-0-1-0",
+                                            "4-0-1-0",
+                                            "3-1-1-0"
+                                          ]
+                                        }
+                                      },
+                                      "additionalProperties": false
+                                    },
                                     "supersetGroupId": {
                                       "nullable": true,
                                       "type": "string",
@@ -25054,6 +26474,77 @@
                                     "items": {
                                       "type": "object",
                                       "properties": {
+                                        "runeConfig": {
+                                          "type": "object",
+                                          "properties": {
+                                            "DROP_SET": {
+                                              "type": "integer",
+                                              "minimum": 1,
+                                              "maximum": 3
+                                            },
+                                            "REST_PAUSE": {
+                                              "anyOf": [
+                                                {
+                                                  "type": "number",
+                                                  "enum": [
+                                                    10
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "number",
+                                                  "enum": [
+                                                    15
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "number",
+                                                  "enum": [
+                                                    20
+                                                  ]
+                                                }
+                                              ]
+                                            },
+                                            "ISOMETRIC_HOLD": {
+                                              "type": "string",
+                                              "enum": [
+                                                "peak2",
+                                                "peak3",
+                                                "base2"
+                                              ]
+                                            },
+                                            "CLUSTER_SET": {
+                                              "anyOf": [
+                                                {
+                                                  "type": "number",
+                                                  "enum": [
+                                                    2
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "number",
+                                                  "enum": [
+                                                    3
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "number",
+                                                  "enum": [
+                                                    4
+                                                  ]
+                                                }
+                                              ]
+                                            },
+                                            "TEMPO_CONTROL": {
+                                              "type": "string",
+                                              "enum": [
+                                                "3-0-1-0",
+                                                "4-0-1-0",
+                                                "3-1-1-0"
+                                              ]
+                                            }
+                                          },
+                                          "additionalProperties": false
+                                        },
                                         "supersetGroupId": {
                                           "nullable": true,
                                           "type": "string",
@@ -25624,6 +27115,77 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "runeConfig": {
+                                      "type": "object",
+                                      "properties": {
+                                        "DROP_SET": {
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 3
+                                        },
+                                        "REST_PAUSE": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                10
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                15
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                20
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "ISOMETRIC_HOLD": {
+                                          "type": "string",
+                                          "enum": [
+                                            "peak2",
+                                            "peak3",
+                                            "base2"
+                                          ]
+                                        },
+                                        "CLUSTER_SET": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                2
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                3
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                4
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "TEMPO_CONTROL": {
+                                          "type": "string",
+                                          "enum": [
+                                            "3-0-1-0",
+                                            "4-0-1-0",
+                                            "3-1-1-0"
+                                          ]
+                                        }
+                                      },
+                                      "additionalProperties": false
+                                    },
                                     "supersetGroupId": {
                                       "nullable": true,
                                       "type": "string",
@@ -26096,6 +27658,77 @@
                                 },
                                 "reps": {
                                   "type": "number"
+                                },
+                                "runeConfig": {
+                                  "type": "object",
+                                  "properties": {
+                                    "DROP_SET": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 3
+                                    },
+                                    "REST_PAUSE": {
+                                      "anyOf": [
+                                        {
+                                          "type": "number",
+                                          "enum": [
+                                            10
+                                          ]
+                                        },
+                                        {
+                                          "type": "number",
+                                          "enum": [
+                                            15
+                                          ]
+                                        },
+                                        {
+                                          "type": "number",
+                                          "enum": [
+                                            20
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    "ISOMETRIC_HOLD": {
+                                      "type": "string",
+                                      "enum": [
+                                        "peak2",
+                                        "peak3",
+                                        "base2"
+                                      ]
+                                    },
+                                    "CLUSTER_SET": {
+                                      "anyOf": [
+                                        {
+                                          "type": "number",
+                                          "enum": [
+                                            2
+                                          ]
+                                        },
+                                        {
+                                          "type": "number",
+                                          "enum": [
+                                            3
+                                          ]
+                                        },
+                                        {
+                                          "type": "number",
+                                          "enum": [
+                                            4
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    "TEMPO_CONTROL": {
+                                      "type": "string",
+                                      "enum": [
+                                        "3-0-1-0",
+                                        "4-0-1-0",
+                                        "3-1-1-0"
+                                      ]
+                                    }
+                                  },
+                                  "additionalProperties": false
                                 },
                                 "supersetGroupId": {
                                   "nullable": true,
@@ -27926,6 +29559,77 @@
                           "planned": {
                             "type": "object",
                             "properties": {
+                              "runeConfig": {
+                                "type": "object",
+                                "properties": {
+                                  "DROP_SET": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 3
+                                  },
+                                  "REST_PAUSE": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          10
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          15
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          20
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "ISOMETRIC_HOLD": {
+                                    "type": "string",
+                                    "enum": [
+                                      "peak2",
+                                      "peak3",
+                                      "base2"
+                                    ]
+                                  },
+                                  "CLUSTER_SET": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          2
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          3
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          4
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "TEMPO_CONTROL": {
+                                    "type": "string",
+                                    "enum": [
+                                      "3-0-1-0",
+                                      "4-0-1-0",
+                                      "3-1-1-0"
+                                    ]
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
                               "supersetGroupId": {
                                 "nullable": true,
                                 "type": "string",
@@ -29583,6 +31287,77 @@
                                   "items": {
                                     "type": "object",
                                     "properties": {
+                                      "runeConfig": {
+                                        "type": "object",
+                                        "properties": {
+                                          "DROP_SET": {
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 3
+                                          },
+                                          "REST_PAUSE": {
+                                            "anyOf": [
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  10
+                                                ]
+                                              },
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  15
+                                                ]
+                                              },
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  20
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          "ISOMETRIC_HOLD": {
+                                            "type": "string",
+                                            "enum": [
+                                              "peak2",
+                                              "peak3",
+                                              "base2"
+                                            ]
+                                          },
+                                          "CLUSTER_SET": {
+                                            "anyOf": [
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  2
+                                                ]
+                                              },
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  3
+                                                ]
+                                              },
+                                              {
+                                                "type": "number",
+                                                "enum": [
+                                                  4
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          "TEMPO_CONTROL": {
+                                            "type": "string",
+                                            "enum": [
+                                              "3-0-1-0",
+                                              "4-0-1-0",
+                                              "3-1-1-0"
+                                            ]
+                                          }
+                                        },
+                                        "additionalProperties": false
+                                      },
                                       "supersetGroupId": {
                                         "nullable": true,
                                         "type": "string",
@@ -29947,6 +31722,77 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "runeConfig": {
+                                "type": "object",
+                                "properties": {
+                                  "DROP_SET": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 3
+                                  },
+                                  "REST_PAUSE": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          10
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          15
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          20
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "ISOMETRIC_HOLD": {
+                                    "type": "string",
+                                    "enum": [
+                                      "peak2",
+                                      "peak3",
+                                      "base2"
+                                    ]
+                                  },
+                                  "CLUSTER_SET": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          2
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          3
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          4
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "TEMPO_CONTROL": {
+                                    "type": "string",
+                                    "enum": [
+                                      "3-0-1-0",
+                                      "4-0-1-0",
+                                      "3-1-1-0"
+                                    ]
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
                               "supersetGroupId": {
                                 "nullable": true,
                                 "type": "string",
@@ -30180,6 +32026,77 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "runeConfig": {
+                                      "type": "object",
+                                      "properties": {
+                                        "DROP_SET": {
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 3
+                                        },
+                                        "REST_PAUSE": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                10
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                15
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                20
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "ISOMETRIC_HOLD": {
+                                          "type": "string",
+                                          "enum": [
+                                            "peak2",
+                                            "peak3",
+                                            "base2"
+                                          ]
+                                        },
+                                        "CLUSTER_SET": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                2
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                3
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                4
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "TEMPO_CONTROL": {
+                                          "type": "string",
+                                          "enum": [
+                                            "3-0-1-0",
+                                            "4-0-1-0",
+                                            "3-1-1-0"
+                                          ]
+                                        }
+                                      },
+                                      "additionalProperties": false
+                                    },
                                     "supersetGroupId": {
                                       "nullable": true,
                                       "type": "string",
@@ -30554,6 +32471,77 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "runeConfig": {
+                                      "type": "object",
+                                      "properties": {
+                                        "DROP_SET": {
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 3
+                                        },
+                                        "REST_PAUSE": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                10
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                15
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                20
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "ISOMETRIC_HOLD": {
+                                          "type": "string",
+                                          "enum": [
+                                            "peak2",
+                                            "peak3",
+                                            "base2"
+                                          ]
+                                        },
+                                        "CLUSTER_SET": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                2
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                3
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                4
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "TEMPO_CONTROL": {
+                                          "type": "string",
+                                          "enum": [
+                                            "3-0-1-0",
+                                            "4-0-1-0",
+                                            "3-1-1-0"
+                                          ]
+                                        }
+                                      },
+                                      "additionalProperties": false
+                                    },
                                     "supersetGroupId": {
                                       "nullable": true,
                                       "type": "string",
@@ -30917,6 +32905,77 @@
                           "items": {
                             "type": "object",
                             "properties": {
+                              "runeConfig": {
+                                "type": "object",
+                                "properties": {
+                                  "DROP_SET": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 3
+                                  },
+                                  "REST_PAUSE": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          10
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          15
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          20
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "ISOMETRIC_HOLD": {
+                                    "type": "string",
+                                    "enum": [
+                                      "peak2",
+                                      "peak3",
+                                      "base2"
+                                    ]
+                                  },
+                                  "CLUSTER_SET": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          2
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          3
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          4
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "TEMPO_CONTROL": {
+                                    "type": "string",
+                                    "enum": [
+                                      "3-0-1-0",
+                                      "4-0-1-0",
+                                      "3-1-1-0"
+                                    ]
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
                               "supersetGroupId": {
                                 "nullable": true,
                                 "type": "string",
@@ -31160,6 +33219,77 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "runeConfig": {
+                                      "type": "object",
+                                      "properties": {
+                                        "DROP_SET": {
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 3
+                                        },
+                                        "REST_PAUSE": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                10
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                15
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                20
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "ISOMETRIC_HOLD": {
+                                          "type": "string",
+                                          "enum": [
+                                            "peak2",
+                                            "peak3",
+                                            "base2"
+                                          ]
+                                        },
+                                        "CLUSTER_SET": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                2
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                3
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                4
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "TEMPO_CONTROL": {
+                                          "type": "string",
+                                          "enum": [
+                                            "3-0-1-0",
+                                            "4-0-1-0",
+                                            "3-1-1-0"
+                                          ]
+                                        }
+                                      },
+                                      "additionalProperties": false
+                                    },
                                     "supersetGroupId": {
                                       "nullable": true,
                                       "type": "string",
@@ -31830,6 +33960,77 @@
                                     "items": {
                                       "type": "object",
                                       "properties": {
+                                        "runeConfig": {
+                                          "type": "object",
+                                          "properties": {
+                                            "DROP_SET": {
+                                              "type": "integer",
+                                              "minimum": 1,
+                                              "maximum": 3
+                                            },
+                                            "REST_PAUSE": {
+                                              "anyOf": [
+                                                {
+                                                  "type": "number",
+                                                  "enum": [
+                                                    10
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "number",
+                                                  "enum": [
+                                                    15
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "number",
+                                                  "enum": [
+                                                    20
+                                                  ]
+                                                }
+                                              ]
+                                            },
+                                            "ISOMETRIC_HOLD": {
+                                              "type": "string",
+                                              "enum": [
+                                                "peak2",
+                                                "peak3",
+                                                "base2"
+                                              ]
+                                            },
+                                            "CLUSTER_SET": {
+                                              "anyOf": [
+                                                {
+                                                  "type": "number",
+                                                  "enum": [
+                                                    2
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "number",
+                                                  "enum": [
+                                                    3
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "number",
+                                                  "enum": [
+                                                    4
+                                                  ]
+                                                }
+                                              ]
+                                            },
+                                            "TEMPO_CONTROL": {
+                                              "type": "string",
+                                              "enum": [
+                                                "3-0-1-0",
+                                                "4-0-1-0",
+                                                "3-1-1-0"
+                                              ]
+                                            }
+                                          },
+                                          "additionalProperties": false
+                                        },
                                         "supersetGroupId": {
                                           "nullable": true,
                                           "type": "string",
@@ -32231,6 +34432,77 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
+                                    "runeConfig": {
+                                      "type": "object",
+                                      "properties": {
+                                        "DROP_SET": {
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 3
+                                        },
+                                        "REST_PAUSE": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                10
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                15
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                20
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "ISOMETRIC_HOLD": {
+                                          "type": "string",
+                                          "enum": [
+                                            "peak2",
+                                            "peak3",
+                                            "base2"
+                                          ]
+                                        },
+                                        "CLUSTER_SET": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                2
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                3
+                                              ]
+                                            },
+                                            {
+                                              "type": "number",
+                                              "enum": [
+                                                4
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "TEMPO_CONTROL": {
+                                          "type": "string",
+                                          "enum": [
+                                            "3-0-1-0",
+                                            "4-0-1-0",
+                                            "3-1-1-0"
+                                          ]
+                                        }
+                                      },
+                                      "additionalProperties": false
+                                    },
                                     "supersetGroupId": {
                                       "nullable": true,
                                       "type": "string",
@@ -46966,6 +49238,77 @@
                             "items": {
                               "type": "object",
                               "properties": {
+                                "runeConfig": {
+                                  "type": "object",
+                                  "properties": {
+                                    "DROP_SET": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 3
+                                    },
+                                    "REST_PAUSE": {
+                                      "anyOf": [
+                                        {
+                                          "type": "number",
+                                          "enum": [
+                                            10
+                                          ]
+                                        },
+                                        {
+                                          "type": "number",
+                                          "enum": [
+                                            15
+                                          ]
+                                        },
+                                        {
+                                          "type": "number",
+                                          "enum": [
+                                            20
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    "ISOMETRIC_HOLD": {
+                                      "type": "string",
+                                      "enum": [
+                                        "peak2",
+                                        "peak3",
+                                        "base2"
+                                      ]
+                                    },
+                                    "CLUSTER_SET": {
+                                      "anyOf": [
+                                        {
+                                          "type": "number",
+                                          "enum": [
+                                            2
+                                          ]
+                                        },
+                                        {
+                                          "type": "number",
+                                          "enum": [
+                                            3
+                                          ]
+                                        },
+                                        {
+                                          "type": "number",
+                                          "enum": [
+                                            4
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    "TEMPO_CONTROL": {
+                                      "type": "string",
+                                      "enum": [
+                                        "3-0-1-0",
+                                        "4-0-1-0",
+                                        "3-1-1-0"
+                                      ]
+                                    }
+                                  },
+                                  "additionalProperties": false
+                                },
                                 "supersetGroupId": {
                                   "nullable": true,
                                   "type": "string",
@@ -49048,6 +51391,77 @@
                           "planned": {
                             "type": "object",
                             "properties": {
+                              "runeConfig": {
+                                "type": "object",
+                                "properties": {
+                                  "DROP_SET": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 3
+                                  },
+                                  "REST_PAUSE": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          10
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          15
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          20
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "ISOMETRIC_HOLD": {
+                                    "type": "string",
+                                    "enum": [
+                                      "peak2",
+                                      "peak3",
+                                      "base2"
+                                    ]
+                                  },
+                                  "CLUSTER_SET": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          2
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          3
+                                        ]
+                                      },
+                                      {
+                                        "type": "number",
+                                        "enum": [
+                                          4
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "TEMPO_CONTROL": {
+                                    "type": "string",
+                                    "enum": [
+                                      "3-0-1-0",
+                                      "4-0-1-0",
+                                      "3-1-1-0"
+                                    ]
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
                               "supersetGroupId": {
                                 "nullable": true,
                                 "type": "string",

@@ -273,6 +273,43 @@ export const ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export const ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemRuneConfig =
+  {
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    DROP_SET?: number;
+    REST_PAUSE?: (typeof ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+    ISOMETRIC_HOLD?: ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+    CLUSTER_SET?: (typeof ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+    TEMPO_CONTROL?: ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+  };
+
 export type ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemRunesItem =
   (typeof ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemRunesItem)[keyof typeof ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemRunesItem];
 
@@ -325,6 +362,7 @@ export type ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItem = {
   warmupSets: number;
   sets: number;
   reps: number;
+  runeConfig?: ListWorkoutPlans200WorkoutPlansItemWorkoutDaysItemExercisesItemRuneConfig;
   /**
    * @minLength 1
    * @maxLength 100
@@ -416,6 +454,42 @@ export const CreateWorkoutPlanBodyWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export const CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfig = {
+  /**
+   * @minimum 1
+   * @maximum 3
+   */
+  DROP_SET?: number;
+  REST_PAUSE?: (typeof CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+  ISOMETRIC_HOLD?: CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+  CLUSTER_SET?: (typeof CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+  TEMPO_CONTROL?: CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+};
+
 export type CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemRunesItem =
   (typeof CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemRunesItem)[keyof typeof CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemRunesItem];
 
@@ -458,6 +532,7 @@ export type CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemSetPrescriptionItem
   };
 
 export type CreateWorkoutPlanBodyWorkoutDaysItemExercisesItem = {
+  runeConfig?: CreateWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfig;
   /**
    * @minLength 1
    * @maxLength 100
@@ -578,6 +653,42 @@ export const CreateWorkoutPlan201WorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export const CreateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type CreateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof CreateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof CreateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const CreateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const CreateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type CreateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof CreateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof CreateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const CreateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type CreateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfig = {
+  /**
+   * @minimum 1
+   * @maximum 3
+   */
+  DROP_SET?: number;
+  REST_PAUSE?: (typeof CreateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof CreateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+  ISOMETRIC_HOLD?: CreateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+  CLUSTER_SET?: (typeof CreateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof CreateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+  TEMPO_CONTROL?: CreateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+};
+
 export type CreateWorkoutPlan201WorkoutDaysItemExercisesItemRunesItem =
   (typeof CreateWorkoutPlan201WorkoutDaysItemExercisesItemRunesItem)[keyof typeof CreateWorkoutPlan201WorkoutDaysItemExercisesItemRunesItem];
 
@@ -620,6 +731,7 @@ export type CreateWorkoutPlan201WorkoutDaysItemExercisesItemSetPrescriptionItem 
   };
 
 export type CreateWorkoutPlan201WorkoutDaysItemExercisesItem = {
+  runeConfig?: CreateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfig;
   /**
    * @minLength 1
    * @maxLength 100
@@ -850,6 +962,42 @@ export const EditWorkoutPlanBodyWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export const EditWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type EditWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof EditWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof EditWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const EditWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const EditWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type EditWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof EditWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof EditWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const EditWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type EditWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfig = {
+  /**
+   * @minimum 1
+   * @maximum 3
+   */
+  DROP_SET?: number;
+  REST_PAUSE?: (typeof EditWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof EditWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+  ISOMETRIC_HOLD?: EditWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+  CLUSTER_SET?: (typeof EditWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof EditWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+  TEMPO_CONTROL?: EditWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+};
+
 export type EditWorkoutPlanBodyWorkoutDaysItemExercisesItemRunesItem =
   (typeof EditWorkoutPlanBodyWorkoutDaysItemExercisesItemRunesItem)[keyof typeof EditWorkoutPlanBodyWorkoutDaysItemExercisesItemRunesItem];
 
@@ -892,6 +1040,7 @@ export type EditWorkoutPlanBodyWorkoutDaysItemExercisesItemSetPrescriptionItem =
   };
 
 export type EditWorkoutPlanBodyWorkoutDaysItemExercisesItem = {
+  runeConfig?: EditWorkoutPlanBodyWorkoutDaysItemExercisesItemRuneConfig;
   /**
    * @minLength 1
    * @maxLength 100
@@ -1083,6 +1232,46 @@ export type GetWorkoutDay200ExercisesItemAlternative2Exercise = {
   name: string;
 } | null;
 
+export const GetWorkoutDay200ExercisesItemRuneConfigRESTPAUSE = {
+  NUMBER_10: 10,
+  NUMBER_15: 15,
+  NUMBER_20: 20,
+} as const;
+export type GetWorkoutDay200ExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof GetWorkoutDay200ExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof GetWorkoutDay200ExercisesItemRuneConfigISOMETRICHOLD];
+
+export const GetWorkoutDay200ExercisesItemRuneConfigISOMETRICHOLD = {
+  peak2: "peak2",
+  peak3: "peak3",
+  base2: "base2",
+} as const;
+
+export const GetWorkoutDay200ExercisesItemRuneConfigCLUSTERSET = {
+  NUMBER_2: 2,
+  NUMBER_3: 3,
+  NUMBER_4: 4,
+} as const;
+export type GetWorkoutDay200ExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof GetWorkoutDay200ExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof GetWorkoutDay200ExercisesItemRuneConfigTEMPOCONTROL];
+
+export const GetWorkoutDay200ExercisesItemRuneConfigTEMPOCONTROL = {
+  "3-0-1-0": "3-0-1-0",
+  "4-0-1-0": "4-0-1-0",
+  "3-1-1-0": "3-1-1-0",
+} as const;
+
+export type GetWorkoutDay200ExercisesItemRuneConfig = {
+  /**
+   * @minimum 1
+   * @maximum 3
+   */
+  DROP_SET?: number;
+  REST_PAUSE?: (typeof GetWorkoutDay200ExercisesItemRuneConfigRESTPAUSE)[keyof typeof GetWorkoutDay200ExercisesItemRuneConfigRESTPAUSE];
+  ISOMETRIC_HOLD?: GetWorkoutDay200ExercisesItemRuneConfigISOMETRICHOLD;
+  CLUSTER_SET?: (typeof GetWorkoutDay200ExercisesItemRuneConfigCLUSTERSET)[keyof typeof GetWorkoutDay200ExercisesItemRuneConfigCLUSTERSET];
+  TEMPO_CONTROL?: GetWorkoutDay200ExercisesItemRuneConfigTEMPOCONTROL;
+};
+
 export type GetWorkoutDay200ExercisesItemRunesItem =
   (typeof GetWorkoutDay200ExercisesItemRunesItem)[keyof typeof GetWorkoutDay200ExercisesItemRunesItem];
 
@@ -1152,6 +1341,7 @@ export type GetWorkoutDay200ExercisesItem = {
   sets: number;
   warmupSets: number;
   reps: number;
+  runeConfig?: GetWorkoutDay200ExercisesItemRuneConfig;
   /**
    * @minLength 1
    * @maxLength 100
@@ -1321,6 +1511,42 @@ export const DuplicateWorkoutPlan201WorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export const DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfig = {
+  /**
+   * @minimum 1
+   * @maximum 3
+   */
+  DROP_SET?: number;
+  REST_PAUSE?: (typeof DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+  ISOMETRIC_HOLD?: DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+  CLUSTER_SET?: (typeof DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+  TEMPO_CONTROL?: DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+};
+
 export type DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemRunesItem =
   (typeof DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemRunesItem)[keyof typeof DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemRunesItem];
 
@@ -1363,6 +1589,7 @@ export type DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemSetPrescriptionIt
   };
 
 export type DuplicateWorkoutPlan201WorkoutDaysItemExercisesItem = {
+  runeConfig?: DuplicateWorkoutPlan201WorkoutDaysItemExercisesItemRuneConfig;
   /**
    * @minLength 1
    * @maxLength 100
@@ -2004,6 +2231,43 @@ export const CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export const CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemRuneConfig =
+  {
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    DROP_SET?: number;
+    REST_PAUSE?: (typeof CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+    ISOMETRIC_HOLD?: CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+    CLUSTER_SET?: (typeof CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+    TEMPO_CONTROL?: CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+  };
+
 export type CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemRunesItem =
   (typeof CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemRunesItem)[keyof typeof CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemRunesItem];
 
@@ -2047,6 +2311,7 @@ export type CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemSetP
   };
 
 export type CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItem = {
+  runeConfig?: CreateWorkoutPlanInPeriodizationBodyWorkoutDaysItemExercisesItemRuneConfig;
   /**
    * @minLength 1
    * @maxLength 100
@@ -2172,6 +2437,43 @@ export const CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemWeekDa
     SUNDAY: "SUNDAY",
   } as const;
 
+export const CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemRuneConfig =
+  {
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    DROP_SET?: number;
+    REST_PAUSE?: (typeof CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+    ISOMETRIC_HOLD?: CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+    CLUSTER_SET?: (typeof CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+    TEMPO_CONTROL?: CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+  };
+
 export type CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemRunesItem =
   (typeof CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemRunesItem)[keyof typeof CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemRunesItem];
 
@@ -2216,6 +2518,7 @@ export type CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercis
 
 export type CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItem =
   {
+    runeConfig?: CreateWorkoutPlanInPeriodization201WorkoutPlanWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
      * @maxLength 100
@@ -2786,6 +3089,42 @@ export const ConfirmWorkoutImportBodyWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export const ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemRuneConfig = {
+  /**
+   * @minimum 1
+   * @maximum 3
+   */
+  DROP_SET?: number;
+  REST_PAUSE?: (typeof ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+  ISOMETRIC_HOLD?: ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+  CLUSTER_SET?: (typeof ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+  TEMPO_CONTROL?: ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+};
+
 export type ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemRunesItem =
   (typeof ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemRunesItem)[keyof typeof ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemRunesItem];
 
@@ -2828,6 +3167,7 @@ export type ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemSetPrescriptionI
   };
 
 export type ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItem = {
+  runeConfig?: ConfirmWorkoutImportBodyWorkoutDaysItemExercisesItemRuneConfig;
   /**
    * @minLength 1
    * @maxLength 100
@@ -5606,6 +5946,43 @@ export const GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export const GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfig =
+  {
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    DROP_SET?: number;
+    REST_PAUSE?: (typeof GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+    ISOMETRIC_HOLD?: GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+    CLUSTER_SET?: (typeof GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+    TEMPO_CONTROL?: GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+  };
+
 export type GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRunesItem =
   (typeof GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRunesItem];
 
@@ -5650,6 +6027,7 @@ export type GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItem
 
 export type GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItem =
   {
+    runeConfig?: GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
      * @maxLength 100
@@ -6708,6 +7086,43 @@ export const CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export const CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfig =
+  {
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    DROP_SET?: number;
+    REST_PAUSE?: (typeof CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+    ISOMETRIC_HOLD?: CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+    CLUSTER_SET?: (typeof CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+    TEMPO_CONTROL?: CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+  };
+
 export type CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRunesItem =
   (typeof CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRunesItem)[keyof typeof CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRunesItem];
 
@@ -6751,6 +7166,7 @@ export type CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemSetPre
   };
 
 export type CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItem = {
+  runeConfig?: CreateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfig;
   /**
    * @minLength 1
    * @maxLength 100
@@ -6925,6 +7341,43 @@ export const CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export const CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRuneConfig =
+  {
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    DROP_SET?: number;
+    REST_PAUSE?: (typeof CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+    ISOMETRIC_HOLD?: CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+    CLUSTER_SET?: (typeof CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+    TEMPO_CONTROL?: CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+  };
+
 export type CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRunesItem =
   (typeof CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRunesItem];
 
@@ -6969,6 +7422,7 @@ export type CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItem
 
 export type CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItem =
   {
+    runeConfig?: CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
      * @maxLength 100
@@ -7129,6 +7583,43 @@ export const UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export const UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfig =
+  {
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    DROP_SET?: number;
+    REST_PAUSE?: (typeof UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+    ISOMETRIC_HOLD?: UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+    CLUSTER_SET?: (typeof UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+    TEMPO_CONTROL?: UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+  };
+
 export type UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRunesItem =
   (typeof UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRunesItem)[keyof typeof UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRunesItem];
 
@@ -7172,6 +7663,7 @@ export type UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemSetPre
   };
 
 export type UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItem = {
+  runeConfig?: UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItemRuneConfig;
   /**
    * @minLength 1
    * @maxLength 100
@@ -7350,6 +7842,43 @@ export const UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export const UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRuneConfig =
+  {
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    DROP_SET?: number;
+    REST_PAUSE?: (typeof UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+    ISOMETRIC_HOLD?: UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+    CLUSTER_SET?: (typeof UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+    TEMPO_CONTROL?: UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+  };
+
 export type UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRunesItem =
   (typeof UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRunesItem];
 
@@ -7394,6 +7923,7 @@ export type UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItem
 
 export type UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItem =
   {
+    runeConfig?: UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
      * @maxLength 100
@@ -7590,6 +8120,43 @@ export const GetCoachPrescriptionDetails200PayloadWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export const GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfig =
+  {
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    DROP_SET?: number;
+    REST_PAUSE?: (typeof GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+    ISOMETRIC_HOLD?: GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+    CLUSTER_SET?: (typeof GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+    TEMPO_CONTROL?: GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+  };
+
 export type GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRunesItem =
   (typeof GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRunesItem];
 
@@ -7634,6 +8201,7 @@ export type GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemSet
 
 export type GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItem =
   {
+    runeConfig?: GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
      * @maxLength 100
@@ -7839,6 +8407,43 @@ export const SendWorkoutPrescription200PayloadWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export const SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfig =
+  {
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    DROP_SET?: number;
+    REST_PAUSE?: (typeof SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+    ISOMETRIC_HOLD?: SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+    CLUSTER_SET?: (typeof SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+    TEMPO_CONTROL?: SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+  };
+
 export type SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRunesItem =
   (typeof SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRunesItem];
 
@@ -7882,6 +8487,7 @@ export type SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetPres
   };
 
 export type SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItem = {
+  runeConfig?: SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfig;
   /**
    * @minLength 1
    * @maxLength 100
@@ -8078,6 +8684,43 @@ export const CancelWorkoutPrescription200PayloadWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export const CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfig =
+  {
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    DROP_SET?: number;
+    REST_PAUSE?: (typeof CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+    ISOMETRIC_HOLD?: CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+    CLUSTER_SET?: (typeof CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+    TEMPO_CONTROL?: CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+  };
+
 export type CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRunesItem =
   (typeof CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRunesItem];
 
@@ -8121,6 +8764,7 @@ export type CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetPr
   };
 
 export type CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItem = {
+  runeConfig?: CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfig;
   /**
    * @minLength 1
    * @maxLength 100
@@ -8318,6 +8962,43 @@ export const ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemWeekDay =
     SUNDAY: "SUNDAY",
   } as const;
 
+export const ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfig =
+  {
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    DROP_SET?: number;
+    REST_PAUSE?: (typeof ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+    ISOMETRIC_HOLD?: ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+    CLUSTER_SET?: (typeof ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+    TEMPO_CONTROL?: ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+  };
+
 export type ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRunesItem =
   (typeof ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRunesItem];
 
@@ -8362,6 +9043,7 @@ export type ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesI
 
 export type ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItem =
   {
+    runeConfig?: ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
      * @maxLength 100
@@ -8558,6 +9240,43 @@ export const ListAthletePrescriptions200ItemPayloadWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export const ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfig =
+  {
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    DROP_SET?: number;
+    REST_PAUSE?: (typeof ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+    ISOMETRIC_HOLD?: ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+    CLUSTER_SET?: (typeof ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+    TEMPO_CONTROL?: ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+  };
+
 export type ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRunesItem =
   (typeof ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRunesItem];
 
@@ -8602,6 +9321,7 @@ export type ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemSe
 
 export type ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItem =
   {
+    runeConfig?: ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
      * @maxLength 100
@@ -8798,6 +9518,43 @@ export const GetAthletePrescriptionDetails200PayloadWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export const GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfig =
+  {
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    DROP_SET?: number;
+    REST_PAUSE?: (typeof GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+    ISOMETRIC_HOLD?: GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+    CLUSTER_SET?: (typeof GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+    TEMPO_CONTROL?: GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+  };
+
 export type GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRunesItem =
   (typeof GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRunesItem];
 
@@ -8842,6 +9599,7 @@ export type GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemS
 
 export type GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItem =
   {
+    runeConfig?: GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
      * @maxLength 100
@@ -9039,6 +9797,43 @@ export const AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemWeekD
     SUNDAY: "SUNDAY",
   } as const;
 
+export const AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfig =
+  {
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    DROP_SET?: number;
+    REST_PAUSE?: (typeof AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+    ISOMETRIC_HOLD?: AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+    CLUSTER_SET?: (typeof AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+    TEMPO_CONTROL?: AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+  };
+
 export type AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRunesItem =
   (typeof AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRunesItem];
 
@@ -9083,6 +9878,7 @@ export type AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExerci
 
 export type AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItem =
   {
+    runeConfig?: AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
      * @maxLength 100
@@ -9286,6 +10082,43 @@ export const DeclineWorkoutPrescription200PayloadWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export const DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfig =
+  {
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    DROP_SET?: number;
+    REST_PAUSE?: (typeof DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+    ISOMETRIC_HOLD?: DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+    CLUSTER_SET?: (typeof DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+    TEMPO_CONTROL?: DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+  };
+
 export type DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRunesItem =
   (typeof DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRunesItem];
 
@@ -9329,6 +10162,7 @@ export type DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetP
   };
 
 export type DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItem = {
+  runeConfig?: DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfig;
   /**
    * @minLength 1
    * @maxLength 100
@@ -9505,6 +10339,43 @@ export const GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export const GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemRuneConfig =
+  {
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    DROP_SET?: number;
+    REST_PAUSE?: (typeof GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+    ISOMETRIC_HOLD?: GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+    CLUSTER_SET?: (typeof GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+    TEMPO_CONTROL?: GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+  };
+
 export type GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemRunesItem =
   (typeof GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemRunesItem)[keyof typeof GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemRunesItem];
 
@@ -9553,6 +10424,7 @@ export type GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItem 
     sets: number;
     warmupSets: number;
     reps: number;
+    runeConfig?: GenerateCoachPrescriptionDraftWithAi200WorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
      * @maxLength 100
@@ -10133,6 +11005,43 @@ export type GetCoachAthleteProgressSessionDetail200Summary = {
   totalLoadVolumeKg: number;
 };
 
+export const GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedRuneConfigISOMETRICHOLD =
+  (typeof GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedRuneConfigISOMETRICHOLD)[keyof typeof GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedRuneConfigISOMETRICHOLD];
+
+export const GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedRuneConfigTEMPOCONTROL =
+  (typeof GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedRuneConfigTEMPOCONTROL)[keyof typeof GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedRuneConfigTEMPOCONTROL];
+
+export const GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedRuneConfig =
+  {
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    DROP_SET?: number;
+    REST_PAUSE?: (typeof GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedRuneConfigRESTPAUSE)[keyof typeof GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedRuneConfigRESTPAUSE];
+    ISOMETRIC_HOLD?: GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedRuneConfigISOMETRICHOLD;
+    CLUSTER_SET?: (typeof GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedRuneConfigCLUSTERSET)[keyof typeof GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedRuneConfigCLUSTERSET];
+    TEMPO_CONTROL?: GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedRuneConfigTEMPOCONTROL;
+  };
+
 export type GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedRunesItem =
   (typeof GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedRunesItem)[keyof typeof GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedRunesItem];
 
@@ -10176,6 +11085,7 @@ export type GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedSetPrescr
   };
 
 export type GetCoachAthleteProgressSessionDetail200ExercisesItemPlanned = {
+  runeConfig?: GetCoachAthleteProgressSessionDetail200ExercisesItemPlannedRuneConfig;
   /**
    * @minLength 1
    * @maxLength 100
@@ -10864,6 +11774,43 @@ export const ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemWeekDay =
     SUNDAY: "SUNDAY",
   } as const;
 
+export const ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRuneConfig =
+  {
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    DROP_SET?: number;
+    REST_PAUSE?: (typeof ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+    ISOMETRIC_HOLD?: ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+    CLUSTER_SET?: (typeof ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+    TEMPO_CONTROL?: ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+  };
+
 export type ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRunesItem =
   (typeof ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRunesItem];
 
@@ -10908,6 +11855,7 @@ export type ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesI
 
 export type ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItem =
   {
+    runeConfig?: ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
      * @maxLength 100
@@ -11030,6 +11978,43 @@ export const CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export const CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfig =
+  {
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    DROP_SET?: number;
+    REST_PAUSE?: (typeof CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+    ISOMETRIC_HOLD?: CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+    CLUSTER_SET?: (typeof CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+    TEMPO_CONTROL?: CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+  };
+
 export type CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRunesItem =
   (typeof CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRunesItem)[keyof typeof CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRunesItem];
 
@@ -11073,6 +12058,7 @@ export type CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemSetPre
   };
 
 export type CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItem = {
+  runeConfig?: CreateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfig;
   /**
    * @minLength 1
    * @maxLength 100
@@ -11209,6 +12195,43 @@ export const CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export const CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRuneConfig =
+  {
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    DROP_SET?: number;
+    REST_PAUSE?: (typeof CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+    ISOMETRIC_HOLD?: CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+    CLUSTER_SET?: (typeof CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+    TEMPO_CONTROL?: CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+  };
+
 export type CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRunesItem =
   (typeof CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRunesItem];
 
@@ -11253,6 +12276,7 @@ export type CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItem
 
 export type CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItem =
   {
+    runeConfig?: CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
      * @maxLength 100
@@ -11375,6 +12399,43 @@ export const GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export const GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfig =
+  {
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    DROP_SET?: number;
+    REST_PAUSE?: (typeof GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+    ISOMETRIC_HOLD?: GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+    CLUSTER_SET?: (typeof GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+    TEMPO_CONTROL?: GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+  };
+
 export type GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRunesItem =
   (typeof GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRunesItem];
 
@@ -11419,6 +12480,7 @@ export type GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemSet
 
 export type GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItem =
   {
+    runeConfig?: GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
      * @maxLength 100
@@ -11541,6 +12603,43 @@ export const UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export const UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfig =
+  {
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    DROP_SET?: number;
+    REST_PAUSE?: (typeof UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+    ISOMETRIC_HOLD?: UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+    CLUSTER_SET?: (typeof UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+    TEMPO_CONTROL?: UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+  };
+
 export type UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRunesItem =
   (typeof UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRunesItem)[keyof typeof UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRunesItem];
 
@@ -11584,6 +12683,7 @@ export type UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemSetPre
   };
 
 export type UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItem = {
+  runeConfig?: UpdateCoachWorkoutPlanTemplateBodyWorkoutDaysItemExercisesItemRuneConfig;
   /**
    * @minLength 1
    * @maxLength 100
@@ -11720,6 +12820,43 @@ export const UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export const UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfig =
+  {
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    DROP_SET?: number;
+    REST_PAUSE?: (typeof UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+    ISOMETRIC_HOLD?: UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+    CLUSTER_SET?: (typeof UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+    TEMPO_CONTROL?: UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+  };
+
 export type UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRunesItem =
   (typeof UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRunesItem];
 
@@ -11764,6 +12901,7 @@ export type UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItem
 
 export type UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItem =
   {
+    runeConfig?: UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
      * @maxLength 100
@@ -11962,6 +13100,43 @@ export const AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysIt
     SUNDAY: "SUNDAY",
   } as const;
 
+export const AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfig =
+  {
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    DROP_SET?: number;
+    REST_PAUSE?: (typeof AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+    ISOMETRIC_HOLD?: AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+    CLUSTER_SET?: (typeof AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+    TEMPO_CONTROL?: AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+  };
+
 export type AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRunesItem =
   (typeof AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRunesItem];
 
@@ -12006,6 +13181,7 @@ export type AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysIte
 
 export type AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItem =
   {
+    runeConfig?: AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
      * @maxLength 100
@@ -12168,6 +13344,43 @@ export const CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemWeek
     SUNDAY: "SUNDAY",
   } as const;
 
+export const CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRuneConfig =
+  {
+    /**
+     * @minimum 1
+     * @maximum 3
+     */
+    DROP_SET?: number;
+    REST_PAUSE?: (typeof CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+    ISOMETRIC_HOLD?: CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+    CLUSTER_SET?: (typeof CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+    TEMPO_CONTROL?: CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+  };
+
 export type CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRunesItem =
   (typeof CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRunesItem)[keyof typeof CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRunesItem];
 
@@ -12212,6 +13425,7 @@ export type CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExerc
 
 export type CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItem =
   {
+    runeConfig?: CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
      * @maxLength 100
@@ -18255,6 +19469,42 @@ export const GetEditableWorkoutPlan200WorkoutDaysItemWeekDay = {
   SUNDAY: "SUNDAY",
 } as const;
 
+export const GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  (typeof GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD)[keyof typeof GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD];
+
+export const GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  (typeof GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL)[keyof typeof GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL];
+
+export const GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemRuneConfig = {
+  /**
+   * @minimum 1
+   * @maximum 3
+   */
+  DROP_SET?: number;
+  REST_PAUSE?: (typeof GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemRuneConfigRESTPAUSE)[keyof typeof GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemRuneConfigRESTPAUSE];
+  ISOMETRIC_HOLD?: GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemRuneConfigISOMETRICHOLD;
+  CLUSTER_SET?: (typeof GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemRuneConfigCLUSTERSET)[keyof typeof GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemRuneConfigCLUSTERSET];
+  TEMPO_CONTROL?: GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemRuneConfigTEMPOCONTROL;
+};
+
 export type GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemRunesItem =
   (typeof GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemRunesItem)[keyof typeof GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemRunesItem];
 
@@ -18297,6 +19547,7 @@ export type GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemSetPrescription
   };
 
 export type GetEditableWorkoutPlan200WorkoutDaysItemExercisesItem = {
+  runeConfig?: GetEditableWorkoutPlan200WorkoutDaysItemExercisesItemRuneConfig;
   /**
    * @minLength 1
    * @maxLength 100
@@ -19080,6 +20331,42 @@ export type GetWorkoutHistorySession200Summary = {
   totalLoadVolumeKg: number;
 };
 
+export const GetWorkoutHistorySession200ExercisesItemPlannedRuneConfigRESTPAUSE =
+  { NUMBER_10: 10, NUMBER_15: 15, NUMBER_20: 20 } as const;
+export type GetWorkoutHistorySession200ExercisesItemPlannedRuneConfigISOMETRICHOLD =
+  (typeof GetWorkoutHistorySession200ExercisesItemPlannedRuneConfigISOMETRICHOLD)[keyof typeof GetWorkoutHistorySession200ExercisesItemPlannedRuneConfigISOMETRICHOLD];
+
+export const GetWorkoutHistorySession200ExercisesItemPlannedRuneConfigISOMETRICHOLD =
+  {
+    peak2: "peak2",
+    peak3: "peak3",
+    base2: "base2",
+  } as const;
+
+export const GetWorkoutHistorySession200ExercisesItemPlannedRuneConfigCLUSTERSET =
+  { NUMBER_2: 2, NUMBER_3: 3, NUMBER_4: 4 } as const;
+export type GetWorkoutHistorySession200ExercisesItemPlannedRuneConfigTEMPOCONTROL =
+  (typeof GetWorkoutHistorySession200ExercisesItemPlannedRuneConfigTEMPOCONTROL)[keyof typeof GetWorkoutHistorySession200ExercisesItemPlannedRuneConfigTEMPOCONTROL];
+
+export const GetWorkoutHistorySession200ExercisesItemPlannedRuneConfigTEMPOCONTROL =
+  {
+    "3-0-1-0": "3-0-1-0",
+    "4-0-1-0": "4-0-1-0",
+    "3-1-1-0": "3-1-1-0",
+  } as const;
+
+export type GetWorkoutHistorySession200ExercisesItemPlannedRuneConfig = {
+  /**
+   * @minimum 1
+   * @maximum 3
+   */
+  DROP_SET?: number;
+  REST_PAUSE?: (typeof GetWorkoutHistorySession200ExercisesItemPlannedRuneConfigRESTPAUSE)[keyof typeof GetWorkoutHistorySession200ExercisesItemPlannedRuneConfigRESTPAUSE];
+  ISOMETRIC_HOLD?: GetWorkoutHistorySession200ExercisesItemPlannedRuneConfigISOMETRICHOLD;
+  CLUSTER_SET?: (typeof GetWorkoutHistorySession200ExercisesItemPlannedRuneConfigCLUSTERSET)[keyof typeof GetWorkoutHistorySession200ExercisesItemPlannedRuneConfigCLUSTERSET];
+  TEMPO_CONTROL?: GetWorkoutHistorySession200ExercisesItemPlannedRuneConfigTEMPOCONTROL;
+};
+
 export type GetWorkoutHistorySession200ExercisesItemPlannedRunesItem =
   (typeof GetWorkoutHistorySession200ExercisesItemPlannedRunesItem)[keyof typeof GetWorkoutHistorySession200ExercisesItemPlannedRunesItem];
 
@@ -19122,6 +20409,7 @@ export type GetWorkoutHistorySession200ExercisesItemPlannedSetPrescriptionItem =
   };
 
 export type GetWorkoutHistorySession200ExercisesItemPlanned = {
+  runeConfig?: GetWorkoutHistorySession200ExercisesItemPlannedRuneConfig;
   /**
    * @minLength 1
    * @maxLength 100

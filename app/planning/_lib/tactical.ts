@@ -8,6 +8,72 @@ export type Rune =
   | "CLUSTER_SET"
   | "TEMPO_CONTROL";
 export type Zone = "strength" | "hypertrophy" | "endurance";
+export type RuneConfig = {
+  DROP_SET?: number;
+  REST_PAUSE?: 10 | 15 | 20;
+  ISOMETRIC_HOLD?: "peak2" | "peak3" | "base2";
+  CLUSTER_SET?: 2 | 3 | 4;
+  TEMPO_CONTROL?: "3-0-1-0" | "4-0-1-0" | "3-1-1-0";
+};
+export const RUNE_COLORS: Record<Rune, string> = {
+  DROP_SET: "#fb923c",
+  REST_PAUSE: "#fde047",
+  ISOMETRIC_HOLD: "#7dd3fc",
+  CLUSTER_SET: "#c084fc",
+  TEMPO_CONTROL: "#6ee7b7",
+};
+const RUNE_OPTIONS = {
+  DROP_SET: [1, 2, 3],
+  REST_PAUSE: [10, 15, 20],
+  ISOMETRIC_HOLD: ["peak2", "peak3", "base2"],
+  CLUSTER_SET: [2, 3, 4],
+  TEMPO_CONTROL: ["3-0-1-0", "4-0-1-0", "3-1-1-0"],
+} as const;
+export function cycleRune(
+  item: WorkoutPlanDraftExercise,
+  rune: Rune,
+): Partial<WorkoutPlanDraftExercise> {
+  const options: readonly (string | number)[] = RUNE_OPTIONS[rune];
+  const current = item.runeConfig?.[rune] ?? options[0];
+  const value = options[(options.indexOf(current) + 1) % options.length];
+  return {
+    runeConfig: { ...item.runeConfig, [rune]: value },
+    ...(rune === "TEMPO_CONTROL" ? { tempo: String(value) } : {}),
+  };
+}
+export function runeLabel(item: WorkoutPlanDraftExercise, rune: Rune) {
+  const value = item.runeConfig?.[rune] ?? RUNE_OPTIONS[rune][0];
+  switch (rune) {
+    case "DROP_SET":
+      return `🔥 Drop-set ${value}x`;
+    case "REST_PAUSE":
+      return `⚡ Rest-pause ${value}s`;
+    case "ISOMETRIC_HOLD":
+      return value === "base2"
+        ? "❄ Base 2s"
+        : value === "peak3"
+          ? "❄ Pico 3s"
+          : "❄ Pico 2s";
+    case "CLUSTER_SET":
+      return `⛓ Cluster ${value} blocos`;
+    case "TEMPO_CONTROL":
+      return `◷ ${item.tempo || value}`;
+  }
+}
+export function toggleRune(
+  item: WorkoutPlanDraftExercise,
+  rune: Rune,
+): Partial<WorkoutPlanDraftExercise> {
+  const active = item.runes?.includes(rune);
+  const config = { ...item.runeConfig };
+  if (active) delete config[rune];
+  return {
+    runes: active
+      ? item.runes?.filter((r) => r !== rune)
+      : [...(item.runes ?? []), rune],
+    runeConfig: config,
+  };
+}
 export type TacticalSet = {
   reps: number;
   zone: Zone;
