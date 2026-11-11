@@ -63,6 +63,7 @@ import {
   telemetry,
   unmergeExercises,
   RUNES,
+  RUNE_COLORS,
   type Rune,
 } from "../../_lib/tactical";
 import { TrainingBioPanel, TrainingBioDetails } from "./training-bio-panel";
@@ -456,9 +457,9 @@ export function TacticalBuilderArena({
             onDragEnd={dropped}
             onDragCancel={clearDrag}
           >
-            <header className="no-scrollbar flex h-14 shrink-0 items-center gap-2 overflow-x-auto border-b border-white/10 bg-zinc-950 px-3">
+            <header className="flex h-14 shrink-0 items-center gap-1.5 border-b border-white/10 bg-zinc-950 px-2 sm:gap-2 sm:px-3">
               {title}
-              <div className="max-w-20 sm:max-w-40 shrink-0">{navigation}</div>
+              <div className="min-w-0 max-w-20 sm:max-w-40">{navigation}</div>
               <TrainingBioPanel data={data} />
               <span className="hidden whitespace-nowrap text-[10px] text-zinc-500 2xl:block">
                 {data.sets} séries · {groups.length} blocos
@@ -469,7 +470,7 @@ export function TacticalBuilderArena({
               </div>
             </header>
             <div className="flex min-h-0 w-full flex-1 overflow-hidden">
-              <aside className="no-scrollbar hidden w-72 shrink-0 overflow-y-auto border-r border-white/10 bg-zinc-900/25 p-4 lg:block">
+              <aside className="no-scrollbar hidden w-72 shrink-0 overflow-y-auto border-r border-white/10 bg-zinc-900/25 p-3 lg:block [&_svg[role=group]]:h-[min(27dvh,260px)]">
                 <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-zinc-400">
                   Leitura do treino
                 </p>
@@ -619,7 +620,14 @@ export function TacticalBuilderArena({
                   className="relative z-30 h-[202px] shrink-0 border-t border-white/10 bg-gradient-to-t from-zinc-900/90 to-zinc-950/60 shadow-[0_-12px_32px_#0002] backdrop-blur-md"
                 >
                   {rune && (
-                    <div className="absolute bottom-full left-3 right-3 z-30 mb-2 flex min-h-10 items-center justify-between gap-2 rounded-xl border border-amber-300/30 bg-zinc-950/95 px-3 text-[11px] text-amber-200">
+                    <div
+                      role="status"
+                      style={{
+                        color: RUNE_COLORS[rune],
+                        borderColor: `${RUNE_COLORS[rune]}66`,
+                      }}
+                      className="absolute bottom-full left-3 right-3 z-30 mb-2 flex min-h-10 items-center justify-between gap-2 rounded-xl border bg-zinc-950/95 px-3 text-[11px]"
+                    >
                       <span>
                         {RUNES[rune]} selecionado — Toque nos exercícios para
                         aplicar ou remover

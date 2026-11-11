@@ -13,7 +13,7 @@ export function TrainingBioDetails({
   return (
     <>
       <BodyHeatmapSVG volumes={data.muscles} />
-      <div className="mt-3 border-t border-white/10 pt-3 [&_svg]:max-h-[min(25dvh,200px)]">
+      <div className="mt-2 border-t border-white/10 pt-2 [&_svg]:max-h-[min(20dvh,180px)]">
         <p className="text-center text-[10px] uppercase tracking-widest text-zinc-500">
           Perfil do treino
         </p>
@@ -37,12 +37,12 @@ export function TrainingBioPanel({
         type="button"
         aria-label="Ver mapa muscular e atributos"
         onClick={() => setOpen(true)}
-        className="flex shrink-0 items-center h-9 rounded-full border border-cyan-300/15 bg-cyan-300/5 px-3"
+        className="flex shrink-0 items-center h-9 rounded-full border border-cyan-300/15 bg-cyan-300/5 px-2 sm:px-3"
       >
-        <span className="text-[10px] text-cyan-200 sm:hidden">
+        <span className="text-[10px] text-cyan-200 lg:hidden">
           ⚡ {data.neural}%
         </span>
-        <span className="hidden sm:block">
+        <span className="hidden lg:block">
           <TelemetryHeader compact data={data} />
         </span>
       </button>

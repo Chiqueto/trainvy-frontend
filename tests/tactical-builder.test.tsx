@@ -118,6 +118,20 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe("Tactical builder", () => {
+  it("shows prescribed reps and rest instead of a generic zone range", () => {
+    const initialPlan = plan();
+    initialPlan.workoutDays[0].exercises[0].reps = 7;
+    initialPlan.workoutDays[0].exercises[0].restTimeInSeconds = 95;
+    render(<WorkoutPlanBuilder mode="edit" initialPlan={initialPlan} />);
+    const zone = screen.getByRole("button", {
+      name: "Alternar zona de Supino com barra: Hipertrofia",
+    });
+    expect(zone.textContent).toContain("7 reps");
+    expect(zone.textContent).toContain("95s");
+    fireEvent.click(zone);
+    expect(zone.textContent).toContain("15 reps");
+    expect(zone.textContent).toContain("45s");
+  });
   it("keeps a rune armed across targets, toggles it, and persists badge parameters", async () => {
     render(<WorkoutPlanBuilder mode="edit" initialPlan={plan()} />);
     fireEvent.click(

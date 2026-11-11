@@ -35,11 +35,6 @@ const zoneStyle: Record<Zone, string> = {
   hypertrophy: "border-amber-500/35",
   endurance: "border-cyan-400/40",
 };
-const zoneLabel: Record<Zone, string> = {
-  strength: "3–5",
-  hypertrophy: "8–12",
-  endurance: "15+",
-};
 
 export function ExerciseCard({
   item,
@@ -91,14 +86,23 @@ export function ExerciseCard({
   const [panel, setPanel] = useState<"combine" | "details" | null>(null);
   const reduced = useReducedMotion();
   const [pulse, setPulse] = useState(0);
+  const [pulseColor, setPulseColor] = useState("#ffffff");
   const tint = (runeOver ? dragRune : selectedRune) ?? null;
-  function changeRune(patch: Partial<WorkoutPlanDraftExercise>) {
+  function changeRune(patch: Partial<WorkoutPlanDraftExercise>, rune: Rune) {
     onChange(patch);
+    setPulseColor(RUNE_COLORS[rune]);
     setPulse((p) => p + 1);
     haptic(15);
   }
   const sets = prescriptionSets(item),
     zone = sets[0]?.zone ?? zoneFor(item.reps);
+  const repsLabel =
+    item.repsMin != null && item.repsMax != null
+      ? `${item.repsMin}–${item.repsMax}`
+      : (sets[0]?.reps ?? item.reps);
+  const variedSets = sets.some(
+    (s) => s.reps !== sets[0].reps || s.restSeconds !== sets[0].restSeconds,
+  );
   function updateSets(next: TacticalSet[]) {
     onChange({
       setPrescription: next,
@@ -154,8 +158,17 @@ export function ExerciseCard({
             : undefined
         }
         aria-label={`Exercício ${index + 1}: ${item.name}`}
-        className={`relative grid min-h-[72px] grid-cols-[20px_minmax(0,1fr)_52px_90px] sm:grid-cols-[28px_minmax(0,1fr)_88px_120px] items-center gap-2 border bg-gradient-to-r from-zinc-900 to-zinc-950 px-2 py-1 shadow-lg ${grouped ? "border-transparent" : `rounded-xl ${zoneStyle[zone]}`} ${fusionReady || runeOver ? "z-10 border-dashed ring-1 ring-white/20" : ""}`}
+        className={`group relative grid h-[72px] grid-cols-[16px_minmax(0,1fr)_52px_78px] sm:grid-cols-[28px_minmax(0,1fr)_88px_120px] items-center gap-1.5 border bg-gradient-to-r from-zinc-900 to-zinc-950 px-2 py-1 shadow-lg ${grouped ? "border-transparent" : `rounded-xl ${zoneStyle[zone]}`} ${fusionReady || runeOver ? "z-10 border-dashed ring-1 ring-white/20" : ""}`}
       >
+        {runeOver && dragRune && (
+          <motion.span
+            aria-hidden="true"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.14 }}
+            style={{ backgroundColor: RUNE_COLORS[dragRune] }}
+            className="pointer-events-none absolute inset-0 rounded-xl"
+          />
+        )}
         <button
           type="button"
           {...attributes}
@@ -217,10 +230,10 @@ export function ExerciseCard({
                 >
                   <button
                     type="button"
-                    onClick={() => changeRune(cycleRune(item, r))}
+                    onClick={() => changeRune(cycleRune(item, r), r)}
                     onContextMenu={(e) => {
                       e.preventDefault();
-                      changeRune(toggleRune(item, r));
+                      changeRune(toggleRune(item, r), r);
                     }}
                     title="Toque para alternar parâmetros"
                     className="h-7 px-1.5"
@@ -230,7 +243,7 @@ export function ExerciseCard({
                   <button
                     type="button"
                     aria-label={`Remover ${RUNES[r]} de ${item.name}`}
-                    onClick={() => changeRune(toggleRune(item, r))}
+                    onClick={() => changeRune(toggleRune(item, r), r)}
                     className="h-7 w-6 border-l border-current/20"
                   >
                     ×
@@ -261,7 +274,7 @@ export function ExerciseCard({
                       type="button"
                       key={r}
                       aria-pressed={item.runes?.includes(r) ?? false}
-                      onClick={() => changeRune(toggleRune(item, r))}
+                      onClick={() => changeRune(toggleRune(item, r), r)}
                       className="flex min-h-10 w-full items-center justify-between rounded-lg px-2 text-xs hover:bg-white/5"
                       style={{ color: RUNE_COLORS[r] }}
                       title={TECHNIQUES[r]}
@@ -300,7 +313,9 @@ export function ExerciseCard({
           aria-label={`Alternar zona de ${item.name}: ${ZONES[zone].label}`}
           className={`flex min-h-12 flex-col items-center justify-center rounded-lg text-[9px] ${zone === "strength" ? "bg-rose-500/15 text-rose-200" : zone === "hypertrophy" ? "bg-amber-500/15 text-amber-200" : "bg-cyan-400/15 text-cyan-200"}`}
         >
-          <strong className="text-xs">{zoneLabel[zone]}</strong>
+          <strong className="text-xs">
+            {repsLabel} <span className="text-[8px] font-normal">reps</span>
+          </strong>
           <span>
             {zone === "hypertrophy"
               ? "Hiper"
@@ -309,7 +324,8 @@ export function ExerciseCard({
                 : "Força"}
           </span>
           <span className="text-[8px] opacity-65">
-            {item.restTimeInSeconds}s ↻
+            {sets[0]?.restSeconds ?? item.restTimeInSeconds}s{" "}
+            {variedSets ? "· varia" : "↻"}
           </span>
         </button>
         <div className="flex items-center justify-end gap-1">
@@ -318,7 +334,7 @@ export function ExerciseCard({
             disabled={sets.length <= 1}
             onClick={() => updateSets(sets.slice(0, -1))}
             aria-label={`Remover série de ${item.name}`}
-            className="flex h-9 w-7 shrink-0 items-center justify-center rounded-lg bg-white/5 text-zinc-400 disabled:opacity-25"
+            className="flex h-9 w-6 sm:w-7 shrink-0 items-center justify-center rounded-lg bg-white/5 text-zinc-400 disabled:opacity-25"
           >
             <Minus size={12} />
           </button>
@@ -333,7 +349,7 @@ export function ExerciseCard({
               haptic();
             }}
             aria-label={`Adicionar série a ${item.name}`}
-            className="flex h-9 w-7 shrink-0 items-center justify-center rounded-lg bg-cyan-300/10 text-cyan-200 disabled:opacity-25"
+            className="flex h-9 w-6 sm:w-7 shrink-0 items-center justify-center rounded-lg bg-cyan-300/10 text-cyan-200 disabled:opacity-25"
           >
             <Plus size={12} />
           </button>
@@ -341,7 +357,7 @@ export function ExerciseCard({
             type="button"
             aria-label={`Remover exercício ${item.name}`}
             onClick={onRemove}
-            className="hidden h-9 w-5 text-zinc-500 hover:text-rose-300 sm:block"
+            className="hidden h-9 w-5 text-zinc-500 hover:text-rose-300 sm:block sm:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100"
           >
             ×
           </button>
@@ -353,7 +369,8 @@ export function ExerciseCard({
               initial={{ opacity: 0.3 }}
               animate={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="pointer-events-none absolute inset-0 rounded-xl bg-white"
+              style={{ backgroundColor: pulseColor }}
+              className="pointer-events-none absolute inset-0 rounded-xl"
             />
           )}
         </AnimatePresence>
@@ -362,6 +379,7 @@ export function ExerciseCard({
             type="button"
             onClick={() => {
               onApplyRune();
+              setPulseColor(RUNE_COLORS[selectedRune]);
               setPulse((p) => p + 1);
             }}
             aria-label={`Aplicar ${RUNES[selectedRune]} em ${item.name}`}
@@ -375,7 +393,13 @@ export function ExerciseCard({
           </button>
         )}
         {(fusionReady || runeOver) && (
-          <span className="pointer-events-none absolute inset-x-4 top-1 z-30 rounded-md bg-cyan-300 px-2 py-1 text-center text-[10px] font-semibold text-zinc-950">
+          <span
+            style={{
+              backgroundColor:
+                runeOver && dragRune ? RUNE_COLORS[dragRune] : undefined,
+            }}
+            className="pointer-events-none absolute inset-x-4 top-1 z-30 rounded-md bg-cyan-300 px-2 py-1 text-center text-[10px] font-semibold text-zinc-950"
+          >
             {runeOver
               ? `Encaixar ${dragRune ? runeLabel(item, dragRune) : "técnica"}`
               : "Solte para fundir bi-set"}

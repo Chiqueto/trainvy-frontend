@@ -59,7 +59,7 @@ export function TacticalPlanWorkspace({
   const navigation = (
     <div className="flex min-w-0 items-center gap-1">
       <div
-        className="flex min-w-0 gap-1 overflow-x-auto"
+        className="no-scrollbar flex min-w-0 gap-1 overflow-x-auto"
         role="tablist"
         aria-label="Treinos do plano"
       >
@@ -178,7 +178,7 @@ export function TacticalPlanWorkspace({
                     >
                       <ArrowLeft size={16} />
                     </button>
-                    <div className="hidden min-w-0 w-44 xl:block">
+                    <div className="hidden min-w-0 w-36 xl:block">
                       <span className="text-xs font-semibold">
                         Montar Plano
                       </span>

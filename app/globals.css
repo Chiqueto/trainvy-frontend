@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
 /* Keep scrolling available to touch, wheel and keyboard without native chrome. */
 .no-scrollbar,
@@ -9,8 +11,6 @@
 [data-testid="tactical-viewport"] *::-webkit-scrollbar {
   display: none;
 }
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
