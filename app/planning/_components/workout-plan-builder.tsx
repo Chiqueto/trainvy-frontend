@@ -277,43 +277,8 @@ export function WorkoutPlanBuilder({
     });
   }
 
-  return (
-    <fieldset
-      disabled={!hydrated || isPending}
-      aria-busy={!hydrated || isPending}
-      aria-label="Editor de plano de treino"
-      className="flex min-w-0 flex-col gap-6"
-    >
-      {/* Banner de Geração com IA / Importação de Ficha */}
-      <AiFeature capability="planning">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-2xl border border-primary/30 bg-primary/5 shadow-xs">
-          <div className="flex items-center gap-3">
-            <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary shrink-0">
-              <Sparkles className="size-5" />
-            </div>
-            <div>
-              <h4 className="font-heading text-xs font-bold text-foreground">
-                Organize seus exercícios ou importe sua ficha com IA
-              </h4>
-              <p className="text-[11px] text-muted-foreground">
-                Fale por voz ou anexe o PDF/foto da sua ficha antiga da academia
-              </p>
-            </div>
-          </div>
-          <AiFeature capability="planning">
-            <Button
-              type="button"
-              size="sm"
-              onClick={() => setIsAiModalOpen(true)}
-              className="h-8 px-3 rounded-xl font-heading text-xs font-bold gap-1.5 shadow-sm"
-            >
-              <Sparkles className="size-3.5" />
-              <span>Gerar com IA</span>
-            </Button>
-          </AiFeature>
-        </div>
-      </AiFeature>
-
+  const planSettings = (
+    <>
       <section className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-5">
         <label className="flex flex-col gap-2 text-sm font-medium">
           Nome do plano *
@@ -373,14 +338,63 @@ export function WorkoutPlanBuilder({
           </p>
         )}
       </section>
+    </>
+  );
+
+  return (
+    <fieldset
+      disabled={!hydrated || isPending}
+      aria-busy={!hydrated || isPending}
+      aria-label="Editor de plano de treino"
+      className="flex min-w-0 flex-col gap-6"
+    >
+      {/* Banner de Geração com IA / Importação de Ficha */}
+      <AiFeature capability="planning">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-2xl border border-primary/30 bg-primary/5 shadow-xs">
+          <div className="flex items-center gap-3">
+            <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary shrink-0">
+              <Sparkles className="size-5" />
+            </div>
+            <div>
+              <h4 className="font-heading text-xs font-bold text-foreground">
+                Organize seus exercícios ou importe sua ficha com IA
+              </h4>
+              <p className="text-[11px] text-muted-foreground">
+                Fale por voz ou anexe o PDF/foto da sua ficha antiga da academia
+              </p>
+            </div>
+          </div>
+          <AiFeature capability="planning">
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => setIsAiModalOpen(true)}
+              className="h-8 px-3 rounded-xl font-heading text-xs font-bold gap-1.5 shadow-sm"
+            >
+              <Sparkles className="size-3.5" />
+              <span>Gerar com IA</span>
+            </Button>
+          </AiFeature>
+        </div>
+      </AiFeature>
+
+      {builderMode === "classic" && planSettings}
 
       <ViewModeToggle
         value={builderMode}
         onChange={changeMode}
         syncError={syncError}
       />
-      {builderMode === "tactical" && (
+      {builderMode === "tactical" && !isAiModalOpen && (
         <TacticalPlanWorkspace
+          planName={name}
+          settings={planSettings}
+          onAi={() => setIsAiModalOpen(true)}
+          onClassic={() => changeMode("classic")}
+          syncError={syncError}
+          onSave={() => submit()}
+          onReview={() => submit(true)}
+          error={error}
           activeIndex={tacticalDayIndex}
           onActiveChange={setTacticalDayIndex}
           days={days}

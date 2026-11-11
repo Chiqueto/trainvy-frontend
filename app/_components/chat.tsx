@@ -224,6 +224,7 @@ function ToolApprovalCard({
   onApprove,
   onReject,
 }: ToolApprovalCardProps) {
+  const [submitting, setSubmitting] = useState(false);
   const isPeriodization =
     part.type?.toLowerCase().includes("periodization") ||
     Boolean(part.input && "blocks" in part.input);
@@ -298,16 +299,25 @@ function ToolApprovalCard({
         <Button
           size="sm"
           type="button"
-          onClick={onApprove}
-          className="h-8 font-heading text-xs"
+          disabled={submitting}
+          onClick={() => {
+            setSubmitting(true);
+            onApprove();
+          }}
+          className="h-8 font-heading text-xs gap-1.5"
         >
-          Salvar como rascunho
+          {submitting && <Loader2 className="size-3.5 animate-spin" />}
+          <span>{submitting ? "Salvando..." : "Salvar como rascunho"}</span>
         </Button>
         <Button
           size="sm"
           type="button"
           variant="outline"
-          onClick={onReject}
+          disabled={submitting}
+          onClick={() => {
+            setSubmitting(true);
+            onReject();
+          }}
           className="h-8 font-heading text-xs"
         >
           Continuar ajustando
@@ -362,6 +372,7 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
   const [loadingConversations, setLoadingConversations] = useState(false);
   const [showDrawer, setShowDrawer] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [isDeletingConversation, setIsDeletingConversation] = useState(false);
   const [thinkingPhraseIndex, setThinkingPhraseIndex] = useState(0);
   const [activeRecoveryDraftId, setActiveRecoveryDraftId] = useState<
     string | null
@@ -720,6 +731,7 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
   };
 
   const handleDeleteConversation = async (id: string) => {
+    setIsDeletingConversation(true);
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/ai/conversations/${id}`,
@@ -737,6 +749,7 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
     } catch {
       // Ignora erro
     } finally {
+      setIsDeletingConversation(false);
       setConfirmDeleteId(null);
     }
   };
@@ -936,6 +949,7 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
               <Button
                 variant="outline"
                 size="sm"
+                disabled={isDeletingConversation}
                 onClick={() => setConfirmDeleteId(null)}
                 className="h-8 text-xs font-heading"
               >
@@ -944,10 +958,12 @@ export function Chat({ embedded = false, initialMessage }: ChatProps) {
               <Button
                 variant="destructive"
                 size="sm"
+                disabled={isDeletingConversation}
                 onClick={() => handleDeleteConversation(confirmDeleteId)}
-                className="h-8 text-xs font-heading"
+                className="h-8 text-xs font-heading gap-1.5"
               >
-                Excluir
+                {isDeletingConversation && <Loader2 className="size-3.5 animate-spin" />}
+                <span>{isDeletingConversation ? "Excluindo..." : "Excluir"}</span>
               </Button>
             </div>
           </div>

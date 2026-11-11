@@ -9,6 +9,7 @@ import {
   Download,
   Flame,
   Layers,
+  Loader2,
   Share2,
   Sliders,
   Sparkles,
@@ -575,9 +576,14 @@ export function WorkoutStoryShareModal({
               type="button"
               onClick={handleCopySticker}
               disabled={isExporting}
-              className="h-12 w-full rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 font-heading text-sm font-bold text-white shadow-lg transition hover:brightness-110"
+              className="h-12 w-full rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 font-heading text-sm font-bold text-white shadow-lg transition hover:brightness-110 gap-2"
             >
-              {copiedSuccess ? (
+              {isExporting ? (
+                <>
+                  <Loader2 className="size-4.5 animate-spin" />
+                  <span>Gerando Figurinha...</span>
+                </>
+              ) : copiedSuccess ? (
                 <>
                   <Check className="size-4.5" />
                   <span>Figurinha Copiada!</span>
@@ -597,10 +603,14 @@ export function WorkoutStoryShareModal({
                 onClick={handleDownload}
                 disabled={isExporting}
                 variant="outline"
-                className="h-11 rounded-2xl font-heading text-xs font-semibold"
+                className="h-11 rounded-2xl font-heading text-xs font-semibold gap-1.5"
               >
-                <Download className="size-4" />
-                <span>Baixar Story (PNG)</span>
+                {isExporting ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <Download className="size-4" />
+                )}
+                <span>{isExporting ? "Gerando..." : "Baixar Story (PNG)"}</span>
               </Button>
 
               {/* Compartilhar direto */}
@@ -609,10 +619,14 @@ export function WorkoutStoryShareModal({
                 onClick={handleNativeShare}
                 disabled={isExporting}
                 variant="secondary"
-                className="h-11 rounded-2xl font-heading text-xs font-semibold"
+                className="h-11 rounded-2xl font-heading text-xs font-semibold gap-1.5"
               >
-                <Share2 className="size-4 text-primary" />
-                <span>Compartilhar</span>
+                {isExporting ? (
+                  <Loader2 className="size-4 animate-spin text-primary" />
+                ) : (
+                  <Share2 className="size-4 text-primary" />
+                )}
+                <span>{isExporting ? "Gerando..." : "Compartilhar"}</span>
               </Button>
             </div>
           </div>

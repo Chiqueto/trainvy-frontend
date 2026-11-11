@@ -418,52 +418,8 @@ export function CoachPrescriptionBuilder({
     });
   }
 
-  return (
-    <fieldset
-      disabled={!hydrated || isPending}
-      aria-busy={!hydrated || isPending}
-      className="flex min-w-0 flex-col gap-6 disabled:opacity-80"
-    >
-      {/* Banner de Prescrição Assistida por IA */}
-      {aiAssisted && (
-        <p className="rounded-lg border p-3 text-sm">
-          Sugestão gerada por IA — Revisão e aprovação profissional obrigatória
-          antes de liberar ao aluno.
-        </p>
-      )}
-      <AiFeature capability="planning">
-        <section className="relative overflow-hidden rounded-3xl border border-primary/20 bg-linear-to-r from-primary/10 via-primary/5 to-transparent p-5 shadow-xs">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="inline-flex size-7 items-center justify-center rounded-xl bg-primary/20 text-primary">
-                  <Sparkles className="size-4" />
-                </span>
-                <h2 className="font-heading text-sm font-bold text-foreground">
-                  Prescrição Assistida por IA
-                </h2>
-              </div>
-              <p className="text-xs text-muted-foreground max-w-xl">
-                Monte divisões e selecione exercícios canônicos ditando por voz,
-                enviando uma ficha em PDF/foto ou descrevendo a estratégia para{" "}
-                {athleteName}.
-              </p>
-            </div>
-
-            <Button
-              type="button"
-              variant="default"
-              size="sm"
-              onClick={() => setIsAiModalOpen(true)}
-              className="h-10 rounded-xl font-heading text-xs font-bold gap-2 shadow-xs shrink-0"
-            >
-              <Sparkles className="size-3.5" />
-              <span>Prescrever com IA</span>
-            </Button>
-          </div>
-        </section>
-      </AiFeature>
-
+  const planSettings = (
+    <>
       {/* Card de Configurações Básicas da Prescrição */}
       <section className="rounded-3xl border border-border/80 bg-card p-5 shadow-xs flex flex-col gap-4">
         <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-primary">
@@ -538,19 +494,80 @@ export function CoachPrescriptionBuilder({
         </span>
       </label>
       {/* Seção de Dias de Treino */}
+    </>
+  );
+
+  return (
+    <fieldset
+      disabled={!hydrated || isPending}
+      aria-busy={!hydrated || isPending}
+      className="flex min-w-0 flex-col gap-6 disabled:opacity-80"
+    >
+      {/* Banner de Prescrição Assistida por IA */}
+      {aiAssisted && (
+        <p className="rounded-lg border p-3 text-sm">
+          Sugestão gerada por IA — Revisão e aprovação profissional obrigatória
+          antes de liberar ao aluno.
+        </p>
+      )}
+      <AiFeature capability="planning">
+        <section className="relative overflow-hidden rounded-3xl border border-primary/20 bg-linear-to-r from-primary/10 via-primary/5 to-transparent p-5 shadow-xs">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex size-7 items-center justify-center rounded-xl bg-primary/20 text-primary">
+                  <Sparkles className="size-4" />
+                </span>
+                <h2 className="font-heading text-sm font-bold text-foreground">
+                  Prescrição Assistida por IA
+                </h2>
+              </div>
+              <p className="text-xs text-muted-foreground max-w-xl">
+                Monte divisões e selecione exercícios canônicos ditando por voz,
+                enviando uma ficha em PDF/foto ou descrevendo a estratégia para{" "}
+                {athleteName}.
+              </p>
+            </div>
+
+            <Button
+              type="button"
+              variant="default"
+              size="sm"
+              onClick={() => setIsAiModalOpen(true)}
+              className="h-10 rounded-xl font-heading text-xs font-bold gap-2 shadow-xs shrink-0"
+            >
+              <Sparkles className="size-3.5" />
+              <span>Prescrever com IA</span>
+            </Button>
+          </div>
+        </section>
+      </AiFeature>
+
+      {builderMode === "classic" && planSettings}
       <ViewModeToggle
         value={builderMode}
         onChange={changeMode}
         syncError={syncError}
       />
       {builderMode === "tactical" ? (
-        <TacticalPlanWorkspace
-          activeIndex={tacticalDayIndex}
-          onActiveChange={setTacticalDayIndex}
-          days={days}
-          onChange={setDays}
-          disabled={isPending}
-        />
+        !isAiModalOpen && (
+          <TacticalPlanWorkspace
+            planName={name}
+            settings={planSettings}
+            onAi={() => setIsAiModalOpen(true)}
+            onClassic={() => changeMode("classic")}
+            syncError={syncError}
+            onSave={() => void handleSave(false)}
+            onReview={() => void handleSave(true)}
+            reviewLabel="Revisar e enviar"
+            error={error}
+            activeIndex={tacticalDayIndex}
+            onActiveChange={setTacticalDayIndex}
+            days={days}
+            onChange={setDays}
+            disabled={isPending}
+          />
+        )
       ) : (
         <section className="space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3">

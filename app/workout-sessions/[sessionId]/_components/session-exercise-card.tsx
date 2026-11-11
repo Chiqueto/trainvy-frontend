@@ -475,8 +475,17 @@ export function SessionExerciseCard({
               disabled={isPending}
               className="mt-1 h-11 w-full rounded-xl border-dashed font-heading text-xs font-semibold text-foreground hover:border-primary/50 hover:bg-primary/5 active:scale-[0.99]"
             >
-              <Plus className="mr-1.5 size-4 text-primary" />
-              <span>Adicionar série</span>
+              {isPending ? (
+                <>
+                  <Loader2 className="mr-1.5 size-4 animate-spin text-primary" />
+                  <span>Adicionando série...</span>
+                </>
+              ) : (
+                <>
+                  <Plus className="mr-1.5 size-4 text-primary" />
+                  <span>Adicionar série</span>
+                </>
+              )}
             </Button>
           )}
         </>

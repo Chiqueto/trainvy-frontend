@@ -275,38 +275,8 @@ export function CoachTemplateBuilder({
     });
   }
 
-  return (
-    <div className="flex flex-col gap-6">
-      {/* Top Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <Link
-          href="/personal/modelos"
-          className="inline-flex items-center gap-1.5 text-xs font-heading font-medium text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ArrowLeft className="size-3.5" />
-          <span>Voltar para Modelos</span>
-        </Link>
-
-        <Button
-          onClick={handleSave}
-          disabled={isPending || !name.trim()}
-          className="rounded-xl h-10 px-5 font-heading font-semibold shadow-xs"
-        >
-          {isPending ? (
-            <div className="flex items-center gap-2">
-              <LoaderCircle className="size-4 animate-spin" />
-              <span>Salvando...</span>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2">
-              <Save className="size-4" />
-              <span>{isEditing ? "Salvar Alterações" : "Salvar Modelo"}</span>
-            </div>
-          )}
-        </Button>
-      </div>
-
-      {/* Dados Gerais do Modelo */}
+  const planSettings = (
+    <>
       <div className="rounded-3xl border border-border bg-card p-5 sm:p-7 shadow-xs flex flex-col gap-5">
         <div className="flex items-center gap-2.5">
           <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -377,7 +347,42 @@ export function CoachTemplateBuilder({
           </div>
         </div>
       </div>
+    </>
+  );
 
+  return (
+    <div className="flex flex-col gap-6">
+      {/* Top Header */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <Link
+          href="/personal/modelos"
+          className="inline-flex items-center gap-1.5 text-xs font-heading font-medium text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="size-3.5" />
+          <span>Voltar para Modelos</span>
+        </Link>
+
+        <Button
+          onClick={handleSave}
+          disabled={isPending || !name.trim()}
+          className="rounded-xl h-10 px-5 font-heading font-semibold shadow-xs"
+        >
+          {isPending ? (
+            <div className="flex items-center gap-2">
+              <LoaderCircle className="size-4 animate-spin" />
+              <span>Salvando...</span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Save className="size-4" />
+              <span>{isEditing ? "Salvar Alterações" : "Salvar Modelo"}</span>
+            </div>
+          )}
+        </Button>
+      </div>
+
+      {/* Dados Gerais do Modelo */}
+      {builderMode === "classic" && planSettings}
       {/* Dias de Treino */}
       <ViewModeToggle
         value={builderMode}
@@ -386,6 +391,11 @@ export function CoachTemplateBuilder({
       />
       {builderMode === "tactical" ? (
         <TacticalPlanWorkspace
+          planName={name}
+          settings={planSettings}
+          onClassic={() => changeMode("classic")}
+          syncError={syncError}
+          onSave={() => void handleSave()}
           activeIndex={tacticalDayIndex}
           onActiveChange={setTacticalDayIndex}
           days={days}

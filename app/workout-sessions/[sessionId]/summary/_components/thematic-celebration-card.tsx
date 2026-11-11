@@ -114,12 +114,13 @@ export function ThematicCelebrationCard({
                 <button
                   key={key}
                   type="button"
+                  disabled={isPending}
                   onClick={() => handleSwitchTheme(key)}
                   className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium transition-all ${
                     isSelected
                       ? "bg-background text-foreground shadow-sm ring-1 ring-border"
                       : "text-muted-foreground hover:text-foreground"
-                  }`}
+                  } ${isPending ? "opacity-60 cursor-not-allowed" : ""}`}
                   title={theme.tagline}
                 >
                   <span>{theme.emoji}</span>

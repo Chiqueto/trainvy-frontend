@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
 import type { ListAdminUsers200, ListAdminUsersParams } from "@/app/_lib/api/fetch-generated";
 import { Button } from "@/components/ui/button";
 import { loadAdminUsers } from "../_actions";
@@ -17,7 +18,10 @@ export function UsersList({ initial }: { initial: ListAdminUsers200 }) {
       <label>Tipo de conta<select className={fieldClass} value={type} onChange={e=>setType(e.target.value)}><option value="">Todos</option><option value="ATHLETE">Atletas</option><option value="COACH">Personals</option></select></label>
       <label>Status<select className={fieldClass} value={status} onChange={e=>setStatus(e.target.value)}><option value="">Todos</option>{statuses.map(s=><option key={s}>{s}</option>)}</select></label>
       <label>Código do plano<input className={fieldClass} value={plan} onChange={e=>setPlan(e.target.value)} /></label>
-      <Button type="submit" className="self-end">Buscar usuários</Button>
+      <Button type="submit" disabled={page.loading} className="self-end gap-1.5">
+        {page.loading && <Loader2 className="size-4 animate-spin" />}
+        <span>{page.loading ? "Buscando..." : "Buscar usuários"}</span>
+      </Button>
     </form>
     <div aria-busy={page.loading} className="grid gap-3 lg:grid-cols-2">{page.data.items.map(u=><Link key={u.id} href={`/admin/users/${u.id}`} className="min-w-0 break-words rounded-2xl border p-4 hover:bg-muted"><h2 className="font-semibold">{u.name}</h2><p className="text-sm">{u.email}</p><p className="my-2 text-sm text-muted-foreground">{u.accountType === "COACH" ? "Personal" : "Atleta"} · {u.systemRole} · {u.plan?.name ?? "Sem plano"}</p><SubscriptionStatus value={u.subscription}/></Link>)}</div>
     {!page.loading && !page.error && page.data.items.length === 0 && <p>Nenhum usuário encontrado.</p>}

@@ -1,5 +1,12 @@
 import { useDraggable } from "@dnd-kit/core";
 import { RUNES, type Rune } from "../../_lib/tactical";
+const icons: Record<Rune, string> = {
+  DROP_SET: "🔥",
+  REST_PAUSE: "⚡",
+  ISOMETRIC_HOLD: "❄",
+  CLUSTER_SET: "⛓",
+  TEMPO_CONTROL: "◷",
+};
 function RuneToken({
   rune,
   active,
@@ -19,12 +26,14 @@ function RuneToken({
       type="button"
       {...listeners}
       {...attributes}
+      aria-label={RUNES[rune]}
+      title={`${RUNES[rune]}: arraste ou toque e escolha o exercício`}
       aria-pressed={active}
       onClick={() => onSelect(rune)}
-      className={`min-h-11 shrink-0 rounded-xl border px-3 text-xs ${active ? "border-amber-300 bg-amber-300/15 text-amber-200" : "border-slate-700 bg-slate-900 text-slate-300"}`}
+      className={`flex size-10 shrink-0 items-center justify-center rounded-full border text-base ${active ? "border-amber-300 bg-amber-300/20 shadow-[0_0_12px_#fbbf2440]" : "border-white/10 bg-gradient-to-b from-zinc-800 to-zinc-950"}`}
       style={{ touchAction: "pan-x pan-y" }}
     >
-      {RUNES[rune]}
+      {icons[rune]}
     </button>
   );
 }
@@ -37,8 +46,9 @@ export function RuneBadgeDock({
 }) {
   return (
     <div
-      className="flex gap-2 overflow-x-auto pb-2"
-      aria-label="Técnicas avançadas"
+      className="flex shrink-0 gap-1"
+      role="group"
+      aria-label="Técnicas rápidas"
     >
       {(Object.keys(RUNES) as Rune[]).map((r) => (
         <RuneToken

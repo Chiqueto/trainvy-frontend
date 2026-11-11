@@ -2,7 +2,7 @@
 import { trainingOnlyImportDraft } from "@/app/_lib/training-days";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { X, Mic, Square, FileUp } from "lucide-react";
+import { X, Mic, Square, FileUp, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import {
   confirmWorkoutImportAction,
@@ -97,6 +97,7 @@ export function AthleteAiWorkoutPlanModal({ isOpen, onClose }: Props) {
           <Button
             variant="ghost"
             size="icon"
+            disabled={busy}
             aria-label="Fechar importação"
             onClick={onClose}
           >
@@ -187,6 +188,7 @@ export function AthleteAiWorkoutPlanModal({ isOpen, onClose }: Props) {
               disabled={
                 busy || recorder.isRecording || (!prompt.trim() && !file)
               }
+              className="gap-2"
               onClick={async () => {
                 setBusy(true);
                 setError("");
@@ -205,7 +207,8 @@ export function AthleteAiWorkoutPlanModal({ isOpen, onClose }: Props) {
                 }
               }}
             >
-              {busy ? "Extraindo…" : "Extrair e revisar ficha"}
+              {busy && <Loader2 className="size-4 animate-spin" />}
+              <span>{busy ? "Extraindo…" : "Extrair e revisar ficha"}</span>
             </Button>
           </>
         ) : (
@@ -478,8 +481,10 @@ export function AthleteAiWorkoutPlanModal({ isOpen, onClose }: Props) {
                   !confirmed ||
                   !draft.workoutDays.some((d) => d.exercises.length > 0)
                 }
+                className="gap-2"
               >
-                {busy ? "Salvando…" : "Confirmar e salvar rascunho pessoal"}
+                {busy && <Loader2 className="size-4 animate-spin" />}
+                <span>{busy ? "Salvando…" : "Confirmar e salvar rascunho pessoal"}</span>
               </Button>
             </div>
           </form>
