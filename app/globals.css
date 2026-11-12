@@ -381,19 +381,15 @@ body:has(.app-navigation) {
   }
 }
 @media (max-width: 639px) {
-  .spatial-camera {
-    top: 190px;
-    left: 12px;
-    right: auto;
-    flex-direction: column;
-    gap: 0;
+  .spatial-header .spatial-icon-button {
+    width: 44px;
+    height: 44px;
   }
-  .spatial-camera > span {
-    display: none;
+  .spatial-studio {
+    overscroll-behavior: none;
   }
-  .spatial-camera .spatial-icon-button {
-    width: 32px;
-    height: 32px;
+  .spatial-exercise {
+    -webkit-touch-callout: none;
   }
 }
 @media (prefers-reduced-motion: reduce) {

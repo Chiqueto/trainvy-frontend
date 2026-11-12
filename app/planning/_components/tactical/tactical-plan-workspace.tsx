@@ -199,7 +199,7 @@ export function TacticalPlanWorkspace({
           <Dialog.Description className="sr-only">
             Organize exercícios, séries e técnicas do plano.
           </Dialog.Description>
-          <div className="absolute bottom-3 left-3 z-[60] rounded-xl bg-zinc-900 text-zinc-100">
+          <div className="absolute right-3 top-[120px] z-[60] rounded-xl bg-zinc-900 text-zinc-100 sm:bottom-3 sm:left-3 sm:right-auto sm:top-auto">
             <CoachGuidedTour tour="builder" />
           </div>
           <div

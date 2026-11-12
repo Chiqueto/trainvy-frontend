@@ -171,3 +171,30 @@ export function screenToBoard(
     y: localY + rect.height / 2,
   };
 }
+
+/** Keep the board point beneath the fingers fixed while pinching and translating. */
+export function pinchCamera(
+  camera: { panX: number; panY: number; zoom: number; tilt: number },
+  rect: { left: number; top: number; width: number; height: number },
+  from: Point,
+  to: Point,
+  scale: number,
+) {
+  if (!Number.isFinite(scale) || scale <= 0) return camera;
+  const anchor = screenToBoard(from, rect, camera);
+  // Only guard numerical singularities; mobile has no desktop zoom cap.
+  const zoom = Math.max(0.001, camera.zoom * scale);
+  const angle = (camera.tilt * Math.PI) / 180;
+  const localY = (anchor.y - rect.height / 2) * zoom;
+  const perspective = 1 - (Math.sin(angle) * localY) / 1200;
+  return {
+    ...camera,
+    zoom,
+    panX:
+      (to.x - rect.left - rect.width / 2) * perspective -
+      (anchor.x - rect.width / 2) * zoom,
+    panY:
+      (to.y - rect.top - rect.height / 2) * perspective -
+      localY * Math.cos(angle),
+  };
+}

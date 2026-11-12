@@ -2,11 +2,15 @@
 
 import React, { useRef, useState } from "react";
 import type { CameraState } from "./use-spatial-state";
+import { useMobileStudio } from "./use-mobile-studio";
+import type { Point } from "./spatial-utils";
 
 export interface SpatialCanvasProps {
   camera: CameraState;
   onPan: (dx: number, dy: number) => void;
   onZoom: (delta: number) => void;
+  onPinch?: (from: Point, to: Point, scale: number) => void;
+  onPinchStart?: () => void;
   children: React.ReactNode;
 }
 
@@ -14,13 +18,85 @@ export function SpatialCanvas({
   camera,
   onPan,
   onZoom,
+  onPinch,
+  onPinchStart,
   children,
 }: SpatialCanvasProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isPanning, setIsPanning] = useState(false);
+  const mobile = useMobileStudio();
+  const fingers = useRef(new Map<number, Point>());
+  const panPointer = useRef<number | null>(null);
+  const pinching = useRef(false);
+  const pair = () => {
+    const [a, b] = [...fingers.current.values()];
+    return {
+      center: { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 },
+      distance: Math.hypot(a.x - b.x, a.y - b.y),
+    };
+  };
+  function touchDown(event: React.PointerEvent<HTMLDivElement>) {
+    if (!mobile || event.pointerType !== "touch") return;
+    fingers.current.set(event.pointerId, {
+      x: event.clientX,
+      y: event.clientY,
+    });
+    if (fingers.current.size >= 2) {
+      if (!pinching.current) onPinchStart?.();
+      pinching.current = true;
+      panPointer.current = null;
+      setIsPanning(true);
+      for (const id of fingers.current.keys())
+        event.currentTarget.setPointerCapture(id);
+      event.preventDefault();
+      event.stopPropagation();
+    } else if (
+      !(event.target as Element).closest(
+        "button,input,select,.no-card-drag,[data-holo-card]",
+      )
+    ) {
+      panPointer.current = event.pointerId;
+      event.currentTarget.setPointerCapture(event.pointerId);
+      setIsPanning(true);
+    }
+  }
+  function touchMove(event: React.PointerEvent<HTMLDivElement>) {
+    const previous = fingers.current.get(event.pointerId);
+    if (!mobile || event.pointerType !== "touch" || !previous) return;
+    const before = fingers.current.size === 2 ? pair() : null;
+    fingers.current.set(event.pointerId, {
+      x: event.clientX,
+      y: event.clientY,
+    });
+    if (before) {
+      const after = pair();
+      onPinch?.(
+        before.center,
+        after.center,
+        before.distance > 0 ? after.distance / before.distance : 1,
+      );
+      event.preventDefault();
+      event.stopPropagation();
+    } else if (!pinching.current && panPointer.current === event.pointerId) {
+      onPan(event.clientX - previous.x, event.clientY - previous.y);
+    }
+  }
+  function touchEnd(event: React.PointerEvent<HTMLDivElement>) {
+    if (event.pointerType !== "touch") return;
+    fingers.current.delete(event.pointerId);
+    if (panPointer.current === event.pointerId) panPointer.current = null;
+    if (event.currentTarget.hasPointerCapture(event.pointerId))
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    // Require a fresh touch after a pinch; its remaining finger must not move a card.
+    if (fingers.current.size === 0) {
+      pinching.current = false;
+      setIsPanning(false);
+    }
+  }
 
   // Manipulação de Pan ao arrastar o fundo
   const handlePointerDown = (e: React.PointerEvent) => {
+    if (mobile && e.pointerType === "touch") return;
     if (!containerRef.current?.contains(e.target as Node)) return;
     // Apenas se o clique foi direto no fundo do canvas ou no plano de grade
     const target = e.target as Element;
@@ -68,6 +144,11 @@ export function SpatialCanvas({
   return (
     <div
       ref={containerRef}
+      data-spatial-canvas
+      onPointerDownCapture={touchDown}
+      onPointerMoveCapture={touchMove}
+      onPointerUpCapture={touchEnd}
+      onPointerCancelCapture={touchEnd}
       onPointerDown={handlePointerDown}
       onWheel={handleWheel}
       style={{

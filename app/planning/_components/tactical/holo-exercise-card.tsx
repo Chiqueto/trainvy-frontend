@@ -1,6 +1,13 @@
 "use client";
 import React, { useRef, useState } from "react";
-import { Dumbbell, ListPlus, Pencil, Sparkles, Unlink } from "lucide-react";
+import {
+  Dumbbell,
+  GripHorizontal,
+  ListPlus,
+  Pencil,
+  Sparkles,
+  Unlink,
+} from "lucide-react";
 import type { WorkoutPlanDraftExercise } from "../../_lib/workout-plan-builder";
 import { prescriptionSets, runeLabel, RUNE_COLORS } from "../../_lib/tactical";
 import { CARD_WIDTH, CARD_HEIGHT, type Point } from "./spatial-utils";
@@ -14,6 +21,7 @@ import { ExerciseActionsMenu } from "./exercise-actions-menu";
 import { useHoldMenu } from "./use-hold-menu";
 import { OrbitalSwapMenu } from "./orbital-swap-menu";
 import { TechniqueIcon } from "./technique-icon";
+import { useMobileStudio } from "./use-mobile-studio";
 const RARITY_STYLES = {
   high: {
     border: "border-amber-400/40 hover:border-amber-300",
@@ -86,6 +94,7 @@ export function HoloExerciseCard({
   onDragEnd,
   onDragStateChange,
 }: HoloCardProps) {
+  const mobile = useMobileStudio();
   const cardRef = useRef<HTMLDivElement>(null),
     cleanupRef = useRef<(() => void) | null>(null);
   const [dragging, setDragging] = useState(false),
@@ -114,14 +123,22 @@ export function HoloExerciseCard({
     )
       return;
     const target = event.target as Element;
-    if (target.closest("button,input,select,summary,.no-card-drag")) return;
+    if (
+      target.closest("button,input,select,summary,.no-card-drag") &&
+      !target.closest("[data-mobile-card-handle]")
+    )
+      return;
+    if (event.pointerType === "touch" && !event.isPrimary) return;
     event.preventDefault();
     event.stopPropagation();
     event.currentTarget.setPointerCapture(event.pointerId);
+    const captureTarget = event.currentTarget;
+    const pointerId = event.pointerId;
     const convert = toBoardPoint ?? ((p: Point) => p),
       start = convert({ x: event.clientX, y: event.clientY });
     let moved = false;
     const move = (e: PointerEvent) => {
+      if (e.pointerId !== pointerId) return;
       if (hold.held.current) return;
       if (
         !moved &&
@@ -144,9 +161,23 @@ export function HoloExerciseCard({
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerup", end);
       window.removeEventListener("pointercancel", end);
+      window.removeEventListener("pointerdown", interruptTouch, true);
+      window.removeEventListener("blur", cancelDrag);
+      if (captureTarget.hasPointerCapture?.(pointerId))
+        captureTarget.releasePointerCapture(pointerId);
       cleanupRef.current = null;
     };
+    const cancelDrag = () => {
+      setDragging(false);
+      onDragStateChange?.(false);
+      hold.cancel();
+      clean();
+    };
+    const interruptTouch = (e: PointerEvent) => {
+      if (e.pointerType === "touch" && e.pointerId !== pointerId) cancelDrag();
+    };
     const end = (e: PointerEvent) => {
+      if (e.pointerId !== pointerId) return;
       setDragging(false);
       onDragStateChange?.(false);
       hold.cancel();
@@ -159,6 +190,8 @@ export function HoloExerciseCard({
     window.addEventListener("pointermove", move);
     window.addEventListener("pointerup", end);
     window.addEventListener("pointercancel", end);
+    window.addEventListener("pointerdown", interruptTouch, true);
+    window.addEventListener("blur", cancelDrag);
   }
   React.useEffect(
     () => () => {
@@ -174,7 +207,10 @@ export function HoloExerciseCard({
       data-exercise-index={index}
       {...{
         onPointerDownCapture: (e: React.PointerEvent) => {
-          if (cardRef.current?.contains(e.target as Node))
+          if (
+            cardRef.current?.contains(e.target as Node) &&
+            !(e.target as Element).closest("[data-mobile-card-handle]")
+          )
             hold.onPointerDownCapture(e);
         },
         onPointerMoveCapture: hold.onPointerMoveCapture,
@@ -219,6 +255,31 @@ export function HoloExerciseCard({
         className={`spatial-card-body relative flex flex-col rounded-2xl border bg-gradient-to-b p-3 ${rarity.border} ${rarity.gradient} ${isDragTarget ? "ring-2 ring-violet-400" : ""}`}
       >
         <div className="mb-2 flex items-center justify-between border-b border-white/10 pb-2">
+          <button
+            type="button"
+            data-mobile-card-handle
+            aria-label={`Mover ${item.name}`}
+            className="flex min-h-11 min-w-11 touch-none items-center justify-center rounded-lg bg-white/5 text-cyan-200 sm:hidden"
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+            }}
+            onKeyDown={(event) => {
+              const movement: Record<string, Point> = {
+                ArrowLeft: { x: -16, y: 0 },
+                ArrowRight: { x: 16, y: 0 },
+                ArrowUp: { x: 0, y: -16 },
+                ArrowDown: { x: 0, y: 16 },
+              };
+              const delta = movement[event.key];
+              if (delta) {
+                event.preventDefault();
+                onPositionChange({ x: x + delta.x, y: y + delta.y });
+              }
+            }}
+          >
+            <GripHorizontal size={20} />
+          </button>
           <div className="flex items-center gap-2">
             <span
               className={`rounded-md px-1.5 py-1 font-mono text-[10px] font-bold ${rarity.badge}`}
@@ -259,6 +320,9 @@ export function HoloExerciseCard({
         <button
           type="button"
           data-card-title
+          onClick={() => {
+            if (mobile) configure("prescription");
+          }}
           onDoubleClick={() => configure("prescription")}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
@@ -266,16 +330,22 @@ export function HoloExerciseCard({
               configure("prescription");
             }
           }}
-          title="Duplo clique para editar a prescrição · ou use o lápis"
+          title={
+            mobile
+              ? "Toque para editar a prescrição"
+              : "Duplo clique para editar a prescrição · ou use o lápis"
+          }
           className="no-card-drag text-left"
         >
           <span className="line-clamp-2 block min-h-9 text-sm font-semibold leading-tight text-white">
             {item.name || "Selecionar exercício"}
           </span>
           <span className="mt-1 block text-[9px] font-normal text-slate-500">
-            {item.repsMin && item.repsMax
-              ? `Faixa ${item.repsMin}–${item.repsMax} reps · 2× para editar`
-              : "2× no título para editar"}
+            {mobile
+              ? "Toque para editar"
+              : item.repsMin && item.repsMax
+                ? `Faixa ${item.repsMin}–${item.repsMax} reps · 2× para editar`
+                : "2× no título para editar"}
           </span>
         </button>
         <div className="relative my-2 flex min-h-10 flex-1 flex-col items-center justify-center overflow-hidden rounded-xl border border-white/5 bg-slate-900/50">

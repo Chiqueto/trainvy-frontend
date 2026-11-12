@@ -7,13 +7,19 @@ export function useHoldMenu(onOpen: () => void) {
     releasedAt = useRef(0),
     start = useRef({ x: 0, y: 0 }),
     timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const interruptRef = useRef<
+    ((event: globalThis.PointerEvent) => void) | null
+  >(null);
   function cancel() {
     if (timer.current) clearTimeout(timer.current);
     timer.current = null;
+    if (interruptRef.current)
+      window.removeEventListener("pointerdown", interruptRef.current, true);
+    interruptRef.current = null;
   }
   useEffect(
     () => () => {
-      if (timer.current) clearTimeout(timer.current);
+      cancel();
     },
     [],
   );
@@ -33,6 +39,16 @@ export function useHoldMenu(onOpen: () => void) {
         held.current = true;
         onOpen();
       }, 600);
+      if (event.pointerType === "touch") {
+        interruptRef.current = (next) => {
+          if (
+            next.pointerType === "touch" &&
+            next.pointerId !== event.pointerId
+          )
+            cancel();
+        };
+        window.addEventListener("pointerdown", interruptRef.current, true);
+      }
     },
     onPointerMoveCapture(event: PointerEvent) {
       if (

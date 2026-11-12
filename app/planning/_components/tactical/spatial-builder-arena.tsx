@@ -32,6 +32,7 @@ import {
   getCardConnectors,
   screenToBoard,
   generateTacticalFormation,
+  pinchCamera,
   type Point,
 } from "./spatial-utils";
 import { Zap } from "lucide-react";
@@ -400,6 +401,18 @@ export function SpatialBuilderArena({
         camera={spatial.camera}
         onPan={spatial.panBy}
         onZoom={spatial.setZoom}
+        onPinchStart={() => {
+          spatial.endWirePull();
+          spatial.setFusionTargetId(null);
+          setBoardDragging(false);
+        }}
+        onPinch={(from, to, scale) => {
+          const rect = viewportRef.current?.getBoundingClientRect();
+          if (rect)
+            spatial.setCamera((camera) =>
+              pinchCamera(camera, rect, from, to, scale),
+            );
+        }}
       >
         {/* Camada SVG dos Feixes de Energia Bezier Animados */}
         <EnergyLinksSvg

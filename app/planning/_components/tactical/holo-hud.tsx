@@ -17,6 +17,8 @@ import {
   RotateCcw,
   Settings2,
   Pencil,
+  MoreHorizontal,
+  Check,
   X,
 } from "lucide-react";
 import type { telemetry } from "../../_lib/tactical";
@@ -98,6 +100,7 @@ export function HoloHud({
     null,
   );
   const [helpOpen, setHelpOpen] = useState(false);
+  const [controlsOpen, setControlsOpen] = useState(false);
   const setScannerAnchor = useCallback((element: HTMLDivElement | null) => {
     setScannerContainer(
       element?.closest<HTMLElement>('[data-testid="tactical-viewport"]') ??
@@ -153,7 +156,7 @@ export function HoloHud({
               </h2>
             )}
           </div>
-          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+          <div className="hidden shrink-0 items-center gap-1.5 sm:flex sm:gap-2">
             {onListView && (
               <button
                 type="button"
@@ -266,7 +269,7 @@ export function HoloHud({
 
       <div
         ref={setScannerAnchor}
-        className="pointer-events-auto absolute left-3 top-[140px] z-30 sm:left-6"
+        className="pointer-events-auto absolute left-3 top-[140px] z-30 hidden sm:block sm:left-6"
       >
         <div className="flex items-center gap-2">
           <Popover.Root
@@ -342,7 +345,7 @@ export function HoloHud({
         </div>
       </div>
 
-      <div className="spatial-camera spatial-glass pointer-events-auto absolute right-3 top-[140px] z-30 flex items-center gap-1 rounded-xl p-1 sm:right-6">
+      <div className="spatial-camera spatial-glass pointer-events-auto absolute right-3 top-[140px] z-30 hidden items-center gap-1 rounded-xl p-1 sm:right-6 sm:flex">
         <button
           type="button"
           onClick={onAutoArrange}
@@ -394,6 +397,163 @@ export function HoloHud({
           <RotateCcw size={14} />
         </button>
       </div>
+      <p className="pointer-events-none absolute left-4 top-[132px] z-20 text-[10px] text-slate-500 sm:hidden">
+        Arraste a mesa · use a pinça para zoom
+      </p>
+      <nav
+        aria-label="Ações do treino"
+        className="spatial-mobile-actions pointer-events-auto absolute inset-x-0 bottom-0 z-50 flex items-center gap-2 border-t border-white/10 bg-[#0c141f]/95 px-3 pt-2 backdrop-blur-xl sm:hidden"
+        style={{ paddingBottom: "max(10px, env(safe-area-inset-bottom))" }}
+      >
+        <button
+          type="button"
+          aria-label="Mais ações do treino"
+          data-tour="builder-views"
+          onClick={() => setControlsOpen(true)}
+          className="flex min-h-12 flex-1 flex-col items-center justify-center gap-1 rounded-xl text-[11px] text-slate-300"
+        >
+          <MoreHorizontal size={20} />
+          Mais
+        </button>
+        {onReview && (
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={onReview}
+            className="flex min-h-12 flex-1 flex-col items-center justify-center gap-1 rounded-xl text-[11px] text-slate-300"
+          >
+            <Eye size={19} />
+            Revisar
+          </button>
+        )}
+        {onSave && (
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={onSave}
+            data-tour="builder-save"
+            className="flex min-h-12 flex-[1.4] items-center justify-center gap-2 rounded-xl bg-cyan-300 px-3 text-sm font-semibold text-slate-950"
+          >
+            <Check size={19} />
+            Salvar
+          </button>
+        )}
+      </nav>
+      <TacticalSheet
+        open={controlsOpen}
+        onClose={() => setControlsOpen(false)}
+        title="Ações do treino"
+        description="Ajuste sua ficha e escolha como explorar a mesa."
+      >
+        <div className="grid grid-cols-2 gap-2 text-xs [&_button]:flex [&_button]:min-h-14 [&_button]:items-center [&_button]:gap-2 [&_button]:rounded-xl [&_button]:bg-white/5 [&_button]:px-3">
+          {onOpenSettings && (
+            <button
+              type="button"
+              onClick={() => {
+                setControlsOpen(false);
+                onOpenSettings();
+              }}
+            >
+              <Settings2 size={18} />
+              Editar informações
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => {
+              setControlsOpen(false);
+              setScannerOpen(true);
+            }}
+          >
+            <Activity size={18} />
+            Mapa muscular
+          </button>
+          {onListView && (
+            <button
+              type="button"
+              onClick={() => {
+                setControlsOpen(false);
+                onListView();
+              }}
+            >
+              <List size={18} />
+              Visualização em lista
+            </button>
+          )}
+          {onClassicView && (
+            <button
+              type="button"
+              onClick={() => {
+                setControlsOpen(false);
+                onClassicView();
+              }}
+            >
+              <ArrowLeft size={18} />
+              Editor clássico
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => {
+              onAutoArrange();
+              setControlsOpen(false);
+            }}
+          >
+            <LayoutGrid size={18} />
+            Organizar cartões
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              onResetCamera();
+              setControlsOpen(false);
+            }}
+          >
+            <RotateCcw size={18} />
+            Centralizar mesa
+          </button>
+          <button type="button" aria-pressed={tilt > 5} onClick={onToggleTilt}>
+            <Compass size={18} />
+            {tilt > 5 ? "Vista de cima" : "Perspectiva 3D"}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setControlsOpen(false);
+              setHelpOpen(true);
+            }}
+          >
+            <CircleHelp size={18} />
+            Ajuda e gestos
+          </button>
+        </div>
+        <div className="flex items-center justify-between rounded-xl bg-white/5 p-2">
+          <button
+            type="button"
+            aria-label="Diminuir zoom"
+            onClick={onZoomOut}
+            className="spatial-icon-button"
+          >
+            <Minus size={18} />
+          </button>
+          <span className="text-xs text-slate-300">
+            Zoom {Math.round(zoom * 100)}%
+          </span>
+          <button
+            type="button"
+            aria-label="Aumentar zoom"
+            onClick={onZoomIn}
+            className="spatial-icon-button"
+          >
+            <Plus size={18} />
+          </button>
+        </div>
+        <p className="text-xs leading-relaxed text-slate-400">
+          Use dois dedos para aproximar, afastar ou mover a mesa. Arraste pela
+          alça do cartão para reposicioná-lo. Os campos e botões continuam
+          disponíveis ao toque.
+        </p>
+      </TacticalSheet>
       <div className="pointer-events-none absolute bottom-[250px] left-6 hidden items-center gap-4 text-[10px] text-slate-500 lg:flex">
         <span className="flex items-center gap-2">
           <span className="size-1 rounded-full bg-cyan-400" />

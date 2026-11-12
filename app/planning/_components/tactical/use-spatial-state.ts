@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+import { useMobileStudio } from "./use-mobile-studio";
 import {
   generateTacticalFormation,
   checkMagneticFusion,
@@ -15,13 +16,24 @@ export interface CameraState {
 }
 
 export function useSpatialState(itemsCount: number) {
+  const mobile = useMobileStudio();
   // Estado de Câmera da Mesa Espacial
   const [camera, setCamera] = useState<CameraState>({
     panX: 0,
     panY: 0,
-    zoom: 0.95,
-    tilt: 22, // Inicia na perspectiva 3D estilo Yu-Gi-Oh!
+    zoom: mobile ? 0.85 : 0.95,
+    tilt: mobile ? 0 : 22,
   });
+  const [previousMobile, setPreviousMobile] = useState(mobile);
+  if (previousMobile !== mobile) {
+    setPreviousMobile(mobile);
+    setCamera({
+      panX: 0,
+      panY: 0,
+      zoom: mobile ? 0.85 : 0.95,
+      tilt: mobile ? 0 : 22,
+    });
+  }
 
   // Posições espaciais das cartas (chave = id único do bloco ou index)
   const [positions, setPositions] = useState<Record<string, Point>>({});
@@ -66,14 +78,19 @@ export function useSpatialState(itemsCount: number) {
   }, []);
 
   // Zoom da Câmera
-  const setZoom = useCallback((delta: number | ((curr: number) => number)) => {
-    setCamera((prev) => {
-      const nextZoom =
-        typeof delta === "function" ? delta(prev.zoom) : prev.zoom + delta;
-      const clamped = Math.max(0.6, Math.min(1.35, nextZoom));
-      return { ...prev, zoom: Number(clamped.toFixed(2)) };
-    });
-  }, []);
+  const setZoom = useCallback(
+    (delta: number | ((curr: number) => number)) => {
+      setCamera((prev) => {
+        const nextZoom =
+          typeof delta === "function" ? delta(prev.zoom) : prev.zoom + delta;
+        const clamped = mobile
+          ? Math.max(0.001, nextZoom)
+          : Math.max(0.6, Math.min(1.35, nextZoom));
+        return { ...prev, zoom: mobile ? clamped : Number(clamped.toFixed(2)) };
+      });
+    },
+    [mobile],
+  );
 
   // Pan da Câmera
   const panBy = useCallback((dx: number, dy: number) => {
@@ -89,10 +106,10 @@ export function useSpatialState(itemsCount: number) {
     setCamera({
       panX: 0,
       panY: 0,
-      zoom: 0.95,
-      tilt: 22,
+      zoom: mobile ? 0.85 : 0.95,
+      tilt: mobile ? 0 : 22,
     });
-  }, []);
+  }, [mobile]);
 
   // Atualizar posição de uma carta
   const updateCardPosition = useCallback(

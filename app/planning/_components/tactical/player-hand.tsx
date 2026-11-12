@@ -34,6 +34,7 @@ import { ExerciseActionsMenu } from "./exercise-actions-menu";
 import { TacticalSheet } from "./tactical-sheet";
 import { useHoldMenu } from "./use-hold-menu";
 import type { Point } from "./spatial-utils";
+import { useMobileStudio } from "./use-mobile-studio";
 const FILTERS = [
   { label: "Todos", groups: [] },
   { label: "Peito", groups: ["CHEST"] },
@@ -74,11 +75,13 @@ export function PlayerHand({
   onCatalogDrag,
   onCatalogDrop,
 }: PlayerHandProps) {
+  const mobile = useMobileStudio();
   const [filterIndex, setFilterIndex] = useState(0),
     [query, setQuery] = useState(""),
-    [collapsed, setCollapsed] = useState(false),
+    [collapsedOverride, setCollapsed] = useState<boolean | null>(null),
     [limit, setLimit] = useState(50),
     [scroll, setScroll] = useState({ left: 0, end: false });
+  const collapsed = collapsedOverride ?? mobile;
   const listRef = useRef<HTMLDivElement>(null);
   const [configuration, setConfiguration] = useState<{
     entry: ListExercises200Item;
@@ -104,6 +107,19 @@ export function PlayerHand({
     setScroll({ left: 0, end: false });
     if (listRef.current) listRef.current.scrollLeft = 0;
   }
+  function addExercise(
+    entry: ListExercises200Item,
+    patch?: Partial<WorkoutPlanDraftExercise>,
+  ) {
+    if (patch) onSummonExercise(entry, patch);
+    else onSummonExercise(entry);
+    if (mobile) {
+      setCollapsed(true);
+      setQuery("");
+      if (document.activeElement instanceof HTMLElement)
+        document.activeElement.blur();
+    }
+  }
   useEffect(() => {
     const node = listRef.current;
     if (!node) return;
@@ -120,7 +136,7 @@ export function PlayerHand({
     <section
       data-deck-drop-zone
       aria-label="Catálogo de exercícios"
-      className={`spatial-deck pointer-events-none absolute inset-x-0 bottom-0 z-40 flex flex-col items-center px-3 pb-[max(12px,env(safe-area-inset-bottom))] sm:px-6 ${isDropTarget ? "spatial-deck-drop" : ""}`}
+      className={`spatial-deck pointer-events-none absolute inset-x-0 bottom-[calc(72px+env(safe-area-inset-bottom))] z-40 flex flex-col items-center px-3 pb-2 sm:bottom-0 sm:px-6 sm:pb-[max(12px,env(safe-area-inset-bottom))] ${isDropTarget ? "spatial-deck-drop" : ""}`}
     >
       <div className="spatial-glass pointer-events-auto relative z-20 w-full max-w-5xl rounded-2xl p-2 sm:px-3">
         <div className="flex items-center gap-2">
@@ -143,6 +159,9 @@ export function PlayerHand({
                 setCollapsed(false);
               }}
               placeholder="Buscar exercício…"
+              onFocus={() => {
+                if (mobile) setCollapsed(false);
+              }}
               className="min-w-0 w-full bg-transparent text-xs text-white outline-none placeholder:text-slate-500"
             />
             {query && (
@@ -217,7 +236,7 @@ export function PlayerHand({
                 entry={entry}
                 index={i}
                 disabled={disabled}
-                onAdd={() => onSummonExercise(entry)}
+                onAdd={() => addExercise(entry)}
                 onConfigure={(tab) =>
                   setConfiguration({
                     entry,
@@ -296,7 +315,7 @@ export function PlayerHand({
             disabled={disabled}
             onClick={() => {
               if (configuration) {
-                onSummonExercise(configuration.entry, configuration.item);
+                addExercise(configuration.entry, configuration.item);
                 setConfiguration(null);
               }
             }}

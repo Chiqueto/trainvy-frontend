@@ -10,6 +10,7 @@ import {
   checkMagneticFusion,
   generateTacticalFormation,
   screenToBoard,
+  pinchCamera,
 } from "@/app/planning/_components/tactical/spatial-utils";
 import { EnergyLinksSvg } from "@/app/planning/_components/tactical/energy-links-svg";
 import { SpatialCanvas } from "@/app/planning/_components/tactical/spatial-canvas";
@@ -37,6 +38,23 @@ vi.mock("@/app/_lib/hooks/use-exercise-catalog", () => ({
 }));
 
 describe("Holo-Board 3D Spatial Utils", () => {
+  it.each([0, 22])(
+    "keeps the gesture anchor under the fingers at tilt %s without desktop zoom limits",
+    (tilt) => {
+      const rect = { left: 0, top: 0, width: 390, height: 844 };
+      const camera = { panX: 20, panY: -30, zoom: 0.85, tilt };
+      const from = { x: 130, y: 340 },
+        to = { x: 180, y: 380 };
+      const anchor = screenToBoard(from, rect, camera);
+      for (const scale of [0.1, 5]) {
+        const next = pinchCamera(camera, rect, from, to, scale);
+        const result = screenToBoard(to, rect, next);
+        expect(result.x).toBeCloseTo(anchor.x, 8);
+        expect(result.y).toBeCloseTo(anchor.y, 8);
+        expect(next.zoom).toBeCloseTo(camera.zoom * scale);
+      }
+    },
+  );
   it("preserves an existing custom cadence when enabling its technique", () => {
     const item = {
       name: "Supino",
@@ -121,6 +139,42 @@ describe("Holo-Board 3D Spatial Utils", () => {
 });
 
 describe("Holo-Board 3D Components", () => {
+  it("cancels the hold menu when a second finger starts a pinch", () => {
+    vi.useFakeTimers();
+    try {
+      const { container } = render(
+        <HoloExerciseCard
+          item={{ name: "Remada", sets: 3, reps: 10, restTimeInSeconds: 75 }}
+          index={0}
+          orderLabel="01"
+          x={100}
+          y={100}
+          onPositionChange={vi.fn()}
+          onChange={vi.fn()}
+          onRemove={vi.fn()}
+          onStartWirePull={vi.fn()}
+        />,
+      );
+      fireEvent.pointerDown(container.querySelector("[data-card-title]")!, {
+        pointerType: "touch",
+        pointerId: 1,
+        isPrimary: true,
+        clientX: 120,
+        clientY: 130,
+      });
+      fireEvent.pointerDown(window, {
+        pointerType: "touch",
+        pointerId: 2,
+        isPrimary: false,
+        clientX: 160,
+        clientY: 130,
+      });
+      act(() => vi.advanceTimersByTime(700));
+      expect(screen.queryByRole("menu")).toBeNull();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
   it("preserves the prescription configured in the catalog when adding its card to the board", () => {
     const observe = vi.fn();
     function Editor() {

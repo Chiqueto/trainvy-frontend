@@ -95,7 +95,9 @@ export function CoachGuidedTour({ tour }: { tour: "workspace" | "builder" }) {
 
   useEffect(() => {
     if (!open || !current.target) return;
-    const target = document.querySelector<HTMLElement>(current.target);
+    const target = Array.from(
+      document.querySelectorAll<HTMLElement>(current.target),
+    ).find((element) => element.getClientRects().length > 0);
     if (!target) return;
     target.scrollIntoView?.({ block: "center", behavior: "instant" });
     const update = () => {
