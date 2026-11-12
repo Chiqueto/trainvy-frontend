@@ -1,4 +1,5 @@
 import { notFound, redirect } from "next/navigation";
+import { InviteStudentModal } from "../../_components/invite-student-modal";
 import Link from "next/link";
 import {
   AlertCircle,
@@ -240,12 +241,26 @@ export default async function AthleteDetailsPage({
         </div>
 
         {/* Conteúdo da Tab Selecionada */}
+        {athleteData.isManagedProfile && (
+          <section className="space-y-3 rounded-2xl border border-primary/30 bg-primary/5 p-5">
+            <p className="text-sm text-muted-foreground">
+              Você já pode montar as fichas deste aluno. Envie um convite quando
+              ele for criar ou vincular sua conta; os treinos preparados serão
+              preservados.
+            </p>
+            <InviteStudentModal isFull={false} managedAthleteId={athleteId} />
+          </section>
+        )}
         {currentTab === "prescriptions" ? (
-          prescriptionsFailed ? <WorkspaceError message="Não foi possível carregar as prescrições deste aluno." /> : <CoachPrescriptionsList
-            athleteId={athleteId}
-            athleteName={athleteData.name}
-            prescriptions={prescriptions}
-          />
+          prescriptionsFailed ? (
+            <WorkspaceError message="Não foi possível carregar as prescrições deste aluno." />
+          ) : (
+            <CoachPrescriptionsList
+              athleteId={athleteId}
+              athleteName={athleteData.name}
+              prescriptions={prescriptions}
+            />
+          )
         ) : currentTab === "evolution" ? (
           <CoachAthleteEvolutionDashboard
             athleteId={athleteId}
@@ -277,7 +292,11 @@ export default async function AthleteDetailsPage({
                 </h1>
                 <p className="text-xs text-muted-foreground flex items-center justify-center gap-1.5 truncate">
                   <Mail className="size-3 shrink-0" />
-                  <span>{athleteData.email}</span>
+                  <span>
+                    {athleteData.isManagedProfile
+                      ? "Aluno sem conta no Trainvy"
+                      : athleteData.email}
+                  </span>
                 </p>
               </div>
 

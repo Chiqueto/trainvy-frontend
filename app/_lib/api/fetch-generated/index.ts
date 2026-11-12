@@ -4539,7 +4539,132 @@ export type GetCommercialContext503 = {
   code: string;
 };
 
+export type GetCoachOnboarding200 = {
+  coachOnboardingCompleted: boolean;
+  workoutBuilderOnboardingCompleted: boolean;
+};
+
+export type GetCoachOnboarding400 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachOnboarding401 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachOnboarding403 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachOnboarding404 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachOnboarding409 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachOnboarding500 = {
+  error: string;
+  code: string;
+};
+
+export type CompleteCoachOnboardingBodyTour =
+  (typeof CompleteCoachOnboardingBodyTour)[keyof typeof CompleteCoachOnboardingBodyTour];
+
+export const CompleteCoachOnboardingBodyTour = {
+  workspace: "workspace",
+  builder: "builder",
+} as const;
+
+export type CompleteCoachOnboardingBody = {
+  tour: CompleteCoachOnboardingBodyTour;
+};
+
+export type CompleteCoachOnboarding200 = {
+  coachOnboardingCompleted: boolean;
+  workoutBuilderOnboardingCompleted: boolean;
+};
+
+export type CompleteCoachOnboarding400 = {
+  error: string;
+  code: string;
+};
+
+export type CompleteCoachOnboarding401 = {
+  error: string;
+  code: string;
+};
+
+export type CompleteCoachOnboarding403 = {
+  error: string;
+  code: string;
+};
+
+export type CompleteCoachOnboarding404 = {
+  error: string;
+  code: string;
+};
+
+export type CompleteCoachOnboarding409 = {
+  error: string;
+  code: string;
+};
+
+export type CompleteCoachOnboarding500 = {
+  error: string;
+  code: string;
+};
+
+export type CreateManagedAthleteBody = {
+  /**
+   * @minLength 2
+   * @maxLength 100
+   */
+  name: string;
+};
+
+export type CreateManagedAthlete201 = {
+  athleteId: string;
+};
+
+export type CreateManagedAthlete400 = {
+  error: string;
+  code: string;
+};
+
+export type CreateManagedAthlete401 = {
+  error: string;
+  code: string;
+};
+
+export type CreateManagedAthlete403 = {
+  error: string;
+  code: string;
+};
+
+export type CreateManagedAthlete404 = {
+  error: string;
+  code: string;
+};
+
+export type CreateManagedAthlete409 = {
+  error: string;
+  code: string;
+};
+
+export type CreateManagedAthlete500 = {
+  error: string;
+  code: string;
+};
+
 export type CreateCoachInvitationBody = {
+  managedAthleteId?: string;
   /**
    * @minimum 1
    * @maximum 30
@@ -4680,6 +4805,7 @@ export type ListCoachAthletes200AthletesItemActivePrescription = {
 } | null;
 
 export type ListCoachAthletes200AthletesItem = {
+  isManagedProfile: boolean;
   linkId: string;
   athleteId: string;
   name: string;
@@ -4782,6 +4908,7 @@ export type ListCoachAthletes500 = {
 };
 
 export type GetCoachAthleteDetails200 = {
+  isManagedProfile: boolean;
   linkId: string;
   athleteId: string;
   name: string;
@@ -23566,6 +23693,219 @@ export const getCommercialContext = async (
     {
       ...options,
       method: "GET",
+    },
+  );
+};
+
+export type getCoachOnboardingResponse200 = {
+  data: GetCoachOnboarding200;
+  status: 200;
+};
+
+export type getCoachOnboardingResponse400 = {
+  data: GetCoachOnboarding400;
+  status: 400;
+};
+
+export type getCoachOnboardingResponse401 = {
+  data: GetCoachOnboarding401;
+  status: 401;
+};
+
+export type getCoachOnboardingResponse403 = {
+  data: GetCoachOnboarding403;
+  status: 403;
+};
+
+export type getCoachOnboardingResponse404 = {
+  data: GetCoachOnboarding404;
+  status: 404;
+};
+
+export type getCoachOnboardingResponse409 = {
+  data: GetCoachOnboarding409;
+  status: 409;
+};
+
+export type getCoachOnboardingResponse500 = {
+  data: GetCoachOnboarding500;
+  status: 500;
+};
+
+export type getCoachOnboardingResponseSuccess =
+  getCoachOnboardingResponse200 & {
+    headers: Headers;
+  };
+export type getCoachOnboardingResponseError = (
+  | getCoachOnboardingResponse400
+  | getCoachOnboardingResponse401
+  | getCoachOnboardingResponse403
+  | getCoachOnboardingResponse404
+  | getCoachOnboardingResponse409
+  | getCoachOnboardingResponse500
+) & {
+  headers: Headers;
+};
+
+export type getCoachOnboardingResponse =
+  | getCoachOnboardingResponseSuccess
+  | getCoachOnboardingResponseError;
+
+export const getGetCoachOnboardingUrl = () => {
+  return `/coach/onboarding`;
+};
+
+export const getCoachOnboarding = async (
+  options?: RequestInit,
+): Promise<getCoachOnboardingResponse> => {
+  return customFetch<getCoachOnboardingResponse>(getGetCoachOnboardingUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export type completeCoachOnboardingResponse200 = {
+  data: CompleteCoachOnboarding200;
+  status: 200;
+};
+
+export type completeCoachOnboardingResponse400 = {
+  data: CompleteCoachOnboarding400;
+  status: 400;
+};
+
+export type completeCoachOnboardingResponse401 = {
+  data: CompleteCoachOnboarding401;
+  status: 401;
+};
+
+export type completeCoachOnboardingResponse403 = {
+  data: CompleteCoachOnboarding403;
+  status: 403;
+};
+
+export type completeCoachOnboardingResponse404 = {
+  data: CompleteCoachOnboarding404;
+  status: 404;
+};
+
+export type completeCoachOnboardingResponse409 = {
+  data: CompleteCoachOnboarding409;
+  status: 409;
+};
+
+export type completeCoachOnboardingResponse500 = {
+  data: CompleteCoachOnboarding500;
+  status: 500;
+};
+
+export type completeCoachOnboardingResponseSuccess =
+  completeCoachOnboardingResponse200 & {
+    headers: Headers;
+  };
+export type completeCoachOnboardingResponseError = (
+  | completeCoachOnboardingResponse400
+  | completeCoachOnboardingResponse401
+  | completeCoachOnboardingResponse403
+  | completeCoachOnboardingResponse404
+  | completeCoachOnboardingResponse409
+  | completeCoachOnboardingResponse500
+) & {
+  headers: Headers;
+};
+
+export type completeCoachOnboardingResponse =
+  | completeCoachOnboardingResponseSuccess
+  | completeCoachOnboardingResponseError;
+
+export const getCompleteCoachOnboardingUrl = () => {
+  return `/coach/onboarding`;
+};
+
+export const completeCoachOnboarding = async (
+  completeCoachOnboardingBody: CompleteCoachOnboardingBody,
+  options?: RequestInit,
+): Promise<completeCoachOnboardingResponse> => {
+  return customFetch<completeCoachOnboardingResponse>(
+    getCompleteCoachOnboardingUrl(),
+    {
+      ...options,
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(completeCoachOnboardingBody),
+    },
+  );
+};
+
+export type createManagedAthleteResponse201 = {
+  data: CreateManagedAthlete201;
+  status: 201;
+};
+
+export type createManagedAthleteResponse400 = {
+  data: CreateManagedAthlete400;
+  status: 400;
+};
+
+export type createManagedAthleteResponse401 = {
+  data: CreateManagedAthlete401;
+  status: 401;
+};
+
+export type createManagedAthleteResponse403 = {
+  data: CreateManagedAthlete403;
+  status: 403;
+};
+
+export type createManagedAthleteResponse404 = {
+  data: CreateManagedAthlete404;
+  status: 404;
+};
+
+export type createManagedAthleteResponse409 = {
+  data: CreateManagedAthlete409;
+  status: 409;
+};
+
+export type createManagedAthleteResponse500 = {
+  data: CreateManagedAthlete500;
+  status: 500;
+};
+
+export type createManagedAthleteResponseSuccess =
+  createManagedAthleteResponse201 & {
+    headers: Headers;
+  };
+export type createManagedAthleteResponseError = (
+  | createManagedAthleteResponse400
+  | createManagedAthleteResponse401
+  | createManagedAthleteResponse403
+  | createManagedAthleteResponse404
+  | createManagedAthleteResponse409
+  | createManagedAthleteResponse500
+) & {
+  headers: Headers;
+};
+
+export type createManagedAthleteResponse =
+  | createManagedAthleteResponseSuccess
+  | createManagedAthleteResponseError;
+
+export const getCreateManagedAthleteUrl = () => {
+  return `/coach/managed-athletes`;
+};
+
+export const createManagedAthlete = async (
+  createManagedAthleteBody: CreateManagedAthleteBody,
+  options?: RequestInit,
+): Promise<createManagedAthleteResponse> => {
+  return customFetch<createManagedAthleteResponse>(
+    getCreateManagedAthleteUrl(),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(createManagedAthleteBody),
     },
   );
 };

@@ -100,7 +100,8 @@ export function HoloHud({
   const [helpOpen, setHelpOpen] = useState(false);
   const setScannerAnchor = useCallback((element: HTMLDivElement | null) => {
     setScannerContainer(
-      element?.closest<HTMLElement>('[data-testid="tactical-viewport"]') ?? null,
+      element?.closest<HTMLElement>('[data-testid="tactical-viewport"]') ??
+        null,
     );
   }, []);
   const desktop = useSyncExternalStore(
@@ -158,6 +159,7 @@ export function HoloHud({
                 type="button"
                 onClick={onListView}
                 aria-label="Visualização em lista"
+                data-tour="builder-views"
                 className="spatial-icon-button sm:!w-auto sm:gap-2 sm:px-3"
               >
                 <List size={16} />
@@ -189,7 +191,10 @@ export function HoloHud({
               </button>
             )}
             {onSave && (
-              <div className="min-w-10 sm:w-36 [&_button]:h-10">
+              <div
+                data-tour="builder-save"
+                className="min-w-10 sm:w-36 [&_button]:h-10"
+              >
                 <SealButton
                   disabled={disabled}
                   onSave={onSave}
@@ -199,7 +204,10 @@ export function HoloHud({
             )}
           </div>
         </div>
-        <div className="flex min-w-0 items-center gap-3 border-t border-white/5 px-3 py-2 sm:px-6">
+        <div
+          data-tour="builder-days"
+          className="flex min-w-0 items-center gap-3 border-t border-white/5 px-3 py-2 sm:px-6"
+        >
           <span className="hidden text-[10px] uppercase tracking-[0.18em] text-slate-500 sm:block">
             Divisão
           </span>

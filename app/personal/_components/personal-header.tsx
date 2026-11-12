@@ -86,7 +86,10 @@ export function PersonalHeader({
       </div>
 
       {/* Navegação Rápida entre Alunos, Modelos e Exercícios */}
-      <div className="flex items-center gap-1.5 overflow-x-auto border-t border-border/50 pt-4 -mx-1 px-1 scrollbar-none">
+      <div
+        data-tour="personal-tabs"
+        className="flex items-center gap-1.5 overflow-x-auto border-t border-border/50 pt-4 -mx-1 px-1 scrollbar-none"
+      >
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = currentTab === tab.id;

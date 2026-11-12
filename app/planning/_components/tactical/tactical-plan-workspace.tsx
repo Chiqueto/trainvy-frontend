@@ -1,5 +1,6 @@
 "use client";
 import { useState, type ReactNode } from "react";
+import { CoachGuidedTour } from "@/app/personal/_components/coach-guided-tour";
 import { Dialog } from "radix-ui";
 import { ArrowLeft, Copy, Eye, Plus, Settings2, Trash2 } from "lucide-react";
 import { TacticalBuilderArena } from "./tactical-builder-arena";
@@ -73,7 +74,7 @@ export function TacticalPlanWorkspace({
     onChange(days.map((d, i) => (i === index ? { ...d, ...patch } : d)));
   }
   const navigation = (
-    <div className="flex min-w-0 items-center gap-1">
+    <div data-tour="builder-days" className="flex min-w-0 items-center gap-1">
       <div
         className="no-scrollbar flex min-w-0 gap-1 overflow-x-auto"
         role="tablist"
@@ -124,6 +125,7 @@ export function TacticalPlanWorkspace({
             setArenaMode(arenaMode === "spatial" ? "list" : "spatial")
           }
           aria-label="Alternar visualização tática"
+          data-tour="builder-views"
           className="hidden h-9 rounded-lg bg-white/5 px-2 text-xs sm:block"
         >
           {arenaMode === "spatial" ? (
@@ -157,7 +159,9 @@ export function TacticalPlanWorkspace({
           </button>
         )}
         {onSave && (
-          <SealButton disabled={disabled} onSave={onSave} label={saveLabel} />
+          <div data-tour="builder-save">
+            <SealButton disabled={disabled} onSave={onSave} label={saveLabel} />
+          </div>
         )}
       </div>
       {error && (
@@ -195,7 +199,13 @@ export function TacticalPlanWorkspace({
           <Dialog.Description className="sr-only">
             Organize exercícios, séries e técnicas do plano.
           </Dialog.Description>
-          <div className="min-h-0 flex-1 overflow-hidden">
+          <div className="absolute bottom-3 left-3 z-[60] rounded-xl bg-zinc-900 text-zinc-100">
+            <CoachGuidedTour tour="builder" />
+          </div>
+          <div
+            data-tour="builder-arena"
+            className="min-h-0 flex-1 overflow-hidden"
+          >
             {day && arenaMode === "spatial" ? (
               <SpatialBuilderArena
                 key={`spatial-${day.clientId ?? day.id ?? index}`}

@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { CoachGuidedTour } from "@/app/personal/_components/coach-guided-tour";
 import { LayoutList, Zap } from "lucide-react";
 import {
   loadBuilderPreference,
@@ -102,7 +103,9 @@ export function ViewModeToggle({
 }) {
   return (
     <div className="ml-auto w-fit space-y-1">
+      {value === "classic" && <CoachGuidedTour tour="builder" />}
       <div
+        data-tour="builder-views"
         role="group"
         aria-label="Visualização do editor"
         className="inline-flex rounded-2xl border border-slate-700 bg-slate-950 p-1 text-xs text-slate-300"

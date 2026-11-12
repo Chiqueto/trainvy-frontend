@@ -1,4 +1,6 @@
 import { ProfessionalRegistrationForm } from "./_components/professional-registration-form";
+import { CoachGuidedTour } from "./_components/coach-guided-tour";
+import { CreateStudentModal } from "./_components/create-student-modal";
 import { LegalConsent } from "@/app/_components/legal-consent";
 import { getProfessionalRegistration } from "@/app/_lib/api/fetch-generated";
 import { redirect } from "next/navigation";
@@ -105,7 +107,15 @@ export default async function PersonalPage() {
     <div className="personal-workspace flex min-h-svh min-w-0 flex-col bg-background pb-24 lg:pb-8">
       <main className="mx-auto w-full max-w-6xl px-5 py-4 flex flex-col gap-5">
         <PersonalHeader
-          actions={<InviteStudentModal isFull={isFull} compact />}
+          actions={
+            <>
+              <CoachGuidedTour tour="workspace" />
+              <div data-tour="student-actions" className="flex flex-wrap gap-2">
+                <CreateStudentModal isFull={isFull} />
+                <InviteStudentModal isFull={isFull} compact />
+              </div>
+            </>
+          }
         />
 
         {activeCount === 0 && invitations.length === 0 && (
@@ -113,12 +123,14 @@ export default async function PersonalPage() {
         )}
 
         <ProfessionalWorkspaceEvent />
-        <AthletesList
-          athletes={athletes}
-          summary={summary}
-          activeCount={activeCount}
-          limit={limit}
-        />
+        <div data-tour="athletes">
+          <AthletesList
+            athletes={athletes}
+            summary={summary}
+            activeCount={activeCount}
+            limit={limit}
+          />
+        </div>
 
         <section
           aria-label="Recursos da assessoria"
@@ -144,7 +156,10 @@ export default async function PersonalPage() {
               <ArrowUpRight className="size-4 shrink-0 text-muted-foreground group-hover:text-primary" />
             </Link>
           </div>
-          <div className="rounded-3xl border border-border/70 bg-card p-5 shadow-xs space-y-4">
+          <div
+            data-tour="invitations"
+            className="rounded-3xl border border-border/70 bg-card p-5 shadow-xs space-y-4"
+          >
             <div>
               <h2 className="font-heading text-base font-semibold">
                 Convites da assessoria

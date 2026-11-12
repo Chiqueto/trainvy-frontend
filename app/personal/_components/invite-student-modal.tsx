@@ -17,6 +17,7 @@ import { createInvitationAction } from "../_actions";
 import { trackProductEvent } from "@/app/_lib/product-events";
 
 interface InviteStudentModalProps {
+  managedAthleteId?: string;
   isFull: boolean;
   compact?: boolean;
 }
@@ -24,6 +25,7 @@ interface InviteStudentModalProps {
 export function InviteStudentModal({
   isFull,
   compact = false,
+  managedAthleteId,
 }: InviteStudentModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -44,7 +46,7 @@ export function InviteStudentModal({
 
   const handleGenerate = () => {
     startTransition(async () => {
-      const res = await createInvitationAction(7);
+      const res = await createInvitationAction(7, managedAthleteId);
       if (!res.success) {
         toast.error(res.error);
       } else {
@@ -93,7 +95,11 @@ export function InviteStudentModal({
         }
       >
         <UserPlus className="size-4" />
-        {compact ? "Convidar aluno" : "Convidar novo aluno"}
+        {managedAthleteId
+          ? "Vincular conta do aluno"
+          : compact
+            ? "Convidar aluno"
+            : "Convidar novo aluno"}
       </Button>
 
       {isOpen && (
@@ -120,9 +126,15 @@ export function InviteStudentModal({
             {!generatedToken ? (
               <div className="flex flex-col gap-4">
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  Gere um link seguro e exclusivo para enviar ao seu atleta. Ao
-                  clicar, ele poderá aceitar a assessoria mantendo total
-                  controle e propriedade sobre a sua própria conta.
+                  {managedAthleteId ? (
+                    "Envie este link somente para este aluno. Quando ele entrar ou criar sua conta e aceitar o convite, as fichas que você preparou serão vinculadas automaticamente à conta dele."
+                  ) : (
+                    <>
+                      Gere um link seguro e exclusivo para enviar ao seu atleta.
+                      Ao clicar, ele poderá aceitar a assessoria mantendo total
+                      controle e propriedade sobre a sua própria conta.
+                    </>
+                  )}
                 </p>
 
                 <div className="rounded-xl border border-border/60 bg-muted/30 p-3 text-xs text-foreground/80 space-y-1">

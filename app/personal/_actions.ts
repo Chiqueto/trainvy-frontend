@@ -5,6 +5,7 @@ import {
   cancelCoachInvitation,
   cancelWorkoutPrescription,
   createCoachInvitation,
+  createManagedAthlete,
   createWorkoutPrescriptionDraft,
   generateCoachPrescriptionDraftWithAi,
   revokeCoachAthleteLink,
@@ -42,10 +43,32 @@ function getActionError(data: unknown, fallback: string): string {
   return fallback;
 }
 
-export async function createInvitationAction(expiresInDays: number = 7) {
+export async function createManagedStudentAction(name: string) {
+  try {
+    const result = await createManagedAthlete({ name });
+    if (result.status === 201) {
+      revalidatePath("/personal");
+      return { success: true as const, data: result.data };
+    }
+    return {
+      success: false as const,
+      error: getActionError(result.data, "Não foi possível cadastrar o aluno."),
+    };
+  } catch {
+    return {
+      success: false as const,
+      error: "Falha na comunicação com o servidor.",
+    };
+  }
+}
+
+export async function createInvitationAction(
+  expiresInDays: number = 7,
+  managedAthleteId?: string,
+) {
   try {
     const res = await createCoachInvitation(
-      { expiresInDays },
+      { expiresInDays, managedAthleteId },
       { cache: "no-store" },
     );
 

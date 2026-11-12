@@ -62,12 +62,12 @@ export function CoachFirstStepsCard({ isFull }: CoachFirstStepsCardProps) {
                 1
               </span>
               <h3 className="font-heading text-xs font-bold text-foreground">
-                Convide seu 1º Aluno
+                Cadastre seu 1º Aluno
               </h3>
             </div>
             <p className="text-[11px] text-muted-foreground leading-normal">
-              Gere um link exclusivo e envie pelo WhatsApp. O aluno se conecta
-              na hora.
+              Cadastre pelo nome e comece a preparar os treinos. Depois envie
+              o convite para vincular a conta do aluno.
             </p>
           </div>
         </div>

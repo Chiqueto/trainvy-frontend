@@ -38,6 +38,7 @@ export interface AthleteItem {
   athleteId: string;
   name: string;
   email: string;
+  isManagedProfile?: boolean;
   image?: string | null;
   acceptedAt: string;
   evolutionShared?: boolean;
@@ -360,7 +361,9 @@ export function AthletesList({
                         )}
                       </div>
                       <span className="text-[11px] text-muted-foreground truncate">
-                        {ath.email}
+                        {ath.isManagedProfile
+                          ? "Aguardando conta · treinos já disponíveis para montar"
+                          : ath.email}
                       </span>
                     </div>
 
