@@ -7,12 +7,15 @@ import { haptic } from "../../_lib/tactical";
 export function SealButton({
   onSave,
   disabled,
+  label = "Selar treino",
 }: {
   onSave: () => void;
   disabled?: boolean;
+  label?: string;
 }) {
   const [sealing, setSealing] = useState(false);
   const reduced = useReducedMotion();
+  const pendingLabel = label === "Selar treino" ? "Selando…" : "Salvando…";
   return (
     <motion.div
       className="flex-1"
@@ -27,7 +30,7 @@ export function SealButton({
     >
       <Button
         type="button"
-        aria-label={sealing ? "Selando…" : "Selar treino"}
+        aria-label={sealing ? pendingLabel : label}
         disabled={disabled || sealing}
         className="h-9 w-full rounded-xl bg-cyan-300 text-slate-950 hover:bg-cyan-200"
         onClick={() => {
@@ -48,7 +51,7 @@ export function SealButton({
           <Check size={16} />
         )}
         <span className="hidden sm:inline">
-          {sealing ? "Selando…" : "Selar treino"}
+          {sealing ? pendingLabel : label}
         </span>
       </Button>
     </motion.div>

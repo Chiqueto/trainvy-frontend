@@ -1,12 +1,6 @@
 "use client";
 
-import React, {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type ReactNode,
-} from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useExerciseCatalog } from "@/app/_lib/hooks/use-exercise-catalog";
 import type { ListExercises200Item } from "@/app/_lib/api/fetch-generated";
 import {
@@ -40,7 +34,6 @@ import {
   generateTacticalFormation,
   type Point,
 } from "./spatial-utils";
-import { TacticalSheet } from "./tactical-sheet";
 import { Zap } from "lucide-react";
 
 export interface SpatialBuilderArenaProps {
@@ -52,12 +45,15 @@ export interface SpatialBuilderArenaProps {
   onChange: (patch: Partial<WorkoutPlanDraftDay>) => void;
   disabled?: boolean;
   onSave?: () => void;
+  saveLabel?: string;
   onClassicView?: () => void;
-  settingsNode?: ReactNode;
+  onOpenSettings?: () => void;
   onListView?: () => void;
   onReview?: () => void;
   reviewLabel?: string;
   planName?: string;
+  onPlanNameChange?: (name: string) => void;
+  planNameMaxLength?: number;
   error?: string | null;
   syncError?: boolean;
 }
@@ -71,18 +67,20 @@ export function SpatialBuilderArena({
   onChange,
   disabled = false,
   onSave,
+  saveLabel,
   onClassicView,
-  settingsNode,
+  onOpenSettings,
   onListView,
   onReview,
   reviewLabel,
   planName,
+  onPlanNameChange,
+  planNameMaxLength,
   error,
   syncError,
 }: SpatialBuilderArenaProps) {
   const { exercises: catalog, isSyncing } = useExerciseCatalog();
   const [summons, setSummons] = useState<SummonEvent[]>([]);
-  const [settingsOpen, setSettingsOpen] = useState(false);
   const [boardDragging, setBoardDragging] = useState(false);
   const [catalogDrag, setCatalogDrag] = useState<{
     entry: ListExercises200Item;
@@ -184,10 +182,6 @@ export function SpatialBuilderArena({
     const normalized = normalizeGroups(items);
     onChange({
       exercises: normalized,
-      estimatedDurationInMinutes: Math.max(
-        1,
-        telemetry(normalized, catalog).minutes,
-      ),
     });
   }
 
@@ -389,12 +383,15 @@ export function SpatialBuilderArena({
           haptic(20);
         }}
         onSave={onSave}
+        saveLabel={saveLabel}
         onListView={onListView}
         onReview={onReview}
         reviewLabel={reviewLabel}
         planName={planName}
+        onPlanNameChange={onPlanNameChange}
+        planNameMaxLength={planNameMaxLength}
         onClassicView={onClassicView}
-        onOpenSettings={() => setSettingsOpen(true)}
+        onOpenSettings={onOpenSettings}
         disabled={disabled}
       />
 
@@ -661,25 +658,6 @@ export function SpatialBuilderArena({
           </span>
         </div>
       )}
-      {/* Sheet de Configurações do Treino */}
-      <TacticalSheet
-        open={settingsOpen}
-        onClose={() => setSettingsOpen(false)}
-        title="Configurações do Treino"
-        description="Ajuste nome, divisão e parâmetros gerais do plano."
-      >
-        <fieldset disabled={disabled} className="space-y-3">
-          <label className="block text-xs">
-            Nome do Treino
-            <input
-              value={day.name}
-              onChange={(e) => onChange({ name: e.target.value })}
-              className="mt-1 h-10 w-full rounded-xl border border-white/10 bg-zinc-900 px-3 text-sm text-white"
-            />
-          </label>
-          {settingsNode}
-        </fieldset>
-      </TacticalSheet>
     </div>
   );
 }

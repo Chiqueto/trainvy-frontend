@@ -303,10 +303,6 @@ export function TacticalBuilderArena({
     const exercises = normalizeGroups(items);
     onChange({
       exercises,
-      estimatedDurationInMinutes: Math.max(
-        1,
-        telemetry(exercises, catalog).minutes,
-      ),
     });
   }
   function update(index: number, patch: Partial<WorkoutPlanDraftExercise>) {

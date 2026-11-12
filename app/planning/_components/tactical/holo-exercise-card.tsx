@@ -13,6 +13,7 @@ import {
 import { ExerciseActionsMenu } from "./exercise-actions-menu";
 import { useHoldMenu } from "./use-hold-menu";
 import { OrbitalSwapMenu } from "./orbital-swap-menu";
+import { TechniqueIcon } from "./technique-icon";
 const RARITY_STYLES = {
   high: {
     border: "border-amber-400/40 hover:border-amber-300",
@@ -364,9 +365,10 @@ export function HoloExerciseCard({
               color: RUNE_COLORS[rune],
               borderColor: `${RUNE_COLORS[rune]}55`,
             }}
-            className="min-h-8 rounded-r-lg border border-l-0 bg-slate-950/95 px-2 py-1 text-left text-[9px] leading-relaxed"
+            className="flex min-h-8 items-center gap-1.5 rounded-r-lg border border-l-0 bg-slate-950/95 px-2 py-1 text-left text-[9px] leading-relaxed"
           >
-            {runeLabel(item, rune)}
+            <TechniqueIcon rune={rune} size={13} />
+            <span>{runeLabel(item, rune).replace(/^\S+\s/u, "")}</span>
           </button>
         ))}
       </div>

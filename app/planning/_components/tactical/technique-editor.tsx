@@ -2,6 +2,7 @@
 import { useState } from "react";
 import type { WorkoutPlanDraftExercise } from "../../_lib/workout-plan-builder";
 import { toggleRune, isCadence, type Rune } from "../../_lib/tactical";
+import { TechniqueIcon } from "./technique-icon";
 
 export const TECHNIQUE_NAMES: Record<Rune, string> = {
   DROP_SET: "Drop-set",
@@ -64,6 +65,7 @@ export function TechniqueEditor({
                 onChange={() => onChange(toggleRune(item, rune))}
                 className="size-4 accent-cyan-300"
               />
+              <TechniqueIcon rune={rune} />
               {TECHNIQUE_NAMES[rune]}
             </label>
             <p className="mt-1 text-xs leading-relaxed text-slate-400">

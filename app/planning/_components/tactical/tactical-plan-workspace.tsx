@@ -10,6 +10,7 @@ import {
   createDraftWorkoutDay,
   duplicateDraftWorkoutDay,
   type WorkoutPlanDraftDay,
+  WEEK_DAYS,
 } from "../../_lib/workout-plan-builder";
 import { Input } from "@/components/ui/input";
 import { AiFeature } from "@/app/_components/ai-availability-provider";
@@ -23,7 +24,10 @@ export function TacticalPlanWorkspace({
   onClassic,
   settings,
   planName,
+  onPlanNameChange,
+  planNameMaxLength = 120,
   onSave,
+  saveLabel,
   onReview,
   reviewLabel = "Revisar ficha",
   error,
@@ -39,7 +43,10 @@ export function TacticalPlanWorkspace({
   onClassic?: () => void;
   settings?: ReactNode;
   planName?: string;
+  onPlanNameChange?: (name: string) => void;
+  planNameMaxLength?: number;
   onSave?: () => void;
+  saveLabel?: string;
   onReview?: () => void;
   reviewLabel?: string;
   error?: string | null;
@@ -149,7 +156,9 @@ export function TacticalPlanWorkspace({
             <Eye size={16} className="sm:hidden" />
           </button>
         )}
-        {onSave && <SealButton disabled={disabled} onSave={onSave} />}
+        {onSave && (
+          <SealButton disabled={disabled} onSave={onSave} label={saveLabel} />
+        )}
       </div>
       {error && (
         <p
@@ -209,14 +218,17 @@ export function TacticalPlanWorkspace({
                 onChange={updateDay}
                 disabled={disabled}
                 onSave={onSave}
+                saveLabel={saveLabel}
                 onListView={() => setArenaMode("list")}
                 onReview={onReview}
                 reviewLabel={reviewLabel}
                 planName={planName}
+                onPlanNameChange={onPlanNameChange}
+                planNameMaxLength={planNameMaxLength}
                 error={error}
                 syncError={syncError}
                 onClassicView={onClassic}
-                settingsNode={settings}
+                onOpenSettings={() => setSettingsOpen(true)}
               />
             ) : day ? (
               <TacticalBuilderArena
@@ -298,6 +310,49 @@ export function TacticalPlanWorkspace({
                       className="mt-1"
                     />
                   </label>
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <label className="block text-xs">
+                      Duração (min)
+                      <Input
+                        type="number"
+                        inputMode="numeric"
+                        min={1}
+                        value={day.estimatedDurationInMinutes}
+                        onChange={(event) =>
+                          updateDay({
+                            estimatedDurationInMinutes: Number(
+                              event.target.value,
+                            ),
+                          })
+                        }
+                        className="mt-1"
+                      />
+                    </label>
+                    <label className="block text-xs">
+                      Dia de referência
+                      <select
+                        aria-label="Dia de referência"
+                        value={day.weekDay ?? WEEK_DAYS[index % 7].value}
+                        onChange={(event) =>
+                          updateDay({
+                            weekDay: event.target
+                              .value as WorkoutPlanDraftDay["weekDay"],
+                          })
+                        }
+                        className="mt-1 h-10 w-full rounded-xl border border-white/10 bg-zinc-900 px-3 text-sm text-white"
+                      >
+                        {WEEK_DAYS.map((day) => (
+                          <option key={day.value} value={day.value}>
+                            {day.label}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  </div>
+                  <p className="text-[11px] leading-relaxed text-slate-400">
+                    A divisão segue a ordem dos treinos. O dia é uma referência
+                    e a duração informada será preservada.
+                  </p>
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <button
                       type="button"

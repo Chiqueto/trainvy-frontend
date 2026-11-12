@@ -388,6 +388,7 @@ export function WorkoutPlanBuilder({
       {builderMode === "tactical" && !isAiModalOpen && (
         <TacticalPlanWorkspace
           planName={name}
+          onPlanNameChange={setName}
           settings={planSettings}
           onAi={() => setIsAiModalOpen(true)}
           onClassic={() => changeMode("classic")}

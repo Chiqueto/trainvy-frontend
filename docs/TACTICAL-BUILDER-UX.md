@@ -16,9 +16,13 @@ Séries e repetições usam inputs, +/−, roda do mouse e alça vertical de aju
 
 As descrições abaixo documentam a interface tática em lista anterior; seus controles cíclicos continuam disponíveis nessa visualização.
 
+### Edição e salvamento do plano
+
+O nome do plano é editável diretamente no cabeçalho espacial e fica sincronizado com o formulário de configurações compartilhado com o editor normal. Planos, modelos e prescrições mantêm suas próprias ações de salvar e revisar. O painel reúne os campos gerais de cada editor e permite renomear, duplicar, excluir e ordenar treinos, além de ajustar a duração e o dia de referência. Alterar exercícios preserva a duração informada. A prescrição permite editar aquecimento e descanso geral, além das séries individuais; técnicas exibem ícones no seletor e nas etiquetas laterais.
+
 ### Painel muscular, SNC e atributos
 
-O botão Mapa muscular abre um painel com abas Músculos, SNC e Atributos, em tamanho legível no desktop e no celular. A silhueta SVG possui vistas anterior/posterior, mais regiões anatômicas ilustrativas e seleção por toque, teclado ou nomes dos grupos. O radar usa rótulos maiores e uma lista de valores com escala 0–10. A demanda do SNC mostra base, acréscimo de técnicas e contribuições por exercício, incluindo a classificação desconhecida; a fórmula do índice permanece a mesma. Os resumos exibem pontos, sem apresentar o índice como porcentagem de fadiga.
+O botão Mapa muscular abre um painel lateral de 400 px com rolagem própria no desktop (a partir de 1024 px), mantendo a mesa interativa. No celular e em telas menores, abre em modal. Ambos preservam as abas Músculos, SNC e Atributos, o modelo detalhado e os textos maiores. A silhueta SVG possui vistas anterior/posterior, mais regiões anatômicas ilustrativas e seleção por toque, teclado ou nomes dos grupos. O radar usa rótulos maiores e uma lista de valores com escala 0–10. A demanda do SNC mostra base, acréscimo de técnicas e contribuições por exercício, incluindo a classificação desconhecida; a fórmula do índice permanece a mesma. Os resumos exibem pontos, sem apresentar o índice como porcentagem de fadiga.
 
 O workspace compartilhado pelos editores de planos, modelos e prescrições usa um cabeçalho de 56 px com revisão e salvamento, mesa flexível, painel muscular de 288 px no desktop e dock de 202 px. No mobile, a pílula de telemetria abre o painel em modal; ações compactas mantêm nomes acessíveis. A rolagem continua disponível sem barras nativas.
 

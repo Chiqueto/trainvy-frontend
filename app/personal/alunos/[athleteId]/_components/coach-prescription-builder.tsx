@@ -554,6 +554,9 @@ export function CoachPrescriptionBuilder({
         !isAiModalOpen && (
           <TacticalPlanWorkspace
             planName={name}
+            onPlanNameChange={setName}
+            planNameMaxLength={100}
+            saveLabel="Salvar rascunho"
             settings={planSettings}
             onAi={() => setIsAiModalOpen(true)}
             onClassic={() => changeMode("classic")}

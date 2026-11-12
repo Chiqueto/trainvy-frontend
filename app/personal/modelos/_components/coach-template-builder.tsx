@@ -393,6 +393,9 @@ export function CoachTemplateBuilder({
       {builderMode === "tactical" ? (
         <TacticalPlanWorkspace
           planName={name}
+          onPlanNameChange={setName}
+          planNameMaxLength={100}
+          saveLabel="Salvar modelo"
           settings={planSettings}
           onClassic={() => changeMode("classic")}
           syncError={syncError}

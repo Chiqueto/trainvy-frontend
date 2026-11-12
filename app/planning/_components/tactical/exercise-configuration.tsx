@@ -100,6 +100,41 @@ export function ExerciseConfiguration({
           </div>
         ) : (
           <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-3">
+              <label className="text-xs">
+                Aquecimento (séries)
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  min={0}
+                  step={1}
+                  value={item.warmupSets ?? 0}
+                  onChange={(event) => {
+                    const value = Number(event.target.value);
+                    if (Number.isInteger(value) && value >= 0)
+                      onChange({ warmupSets: value });
+                  }}
+                  className="mt-1 h-10 w-full rounded-lg border border-white/15 bg-slate-900 px-3 text-sm text-white"
+                />
+              </label>
+              <label className="text-xs">
+                Descanso entre séries (s)
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  min={1}
+                  max={86400}
+                  step={1}
+                  value={item.restTimeInSeconds}
+                  onChange={(event) => {
+                    const value = Number(event.target.value);
+                    if (Number.isInteger(value) && value >= 1 && value <= 86400)
+                      onChange({ restTimeInSeconds: value });
+                  }}
+                  className="mt-1 h-10 w-full rounded-lg border border-white/15 bg-slate-900 px-3 text-sm text-white"
+                />
+              </label>
+            </div>
             <AdvancedPrescriptionFields
               value={item}
               onChange={onChange}

@@ -1,6 +1,7 @@
 ﻿"use client";
 
-import { useState } from "react";
+import { useId, useState, useSyncExternalStore } from "react";
+import { Popover } from "radix-ui";
 import {
   Activity,
   ArrowLeft,
@@ -15,12 +16,31 @@ import {
   Plus,
   RotateCcw,
   Settings2,
+  Pencil,
+  X,
 } from "lucide-react";
 import type { telemetry } from "../../_lib/tactical";
 import type { WorkoutPlanDraftDay } from "../../_lib/workout-plan-builder";
 import { TrainingBioDetails } from "./training-bio-panel";
 import { SealButton } from "./seal-button";
 import { TacticalSheet } from "./tactical-sheet";
+
+const desktopQuery = "(min-width: 1024px)";
+function subscribeToDesktop(onChange: () => void) {
+  if (typeof window.matchMedia !== "function") return () => {};
+  const query = window.matchMedia(desktopQuery);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
+function getDesktopSnapshot() {
+  return (
+    typeof window.matchMedia === "function" &&
+    window.matchMedia(desktopQuery).matches
+  );
+}
+function getServerDesktopSnapshot() {
+  return false;
+}
 
 export interface HoloHudProps {
   days: WorkoutPlanDraftDay[];
@@ -42,6 +62,9 @@ export interface HoloHudProps {
   onReview?: () => void;
   reviewLabel?: string;
   planName?: string;
+  onPlanNameChange?: (name: string) => void;
+  planNameMaxLength?: number;
+  saveLabel?: string;
   disabled?: boolean;
 }
 
@@ -65,10 +88,19 @@ export function HoloHud({
   onReview,
   reviewLabel,
   planName,
+  onPlanNameChange,
+  planNameMaxLength = 120,
+  saveLabel = "Salvar plano",
   disabled,
 }: HoloHudProps) {
   const [scannerOpen, setScannerOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
+  const desktop = useSyncExternalStore(
+    subscribeToDesktop,
+    getDesktopSnapshot,
+    getServerDesktopSnapshot,
+  );
+  const scannerTitleId = useId();
   return (
     <>
       <header className="spatial-header pointer-events-auto absolute inset-x-0 top-0 z-40">
@@ -88,9 +120,29 @@ export function HoloHud({
               <Layers3 size={12} /> Trainvy{" "}
               <span className="text-slate-600">/</span> Studio
             </div>
-            <h2 className="truncate text-sm font-semibold tracking-tight text-white sm:text-lg">
-              {planName || "Seu próximo treino"}
-            </h2>
+            {onPlanNameChange ? (
+              <label className="relative block">
+                <span className="sr-only">Nome do plano</span>
+                <input
+                  aria-required="true"
+                  value={planName ?? ""}
+                  maxLength={planNameMaxLength}
+                  disabled={disabled}
+                  onChange={(event) => onPlanNameChange(event.target.value)}
+                  placeholder="Nome do plano *"
+                  title="Edite o nome do plano de treino"
+                  className="block h-8 w-full min-w-0 rounded-lg border border-white/10 bg-white/[0.03] pl-2 pr-7 text-sm font-semibold tracking-tight text-white outline-none transition-colors placeholder:font-normal placeholder:text-slate-400 hover:border-cyan-300/30 focus:border-cyan-300/60 focus:bg-cyan-300/5 sm:text-lg"
+                />
+                <Pencil
+                  size={12}
+                  className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-slate-500"
+                />
+              </label>
+            ) : (
+              <h2 className="truncate text-sm font-semibold tracking-tight text-white sm:text-lg">
+                {planName || "Seu próximo treino"}
+              </h2>
+            )}
           </div>
           <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
             {onListView && (
@@ -130,7 +182,11 @@ export function HoloHud({
             )}
             {onSave && (
               <div className="min-w-10 sm:w-36 [&_button]:h-10">
-                <SealButton disabled={disabled} onSave={onSave} />
+                <SealButton
+                  disabled={disabled}
+                  onSave={onSave}
+                  label={saveLabel}
+                />
               </div>
             )}
           </div>
@@ -194,16 +250,63 @@ export function HoloHud({
 
       <div className="pointer-events-auto absolute left-3 top-[140px] z-30 sm:left-6">
         <div className="flex items-center gap-2">
-          <button
-            type="button"
-            aria-expanded={scannerOpen}
-            onClick={() => setScannerOpen(!scannerOpen)}
-            className="spatial-glass flex h-10 items-center gap-2 rounded-xl px-3 text-xs text-slate-300"
+          <Popover.Root
+            open={desktop && scannerOpen}
+            onOpenChange={(open) => {
+              if (desktop) setScannerOpen(open);
+            }}
           >
-            <Activity size={15} className="text-cyan-300" />
-            Mapa muscular
-            <span className="size-1.5 rounded-full bg-cyan-300/80" />
-          </button>
+            <Popover.Trigger asChild>
+              <button
+                type="button"
+                aria-expanded={scannerOpen}
+                onClick={
+                  desktop ? undefined : () => setScannerOpen(!scannerOpen)
+                }
+                className="spatial-glass flex h-10 items-center gap-2 rounded-xl px-3 text-xs text-slate-300"
+              >
+                <Activity size={15} className="text-cyan-300" />
+                Mapa muscular
+                <span className="size-1.5 rounded-full bg-cyan-300/80" />
+              </button>
+            </Popover.Trigger>
+            <Popover.Portal>
+              <Popover.Content
+                role="region"
+                aria-labelledby={scannerTitleId}
+                side="bottom"
+                align="start"
+                sideOffset={10}
+                collisionPadding={24}
+                onOpenAutoFocus={(event) => event.preventDefault()}
+                onInteractOutside={(event) => event.preventDefault()}
+                className="dark spatial-glass z-[80] flex max-h-[calc(100dvh-215px)] w-[400px] max-w-[calc(100vw-3rem)] flex-col overflow-hidden rounded-2xl text-slate-100 outline-none"
+              >
+                <header className="flex shrink-0 items-center justify-between gap-3 border-b border-white/10 px-4 py-3">
+                  <div>
+                    <h3 id={scannerTitleId} className="text-sm font-semibold">
+                      Mapa muscular e atributos
+                    </h3>
+                    <p className="mt-1 text-xs text-slate-400">
+                      Explore a ficha com a mesa à vista.
+                    </p>
+                  </div>
+                  <Popover.Close asChild>
+                    <button
+                      type="button"
+                      aria-label="Fechar mapa muscular"
+                      className="spatial-icon-button !size-9"
+                    >
+                      <X size={16} />
+                    </button>
+                  </Popover.Close>
+                </header>
+                <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto overscroll-contain p-4">
+                  <TrainingBioDetails data={telemetryData} />
+                </div>
+              </Popover.Content>
+            </Popover.Portal>
+          </Popover.Root>
           <button
             type="button"
             title="Como usar · cores, estrelas e controles"
@@ -277,7 +380,7 @@ export function HoloHud({
         <span>Conecte OUT → IN para ordenar</span>
       </div>
       <TacticalSheet
-        open={scannerOpen}
+        open={scannerOpen && !desktop}
         onClose={() => setScannerOpen(false)}
         title="Mapa muscular e atributos"
         description="Explore os músculos, a composição da demanda do SNC e os atributos estimados da ficha."
