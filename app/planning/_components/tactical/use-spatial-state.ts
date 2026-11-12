@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import {
   generateTacticalFormation,
   checkMagneticFusion,
@@ -45,7 +45,7 @@ export function useSpatialState(itemsCount: number) {
       const h = viewportRef.current?.clientHeight || 800;
       const formation = generateTacticalFormation(count, w, h);
 
-      setPositions((prev) => {
+      setPositions(() => {
         const next: Record<string, Point> = {};
         for (let i = 0; i < count; i++) {
           const key = blockIds?.[i] ?? `slot:${i}`;
@@ -97,25 +97,20 @@ export function useSpatialState(itemsCount: number) {
   // Atualizar posição de uma carta
   const updateCardPosition = useCallback(
     (id: string, newPos: Point, allIds: string[]) => {
-      setPositions((prev) => {
-        const next = { ...prev, [id]: newPos };
-
-        // Testar se está em fusão magnética com outro card
-        let fusionFound: string | null = null;
-        for (const otherId of allIds) {
-          if (otherId === id) continue;
-          const otherPos = next[otherId];
-          if (otherPos && checkMagneticFusion(newPos, otherPos)) {
-            fusionFound = otherId;
-            break;
-          }
+      const next = { ...positions, [id]: newPos };
+      let fusionFound: string | null = null;
+      for (const otherId of allIds) {
+        if (otherId === id) continue;
+        const otherPos = next[otherId];
+        if (otherPos && checkMagneticFusion(newPos, otherPos)) {
+          fusionFound = otherId;
+          break;
         }
-        setFusionTargetId(fusionFound);
-
-        return next;
-      });
+      }
+      setPositions(next);
+      setFusionTargetId(fusionFound);
     },
-    [],
+    [positions],
   );
 
   // Iniciar puxada de linha de energia
@@ -168,4 +163,3 @@ export function useSpatialState(itemsCount: number) {
     viewportRef,
   };
 }
-

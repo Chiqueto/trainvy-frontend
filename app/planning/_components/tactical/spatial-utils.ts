@@ -15,8 +15,8 @@ export interface CardRect {
   height: number;
 }
 
-export const CARD_WIDTH = 196;
-export const CARD_HEIGHT = 248;
+export const CARD_WIDTH = 216;
+export const CARD_HEIGHT = 286;
 export const BISET_GAP = 14;
 export const MAGNETIC_THRESHOLD = 50;
 
@@ -25,7 +25,11 @@ export const MAGNETIC_THRESHOLD = 50;
  * IN: Topo central
  * OUT: Base central
  */
-export function getCardConnectors(x: number, y: number, isGrouped = false): {
+export function getCardConnectors(
+  x: number,
+  y: number,
+  isGrouped = false,
+): {
   input: Point;
   output: Point;
 } {
@@ -46,11 +50,13 @@ export function getCardConnectors(x: number, y: number, isGrouped = false): {
  * Calcula a curva Bezier cúbica suave conectando a porta OUT da carta anterior
  * até a porta IN da próxima carta.
  */
-export function calculateBezierCurve(from: Point, to: Point): {
+export function calculateBezierCurve(
+  from: Point,
+  to: Point,
+): {
   path: string;
   midpoint: Point;
 } {
-  const dx = to.x - from.x;
   const dy = to.y - from.y;
 
   // Handles de controle dinâmicos baseados na distância vertical e horizontal
@@ -92,7 +98,9 @@ export function checkMagneticFusion(
   threshold: number = MAGNETIC_THRESHOLD,
 ): boolean {
   // Proximidade lateral e vertical
-  const lateralDist = Math.abs(dragPos.x - (targetPos.x + CARD_WIDTH + BISET_GAP / 2));
+  const lateralDist = Math.abs(
+    dragPos.x - (targetPos.x + CARD_WIDTH + BISET_GAP / 2),
+  );
   const verticalDist = Math.abs(dragPos.y - targetPos.y);
 
   // Também aceita se sobrepor quase diretamente o centro
@@ -101,7 +109,10 @@ export function checkMagneticFusion(
     { x: targetPos.x + CARD_WIDTH / 2, y: targetPos.y + CARD_HEIGHT / 2 },
   );
 
-  return (lateralDist < threshold && verticalDist < threshold * 1.5) || centerDist < threshold * 1.2;
+  return (
+    (lateralDist < threshold && verticalDist < threshold * 1.5) ||
+    centerDist < threshold * 1.2
+  );
 }
 
 /**
@@ -116,49 +127,44 @@ export function generateTacticalFormation(
   if (count <= 0) return [];
 
   const points: Point[] = [];
-  const centerX = canvasWidth / 2;
-  const startY = 160;
-
-  if (count <= 4) {
-    // Formação em Arco Holográfico suave
-    const spacingX = Math.min(270, (canvasWidth - 300) / Math.max(1, count - 1));
-    const totalW = (count - 1) * spacingX;
-    const startX = centerX - totalW / 2 - CARD_WIDTH / 2;
-
-    for (let i = 0; i < count; i++) {
-      // Pequena elevação parabólica para dar efeito de arco
-      const norm = count === 1 ? 0 : (i / (count - 1)) * 2 - 1; // -1 to 1
-      const arcElevation = (1 - norm * norm) * 45; // Mais alto no centro
-      points.push({
-        x: Math.round(startX + i * spacingX),
-        y: Math.round(startY + 80 - arcElevation),
-      });
-    }
-    return points;
-  }
-
-  // Para 5+ cartas: Formação Zigue-Zague Tática (2 a 3 fileiras dinâmicas)
-  const cols = Math.min(4, Math.ceil(Math.sqrt(count * 1.4)));
-  const rows = Math.ceil(count / cols);
-  const spacingX = 260;
-  const spacingY = 320;
-
-  const totalW = (cols - 1) * spacingX;
-  const startX = Math.max(120, centerX - totalW / 2 - CARD_WIDTH / 2);
-
+  const columns = Math.max(
+    1,
+    Math.min(4, Math.floor((canvasWidth - 72) / (CARD_WIDTH + 60))),
+  );
+  const cols = canvasWidth < 640 ? count : Math.min(count, columns);
+  const spacingX = CARD_WIDTH + 64;
+  const startX =
+    canvasWidth < 640
+      ? (canvasWidth - CARD_WIDTH) / 2
+      : Math.max(32, (canvasWidth - ((cols - 1) * spacingX + CARD_WIDTH)) / 2);
+  const startY = Math.max(205, Math.min(240, (canvasHeight - CARD_HEIGHT) / 2));
   for (let i = 0; i < count; i++) {
-    const r = Math.floor(i / cols);
-    const c = r % 2 === 0 ? i % cols : cols - 1 - (i % cols); // Zigue-zague serpenteando
-    // Pequeno offset para estilo orgânico tático
-    const jitterX = ((i * 13) % 17) - 8;
-    const jitterY = ((i * 7) % 13) - 6;
-
+    const row = Math.floor(i / cols);
+    const column = row % 2 === 0 ? i % cols : cols - 1 - (i % cols);
+    const norm = cols === 1 ? 0 : (column / (cols - 1)) * 2 - 1;
     points.push({
-      x: Math.round(startX + c * spacingX + jitterX),
-      y: Math.round(startY + r * spacingY + jitterY),
+      x: Math.round(startX + column * spacingX),
+      y: Math.round(startY + row * (CARD_HEIGHT + 95) - (1 - norm * norm) * 24),
     });
   }
-
   return points;
 }
 
+/** Inverse of the canvas perspective, scale and tilt, for pointer coordinates. */
+export function screenToBoard(
+  point: Point,
+  rect: { left: number; top: number; width: number; height: number },
+  camera: { panX: number; panY: number; zoom: number; tilt: number },
+): Point {
+  const x = point.x - rect.left - rect.width / 2;
+  const y = point.y - rect.top - rect.height / 2;
+  const angle = (camera.tilt * Math.PI) / 180;
+  const localY =
+    (y - camera.panY) /
+    (camera.zoom * (Math.cos(angle) + (y * Math.sin(angle)) / 1200));
+  const perspective = 1 - (camera.zoom * Math.sin(angle) * localY) / 1200;
+  return {
+    x: (x * perspective - camera.panX) / camera.zoom + rect.width / 2,
+    y: localY + rect.height / 2,
+  };
+}

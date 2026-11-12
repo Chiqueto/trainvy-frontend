@@ -9,6 +9,7 @@ import {
   distance,
   checkMagneticFusion,
   generateTacticalFormation,
+  screenToBoard,
 } from "@/app/planning/_components/tactical/spatial-utils";
 import { EnergyLinksSvg } from "@/app/planning/_components/tactical/energy-links-svg";
 import { SpatialCanvas } from "@/app/planning/_components/tactical/spatial-canvas";
@@ -17,6 +18,27 @@ import { PlayerHand } from "@/app/planning/_components/tactical/player-hand";
 import type { ListExercises200Item } from "@/app/_lib/api/fetch-generated";
 
 describe("Holo-Board 3D Spatial Utils", () => {
+  it("keeps mobile cards spaced horizontally instead of stacking under the deck", () => {
+    const points = generateTacticalFormation(4, 390, 844);
+    expect(points[0].x).toBeGreaterThanOrEqual(0);
+    for (let i = 1; i < points.length; i++) {
+      expect(points[i].x - points[i - 1].x).toBeGreaterThan(CARD_WIDTH);
+      expect(Math.abs(points[i].y - points[0].y)).toBeLessThan(50);
+    }
+  });
+
+  it("maps pointer movement to board coordinates at different zoom levels", () => {
+    const rect = { left: 20, top: 30, width: 1000, height: 800 };
+    const camera = { panX: 50, panY: -20, zoom: 0.5, tilt: 0 };
+    expect(screenToBoard({ x: 570, y: 410 }, rect, camera)).toEqual({
+      x: 500,
+      y: 400,
+    });
+    expect(screenToBoard({ x: 620, y: 460 }, rect, camera)).toEqual({
+      x: 600,
+      y: 500,
+    });
+  });
   it("computes accurate IN (top) and OUT (bottom) card connectors", () => {
     const conn = getCardConnectors(100, 200);
     expect(conn.input).toEqual({ x: 100 + CARD_WIDTH / 2, y: 200 });
@@ -67,6 +89,71 @@ describe("Holo-Board 3D Spatial Utils", () => {
 });
 
 describe("Holo-Board 3D Components", () => {
+  it("pans by incremental pointer movement without accelerating", () => {
+    const onPan = vi.fn();
+    const { container } = render(
+      <SpatialCanvas
+        camera={{ panX: 0, panY: 0, zoom: 1, tilt: 0 }}
+        onPan={onPan}
+        onZoom={vi.fn()}
+      >
+        <div />
+      </SpatialCanvas>,
+    );
+    fireEvent.pointerDown(container.firstChild as HTMLElement, {
+      button: 0,
+      clientX: 100,
+      clientY: 100,
+    });
+    fireEvent.pointerMove(window, { clientX: 110, clientY: 105 });
+    fireEvent.pointerMove(window, { clientX: 120, clientY: 110 });
+    fireEvent.pointerUp(window);
+    expect(onPan.mock.calls).toEqual([
+      [10, 5],
+      [10, 5],
+    ]);
+  });
+
+  it("makes exercises beyond the first 18 reachable and resets pagination when searching", () => {
+    const onSummon = vi.fn();
+    const catalog: ListExercises200Item[] = Array.from(
+      { length: 20 },
+      (_, i) => ({
+        id: `exercise-${i}`,
+        name: `Exercício ${i}`,
+        ownerUserId: null,
+        hasMedia: false,
+        muscles: [],
+      }),
+    );
+    render(<PlayerHand catalog={catalog} onSummonExercise={onSummon} />);
+    for (let i = 0; i < 3; i++)
+      fireEvent.click(
+        screen.getByRole("button", { name: "Próxima página de exercícios" }),
+      );
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "Adicionar Exercício 19",
+      }),
+    );
+    expect(onSummon).toHaveBeenCalledWith(catalog[19]);
+    fireEvent.change(
+      screen.getByRole("searchbox", { name: "Buscar exercícios no deck" }),
+      { target: { value: "Exercicio 0" } },
+    );
+    expect(
+      screen.getByRole("button", {
+        name: "Adicionar Exercício 0",
+      }),
+    ).toBeDefined();
+    expect(
+      (
+        screen.getByRole("button", {
+          name: "Página anterior de exercícios",
+        }) as HTMLButtonElement
+      ).disabled,
+    ).toBe(true);
+  });
   it("renders the 3D perspective spatial canvas with volumetric lighting and grid", () => {
     const onPan = vi.fn();
     const onZoom = vi.fn();

@@ -1,21 +1,16 @@
 "use client";
 
-import React, { useRef, useState, type CSSProperties } from "react";
+import React, { useRef, useState } from "react";
 import { Popover } from "radix-ui";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Cable,
   Check,
   Dumbbell,
-  GripHorizontal,
   Minus,
-  PersonStanding,
   Plus,
-  RefreshCw,
   Sparkles,
   Trash2,
   Unlink,
-  Zap,
 } from "lucide-react";
 import type { WorkoutPlanDraftExercise } from "../../_lib/workout-plan-builder";
 import {
@@ -29,17 +24,17 @@ import {
   zoneFor,
   ZONES,
   type Rune,
-  type TacticalSet,
   type Zone,
 } from "../../_lib/tactical";
+import { CARD_WIDTH, CARD_HEIGHT, type Point } from "./spatial-utils";
 import { OrbitalSwapMenu } from "./orbital-swap-menu";
 import { TacticalSheet } from "./tactical-sheet";
 import { AdvancedPrescriptionFields } from "../advanced-prescription-fields";
 
 const RARITY_STYLES = {
   high: {
-    border: "border-amber-400/80 hover:border-amber-300",
-    glow: "shadow-[0_16px_36px_rgba(245,158,11,0.25)]",
+    border: "border-amber-400/40 hover:border-amber-300",
+    glow: "shadow-[0_16px_36px_rgba(245,158,11,0.10)]",
     gradient: "from-amber-950/40 via-slate-950/90 to-slate-950",
     badge: "bg-gradient-to-r from-amber-500 to-rose-500 text-slate-950",
     stars: "★★★",
@@ -47,8 +42,8 @@ const RARITY_STYLES = {
     label: "Composto Pesado",
   },
   medium: {
-    border: "border-cyan-400/80 hover:border-cyan-300",
-    glow: "shadow-[0_16px_36px_rgba(6,182,212,0.25)]",
+    border: "border-cyan-400/40 hover:border-cyan-300",
+    glow: "shadow-[0_16px_36px_rgba(6,182,212,0.10)]",
     gradient: "from-cyan-950/40 via-slate-950/90 to-slate-950",
     badge: "bg-cyan-400 text-slate-950",
     stars: "★★",
@@ -56,8 +51,8 @@ const RARITY_STYLES = {
     label: "Multiarticular",
   },
   low: {
-    border: "border-emerald-400/80 hover:border-emerald-300",
-    glow: "shadow-[0_16px_36px_rgba(16,185,129,0.2)]",
+    border: "border-emerald-400/40 hover:border-emerald-300",
+    glow: "shadow-[0_16px_36px_rgba(16,185,129,0.10)]",
     gradient: "from-emerald-950/30 via-slate-950/90 to-slate-950",
     badge: "bg-emerald-400 text-slate-950",
     stars: "★",
@@ -79,8 +74,14 @@ export interface HoloCardProps {
   onPositionChange: (newPos: { x: number; y: number }) => void;
   onChange: (patch: Partial<WorkoutPlanDraftExercise>) => void;
   onRemove: () => void;
-  onStartWirePull: (index: number, startPoint: { x: number; y: number }) => void;
+  onStartWirePull: (
+    index: number,
+    startPoint: { x: number; y: number },
+  ) => void;
   onSeparateBiSet?: () => void;
+  disabled?: boolean;
+  toBoardPoint?: (point: Point) => Point;
+  onDragEnd?: () => void;
   allExerciseCandidates?: { index: number; name: string }[];
   onMergeWith?: (targetIndex: number) => void;
 }
@@ -100,6 +101,9 @@ export function HoloExerciseCard({
   onRemove,
   onStartWirePull,
   onSeparateBiSet,
+  disabled,
+  toBoardPoint,
+  onDragEnd,
 }: HoloCardProps) {
   const cardRef = useRef<HTMLDivElement | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -115,8 +119,13 @@ export function HoloExerciseCard({
   // Drag livre do Card no plano espacial
   const handlePointerDown = (e: React.PointerEvent) => {
     // Não arrastar se clicou em botões de controle
-    const target = e.target as HTMLElement;
-    if (target.closest("button") || target.closest("input") || target.closest(".no-card-drag")) {
+    if (disabled || e.button !== 0) return;
+    const target = e.target as Element;
+    if (
+      target.closest("button") ||
+      target.closest("input") ||
+      target.closest(".no-card-drag")
+    ) {
       return;
     }
 
@@ -125,14 +134,15 @@ export function HoloExerciseCard({
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
 
     setIsDragging(true);
-    const startMouseX = e.clientX;
-    const startMouseY = e.clientY;
+    const convert = toBoardPoint ?? ((point: Point) => point);
+    const startPointer = convert({ x: e.clientX, y: e.clientY });
     const startPosX = x;
     const startPosY = y;
 
     const onPointerMove = (moveEvent: PointerEvent) => {
-      const dx = moveEvent.clientX - startMouseX;
-      const dy = moveEvent.clientY - startMouseY;
+      const pointer = convert({ x: moveEvent.clientX, y: moveEvent.clientY });
+      const dx = pointer.x - startPointer.x;
+      const dy = pointer.y - startPointer.y;
       onPositionChange({
         x: Math.round(startPosX + dx),
         y: Math.round(startPosY + dy),
@@ -141,12 +151,15 @@ export function HoloExerciseCard({
 
     const onPointerUp = (upEvent: PointerEvent) => {
       setIsDragging(false);
+      if (upEvent.type !== "pointercancel") onDragEnd?.();
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("pointercancel", onPointerUp);
     };
 
     window.addEventListener("pointermove", onPointerMove);
     window.addEventListener("pointerup", onPointerUp);
+    window.addEventListener("pointercancel", onPointerUp);
   };
 
   // Efeito 3D Tilt interativo no hover
@@ -172,6 +185,7 @@ export function HoloExerciseCard({
 
   // Ciclo da Zona de Repetições
   const cycleZone = () => {
+    if (disabled) return;
     const zones: Zone[] = ["strength", "hypertrophy", "endurance"];
     const nextZone = zones[(zones.indexOf(currentZone) + 1) % zones.length];
     const cfg = ZONES[nextZone];
@@ -193,6 +207,7 @@ export function HoloExerciseCard({
 
   // Ajustar número de séries
   const updateSetsCount = (delta: number) => {
+    if (disabled) return;
     const newCount = Math.max(1, Math.min(12, sets.length + delta));
     if (newCount === sets.length) return;
 
@@ -219,6 +234,9 @@ export function HoloExerciseCard({
 
   return (
     <div
+      inert={disabled || undefined}
+      data-holo-card
+      data-exercise-index={index}
       ref={cardRef}
       onPointerDown={handlePointerDown}
       onMouseMove={handleMouseMove}
@@ -227,30 +245,38 @@ export function HoloExerciseCard({
         position: "absolute",
         left: `${x}px`,
         top: `${y}px`,
-        width: "196px",
+        width: `${CARD_WIDTH}px`,
+        height: `${CARD_HEIGHT}px`,
         zIndex: isDragging ? 50 : 20,
         cursor: isDragging ? "grabbing" : "grab",
-        transform: `perspective(1000px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) scale(${isDragging ? 1.05 : 1})`,
+        transform: `scale(${isDragging ? 1.03 : 1})`,
         transition: isDragging ? "none" : "transform 0.15s ease-out",
         userSelect: "none",
         touchAction: "none",
       }}
-      className="group relative select-none"
+      className="spatial-exercise group relative select-none"
     >
       {/* NÓ DE ENTRADA LUMINOSO (IN) - TOPO */}
       <div
+        data-wire-input={index}
         title="Porta de Energia (IN) - Recebe sequência anterior"
         style={{ left: "50%", transform: "translate(-50%, -50%)" }}
         className="absolute top-0 z-30 flex size-5 items-center justify-center rounded-full border border-cyan-400 bg-slate-950 shadow-[0_0_10px_#00f2fe]"
       >
-        <span className="size-2 animate-ping rounded-full bg-cyan-400 opacity-75" />
+        <span className="size-2 rounded-full bg-cyan-400 opacity-75" />
         <span className="absolute size-2 rounded-full bg-cyan-300" />
       </div>
 
       {/* CORPO PRINCIPAL DA CARTA HOLOGRÁFICA */}
       <div
-        className={`relative flex h-[248px] flex-col overflow-hidden rounded-2xl border-2 bg-gradient-to-b p-2 backdrop-blur-xl transition-all duration-300 ${rarity.border} ${rarity.glow} ${rarity.gradient} ${
-          isDragTarget ? "ring-4 ring-purple-500/80 ring-offset-2 ring-offset-slate-950" : ""
+        style={{
+          height: CARD_HEIGHT,
+          transform: `perspective(1000px) rotateX(${tilt.rx * 0.4}deg) rotateY(${tilt.ry * 0.4}deg)`,
+        }}
+        className={`spatial-card-body relative flex flex-col overflow-hidden rounded-2xl border bg-gradient-to-b p-3 backdrop-blur-xl transition-all duration-300 ${rarity.border} ${rarity.glow} ${rarity.gradient} ${
+          isDragTarget
+            ? "ring-4 ring-purple-500/80 ring-offset-2 ring-offset-slate-950"
+            : ""
         }`}
       >
         {/* Holographic Glare overlay */}
@@ -270,7 +296,9 @@ export function HoloExerciseCard({
             >
               #{orderLabel}
             </span>
-            <span className={`text-[10px] font-bold tracking-tighter ${rarity.starColor}`}>
+            <span
+              className={`text-[10px] font-bold tracking-tighter ${rarity.starColor}`}
+            >
               {rarity.stars}
             </span>
           </div>
@@ -294,6 +322,7 @@ export function HoloExerciseCard({
             <button
               type="button"
               title="Excluir da mesa"
+              disabled={disabled}
               onClick={onRemove}
               className="rounded p-0.5 text-zinc-400 hover:bg-rose-500/20 hover:text-rose-300"
             >
@@ -309,7 +338,7 @@ export function HoloExerciseCard({
           title={`Editar: ${item.name}`}
           className="relative z-10 no-card-drag text-left"
         >
-          <span className="line-clamp-1 block text-xs font-bold leading-tight tracking-tight text-white hover:text-cyan-300">
+          <span className="line-clamp-2 block min-h-9 text-sm font-semibold leading-tight tracking-tight text-white hover:text-cyan-300">
             {item.name || "Selecionar Exercício"}
           </span>
         </button>
@@ -325,7 +354,10 @@ export function HoloExerciseCard({
           {/* Ícone vetorial flutuante do equipamento */}
           <div className="relative my-auto flex size-12 items-center justify-center text-cyan-300">
             <span className="absolute inset-0 animate-pulse rounded-full bg-cyan-400/20 blur-md" />
-            <Dumbbell size={28} className="relative z-10 text-cyan-200 drop-shadow-[0_0_8px_#38bdf8]" />
+            <Dumbbell
+              size={28}
+              className="relative z-10 text-cyan-200 drop-shadow-[0_0_8px_#38bdf8]"
+            />
           </div>
 
           {/* Tag do Músculo Alvo */}
@@ -338,24 +370,30 @@ export function HoloExerciseCard({
         <div className="relative z-10 mt-auto grid grid-cols-2 gap-1 rounded-xl border border-white/10 bg-slate-950/80 p-1 font-mono">
           {/* LADO ESQUERDO: SÉRIES (ATK) */}
           <div className="flex flex-col items-center justify-center border-r border-white/10 pr-1 no-card-drag">
-            <span className="text-[8px] uppercase tracking-wider text-zinc-400">Séries</span>
+            <span className="text-[9px] uppercase tracking-wider text-zinc-400">
+              Séries
+            </span>
             <div className="flex items-center gap-1">
               <button
                 type="button"
+                aria-label="Diminuir séries"
+                disabled={disabled}
                 onClick={() => updateSetsCount(-1)}
-                className="flex size-4 items-center justify-center rounded bg-white/10 text-zinc-300 hover:bg-white/20"
+                className="flex size-7 items-center justify-center rounded bg-white/10 text-zinc-300 hover:bg-white/20"
               >
-                <Minus size={9} />
+                <Minus size={12} />
               </button>
               <span className="font-mono text-xs font-black text-amber-300">
                 {sets.length}
               </span>
               <button
                 type="button"
+                aria-label="Aumentar séries"
+                disabled={disabled}
                 onClick={() => updateSetsCount(1)}
-                className="flex size-4 items-center justify-center rounded bg-white/10 text-zinc-300 hover:bg-white/20"
+                className="flex size-7 items-center justify-center rounded bg-white/10 text-zinc-300 hover:bg-white/20"
               >
-                <Plus size={9} />
+                <Plus size={12} />
               </button>
             </div>
           </div>
@@ -367,7 +405,7 @@ export function HoloExerciseCard({
             title="Alternar Faixa de Repetições"
             className="flex flex-col items-center justify-center no-card-drag hover:bg-white/5 rounded"
           >
-            <span className="text-[8px] uppercase tracking-wider text-cyan-400">
+            <span className="text-[9px] uppercase tracking-wider text-cyan-400">
               {currentZone === "hypertrophy"
                 ? "Hiper"
                 : currentZone === "strength"
@@ -375,7 +413,9 @@ export function HoloExerciseCard({
                   : "Resist"}
             </span>
             <span className="text-xs font-black text-white">
-              {item.repsMin && item.repsMax ? `${item.repsMin}-${item.repsMax}` : item.reps}{" "}
+              {item.repsMin && item.repsMax
+                ? `${item.repsMin}-${item.repsMax}`
+                : item.reps}{" "}
               <span className="text-[8px] font-normal text-zinc-400">reps</span>
             </span>
           </button>
@@ -429,15 +469,14 @@ export function HoloExerciseCard({
           ))}
         </AnimatePresence>
 
-        {/* Botão + Magia para equipar técnica */}
+        {/* Botão + Técnica para equipar técnica */}
         <Popover.Root>
           <Popover.Trigger asChild>
             <button
               type="button"
               className="flex items-center gap-0.5 rounded-b-lg border border-t-0 border-white/20 bg-slate-950/80 px-1.5 py-0.5 text-[9px] font-medium text-zinc-400 hover:border-cyan-400 hover:text-cyan-300"
             >
-              <Sparkles size={9} />
-              + Magia
+              <Sparkles size={9} />+ Técnica
             </button>
           </Popover.Trigger>
           <Popover.Portal>
@@ -475,12 +514,16 @@ export function HoloExerciseCard({
         title="Porta de Energia (OUT) - Puxe para conectar com o próximo exercício"
         onPointerDown={(e) => {
           e.stopPropagation();
-          onStartWirePull(index, { x: x + 98, y: y + 248 });
+          if (!disabled)
+            onStartWirePull(index, {
+              x: x + CARD_WIDTH / 2,
+              y: y + CARD_HEIGHT,
+            });
         }}
         style={{ left: "50%", transform: "translate(-50%, 50%)" }}
         className="no-card-drag absolute bottom-0 z-30 flex size-5 cursor-crosshair items-center justify-center rounded-full border border-purple-400 bg-slate-950 shadow-[0_0_12px_#a855f7] hover:scale-125 transition-transform"
       >
-        <span className="size-2 animate-ping rounded-full bg-purple-400 opacity-75" />
+        <span className="size-2 rounded-full bg-purple-400 opacity-75" />
         <span className="absolute size-2 rounded-full bg-purple-300" />
       </div>
 
@@ -542,7 +585,10 @@ export function HoloExerciseCard({
                   placeholder="0"
                   onChange={(e) => {
                     const next = [...sets];
-                    next[i] = { ...s, load: e.target.value ? Number(e.target.value) : undefined };
+                    next[i] = {
+                      ...s,
+                      load: e.target.value ? Number(e.target.value) : undefined,
+                    };
                     onChange({ setPrescription: next });
                   }}
                   className="mt-1 h-9 w-full rounded-lg border border-white/10 bg-zinc-900 px-2 text-sm text-white"
@@ -557,4 +603,3 @@ export function HoloExerciseCard({
     </div>
   );
 }
-

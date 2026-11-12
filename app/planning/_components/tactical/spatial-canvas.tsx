@@ -22,7 +22,7 @@ export function SpatialCanvas({
   // Manipulação de Pan ao arrastar o fundo
   const handlePointerDown = (e: React.PointerEvent) => {
     // Apenas se o clique foi direto no fundo do canvas ou no plano de grade
-    const target = e.target as HTMLElement;
+    const target = e.target as Element;
     if (
       target.closest("button") ||
       target.closest(".no-card-drag") ||
@@ -31,13 +31,16 @@ export function SpatialCanvas({
       return;
     }
 
+    if (e.button !== 0) return;
     setIsPanning(true);
-    const startX = e.clientX;
-    const startY = e.clientY;
+    let lastX = e.clientX;
+    let lastY = e.clientY;
 
     const onPointerMove = (moveEvent: PointerEvent) => {
-      const dx = moveEvent.clientX - startX;
-      const dy = moveEvent.clientY - startY;
+      const dx = moveEvent.clientX - lastX;
+      const dy = moveEvent.clientY - lastY;
+      lastX = moveEvent.clientX;
+      lastY = moveEvent.clientY;
       onPan(dx, dy);
     };
 
@@ -45,10 +48,12 @@ export function SpatialCanvas({
       setIsPanning(false);
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("pointercancel", onPointerUp);
     };
 
     window.addEventListener("pointermove", onPointerMove);
     window.addEventListener("pointerup", onPointerUp);
+    window.addEventListener("pointercancel", onPointerUp);
   };
 
   // Zoom no scroll da roda do mouse
@@ -67,10 +72,10 @@ export function SpatialCanvas({
         perspective: "1200px",
         perspectiveOrigin: "50% 50%",
       }}
-      className="relative size-full select-none overflow-hidden bg-[#04070d]"
+      className="spatial-canvas relative size-full touch-none select-none overflow-hidden bg-[#070c14]"
     >
       {/* 1. ILUMINAÇÃO VOLUMÉTRICA RADIAL CIANO/AZUL NO CENTRO DA MESA */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(6,182,212,0.18)_0%,rgba(56,189,248,0.08)_35%,transparent_75%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(6,182,212,0.09)_0%,rgba(56,189,248,0.04)_35%,transparent_75%)]" />
 
       {/* 2. GRADE HOLOGRÁFICA EM PERSPECTIVA */}
       <div
@@ -100,9 +105,10 @@ export function SpatialCanvas({
         style={{
           transform: `translate3d(${camera.panX}px, ${camera.panY}px, 0) scale(${camera.zoom}) rotateX(${camera.tilt}deg)`,
           transformOrigin: "50% 50%",
-          transformStyle: "preserve-3d",
-          transition: isPanning ? "none" : "transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+          transformStyle: "flat",
+          transition: isPanning ? "none" : "none",
         }}
+        data-spatial-plane
         className="absolute inset-0 size-full"
       >
         {children}
@@ -110,4 +116,3 @@ export function SpatialCanvas({
     </div>
   );
 }
-

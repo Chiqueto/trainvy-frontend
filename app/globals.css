@@ -269,3 +269,109 @@ body:has(.app-navigation) {
   }
 }
 
+/* Spatial workout studio. Surfaces stay quiet so the prescription leads. */
+.spatial-studio {
+  font-family: var(--font-geist-sans), sans-serif;
+  isolation: isolate;
+}
+.spatial-glass {
+  border: 1px solid rgb(148 163 184 / 14%);
+  background: rgb(12 20 31 / 90%);
+  box-shadow:
+    0 12px 40px rgb(0 0 0 / 20%),
+    inset 0 1px rgb(255 255 255 / 3%);
+  backdrop-filter: blur(20px);
+}
+.spatial-header {
+  border-bottom: 1px solid rgb(148 163 184 / 12%);
+  background: linear-gradient(180deg, rgb(10 17 27 / 98%), rgb(10 17 27 / 90%));
+  backdrop-filter: blur(20px);
+}
+.spatial-icon-button {
+  display: inline-flex;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgb(148 163 184 / 12%);
+  border-radius: 10px;
+  background: rgb(255 255 255 / 3%);
+  color: #94a3b8;
+  transition:
+    color 150ms,
+    background 150ms;
+}
+.spatial-icon-button:hover {
+  color: #e2f8ff;
+  background: rgb(103 217 238 / 8%);
+}
+.spatial-studio button:focus-visible,
+.spatial-studio input:focus-visible {
+  outline: 2px solid #67d9ee;
+  outline-offset: 3px;
+}
+.spatial-studio button:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+.spatial-deck {
+  background: linear-gradient(
+    0deg,
+    #070c14 0%,
+    rgb(7 12 20 / 95%) 65%,
+    transparent
+  );
+}
+.spatial-hand-card {
+  background: linear-gradient(150deg, #192432, #0c141f 75%);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 30%);
+  transition:
+    transform 180ms,
+    border-color 180ms,
+    box-shadow 180ms;
+}
+.spatial-hand-card:hover,
+.spatial-hand-card:focus-visible {
+  z-index: 10;
+  border-color: var(--card-accent);
+  box-shadow: 0 8px 30px rgb(0 0 0 / 50%);
+}
+.spatial-card-body {
+  box-shadow:
+    0 22px 32px rgb(0 0 0 / 35%),
+    inset 0 1px rgb(255 255 255 / 6%);
+}
+@media (min-width: 640px) {
+  .spatial-hand-card {
+    transform: rotate(var(--fan-angle));
+    margin-inline: -3px;
+  }
+  .spatial-hand-card:hover,
+  .spatial-hand-card:focus-visible {
+    transform: translateY(-16px) rotate(0deg);
+  }
+}
+@media (max-width: 639px) {
+  .spatial-camera {
+    top: 190px;
+    right: 12px;
+    flex-direction: column;
+    gap: 0;
+  }
+  .spatial-camera > span {
+    display: none;
+  }
+  .spatial-camera .spatial-icon-button {
+    width: 32px;
+    height: 32px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spatial-studio *,
+  .spatial-studio *::before,
+  .spatial-studio *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

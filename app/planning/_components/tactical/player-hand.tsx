@@ -1,19 +1,20 @@
-"use client";
+﻿"use client";
 
-import React, { useMemo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useMemo, useState, type CSSProperties } from "react";
 import {
   Cable,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
   Dumbbell,
-  Minus,
-  PersonStanding,
   Plus,
   Search,
   Sparkles,
   X,
 } from "lucide-react";
 import type { ListExercises200Item } from "@/app/_lib/api/fetch-generated";
-import { tacticalMetadata, RUNES, RUNE_COLORS, type Rune } from "../../_lib/tactical";
+import { tacticalMetadata } from "../../_lib/tactical";
 import { getMuscleGroupLabel } from "@/app/_lib/muscle-labels";
 
 const FILTERS = [
@@ -27,231 +28,228 @@ const FILTERS = [
   { label: "Ombros", groups: ["SHOULDERS"] },
   { label: "Braços", groups: ["BICEPS", "TRICEPS", "FOREARMS"] },
   { label: "Core", groups: ["CORE"] },
-  { label: "Potência", groups: ["POWER"] },
 ];
-
 const searchText = (value: string) =>
   value
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase();
+    .toLowerCase()
+    .trim();
+const PAGE_SIZE = 6;
 
 export interface PlayerHandProps {
   catalog: ListExercises200Item[];
-  onSummonExercise: (entry: ListExercises200Item, clientX?: number, clientY?: number) => void;
-  onApplyRuneToActive?: (rune: Rune) => void;
+  onSummonExercise: (entry: ListExercises200Item) => void;
+  disabled?: boolean;
+  isLoading?: boolean;
 }
 
 export function PlayerHand({
   catalog,
   onSummonExercise,
-  onApplyRuneToActive,
+  disabled,
+  isLoading,
 }: PlayerHandProps) {
   const [filterIndex, setFilterIndex] = useState(0);
   const [query, setQuery] = useState("");
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [isHandCollapsed, setIsHandCollapsed] = useState(false);
-
-  // Filtragem instantânea do Deck
-  const filteredCatalog = useMemo(() => {
-    return catalog.filter((e) => {
-      const matchesSearch = searchText(e.name).includes(searchText(query));
-      if (!matchesSearch) return false;
-
-      if (!filterIndex) return true;
-      const groupConfig = FILTERS[filterIndex].groups;
-      if (groupConfig.includes("POWER")) {
-        return tacticalMetadata(e).attributeWeights.power === 10;
-      }
-      return e.muscles.some(
-        (m) => m.role === "PRIMARY" && groupConfig.includes(m.muscleGroup),
-      );
-    });
-  }, [catalog, query, filterIndex]);
-
-  // Limite visual de cartas simultâneas na mão para manter formato de leque limpo
-  const visibleCards = useMemo(() => {
-    return filteredCatalog.slice(0, 18);
-  }, [filteredCatalog]);
-
-  const middleIndex = (visibleCards.length - 1) / 2;
+  const [collapsed, setCollapsed] = useState(false);
+  const [page, setPage] = useState(0);
+  const filtered = useMemo(
+    () =>
+      catalog.filter(
+        (entry) =>
+          searchText(entry.name).includes(searchText(query)) &&
+          (!filterIndex ||
+            entry.muscles.some(
+              (m) =>
+                m.role === "PRIMARY" &&
+                FILTERS[filterIndex].groups.includes(m.muscleGroup),
+            )),
+      ),
+    [catalog, query, filterIndex],
+  );
+  const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const currentPage = Math.min(page, pages - 1);
+  const visible = filtered.slice(
+    currentPage * PAGE_SIZE,
+    (currentPage + 1) * PAGE_SIZE,
+  );
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-2 z-40 flex flex-col items-center justify-end">
-      {/* 1. PÍLULA HOLOGRÁFICA FLUTUANTE DE FILTROS & SPELL RUNES */}
-      <div className="pointer-events-auto mb-2 flex max-w-[95vw] flex-wrap items-center gap-1.5 rounded-full border border-cyan-500/30 bg-slate-950/70 px-3 py-1 shadow-[0_4px_24px_rgba(0,240,255,0.18)] backdrop-blur-xl transition-all">
-        {/* Runas de Magia Rápidas */}
-        <div className="flex items-center gap-1 border-r border-white/15 pr-2">
-          {(Object.keys(RUNES) as Rune[]).map((r) => (
-            <button
-              type="button"
-              key={r}
-              onClick={() => onApplyRuneToActive?.(r)}
-              title={`Equipar ${RUNES[r]}`}
-              style={{ color: RUNE_COLORS[r] }}
-              className="flex size-7 items-center justify-center rounded-full bg-white/5 text-[11px] transition-transform hover:scale-125 hover:bg-white/15"
-            >
-              {r === "DROP_SET"
-                ? "🔥"
-                : r === "REST_PAUSE"
-                  ? "⚡"
-                  : r === "ISOMETRIC_HOLD"
-                    ? "❄"
-                    : r === "CLUSTER_SET"
-                      ? "⛓"
-                      : "◷"}
-            </button>
-          ))}
-        </div>
-
-        {/* Filtros por Grupo Muscular */}
-        <div className="no-scrollbar flex max-w-[50vw] items-center gap-1 overflow-x-auto">
-          {FILTERS.map((f, i) => (
-            <button
-              type="button"
-              key={f.label}
-              onClick={() => setFilterIndex(i)}
-              className={`h-7 shrink-0 rounded-full px-2.5 text-[10px] font-medium transition-all ${
-                filterIndex === i
-                  ? "bg-cyan-400 font-bold text-slate-950 shadow-[0_0_12px_#22d3ee]"
-                  : "bg-white/5 text-zinc-300 hover:bg-white/10 hover:text-white"
-              }`}
-            >
-              {f.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Botão de Busca */}
-        <button
-          type="button"
-          onClick={() => setSearchOpen(!searchOpen)}
-          title="Buscar exercício no deck"
-          className="flex size-7 shrink-0 items-center justify-center rounded-full bg-white/10 text-zinc-300 hover:bg-white/20 hover:text-cyan-300"
-        >
-          <Search size={13} />
-        </button>
-
-        {/* Toggle Minimizar Mão */}
-        <button
-          type="button"
-          onClick={() => setIsHandCollapsed(!isHandCollapsed)}
-          className="ml-1 text-[10px] text-zinc-400 hover:text-white"
-        >
-          {isHandCollapsed ? "▲ Expandir Deck" : "▼ Recolher"}
-        </button>
-      </div>
-
-      {/* Caixa de Busca Flutuante */}
-      <AnimatePresence>
-        {searchOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className="pointer-events-auto mb-2 flex w-72 items-center gap-2 rounded-2xl border border-cyan-400/40 bg-slate-950/90 px-3 py-1.5 shadow-2xl backdrop-blur-xl"
-          >
-            <Search size={14} className="text-cyan-400" />
+    <section
+      aria-label="Catálogo de exercícios"
+      className="spatial-deck pointer-events-none absolute inset-x-0 bottom-0 z-40 flex flex-col items-center px-3 pb-[max(12px,env(safe-area-inset-bottom))] sm:px-6"
+    >
+      <div className="spatial-glass pointer-events-auto relative z-20 w-full max-w-4xl rounded-2xl p-2 sm:px-3">
+        <div className="flex items-center gap-2">
+          <div className="hidden shrink-0 items-center gap-2 border-r border-white/10 pr-3 sm:flex">
+            <LayersIcon />
+            <span className="text-xs font-medium text-slate-200">Seu deck</span>
+            <span className="font-mono text-[10px] text-slate-500">
+              {filtered.length}
+            </span>
+          </div>
+          <label className="flex min-w-0 flex-1 items-center gap-2 rounded-lg bg-white/[0.04] px-2.5 py-2">
+            <Search size={14} className="shrink-0 text-slate-500" />
             <input
               type="search"
-              autoFocus
+              aria-label="Buscar exercícios no deck"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Buscar no deck..."
-              className="flex-1 bg-transparent text-xs text-white outline-none placeholder:text-zinc-500"
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setPage(0);
+                setCollapsed(false);
+              }}
+              placeholder="Buscar exercício…"
+              className="min-w-0 w-full bg-transparent text-xs text-white outline-none placeholder:text-slate-500"
             />
             {query && (
               <button
                 type="button"
-                onClick={() => setQuery("")}
-                className="text-zinc-400 hover:text-white"
+                aria-label="Limpar busca"
+                onClick={() => {
+                  setQuery("");
+                  setPage(0);
+                }}
               >
                 <X size={13} />
               </button>
             )}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* 2. O LEQUE DE CARTAS FLUTUANTE (PLAYER'S HAND EM ARCO) */}
-      {!isHandCollapsed && (
-        <div className="pointer-events-auto relative flex h-[155px] max-w-[98vw] items-end justify-center px-4 overflow-visible">
-          {visibleCards.map((entry, idx) => {
-            const meta = tacticalMetadata(entry);
-            const distFromCenter = idx - middleIndex;
-            // Rotação suave em leque (-14deg até 14deg)
-            const rotationDeg = distFromCenter * 2.8;
-            // Elevação no arco (mais alto no centro, mais baixo nas pontas)
-            const arcY = Math.abs(distFromCenter) * 3;
-
-            return (
-              <motion.div
-                key={entry.id}
-                style={{
-                  transformOrigin: "bottom center",
-                  marginLeft: idx === 0 ? 0 : "-44px", // Sobreposição tipo leque
-                  zIndex: 10 + idx,
-                }}
-                initial={{ opacity: 0, y: 40 }}
-                animate={{
-                  opacity: 1,
-                  y: arcY,
-                  rotate: rotationDeg,
-                }}
-                whileHover={{
-                  y: -36,
-                  rotate: 0,
-                  scale: 1.18,
-                  zIndex: 60,
-                  transition: { duration: 0.18, ease: "easeOut" },
-                }}
-                whileTap={{ scale: 0.95 }}
-                onClick={(e) => {
-                  onSummonExercise(entry, e.clientX, e.clientY - 200);
-                }}
-                className="group relative flex h-[146px] w-[124px] shrink-0 cursor-pointer flex-col overflow-hidden rounded-xl border border-cyan-500/40 bg-gradient-to-b from-slate-900/95 via-slate-950/95 to-slate-950 p-2 shadow-[0_12px_28px_rgba(0,0,0,0.7)] backdrop-blur-xl transition-shadow hover:border-cyan-300 hover:shadow-[0_0_24px_rgba(0,242,254,0.4)]"
-              >
-                {/* Linha superior: Custo SNC e Músculo */}
-                <div className="flex items-center justify-between text-[8px] font-mono text-cyan-300">
-                  <span>
-                    {meta.cnsDemand === "high"
-                      ? "★★★"
-                      : meta.cnsDemand === "medium"
-                        ? "★★"
-                        : "★"}
-                  </span>
-                  <span className="truncate max-w-[60px] rounded bg-white/5 px-1 uppercase text-zinc-300">
-                    {meta.primaryMuscles.map(getMuscleGroupLabel).slice(0, 1)}
-                  </span>
-                </div>
-
-                {/* Ícone holográfico central */}
-                <div className="relative my-auto flex size-9 items-center justify-center self-center text-cyan-400">
-                  <span className="absolute inset-0 rounded-full bg-cyan-400/20 blur-md group-hover:bg-cyan-400/40" />
-                  {meta.equipment === "Barra" ? (
-                    <Minus size={22} />
-                  ) : meta.equipment === "Máquina / cabo" ? (
-                    <Cable size={22} />
-                  ) : (
-                    <Dumbbell size={22} />
-                  )}
-                </div>
-
-                {/* Nome do exercício */}
-                <span className="line-clamp-2 text-center text-[10px] font-bold leading-tight text-white group-hover:text-cyan-300">
-                  {entry.name}
-                </span>
-
-                {/* Badge Invocação no hover */}
-                <div className="absolute inset-x-1 bottom-1 hidden items-center justify-center rounded-md bg-cyan-400 py-0.5 text-[8px] font-black uppercase text-slate-950 group-hover:flex">
-                  Invocação ⚡
-                </div>
-              </motion.div>
-            );
-          })}
+          </label>
+          <button
+            type="button"
+            onClick={() => setCollapsed(!collapsed)}
+            aria-expanded={!collapsed}
+            aria-label={collapsed ? "Expandir deck" : "Recolher deck"}
+            className="spatial-icon-button !size-8 !border-0 !bg-transparent"
+          >
+            {collapsed ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          </button>
         </div>
+        {!collapsed && (
+          <div
+            className="no-scrollbar mt-2 flex gap-1 overflow-x-auto"
+            role="group"
+            aria-label="Filtrar grupo muscular"
+          >
+            {FILTERS.map((filter, i) => (
+              <button
+                type="button"
+                key={filter.label}
+                onClick={() => {
+                  setFilterIndex(i);
+                  setPage(0);
+                }}
+                aria-pressed={filterIndex === i}
+                className={`h-7 shrink-0 rounded-lg px-3 text-[11px] transition-colors ${filterIndex === i ? "bg-cyan-300/10 text-cyan-200" : "text-slate-500 hover:bg-white/5 hover:text-slate-200"}`}
+              >
+                {filter.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+      {!collapsed && (
+        <>
+          <div className="spatial-hand no-scrollbar pointer-events-auto flex w-full max-w-4xl items-end gap-2 overflow-x-auto px-1 pb-1 pt-5 sm:justify-center sm:gap-0 sm:overflow-visible">
+            {visible.map((entry, i) => {
+              const meta = tacticalMetadata(entry);
+              return (
+                <button
+                  type="button"
+                  key={entry.id}
+                  disabled={disabled}
+                  aria-label={`Adicionar ${entry.name}`}
+                  onClick={() => onSummonExercise(entry)}
+                  style={
+                    {
+                      "--fan-angle": `${(i - (visible.length - 1) / 2) * 2}deg`,
+                      "--card-accent":
+                        meta.cnsDemand === "high"
+                          ? "#e5b979"
+                          : meta.cnsDemand === "low"
+                            ? "#6ed8b3"
+                            : "#67d9ee",
+                    } as CSSProperties
+                  }
+                  className="spatial-hand-card group relative flex h-[124px] w-[132px] shrink-0 flex-col rounded-xl border border-white/15 p-3 text-left disabled:opacity-40 sm:h-[136px] sm:w-[148px]"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] font-semibold uppercase tracking-widest text-[var(--card-accent)]">
+                      {meta.primaryMuscles.map(getMuscleGroupLabel).slice(0, 1)}
+                    </span>
+                    <Plus
+                      size={13}
+                      className="text-slate-500 group-hover:text-cyan-200"
+                    />
+                  </div>
+                  <div className="my-auto flex items-center gap-2 text-slate-500">
+                    {meta.equipment === "Máquina / cabo" ? (
+                      <Cable size={24} strokeWidth={1.2} />
+                    ) : (
+                      <Dumbbell size={24} strokeWidth={1.2} />
+                    )}
+                    <span className="text-[9px]">{meta.equipment}</span>
+                  </div>
+                  <span className="line-clamp-2 text-[11px] font-medium leading-snug text-slate-100">
+                    {entry.name}
+                  </span>
+                </button>
+              );
+            })}
+            {visible.length === 0 && (
+              <div
+                role="status"
+                className="flex h-[124px] w-full flex-col items-center justify-center gap-2 text-center text-xs text-slate-400"
+              >
+                <Search size={22} className="text-slate-600" />
+                <span>
+                  {isLoading
+                    ? "Carregando exercícios…"
+                    : "Nenhum exercício encontrado"}
+                </span>
+                {!isLoading && (
+                  <span className="text-[10px] text-slate-500">
+                    Tente outro nome ou grupo muscular.
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+          <div className="pointer-events-auto mt-1 flex h-7 items-center gap-4 text-[10px] text-slate-500">
+            <span className="hidden sm:inline">
+              Toque em uma carta para adicionar ao treino
+            </span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                aria-label="Página anterior de exercícios"
+                disabled={currentPage === 0}
+                onClick={() => setPage(currentPage - 1)}
+                className="flex size-7 items-center justify-center rounded-lg hover:bg-white/5 disabled:opacity-20"
+              >
+                <ChevronLeft size={14} />
+              </button>
+              <span className="min-w-12 text-center font-mono">
+                {currentPage + 1} / {pages}
+              </span>
+              <button
+                type="button"
+                aria-label="Próxima página de exercícios"
+                disabled={currentPage + 1 >= pages}
+                onClick={() => setPage(currentPage + 1)}
+                className="flex size-7 items-center justify-center rounded-lg hover:bg-white/5 disabled:opacity-20"
+              >
+                <ChevronRight size={14} />
+              </button>
+            </div>
+          </div>
+        </>
       )}
-    </div>
+    </section>
   );
 }
 
+function LayersIcon() {
+  return <Sparkles size={15} className="text-cyan-300" />;
+}

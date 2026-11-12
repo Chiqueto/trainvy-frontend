@@ -113,7 +113,9 @@ export function TacticalPlanWorkspace({
       <div className="flex shrink-0 items-center gap-2">
         <button
           type="button"
-          onClick={() => setArenaMode(arenaMode === "spatial" ? "list" : "spatial")}
+          onClick={() =>
+            setArenaMode(arenaMode === "spatial" ? "list" : "spatial")
+          }
           aria-label="Alternar visualização tática"
           className="hidden h-9 rounded-lg bg-white/5 px-2 text-xs sm:block"
         >
@@ -207,6 +209,12 @@ export function TacticalPlanWorkspace({
                 onChange={updateDay}
                 disabled={disabled}
                 onSave={onSave}
+                onListView={() => setArenaMode("list")}
+                onReview={onReview}
+                reviewLabel={reviewLabel}
+                planName={planName}
+                error={error}
+                syncError={syncError}
                 onClassicView={onClassic}
                 settingsNode={settings}
               />
