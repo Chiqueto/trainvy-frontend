@@ -20,7 +20,10 @@ describe("Holo-Board 3D Spatial Utils", () => {
   it("computes accurate IN (top) and OUT (bottom) card connectors", () => {
     const conn = getCardConnectors(100, 200);
     expect(conn.input).toEqual({ x: 100 + CARD_WIDTH / 2, y: 200 });
-    expect(conn.output).toEqual({ x: 100 + CARD_WIDTH / 2, y: 200 + CARD_HEIGHT });
+    expect(conn.output).toEqual({
+      x: 100 + CARD_WIDTH / 2,
+      y: 200 + CARD_HEIGHT,
+    });
   });
 
   it("calculates a smooth cubic Bezier path with midpoint between cards", () => {
@@ -80,7 +83,9 @@ describe("Holo-Board 3D Components", () => {
 
     expect(screen.getByTestId("test-child")).toBeDefined();
     // Verifica se a perspectiva de 1200px foi aplicada
-    expect((container.firstChild as HTMLElement).style.perspective).toBe("1200px");
+    expect((container.firstChild as HTMLElement).style.perspective).toBe(
+      "1200px",
+    );
   });
 
   it("renders energy links SVG with animated Bezier curves and connection HUDs", () => {
@@ -149,20 +154,22 @@ describe("Holo-Board 3D Components", () => {
         name: "Desenvolvimento Militar",
         ownerUserId: null,
         hasMedia: false,
-        muscles: [{ muscleGroup: "SHOULDERS", role: "PRIMARY" }],
+        muscles: [
+          { id: "ex-1-shoulders", muscleGroup: "SHOULDERS", role: "PRIMARY" },
+        ],
       },
       {
         id: "ex-2",
         name: "Elevação Lateral",
         ownerUserId: null,
         hasMedia: false,
-        muscles: [{ muscleGroup: "SHOULDERS", role: "PRIMARY" }],
+        muscles: [
+          { id: "ex-2-shoulders", muscleGroup: "SHOULDERS", role: "PRIMARY" },
+        ],
       },
     ];
 
-    render(
-      <PlayerHand catalog={mockCatalog} onSummonExercise={onSummon} />,
-    );
+    render(<PlayerHand catalog={mockCatalog} onSummonExercise={onSummon} />);
 
     // Cartas no leque
     expect(screen.getByText("Desenvolvimento Militar")).toBeDefined();
@@ -173,4 +180,3 @@ describe("Holo-Board 3D Components", () => {
     expect(onSummon).toHaveBeenCalled();
   });
 });
-
