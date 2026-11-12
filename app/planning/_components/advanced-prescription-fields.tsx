@@ -5,6 +5,7 @@ export function AdvancedPrescriptionFields({
   value,
   onChange,
   disabled = false,
+  defaultOpen = false,
 }: {
   value: Pick<
     WorkoutPlanDraftExercise,
@@ -12,10 +13,14 @@ export function AdvancedPrescriptionFields({
   >;
   onChange: (patch: Partial<WorkoutPlanDraftExercise>) => void;
   disabled?: boolean;
+  defaultOpen?: boolean;
 }) {
   const number = (text: string) => (text === "" ? null : Number(text));
   return (
-    <details className="rounded-xl border border-border/70 px-3 py-2">
+    <details
+      open={defaultOpen || undefined}
+      className="rounded-xl border border-border/70 px-3 py-2"
+    >
       <summary className="cursor-pointer py-1 text-xs font-semibold text-primary">
         Prescrição avançada (opcional)
       </summary>

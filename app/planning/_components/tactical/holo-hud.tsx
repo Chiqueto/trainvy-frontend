@@ -7,6 +7,8 @@ import {
   Clock3,
   Compass,
   Eye,
+  CircleHelp,
+  Brain,
   Layers3,
   LayoutGrid,
   List,
@@ -21,6 +23,7 @@ import type { WorkoutPlanDraftDay } from "../../_lib/workout-plan-builder";
 import { BodyHeatmapSVG } from "./body-heatmap-svg";
 import { AttributeRadarChart } from "./attribute-radar-chart";
 import { SealButton } from "./seal-button";
+import { TacticalSheet } from "./tactical-sheet";
 
 export interface HoloHudProps {
   days: WorkoutPlanDraftDay[];
@@ -68,6 +71,7 @@ export function HoloHud({
   disabled,
 }: HoloHudProps) {
   const [scannerOpen, setScannerOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
   return (
     <>
       <header className="spatial-header pointer-events-auto absolute inset-x-0 top-0 z-40">
@@ -192,16 +196,27 @@ export function HoloHud({
       </header>
 
       <div className="pointer-events-auto absolute left-3 top-[140px] z-30 sm:left-6">
-        <button
-          type="button"
-          aria-expanded={scannerOpen}
-          onClick={() => setScannerOpen(!scannerOpen)}
-          className="spatial-glass flex h-10 items-center gap-2 rounded-xl px-3 text-xs text-slate-300"
-        >
-          <Activity size={15} className="text-cyan-300" />
-          Mapa muscular
-          <span className="size-1.5 rounded-full bg-cyan-300/80" />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            aria-expanded={scannerOpen}
+            onClick={() => setScannerOpen(!scannerOpen)}
+            className="spatial-glass flex h-10 items-center gap-2 rounded-xl px-3 text-xs text-slate-300"
+          >
+            <Activity size={15} className="text-cyan-300" />
+            Mapa muscular
+            <span className="size-1.5 rounded-full bg-cyan-300/80" />
+          </button>
+          <button
+            type="button"
+            title="Como usar · cores, estrelas e controles"
+            aria-label="Ajuda e legendas"
+            onClick={() => setHelpOpen(true)}
+            className="spatial-icon-button spatial-glass"
+          >
+            <CircleHelp size={17} />
+          </button>
+        </div>
         {scannerOpen && (
           <section
             aria-label="Resumo muscular"
@@ -220,6 +235,23 @@ export function HoloHud({
             </div>
             <div className="[&_svg]:max-h-40">
               <BodyHeatmapSVG volumes={telemetryData.muscles} />
+            </div>
+            <div className="mt-3 rounded-xl border border-amber-300/15 bg-amber-300/5 p-3">
+              <h4 className="flex items-center gap-2 text-xs font-medium text-amber-200">
+                <Brain size={14} />
+                Demanda do SNC
+              </h4>
+              <p className="mt-2 font-mono text-xl text-amber-100">
+                {telemetryData.neural}
+                <span className="ml-2 text-[10px] text-slate-400">
+                  pontos estimados
+                </span>
+              </p>
+              <p className="mt-2 text-[10px] leading-relaxed text-slate-400">
+                Índice ilustrativo da ficha: considera a categoria dos
+                exercícios, séries e técnicas. Não mede fadiga nem estresse real
+                do sistema nervoso central.
+              </p>
             </div>
             <div className="mt-3 border-t border-white/10 pt-3 [&_svg]:max-h-32">
               <AttributeRadarChart values={telemetryData.attributes} />
@@ -292,6 +324,102 @@ export function HoloHud({
         <span>Scroll para aproximar</span>
         <span>Conecte OUT → IN para ordenar</span>
       </div>
+      <TacticalSheet
+        open={helpOpen}
+        onClose={() => setHelpOpen(false)}
+        title="Como usar o Studio"
+        description="Gestos, controles e significado das cartas."
+      >
+        <div className="space-y-5 text-xs leading-relaxed text-slate-300">
+          <section>
+            <h3 className="mb-2 text-sm font-semibold text-white">
+              Monte sua sequência
+            </h3>
+            <ul className="list-disc space-y-2 pl-4">
+              <li>
+                Role a lista do deck com a roda do mouse, pelas setas ou
+                deslizando no celular.
+              </li>
+              <li>
+                Clique em uma carta do deck para adicionar. Para posicioná-la,
+                arraste a alça até a mesa.
+              </li>
+              <li>
+                Arraste uma carta da mesa de volta ao deck para removê-la do
+                treino.
+              </li>
+              <li>
+                Arraste o fundo para navegar e use os controles de câmera para
+                aproximar ou organizar.
+              </li>
+              <li>
+                Conecte a saída OUT à entrada IN para reordenar. Aproxime cartas
+                e solte para criar um bi-set.
+              </li>
+            </ul>
+          </section>
+          <section>
+            <h3 className="mb-2 text-sm font-semibold text-white">
+              Edite a prescrição
+            </h3>
+            <ul className="list-disc space-y-2 pl-4">
+              <li>
+                Duplo clique no título abre a configuração. O botão de lápis
+                também abre com um toque, Enter ou Espaço.
+              </li>
+              <li>
+                Séries e repetições: digite o valor, use + / − ou role sobre o
+                controle.
+              </li>
+              <li>
+                O botão direito, o menu ⋯ ou manter pressionado sem mover abre
+                as opções da carta.
+              </li>
+              <li>
+                A aba lateral Técnicas abre inputs de segundos, posição da
+                isometria, blocos e cadência. Os valores não mudam ao clicar na
+                etiqueta.
+              </li>
+              <li>
+                Use Substitutos para cadastrar até duas alternativas sem trocar
+                o exercício principal.
+              </li>
+            </ul>
+          </section>
+          <section>
+            <h3 className="mb-2 text-sm font-semibold text-white">
+              Cores e estrelas
+            </h3>
+            <div className="space-y-2">
+              <p className="text-emerald-300">
+                ★ Verde · isolador / menor demanda estimada
+              </p>
+              <p className="text-cyan-300">
+                ★★ Ciano · multiarticular / demanda moderada estimada
+              </p>
+              <p className="text-amber-300">
+                ★★★ Dourado · composto ou potência / maior demanda estimada
+              </p>
+            </div>
+            <p className="mt-3 text-slate-500">
+              Classificação visual aproximada pelas características e nome do
+              exercício. Estrelas não indicam qualidade, dificuldade individual
+              ou ativação muscular medida.
+            </p>
+          </section>
+          <section>
+            <h3 className="mb-2 text-sm font-semibold text-white">
+              SNC e mapa muscular
+            </h3>
+            <p>
+              O índice de demanda do SNC soma pontos por série (2, 4 ou 7
+              conforme a categoria) e um fator de 15% por técnica. Serve para
+              comparar fichas; não é uma medição fisiológica. O mapa mostra
+              grupos musculares ilustrativos.
+            </p>
+          </section>
+        </div>
+      </TacticalSheet>
     </>
   );
 }

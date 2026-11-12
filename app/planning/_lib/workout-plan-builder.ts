@@ -15,6 +15,7 @@ export const WEEK_DAYS = [
 ] as const;
 
 export type WorkoutPlanDraftExercise = {
+  clientId?: string;
   supersetGroupId?: string | null;
   runes?: import("./tactical").Rune[];
   runeConfig?: import("./tactical").RuneConfig;

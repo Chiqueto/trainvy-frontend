@@ -173,8 +173,8 @@ function CatalogDialog({
   }
   return (
     <Dialog.Portal>
-      <Dialog.Overlay className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-xs" />
-      <Dialog.Content className="fixed left-1/2 top-1/2 z-[61] flex max-h-[calc(100dvh-1.5rem)] w-[calc(100%-1.5rem)] max-w-3xl -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-xl">
+      <Dialog.Overlay className="fixed inset-0 z-[140] bg-black/60 backdrop-blur-xs" />
+      <Dialog.Content className="fixed left-1/2 top-1/2 z-[141] flex max-h-[calc(100dvh-1.5rem)] w-[calc(100%-1.5rem)] max-w-3xl -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-xl">
         <div className="flex shrink-0 items-start justify-between gap-3 p-5 pb-4">
           <div className="min-w-0">
             <p className="mb-1 text-[10px] font-bold tracking-[0.2em] text-primary uppercase">

@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, within, act } from "@testing-library/react";
 import {
   CARD_WIDTH,
   CARD_HEIGHT,
@@ -15,9 +15,41 @@ import { EnergyLinksSvg } from "@/app/planning/_components/tactical/energy-links
 import { SpatialCanvas } from "@/app/planning/_components/tactical/spatial-canvas";
 import { HoloExerciseCard } from "@/app/planning/_components/tactical/holo-exercise-card";
 import { PlayerHand } from "@/app/planning/_components/tactical/player-hand";
+import { SpatialBuilderArena } from "@/app/planning/_components/tactical/spatial-builder-arena";
 import type { ListExercises200Item } from "@/app/_lib/api/fetch-generated";
+import { patchExercise, toggleRune } from "@/app/planning/_lib/tactical";
+import type {
+  WorkoutPlanDraftExercise,
+  WorkoutPlanDraftDay,
+} from "@/app/planning/_lib/workout-plan-builder";
+
+const catalogFixture = vi.hoisted(() => [
+  {
+    id: "catalog-test",
+    name: "Exercício configurável",
+    ownerUserId: null,
+    hasMedia: false,
+    muscles: [],
+  },
+]);
+vi.mock("@/app/_lib/hooks/use-exercise-catalog", () => ({
+  useExerciseCatalog: () => ({ exercises: catalogFixture, isSyncing: false }),
+}));
 
 describe("Holo-Board 3D Spatial Utils", () => {
+  it("preserves an existing custom cadence when enabling its technique", () => {
+    const item = {
+      name: "Supino",
+      sets: 3,
+      reps: 10,
+      restTimeInSeconds: 75,
+      tempo: "5-2-1-3",
+    };
+    expect(toggleRune(item, "TEMPO_CONTROL")).toMatchObject({
+      tempo: "5-2-1-3",
+      runeConfig: { TEMPO_CONTROL: "5-2-1-3" },
+    });
+  });
   it("keeps mobile cards spaced horizontally instead of stacking under the deck", () => {
     const points = generateTacticalFormation(4, 390, 844);
     expect(points[0].x).toBeGreaterThanOrEqual(0);
@@ -89,6 +121,310 @@ describe("Holo-Board 3D Spatial Utils", () => {
 });
 
 describe("Holo-Board 3D Components", () => {
+  it("preserves the prescription configured in the catalog when adding its card to the board", () => {
+    const observe = vi.fn();
+    function Editor() {
+      const [day, setDay] = useState<WorkoutPlanDraftDay>({
+        clientId: "day",
+        name: "Treino A",
+        isRest: false,
+        estimatedDurationInMinutes: 30,
+        exercises: [],
+      });
+      return (
+        <SpatialBuilderArena
+          day={day}
+          days={[day]}
+          activeDayIndex={0}
+          onSelectDay={vi.fn()}
+          onAddDay={vi.fn()}
+          onChange={(patch) => {
+            observe(patch);
+            setDay((previous) => ({ ...previous, ...patch }));
+          }}
+        />
+      );
+    }
+    render(<Editor />);
+    fireEvent.contextMenu(
+      screen.getByRole("button", { name: "Adicionar Exercício configurável" }),
+    );
+    fireEvent.click(
+      screen.getByRole("menuitem", { name: "Prescrição avançada" }),
+    );
+    const dialog = screen.getByRole("dialog", {
+      name: "Exercício configurável",
+    });
+    fireEvent.change(within(dialog).getByLabelText("Série 1: descanso (s)"), {
+      target: { value: "95" },
+    });
+    fireEvent.click(
+      within(dialog).getByRole("button", { name: "Adicionar ao treino" }),
+    );
+    expect(observe).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        exercises: [
+          expect.objectContaining({
+            exerciseId: "catalog-test",
+            restTimeInSeconds: 95,
+            setPrescription: expect.arrayContaining([
+              expect.objectContaining({ restSeconds: 95 }),
+            ]),
+          }),
+        ],
+      }),
+    );
+  });
+  it("opens options on stationary long press and suppresses the insertion click when releasing", () => {
+    vi.useFakeTimers();
+    try {
+      const onSummon = vi.fn();
+      render(
+        <PlayerHand
+          catalog={[
+            {
+              id: "long-press",
+              name: "Remada de teste",
+              ownerUserId: null,
+              hasMedia: false,
+              muscles: [],
+            },
+          ]}
+          onSummonExercise={onSummon}
+        />,
+      );
+      const add = screen.getByRole("button", {
+        name: "Adicionar Remada de teste",
+      });
+      fireEvent.pointerDown(add, {
+        button: 0,
+        pointerType: "touch",
+        clientX: 60,
+        clientY: 100,
+      });
+      act(() => vi.advanceTimersByTime(650));
+      fireEvent.pointerUp(add, {
+        pointerType: "touch",
+        clientX: 60,
+        clientY: 100,
+      });
+      fireEvent.click(add);
+      expect(
+        screen.getByRole("menuitem", { name: "Configurar técnicas" }),
+      ).toBeDefined();
+      expect(onSummon).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("cancels the long press when the finger moves to scroll", () => {
+    vi.useFakeTimers();
+    try {
+      render(
+        <PlayerHand
+          catalog={[
+            {
+              id: "swipe",
+              name: "Remada para deslizar",
+              ownerUserId: null,
+              hasMedia: false,
+              muscles: [],
+            },
+          ]}
+          onSummonExercise={vi.fn()}
+        />,
+      );
+      const add = screen.getByRole("button", {
+        name: "Adicionar Remada para deslizar",
+      });
+      fireEvent.pointerDown(add, {
+        button: 0,
+        pointerType: "touch",
+        clientX: 60,
+        clientY: 100,
+      });
+      fireEvent.pointerMove(add, {
+        pointerType: "touch",
+        clientX: 100,
+        clientY: 100,
+      });
+      act(() => vi.advanceTimersByTime(650));
+      fireEvent.pointerUp(add, {
+        pointerType: "touch",
+        clientX: 100,
+        clientY: 100,
+      });
+      expect(screen.queryByRole("menu")).toBeNull();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+  it("drags inside the workspace dialog and reports the release point for returning to the deck", () => {
+    const onPositionChange = vi.fn(),
+      onDragEnd = vi.fn();
+    const { container } = render(
+      <div role="dialog">
+        <HoloExerciseCard
+          item={{ name: "Remada", sets: 3, reps: 10, restTimeInSeconds: 75 }}
+          index={0}
+          orderLabel="01"
+          x={100}
+          y={100}
+          onPositionChange={onPositionChange}
+          onDragEnd={onDragEnd}
+          onChange={vi.fn()}
+          onRemove={vi.fn()}
+          onStartWirePull={vi.fn()}
+        />
+      </div>,
+    );
+    const card = container.querySelector("[data-holo-card]") as HTMLElement;
+    card.setPointerCapture = vi.fn();
+    fireEvent.pointerDown(card.querySelector("svg.lucide-dumbbell")!, {
+      button: 0,
+      pointerId: 1,
+      clientX: 130,
+      clientY: 180,
+    });
+    fireEvent.pointerMove(window, { pointerId: 1, clientX: 150, clientY: 220 });
+    fireEvent.pointerUp(window, { pointerId: 1, clientX: 150, clientY: 700 });
+    expect(onPositionChange).toHaveBeenCalledWith({ x: 120, y: 140 });
+    expect(onDragEnd).toHaveBeenCalledWith({ x: 150, y: 700 });
+  });
+
+  it("opens settings on double click, lets advanced fields toggle, and edits explicit technique inputs", () => {
+    function Editor() {
+      const [item, setItem] = useState<WorkoutPlanDraftExercise>({
+        name: "Supino de teste",
+        sets: 3,
+        reps: 10,
+        restTimeInSeconds: 75,
+      });
+      return (
+        <HoloExerciseCard
+          item={item}
+          index={0}
+          orderLabel="01"
+          x={0}
+          y={0}
+          onPositionChange={vi.fn()}
+          onChange={(patch) =>
+            setItem((previous) => patchExercise(previous, patch))
+          }
+          onRemove={vi.fn()}
+          onStartWirePull={vi.fn()}
+        />
+      );
+    }
+    const { container } = render(<Editor />);
+    const title = container.querySelector("[data-card-title]")!;
+    fireEvent.click(title);
+    expect(
+      screen.queryByRole("dialog", { name: "Supino de teste" }),
+    ).toBeNull();
+    fireEvent.doubleClick(title);
+    const dialog = screen.getByRole("dialog", { name: "Supino de teste" });
+    const advanced = within(dialog).getByText("Prescrição avançada (opcional)");
+    fireEvent.pointerDown(advanced, { button: 0 });
+    fireEvent.click(advanced);
+    expect((advanced.closest("details") as HTMLDetailsElement).open).toBe(
+      false,
+    );
+    fireEvent.click(advanced);
+    expect((advanced.closest("details") as HTMLDetailsElement).open).toBe(true);
+    fireEvent.change(within(dialog).getByLabelText("RIR alvo"), {
+      target: { value: "3" },
+    });
+    fireEvent.click(within(dialog).getByRole("tab", { name: "Técnicas" }));
+    fireEvent.click(
+      within(dialog).getByRole("checkbox", { name: "Rest-pause" }),
+    );
+    fireEvent.change(within(dialog).getByLabelText("Pausa interna (s)"), {
+      target: { value: "17" },
+    });
+    fireEvent.click(
+      within(dialog).getByRole("checkbox", { name: "Isometria" }),
+    );
+    fireEvent.change(within(dialog).getByLabelText("Posição da isometria"), {
+      target: { value: "base" },
+    });
+    fireEvent.change(within(dialog).getByLabelText("Isometria (s)"), {
+      target: { value: "12" },
+    });
+    fireEvent.click(within(dialog).getByRole("checkbox", { name: "Cadência" }));
+    fireEvent.change(within(dialog).getByLabelText("Descida (s)"), {
+      target: { value: "5" },
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Concluir" }));
+    expect(screen.getByText(/Rest-pause 17s/)).toBeDefined();
+    expect(screen.getByText(/Base 12s/)).toBeDefined();
+    expect(screen.getByText(/5-0-1-0/)).toBeDefined();
+    fireEvent.doubleClick(title);
+    expect(
+      (
+        within(
+          screen.getByRole("dialog", { name: "Supino de teste" }),
+        ).getByLabelText("RIR alvo") as HTMLInputElement
+      ).value,
+    ).toBe("3");
+  });
+
+  it("adjusts exact reps by click and wheel while preserving individual rests and loads", () => {
+    const observe = vi.fn();
+    function Editor() {
+      const [item, setItem] = useState<WorkoutPlanDraftExercise>({
+        name: "Remada",
+        sets: 2,
+        reps: 10,
+        restTimeInSeconds: 75,
+        repsMin: 8,
+        repsMax: 12,
+        setPrescription: [
+          { reps: 10, zone: "hypertrophy", restSeconds: 75, load: 20 },
+          { reps: 8, zone: "hypertrophy", restSeconds: 90, load: 15 },
+        ],
+      });
+      return (
+        <HoloExerciseCard
+          item={item}
+          index={0}
+          orderLabel="01"
+          x={0}
+          y={0}
+          onPositionChange={vi.fn()}
+          onChange={(patch) =>
+            setItem((previous) => {
+              const next = patchExercise(previous, patch);
+              observe(next);
+              return next;
+            })
+          }
+          onRemove={vi.fn()}
+          onStartWirePull={vi.fn()}
+        />
+      );
+    }
+    render(<Editor />);
+    fireEvent.click(
+      screen.getByRole("button", { name: "Aumentar repetições" }),
+    );
+    fireEvent.wheel(
+      screen.getByRole("spinbutton", { name: "Valor de repetições" }),
+      { deltaY: -100 },
+    );
+    expect(observe).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        reps: 12,
+        repsMin: null,
+        repsMax: null,
+        setPrescription: [
+          { reps: 12, zone: "hypertrophy", restSeconds: 75, load: 20 },
+          { reps: 12, zone: "hypertrophy", restSeconds: 90, load: 15 },
+        ],
+      }),
+    );
+  });
   it("pans by incremental pointer movement without accelerating", () => {
     const onPan = vi.fn();
     const { container } = render(
@@ -114,7 +450,7 @@ describe("Holo-Board 3D Components", () => {
     ]);
   });
 
-  it("makes exercises beyond the first 18 reachable and resets pagination when searching", () => {
+  it("makes exercises beyond the first 18 reachable in a scrollable list and filters search", () => {
     const onSummon = vi.fn();
     const catalog: ListExercises200Item[] = Array.from(
       { length: 20 },
@@ -127,10 +463,6 @@ describe("Holo-Board 3D Components", () => {
       }),
     );
     render(<PlayerHand catalog={catalog} onSummonExercise={onSummon} />);
-    for (let i = 0; i < 3; i++)
-      fireEvent.click(
-        screen.getByRole("button", { name: "Próxima página de exercícios" }),
-      );
     fireEvent.click(
       screen.getByRole("button", {
         name: "Adicionar Exercício 19",
@@ -149,7 +481,7 @@ describe("Holo-Board 3D Components", () => {
     expect(
       (
         screen.getByRole("button", {
-          name: "Página anterior de exercícios",
+          name: "Rolar exercícios para a esquerda",
         }) as HTMLButtonElement
       ).disabled,
     ).toBe(true);
@@ -228,7 +560,13 @@ describe("Holo-Board 3D Components", () => {
     // Tag muscular
     expect(screen.getByText("Peitoral Superior")).toBeDefined();
     // Séries (4 sets)
-    expect(screen.getByText("4")).toBeDefined();
+    expect(
+      (
+        screen.getByRole("spinbutton", {
+          name: "Valor de séries",
+        }) as HTMLInputElement
+      ).value,
+    ).toBe("4");
     // Runa equipada Drop-set
     expect(screen.getByText(/Drop-set 2x/)).toBeDefined();
   });

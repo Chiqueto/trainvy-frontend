@@ -1,6 +1,11 @@
-﻿"use client";
-
-import { useMemo, useState, type CSSProperties } from "react";
+"use client";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import {
   Cable,
   ChevronDown,
@@ -8,15 +13,27 @@ import {
   ChevronRight,
   ChevronUp,
   Dumbbell,
+  GripVertical,
   Plus,
   Search,
   Sparkles,
   X,
 } from "lucide-react";
 import type { ListExercises200Item } from "@/app/_lib/api/fetch-generated";
-import { tacticalMetadata } from "../../_lib/tactical";
+import { tacticalMetadata, patchExercise } from "../../_lib/tactical";
+import {
+  createDraftExercise,
+  type WorkoutPlanDraftExercise,
+} from "../../_lib/workout-plan-builder";
 import { getMuscleGroupLabel } from "@/app/_lib/muscle-labels";
-
+import {
+  ExerciseConfiguration,
+  type ExercisePanelTab,
+} from "./exercise-configuration";
+import { ExerciseActionsMenu } from "./exercise-actions-menu";
+import { TacticalSheet } from "./tactical-sheet";
+import { useHoldMenu } from "./use-hold-menu";
+import type { Point } from "./spatial-utils";
 const FILTERS = [
   { label: "Todos", groups: [] },
   { label: "Peito", groups: ["CHEST"] },
@@ -35,25 +52,39 @@ const searchText = (value: string) =>
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .trim();
-const PAGE_SIZE = 6;
-
 export interface PlayerHandProps {
   catalog: ListExercises200Item[];
-  onSummonExercise: (entry: ListExercises200Item) => void;
+  onSummonExercise: (
+    entry: ListExercises200Item,
+    patch?: Partial<WorkoutPlanDraftExercise>,
+    point?: Point,
+  ) => void;
   disabled?: boolean;
   isLoading?: boolean;
+  isDropTarget?: boolean;
+  onCatalogDrag?: (entry: ListExercises200Item | null, point?: Point) => void;
+  onCatalogDrop?: (entry: ListExercises200Item, point: Point) => void;
 }
-
 export function PlayerHand({
   catalog,
   onSummonExercise,
   disabled,
   isLoading,
+  isDropTarget,
+  onCatalogDrag,
+  onCatalogDrop,
 }: PlayerHandProps) {
-  const [filterIndex, setFilterIndex] = useState(0);
-  const [query, setQuery] = useState("");
-  const [collapsed, setCollapsed] = useState(false);
-  const [page, setPage] = useState(0);
+  const [filterIndex, setFilterIndex] = useState(0),
+    [query, setQuery] = useState(""),
+    [collapsed, setCollapsed] = useState(false),
+    [limit, setLimit] = useState(50),
+    [scroll, setScroll] = useState({ left: 0, end: false });
+  const listRef = useRef<HTMLDivElement>(null);
+  const [configuration, setConfiguration] = useState<{
+    entry: ListExercises200Item;
+    item: WorkoutPlanDraftExercise;
+    tab: ExercisePanelTab;
+  } | null>(null);
   const filtered = useMemo(
     () =>
       catalog.filter(
@@ -68,22 +99,33 @@ export function PlayerHand({
       ),
     [catalog, query, filterIndex],
   );
-  const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const currentPage = Math.min(page, pages - 1);
-  const visible = filtered.slice(
-    currentPage * PAGE_SIZE,
-    (currentPage + 1) * PAGE_SIZE,
-  );
-
+  function reset() {
+    setLimit(50);
+    setScroll({ left: 0, end: false });
+    if (listRef.current) listRef.current.scrollLeft = 0;
+  }
+  useEffect(() => {
+    const node = listRef.current;
+    if (!node) return;
+    const wheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+      e.preventDefault();
+      e.stopPropagation();
+      node.scrollLeft += e.deltaY;
+    };
+    node.addEventListener("wheel", wheel, { passive: false });
+    return () => node.removeEventListener("wheel", wheel);
+  }, [collapsed]);
   return (
     <section
+      data-deck-drop-zone
       aria-label="Catálogo de exercícios"
-      className="spatial-deck pointer-events-none absolute inset-x-0 bottom-0 z-40 flex flex-col items-center px-3 pb-[max(12px,env(safe-area-inset-bottom))] sm:px-6"
+      className={`spatial-deck pointer-events-none absolute inset-x-0 bottom-0 z-40 flex flex-col items-center px-3 pb-[max(12px,env(safe-area-inset-bottom))] sm:px-6 ${isDropTarget ? "spatial-deck-drop" : ""}`}
     >
-      <div className="spatial-glass pointer-events-auto relative z-20 w-full max-w-4xl rounded-2xl p-2 sm:px-3">
+      <div className="spatial-glass pointer-events-auto relative z-20 w-full max-w-5xl rounded-2xl p-2 sm:px-3">
         <div className="flex items-center gap-2">
           <div className="hidden shrink-0 items-center gap-2 border-r border-white/10 pr-3 sm:flex">
-            <LayersIcon />
+            <Sparkles size={15} className="text-cyan-300" />
             <span className="text-xs font-medium text-slate-200">Seu deck</span>
             <span className="font-mono text-[10px] text-slate-500">
               {filtered.length}
@@ -97,7 +139,7 @@ export function PlayerHand({
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);
-                setPage(0);
+                reset();
                 setCollapsed(false);
               }}
               placeholder="Buscar exercício…"
@@ -109,7 +151,7 @@ export function PlayerHand({
                 aria-label="Limpar busca"
                 onClick={() => {
                   setQuery("");
-                  setPage(0);
+                  reset();
                 }}
               >
                 <X size={13} />
@@ -128,20 +170,20 @@ export function PlayerHand({
         </div>
         {!collapsed && (
           <div
-            className="no-scrollbar mt-2 flex gap-1 overflow-x-auto"
             role="group"
             aria-label="Filtrar grupo muscular"
+            className="no-scrollbar mt-2 flex gap-1 overflow-x-auto"
           >
             {FILTERS.map((filter, i) => (
               <button
-                type="button"
                 key={filter.label}
+                type="button"
+                aria-pressed={filterIndex === i}
                 onClick={() => {
                   setFilterIndex(i);
-                  setPage(0);
+                  reset();
                 }}
-                aria-pressed={filterIndex === i}
-                className={`h-7 shrink-0 rounded-lg px-3 text-[11px] transition-colors ${filterIndex === i ? "bg-cyan-300/10 text-cyan-200" : "text-slate-500 hover:bg-white/5 hover:text-slate-200"}`}
+                className={`h-7 shrink-0 rounded-lg px-3 text-[11px] ${filterIndex === i ? "bg-cyan-300/10 text-cyan-200" : "text-slate-500 hover:bg-white/5"}`}
               >
                 {filter.label}
               </button>
@@ -149,107 +191,284 @@ export function PlayerHand({
           </div>
         )}
       </div>
+      {isDropTarget && (
+        <p className="pointer-events-none absolute -top-10 rounded-xl border border-rose-300/30 bg-rose-950/95 px-4 py-2 text-xs text-rose-200">
+          Solte aqui para remover do treino e devolver ao catálogo
+        </p>
+      )}
       {!collapsed && (
         <>
-          <div className="spatial-hand no-scrollbar pointer-events-auto flex w-full max-w-4xl items-end gap-2 overflow-x-auto px-1 pb-1 pt-5 sm:justify-center sm:gap-0 sm:overflow-visible">
-            {visible.map((entry, i) => {
-              const meta = tacticalMetadata(entry);
-              return (
-                <button
-                  type="button"
-                  key={entry.id}
-                  disabled={disabled}
-                  aria-label={`Adicionar ${entry.name}`}
-                  onClick={() => onSummonExercise(entry)}
-                  style={
-                    {
-                      "--fan-angle": `${(i - (visible.length - 1) / 2) * 2}deg`,
-                      "--card-accent":
-                        meta.cnsDemand === "high"
-                          ? "#e5b979"
-                          : meta.cnsDemand === "low"
-                            ? "#6ed8b3"
-                            : "#67d9ee",
-                    } as CSSProperties
-                  }
-                  className="spatial-hand-card group relative flex h-[124px] w-[132px] shrink-0 flex-col rounded-xl border border-white/15 p-3 text-left disabled:opacity-40 sm:h-[136px] sm:w-[148px]"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-[9px] font-semibold uppercase tracking-widest text-[var(--card-accent)]">
-                      {meta.primaryMuscles.map(getMuscleGroupLabel).slice(0, 1)}
-                    </span>
-                    <Plus
-                      size={13}
-                      className="text-slate-500 group-hover:text-cyan-200"
-                    />
-                  </div>
-                  <div className="my-auto flex items-center gap-2 text-slate-500">
-                    {meta.equipment === "Máquina / cabo" ? (
-                      <Cable size={24} strokeWidth={1.2} />
-                    ) : (
-                      <Dumbbell size={24} strokeWidth={1.2} />
-                    )}
-                    <span className="text-[9px]">{meta.equipment}</span>
-                  </div>
-                  <span className="line-clamp-2 text-[11px] font-medium leading-snug text-slate-100">
-                    {entry.name}
-                  </span>
-                </button>
-              );
-            })}
-            {visible.length === 0 && (
+          <div
+            ref={listRef}
+            tabIndex={0}
+            role="region"
+            aria-label="Lista rolável de exercícios"
+            onScroll={(e) => {
+              const el = e.currentTarget;
+              const end = el.scrollWidth - el.clientWidth - el.scrollLeft < 30;
+              setScroll({ left: el.scrollLeft, end });
+              if (end) setLimit((prev) => Math.min(filtered.length, prev + 50));
+            }}
+            className="spatial-hand no-scrollbar pointer-events-auto flex w-full max-w-5xl items-end gap-2 overflow-x-auto overscroll-x-contain px-1 pb-2 pt-5 [touch-action:pan-x]"
+          >
+            {filtered.slice(0, limit).map((entry, i) => (
+              <CatalogCard
+                key={entry.id}
+                entry={entry}
+                index={i}
+                disabled={disabled}
+                onAdd={() => onSummonExercise(entry)}
+                onConfigure={(tab) =>
+                  setConfiguration({
+                    entry,
+                    item: {
+                      ...createDraftExercise(),
+                      name: entry.name,
+                      exerciseId: entry.id,
+                      restTimeInSeconds: 75,
+                    },
+                    tab,
+                  })
+                }
+                onDrag={(point) => onCatalogDrag?.(entry, point)}
+                onDrop={(point) => {
+                  onCatalogDrag?.(null);
+                  onCatalogDrop?.(entry, point);
+                }}
+                onCancel={() => onCatalogDrag?.(null)}
+              />
+            ))}
+            {!filtered.length && (
               <div
                 role="status"
-                className="flex h-[124px] w-full flex-col items-center justify-center gap-2 text-center text-xs text-slate-400"
+                className="flex h-32 w-full flex-col items-center justify-center gap-2 text-xs text-slate-400"
               >
-                <Search size={22} className="text-slate-600" />
+                <Search size={22} />
                 <span>
                   {isLoading
                     ? "Carregando exercícios…"
                     : "Nenhum exercício encontrado"}
                 </span>
-                {!isLoading && (
-                  <span className="text-[10px] text-slate-500">
-                    Tente outro nome ou grupo muscular.
-                  </span>
-                )}
+                <span className="text-[10px] text-slate-500">
+                  Tente outro nome ou grupo muscular.
+                </span>
               </div>
             )}
           </div>
-          <div className="pointer-events-auto mt-1 flex h-7 items-center gap-4 text-[10px] text-slate-500">
-            <span className="hidden sm:inline">
-              Toque em uma carta para adicionar ao treino
+          <div className="pointer-events-auto flex min-h-8 items-center gap-2 text-[10px] text-slate-500">
+            <button
+              type="button"
+              aria-label="Rolar exercícios para a esquerda"
+              disabled={scroll.left <= 0}
+              onClick={() =>
+                listRef.current?.scrollBy({ left: -400, behavior: "smooth" })
+              }
+              className="spatial-icon-button !size-7 !border-0"
+            >
+              <ChevronLeft size={14} />
+            </button>
+            <span className="max-w-[75vw] text-center">
+              Role para explorar · clique para adicionar · arraste pela alça ·
+              segure para opções
             </span>
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                aria-label="Página anterior de exercícios"
-                disabled={currentPage === 0}
-                onClick={() => setPage(currentPage - 1)}
-                className="flex size-7 items-center justify-center rounded-lg hover:bg-white/5 disabled:opacity-20"
-              >
-                <ChevronLeft size={14} />
-              </button>
-              <span className="min-w-12 text-center font-mono">
-                {currentPage + 1} / {pages}
-              </span>
-              <button
-                type="button"
-                aria-label="Próxima página de exercícios"
-                disabled={currentPage + 1 >= pages}
-                onClick={() => setPage(currentPage + 1)}
-                className="flex size-7 items-center justify-center rounded-lg hover:bg-white/5 disabled:opacity-20"
-              >
-                <ChevronRight size={14} />
-              </button>
-            </div>
+            <button
+              type="button"
+              aria-label="Rolar exercícios para a direita"
+              disabled={scroll.end && limit >= filtered.length}
+              onClick={() =>
+                listRef.current?.scrollBy({ left: 400, behavior: "smooth" })
+              }
+              className="spatial-icon-button !size-7 !border-0"
+            >
+              <ChevronRight size={14} />
+            </button>
           </div>
         </>
       )}
+      <TacticalSheet
+        open={!!configuration}
+        onClose={() => setConfiguration(null)}
+        title={configuration?.entry.name ?? "Configurar exercício"}
+        description="Configure a carta antes de adicioná-la ao treino."
+        footer={
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={() => {
+              if (configuration) {
+                onSummonExercise(configuration.entry, configuration.item);
+                setConfiguration(null);
+              }
+            }}
+            className="min-h-11 rounded-xl bg-cyan-300 text-sm font-semibold text-slate-950"
+          >
+            Adicionar ao treino
+          </button>
+        }
+      >
+        {configuration && (
+          <ExerciseConfiguration
+            item={configuration.item}
+            tab={configuration.tab}
+            onTabChange={(tab) => setConfiguration({ ...configuration, tab })}
+            onChange={(patch) =>
+              setConfiguration({
+                ...configuration,
+                item: patchExercise(configuration.item, patch),
+              })
+            }
+            disabled={disabled}
+          />
+        )}
+      </TacticalSheet>
     </section>
   );
 }
-
-function LayersIcon() {
-  return <Sparkles size={15} className="text-cyan-300" />;
+function CatalogCard({
+  entry,
+  index,
+  disabled,
+  onAdd,
+  onConfigure,
+  onDrag,
+  onDrop,
+  onCancel,
+}: {
+  entry: ListExercises200Item;
+  index: number;
+  disabled?: boolean;
+  onAdd: () => void;
+  onConfigure: (tab: ExercisePanelTab) => void;
+  onDrag: (point: Point) => void;
+  onDrop: (point: Point) => void;
+  onCancel: () => void;
+}) {
+  const [menu, setMenu] = useState(false);
+  const hold = useHoldMenu(() => setMenu(true));
+  const suppressClick = useRef(false),
+    cleanupRef = useRef<(() => void) | null>(null);
+  const meta = tacticalMetadata(entry);
+  useEffect(() => () => cleanupRef.current?.(), []);
+  function start(event: React.PointerEvent) {
+    suppressClick.current = false;
+    if (
+      disabled ||
+      event.button !== 0 ||
+      (event.target as Element).closest("[data-card-actions]")
+    )
+      return;
+    if (
+      event.pointerType === "touch" &&
+      !(event.target as Element).closest("[data-drag-handle]")
+    )
+      return;
+    const point = { x: event.clientX, y: event.clientY };
+    let moved = false;
+    const move = (e: PointerEvent) => {
+      if (hold.held.current) return;
+      if (!moved && Math.hypot(e.clientX - point.x, e.clientY - point.y) < 8)
+        return;
+      moved = true;
+      hold.cancel();
+      suppressClick.current = true;
+      e.preventDefault();
+      onDrag({ x: e.clientX, y: e.clientY });
+    };
+    const clean = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", end);
+      window.removeEventListener("pointercancel", end);
+      cleanupRef.current = null;
+    };
+    const end = (e: PointerEvent) => {
+      if (moved) {
+        if (e.type === "pointercancel") onCancel();
+        else onDrop({ x: e.clientX, y: e.clientY });
+      }
+      clean();
+    };
+    cleanupRef.current?.();
+    cleanupRef.current = clean;
+    window.addEventListener("pointermove", move, { passive: false });
+    window.addEventListener("pointerup", end);
+    window.addEventListener("pointercancel", end);
+  }
+  return (
+    <article
+      inert={disabled || undefined}
+      data-catalog-card={entry.id}
+      {...{
+        onPointerDownCapture: hold.onPointerDownCapture,
+        onPointerMoveCapture: hold.onPointerMoveCapture,
+        onPointerUpCapture: hold.onPointerUpCapture,
+        onPointerCancelCapture: hold.onPointerCancelCapture,
+      }}
+      onPointerDown={start}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        setMenu(true);
+      }}
+      onClickCapture={(e) => {
+        if (suppressClick.current || hold.held.current) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }}
+      style={
+        {
+          "--fan-angle": `${((index % 6) - 2.5) * 1.2}deg`,
+          "--card-accent":
+            meta.cnsDemand === "high"
+              ? "#e5b979"
+              : meta.cnsDemand === "low"
+                ? "#6ed8b3"
+                : "#67d9ee",
+        } as CSSProperties
+      }
+      className="spatial-hand-card relative flex h-[144px] w-[150px] shrink-0 select-none flex-col rounded-xl border border-white/15 p-2 text-left"
+    >
+      <div className="flex items-center justify-between">
+        <button
+          type="button"
+          data-drag-handle
+          aria-label={`Arrastar ${entry.name} para a mesa`}
+          title="Arraste para a mesa"
+          className="flex size-7 touch-none cursor-grab items-center justify-center text-slate-500"
+        >
+          <GripVertical size={15} />
+        </button>
+        <span className="max-w-20 truncate text-[9px] uppercase tracking-widest text-[var(--card-accent)]">
+          {meta.primaryMuscles.map(getMuscleGroupLabel).slice(0, 1)}
+        </span>
+        <div data-card-actions>
+          <ExerciseActionsMenu
+            open={menu}
+            onOpenChange={setMenu}
+            ignoreOutside={hold.ignoreOutside}
+            onConfigure={onConfigure}
+            onAdd={onAdd}
+          />
+        </div>
+      </div>
+      <button
+        type="button"
+        disabled={disabled}
+        aria-label={`Adicionar ${entry.name}`}
+        onClick={onAdd}
+        className="flex min-h-0 flex-1 flex-col text-left"
+      >
+        <div className="my-auto flex items-center gap-2 text-slate-500">
+          {meta.equipment === "Máquina / cabo" ? (
+            <Cable size={22} strokeWidth={1.2} />
+          ) : (
+            <Dumbbell size={22} strokeWidth={1.2} />
+          )}
+          <Plus size={12} />
+        </div>
+        <span className="line-clamp-2 min-h-8 text-[11px] font-medium leading-snug text-white">
+          {entry.name}
+        </span>
+      </button>
+    </article>
+  );
 }

@@ -8,12 +8,14 @@ export function TacticalSheet({
   title,
   description,
   children,
+  footer,
 }: {
   open: boolean;
   onClose: () => void;
   title: string;
   description: string;
   children: ReactNode;
+  footer?: ReactNode;
 }) {
   return (
     <Dialog.Root
@@ -45,12 +47,14 @@ export function TacticalSheet({
           <div className="no-scrollbar min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain py-4">
             {children}
           </div>
-          <Dialog.Close
-            className="min-h-11 shrink-0 rounded-xl bg-cyan-300 text-sm font-semibold text-zinc-950"
-            style={{ marginBottom: "env(safe-area-inset-bottom)" }}
-          >
-            Concluir
-          </Dialog.Close>
+          {footer ?? (
+            <Dialog.Close
+              className="min-h-11 shrink-0 rounded-xl bg-cyan-300 text-sm font-semibold text-zinc-950"
+              style={{ marginBottom: "env(safe-area-inset-bottom)" }}
+            >
+              Concluir
+            </Dialog.Close>
+          )}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

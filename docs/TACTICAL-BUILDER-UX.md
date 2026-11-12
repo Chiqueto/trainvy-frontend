@@ -1,5 +1,21 @@
 # Editor tático — 11/11/2026
 
+## Studio espacial — atualização de 12/11/2026
+
+O modo espacial tem cartas livres na mesa e catálogo horizontal com rolagem contínua por roda do mouse, setas ou swipe. A alça do catálogo permite arrastar até a posição desejada na mesa, inclusive no touch. Devolver uma carta da mesa ao deck remove somente essa entrada do treino. Coordenadas são locais ao editor e não alteram a identidade do exercício no catálogo ou o histórico.
+
+Duplo clique no título abre a configuração; o lápis oferece a mesma ação com um toque ou teclado. Botão direito, menu ⋯ e toque longo de 600 ms sem deslocamento abrem as ações tanto nas cartas do catálogo quanto nas da mesa. Deslizar cancela o toque longo. A configuração do catálogo é aplicada à nova carta somente ao confirmar **Adicionar ao treino**.
+
+O painel possui abas Prescrição, Técnicas e Substitutos. A prescrição avançada abre expandida e mantém campos e séries individuais editáveis. Substitutos usa o seletor do catálogo, com até duas alternativas, excluindo o próprio exercício e a alternativa já selecionada. Seletores aninhados ficam acima do painel. Eventos de portais não iniciam o pan nem o arraste da carta.
+
+Séries e repetições usam inputs, +/−, roda do mouse e alça vertical de ajuste. Alterar reps fixas limpa a faixa e preserva descansos e cargas individuais. Técnicas aparecem em abas laterais e abrem formulários explícitos, sem alternar valores ao clicar na etiqueta.
+
+`runeConfig` agora aceita drop-set 1–10 reduções, rest-pause 1–600 s, cluster 2–20 blocos, isometria `peakN`/`baseN` com N entre 1–600 s e cadência de quatro fases inteiras entre 0–60 s. A notação antiga continua válida. Zod/OpenAPI e Orval foram atualizados; publicar a API antes do frontend. Não é necessária nova migration, pois os valores continuam no JSON existente.
+
+**Ajuda e legendas** explica gestos, controles, cores e estrelas: verde/★ indica a categoria isoladora, ciano/★★ multiarticular e dourado/★★★ composto/potência, conforme a heurística do editor. O mapa inclui demanda do SNC em pontos (2/4/7 por série, acrescidos do fator de técnicas). É uma comparação ilustrativa das fichas, sem representar fadiga ou estresse fisiológico medido.
+
+As descrições abaixo documentam a interface tática em lista anterior; seus controles cíclicos continuam disponíveis nessa visualização.
+
 O workspace compartilhado pelos editores de planos, modelos e prescrições usa um cabeçalho de 56 px com revisão e salvamento, mesa flexível, painel muscular de 288 px no desktop e dock de 202 px. No mobile, a pílula de telemetria abre o painel em modal; ações compactas mantêm nomes acessíveis. A rolagem continua disponível sem barras nativas.
 
 Técnicas podem ser aplicadas pelo menu junto ao exercício, arraste com prévia colorida ou seleção persistente no dock. No modo armado, tocar novamente remove a técnica; cancelar ou Escape desarma. Badges alternam parâmetros e possuem remoção independente. Bi-set combina com o próximo exercício elegível; o seletor permanece como alternativa quando não há parceiro imediatamente abaixo.

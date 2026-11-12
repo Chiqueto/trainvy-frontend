@@ -1,36 +1,18 @@
 "use client";
-
 import React, { useRef, useState } from "react";
-import { Popover } from "radix-ui";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Check,
-  Dumbbell,
-  Minus,
-  Plus,
-  Sparkles,
-  Trash2,
-  Unlink,
-} from "lucide-react";
+import { Dumbbell, ListPlus, Pencil, Sparkles, Unlink } from "lucide-react";
 import type { WorkoutPlanDraftExercise } from "../../_lib/workout-plan-builder";
-import {
-  cycleRune,
-  haptic,
-  prescriptionSets,
-  runeLabel,
-  RUNES,
-  RUNE_COLORS,
-  toggleRune,
-  zoneFor,
-  ZONES,
-  type Rune,
-  type Zone,
-} from "../../_lib/tactical";
+import { prescriptionSets, runeLabel, RUNE_COLORS } from "../../_lib/tactical";
 import { CARD_WIDTH, CARD_HEIGHT, type Point } from "./spatial-utils";
-import { OrbitalSwapMenu } from "./orbital-swap-menu";
 import { TacticalSheet } from "./tactical-sheet";
-import { AdvancedPrescriptionFields } from "../advanced-prescription-fields";
-
+import { PrescriptionStepper } from "./prescription-stepper";
+import {
+  ExerciseConfiguration,
+  type ExercisePanelTab,
+} from "./exercise-configuration";
+import { ExerciseActionsMenu } from "./exercise-actions-menu";
+import { useHoldMenu } from "./use-hold-menu";
+import { OrbitalSwapMenu } from "./orbital-swap-menu";
 const RARITY_STYLES = {
   high: {
     border: "border-amber-400/40 hover:border-amber-300",
@@ -64,28 +46,25 @@ const RARITY_STYLES = {
 export interface HoloCardProps {
   item: WorkoutPlanDraftExercise;
   index: number;
-  orderLabel: string; // Ex: "01", "01A", "02"
+  orderLabel: string;
   x: number;
   y: number;
   demand?: "low" | "medium" | "high";
   muscle?: string;
   isBiSet?: boolean;
   isDragTarget?: boolean;
-  onPositionChange: (newPos: { x: number; y: number }) => void;
+  onPositionChange: (point: Point) => void;
   onChange: (patch: Partial<WorkoutPlanDraftExercise>) => void;
   onRemove: () => void;
-  onStartWirePull: (
-    index: number,
-    startPoint: { x: number; y: number },
-  ) => void;
+  onStartWirePull: (index: number, point: Point) => void;
   onSeparateBiSet?: () => void;
   disabled?: boolean;
   toBoardPoint?: (point: Point) => Point;
-  onDragEnd?: () => void;
+  onDragEnd?: (clientPoint: Point) => void;
+  onDragStateChange?: (dragging: boolean) => void;
   allExerciseCandidates?: { index: number; name: string }[];
   onMergeWith?: (targetIndex: number) => void;
 }
-
 export function HoloExerciseCard({
   item,
   index,
@@ -93,9 +72,9 @@ export function HoloExerciseCard({
   x,
   y,
   demand = "medium",
-  muscle = "Peito",
-  isBiSet = false,
-  isDragTarget = false,
+  muscle = "",
+  isBiSet,
+  isDragTarget,
   onPositionChange,
   onChange,
   onRemove,
@@ -104,214 +83,162 @@ export function HoloExerciseCard({
   disabled,
   toBoardPoint,
   onDragEnd,
+  onDragStateChange,
 }: HoloCardProps) {
-  const cardRef = useRef<HTMLDivElement | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [detailsOpen, setDetailsOpen] = useState(false);
-
-  // 3D Tilt effect
-  const [tilt, setTilt] = useState({ rx: 0, ry: 0, glareX: 50, glareY: 50 });
-
-  const rarity = RARITY_STYLES[demand];
-  const sets = prescriptionSets(item);
-  const currentZone = sets[0]?.zone ?? zoneFor(item.reps);
-
-  // Drag livre do Card no plano espacial
-  const handlePointerDown = (e: React.PointerEvent) => {
-    // Não arrastar se clicou em botões de controle
-    if (disabled || e.button !== 0) return;
-    const target = e.target as Element;
+  const cardRef = useRef<HTMLDivElement>(null),
+    cleanupRef = useRef<(() => void) | null>(null);
+  const [dragging, setDragging] = useState(false),
+    [menuOpen, setMenuOpen] = useState(false),
+    [detailsOpen, setDetailsOpen] = useState(false),
+    [tab, setTab] = useState<ExercisePanelTab>("prescription");
+  const hold = useHoldMenu(() => setMenuOpen(true));
+  const sets = prescriptionSets(item),
+    rarity = RARITY_STYLES[demand];
+  function configure(next: ExercisePanelTab) {
+    setTab(next);
+    setMenuOpen(false);
+    setDetailsOpen(true);
+  }
+  function changeSets(count: number) {
+    const next = Array.from({ length: count }, (_, i) => ({
+      ...(sets[i] ?? sets[sets.length - 1]),
+    }));
+    onChange({ sets: count, setPrescription: next });
+  }
+  function handlePointerDown(event: React.PointerEvent) {
     if (
-      target.closest("button") ||
-      target.closest("input") ||
-      target.closest(".no-card-drag")
-    ) {
+      disabled ||
+      event.button !== 0 ||
+      !cardRef.current?.contains(event.target as Node)
+    )
       return;
-    }
-
-    e.preventDefault();
-    e.stopPropagation();
-    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-
-    setIsDragging(true);
-    const convert = toBoardPoint ?? ((point: Point) => point);
-    const startPointer = convert({ x: e.clientX, y: e.clientY });
-    const startPosX = x;
-    const startPosY = y;
-
-    const onPointerMove = (moveEvent: PointerEvent) => {
-      const pointer = convert({ x: moveEvent.clientX, y: moveEvent.clientY });
-      const dx = pointer.x - startPointer.x;
-      const dy = pointer.y - startPointer.y;
+    const target = event.target as Element;
+    if (target.closest("button,input,select,summary,.no-card-drag")) return;
+    event.preventDefault();
+    event.stopPropagation();
+    event.currentTarget.setPointerCapture(event.pointerId);
+    const convert = toBoardPoint ?? ((p: Point) => p),
+      start = convert({ x: event.clientX, y: event.clientY });
+    let moved = false;
+    const move = (e: PointerEvent) => {
+      if (hold.held.current) return;
+      if (
+        !moved &&
+        Math.hypot(e.clientX - event.clientX, e.clientY - event.clientY) < 8
+      )
+        return;
+      if (!moved) {
+        moved = true;
+        hold.cancel();
+        setDragging(true);
+        onDragStateChange?.(true);
+      }
+      const point = convert({ x: e.clientX, y: e.clientY });
       onPositionChange({
-        x: Math.round(startPosX + dx),
-        y: Math.round(startPosY + dy),
+        x: Math.round(x + point.x - start.x),
+        y: Math.round(y + point.y - start.y),
       });
     };
-
-    const onPointerUp = (upEvent: PointerEvent) => {
-      setIsDragging(false);
-      if (upEvent.type !== "pointercancel") onDragEnd?.();
-      window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("pointerup", onPointerUp);
-      window.removeEventListener("pointercancel", onPointerUp);
+    const clean = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", end);
+      window.removeEventListener("pointercancel", end);
+      cleanupRef.current = null;
     };
-
-    window.addEventListener("pointermove", onPointerMove);
-    window.addEventListener("pointerup", onPointerUp);
-    window.addEventListener("pointercancel", onPointerUp);
-  };
-
-  // Efeito 3D Tilt interativo no hover
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isDragging || !cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const px = (e.clientX - rect.left) / rect.width;
-    const py = (e.clientY - rect.top) / rect.height;
-
-    const rx = (py - 0.5) * -16; // -8deg a 8deg
-    const ry = (px - 0.5) * 16;
-    setTilt({
-      rx,
-      ry,
-      glareX: px * 100,
-      glareY: py * 100,
-    });
-  };
-
-  const handleMouseLeave = () => {
-    setTilt({ rx: 0, ry: 0, glareX: 50, glareY: 50 });
-  };
-
-  // Ciclo da Zona de Repetições
-  const cycleZone = () => {
-    if (disabled) return;
-    const zones: Zone[] = ["strength", "hypertrophy", "endurance"];
-    const nextZone = zones[(zones.indexOf(currentZone) + 1) % zones.length];
-    const cfg = ZONES[nextZone];
-
-    onChange({
-      repsMin: nextZone === "hypertrophy" ? 8 : null,
-      repsMax: nextZone === "hypertrophy" ? 12 : null,
-      reps: cfg.reps,
-      restTimeInSeconds: cfg.rest,
-      setPrescription: sets.map((s) => ({
-        ...s,
-        zone: nextZone,
-        reps: cfg.reps,
-        restSeconds: cfg.rest,
-      })),
-    });
-    haptic(15);
-  };
-
-  // Ajustar número de séries
-  const updateSetsCount = (delta: number) => {
-    if (disabled) return;
-    const newCount = Math.max(1, Math.min(12, sets.length + delta));
-    if (newCount === sets.length) return;
-
-    if (delta > 0) {
-      const lastSet = sets[sets.length - 1] ?? {
-        reps: item.reps,
-        zone: currentZone,
-        restSeconds: item.restTimeInSeconds,
-      };
-      const nextSets = [...sets, { ...lastSet }];
-      onChange({
-        sets: nextSets.length,
-        setPrescription: nextSets,
-      });
-    } else {
-      const nextSets = sets.slice(0, -1);
-      onChange({
-        sets: nextSets.length,
-        setPrescription: nextSets,
-      });
-    }
-    haptic(10);
-  };
-
+    const end = (e: PointerEvent) => {
+      setDragging(false);
+      onDragStateChange?.(false);
+      hold.cancel();
+      if (moved && e.type !== "pointercancel" && !hold.held.current)
+        onDragEnd?.({ x: e.clientX, y: e.clientY });
+      clean();
+    };
+    cleanupRef.current?.();
+    cleanupRef.current = clean;
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", end);
+    window.addEventListener("pointercancel", end);
+  }
+  React.useEffect(
+    () => () => {
+      cleanupRef.current?.();
+    },
+    [],
+  );
   return (
     <div
+      ref={cardRef}
       inert={disabled || undefined}
       data-holo-card
       data-exercise-index={index}
-      ref={cardRef}
+      {...{
+        onPointerDownCapture: (e: React.PointerEvent) => {
+          if (cardRef.current?.contains(e.target as Node))
+            hold.onPointerDownCapture(e);
+        },
+        onPointerMoveCapture: hold.onPointerMoveCapture,
+        onPointerUpCapture: hold.onPointerUpCapture,
+        onPointerCancelCapture: hold.onPointerCancelCapture,
+      }}
+      onContextMenu={(e) => {
+        if (cardRef.current?.contains(e.target as Node)) {
+          e.preventDefault();
+          setMenuOpen(true);
+        }
+      }}
       onPointerDown={handlePointerDown}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      onClickCapture={(e) => {
+        if (hold.held.current && cardRef.current?.contains(e.target as Node)) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }}
       style={{
         position: "absolute",
-        left: `${x}px`,
-        top: `${y}px`,
-        width: `${CARD_WIDTH}px`,
-        height: `${CARD_HEIGHT}px`,
-        zIndex: isDragging ? 50 : 20,
-        cursor: isDragging ? "grabbing" : "grab",
-        transform: `scale(${isDragging ? 1.03 : 1})`,
-        transition: isDragging ? "none" : "transform 0.15s ease-out",
-        userSelect: "none",
+        left: x,
+        top: y,
+        width: CARD_WIDTH,
+        height: CARD_HEIGHT,
+        zIndex: dragging ? 60 : 20,
+        cursor: dragging ? "grabbing" : "grab",
         touchAction: "none",
       }}
-      className="spatial-exercise group relative select-none"
+      className="spatial-exercise group select-none"
     >
-      {/* NÓ DE ENTRADA LUMINOSO (IN) - TOPO */}
       <div
         data-wire-input={index}
-        title="Porta de Energia (IN) - Recebe sequência anterior"
-        style={{ left: "50%", transform: "translate(-50%, -50%)" }}
-        className="absolute top-0 z-30 flex size-5 items-center justify-center rounded-full border border-cyan-400 bg-slate-950 shadow-[0_0_10px_#00f2fe]"
+        title="Entrada IN · recebe a saída OUT da carta anterior"
+        style={{ left: "50%", transform: "translate(-50%,-50%)" }}
+        className="no-card-drag absolute top-0 z-30 flex size-6 items-center justify-center rounded-full border border-cyan-400/60 bg-slate-950 shadow-[0_0_12px_#22d3ee66]"
       >
-        <span className="size-2 rounded-full bg-cyan-400 opacity-75" />
-        <span className="absolute size-2 rounded-full bg-cyan-300" />
+        <span className="size-2 rounded-full bg-cyan-300" />
       </div>
-
-      {/* CORPO PRINCIPAL DA CARTA HOLOGRÁFICA */}
       <div
-        style={{
-          height: CARD_HEIGHT,
-          transform: `perspective(1000px) rotateX(${tilt.rx * 0.4}deg) rotateY(${tilt.ry * 0.4}deg)`,
-        }}
-        className={`spatial-card-body relative flex flex-col overflow-hidden rounded-2xl border bg-gradient-to-b p-3 backdrop-blur-xl transition-all duration-300 ${rarity.border} ${rarity.glow} ${rarity.gradient} ${
-          isDragTarget
-            ? "ring-4 ring-purple-500/80 ring-offset-2 ring-offset-slate-950"
-            : ""
-        }`}
+        style={{ height: CARD_HEIGHT }}
+        className={`spatial-card-body relative flex flex-col rounded-2xl border bg-gradient-to-b p-3 ${rarity.border} ${rarity.gradient} ${isDragTarget ? "ring-2 ring-violet-400" : ""}`}
       >
-        {/* Holographic Glare overlay */}
-        <div
-          style={{
-            background: `radial-gradient(circle at ${tilt.glareX}% ${tilt.glareY}%, rgba(255,255,255,0.18) 0%, transparent 60%)`,
-          }}
-          className="pointer-events-none absolute inset-0 opacity-80"
-        />
-
-        {/* 1. CABEÇALHO DA CARTA */}
-        <div className="relative z-10 mb-1 flex items-center justify-between border-b border-white/10 pb-1">
-          {/* Badge de Ordem #01 com raridade */}
-          <div className="flex items-center gap-1.5">
+        <div className="mb-2 flex items-center justify-between border-b border-white/10 pb-2">
+          <div className="flex items-center gap-2">
             <span
-              className={`flex h-5 items-center justify-center rounded-md px-1.5 font-mono text-[10px] font-black uppercase tracking-wider ${rarity.badge}`}
+              className={`rounded-md px-1.5 py-1 font-mono text-[10px] font-bold ${rarity.badge}`}
             >
               #{orderLabel}
             </span>
             <span
-              className={`text-[10px] font-bold tracking-tighter ${rarity.starColor}`}
+              title={`${rarity.label} · demanda estimada ${demand === "high" ? "alta" : demand === "medium" ? "moderada" : "baixa"}`}
+              className={`text-[10px] ${rarity.starColor}`}
             >
               {rarity.stars}
             </span>
           </div>
-
-          {/* Troca Rápida e Menu */}
-          <div className="flex items-center gap-0.5 no-card-drag">
+          <div className="no-card-drag flex items-center">
             <OrbitalSwapMenu
               compact
               exerciseId={item.exerciseId}
-              onSwap={(e) =>
+              onSwap={(entry) =>
                 onChange({
-                  name: e.name,
-                  exerciseId: e.id,
+                  name: entry.name,
+                  exerciseId: entry.id,
                   alternative1ExerciseId: null,
                   alternative2ExerciseId: null,
                   alternative1Name: "",
@@ -319,286 +246,159 @@ export function HoloExerciseCard({
                 })
               }
             />
-            <button
-              type="button"
-              title="Excluir da mesa"
-              disabled={disabled}
-              onClick={onRemove}
-              className="rounded p-0.5 text-zinc-400 hover:bg-rose-500/20 hover:text-rose-300"
-            >
-              <Trash2 size={11} />
-            </button>
-          </div>
-        </div>
-
-        {/* Título do Exercício */}
-        <button
-          type="button"
-          onClick={() => setDetailsOpen(true)}
-          title={`Editar: ${item.name}`}
-          className="relative z-10 no-card-drag text-left"
-        >
-          <span className="line-clamp-2 block min-h-9 text-sm font-semibold leading-tight tracking-tight text-white hover:text-cyan-300">
-            {item.name || "Selecionar Exercício"}
-          </span>
-        </button>
-
-        {/* 2. JANELA CENTRAL (ARTE / HOLOGRAMA SCI-FI) */}
-        <div
-          onClick={() => setDetailsOpen(true)}
-          className="relative my-1.5 flex flex-1 flex-col items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-slate-900/60 p-1 shadow-inner cursor-pointer hover:border-cyan-400/40"
-        >
-          {/* Fundo com grade holográfica */}
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(#38bdf822_1px,transparent_1px)] [background-size:8px_8px]" />
-
-          {/* Ícone vetorial flutuante do equipamento */}
-          <div className="relative my-auto flex size-12 items-center justify-center text-cyan-300">
-            <span className="absolute inset-0 animate-pulse rounded-full bg-cyan-400/20 blur-md" />
-            <Dumbbell
-              size={28}
-              className="relative z-10 text-cyan-200 drop-shadow-[0_0_8px_#38bdf8]"
+            <ExerciseActionsMenu
+              open={menuOpen}
+              onOpenChange={setMenuOpen}
+              ignoreOutside={hold.ignoreOutside}
+              onConfigure={configure}
+              onRemove={onRemove}
             />
           </div>
-
-          {/* Tag do Músculo Alvo */}
-          <span className="relative z-10 mt-auto truncate rounded-full border border-white/10 bg-slate-950/80 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-cyan-300">
+        </div>
+        <button
+          type="button"
+          data-card-title
+          onDoubleClick={() => configure("prescription")}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              configure("prescription");
+            }
+          }}
+          title="Duplo clique para editar a prescrição · ou use o lápis"
+          className="no-card-drag text-left"
+        >
+          <span className="line-clamp-2 block min-h-9 text-sm font-semibold leading-tight text-white">
+            {item.name || "Selecionar exercício"}
+          </span>
+          <span className="mt-1 block text-[9px] font-normal text-slate-500">
+            {item.repsMin && item.repsMax
+              ? `Faixa ${item.repsMin}–${item.repsMax} reps · 2× para editar`
+              : "2× no título para editar"}
+          </span>
+        </button>
+        <div className="relative my-2 flex min-h-10 flex-1 flex-col items-center justify-center overflow-hidden rounded-xl border border-white/5 bg-slate-900/50">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(#38bdf81a_1px,transparent_1px)] [background-size:10px_10px]" />
+          <Dumbbell
+            size={28}
+            strokeWidth={1.3}
+            className="relative my-2 text-cyan-200/80"
+          />
+          <span className="relative mb-2 max-w-full truncate px-2 text-[9px] uppercase tracking-widest text-cyan-200/80">
             {muscle}
           </span>
         </div>
-
-        {/* 3. PAINEL DE ATRIBUTOS BASE (ATK / DEF ESTILO YU-GI-OH) */}
-        <div className="relative z-10 mt-auto grid grid-cols-2 gap-1 rounded-xl border border-white/10 bg-slate-950/80 p-1 font-mono">
-          {/* LADO ESQUERDO: SÉRIES (ATK) */}
-          <div className="flex flex-col items-center justify-center border-r border-white/10 pr-1 no-card-drag">
-            <span className="text-[9px] uppercase tracking-wider text-zinc-400">
-              Séries
-            </span>
-            <div className="flex items-center gap-1">
-              <button
-                type="button"
-                aria-label="Diminuir séries"
-                disabled={disabled}
-                onClick={() => updateSetsCount(-1)}
-                className="flex size-7 items-center justify-center rounded bg-white/10 text-zinc-300 hover:bg-white/20"
-              >
-                <Minus size={12} />
-              </button>
-              <span className="font-mono text-xs font-black text-amber-300">
-                {sets.length}
-              </span>
-              <button
-                type="button"
-                aria-label="Aumentar séries"
-                disabled={disabled}
-                onClick={() => updateSetsCount(1)}
-                className="flex size-7 items-center justify-center rounded bg-white/10 text-zinc-300 hover:bg-white/20"
-              >
-                <Plus size={12} />
-              </button>
-            </div>
-          </div>
-
-          {/* LADO DIREITO: ZONA / REPS (DEF) */}
-          <button
-            type="button"
-            onClick={cycleZone}
-            title="Alternar Faixa de Repetições"
-            className="flex flex-col items-center justify-center no-card-drag hover:bg-white/5 rounded"
-          >
-            <span className="text-[9px] uppercase tracking-wider text-cyan-400">
-              {currentZone === "hypertrophy"
-                ? "Hiper"
-                : currentZone === "strength"
-                  ? "Força"
-                  : "Resist"}
-            </span>
-            <span className="text-xs font-black text-white">
-              {item.repsMin && item.repsMax
-                ? `${item.repsMin}-${item.repsMax}`
-                : item.reps}{" "}
-              <span className="text-[8px] font-normal text-zinc-400">reps</span>
-            </span>
-          </button>
+        <div className="grid grid-cols-2 gap-1 rounded-xl border border-white/10 bg-slate-950/60 py-1.5">
+          <PrescriptionStepper
+            label="Séries"
+            value={sets.length}
+            min={1}
+            max={100}
+            disabled={disabled}
+            onChange={changeSets}
+          />
+          <PrescriptionStepper
+            label="Repetições"
+            value={item.reps}
+            min={1}
+            max={10000}
+            disabled={disabled}
+            onChange={(reps) =>
+              onChange({ reps, repsMin: null, repsMax: null })
+            }
+          />
         </div>
-
-        {/* Botão de separar Bi-set se estiver agrupado */}
-        {isBiSet && onSeparateBiSet && (
+        <div className="no-card-drag mt-2 flex justify-between gap-1">
           <button
             type="button"
-            onClick={onSeparateBiSet}
-            className="no-card-drag mt-1 flex items-center justify-center gap-1 rounded-lg border border-purple-500/40 bg-purple-950/60 py-0.5 text-[9px] font-bold text-purple-300 hover:bg-purple-900/80"
+            title="Editar prescrição e descanso"
+            aria-label="Editar prescrição"
+            onClick={() => configure("prescription")}
+            className="flex h-7 items-center gap-1 rounded-md px-1.5 text-[10px] text-slate-400 hover:bg-white/5"
           >
-            <Unlink size={10} />
-            Separar Bi-Set
+            <Pencil size={12} />
+            {item.restTimeInSeconds}s
           </button>
-        )}
-      </div>
-
-      {/* 4. CARTAS DE MAGIA / EQUIPAMENTO ENCAIXADAS (RUNAS DE TÉCNICAS) */}
-      <div className="relative -mt-1 flex flex-wrap gap-1 px-1 no-card-drag">
-        <AnimatePresence>
-          {(item.runes ?? []).map((rune) => (
-            <motion.div
-              key={rune}
-              initial={{ y: -8, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -8, opacity: 0 }}
-              style={{
-                borderColor: RUNE_COLORS[rune],
-                color: RUNE_COLORS[rune],
-              }}
-              className="flex items-center gap-0.5 rounded-b-lg border border-t-0 bg-slate-950/95 px-1.5 py-0.5 text-[9px] font-bold shadow-[0_4px_10px_rgba(0,0,0,0.5)]"
-            >
-              <button
-                type="button"
-                onClick={() => onChange(cycleRune(item, rune))}
-                title="Ciclar parâmetro da técnica"
-                className="hover:underline"
-              >
-                {runeLabel(item, rune)}
-              </button>
-              <button
-                type="button"
-                onClick={() => onChange(toggleRune(item, rune))}
-                title="Ejetar magia"
-                className="ml-0.5 text-zinc-500 hover:text-white"
-              >
-                ×
-              </button>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-
-        {/* Botão + Técnica para equipar técnica */}
-        <Popover.Root>
-          <Popover.Trigger asChild>
+          <button
+            type="button"
+            title="Adicionar exercícios substitutos"
+            aria-label="Exercícios substitutos"
+            onClick={() => configure("alternatives")}
+            className="flex h-7 items-center gap-1 rounded-md px-1.5 text-[10px] text-cyan-200/80 hover:bg-white/5"
+          >
+            <ListPlus size={13} />
+            {[
+              item.alternative1ExerciseId || item.alternative1Name,
+              item.alternative2ExerciseId || item.alternative2Name,
+            ].filter(Boolean).length || "Substitutos"}
+          </button>
+          {isBiSet && onSeparateBiSet && (
             <button
               type="button"
-              className="flex items-center gap-0.5 rounded-b-lg border border-t-0 border-white/20 bg-slate-950/80 px-1.5 py-0.5 text-[9px] font-medium text-zinc-400 hover:border-cyan-400 hover:text-cyan-300"
+              title="Separar Bi-Set"
+              aria-label="Separar Bi-Set"
+              onClick={onSeparateBiSet}
+              className="px-1 text-violet-300"
             >
-              <Sparkles size={9} />+ Técnica
+              <Unlink size={13} />
             </button>
-          </Popover.Trigger>
-          <Popover.Portal>
-            <Popover.Content
-              side="bottom"
-              align="center"
-              sideOffset={4}
-              className="z-[90] w-56 rounded-xl border border-white/20 bg-slate-950 p-2 text-white shadow-2xl backdrop-blur-xl"
-            >
-              <p className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-zinc-400">
-                Equipar Técnica Holográfica
-              </p>
-              {(Object.keys(RUNES) as Rune[]).map((r) => {
-                const isActive = item.runes?.includes(r);
-                return (
-                  <button
-                    type="button"
-                    key={r}
-                    onClick={() => onChange(toggleRune(item, r))}
-                    style={{ color: RUNE_COLORS[r] }}
-                    className="flex w-full items-center justify-between rounded-lg px-2 py-1.5 text-xs hover:bg-white/10"
-                  >
-                    <span>{RUNES[r]}</span>
-                    {isActive && <Check size={14} />}
-                  </button>
-                );
-              })}
-            </Popover.Content>
-          </Popover.Portal>
-        </Popover.Root>
+          )}
+        </div>
       </div>
-
-      {/* NÓ DE SAÍDA LUMINOSO (OUT) - BASE */}
+      <div className="spatial-technique-tabs no-card-drag absolute left-full top-7 flex max-h-[240px] w-20 flex-col gap-1 overflow-y-auto pl-1.5 sm:w-[112px]">
+        <button
+          type="button"
+          onClick={() => configure("techniques")}
+          className="flex min-h-8 items-center gap-1 rounded-r-lg border border-l-0 border-cyan-300/20 bg-slate-950/95 px-2 text-[10px] text-cyan-200"
+        >
+          <Sparkles size={12} />
+          Técnicas +
+        </button>
+        {(item.runes ?? []).map((rune) => (
+          <button
+            type="button"
+            key={rune}
+            onClick={() => configure("techniques")}
+            title="Clique para configurar os valores da técnica"
+            style={{
+              color: RUNE_COLORS[rune],
+              borderColor: `${RUNE_COLORS[rune]}55`,
+            }}
+            className="min-h-8 rounded-r-lg border border-l-0 bg-slate-950/95 px-2 py-1 text-left text-[9px] leading-relaxed"
+          >
+            {runeLabel(item, rune)}
+          </button>
+        ))}
+      </div>
       <div
-        title="Porta de Energia (OUT) - Puxe para conectar com o próximo exercício"
+        title="Saída OUT · arraste até a entrada IN da próxima carta"
         onPointerDown={(e) => {
           e.stopPropagation();
+          hold.cancel();
           if (!disabled)
             onStartWirePull(index, {
               x: x + CARD_WIDTH / 2,
               y: y + CARD_HEIGHT,
             });
         }}
-        style={{ left: "50%", transform: "translate(-50%, 50%)" }}
-        className="no-card-drag absolute bottom-0 z-30 flex size-5 cursor-crosshair items-center justify-center rounded-full border border-purple-400 bg-slate-950 shadow-[0_0_12px_#a855f7] hover:scale-125 transition-transform"
+        style={{ left: "50%", transform: "translate(-50%,50%)" }}
+        className="no-card-drag absolute bottom-0 z-30 flex size-6 cursor-crosshair items-center justify-center rounded-full border border-violet-400/60 bg-slate-950 shadow-[0_0_12px_#a855f766]"
       >
-        <span className="size-2 rounded-full bg-purple-400 opacity-75" />
-        <span className="absolute size-2 rounded-full bg-purple-300" />
+        <span className="size-2 rounded-full bg-violet-300" />
       </div>
-
-      {/* Folha tática de detalhes avançados */}
       <TacticalSheet
         open={detailsOpen}
         onClose={() => setDetailsOpen(false)}
         title={item.name}
-        description="Prescrição detalhada do exercício, cargas e séries."
+        description="Configure os valores da prescrição, técnicas e substitutos."
       >
-        <div className="space-y-4">
-          <p className="text-xs text-zinc-400">Prescrição por série</p>
-          {sets.map((s, i) => (
-            <div
-              key={i}
-              className="grid grid-cols-[20px_1fr_1fr_1fr] items-end gap-2 text-xs"
-            >
-              <span className="pb-3 text-zinc-500">{i + 1}</span>
-              <label>
-                Reps
-                <input
-                  type="number"
-                  min={1}
-                  max={999}
-                  value={s.reps}
-                  onChange={(e) => {
-                    const next = [...sets];
-                    next[i] = { ...s, reps: Number(e.target.value) };
-                    onChange({ setPrescription: next, reps: next[0].reps });
-                  }}
-                  className="mt-1 h-9 w-full rounded-lg border border-white/10 bg-zinc-900 px-2 text-sm text-white"
-                />
-              </label>
-              <label>
-                Descanso (s)
-                <input
-                  type="number"
-                  min={10}
-                  max={600}
-                  value={s.restSeconds}
-                  onChange={(e) => {
-                    const next = [...sets];
-                    next[i] = { ...s, restSeconds: Number(e.target.value) };
-                    onChange({
-                      setPrescription: next,
-                      restTimeInSeconds: next[0].restSeconds,
-                    });
-                  }}
-                  className="mt-1 h-9 w-full rounded-lg border border-white/10 bg-zinc-900 px-2 text-sm text-white"
-                />
-              </label>
-              <label>
-                Carga (kg)
-                <input
-                  type="number"
-                  min={0}
-                  step={0.5}
-                  value={s.load ?? ""}
-                  placeholder="0"
-                  onChange={(e) => {
-                    const next = [...sets];
-                    next[i] = {
-                      ...s,
-                      load: e.target.value ? Number(e.target.value) : undefined,
-                    };
-                    onChange({ setPrescription: next });
-                  }}
-                  className="mt-1 h-9 w-full rounded-lg border border-white/10 bg-zinc-900 px-2 text-sm text-white"
-                />
-              </label>
-            </div>
-          ))}
-
-          <AdvancedPrescriptionFields value={item} onChange={onChange} />
-        </div>
+        <ExerciseConfiguration
+          item={item}
+          onChange={onChange}
+          tab={tab}
+          onTabChange={setTab}
+          disabled={disabled}
+        />
       </TacticalSheet>
     </div>
   );

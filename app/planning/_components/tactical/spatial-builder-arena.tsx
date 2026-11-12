@@ -83,6 +83,13 @@ export function SpatialBuilderArena({
   const { exercises: catalog, isSyncing } = useExerciseCatalog();
   const [summons, setSummons] = useState<SummonEvent[]>([]);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [boardDragging, setBoardDragging] = useState(false);
+  const [catalogDrag, setCatalogDrag] = useState<{
+    entry: ListExercises200Item;
+    point: Point;
+  } | null>(null);
+  const pendingPositions = useRef<Record<string, Point>>({});
+  const initialized = useRef(false);
 
   // Estado Espacial (Câmera, Posições e Fios de Energia)
   const spatial = useSpatialState(day.exercises.length);
@@ -94,13 +101,28 @@ export function SpatialBuilderArena({
   );
 
   const exerciseKeys = JSON.stringify(
-    day.exercises.map((e, i) => e.id ?? `slot:${i}`),
+    day.exercises.map((e, i) => e.id ?? e.clientId ?? `slot:${i}`),
   );
-  const { autoArrange, viewportRef } = spatial;
+  const { autoArrange, viewportRef, setPositions } = spatial;
   useEffect(() => {
     const ids: string[] = JSON.parse(exerciseKeys);
     const arrange = () => autoArrange(ids.length, ids);
-    arrange();
+    if (!initialized.current) {
+      arrange();
+      initialized.current = true;
+    }
+    const pending = pendingPositions.current;
+    pendingPositions.current = {};
+    setPositions((prev) => {
+      const formation = generateTacticalFormation(
+        ids.length,
+        viewportRef.current?.clientWidth || 1300,
+        viewportRef.current?.clientHeight || 800,
+      );
+      return Object.fromEntries(
+        ids.map((id, i) => [id, pending[id] ?? prev[id] ?? formation[i]]),
+      );
+    });
     const viewport = viewportRef.current;
     if (!viewport || typeof ResizeObserver === "undefined") return;
     let width = viewport.clientWidth;
@@ -112,7 +134,7 @@ export function SpatialBuilderArena({
     });
     observer.observe(viewport);
     return () => observer.disconnect();
-  }, [exerciseKeys, autoArrange, viewportRef]);
+  }, [exerciseKeys, autoArrange, viewportRef, setPositions]);
 
   const fusionRef = useRef(spatial.fusionTargetId);
   useEffect(() => {
@@ -180,14 +202,21 @@ export function SpatialBuilderArena({
   }
 
   // Invocar (Summon) uma carta do Deck para a Mesa Espacial
-  function summonExercise(entry: ListExercises200Item) {
+  function summonExercise(
+    entry: ListExercises200Item,
+    patch?: Partial<WorkoutPlanDraftExercise>,
+    clientPoint?: Point,
+  ) {
     if (disabled) return;
 
     const newExercise: WorkoutPlanDraftExercise = {
       ...createDraftExercise(),
+      ...patch,
+      clientId: `spatial-${crypto.randomUUID()}`,
+      id: undefined,
       name: entry.name,
       exerciseId: entry.id,
-      restTimeInSeconds: 75,
+      restTimeInSeconds: patch?.restTimeInSeconds ?? 75,
     };
 
     // Posição no espaço da mesa
@@ -195,7 +224,7 @@ export function SpatialBuilderArena({
       (e) => e.name || e.exerciseId,
     );
     const targetIndex = existingExercises.length;
-    const blockId = `slot:${targetIndex}`;
+    const blockId = newExercise.clientId!;
 
     // Determinar ponto de invocação
     const w = spatial.viewportRef.current?.clientWidth || 1200;
@@ -205,7 +234,11 @@ export function SpatialBuilderArena({
       w,
       spatial.viewportRef.current?.clientHeight || 800,
     );
-    const { x: spawnX, y: spawnY } = formation[targetIndex];
+    const dropPoint = clientPoint ? toBoardPoint(clientPoint) : null;
+    const { x: spawnX, y: spawnY } = dropPoint
+      ? { x: dropPoint.x - CARD_WIDTH / 2, y: dropPoint.y - CARD_HEIGHT / 2 }
+      : formation[targetIndex];
+    pendingPositions.current[blockId] = { x: spawnX, y: spawnY };
 
     // Disparar animação de invocação (Summon Effect)
     const summonId = `summon-${Date.now()}`;
@@ -220,14 +253,35 @@ export function SpatialBuilderArena({
     ]);
 
     // Atualizar posição do card
-    spatial.autoArrange(targetIndex + 1, [
-      ...existingExercises.map((e, i) => e.id ?? `slot:${i}`),
-      blockId,
-    ]);
-    spatial.resetCamera();
+    if (!clientPoint) spatial.resetCamera();
 
     commit([...existingExercises, newExercise]);
     haptic(30);
+  }
+
+  function isOverDeck(point: Point) {
+    const rect = viewportRef.current
+      ?.querySelector("[data-deck-drop-zone]")
+      ?.getBoundingClientRect();
+    return (
+      !!rect &&
+      point.y >= rect.top &&
+      point.y <= rect.bottom &&
+      point.x >= rect.left &&
+      point.x <= rect.right
+    );
+  }
+  function dropCatalogExercise(entry: ListExercises200Item, point: Point) {
+    const rect = viewportRef.current?.getBoundingClientRect();
+    if (
+      rect &&
+      point.x >= rect.left &&
+      point.x <= rect.right &&
+      point.y >= rect.top + 180 &&
+      point.y < rect.bottom &&
+      !isOverDeck(point)
+    )
+      summonExercise(entry, undefined, point);
   }
 
   // Agrupamento de Bi-Sets / Super-Sets
@@ -260,11 +314,14 @@ export function SpatialBuilderArena({
     for (const slot of groupedSlots) {
       if (slot.members.length < 2) continue;
       const first = slot.members[0];
-      const anchor = spatial.positions[first.item.id ?? `slot:${first.index}`];
+      const anchor =
+        spatial.positions[
+          first.item.id ?? first.item.clientId ?? `slot:${first.index}`
+        ];
       if (!anchor) continue;
       slot.members.forEach(({ item, index }, i) => {
-        positions[item.id ?? `slot:${index}`] = {
-          x: anchor.x + 11 + i * (CARD_WIDTH + 12),
+        positions[item.id ?? item.clientId ?? `slot:${index}`] = {
+          x: anchor.x + 11 + i * (CARD_WIDTH + 128),
           y: anchor.y + 11,
         };
       });
@@ -278,8 +335,12 @@ export function SpatialBuilderArena({
     if (day.exercises.length < 2) return conns;
 
     for (let i = 0; i < day.exercises.length - 1; i++) {
-      const fromId = day.exercises[i].id ?? `slot:${i}`;
-      const toId = day.exercises[i + 1].id ?? `slot:${i + 1}`;
+      const fromId =
+        day.exercises[i].id ?? day.exercises[i].clientId ?? `slot:${i}`;
+      const toId =
+        day.exercises[i + 1].id ??
+        day.exercises[i + 1].clientId ??
+        `slot:${i + 1}`;
 
       const fromPos = renderedPositions[fromId] ?? { x: 200 + i * 240, y: 220 };
       const toPos = renderedPositions[toId] ?? {
@@ -321,7 +382,9 @@ export function SpatialBuilderArena({
         onZoomOut={() => spatial.setZoom(-0.08)}
         onResetCamera={spatial.resetCamera}
         onAutoArrange={() => {
-          const ids = day.exercises.map((e, i) => e.id ?? `slot:${i}`);
+          const ids = day.exercises.map(
+            (e, i) => e.id ?? e.clientId ?? `slot:${i}`,
+          );
           spatial.autoArrange(day.exercises.length, ids);
           haptic(20);
         }}
@@ -350,10 +413,12 @@ export function SpatialBuilderArena({
                   fromPoint: getCardConnectors(
                     renderedPositions[
                       day.exercises[spatial.wireSourceIndex]?.id ??
+                        day.exercises[spatial.wireSourceIndex]?.clientId ??
                         `slot:${spatial.wireSourceIndex}`
                     ]?.x ?? 200,
                     renderedPositions[
                       day.exercises[spatial.wireSourceIndex]?.id ??
+                        day.exercises[spatial.wireSourceIndex]?.clientId ??
                         `slot:${spatial.wireSourceIndex}`
                     ]?.y ?? 200,
                   ).output,
@@ -382,7 +447,8 @@ export function SpatialBuilderArena({
           // Se for Bi-Set, renderiza o Campo de Força Holográfico (Pedestal Compartilhado)
           if (isBiSet) {
             const first = slot.members[0];
-            const posKey = first.item.id ?? `slot:${first.index}`;
+            const posKey =
+              first.item.id ?? first.item.clientId ?? `slot:${first.index}`;
             const pos = spatial.positions[posKey] ?? {
               x: 180 + slotIdx * 380,
               y: 220,
@@ -397,7 +463,7 @@ export function SpatialBuilderArena({
                   top: `${pos.y}px`,
                   zIndex: 25,
                 }}
-                className="relative flex items-center gap-3 rounded-3xl border border-violet-400/30 bg-violet-950/20 p-2.5 shadow-[0_0_40px_rgba(168,85,247,0.08)]"
+                className="relative flex items-center gap-32 rounded-3xl border border-violet-400/30 bg-violet-950/20 p-2.5 shadow-[0_0_40px_rgba(168,85,247,0.08)]"
               >
                 {/* Badge do Campo de Força Bi-Set */}
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 flex items-center gap-1 rounded-full border border-purple-400 bg-slate-950 px-2.5 py-0.5 font-mono text-[9px] font-black tracking-wider text-purple-300 shadow-[0_0_12px_#a855f7]">
@@ -431,11 +497,18 @@ export function SpatialBuilderArena({
                         isBiSet={true}
                         disabled={disabled}
                         toBoardPoint={toBoardPoint}
+                        onDragStateChange={setBoardDragging}
+                        onDragEnd={(point) => {
+                          if (isOverDeck(point))
+                            commit(day.exercises.filter((_, n) => n !== index));
+                        }}
                         onPositionChange={(newPos) => {
                           spatial.updateCardPosition(
                             posKey,
                             { x: pos.x + newPos.x, y: pos.y + newPos.y },
-                            day.exercises.map((e, i) => e.id ?? `slot:${i}`),
+                            day.exercises.map(
+                              (e, i) => e.id ?? e.clientId ?? `slot:${i}`,
+                            ),
                           );
                         }}
                         onChange={(patch) => updateExercise(index, patch)}
@@ -445,7 +518,9 @@ export function SpatialBuilderArena({
                         onStartWirePull={(idx) => {
                           const point =
                             renderedPositions[
-                              day.exercises[idx].id ?? `slot:${idx}`
+                              day.exercises[idx].id ??
+                                day.exercises[idx].clientId ??
+                                `slot:${idx}`
                             ];
                           spatial.startWirePull(
                             idx,
@@ -470,7 +545,7 @@ export function SpatialBuilderArena({
 
           // Carta Individual
           const { item, index } = slot.members[0];
-          const posKey = item.id ?? `slot:${index}`;
+          const posKey = item.id ?? item.clientId ?? `slot:${index}`;
           const pos = spatial.positions[posKey] ?? {
             x: 180 + slotIdx * 250,
             y: 220,
@@ -496,14 +571,19 @@ export function SpatialBuilderArena({
               toBoardPoint={toBoardPoint}
               onPositionChange={(newPos) => {
                 const allKeys = day.exercises.map(
-                  (e, i) => e.id ?? `slot:${i}`,
+                  (e, i) => e.id ?? e.clientId ?? `slot:${i}`,
                 );
                 spatial.updateCardPosition(posKey, newPos, allKeys);
               }}
-              onDragEnd={() => {
+              onDragEnd={(point) => {
+                if (isOverDeck(point)) {
+                  commit(day.exercises.filter((_, n) => n !== index));
+                  spatial.setFusionTargetId(null);
+                  return;
+                }
                 const targetKey = fusionRef.current;
                 const targetIdx = day.exercises.findIndex(
-                  (e, i) => (e.id ?? `slot:${i}`) === targetKey,
+                  (e, i) => (e.id ?? e.clientId ?? `slot:${i}`) === targetKey,
                 );
                 if (targetIdx >= 0 && targetIdx !== index)
                   commit(mergeExercises(day.exercises, index, targetIdx));
@@ -515,7 +595,11 @@ export function SpatialBuilderArena({
               }
               onStartWirePull={(idx) => {
                 const point =
-                  renderedPositions[day.exercises[idx].id ?? `slot:${idx}`];
+                  renderedPositions[
+                    day.exercises[idx].id ??
+                      day.exercises[idx].clientId ??
+                      `slot:${idx}`
+                  ];
                 spatial.startWirePull(
                   idx,
                   getCardConnectors(point.x, point.y).output,
@@ -558,8 +642,25 @@ export function SpatialBuilderArena({
         disabled={disabled}
         isLoading={isSyncing}
         onSummonExercise={summonExercise}
+        isDropTarget={boardDragging}
+        onCatalogDrag={(entry, point) =>
+          setCatalogDrag(entry && point ? { entry, point } : null)
+        }
+        onCatalogDrop={dropCatalogExercise}
       />
 
+      {catalogDrag && (
+        <div
+          aria-hidden
+          className="pointer-events-none fixed z-[130] w-44 -translate-x-1/2 -translate-y-1/2 rounded-xl border border-cyan-300/50 bg-slate-950/95 p-4 text-xs text-cyan-100 shadow-2xl"
+          style={{ left: catalogDrag.point.x, top: catalogDrag.point.y }}
+        >
+          {catalogDrag.entry.name}
+          <span className="mt-2 block text-[10px] text-slate-500">
+            Solte na mesa para adicionar
+          </span>
+        </div>
+      )}
       {/* Sheet de Configurações do Treino */}
       <TacticalSheet
         open={settingsOpen}

@@ -337,6 +337,19 @@ body:has(.app-navigation) {
   border-color: var(--card-accent);
   box-shadow: 0 8px 30px rgb(0 0 0 / 50%);
 }
+.spatial-number {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+.spatial-number::-webkit-inner-spin-button,
+.spatial-number::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
+}
+.spatial-deck-drop > .spatial-glass {
+  border-color: rgb(251 113 133 / 50%);
+  box-shadow: 0 0 24px rgb(251 113 133 / 12%);
+}
 .spatial-card-body {
   box-shadow:
     0 22px 32px rgb(0 0 0 / 35%),
@@ -355,7 +368,8 @@ body:has(.app-navigation) {
 @media (max-width: 639px) {
   .spatial-camera {
     top: 190px;
-    right: 12px;
+    left: 12px;
+    right: auto;
     flex-direction: column;
     gap: 0;
   }

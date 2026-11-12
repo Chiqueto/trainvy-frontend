@@ -577,67 +577,25 @@
                                           "DROP_SET": {
                                             "type": "integer",
                                             "minimum": 1,
-                                            "maximum": 3
+                                            "maximum": 10
                                           },
                                           "REST_PAUSE": {
-                                            "anyOf": [
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  10
-                                                ]
-                                              },
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  15
-                                                ]
-                                              },
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  20
-                                                ]
-                                              }
-                                            ]
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 600
                                           },
                                           "ISOMETRIC_HOLD": {
                                             "type": "string",
-                                            "enum": [
-                                              "peak2",
-                                              "peak3",
-                                              "base2"
-                                            ]
+                                            "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                           },
                                           "CLUSTER_SET": {
-                                            "anyOf": [
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  2
-                                                ]
-                                              },
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  3
-                                                ]
-                                              },
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  4
-                                                ]
-                                              }
-                                            ]
+                                            "type": "integer",
+                                            "minimum": 2,
+                                            "maximum": 20
                                           },
                                           "TEMPO_CONTROL": {
                                             "type": "string",
-                                            "enum": [
-                                              "3-0-1-0",
-                                              "4-0-1-0",
-                                              "3-1-1-0"
-                                            ]
+                                            "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                           }
                                         },
                                         "additionalProperties": false
@@ -899,67 +857,25 @@
                                   "DROP_SET": {
                                     "type": "integer",
                                     "minimum": 1,
-                                    "maximum": 3
+                                    "maximum": 10
                                   },
                                   "REST_PAUSE": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          10
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          15
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          20
-                                        ]
-                                      }
-                                    ]
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 600
                                   },
                                   "ISOMETRIC_HOLD": {
                                     "type": "string",
-                                    "enum": [
-                                      "peak2",
-                                      "peak3",
-                                      "base2"
-                                    ]
+                                    "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                   },
                                   "CLUSTER_SET": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          2
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          3
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          4
-                                        ]
-                                      }
-                                    ]
+                                    "type": "integer",
+                                    "minimum": 2,
+                                    "maximum": 20
                                   },
                                   "TEMPO_CONTROL": {
                                     "type": "string",
-                                    "enum": [
-                                      "3-0-1-0",
-                                      "4-0-1-0",
-                                      "3-1-1-0"
-                                    ]
+                                    "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                   }
                                 },
                                 "additionalProperties": false
@@ -1208,67 +1124,25 @@
                                     "DROP_SET": {
                                       "type": "integer",
                                       "minimum": 1,
-                                      "maximum": 3
+                                      "maximum": 10
                                     },
                                     "REST_PAUSE": {
-                                      "anyOf": [
-                                        {
-                                          "type": "number",
-                                          "enum": [
-                                            10
-                                          ]
-                                        },
-                                        {
-                                          "type": "number",
-                                          "enum": [
-                                            15
-                                          ]
-                                        },
-                                        {
-                                          "type": "number",
-                                          "enum": [
-                                            20
-                                          ]
-                                        }
-                                      ]
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 600
                                     },
                                     "ISOMETRIC_HOLD": {
                                       "type": "string",
-                                      "enum": [
-                                        "peak2",
-                                        "peak3",
-                                        "base2"
-                                      ]
+                                      "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                     },
                                     "CLUSTER_SET": {
-                                      "anyOf": [
-                                        {
-                                          "type": "number",
-                                          "enum": [
-                                            2
-                                          ]
-                                        },
-                                        {
-                                          "type": "number",
-                                          "enum": [
-                                            3
-                                          ]
-                                        },
-                                        {
-                                          "type": "number",
-                                          "enum": [
-                                            4
-                                          ]
-                                        }
-                                      ]
+                                      "type": "integer",
+                                      "minimum": 2,
+                                      "maximum": 20
                                     },
                                     "TEMPO_CONTROL": {
                                       "type": "string",
-                                      "enum": [
-                                        "3-0-1-0",
-                                        "4-0-1-0",
-                                        "3-1-1-0"
-                                      ]
+                                      "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                     }
                                   },
                                   "additionalProperties": false
@@ -1959,67 +1833,25 @@
                                   "DROP_SET": {
                                     "type": "integer",
                                     "minimum": 1,
-                                    "maximum": 3
+                                    "maximum": 10
                                   },
                                   "REST_PAUSE": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          10
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          15
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          20
-                                        ]
-                                      }
-                                    ]
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 600
                                   },
                                   "ISOMETRIC_HOLD": {
                                     "type": "string",
-                                    "enum": [
-                                      "peak2",
-                                      "peak3",
-                                      "base2"
-                                    ]
+                                    "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                   },
                                   "CLUSTER_SET": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          2
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          3
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          4
-                                        ]
-                                      }
-                                    ]
+                                    "type": "integer",
+                                    "minimum": 2,
+                                    "maximum": 20
                                   },
                                   "TEMPO_CONTROL": {
                                     "type": "string",
-                                    "enum": [
-                                      "3-0-1-0",
-                                      "4-0-1-0",
-                                      "3-1-1-0"
-                                    ]
+                                    "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                   }
                                 },
                                 "additionalProperties": false
@@ -2552,67 +2384,25 @@
                               "DROP_SET": {
                                 "type": "integer",
                                 "minimum": 1,
-                                "maximum": 3
+                                "maximum": 10
                               },
                               "REST_PAUSE": {
-                                "anyOf": [
-                                  {
-                                    "type": "number",
-                                    "enum": [
-                                      10
-                                    ]
-                                  },
-                                  {
-                                    "type": "number",
-                                    "enum": [
-                                      15
-                                    ]
-                                  },
-                                  {
-                                    "type": "number",
-                                    "enum": [
-                                      20
-                                    ]
-                                  }
-                                ]
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 600
                               },
                               "ISOMETRIC_HOLD": {
                                 "type": "string",
-                                "enum": [
-                                  "peak2",
-                                  "peak3",
-                                  "base2"
-                                ]
+                                "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                               },
                               "CLUSTER_SET": {
-                                "anyOf": [
-                                  {
-                                    "type": "number",
-                                    "enum": [
-                                      2
-                                    ]
-                                  },
-                                  {
-                                    "type": "number",
-                                    "enum": [
-                                      3
-                                    ]
-                                  },
-                                  {
-                                    "type": "number",
-                                    "enum": [
-                                      4
-                                    ]
-                                  }
-                                ]
+                                "type": "integer",
+                                "minimum": 2,
+                                "maximum": 20
                               },
                               "TEMPO_CONTROL": {
                                 "type": "string",
-                                "enum": [
-                                  "3-0-1-0",
-                                  "4-0-1-0",
-                                  "3-1-1-0"
-                                ]
+                                "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                               }
                             },
                             "additionalProperties": false
@@ -3247,67 +3037,25 @@
                                     "DROP_SET": {
                                       "type": "integer",
                                       "minimum": 1,
-                                      "maximum": 3
+                                      "maximum": 10
                                     },
                                     "REST_PAUSE": {
-                                      "anyOf": [
-                                        {
-                                          "type": "number",
-                                          "enum": [
-                                            10
-                                          ]
-                                        },
-                                        {
-                                          "type": "number",
-                                          "enum": [
-                                            15
-                                          ]
-                                        },
-                                        {
-                                          "type": "number",
-                                          "enum": [
-                                            20
-                                          ]
-                                        }
-                                      ]
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 600
                                     },
                                     "ISOMETRIC_HOLD": {
                                       "type": "string",
-                                      "enum": [
-                                        "peak2",
-                                        "peak3",
-                                        "base2"
-                                      ]
+                                      "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                     },
                                     "CLUSTER_SET": {
-                                      "anyOf": [
-                                        {
-                                          "type": "number",
-                                          "enum": [
-                                            2
-                                          ]
-                                        },
-                                        {
-                                          "type": "number",
-                                          "enum": [
-                                            3
-                                          ]
-                                        },
-                                        {
-                                          "type": "number",
-                                          "enum": [
-                                            4
-                                          ]
-                                        }
-                                      ]
+                                      "type": "integer",
+                                      "minimum": 2,
+                                      "maximum": 20
                                     },
                                     "TEMPO_CONTROL": {
                                       "type": "string",
-                                      "enum": [
-                                        "3-0-1-0",
-                                        "4-0-1-0",
-                                        "3-1-1-0"
-                                      ]
+                                      "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                     }
                                   },
                                   "additionalProperties": false
@@ -5326,67 +5074,25 @@
                                   "DROP_SET": {
                                     "type": "integer",
                                     "minimum": 1,
-                                    "maximum": 3
+                                    "maximum": 10
                                   },
                                   "REST_PAUSE": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          10
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          15
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          20
-                                        ]
-                                      }
-                                    ]
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 600
                                   },
                                   "ISOMETRIC_HOLD": {
                                     "type": "string",
-                                    "enum": [
-                                      "peak2",
-                                      "peak3",
-                                      "base2"
-                                    ]
+                                    "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                   },
                                   "CLUSTER_SET": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          2
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          3
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          4
-                                        ]
-                                      }
-                                    ]
+                                    "type": "integer",
+                                    "minimum": 2,
+                                    "maximum": 20
                                   },
                                   "TEMPO_CONTROL": {
                                     "type": "string",
-                                    "enum": [
-                                      "3-0-1-0",
-                                      "4-0-1-0",
-                                      "3-1-1-0"
-                                    ]
+                                    "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                   }
                                 },
                                 "additionalProperties": false
@@ -5705,67 +5411,25 @@
                                         "DROP_SET": {
                                           "type": "integer",
                                           "minimum": 1,
-                                          "maximum": 3
+                                          "maximum": 10
                                         },
                                         "REST_PAUSE": {
-                                          "anyOf": [
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                10
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                15
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                20
-                                              ]
-                                            }
-                                          ]
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 600
                                         },
                                         "ISOMETRIC_HOLD": {
                                           "type": "string",
-                                          "enum": [
-                                            "peak2",
-                                            "peak3",
-                                            "base2"
-                                          ]
+                                          "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                         },
                                         "CLUSTER_SET": {
-                                          "anyOf": [
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                2
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                3
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                4
-                                              ]
-                                            }
-                                          ]
+                                          "type": "integer",
+                                          "minimum": 2,
+                                          "maximum": 20
                                         },
                                         "TEMPO_CONTROL": {
                                           "type": "string",
-                                          "enum": [
-                                            "3-0-1-0",
-                                            "4-0-1-0",
-                                            "3-1-1-0"
-                                          ]
+                                          "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                         }
                                       },
                                       "additionalProperties": false
@@ -7618,67 +7282,25 @@
                                   "DROP_SET": {
                                     "type": "integer",
                                     "minimum": 1,
-                                    "maximum": 3
+                                    "maximum": 10
                                   },
                                   "REST_PAUSE": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          10
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          15
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          20
-                                        ]
-                                      }
-                                    ]
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 600
                                   },
                                   "ISOMETRIC_HOLD": {
                                     "type": "string",
-                                    "enum": [
-                                      "peak2",
-                                      "peak3",
-                                      "base2"
-                                    ]
+                                    "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                   },
                                   "CLUSTER_SET": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          2
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          3
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          4
-                                        ]
-                                      }
-                                    ]
+                                    "type": "integer",
+                                    "minimum": 2,
+                                    "maximum": 20
                                   },
                                   "TEMPO_CONTROL": {
                                     "type": "string",
-                                    "enum": [
-                                      "3-0-1-0",
-                                      "4-0-1-0",
-                                      "3-1-1-0"
-                                    ]
+                                    "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                   }
                                 },
                                 "additionalProperties": false
@@ -16687,67 +16309,25 @@
                                           "DROP_SET": {
                                             "type": "integer",
                                             "minimum": 1,
-                                            "maximum": 3
+                                            "maximum": 10
                                           },
                                           "REST_PAUSE": {
-                                            "anyOf": [
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  10
-                                                ]
-                                              },
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  15
-                                                ]
-                                              },
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  20
-                                                ]
-                                              }
-                                            ]
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 600
                                           },
                                           "ISOMETRIC_HOLD": {
                                             "type": "string",
-                                            "enum": [
-                                              "peak2",
-                                              "peak3",
-                                              "base2"
-                                            ]
+                                            "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                           },
                                           "CLUSTER_SET": {
-                                            "anyOf": [
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  2
-                                                ]
-                                              },
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  3
-                                                ]
-                                              },
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  4
-                                                ]
-                                              }
-                                            ]
+                                            "type": "integer",
+                                            "minimum": 2,
+                                            "maximum": 20
                                           },
                                           "TEMPO_CONTROL": {
                                             "type": "string",
-                                            "enum": [
-                                              "3-0-1-0",
-                                              "4-0-1-0",
-                                              "3-1-1-0"
-                                            ]
+                                            "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                           }
                                         },
                                         "additionalProperties": false
@@ -20710,67 +20290,25 @@
                                   "DROP_SET": {
                                     "type": "integer",
                                     "minimum": 1,
-                                    "maximum": 3
+                                    "maximum": 10
                                   },
                                   "REST_PAUSE": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          10
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          15
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          20
-                                        ]
-                                      }
-                                    ]
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 600
                                   },
                                   "ISOMETRIC_HOLD": {
                                     "type": "string",
-                                    "enum": [
-                                      "peak2",
-                                      "peak3",
-                                      "base2"
-                                    ]
+                                    "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                   },
                                   "CLUSTER_SET": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          2
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          3
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          4
-                                        ]
-                                      }
-                                    ]
+                                    "type": "integer",
+                                    "minimum": 2,
+                                    "maximum": 20
                                   },
                                   "TEMPO_CONTROL": {
                                     "type": "string",
-                                    "enum": [
-                                      "3-0-1-0",
-                                      "4-0-1-0",
-                                      "3-1-1-0"
-                                    ]
+                                    "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                   }
                                 },
                                 "additionalProperties": false
@@ -21128,67 +20666,25 @@
                                         "DROP_SET": {
                                           "type": "integer",
                                           "minimum": 1,
-                                          "maximum": 3
+                                          "maximum": 10
                                         },
                                         "REST_PAUSE": {
-                                          "anyOf": [
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                10
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                15
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                20
-                                              ]
-                                            }
-                                          ]
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 600
                                         },
                                         "ISOMETRIC_HOLD": {
                                           "type": "string",
-                                          "enum": [
-                                            "peak2",
-                                            "peak3",
-                                            "base2"
-                                          ]
+                                          "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                         },
                                         "CLUSTER_SET": {
-                                          "anyOf": [
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                2
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                3
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                4
-                                              ]
-                                            }
-                                          ]
+                                          "type": "integer",
+                                          "minimum": 2,
+                                          "maximum": 20
                                         },
                                         "TEMPO_CONTROL": {
                                           "type": "string",
-                                          "enum": [
-                                            "3-0-1-0",
-                                            "4-0-1-0",
-                                            "3-1-1-0"
-                                          ]
+                                          "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                         }
                                       },
                                       "additionalProperties": false
@@ -21641,67 +21137,25 @@
                                   "DROP_SET": {
                                     "type": "integer",
                                     "minimum": 1,
-                                    "maximum": 3
+                                    "maximum": 10
                                   },
                                   "REST_PAUSE": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          10
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          15
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          20
-                                        ]
-                                      }
-                                    ]
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 600
                                   },
                                   "ISOMETRIC_HOLD": {
                                     "type": "string",
-                                    "enum": [
-                                      "peak2",
-                                      "peak3",
-                                      "base2"
-                                    ]
+                                    "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                   },
                                   "CLUSTER_SET": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          2
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          3
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          4
-                                        ]
-                                      }
-                                    ]
+                                    "type": "integer",
+                                    "minimum": 2,
+                                    "maximum": 20
                                   },
                                   "TEMPO_CONTROL": {
                                     "type": "string",
-                                    "enum": [
-                                      "3-0-1-0",
-                                      "4-0-1-0",
-                                      "3-1-1-0"
-                                    ]
+                                    "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                   }
                                 },
                                 "additionalProperties": false
@@ -22069,67 +21523,25 @@
                                         "DROP_SET": {
                                           "type": "integer",
                                           "minimum": 1,
-                                          "maximum": 3
+                                          "maximum": 10
                                         },
                                         "REST_PAUSE": {
-                                          "anyOf": [
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                10
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                15
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                20
-                                              ]
-                                            }
-                                          ]
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 600
                                         },
                                         "ISOMETRIC_HOLD": {
                                           "type": "string",
-                                          "enum": [
-                                            "peak2",
-                                            "peak3",
-                                            "base2"
-                                          ]
+                                          "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                         },
                                         "CLUSTER_SET": {
-                                          "anyOf": [
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                2
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                3
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                4
-                                              ]
-                                            }
-                                          ]
+                                          "type": "integer",
+                                          "minimum": 2,
+                                          "maximum": 20
                                         },
                                         "TEMPO_CONTROL": {
                                           "type": "string",
-                                          "enum": [
-                                            "3-0-1-0",
-                                            "4-0-1-0",
-                                            "3-1-1-0"
-                                          ]
+                                          "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                         }
                                       },
                                       "additionalProperties": false
@@ -22693,67 +22105,25 @@
                                         "DROP_SET": {
                                           "type": "integer",
                                           "minimum": 1,
-                                          "maximum": 3
+                                          "maximum": 10
                                         },
                                         "REST_PAUSE": {
-                                          "anyOf": [
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                10
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                15
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                20
-                                              ]
-                                            }
-                                          ]
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 600
                                         },
                                         "ISOMETRIC_HOLD": {
                                           "type": "string",
-                                          "enum": [
-                                            "peak2",
-                                            "peak3",
-                                            "base2"
-                                          ]
+                                          "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                         },
                                         "CLUSTER_SET": {
-                                          "anyOf": [
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                2
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                3
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                4
-                                              ]
-                                            }
-                                          ]
+                                          "type": "integer",
+                                          "minimum": 2,
+                                          "maximum": 20
                                         },
                                         "TEMPO_CONTROL": {
                                           "type": "string",
-                                          "enum": [
-                                            "3-0-1-0",
-                                            "4-0-1-0",
-                                            "3-1-1-0"
-                                          ]
+                                          "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                         }
                                       },
                                       "additionalProperties": false
@@ -23348,67 +22718,25 @@
                                         "DROP_SET": {
                                           "type": "integer",
                                           "minimum": 1,
-                                          "maximum": 3
+                                          "maximum": 10
                                         },
                                         "REST_PAUSE": {
-                                          "anyOf": [
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                10
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                15
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                20
-                                              ]
-                                            }
-                                          ]
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 600
                                         },
                                         "ISOMETRIC_HOLD": {
                                           "type": "string",
-                                          "enum": [
-                                            "peak2",
-                                            "peak3",
-                                            "base2"
-                                          ]
+                                          "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                         },
                                         "CLUSTER_SET": {
-                                          "anyOf": [
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                2
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                3
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                4
-                                              ]
-                                            }
-                                          ]
+                                          "type": "integer",
+                                          "minimum": 2,
+                                          "maximum": 20
                                         },
                                         "TEMPO_CONTROL": {
                                           "type": "string",
-                                          "enum": [
-                                            "3-0-1-0",
-                                            "4-0-1-0",
-                                            "3-1-1-0"
-                                          ]
+                                          "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                         }
                                       },
                                       "additionalProperties": false
@@ -23974,67 +23302,25 @@
                                         "DROP_SET": {
                                           "type": "integer",
                                           "minimum": 1,
-                                          "maximum": 3
+                                          "maximum": 10
                                         },
                                         "REST_PAUSE": {
-                                          "anyOf": [
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                10
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                15
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                20
-                                              ]
-                                            }
-                                          ]
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 600
                                         },
                                         "ISOMETRIC_HOLD": {
                                           "type": "string",
-                                          "enum": [
-                                            "peak2",
-                                            "peak3",
-                                            "base2"
-                                          ]
+                                          "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                         },
                                         "CLUSTER_SET": {
-                                          "anyOf": [
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                2
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                3
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                4
-                                              ]
-                                            }
-                                          ]
+                                          "type": "integer",
+                                          "minimum": 2,
+                                          "maximum": 20
                                         },
                                         "TEMPO_CONTROL": {
                                           "type": "string",
-                                          "enum": [
-                                            "3-0-1-0",
-                                            "4-0-1-0",
-                                            "3-1-1-0"
-                                          ]
+                                          "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                         }
                                       },
                                       "additionalProperties": false
@@ -24602,67 +23888,25 @@
                                           "DROP_SET": {
                                             "type": "integer",
                                             "minimum": 1,
-                                            "maximum": 3
+                                            "maximum": 10
                                           },
                                           "REST_PAUSE": {
-                                            "anyOf": [
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  10
-                                                ]
-                                              },
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  15
-                                                ]
-                                              },
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  20
-                                                ]
-                                              }
-                                            ]
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 600
                                           },
                                           "ISOMETRIC_HOLD": {
                                             "type": "string",
-                                            "enum": [
-                                              "peak2",
-                                              "peak3",
-                                              "base2"
-                                            ]
+                                            "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                           },
                                           "CLUSTER_SET": {
-                                            "anyOf": [
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  2
-                                                ]
-                                              },
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  3
-                                                ]
-                                              },
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  4
-                                                ]
-                                              }
-                                            ]
+                                            "type": "integer",
+                                            "minimum": 2,
+                                            "maximum": 20
                                           },
                                           "TEMPO_CONTROL": {
                                             "type": "string",
-                                            "enum": [
-                                              "3-0-1-0",
-                                              "4-0-1-0",
-                                              "3-1-1-0"
-                                            ]
+                                            "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                           }
                                         },
                                         "additionalProperties": false
@@ -25221,67 +24465,25 @@
                                           "DROP_SET": {
                                             "type": "integer",
                                             "minimum": 1,
-                                            "maximum": 3
+                                            "maximum": 10
                                           },
                                           "REST_PAUSE": {
-                                            "anyOf": [
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  10
-                                                ]
-                                              },
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  15
-                                                ]
-                                              },
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  20
-                                                ]
-                                              }
-                                            ]
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 600
                                           },
                                           "ISOMETRIC_HOLD": {
                                             "type": "string",
-                                            "enum": [
-                                              "peak2",
-                                              "peak3",
-                                              "base2"
-                                            ]
+                                            "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                           },
                                           "CLUSTER_SET": {
-                                            "anyOf": [
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  2
-                                                ]
-                                              },
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  3
-                                                ]
-                                              },
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  4
-                                                ]
-                                              }
-                                            ]
+                                            "type": "integer",
+                                            "minimum": 2,
+                                            "maximum": 20
                                           },
                                           "TEMPO_CONTROL": {
                                             "type": "string",
-                                            "enum": [
-                                              "3-0-1-0",
-                                              "4-0-1-0",
-                                              "3-1-1-0"
-                                            ]
+                                            "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                           }
                                         },
                                         "additionalProperties": false
@@ -25848,67 +25050,25 @@
                                         "DROP_SET": {
                                           "type": "integer",
                                           "minimum": 1,
-                                          "maximum": 3
+                                          "maximum": 10
                                         },
                                         "REST_PAUSE": {
-                                          "anyOf": [
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                10
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                15
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                20
-                                              ]
-                                            }
-                                          ]
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 600
                                         },
                                         "ISOMETRIC_HOLD": {
                                           "type": "string",
-                                          "enum": [
-                                            "peak2",
-                                            "peak3",
-                                            "base2"
-                                          ]
+                                          "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                         },
                                         "CLUSTER_SET": {
-                                          "anyOf": [
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                2
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                3
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                4
-                                              ]
-                                            }
-                                          ]
+                                          "type": "integer",
+                                          "minimum": 2,
+                                          "maximum": 20
                                         },
                                         "TEMPO_CONTROL": {
                                           "type": "string",
-                                          "enum": [
-                                            "3-0-1-0",
-                                            "4-0-1-0",
-                                            "3-1-1-0"
-                                          ]
+                                          "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                         }
                                       },
                                       "additionalProperties": false
@@ -26480,67 +25640,25 @@
                                             "DROP_SET": {
                                               "type": "integer",
                                               "minimum": 1,
-                                              "maximum": 3
+                                              "maximum": 10
                                             },
                                             "REST_PAUSE": {
-                                              "anyOf": [
-                                                {
-                                                  "type": "number",
-                                                  "enum": [
-                                                    10
-                                                  ]
-                                                },
-                                                {
-                                                  "type": "number",
-                                                  "enum": [
-                                                    15
-                                                  ]
-                                                },
-                                                {
-                                                  "type": "number",
-                                                  "enum": [
-                                                    20
-                                                  ]
-                                                }
-                                              ]
+                                              "type": "integer",
+                                              "minimum": 1,
+                                              "maximum": 600
                                             },
                                             "ISOMETRIC_HOLD": {
                                               "type": "string",
-                                              "enum": [
-                                                "peak2",
-                                                "peak3",
-                                                "base2"
-                                              ]
+                                              "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                             },
                                             "CLUSTER_SET": {
-                                              "anyOf": [
-                                                {
-                                                  "type": "number",
-                                                  "enum": [
-                                                    2
-                                                  ]
-                                                },
-                                                {
-                                                  "type": "number",
-                                                  "enum": [
-                                                    3
-                                                  ]
-                                                },
-                                                {
-                                                  "type": "number",
-                                                  "enum": [
-                                                    4
-                                                  ]
-                                                }
-                                              ]
+                                              "type": "integer",
+                                              "minimum": 2,
+                                              "maximum": 20
                                             },
                                             "TEMPO_CONTROL": {
                                               "type": "string",
-                                              "enum": [
-                                                "3-0-1-0",
-                                                "4-0-1-0",
-                                                "3-1-1-0"
-                                              ]
+                                              "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                             }
                                           },
                                           "additionalProperties": false
@@ -27121,67 +26239,25 @@
                                         "DROP_SET": {
                                           "type": "integer",
                                           "minimum": 1,
-                                          "maximum": 3
+                                          "maximum": 10
                                         },
                                         "REST_PAUSE": {
-                                          "anyOf": [
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                10
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                15
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                20
-                                              ]
-                                            }
-                                          ]
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 600
                                         },
                                         "ISOMETRIC_HOLD": {
                                           "type": "string",
-                                          "enum": [
-                                            "peak2",
-                                            "peak3",
-                                            "base2"
-                                          ]
+                                          "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                         },
                                         "CLUSTER_SET": {
-                                          "anyOf": [
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                2
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                3
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                4
-                                              ]
-                                            }
-                                          ]
+                                          "type": "integer",
+                                          "minimum": 2,
+                                          "maximum": 20
                                         },
                                         "TEMPO_CONTROL": {
                                           "type": "string",
-                                          "enum": [
-                                            "3-0-1-0",
-                                            "4-0-1-0",
-                                            "3-1-1-0"
-                                          ]
+                                          "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                         }
                                       },
                                       "additionalProperties": false
@@ -27665,67 +26741,25 @@
                                     "DROP_SET": {
                                       "type": "integer",
                                       "minimum": 1,
-                                      "maximum": 3
+                                      "maximum": 10
                                     },
                                     "REST_PAUSE": {
-                                      "anyOf": [
-                                        {
-                                          "type": "number",
-                                          "enum": [
-                                            10
-                                          ]
-                                        },
-                                        {
-                                          "type": "number",
-                                          "enum": [
-                                            15
-                                          ]
-                                        },
-                                        {
-                                          "type": "number",
-                                          "enum": [
-                                            20
-                                          ]
-                                        }
-                                      ]
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 600
                                     },
                                     "ISOMETRIC_HOLD": {
                                       "type": "string",
-                                      "enum": [
-                                        "peak2",
-                                        "peak3",
-                                        "base2"
-                                      ]
+                                      "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                     },
                                     "CLUSTER_SET": {
-                                      "anyOf": [
-                                        {
-                                          "type": "number",
-                                          "enum": [
-                                            2
-                                          ]
-                                        },
-                                        {
-                                          "type": "number",
-                                          "enum": [
-                                            3
-                                          ]
-                                        },
-                                        {
-                                          "type": "number",
-                                          "enum": [
-                                            4
-                                          ]
-                                        }
-                                      ]
+                                      "type": "integer",
+                                      "minimum": 2,
+                                      "maximum": 20
                                     },
                                     "TEMPO_CONTROL": {
                                       "type": "string",
-                                      "enum": [
-                                        "3-0-1-0",
-                                        "4-0-1-0",
-                                        "3-1-1-0"
-                                      ]
+                                      "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                     }
                                   },
                                   "additionalProperties": false
@@ -29565,67 +28599,25 @@
                                   "DROP_SET": {
                                     "type": "integer",
                                     "minimum": 1,
-                                    "maximum": 3
+                                    "maximum": 10
                                   },
                                   "REST_PAUSE": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          10
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          15
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          20
-                                        ]
-                                      }
-                                    ]
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 600
                                   },
                                   "ISOMETRIC_HOLD": {
                                     "type": "string",
-                                    "enum": [
-                                      "peak2",
-                                      "peak3",
-                                      "base2"
-                                    ]
+                                    "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                   },
                                   "CLUSTER_SET": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          2
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          3
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          4
-                                        ]
-                                      }
-                                    ]
+                                    "type": "integer",
+                                    "minimum": 2,
+                                    "maximum": 20
                                   },
                                   "TEMPO_CONTROL": {
                                     "type": "string",
-                                    "enum": [
-                                      "3-0-1-0",
-                                      "4-0-1-0",
-                                      "3-1-1-0"
-                                    ]
+                                    "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                   }
                                 },
                                 "additionalProperties": false
@@ -31293,67 +30285,25 @@
                                           "DROP_SET": {
                                             "type": "integer",
                                             "minimum": 1,
-                                            "maximum": 3
+                                            "maximum": 10
                                           },
                                           "REST_PAUSE": {
-                                            "anyOf": [
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  10
-                                                ]
-                                              },
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  15
-                                                ]
-                                              },
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  20
-                                                ]
-                                              }
-                                            ]
+                                            "type": "integer",
+                                            "minimum": 1,
+                                            "maximum": 600
                                           },
                                           "ISOMETRIC_HOLD": {
                                             "type": "string",
-                                            "enum": [
-                                              "peak2",
-                                              "peak3",
-                                              "base2"
-                                            ]
+                                            "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                           },
                                           "CLUSTER_SET": {
-                                            "anyOf": [
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  2
-                                                ]
-                                              },
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  3
-                                                ]
-                                              },
-                                              {
-                                                "type": "number",
-                                                "enum": [
-                                                  4
-                                                ]
-                                              }
-                                            ]
+                                            "type": "integer",
+                                            "minimum": 2,
+                                            "maximum": 20
                                           },
                                           "TEMPO_CONTROL": {
                                             "type": "string",
-                                            "enum": [
-                                              "3-0-1-0",
-                                              "4-0-1-0",
-                                              "3-1-1-0"
-                                            ]
+                                            "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                           }
                                         },
                                         "additionalProperties": false
@@ -31728,67 +30678,25 @@
                                   "DROP_SET": {
                                     "type": "integer",
                                     "minimum": 1,
-                                    "maximum": 3
+                                    "maximum": 10
                                   },
                                   "REST_PAUSE": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          10
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          15
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          20
-                                        ]
-                                      }
-                                    ]
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 600
                                   },
                                   "ISOMETRIC_HOLD": {
                                     "type": "string",
-                                    "enum": [
-                                      "peak2",
-                                      "peak3",
-                                      "base2"
-                                    ]
+                                    "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                   },
                                   "CLUSTER_SET": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          2
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          3
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          4
-                                        ]
-                                      }
-                                    ]
+                                    "type": "integer",
+                                    "minimum": 2,
+                                    "maximum": 20
                                   },
                                   "TEMPO_CONTROL": {
                                     "type": "string",
-                                    "enum": [
-                                      "3-0-1-0",
-                                      "4-0-1-0",
-                                      "3-1-1-0"
-                                    ]
+                                    "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                   }
                                 },
                                 "additionalProperties": false
@@ -32032,67 +30940,25 @@
                                         "DROP_SET": {
                                           "type": "integer",
                                           "minimum": 1,
-                                          "maximum": 3
+                                          "maximum": 10
                                         },
                                         "REST_PAUSE": {
-                                          "anyOf": [
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                10
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                15
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                20
-                                              ]
-                                            }
-                                          ]
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 600
                                         },
                                         "ISOMETRIC_HOLD": {
                                           "type": "string",
-                                          "enum": [
-                                            "peak2",
-                                            "peak3",
-                                            "base2"
-                                          ]
+                                          "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                         },
                                         "CLUSTER_SET": {
-                                          "anyOf": [
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                2
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                3
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                4
-                                              ]
-                                            }
-                                          ]
+                                          "type": "integer",
+                                          "minimum": 2,
+                                          "maximum": 20
                                         },
                                         "TEMPO_CONTROL": {
                                           "type": "string",
-                                          "enum": [
-                                            "3-0-1-0",
-                                            "4-0-1-0",
-                                            "3-1-1-0"
-                                          ]
+                                          "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                         }
                                       },
                                       "additionalProperties": false
@@ -32477,67 +31343,25 @@
                                         "DROP_SET": {
                                           "type": "integer",
                                           "minimum": 1,
-                                          "maximum": 3
+                                          "maximum": 10
                                         },
                                         "REST_PAUSE": {
-                                          "anyOf": [
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                10
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                15
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                20
-                                              ]
-                                            }
-                                          ]
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 600
                                         },
                                         "ISOMETRIC_HOLD": {
                                           "type": "string",
-                                          "enum": [
-                                            "peak2",
-                                            "peak3",
-                                            "base2"
-                                          ]
+                                          "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                         },
                                         "CLUSTER_SET": {
-                                          "anyOf": [
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                2
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                3
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                4
-                                              ]
-                                            }
-                                          ]
+                                          "type": "integer",
+                                          "minimum": 2,
+                                          "maximum": 20
                                         },
                                         "TEMPO_CONTROL": {
                                           "type": "string",
-                                          "enum": [
-                                            "3-0-1-0",
-                                            "4-0-1-0",
-                                            "3-1-1-0"
-                                          ]
+                                          "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                         }
                                       },
                                       "additionalProperties": false
@@ -32911,67 +31735,25 @@
                                   "DROP_SET": {
                                     "type": "integer",
                                     "minimum": 1,
-                                    "maximum": 3
+                                    "maximum": 10
                                   },
                                   "REST_PAUSE": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          10
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          15
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          20
-                                        ]
-                                      }
-                                    ]
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 600
                                   },
                                   "ISOMETRIC_HOLD": {
                                     "type": "string",
-                                    "enum": [
-                                      "peak2",
-                                      "peak3",
-                                      "base2"
-                                    ]
+                                    "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                   },
                                   "CLUSTER_SET": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          2
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          3
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          4
-                                        ]
-                                      }
-                                    ]
+                                    "type": "integer",
+                                    "minimum": 2,
+                                    "maximum": 20
                                   },
                                   "TEMPO_CONTROL": {
                                     "type": "string",
-                                    "enum": [
-                                      "3-0-1-0",
-                                      "4-0-1-0",
-                                      "3-1-1-0"
-                                    ]
+                                    "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                   }
                                 },
                                 "additionalProperties": false
@@ -33225,67 +32007,25 @@
                                         "DROP_SET": {
                                           "type": "integer",
                                           "minimum": 1,
-                                          "maximum": 3
+                                          "maximum": 10
                                         },
                                         "REST_PAUSE": {
-                                          "anyOf": [
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                10
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                15
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                20
-                                              ]
-                                            }
-                                          ]
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 600
                                         },
                                         "ISOMETRIC_HOLD": {
                                           "type": "string",
-                                          "enum": [
-                                            "peak2",
-                                            "peak3",
-                                            "base2"
-                                          ]
+                                          "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                         },
                                         "CLUSTER_SET": {
-                                          "anyOf": [
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                2
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                3
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                4
-                                              ]
-                                            }
-                                          ]
+                                          "type": "integer",
+                                          "minimum": 2,
+                                          "maximum": 20
                                         },
                                         "TEMPO_CONTROL": {
                                           "type": "string",
-                                          "enum": [
-                                            "3-0-1-0",
-                                            "4-0-1-0",
-                                            "3-1-1-0"
-                                          ]
+                                          "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                         }
                                       },
                                       "additionalProperties": false
@@ -33966,67 +32706,25 @@
                                             "DROP_SET": {
                                               "type": "integer",
                                               "minimum": 1,
-                                              "maximum": 3
+                                              "maximum": 10
                                             },
                                             "REST_PAUSE": {
-                                              "anyOf": [
-                                                {
-                                                  "type": "number",
-                                                  "enum": [
-                                                    10
-                                                  ]
-                                                },
-                                                {
-                                                  "type": "number",
-                                                  "enum": [
-                                                    15
-                                                  ]
-                                                },
-                                                {
-                                                  "type": "number",
-                                                  "enum": [
-                                                    20
-                                                  ]
-                                                }
-                                              ]
+                                              "type": "integer",
+                                              "minimum": 1,
+                                              "maximum": 600
                                             },
                                             "ISOMETRIC_HOLD": {
                                               "type": "string",
-                                              "enum": [
-                                                "peak2",
-                                                "peak3",
-                                                "base2"
-                                              ]
+                                              "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                             },
                                             "CLUSTER_SET": {
-                                              "anyOf": [
-                                                {
-                                                  "type": "number",
-                                                  "enum": [
-                                                    2
-                                                  ]
-                                                },
-                                                {
-                                                  "type": "number",
-                                                  "enum": [
-                                                    3
-                                                  ]
-                                                },
-                                                {
-                                                  "type": "number",
-                                                  "enum": [
-                                                    4
-                                                  ]
-                                                }
-                                              ]
+                                              "type": "integer",
+                                              "minimum": 2,
+                                              "maximum": 20
                                             },
                                             "TEMPO_CONTROL": {
                                               "type": "string",
-                                              "enum": [
-                                                "3-0-1-0",
-                                                "4-0-1-0",
-                                                "3-1-1-0"
-                                              ]
+                                              "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                             }
                                           },
                                           "additionalProperties": false
@@ -34438,67 +33136,25 @@
                                         "DROP_SET": {
                                           "type": "integer",
                                           "minimum": 1,
-                                          "maximum": 3
+                                          "maximum": 10
                                         },
                                         "REST_PAUSE": {
-                                          "anyOf": [
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                10
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                15
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                20
-                                              ]
-                                            }
-                                          ]
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 600
                                         },
                                         "ISOMETRIC_HOLD": {
                                           "type": "string",
-                                          "enum": [
-                                            "peak2",
-                                            "peak3",
-                                            "base2"
-                                          ]
+                                          "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                         },
                                         "CLUSTER_SET": {
-                                          "anyOf": [
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                2
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                3
-                                              ]
-                                            },
-                                            {
-                                              "type": "number",
-                                              "enum": [
-                                                4
-                                              ]
-                                            }
-                                          ]
+                                          "type": "integer",
+                                          "minimum": 2,
+                                          "maximum": 20
                                         },
                                         "TEMPO_CONTROL": {
                                           "type": "string",
-                                          "enum": [
-                                            "3-0-1-0",
-                                            "4-0-1-0",
-                                            "3-1-1-0"
-                                          ]
+                                          "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                         }
                                       },
                                       "additionalProperties": false
@@ -49244,67 +47900,25 @@
                                     "DROP_SET": {
                                       "type": "integer",
                                       "minimum": 1,
-                                      "maximum": 3
+                                      "maximum": 10
                                     },
                                     "REST_PAUSE": {
-                                      "anyOf": [
-                                        {
-                                          "type": "number",
-                                          "enum": [
-                                            10
-                                          ]
-                                        },
-                                        {
-                                          "type": "number",
-                                          "enum": [
-                                            15
-                                          ]
-                                        },
-                                        {
-                                          "type": "number",
-                                          "enum": [
-                                            20
-                                          ]
-                                        }
-                                      ]
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 600
                                     },
                                     "ISOMETRIC_HOLD": {
                                       "type": "string",
-                                      "enum": [
-                                        "peak2",
-                                        "peak3",
-                                        "base2"
-                                      ]
+                                      "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                     },
                                     "CLUSTER_SET": {
-                                      "anyOf": [
-                                        {
-                                          "type": "number",
-                                          "enum": [
-                                            2
-                                          ]
-                                        },
-                                        {
-                                          "type": "number",
-                                          "enum": [
-                                            3
-                                          ]
-                                        },
-                                        {
-                                          "type": "number",
-                                          "enum": [
-                                            4
-                                          ]
-                                        }
-                                      ]
+                                      "type": "integer",
+                                      "minimum": 2,
+                                      "maximum": 20
                                     },
                                     "TEMPO_CONTROL": {
                                       "type": "string",
-                                      "enum": [
-                                        "3-0-1-0",
-                                        "4-0-1-0",
-                                        "3-1-1-0"
-                                      ]
+                                      "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                     }
                                   },
                                   "additionalProperties": false
@@ -51397,67 +50011,25 @@
                                   "DROP_SET": {
                                     "type": "integer",
                                     "minimum": 1,
-                                    "maximum": 3
+                                    "maximum": 10
                                   },
                                   "REST_PAUSE": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          10
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          15
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          20
-                                        ]
-                                      }
-                                    ]
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 600
                                   },
                                   "ISOMETRIC_HOLD": {
                                     "type": "string",
-                                    "enum": [
-                                      "peak2",
-                                      "peak3",
-                                      "base2"
-                                    ]
+                                    "pattern": "^(peak|base)([1-9]|[1-9]\\d|[1-5]\\d\\d|600)$"
                                   },
                                   "CLUSTER_SET": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          2
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          3
-                                        ]
-                                      },
-                                      {
-                                        "type": "number",
-                                        "enum": [
-                                          4
-                                        ]
-                                      }
-                                    ]
+                                    "type": "integer",
+                                    "minimum": 2,
+                                    "maximum": 20
                                   },
                                   "TEMPO_CONTROL": {
                                     "type": "string",
-                                    "enum": [
-                                      "3-0-1-0",
-                                      "4-0-1-0",
-                                      "3-1-1-0"
-                                    ]
+                                    "pattern": "^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$"
                                   }
                                 },
                                 "additionalProperties": false

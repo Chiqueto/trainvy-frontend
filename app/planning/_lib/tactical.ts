@@ -1,4 +1,7 @@
-import type { ListExercises200Item } from "@/app/_lib/api/fetch-generated";
+import type {
+  ListExercises200Item,
+  GetEditableWorkoutPlan200,
+} from "@/app/_lib/api/fetch-generated";
 import type { WorkoutPlanDraftExercise } from "./workout-plan-builder";
 
 export type Rune =
@@ -8,13 +11,9 @@ export type Rune =
   | "CLUSTER_SET"
   | "TEMPO_CONTROL";
 export type Zone = "strength" | "hypertrophy" | "endurance";
-export type RuneConfig = {
-  DROP_SET?: number;
-  REST_PAUSE?: 10 | 15 | 20;
-  ISOMETRIC_HOLD?: "peak2" | "peak3" | "base2";
-  CLUSTER_SET?: 2 | 3 | 4;
-  TEMPO_CONTROL?: "3-0-1-0" | "4-0-1-0" | "3-1-1-0";
-};
+export type RuneConfig = NonNullable<
+  GetEditableWorkoutPlan200["workoutDays"][number]["exercises"][number]["runeConfig"]
+>;
 export const RUNE_COLORS: Record<Rune, string> = {
   DROP_SET: "#fb923c",
   REST_PAUSE: "#fde047",
@@ -29,6 +28,14 @@ const RUNE_OPTIONS = {
   CLUSTER_SET: [2, 3, 4],
   TEMPO_CONTROL: ["3-0-1-0", "4-0-1-0", "3-1-1-0"],
 } as const;
+export function isCadence(value: string | null | undefined): value is string {
+  return (
+    typeof value === "string" &&
+    /^(?:\d|[1-5]\d|60)-(?:\d|[1-5]\d|60)-(?:\d|[1-5]\d|60)-(?:\d|[1-5]\d|60)$/.test(
+      value,
+    )
+  );
+}
 export function cycleRune(
   item: WorkoutPlanDraftExercise,
   rune: Rune,
@@ -49,11 +56,7 @@ export function runeLabel(item: WorkoutPlanDraftExercise, rune: Rune) {
     case "REST_PAUSE":
       return `⚡ Rest-pause ${value}s`;
     case "ISOMETRIC_HOLD":
-      return value === "base2"
-        ? "❄ Base 2s"
-        : value === "peak3"
-          ? "❄ Pico 3s"
-          : "❄ Pico 2s";
+      return `❄ ${String(value).startsWith("base") ? "Base" : "Pico"} ${String(value).replace(/^(base|peak)/, "")}s`;
     case "CLUSTER_SET":
       return `⛓ Cluster ${value} blocos`;
     case "TEMPO_CONTROL":
@@ -66,12 +69,19 @@ export function toggleRune(
 ): Partial<WorkoutPlanDraftExercise> {
   const active = item.runes?.includes(rune);
   const config = { ...item.runeConfig };
+  const initialValue =
+    rune === "TEMPO_CONTROL" && isCadence(item.tempo)
+      ? item.tempo
+      : RUNE_OPTIONS[rune][0];
   if (active) delete config[rune];
   return {
     runes: active
       ? item.runes?.filter((r) => r !== rune)
       : [...(item.runes ?? []), rune],
-    runeConfig: config,
+    runeConfig: active ? config : { ...config, [rune]: initialValue },
+    ...(!active && rune === "TEMPO_CONTROL"
+      ? { tempo: String(initialValue) }
+      : {}),
   };
 }
 export type TacticalSet = {
@@ -83,7 +93,7 @@ export type TacticalSet = {
 export const RUNES: Record<Rune, string> = {
   DROP_SET: "🔥 Drop-set",
   REST_PAUSE: "⚡ Rest-pause",
-  ISOMETRIC_HOLD: "❄ Isometria 2s",
+  ISOMETRIC_HOLD: "❄ Isometria",
   CLUSTER_SET: "⛓ Cluster set",
   TEMPO_CONTROL: "◷ Controle de tempo",
 };
@@ -112,6 +122,13 @@ export function patchExercise(
   patch: Partial<WorkoutPlanDraftExercise>,
 ): WorkoutPlanDraftExercise {
   const next = { ...e, ...patch };
+  if (
+    patch.tempo &&
+    next.runes?.includes("TEMPO_CONTROL") &&
+    isCadence(patch.tempo)
+  ) {
+    next.runeConfig = { ...next.runeConfig, TEMPO_CONTROL: patch.tempo };
+  }
   if (
     !patch.setPrescription &&
     e.setPrescription?.length &&

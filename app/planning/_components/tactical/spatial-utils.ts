@@ -15,8 +15,8 @@ export interface CardRect {
   height: number;
 }
 
-export const CARD_WIDTH = 216;
-export const CARD_HEIGHT = 286;
+export const CARD_WIDTH = 236;
+export const CARD_HEIGHT = 326;
 export const BISET_GAP = 14;
 export const MAGNETIC_THRESHOLD = 50;
 
@@ -129,15 +129,18 @@ export function generateTacticalFormation(
   const points: Point[] = [];
   const columns = Math.max(
     1,
-    Math.min(4, Math.floor((canvasWidth - 72) / (CARD_WIDTH + 60))),
+    Math.min(4, Math.floor((canvasWidth - 72) / (CARD_WIDTH + 140))),
   );
   const cols = canvasWidth < 640 ? count : Math.min(count, columns);
-  const spacingX = CARD_WIDTH + 64;
+  const spacingX = CARD_WIDTH + 140;
   const startX =
     canvasWidth < 640
       ? (canvasWidth - CARD_WIDTH) / 2
       : Math.max(32, (canvasWidth - ((cols - 1) * spacingX + CARD_WIDTH)) / 2);
-  const startY = Math.max(205, Math.min(240, (canvasHeight - CARD_HEIGHT) / 2));
+  const startY =
+    canvasWidth < 640
+      ? 205
+      : Math.max(205, Math.min(240, (canvasHeight - CARD_HEIGHT) / 2));
   for (let i = 0; i < count; i++) {
     const row = Math.floor(i / cols);
     const column = row % 2 === 0 ? i % cols : cols - 1 - (i % cols);

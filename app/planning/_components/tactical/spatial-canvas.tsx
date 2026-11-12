@@ -21,6 +21,7 @@ export function SpatialCanvas({
 
   // Manipulação de Pan ao arrastar o fundo
   const handlePointerDown = (e: React.PointerEvent) => {
+    if (!containerRef.current?.contains(e.target as Node)) return;
     // Apenas se o clique foi direto no fundo do canvas ou no plano de grade
     const target = e.target as Element;
     if (
@@ -58,6 +59,7 @@ export function SpatialCanvas({
 
   // Zoom no scroll da roda do mouse
   const handleWheel = (e: React.WheelEvent) => {
+    if (!containerRef.current?.contains(e.target as Node)) return;
     // Zoom suave
     const zoomDelta = e.deltaY < 0 ? 0.05 : -0.05;
     onZoom(zoomDelta);
