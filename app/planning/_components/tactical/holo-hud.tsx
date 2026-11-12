@@ -8,7 +8,6 @@ import {
   Compass,
   Eye,
   CircleHelp,
-  Brain,
   Layers3,
   LayoutGrid,
   List,
@@ -16,12 +15,10 @@ import {
   Plus,
   RotateCcw,
   Settings2,
-  X,
 } from "lucide-react";
 import type { telemetry } from "../../_lib/tactical";
 import type { WorkoutPlanDraftDay } from "../../_lib/workout-plan-builder";
-import { BodyHeatmapSVG } from "./body-heatmap-svg";
-import { AttributeRadarChart } from "./attribute-radar-chart";
+import { TrainingBioDetails } from "./training-bio-panel";
 import { SealButton } from "./seal-button";
 import { TacticalSheet } from "./tactical-sheet";
 
@@ -217,51 +214,6 @@ export function HoloHud({
             <CircleHelp size={17} />
           </button>
         </div>
-        {scannerOpen && (
-          <section
-            aria-label="Resumo muscular"
-            className="spatial-glass mt-2 max-h-[calc(100dvh-390px)] w-64 overflow-y-auto rounded-2xl p-4"
-          >
-            <div className="mb-3 flex items-center justify-between">
-              <h3 className="text-xs font-semibold">Distribuição do treino</h3>
-              <button
-                type="button"
-                aria-label="Fechar mapa muscular"
-                onClick={() => setScannerOpen(false)}
-                className="spatial-icon-button !size-7"
-              >
-                <X size={14} />
-              </button>
-            </div>
-            <div className="[&_svg]:max-h-40">
-              <BodyHeatmapSVG volumes={telemetryData.muscles} />
-            </div>
-            <div className="mt-3 rounded-xl border border-amber-300/15 bg-amber-300/5 p-3">
-              <h4 className="flex items-center gap-2 text-xs font-medium text-amber-200">
-                <Brain size={14} />
-                Demanda do SNC
-              </h4>
-              <p className="mt-2 font-mono text-xl text-amber-100">
-                {telemetryData.neural}
-                <span className="ml-2 text-[10px] text-slate-400">
-                  pontos estimados
-                </span>
-              </p>
-              <p className="mt-2 text-[10px] leading-relaxed text-slate-400">
-                Índice ilustrativo da ficha: considera a categoria dos
-                exercícios, séries e técnicas. Não mede fadiga nem estresse real
-                do sistema nervoso central.
-              </p>
-            </div>
-            <div className="mt-3 border-t border-white/10 pt-3 [&_svg]:max-h-32">
-              <AttributeRadarChart values={telemetryData.attributes} />
-            </div>
-            <p className="mt-3 text-[10px] leading-relaxed text-slate-500">
-              Grupos musculares e atributos ilustrativos, estimados a partir da
-              ficha.
-            </p>
-          </section>
-        )}
       </div>
 
       <div className="spatial-camera spatial-glass pointer-events-auto absolute right-3 top-[140px] z-30 flex items-center gap-1 rounded-xl p-1 sm:right-6">
@@ -324,6 +276,14 @@ export function HoloHud({
         <span>Scroll para aproximar</span>
         <span>Conecte OUT → IN para ordenar</span>
       </div>
+      <TacticalSheet
+        open={scannerOpen}
+        onClose={() => setScannerOpen(false)}
+        title="Mapa muscular e atributos"
+        description="Explore os músculos, a composição da demanda do SNC e os atributos estimados da ficha."
+      >
+        <TrainingBioDetails data={telemetryData} />
+      </TacticalSheet>
       <TacticalSheet
         open={helpOpen}
         onClose={() => setHelpOpen(false)}

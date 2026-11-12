@@ -470,7 +470,7 @@ export function TacticalBuilderArena({
               </div>
             </header>
             <div className="flex min-h-0 w-full flex-1 overflow-hidden">
-              <aside className="no-scrollbar hidden w-72 shrink-0 overflow-y-auto border-r border-white/10 bg-zinc-900/25 p-3 lg:block [&_svg[role=group]]:h-[min(27dvh,260px)]">
+              <aside className="no-scrollbar hidden w-80 shrink-0 overflow-y-auto border-r border-white/10 bg-zinc-900/25 p-3 lg:block xl:w-96">
                 <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-zinc-400">
                   Leitura do treino
                 </p>

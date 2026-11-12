@@ -16,6 +16,10 @@ Séries e repetições usam inputs, +/−, roda do mouse e alça vertical de aju
 
 As descrições abaixo documentam a interface tática em lista anterior; seus controles cíclicos continuam disponíveis nessa visualização.
 
+### Painel muscular, SNC e atributos
+
+O botão Mapa muscular abre um painel com abas Músculos, SNC e Atributos, em tamanho legível no desktop e no celular. A silhueta SVG possui vistas anterior/posterior, mais regiões anatômicas ilustrativas e seleção por toque, teclado ou nomes dos grupos. O radar usa rótulos maiores e uma lista de valores com escala 0–10. A demanda do SNC mostra base, acréscimo de técnicas e contribuições por exercício, incluindo a classificação desconhecida; a fórmula do índice permanece a mesma. Os resumos exibem pontos, sem apresentar o índice como porcentagem de fadiga.
+
 O workspace compartilhado pelos editores de planos, modelos e prescrições usa um cabeçalho de 56 px com revisão e salvamento, mesa flexível, painel muscular de 288 px no desktop e dock de 202 px. No mobile, a pílula de telemetria abre o painel em modal; ações compactas mantêm nomes acessíveis. A rolagem continua disponível sem barras nativas.
 
 Técnicas podem ser aplicadas pelo menu junto ao exercício, arraste com prévia colorida ou seleção persistente no dock. No modo armado, tocar novamente remove a técnica; cancelar ou Escape desarma. Badges alternam parâmetros e possuem remoção independente. Bi-set combina com o próximo exercício elegível; o seletor permanece como alternativa quando não há parceiro imediatamente abaixo.

@@ -339,6 +339,14 @@ export function telemetry(
   let seconds = 0,
     neural = 0,
     count = 0;
+  let neuralBase = 0,
+    neuralTechniques = 0;
+  const neuralSources: {
+    name: string;
+    sets: number;
+    demand: "low" | "medium" | "high" | "unknown";
+    points: number;
+  }[] = [];
   items
     .filter((e) => e.name.trim())
     .forEach((e) => {
@@ -351,10 +359,19 @@ export function telemetry(
           multiplier +
         (e.warmupSets ?? 0) * 60 +
         30;
-      neural +=
+      const base =
         (meta ? { low: 2, medium: 4, high: 7 }[meta.cnsDemand] : 3) *
-        sets.length *
-        multiplier;
+        sets.length;
+      const techniqueBonus = base * (multiplier - 1);
+      neural += base * multiplier;
+      neuralBase += base;
+      neuralTechniques += techniqueBonus;
+      neuralSources.push({
+        name: e.name,
+        sets: sets.length,
+        demand: meta?.cnsDemand ?? "unknown",
+        points: base * multiplier,
+      });
       meta?.primaryMuscles.forEach((m) => {
         muscles[m] = (muscles[m] ?? 0) + sets.length;
       });
@@ -380,6 +397,11 @@ export function telemetry(
   return {
     minutes: Math.ceil(seconds / 60),
     neural: Math.round(neural),
+    neuralBreakdown: {
+      base: neuralBase,
+      techniques: Math.round(neuralTechniques),
+      sources: neuralSources,
+    },
     muscles,
     attributes,
     sets: count,
