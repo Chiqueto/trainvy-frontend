@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useId, useState, useSyncExternalStore } from "react";
+import { useCallback, useId, useState, useSyncExternalStore } from "react";
 import { Popover } from "radix-ui";
 import {
   Activity,
@@ -94,7 +94,15 @@ export function HoloHud({
   disabled,
 }: HoloHudProps) {
   const [scannerOpen, setScannerOpen] = useState(false);
+  const [scannerContainer, setScannerContainer] = useState<HTMLElement | null>(
+    null,
+  );
   const [helpOpen, setHelpOpen] = useState(false);
+  const setScannerAnchor = useCallback((element: HTMLDivElement | null) => {
+    setScannerContainer(
+      element?.closest<HTMLElement>('[data-testid="tactical-viewport"]') ?? null,
+    );
+  }, []);
   const desktop = useSyncExternalStore(
     subscribeToDesktop,
     getDesktopSnapshot,
@@ -248,7 +256,10 @@ export function HoloHud({
         </div>
       </header>
 
-      <div className="pointer-events-auto absolute left-3 top-[140px] z-30 sm:left-6">
+      <div
+        ref={setScannerAnchor}
+        className="pointer-events-auto absolute left-3 top-[140px] z-30 sm:left-6"
+      >
         <div className="flex items-center gap-2">
           <Popover.Root
             open={desktop && scannerOpen}
@@ -270,7 +281,7 @@ export function HoloHud({
                 <span className="size-1.5 rounded-full bg-cyan-300/80" />
               </button>
             </Popover.Trigger>
-            <Popover.Portal>
+            <Popover.Portal container={scannerContainer}>
               <Popover.Content
                 role="region"
                 aria-labelledby={scannerTitleId}
@@ -301,7 +312,11 @@ export function HoloHud({
                     </button>
                   </Popover.Close>
                 </header>
-                <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto overscroll-contain p-4">
+                <div
+                  tabIndex={0}
+                  aria-label="Conteúdo do mapa muscular"
+                  className="tactical-panel-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 focus-visible:outline focus-visible:outline-cyan-300/50"
+                >
                   <TrainingBioDetails data={telemetryData} />
                 </div>
               </Popover.Content>

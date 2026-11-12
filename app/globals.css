@@ -12,6 +12,21 @@
   display: none;
 }
 
+[data-testid="tactical-viewport"] .tactical-panel-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #475569 transparent;
+  scrollbar-gutter: stable;
+}
+[data-testid="tactical-viewport"] .tactical-panel-scroll::-webkit-scrollbar {
+  display: block;
+  width: 8px;
+}
+[data-testid="tactical-viewport"]
+  .tactical-panel-scroll::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 999px;
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
