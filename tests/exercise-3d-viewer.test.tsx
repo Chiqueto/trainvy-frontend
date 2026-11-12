@@ -46,6 +46,15 @@ function motionPreference(matches = false) {
   );
 }
 describe("Anatomical viewer controls", () => {
+  it("labels the pulldown return, overhead pause and pull correctly", () => {
+    render(<Exercise3DViewer exercise="lat-pulldown" />);
+    const slider=screen.getByRole("slider",{name:"Posição do movimento"});
+    for(const [value,label] of [[250,"Retorno controlado da barra"],[500,"Pausa com braços alongados"],[800,"Puxada à frente do corpo"]] as const) {
+      fireEvent.change(slider,{target:{value:String(value)}});
+      expect(screen.getByText(label)).toBeDefined();
+    }
+    expect(screen.getByText("Latíssimo do dorso · Redondo maior")).toBeDefined();
+  });
   it("shows the LPO catch phase when scrubbing Hang Power Clean", async () => {
     render(<Exercise3DViewer exercise="hang-power-clean" />);
     fireEvent.change(screen.getByRole("slider",{name:"Posição do movimento"}),{target:{value:"450"}});

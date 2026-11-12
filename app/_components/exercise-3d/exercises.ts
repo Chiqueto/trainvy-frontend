@@ -20,7 +20,10 @@ import { LEG_EXTENSION_INSTRUCTIONS } from "./leg-extension-instructions";
 import { SEATED_LEG_CURL_INSTRUCTIONS } from "./seated-leg-curl-instructions";
 import { PRONE_LEG_CURL_INSTRUCTIONS } from "./prone-leg-curl-instructions";
 
+import { LAT_PULLDOWN_INSTRUCTIONS } from "./lat-pulldown-instructions";
+
 export type ExerciseAnimation =
+  | "lat-pulldown"
   | "hang-power-clean"
   | "squat"
   | "bench-press"
@@ -63,6 +66,7 @@ export interface ExerciseDefinition {
 }
 
 export const EXERCISE_ANIMATIONS = {
+  "lat-pulldown": { name: "Puxada Frontal na Máquina", id: "00000000-0000-4000-8000-000000000119", equipment: "Polia alta, barra com pegada pronada e apoio sobre as coxas", instructions: LAT_PULLDOWN_INSTRUCTIONS, muscles: { primary: ["Latíssimo do dorso", "Redondo maior"], secondary: ["Bíceps, braquial e braquiorradial", "Trapézio e romboides", "Deltoide posterior e infraespinal", "Músculos da pegada", "Abdominais e eretores da coluna"] } },
   "hang-power-clean": {name:"Hang Power Clean",equipment:"Barra livre, início suspenso acima dos joelhos e recepção em agachamento parcial",id:"1b7764ca-1826-488e-8734-fc88117ed9dd",instructions:HANG_POWER_CLEAN_INSTRUCTIONS,muscles:{primary:["Quadríceps","Glúteo máximo","Isquiotibiais"],secondary:["Panturrilhas","Trapézio, dorsal e eretores","Deltoide anterior","Bíceps e músculos da pegada","Abdominais e adutor magno"]}},
   "seated-calf": { name:"Panturrilha Sentado", equipment:"Máquina sentada com almofadas sobre as coxas e plataforma", id:"00000000-0000-4000-8000-000000000118", instructions:SEATED_CALF_INSTRUCTIONS, muscles:{primary:["Sóleo (ênfase)","Gastrocnêmios medial e lateral (menor ênfase)"],secondary:["Fibulares (não individualizados na malha)"]}},
   "standing-calf": { name: "Panturrilha em Pé", equipment: "Máquina com almofadas nos ombros e plataforma para os antepés", id: "00000000-0000-4000-8000-000000000117", instructions: STANDING_CALF_INSTRUCTIONS, muscles: { primary: ["Gastrocnêmios medial e lateral", "Sóleo"], secondary: ["Tibial anterior", "Fibulares (não individualizados na malha)"] } },
@@ -284,6 +288,7 @@ export function getExerciseAnimation(
   if (id === EXERCISE_ANIMATIONS.stiff.id) return "stiff";
   if (id === EXERCISE_ANIMATIONS.deadlift.id) return "deadlift";
   if (id === EXERCISE_ANIMATIONS["sumo-deadlift"].id) return "sumo-deadlift";
+  if (id === EXERCISE_ANIMATIONS["lat-pulldown"].id) return "lat-pulldown";
   if (id === EXERCISE_ANIMATIONS["hang-power-clean"].id) return "hang-power-clean";
   if (id === EXERCISE_ANIMATIONS["seated-calf"].id) return "seated-calf";
   if (id === EXERCISE_ANIMATIONS["standing-calf"].id) return "standing-calf";
@@ -332,6 +337,7 @@ export function getExerciseAnimation(
     if (["stiff", "stiff com barra", "stiff-leg deadlift", "stiff leg deadlift", "levantamento terra com pernas quase estendidas"].includes(normalized)) return "stiff";
     if (["levantamento terra", "levantamento terra convencional", "levantamento terra com barra", "deadlift", "conventional deadlift"].includes(normalized)) return "deadlift";
     if (["levantamento terra sumo", "terra sumo", "sumo deadlift", "sumo barbell deadlift"].includes(normalized)) return "sumo-deadlift";
+    if (["puxada frontal na maquina", "puxada frontal na polia alta com pegada pronada"].includes(normalized)) return "lat-pulldown";
     if (["hang power clean","hang power clean com barra"].includes(normalized)) return "hang-power-clean";
     if (["panturrilha sentado","panturrilha sentada","elevacao de panturrilhas sentado","seated calf raise"].includes(normalized)) return "seated-calf";
     if (["panturrilha em pe", "elevacao de panturrilhas em pe", "standing calf raise", "standing machine calf raise"].includes(normalized)) return "standing-calf";

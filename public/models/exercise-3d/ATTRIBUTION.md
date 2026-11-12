@@ -74,6 +74,17 @@ SHA-256 hashes, rig order and base asset checksum. Reproduction:
 The shared `trainvy-athlete.glb` is unchanged. This supplement is loaded only
 for seated hip abduction and does not alter the license of application code.
 
+## Front lat pulldown surface selection
+
+`app/_components/exercise-3d/lat-pulldown-detail-map.json` is a checksum-bound
+CC BY-SA 4.0 derivative of the same Z-Anatomy / BodyParts3D muscular source.
+It identifies bilateral teres major, infraspinatus, posterior deltoid,
+rhomboids, brachialis and brachioradialis surfaces with at least 80% source
+agreement. Regenerate with `scripts/create-lat-pulldown-detail-map.mjs
+<MuscularSystem100.fbx>`. The source and athlete checksums are embedded in
+the map. This selection changes no athlete geometry; its categories are
+illustrative roles, not EMG measurements.
+
 ## Previous model — anatomical-lifter.glb
 
 The following notice is retained for the previous, source-derived prototype, which is no longer

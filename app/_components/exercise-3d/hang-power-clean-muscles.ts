@@ -1,3 +1,4 @@
+import { createLatPulldownMuscleMask } from "./lat-pulldown-muscles";
 import { BufferAttribute, type BufferGeometry } from "three";
 import lower from "./sumo-dumbbell-muscle-map.json";
 import upper from "./deadlift-upper-back-map.json";
@@ -31,9 +32,9 @@ export function createHangPowerCleanMuscleMask(geometry: BufferGeometry) {
 /** Reuse one GPU attribute slot without conflating exercise classifications. */
 export function createPecDeckHangCleanAttribute(geometry: BufferGeometry) {
   const pec = createPecDeckMuscleMask(geometry),
-    clean = createHangPowerCleanMuscleMask(geometry);
-  const packed = new BufferAttribute(new Float32Array(pec.count * 2), 2);
+    clean = createHangPowerCleanMuscleMask(geometry), pull = createLatPulldownMuscleMask(geometry);
+  const packed = new BufferAttribute(new Float32Array(pec.count * 3), 3);
   for (let i = 0; i < pec.count; i++)
-    packed.setXY(i, pec.getX(i), clean.getX(i));
+    packed.setXYZ(i, pec.getX(i), clean.getX(i), pull.getX(i));
   return packed;
 }

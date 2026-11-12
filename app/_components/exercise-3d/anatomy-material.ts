@@ -38,12 +38,12 @@ export function createTissueMaterial() {
         "#include <common>",
         `#include <common>
         attribute vec3 _exercisemuscles;
-        attribute vec2 _pecdeckmuscles;
+        attribute vec3 _pecdeckmuscles;
         attribute float _flymuscles;
         varying float vFlyMuscles;
         attribute float _smithbenchmuscles;
         attribute float _machinechestpressmuscles;
-        varying float vPecDeckMuscles; varying float vHangCleanMuscles;
+        varying float vPulldownMuscles; varying float vPecDeckMuscles; varying float vHangCleanMuscles;
         varying float vSmithBenchMuscles;
         varying float vMachineChestPressMuscles;
         attribute vec4 _hipmachinemuscles;
@@ -70,7 +70,7 @@ export function createTissueMaterial() {
         "#include <uv_vertex>",
         `#include <uv_vertex>
         vTissue = uv; vFibre = uv1; vFlyMuscles = _flymuscles; vLegExtensionMuscles = _legdetailmuscles.x; vSeatedLegCurlMuscles = _legdetailmuscles.y; vStiffMuscles = _legdetailmuscles.z; vHipThrustMuscles = _legdetailmuscles.w; vProneLegCurlMuscles = _lowerbodymuscles.x; vHackSquatMuscles = _lowerbodymuscles.y; vLegPress45Muscles = _lowerbodymuscles.z; vHorizontalLegPressMuscles = _lowerbodymuscles.w;
-        vExerciseMuscles = _exercisemuscles; vPecDeckMuscles = _pecdeckmuscles.x; vHangCleanMuscles = _pecdeckmuscles.y; vSmithBenchMuscles = _smithbenchmuscles; vMachineChestPressMuscles = _machinechestpressmuscles; vSmithSquatMuscles = _hipmachinemuscles.x; vHipAbductionMuscles = _hipmachinemuscles.y; vSumoDumbbellMuscles = _hipmachinemuscles.z; vDeadliftMuscles = _hipmachinemuscles.w; vGobletSquatMuscles = _gobletsquatmuscles.x; vSumoDeadliftMuscles = _gobletsquatmuscles.y; vStandingCalfMuscles = _gobletsquatmuscles.z; vSeatedCalfMuscles = _gobletsquatmuscles.w; vRestSurface = position;`,
+        vExerciseMuscles = _exercisemuscles; vPecDeckMuscles = _pecdeckmuscles.x; vHangCleanMuscles = _pecdeckmuscles.y; vPulldownMuscles = _pecdeckmuscles.z; vSmithBenchMuscles = _smithbenchmuscles; vMachineChestPressMuscles = _machinechestpressmuscles; vSmithSquatMuscles = _hipmachinemuscles.x; vHipAbductionMuscles = _hipmachinemuscles.y; vSumoDumbbellMuscles = _hipmachinemuscles.z; vDeadliftMuscles = _hipmachinemuscles.w; vGobletSquatMuscles = _gobletsquatmuscles.x; vSumoDeadliftMuscles = _gobletsquatmuscles.y; vStandingCalfMuscles = _gobletsquatmuscles.z; vSeatedCalfMuscles = _gobletsquatmuscles.w; vRestSurface = position;`,
       );
     shader.fragmentShader = shader.fragmentShader
       .replace(
@@ -78,7 +78,7 @@ export function createTissueMaterial() {
         `#include <common>
         varying vec2 vTissue; varying vec2 vFibre; varying float vDeadliftMuscles; varying float vSumoDeadliftMuscles; varying float vStandingCalfMuscles; varying float vSeatedCalfMuscles;
         varying vec3 vExerciseMuscles; varying vec3 vRestSurface;
-        varying float vPecDeckMuscles; varying float vHangCleanMuscles; varying float vFlyMuscles; varying float vSmithBenchMuscles; varying float vMachineChestPressMuscles;
+        varying float vPulldownMuscles; varying float vPecDeckMuscles; varying float vHangCleanMuscles; varying float vFlyMuscles; varying float vSmithBenchMuscles; varying float vMachineChestPressMuscles;
         varying float vSmithSquatMuscles; varying float vHipAbductionMuscles; varying float vGobletSquatMuscles; varying float vSumoDumbbellMuscles; varying float vLegExtensionMuscles; varying float vSeatedLegCurlMuscles; varying float vProneLegCurlMuscles; varying float vHackSquatMuscles; varying float vLegPress45Muscles; varying float vHorizontalLegPressMuscles; varying float vStiffMuscles; varying float vHipThrustMuscles;
         uniform float exerciseMode; uniform float highlightMuscles;
         uniform vec3 neutralTissue; uniform vec3 primaryTissue; uniform vec3 secondaryTissue;`,
@@ -129,6 +129,7 @@ export function createTissueMaterial() {
         if (exerciseMode > 20.5 && exerciseMode < 21.5) mask = vSumoDeadliftMuscles;
         if (exerciseMode > 21.5 && exerciseMode < 22.5) mask = vStandingCalfMuscles;
         if (exerciseMode > 22.5 && exerciseMode < 23.5) mask = vSeatedCalfMuscles;
+        if (exerciseMode > 24.5 && exerciseMode < 25.5) mask = vPulldownMuscles;
         if (exerciseMode > 23.5 && exerciseMode < 24.5) mask = vHangCleanMuscles;
         if (exerciseMode > 17.5 && exerciseMode < 18.5) mask = vGobletSquatMuscles;
         if (exerciseMode > 15.5 && exerciseMode < 16.5) mask = vHipThrustMuscles;
@@ -164,7 +165,7 @@ export function createTissueMaterial() {
           + (1.0-tissue) * (1.0-smoothstep(0.02,0.12,dot(diffuseColor.rgb,vec3(0.333)))) * 0.28, 0.38, 0.88);`,
       );
   };
-  material.customProgramCacheKey = () => "trainvy-atelier-tissue-v26-hang-power-clean";
+  material.customProgramCacheKey = () => "trainvy-atelier-tissue-v27-lat-pulldown";
   const setAppearance = (exercise: ExerciseAnimation, highlighted = true) => {
     const modes: Record<ExerciseAnimation, number> = {
       squat: 0,
@@ -192,6 +193,7 @@ export function createTissueMaterial() {
       "standing-calf": 22,
       "seated-calf": 23,
       "hang-power-clean": 24,
+      "lat-pulldown": 25,
       "flat-dumbbell-fly": 7,
       "smith-bench-press": 5,
       "machine-chest-press": 6,
