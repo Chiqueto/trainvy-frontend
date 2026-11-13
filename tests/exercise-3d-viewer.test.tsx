@@ -46,6 +46,18 @@ function motionPreference(matches = false) {
   );
 }
 describe("Anatomical viewer controls", () => {
+  it.each([
+    ["front-lat-pulldown", "Retorno controlado da barra", "Puxada à frente do corpo"],
+    ["cable-row", "Retorno controlado dos braços", "Remada com cotovelos próximos"],
+    ["machine-row", "Retorno controlado dos pegadores", "Remada com peito apoiado"],
+  ] as const)("labels return and pull for %s", (exercise, returning, pulling) => {
+    render(<Exercise3DViewer exercise={exercise} />);
+    const slider=screen.getByRole("slider", {name:"Posição do movimento"});
+    fireEvent.change(slider,{target:{value:"250"}});
+    expect(screen.getByText(returning)).toBeDefined();
+    fireEvent.change(slider,{target:{value:"800"}});
+    expect(screen.getByText(pulling)).toBeDefined();
+  });
   it("labels the pulldown return, overhead pause and pull correctly", () => {
     render(<Exercise3DViewer exercise="lat-pulldown" />);
     const slider=screen.getByRole("slider",{name:"Posição do movimento"});

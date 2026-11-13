@@ -52,6 +52,12 @@ export function Exercise3DViewer(props: {
 }
 
 function phaseLabel(phase: number, exercise: ExerciseAnimation) {
+  if (exercise === "machine-row") {
+    if(phase<.04 || phase>=.99)return "Pegadores junto ao tronco";
+    if(phase<.48)return "Retorno controlado dos pegadores";
+    if(phase<.54)return "Pausa com braços alongados";
+    return "Remada com peito apoiado";
+  }
   if (exercise === "cable-row") {
     if(phase < .04 || phase >= .99)return "Triângulo junto ao abdômen";
     if(phase < .48)return "Retorno controlado dos braços";

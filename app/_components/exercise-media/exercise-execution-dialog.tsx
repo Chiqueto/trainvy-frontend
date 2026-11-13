@@ -28,6 +28,7 @@ import { SMITH_SQUAT_INSTRUCTIONS } from "../exercise-3d/smith-squat-instruction
 import { LEG_EXTENSION_INSTRUCTIONS } from "../exercise-3d/leg-extension-instructions";
 import { SEATED_LEG_CURL_INSTRUCTIONS } from "../exercise-3d/seated-leg-curl-instructions";
 import { PRONE_LEG_CURL_INSTRUCTIONS } from "../exercise-3d/prone-leg-curl-instructions";
+import { MACHINE_ROW_INSTRUCTIONS } from "../exercise-3d/machine-row-instructions";
 import { CABLE_ROW_INSTRUCTIONS } from "../exercise-3d/cable-row-instructions";
 import { LAT_PULLDOWN_INSTRUCTIONS } from "../exercise-3d/lat-pulldown-instructions";
 import { HANG_POWER_CLEAN_INSTRUCTIONS } from "../exercise-3d/hang-power-clean-instructions";
@@ -90,6 +91,7 @@ const FALLBACK_3D_INSTRUCTIONS: Record<
   "sumo-deadlift": SUMO_DEADLIFT_INSTRUCTIONS,
   "standing-calf": STANDING_CALF_INSTRUCTIONS,
   "seated-calf": SEATED_CALF_INSTRUCTIONS,
+  "machine-row": MACHINE_ROW_INSTRUCTIONS,
   "cable-row": CABLE_ROW_INSTRUCTIONS,
   "front-lat-pulldown": LAT_PULLDOWN_INSTRUCTIONS,
   "lat-pulldown": LAT_PULLDOWN_INSTRUCTIONS,
