@@ -8,7 +8,10 @@ import { ClassicTacticalFields } from "@/app/planning/_components/tactical/class
 import { SealButton } from "@/app/planning/_components/tactical/seal-button";
 import { patchExercise } from "@/app/planning/_lib/tactical";
 
-import { AiFeature } from "@/app/_components/ai-availability-provider";
+import {
+  AiFeature,
+  useAiAvailability,
+} from "@/app/_components/ai-availability-provider";
 
 import { useState, useTransition } from "react";
 import { trainingDaysOnly } from "@/app/_lib/training-days";
@@ -96,6 +99,8 @@ export function WorkoutPlanBuilder({
   const [isPending, startTransition] = useTransition();
   const [reviewOpen, setReviewOpen] = useState(false);
   const [isAiModalOpen, setIsAiModalOpen] = useState(initialOpenAi);
+  const { planningEnabled } = useAiAvailability();
+  const aiModalVisible = planningEnabled && isAiModalOpen;
 
   function toggleDayExpand(dayKey: string) {
     setExpandedDayIds((current) => {
@@ -385,7 +390,7 @@ export function WorkoutPlanBuilder({
         onChange={changeMode}
         syncError={syncError}
       />
-      {builderMode === "tactical" && !isAiModalOpen && (
+      {builderMode === "tactical" && !aiModalVisible && (
         <TacticalPlanWorkspace
           planName={name}
           onPlanNameChange={setName}
@@ -462,6 +467,44 @@ export function WorkoutPlanBuilder({
             </div>
           </div>
 
+          <nav
+            aria-label="Atalhos dos treinos"
+            className="flex flex-wrap gap-2 rounded-2xl bg-muted/40 p-3"
+          >
+            {days.map((day, index) => {
+              const key = day.clientId ?? day.id ?? String(index);
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => {
+                    setExpandedDayIds((current) => new Set(current).add(key));
+                    requestAnimationFrame(() =>
+                      document
+                        .getElementById(`workout-card-${key}`)
+                        ?.scrollIntoView?.({
+                          behavior: "smooth",
+                          block: "start",
+                        }),
+                    );
+                  }}
+                  className="flex min-h-11 min-w-0 items-center gap-2 rounded-xl border border-border bg-card px-3 text-left text-xs hover:border-primary/50 focus-visible:outline-2 focus-visible:outline-ring"
+                >
+                  <span className="font-bold text-primary">
+                    {String.fromCharCode(65 + (index % 26))}
+                  </span>
+                  <span className="max-w-48 truncate">
+                    {day.name || "Sem nome"}
+                  </span>
+                  <span className="text-muted-foreground">
+                    {day.exercises.filter((e) => e.name || e.exerciseId).length}{" "}
+                    ex.
+                  </span>
+                </button>
+              );
+            })}
+          </nav>
+
           {days.map((day, dayIndex) => {
             const dayKey = day.clientId ?? day.id ?? String(dayIndex);
             const isExpanded = expandedDayIds.has(dayKey);
@@ -469,42 +512,45 @@ export function WorkoutPlanBuilder({
             return (
               <article
                 key={dayKey}
-                className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4 transition-all shadow-xs"
+                id={`workout-card-${dayKey}`}
+                className="scroll-mt-24 flex min-w-0 flex-col gap-3 rounded-2xl border border-border bg-card p-4 transition-all shadow-xs"
               >
-                <div
-                  className="flex flex-col items-stretch gap-2 cursor-pointer select-none sm:flex-row sm:items-center sm:justify-between"
-                  onClick={() => toggleDayExpand(dayKey)}
-                  role="button"
-                  tabIndex={0}
-                  aria-expanded={isExpanded}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      toggleDayExpand(dayKey);
+                <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-between">
+                  <button
+                    type="button"
+                    onClick={() => toggleDayExpand(dayKey)}
+                    aria-expanded={isExpanded}
+                    aria-controls={`workout-fields-${dayKey}`}
+                    aria-label={
+                      isExpanded ? "Recolher treino" : "Expandir treino"
                     }
-                  }}
-                >
-                  <div className="flex min-w-0 items-center gap-2.5">
-                    <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10 font-heading text-xs font-bold text-primary">
-                      {String.fromCharCode(65 + (dayIndex % 26))}
-                    </span>
-                    <div className="flex flex-col min-w-0">
-                      <h3 className="min-w-0 truncate font-heading text-sm font-semibold">
-                        {day.name ||
-                          `Treino ${String.fromCharCode(65 + (dayIndex % 26))}`}
-                      </h3>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <span>
-                          {day.exercises.length}{" "}
-                          {day.exercises.length === 1
-                            ? "exercício"
-                            : "exercícios"}{" "}
-                          • {day.estimatedDurationInMinutes || 0} min
-                        </span>
+                    className="flex min-h-11 min-w-0 flex-1 items-center gap-3 rounded-xl text-left focus-visible:outline-2 focus-visible:outline-ring"
+                  >
+                    <div className="flex min-w-0 flex-1 items-center gap-2.5">
+                      <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10 font-heading text-xs font-bold text-primary">
+                        {String.fromCharCode(65 + (dayIndex % 26))}
+                      </span>
+                      <div className="flex flex-col min-w-0">
+                        <h3 className="min-w-0 truncate font-heading text-sm font-semibold">
+                          {day.name ||
+                            `Treino ${String.fromCharCode(65 + (dayIndex % 26))}`}
+                        </h3>
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <span>
+                            {day.exercises.length}{" "}
+                            {day.exercises.length === 1
+                              ? "exercício"
+                              : "exercícios"}{" "}
+                            • {day.estimatedDurationInMinutes || 0} min
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
+                    <ChevronDown
+                      className={`size-4 shrink-0 text-muted-foreground transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                    />
+                  </button>
                   <div
                     className="flex shrink-0 items-center self-end gap-0.5 sm:self-auto"
                     onClick={(e) => e.stopPropagation()}
@@ -514,7 +560,7 @@ export function WorkoutPlanBuilder({
                       aria-label={`Duplicar ${day.name}`}
                       onClick={() => duplicateWorkout(dayIndex)}
                       disabled={isPending}
-                      className="flex size-8 items-center justify-center rounded-full hover:bg-accent"
+                      className="flex size-11 items-center justify-center rounded-full hover:bg-accent"
                     >
                       <Copy className="size-4" />
                     </button>
@@ -523,7 +569,7 @@ export function WorkoutPlanBuilder({
                       aria-label={`Mover treino para cima`}
                       disabled={dayIndex === 0 || isPending}
                       onClick={() => moveWorkout(dayIndex, -1)}
-                      className="flex size-8 items-center justify-center rounded-full hover:bg-accent disabled:opacity-30"
+                      className="flex size-11 items-center justify-center rounded-full hover:bg-accent disabled:opacity-30"
                     >
                       <ArrowUp className="size-4" />
                     </button>
@@ -532,7 +578,7 @@ export function WorkoutPlanBuilder({
                       aria-label={`Mover treino para baixo`}
                       disabled={dayIndex === days.length - 1 || isPending}
                       onClick={() => moveWorkout(dayIndex, 1)}
-                      className="flex size-8 items-center justify-center rounded-full hover:bg-accent disabled:opacity-30"
+                      className="flex size-11 items-center justify-center rounded-full hover:bg-accent disabled:opacity-30"
                     >
                       <ArrowDown className="size-4" />
                     </button>
@@ -542,31 +588,19 @@ export function WorkoutPlanBuilder({
                         aria-label={`Remover treino`}
                         disabled={isPending}
                         onClick={() => removeWorkout(dayIndex)}
-                        className="flex size-8 items-center justify-center rounded-full text-destructive hover:bg-destructive/10 disabled:opacity-30"
+                        className="flex size-11 items-center justify-center rounded-full text-destructive hover:bg-destructive/10 disabled:opacity-30"
                       >
                         <Trash2 className="size-4" />
                       </button>
                     )}
-                    <button
-                      type="button"
-                      aria-label={
-                        isExpanded ? "Recolher treino" : "Expandir treino"
-                      }
-                      aria-expanded={isExpanded}
-                      onClick={() => toggleDayExpand(dayKey)}
-                      className="flex size-8 items-center justify-center rounded-full hover:bg-accent text-muted-foreground hover:text-foreground transition-colors ml-0.5"
-                    >
-                      <ChevronDown
-                        className={`size-4 transition-transform duration-200 ${
-                          isExpanded ? "rotate-180" : ""
-                        }`}
-                      />
-                    </button>
                   </div>
                 </div>
 
                 {isExpanded && (
-                  <div className="flex flex-col gap-4 pt-3 border-t border-border/40">
+                  <div
+                    id={`workout-fields-${dayKey}`}
+                    className="flex flex-col gap-4 pt-3 border-t border-border/40"
+                  >
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_10rem]">
                       <label className="flex flex-col gap-2 text-sm font-medium">
                         Nome do treino
@@ -888,7 +922,7 @@ export function WorkoutPlanBuilder({
 
       <AiFeature capability="planning">
         <AthleteAiWorkoutPlanModal
-          isOpen={isAiModalOpen}
+          isOpen={aiModalVisible}
           onClose={() => setIsAiModalOpen(false)}
           onApplyPlan={(data) => {
             if (data.name) setName(data.name);

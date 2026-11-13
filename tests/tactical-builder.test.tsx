@@ -118,71 +118,36 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe("Tactical builder", () => {
-  it("shows prescribed reps and rest instead of a generic zone range", () => {
-    const initialPlan = plan();
-    initialPlan.workoutDays[0].exercises[0].reps = 7;
-    initialPlan.workoutDays[0].exercises[0].restTimeInSeconds = 95;
-    render(<WorkoutPlanBuilder mode="edit" initialPlan={initialPlan} />);
-    const zone = screen.getByRole("button", {
-      name: "Alternar zona de Supino com barra: Hipertrofia",
-    });
-    expect(zone.textContent).toContain("7 reps");
-    expect(zone.textContent).toContain("95s");
-    fireEvent.click(zone);
-    expect(zone.textContent).toContain("15 reps");
-    expect(zone.textContent).toContain("45s");
-  });
-  it("keeps a rune armed across targets, toggles it, and persists badge parameters", async () => {
+  it("offers only Cards and Deck 3D and preserves names when switching", async () => {
     render(<WorkoutPlanBuilder mode="edit" initialPlan={plan()} />);
-    fireEvent.click(
-      within(screen.getByRole("group", { name: "Técnicas rápidas" })).getByRole(
-        "button",
-        { name: "🔥 Drop-set" },
-      ),
-    );
-    const apply = (name: string) =>
-      fireEvent.click(
-        screen.getByRole("button", { name: `Aplicar 🔥 Drop-set em ${name}` }),
-      );
-    apply("Supino com barra");
-    apply("Supino com halteres");
-    apply("Supino com barra");
-    await waitFor(() =>
-      expect(screen.getAllByRole("article")[0].textContent).not.toContain(
-        "Drop-set 1x",
-      ),
-    );
-    expect(screen.getAllByRole("article")[1].textContent).toContain(
-      "Drop-set 1x",
-    );
-    fireEvent.click(
-      screen.getByRole("button", { name: "Cancelar técnica selecionada" }),
-    );
-    fireEvent.click(screen.getByRole("button", { name: "🔥 Drop-set 1x" }));
-    fireEvent.click(screen.getByRole("button", { name: "🔥 Drop-set 2x" }));
-    fireEvent.click(screen.getByRole("button", { name: "Selar treino" }));
-    await waitFor(() => expect(mocks.save).toHaveBeenCalled());
     expect(
-      mocks.save.mock.calls[0][1].workoutDays[0].exercises[1],
-    ).toMatchObject({ runes: ["DROP_SET"], runeConfig: { DROP_SET: 3 } });
-    await waitFor(() =>
-      expect(
-        (
-          screen.getByRole("button", {
-            name: "Selar treino",
-          }) as HTMLButtonElement
-        ).disabled,
-      ).toBe(false),
-    );
+      screen.queryByRole("button", { name: "Visualização em lista" }),
+    ).toBeNull();
+    expect(
+      screen.queryByRole("button", { name: "Alternar visualização tática" }),
+    ).toBeNull();
+    fireEvent.change(screen.getByRole("textbox", { name: "Nome do treino" }), {
+      target: { value: "Superiores" },
+    });
     fireEvent.click(
-      screen.getByRole("button", {
-        name: "Remover 🔥 Drop-set de Supino com halteres",
-      }),
+      screen.getByRole("button", { name: "Editor por cards" }),
     );
+    const modes = screen.getByRole("group", { name: "Visualização do editor" });
+    expect(within(modes).getAllByRole("button")).toHaveLength(2);
+    expect(
+      within(modes)
+        .getByRole("button", { name: "Cards" })
+        .getAttribute("aria-pressed"),
+    ).toBe("true");
+    expect(
+      (screen.getByLabelText("Nome do treino") as HTMLInputElement).value,
+    ).toBe("Superiores");
+    fireEvent.click(within(modes).getByRole("button", { name: "Deck 3D" }));
+    expect(screen.getByRole("tab", { name: "Superiores" })).toBeDefined();
     await waitFor(() =>
-      expect(
-        screen.queryByRole("button", { name: "🔥 Drop-set 3x" }),
-      ).toBeNull(),
+      expect(localStorage.getItem("trainvy:builder-mode:user-a")).toBe(
+        "tactical",
+      ),
     );
   });
   it("edits plan settings inside the immersive view using the existing save state", async () => {
@@ -203,7 +168,7 @@ describe("Tactical builder", () => {
     expect(
       screen.getByRole("tab", { name: "Treino de superiores" }),
     ).toBeTruthy();
-    fireEvent.click(screen.getByRole("button", { name: "Selar treino" }));
+    fireEvent.click(screen.getByRole("button", { name: "Salvar plano" }));
     await waitFor(() => expect(mocks.save).toHaveBeenCalled());
     expect(mocks.save.mock.calls[0][1]).toMatchObject({
       name: "Plano revisado",
@@ -265,158 +230,47 @@ describe("Tactical builder", () => {
       biomechanicalAlternatives(catalog[0], catalog).map((e) => e.id),
     ).toEqual([catalog[1].id]);
   });
-  it("keeps fusion, runes, series and exact loads while switching modes and saving", async () => {
-    render(<WorkoutPlanBuilder mode="edit" initialPlan={plan()} />);
-    await waitFor(() =>
-      expect(screen.getByTestId("tactical-viewport")).toBeTruthy(),
-    );
-    fireEvent.click(
-      screen.getByRole("button", { name: "Criar bi-set com Supino com barra" }),
-    );
-    expect(screen.getByRole("group", { name: /Bi-set: Supino/ })).toBeTruthy();
-    fireEvent.click(
-      screen.getByRole("button", { name: "Técnicas de Supino com barra" }),
-    );
-    const techniqueSheet = screen.getByRole("dialog", {
-      name: "Técnicas do exercício",
-    });
-    fireEvent.click(
-      within(techniqueSheet).getByRole("button", { name: /Drop-set/ }),
-    );
-    fireEvent.click(
-      within(techniqueSheet).getByRole("button", { name: "Concluir" }),
-    );
-    fireEvent.click(
-      screen.getByRole("button", {
-        name: "Adicionar série a Supino com barra",
-      }),
-    );
-    fireEvent.click(screen.getByRole("button", { name: "Modo Clássico" }));
-    expect(screen.getAllByDisplayValue("4")).toHaveLength(1);
-    expect(
-      screen
-        .getAllByRole("button", { name: "🔥 Drop-set" })[0]
-        .getAttribute("aria-pressed"),
-    ).toBe("true");
-    const loads = screen.getAllByLabelText("Carga kg · 1");
-    fireEvent.change(loads[0], { target: { value: "12.5" } });
-    fireEvent.click(screen.getByRole("button", { name: "Modo Tático" }));
-    fireEvent.click(
-      screen.getByRole("button", { name: "Editar Supino com barra" }),
-    );
-    expect(
-      (screen.getAllByLabelText("Carga série 1")[0] as HTMLInputElement).value,
-    ).toBe("12.5");
-    fireEvent.click(
-      within(
-        screen.getByRole("dialog", { name: "Ajustar exercício" }),
-      ).getByRole("button", { name: "Concluir" }),
-    );
-    fireEvent.click(screen.getByRole("button", { name: "Selar treino" }));
-    await waitFor(() => expect(mocks.save).toHaveBeenCalled());
-    const body = mocks.save.mock.calls[0][1];
-    expect(body.workoutDays[0].exercises[0]).toMatchObject({
-      sets: 4,
-      runes: ["DROP_SET"],
-      setPrescription: expect.arrayContaining([
-        expect.objectContaining({ load: 12.5 }),
-      ]),
-    });
-    expect(body.workoutDays[0].exercises[0].supersetGroupId).toBe(
-      body.workoutDays[0].exercises[1].supersetGroupId,
-    );
-    await waitFor(() =>
-      expect(localStorage.getItem("trainvy:builder-mode:user-a")).toBe(
-        "tactical",
-      ),
-    );
-  });
-  it("swaps a catalog variation without changing individual doses or runes", async () => {
-    const initial = plan();
-    initial.workoutDays[0].exercises = [
-      {
-        ...initial.workoutDays[0].exercises[0],
-        runes: ["CLUSTER_SET"],
-        setPrescription: [
-          { reps: 5, zone: "strength", restSeconds: 120, load: 35 },
-          { reps: 4, zone: "strength", restSeconds: 125, load: 37.5 },
-          { reps: 3, zone: "strength", restSeconds: 150, load: 40 },
-        ],
-      },
-    ];
-    render(<WorkoutPlanBuilder mode="edit" initialPlan={initial} />);
-    fireEvent.click(screen.getByRole("button", { name: "Trocar exercício" }));
-    fireEvent.click(
-      await screen.findByRole("button", { name: "Supino com halteres" }),
-    );
-    fireEvent.click(screen.getByRole("button", { name: "Selar treino" }));
-    await waitFor(() => expect(mocks.save).toHaveBeenCalled());
-    expect(
-      mocks.save.mock.calls[0][1].workoutDays[0].exercises[0],
-    ).toMatchObject({
-      exerciseId: "exercise-2",
-      runes: ["CLUSTER_SET"],
-      setPrescription: initial.workoutDays[0].exercises[0].setPrescription,
-    });
-  });
-  it("adds a card with one tap and selects rest-pause on the exact exercise", async () => {
-    render(<WorkoutPlanBuilder mode="edit" initialPlan={plan()} />);
-    fireEvent.click(
-      screen.getByRole("button", { name: "Adicionar Supino com barra" }),
-    );
-    expect(screen.getAllByRole("article")).toHaveLength(3);
-    const rows = screen.getAllByRole("article");
-    fireEvent.click(
-      within(rows[2]).getByRole("button", {
-        name: "Técnicas de Supino com barra",
-      }),
-    );
-    const sheet = screen.getByRole("dialog", { name: "Técnicas do exercício" });
-    fireEvent.click(within(sheet).getByRole("button", { name: /Rest-pause/ }));
-    expect(
-      within(sheet)
-        .getByRole("button", { name: /Rest-pause/ })
-        .getAttribute("aria-pressed"),
-    ).toBe("true");
-    fireEvent.click(within(sheet).getByRole("button", { name: "Concluir" }));
-    expect(screen.getAllByRole("article")[2].textContent).toContain(
-      "Rest-pause",
-    );
-    expect(screen.getAllByRole("article")[0].textContent).not.toContain(
-      "Rest-pause",
-    );
-    fireEvent.click(screen.getByRole("button", { name: "Selar treino" }));
-    await waitFor(() => expect(mocks.save).toHaveBeenCalled());
-    expect(
-      mocks.save.mock.calls[0][1].workoutDays[0].exercises[2].runes,
-    ).toEqual(["REST_PAUSE"]);
-    expect(
-      mocks.save.mock.calls[0][1].workoutDays[0].exercises[0].runes,
-    ).toEqual([]);
-  });
-  it("separates a bi-set without removing its techniques, series or loads", async () => {
+  it("keeps groups, techniques and exact per-set loads through both editors and saving", async () => {
     const initial = plan();
     initial.workoutDays[0].exercises = initial.workoutDays[0].exercises.map(
       (e) => ({
         ...e,
         supersetGroupId: "group",
-        runes: ["REST_PAUSE"],
-        targetLoadInGrams: 12500,
+        runes: ["DROP_SET"],
+        runeConfig: { DROP_SET: 3 },
+        setPrescription: [
+          { reps: 10, zone: "hypertrophy", restSeconds: 75, load: 12.5 },
+          { reps: 8, zone: "hypertrophy", restSeconds: 90, load: 15 },
+          { reps: 6, zone: "strength", restSeconds: 120, load: 17.5 },
+        ],
       }),
     );
     render(<WorkoutPlanBuilder mode="edit" initialPlan={initial} />);
-    expect(screen.getByRole("group", { name: /Bi-set: Supino/ })).toBeTruthy();
-    fireEvent.click(screen.getByRole("button", { name: "Desfazer bi-set" }));
-    expect(screen.queryByRole("group", { name: /Bi-set: Supino/ })).toBeNull();
-    fireEvent.click(screen.getByRole("button", { name: "Selar treino" }));
-    await waitFor(() => expect(mocks.save).toHaveBeenCalled());
+    fireEvent.click(
+      screen.getByRole("button", { name: "Editor por cards" }),
+    );
     expect(
-      mocks.save.mock.calls[0][1].workoutDays[0].exercises[0],
-    ).toMatchObject({
-      supersetGroupId: null,
-      sets: 3,
-      targetLoadInGrams: 12500,
-      runes: ["REST_PAUSE"],
+      screen
+        .getAllByRole("button", { name: "🔥 Drop-set" })[0]
+        .getAttribute("aria-pressed"),
+    ).toBe("true");
+    fireEvent.change(screen.getAllByLabelText("Carga kg · 1")[0], {
+      target: { value: "20.5" },
     });
+    fireEvent.click(screen.getByRole("button", { name: "Deck 3D" }));
+    fireEvent.click(screen.getByRole("button", { name: "Salvar plano" }));
+    await waitFor(() => expect(mocks.save).toHaveBeenCalled());
+    const saved = mocks.save.mock.calls[0][1].workoutDays[0].exercises;
+    expect(saved[0]).toMatchObject({
+      supersetGroupId: "group",
+      runes: ["DROP_SET"],
+      runeConfig: { DROP_SET: 3 },
+      setPrescription: [
+        { load: 20.5, reps: 10, restSeconds: 75 },
+        { load: 15, reps: 8, restSeconds: 90 },
+        { load: 17.5, reps: 6, restSeconds: 120 },
+      ],
+    });
+    expect(saved[1].supersetGroupId).toBe("group");
   });
 });

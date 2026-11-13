@@ -6,6 +6,7 @@ import {
   fireEvent,
   render,
   screen,
+  waitFor,
   within,
 } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -95,7 +96,9 @@ vi.mock("@/app/_lib/api/fetch-generated", () => ({
   getUserTrainData: vi.fn(),
   getWorkoutPlan: vi.fn(),
   getActiveWorkoutSession: vi.fn(),
-  listAthletePrescriptions: vi.fn().mockResolvedValue({ status: 200, data: [] }),
+  listAthletePrescriptions: vi
+    .fn()
+    .mockResolvedValue({ status: 200, data: [] }),
   getCommercialContext: vi.fn().mockResolvedValue({
     status: 200,
     data: {
@@ -113,6 +116,12 @@ import PlanningPage from "@/app/planning/page";
 import PeriodizationDetailPage from "@/app/planning/periodizations/[id]/page";
 import HomePage from "@/app/page";
 import { BottomNav } from "@/app/_components/bottom-nav";
+import { AiAvailabilityProvider } from "@/app/_components/ai-availability-provider";
+import { loadAiAvailability } from "@/app/_actions/ai-availability";
+
+vi.mock("@/app/_actions/ai-availability", () => ({
+  loadAiAvailability: vi.fn(),
+}));
 
 describe("Trainvy — Fase 2 / Task 2.5A: Hub de Planejamento, Navegação e Estados de Leitura", () => {
   beforeEach(() => {
@@ -146,6 +155,44 @@ describe("Trainvy — Fase 2 / Task 2.5A: Hub de Planejamento, Navegação e Est
   });
 
   describe("1. Planning Hub (/planning) — Contextos Ativos e Branding", () => {
+    it.each([false, true])(
+      "o banner de criação respeita planningEnabled=%s",
+      async (enabled) => {
+        vi.mocked(loadAiAvailability).mockResolvedValue({
+          professionalAiEnabled: false,
+          athleteAiEnabled: enabled,
+          accountType: "ATHLETE",
+          enabled,
+          planningEnabled: enabled,
+          chatEnabled: enabled,
+        });
+        vi.mocked(api.getPlanningOverview).mockResolvedValue({
+          status: 200,
+          data: {
+            activeContext: { type: "NONE" },
+            plans: [],
+            periodizations: [],
+          },
+        } as any);
+        render(
+          <AiAvailabilityProvider>
+            {await PlanningPage()}
+          </AiAvailabilityProvider>,
+        );
+        await waitFor(() => expect(loadAiAvailability).toHaveBeenCalled());
+        await waitFor(() => {
+          expect(
+            !!screen.queryByRole("link", {
+              name: /Organizar com IA ou importar ficha/,
+            }),
+          ).toBe(enabled);
+        });
+        expect(
+          screen.getByRole("heading", { name: "Rotinas de Treino" }),
+        ).toBeDefined();
+      },
+    );
+
     it("renderiza estado quando activeContext = NONE", async () => {
       vi.mocked(api.getPlanningOverview).mockResolvedValue({
         status: 200,

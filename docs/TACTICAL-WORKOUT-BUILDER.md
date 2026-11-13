@@ -1,6 +1,8 @@
 # Tactical Workout Builder
 
-Implementado nos editores de planos pessoais (incluindo etapas de periodização e edição), prescrições do treinador e modelos. O modo inicial é `tactical`; o clássico continua disponível no seletor. Ambos editam o mesmo array `days` do componente pai. A aba tática permanece selecionada ao trocar de modo.
+Implementado nos editores de planos pessoais (incluindo etapas de periodização e edição), prescrições do treinador e modelos. Existem apenas duas visualizações: **Deck 3D** (`tactical`) e **Cards** (`classic`). A lista tática 2D foi removida. Os valores internos da preferência são preservados para compatibilidade; ambos os editores usam o mesmo array `days` do componente pai.
+
+No modo Cards, técnicas e grupos ficam em uma seção recolhível, inicialmente aberta quando há configuração salva. O editor pessoal inclui atalhos para expandir e localizar cada treino, botões de expansão separados das ações e alvos de toque de 44px. Reordenar, duplicar ou excluir não aciona o recolhimento do card.
 
 ## Contrato e persistência
 
@@ -21,6 +23,8 @@ Os campos passam pelos schemas Zod/OpenAPI e pelo client Orval, incluindo criaç
 O cliente atualiza a visualização imediatamente e guarda a preferência em `trainvy:builder-mode:<userId>`. Escritas na API são serializadas. Alterações locais pendentes são reenviadas na próxima abertura; o valor confirmado do servidor prevalece sobre caches antigos de outros dispositivos. Falhas de sincronização são indicadas sem apagar o treino.
 
 ## Interações e estimativas
+
+As descrições de blocos horizontais e técnicas rápidas abaixo são o registro histórico da lista 2D removida. Para os controles atuais do Deck 3D, consulte [Studio espacial](TACTICAL-BUILDER-UX.md).
 
 O modo tático ocupa uma janela fixa de `100dvh`, com cabeçalho de 60 px e arena de `calc(100dvh - 60px)`. A página de fundo fica bloqueada; somente a mesa e os carrosséis rolam. O deck e as ações de salvar/revisar permanecem no rodapé. Em telas baixas, cartas e blocos encolhem sem remover os controles. A área segura inferior do PWA é respeitada.
 

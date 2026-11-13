@@ -36,7 +36,7 @@ const workspaceSteps = [
 const builderSteps = [
   {
     title: "Conheça o novo editor de treinos",
-    text: "O Modo Tático organiza sua ficha em um espaço visual. Este guia apresenta os controles; depois você pode explorar no seu ritmo.",
+    text: "O deck 3D organiza sua ficha em um espaço visual. Este guia apresenta os controles; depois você pode explorar no seu ritmo.",
   },
   {
     title: "Organize a divisão",
@@ -50,7 +50,7 @@ const builderSteps = [
   },
   {
     title: "Escolha sua visualização",
-    text: "Alterne entre o espaço 3D e a lista 2D no Modo Tático. Para editar no formulário tradicional, escolha Clássico. A ficha é a mesma e sua preferência fica salva.",
+    text: "Escolha Deck 3D para organizar os exercícios na mesa ou Cards para editar no formulário tradicional. A ficha é a mesma e sua preferência fica salva.",
     target: '[data-tour="builder-views"]',
   },
   {

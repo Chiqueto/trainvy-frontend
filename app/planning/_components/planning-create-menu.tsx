@@ -35,7 +35,7 @@ export function PlanningCreateMenu() {
             role="menu"
             className="absolute right-0 top-full z-50 mt-2 w-64 rounded-2xl border border-border bg-popover p-1.5 shadow-lg"
           >
-            <AiFeature>
+            <AiFeature capability="chat">
               <Link
                 role="menuitem"
                 href="/planning?chat_open=true&chat_initial_message=Crie%20um%20treino%20para%20mim"
@@ -45,7 +45,7 @@ export function PlanningCreateMenu() {
                 <Sparkles className="size-4 text-primary" /> Gerar treino com IA
               </Link>
             </AiFeature>
-            <AiFeature>
+            <AiFeature capability="planning">
               <Link
                 role="menuitem"
                 href="/planning/plans/new?ai=true"

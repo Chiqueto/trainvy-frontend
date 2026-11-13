@@ -14,7 +14,7 @@ Séries e repetições usam inputs, +/−, roda do mouse e alça vertical de aju
 
 **Ajuda e legendas** explica gestos, controles, cores e estrelas: verde/★ indica a categoria isoladora, ciano/★★ multiarticular e dourado/★★★ composto/potência, conforme a heurística do editor. O mapa inclui demanda do SNC em pontos (2/4/7 por série, acrescidos do fator de técnicas). É uma comparação ilustrativa das fichas, sem representar fadiga ou estresse fisiológico medido.
 
-As descrições abaixo documentam a interface tática em lista anterior; seus controles cíclicos continuam disponíveis nessa visualização.
+O seletor oferece somente **Cards** e **Deck 3D**, inclusive em modelos e prescrições. A interface tática em lista 2D foi removida; as descrições históricas de dock de técnicas e controles cíclicos abaixo não representam uma terceira visualização disponível.
 
 ### Edição e salvamento do plano
 

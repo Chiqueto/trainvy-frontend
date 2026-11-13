@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { CoachGuidedTour } from "@/app/personal/_components/coach-guided-tour";
-import { LayoutList, Zap } from "lucide-react";
+import { LayoutGrid, Layers3 } from "lucide-react";
 import {
   loadBuilderPreference,
   saveBuilderPreference,
@@ -102,13 +102,19 @@ export function ViewModeToggle({
   syncError?: boolean;
 }) {
   return (
-    <div className="ml-auto w-fit space-y-1">
+    <div className="flex flex-col items-stretch gap-3 rounded-2xl border border-border bg-card p-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+      <div className="min-w-0 flex-1">
+        <p className="text-sm font-semibold">Como você prefere montar?</p>
+        <p className="text-xs text-muted-foreground">
+          Edite por cards ou organize os exercícios no deck 3D.
+        </p>
+      </div>
       {value === "classic" && <CoachGuidedTour tour="builder" />}
       <div
         data-tour="builder-views"
         role="group"
         aria-label="Visualização do editor"
-        className="inline-flex rounded-2xl border border-slate-700 bg-slate-950 p-1 text-xs text-slate-300"
+        className="inline-flex self-start rounded-xl bg-muted p-1 text-sm text-muted-foreground sm:self-auto"
       >
         {(["tactical", "classic"] as const).map((mode) => (
           <button
@@ -116,10 +122,14 @@ export function ViewModeToggle({
             key={mode}
             aria-pressed={value === mode}
             onClick={() => onChange(mode)}
-            className={`flex min-h-11 items-center gap-2 rounded-xl px-4 transition-colors ${value === mode ? "bg-cyan-300 text-slate-950 shadow-lg shadow-cyan-500/15" : "hover:bg-slate-800"}`}
+            className={`flex min-h-11 items-center gap-2 rounded-xl px-4 transition-colors ${value === mode ? "bg-primary text-primary-foreground shadow-sm" : "hover:bg-accent hover:text-foreground"}`}
           >
-            {mode === "tactical" ? <Zap size={15} /> : <LayoutList size={15} />}
-            {mode === "tactical" ? "Modo Tático" : "Modo Clássico"}
+            {mode === "tactical" ? (
+              <Layers3 size={16} />
+            ) : (
+              <LayoutGrid size={16} />
+            )}
+            {mode === "tactical" ? "Deck 3D" : "Cards"}
           </button>
         ))}
       </div>

@@ -1,5 +1,12 @@
 // Existing form coverage explicitly exercises the classic view. Tactical parity has its own suite.
-vi.mock("@/app/planning/_components/tactical/view-mode-toggle", () => ({ useBuilderMode: () => ({ builderMode: "classic", changeMode: vi.fn(), syncError: false }), ViewModeToggle: () => null }));
+vi.mock("@/app/planning/_components/tactical/view-mode-toggle", () => ({
+  useBuilderMode: () => ({
+    builderMode: "classic",
+    changeMode: vi.fn(),
+    syncError: false,
+  }),
+  ViewModeToggle: () => null,
+}));
 import React from "react";
 import {
   cleanup,
@@ -488,6 +495,25 @@ describe("WorkoutPlanBuilder — interface", () => {
       within(articles[0]).getByRole("button", { name: "Recolher treino" }),
     );
     expect(within(articles[0]).queryByLabelText("Nome do treino")).toBeNull();
+  });
+
+  it("atalhos abrem o treino escolhido e ações ficam fora do botão de expansão", () => {
+    render(<WorkoutPlanBuilder mode="standalone" />);
+    const cards = screen.getAllByRole("article");
+    const navigation = screen.getByRole("navigation", {
+      name: "Atalhos dos treinos",
+    });
+    fireEvent.click(within(navigation).getAllByRole("button")[1]);
+    expect(within(cards[1]).getByLabelText("Nome do treino")).toBeDefined();
+    const duplicate = within(cards[0]).getByRole("button", {
+      name: /Duplicar/,
+    });
+    expect(duplicate.parentElement?.closest("button")).toBeNull();
+    expect(
+      within(cards[0])
+        .getByRole("button", { name: "Recolher treino" })
+        .getAttribute("aria-controls"),
+    ).toBeTruthy();
   });
 
   it("expande e recolhe todos os treinos pelo botão global", () => {

@@ -25,6 +25,8 @@ A interface inicia sem IA, consulta o estado sem cache e respeita também as per
 
 São condicionados os acessos no menu, planejamento, histórico, execução de treino, prescrições e análises do personal. A landing usa conteúdo manual ou adequado ao público habilitado. A identidade visual e o 3D permanecem disponíveis.
 
+O banner de criação/importação do planejamento exige `planningEnabled`, assim como a entrada correspondente no menu Novo. O atalho para o chat exige `chatEnabled`. Abrir diretamente `/planning/plans/new?ai=true` com IA indisponível mantém o editor manual visível; desligar a IA com o assistente aberto também devolve o espaço ao editor manual.
+
 ## Planos e dados existentes
 
 Com IA profissional desligada, planos públicos com permissões AI_CHAT ou AI_PLAN_GENERATION ficam fora do cadastro. O backend também recusa a criação e conclusão de novas intenções para esses planos enquanto desabilitados. As assinaturas existentes, preços, limites de alunos e permissões armazenadas não são modificados.

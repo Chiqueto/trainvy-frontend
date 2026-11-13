@@ -11,7 +11,6 @@ import {
   CircleHelp,
   Layers3,
   LayoutGrid,
-  List,
   Minus,
   Plus,
   RotateCcw,
@@ -59,7 +58,6 @@ export interface HoloHudProps {
   onAutoArrange: () => void;
   onSave?: () => void;
   onClassicView?: () => void;
-  onListView?: () => void;
   onOpenSettings?: () => void;
   onReview?: () => void;
   reviewLabel?: string;
@@ -86,7 +84,6 @@ export function HoloHud({
   onAutoArrange,
   onSave,
   onClassicView,
-  onListView,
   onOpenSettings,
   onReview,
   reviewLabel,
@@ -123,7 +120,7 @@ export function HoloHud({
             <button
               type="button"
               onClick={onClassicView}
-              aria-label="Voltar ao editor clássico"
+              aria-label="Voltar ao editor por cards"
               className="spatial-icon-button"
             >
               <ArrowLeft size={17} />
@@ -159,16 +156,16 @@ export function HoloHud({
             )}
           </div>
           <div className="hidden shrink-0 items-center gap-1.5 sm:flex sm:gap-2">
-            {onListView && (
+            {onClassicView && (
               <button
                 type="button"
-                onClick={onListView}
-                aria-label="Visualização em lista"
+                onClick={onClassicView}
+                aria-label="Editor por cards"
                 data-tour="builder-views"
                 className="spatial-icon-button sm:!w-auto sm:gap-2 sm:px-3"
               >
-                <List size={16} />
-                <span className="hidden text-xs sm:inline">Lista</span>
+                <Layers3 size={16} />
+                <span className="hidden text-xs sm:inline">Cards</span>
               </button>
             )}
             {onReview && (
@@ -480,18 +477,6 @@ export function HoloHud({
             <Activity size={18} />
             Mapa muscular
           </button>
-          {onListView && (
-            <button
-              type="button"
-              onClick={() => {
-                setControlsOpen(false);
-                onListView();
-              }}
-            >
-              <List size={18} />
-              Visualização em lista
-            </button>
-          )}
           {onClassicView && (
             <button
               type="button"
@@ -501,7 +486,7 @@ export function HoloHud({
               }}
             >
               <ArrowLeft size={18} />
-              Editor clássico
+              Editor por cards
             </button>
           )}
           <button

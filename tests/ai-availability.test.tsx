@@ -30,6 +30,7 @@ import {
   AiFeature,
 } from "@/app/_components/ai-availability-provider";
 import { AiAvailabilityCard } from "@/app/admin/_components/ai-availability-card";
+import { PlanningCreateMenu } from "@/app/planning/_components/planning-create-menu";
 
 beforeEach(() => {
   vi.resetAllMocks();
@@ -40,6 +41,45 @@ beforeEach(() => {
 });
 afterEach(cleanup);
 describe("AI availability presentation", () => {
+  it.each([
+    [[], false, false],
+    [["AI_CHAT"], true, false],
+    [["AI_PLAN_GENERATION"], false, true],
+  ])(
+    "planning menu respects individual capabilities %j",
+    async (entitlements, chat, planning) => {
+      api.flags.mockResolvedValue({
+        status: 200,
+        data: { professionalAiEnabled: true, athleteAiEnabled: false },
+      });
+      api.commercial.mockResolvedValue({
+        status: 200,
+        data: {
+          accountType: "COACH",
+          entitlements: entitlements.map((key) => ({ key })),
+        },
+      });
+      render(
+        <AiAvailabilityProvider>
+          <PlanningCreateMenu />
+        </AiAvailabilityProvider>,
+      );
+      fireEvent.click(screen.getByRole("button", { name: "Novo" }));
+      await waitFor(() => expect(api.commercial).toHaveBeenCalled());
+      await waitFor(() => {
+        expect(
+          !!screen.queryByRole("menuitem", { name: /Gerar treino com IA/ }),
+        ).toBe(chat);
+        expect(
+          !!screen.queryByRole("menuitem", { name: /Criar com IA \/ Ficha/ }),
+        ).toBe(planning);
+      });
+      expect(
+        screen.getByRole("menuitem", { name: /Novo plano/ }),
+      ).toBeDefined();
+    },
+  );
+
   it.each([
     [false, false],
     [true, false],

@@ -49,7 +49,6 @@ export interface SpatialBuilderArenaProps {
   saveLabel?: string;
   onClassicView?: () => void;
   onOpenSettings?: () => void;
-  onListView?: () => void;
   onReview?: () => void;
   reviewLabel?: string;
   planName?: string;
@@ -71,7 +70,6 @@ export function SpatialBuilderArena({
   saveLabel,
   onClassicView,
   onOpenSettings,
-  onListView,
   onReview,
   reviewLabel,
   planName,
@@ -385,7 +383,6 @@ export function SpatialBuilderArena({
         }}
         onSave={onSave}
         saveLabel={saveLabel}
-        onListView={onListView}
         onReview={onReview}
         reviewLabel={reviewLabel}
         planName={planName}

@@ -2,11 +2,9 @@
 import { useState, type ReactNode } from "react";
 import { CoachGuidedTour } from "@/app/personal/_components/coach-guided-tour";
 import { Dialog } from "radix-ui";
-import { ArrowLeft, Copy, Eye, Plus, Settings2, Trash2 } from "lucide-react";
-import { TacticalBuilderArena } from "./tactical-builder-arena";
+import { Copy, Trash2 } from "lucide-react";
 import { SpatialBuilderArena } from "./spatial-builder-arena";
 import { TacticalSheet } from "./tactical-sheet";
-import { SealButton } from "./seal-button";
 import {
   createDraftWorkoutDay,
   duplicateDraftWorkoutDay,
@@ -34,7 +32,6 @@ export function TacticalPlanWorkspace({
   error,
   syncError,
   onAi,
-  initialArenaMode,
 }: {
   days: WorkoutPlanDraftDay[];
   onChange: (days: WorkoutPlanDraftDay[]) => void;
@@ -53,16 +50,9 @@ export function TacticalPlanWorkspace({
   error?: string | null;
   syncError?: boolean;
   onAi?: () => void;
-  initialArenaMode?: "spatial" | "list";
 }) {
-  const [localActive, setLocalActive] = useState(0),
-    [settingsOpen, setSettingsOpen] = useState(false),
-    [arenaMode, setArenaMode] = useState<"spatial" | "list">(
-      initialArenaMode ??
-        (typeof process !== "undefined" && process.env.NODE_ENV === "test"
-          ? "list"
-          : "spatial"),
-    );
+  const [localActive, setLocalActive] = useState(0);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const active = activeIndex ?? localActive,
     index = Math.min(active, Math.max(0, days.length - 1)),
     day = days[index];
@@ -73,112 +63,6 @@ export function TacticalPlanWorkspace({
   function updateDay(patch: Partial<WorkoutPlanDraftDay>) {
     onChange(days.map((d, i) => (i === index ? { ...d, ...patch } : d)));
   }
-  const navigation = (
-    <div data-tour="builder-days" className="flex min-w-0 items-center gap-1">
-      <div
-        className="no-scrollbar flex min-w-0 gap-1 overflow-x-auto"
-        role="tablist"
-        aria-label="Treinos do plano"
-      >
-        {days.map((d, i) => (
-          <button
-            type="button"
-            key={d.clientId ?? d.id ?? i}
-            role="tab"
-            aria-label={d.name}
-            aria-selected={i === index}
-            onClick={() => setActive(i)}
-            className={`flex size-8 shrink-0 items-center justify-center rounded-lg text-xs font-semibold ${i === index ? "bg-cyan-300 text-zinc-950" : "bg-white/5 text-zinc-400"}`}
-          >
-            {String.fromCharCode(65 + (i % 26))}
-          </button>
-        ))}
-      </div>
-      <button
-        type="button"
-        aria-label="Novo treino"
-        disabled={disabled}
-        onClick={() => {
-          onChange([
-            ...days,
-            {
-              ...createDraftWorkoutDay(
-                String.fromCharCode(65 + (days.length % 26)),
-              ),
-              exercises: [],
-            },
-          ]);
-          setActive(days.length);
-        }}
-        className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-dashed border-white/20 text-zinc-400"
-      >
-        <Plus size={13} />
-      </button>
-    </div>
-  );
-  const actions = (
-    <>
-      <div className="flex shrink-0 items-center gap-2">
-        <button
-          type="button"
-          onClick={() =>
-            setArenaMode(arenaMode === "spatial" ? "list" : "spatial")
-          }
-          aria-label="Alternar visualização tática"
-          data-tour="builder-views"
-          className="hidden h-9 rounded-lg bg-white/5 px-2 text-xs sm:block"
-        >
-          {arenaMode === "spatial" ? (
-            <>
-              <span className="text-cyan-200">🌌 Jarvis 3D</span> / ⚡ Lista
-            </>
-          ) : (
-            <>
-              <span className="text-amber-200">⚡ Lista 2D</span> / 🌌 3D
-            </>
-          )}
-        </button>
-        <button
-          type="button"
-          onClick={onClassic}
-          aria-label="Modo Clássico"
-          className="hidden h-9 rounded-lg bg-white/5 px-2 text-xs text-zinc-400 hover:text-white sm:block"
-        >
-          📋 Clássico
-        </button>
-        {onReview && (
-          <button
-            type="button"
-            onClick={onReview}
-            aria-label={reviewLabel}
-            disabled={disabled}
-            className="h-9 shrink-0 rounded-lg border border-white/10 px-2 text-xs text-zinc-300 disabled:opacity-40"
-          >
-            <span className="hidden sm:inline">{reviewLabel}</span>
-            <Eye size={16} className="sm:hidden" />
-          </button>
-        )}
-        {onSave && (
-          <div data-tour="builder-save">
-            <SealButton disabled={disabled} onSave={onSave} label={saveLabel} />
-          </div>
-        )}
-      </div>
-      {error && (
-        <p
-          role="alert"
-          className="absolute right-3 top-16 z-50 max-h-24 max-w-sm overflow-y-auto rounded-xl bg-zinc-900 p-3 text-xs text-rose-300"
-        >
-          {error}
-        </p>
-      )}
-      {syncError && (
-        <p className="absolute right-3 top-14 z-40 text-[9px] text-amber-200">
-          Preferência local · sincronização indisponível
-        </p>
-      )}
-    </>
-  );
   return (
     <Dialog.Root
       open
@@ -206,7 +90,7 @@ export function TacticalPlanWorkspace({
             data-tour="builder-arena"
             className="min-h-0 flex-1 overflow-hidden"
           >
-            {day && arenaMode === "spatial" ? (
+            {day ? (
               <SpatialBuilderArena
                 key={`spatial-${day.clientId ?? day.id ?? index}`}
                 day={day}
@@ -229,7 +113,6 @@ export function TacticalPlanWorkspace({
                 disabled={disabled}
                 onSave={onSave}
                 saveLabel={saveLabel}
-                onListView={() => setArenaMode("list")}
                 onReview={onReview}
                 reviewLabel={reviewLabel}
                 planName={planName}
@@ -239,49 +122,6 @@ export function TacticalPlanWorkspace({
                 syncError={syncError}
                 onClassicView={onClassic}
                 onOpenSettings={() => setSettingsOpen(true)}
-              />
-            ) : day ? (
-              <TacticalBuilderArena
-                key={`list-${day.clientId ?? day.id ?? index}`}
-                day={day}
-                disabled={disabled}
-                onChange={updateDay}
-                navigation={navigation}
-                actions={actions}
-                title={
-                  <>
-                    <button
-                      type="button"
-                      onClick={onClassic}
-                      aria-label="Voltar ao editor clássico"
-                      className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white/5"
-                    >
-                      <ArrowLeft size={16} />
-                    </button>
-                    <div className="min-w-0 w-32 sm:w-36">
-                      <span className="text-xs font-semibold">
-                        Montar Plano
-                      </span>
-                      <input
-                        aria-label="Nome do treino ativo"
-                        disabled={disabled}
-                        value={day.name}
-                        onChange={(e) => updateDay({ name: e.target.value })}
-                        className="block w-full truncate bg-transparent text-[11px] text-zinc-400 outline-none focus:text-white"
-                      />
-                    </div>
-                  </>
-                }
-                settingsAction={
-                  <button
-                    type="button"
-                    aria-label="Configurações do plano"
-                    onClick={() => setSettingsOpen(true)}
-                    className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-white/10"
-                  >
-                    <Settings2 size={15} />
-                  </button>
-                }
               />
             ) : null}
           </div>

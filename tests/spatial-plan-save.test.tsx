@@ -71,23 +71,6 @@ vi.mock(
   "@/app/personal/alunos/[athleteId]/_components/coach-ai-prescription-modal",
   () => ({ CoachAiPrescriptionModal: () => null }),
 );
-vi.mock(
-  "@/app/planning/_components/tactical/tactical-plan-workspace",
-  async (importOriginal) => {
-    const actual =
-      await importOriginal<
-        typeof import("@/app/planning/_components/tactical/tactical-plan-workspace")
-      >();
-    return {
-      ...actual,
-      TacticalPlanWorkspace: (
-        props: React.ComponentProps<typeof actual.TacticalPlanWorkspace>,
-      ) => (
-        <actual.TacticalPlanWorkspace {...props} initialArenaMode="spatial" />
-      ),
-    };
-  },
-);
 
 const exercise = {
   id: "saved-exercise",
@@ -168,6 +151,19 @@ beforeEach(() => {
 });
 
 describe("Spatial plan editor and save parity", () => {
+  it("keeps manual creation available for an AI deep link when AI is disabled", () => {
+    render(<WorkoutPlanBuilder mode="standalone" initialOpenAi />);
+    expect(screen.getByTestId("tactical-viewport")).toBeDefined();
+    expect(
+      screen.getByRole("textbox", { name: "Nome do plano" }),
+    ).toBeDefined();
+    expect(
+      screen.queryByRole("button", {
+        name: /Gerar com IA|Abrir assistente de IA/,
+      }),
+    ).toBeNull();
+  });
+
   it("creates a named plan, preserving manual duration, warm-up and technique inputs through an API failure and retry", async () => {
     mocks.create
       .mockResolvedValueOnce({
@@ -290,12 +286,12 @@ describe("Spatial plan editor and save parity", () => {
     );
     closeSettings(dialog);
     fireEvent.click(
-      screen.getByRole("button", { name: "Voltar ao editor clássico" }),
+      screen.getByRole("button", { name: "Voltar ao editor por cards" }),
     );
     expect(
       (screen.getByLabelText("Nome do plano *") as HTMLInputElement).value,
     ).toBe("Plano atualizado");
-    fireEvent.click(screen.getByRole("button", { name: "Modo Tático" }));
+    fireEvent.click(screen.getByRole("button", { name: "Deck 3D" }));
     expect((header() as HTMLInputElement).value).toBe("Plano atualizado");
     fireEvent.click(screen.getByRole("button", { name: "Salvar plano" }));
     await waitFor(() => expect(mocks.edit).toHaveBeenCalled());

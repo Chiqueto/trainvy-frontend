@@ -5,7 +5,7 @@ Implementado em 12/11/2026 nos dois repositórios.
 - `User.coachOnboardingCompleted` e `workoutBuilderOnboardingCompleted` começam em `false`, inclusive para contas existentes. São independentes do formulário esportivo e da configuração da conta.
 - O painel abre o guia na primeira visita com acesso profissional disponível; os editores de prescrições, modelos e planos abrem o guia do editor para contas COACH. Ambos permitem avançar, voltar, pular e rever.
 - Concluir ou pular persiste somente o indicador daquele guia. Se a gravação falhar, o guia fecha com um aviso e pode reaparecer. A API identifica a conta pela sessão; não aceita IDs de terceiros.
-- O editor explica divisão, catálogo/cartões, espaço 3D, lista 2D, modo clássico, rascunho e revisão profissional.
+- O editor explica divisão, catálogo, os dois modos Cards e Deck 3D, rascunho e revisão profissional.
 
 ## Aluno antes da criação de conta
 

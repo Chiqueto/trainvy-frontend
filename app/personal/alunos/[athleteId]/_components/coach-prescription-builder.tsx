@@ -9,7 +9,10 @@ import { SealButton } from "@/app/planning/_components/tactical/seal-button";
 import { patchExercise } from "@/app/planning/_lib/tactical";
 
 import { trainingDaysOnly } from "@/app/_lib/training-days";
-import { AiFeature } from "@/app/_components/ai-availability-provider";
+import {
+  AiFeature,
+  useAiAvailability,
+} from "@/app/_components/ai-availability-provider";
 import { trackProductEvent } from "@/app/_lib/product-events";
 import { CoachPrescriptionExerciseCard } from "./coach-prescription-exercise-card";
 import { serializeAdvancedPrescription } from "@/app/planning/_lib/workout-plan-builder";
@@ -169,6 +172,8 @@ export function CoachPrescriptionBuilder({
     toast.error(message);
   }
   const [isAiModalOpen, setIsAiModalOpen] = useState(false);
+  const { planningEnabled } = useAiAvailability();
+  const aiModalVisible = planningEnabled && isAiModalOpen;
   const [isPending, startTransition] = useTransition();
 
   function updateDay(index: number, patch: Partial<WorkoutPlanDraftDay>) {
@@ -551,7 +556,7 @@ export function CoachPrescriptionBuilder({
         syncError={syncError}
       />
       {builderMode === "tactical" ? (
-        !isAiModalOpen && (
+        !aiModalVisible && (
           <TacticalPlanWorkspace
             planName={name}
             onPlanNameChange={setName}
@@ -913,7 +918,7 @@ export function CoachPrescriptionBuilder({
         <CoachAiPrescriptionModal
           athleteId={athleteId}
           athleteName={athleteName}
-          isOpen={isAiModalOpen}
+          isOpen={aiModalVisible}
           onClose={() => setIsAiModalOpen(false)}
           onApplyPrescription={(generated) => {
             setAiAssisted(true);
