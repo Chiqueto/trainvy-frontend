@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { Loader2, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { startFreeWorkoutAction } from "../workout-sessions/[sessionId]/_actions";
+import { runWorkoutAction } from "@/app/_lib/show-workout-action-error";
 
 interface StartFreeWorkoutButtonProps {
   hasActiveSession?: boolean;
@@ -13,22 +15,13 @@ export function StartFreeWorkoutButton({
   hasActiveSession = false,
 }: StartFreeWorkoutButtonProps) {
   const [isPending, startTransition] = useTransition();
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleStart = () => {
     if (hasActiveSession || isPending) return;
-    setErrorMessage(null);
 
     startTransition(async () => {
-      try {
-        await startFreeWorkoutAction();
-      } catch (err: unknown) {
-        const msg = (err as Error)?.message || "";
-        if (msg.includes("NEXT_REDIRECT")) {
-          throw err;
-        }
-        setErrorMessage(msg || "Erro ao iniciar treino avulso");
-      }
+      await runWorkoutAction(startFreeWorkoutAction, router.push);
     });
   };
 
@@ -58,11 +51,6 @@ export function StartFreeWorkoutButton({
           </span>
         )}
       </Button>
-      {errorMessage && (
-        <p className="text-xs text-destructive text-center font-heading font-medium">
-          {errorMessage}
-        </p>
-      )}
     </div>
   );
 }

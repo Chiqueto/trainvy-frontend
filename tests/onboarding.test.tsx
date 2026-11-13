@@ -1,7 +1,9 @@
 import React from "react";
 vi.mock("@/app/_components/legal-consent", () => ({
   LegalConsent: ({ onReady }: { onReady?: (ready: boolean) => void }) => {
-    React.useEffect(() => { onReady?.(true); }, [onReady]);
+    React.useEffect(() => {
+      onReady?.(true);
+    }, [onReady]);
     return null;
   },
 }));
@@ -121,6 +123,15 @@ describe("onboarding sem IA", () => {
 });
 
 describe("cadastro direto pelo contrato existente", () => {
+  it("preserva o registro do nascimento de aluno menor de 18 sem bloquear o cadastro", async () => {
+    const birthDate = `${new Date().getUTCFullYear() - 15}-01-01`;
+    expect(
+      (await completeOnboardingAction({ ...input, birthDate })).success,
+    ).toBe(true);
+    expect(mocks.upsertUserTrainData).toHaveBeenCalledWith(
+      expect.objectContaining({ birthDate }),
+    );
+  });
   it("converte kg com vírgula para gramas e mantém gordura opcional", async () => {
     expect(await completeOnboardingAction(input)).toEqual({
       success: true,

@@ -2,6 +2,10 @@
 
 ## Estado
 
+### Idade informativa, sem bloqueio por maioridade — 13/11/2026
+
+Por decisão de produto, a maioridade não condiciona cadastro, perfil ou execução de treino. Idade e nascimento continuam registrados; o nascimento permite calcular a idade e dados antigos conservam a idade legada. O onboarding coleta nascimento com validação de data, sem exigir 18 anos. O guard da API mantém autenticação, aceites legais e de saúde e ownership, sem avaliar maioridade. Contas sem nascimento registrado podem treinar. Documentos e aceites históricos persistidos não são publicados ou alterados automaticamente por essa mudança.
+
 Código integrado nos dois repositórios, com migration aditiva, seed insert-only e contratos Orval. Migration e seed aplicados em 06/11/2026 no banco atual de `DATABASE_URL`, após autorização explícita. O Prisma confirmou o schema atualizado. Publicar frontend e API compatíveis com esse schema.
 
 ## Componentes

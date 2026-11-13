@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { completeWorkoutAction } from "../_actions";
+import { runWorkoutAction } from "@/app/_lib/show-workout-action-error";
 
 interface CompleteWorkoutButtonProps {
   workoutPlanId: string;
@@ -17,31 +19,22 @@ export function CompleteWorkoutButton({
   sessionId,
 }: CompleteWorkoutButtonProps) {
   const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleComplete = () => {
-    setError(null);
+    if (isPending) return;
     startTransition(async () => {
-      try {
-        await completeWorkoutAction(workoutPlanId, workoutDayId, sessionId);
-      } catch (err: unknown) {
-        setError((err as Error)?.message || "Não foi possível finalizar o treino");
-      }
+      await runWorkoutAction(
+        () => completeWorkoutAction(workoutPlanId, workoutDayId, sessionId),
+        router.push,
+      );
     });
   };
 
   return (
     <div className="flex flex-col gap-2">
-      {error && (
-        <div
-          role="alert"
-          className="flex items-center gap-2 rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-xs text-destructive"
-        >
-          <AlertCircle className="size-4 shrink-0" />
-          <span>{error}</span>
-        </div>
-      )}
       <Button
+        type="button"
         variant="outline"
         onClick={handleComplete}
         disabled={isPending}

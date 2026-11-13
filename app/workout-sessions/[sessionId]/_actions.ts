@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { workoutActionError, type WorkoutActionError } from "@/app/_lib/workout-action-error";
 import {
   addExerciseToWorkoutSession,
   cancelWorkoutSession,
@@ -158,11 +159,15 @@ export async function completeWorkoutSessionAction(
 /**
  * Inicia uma sessão de treino avulsa e redireciona para a tela do tracker.
  */
-export async function startFreeWorkoutAction(): Promise<void> {
-  const response = await startFreeWorkoutSession();
+export async function startFreeWorkoutAction(): Promise<WorkoutActionError> {
+  let response;
+  try {
+    response = await startFreeWorkoutSession();
+  } catch {
+    return workoutActionError(0);
+  }
   if (response.status !== 201) {
-    const errorData = response.data as { error?: string };
-    throw new Error(errorData?.error || "Erro ao iniciar treino avulso");
+    return workoutActionError(response.status, response.data?.code);
   }
 
   const sessionId = response.data.userWorkoutSessionId;

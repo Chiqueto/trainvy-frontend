@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ageFromBirthDate, birthDateSchema } from "@/app/_lib/birth-date";
+import { birthDateSchema } from "@/app/_lib/birth-date";
 
 const decimal = (value: string) => Number(value.trim().replace(",", "."));
 
@@ -23,7 +23,7 @@ export const onboardingSchema = z.object({
         .min(50, "Informe uma altura entre 50 e 250 cm.")
         .max(250, "Informe uma altura entre 50 e 250 cm."),
     ),
-  birthDate: birthDateSchema.refine((date) => ageFromBirthDate(date) >= 18, "Contas autônomas exigem idade mínima de 18 anos."),
+  birthDate: birthDateSchema,
   trainingGoals: z
     .string()
     .trim()

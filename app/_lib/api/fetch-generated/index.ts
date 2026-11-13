@@ -1744,6 +1744,11 @@ export type StartWorkoutSession401 = {
   code: string;
 };
 
+export type StartWorkoutSession403 = {
+  error: string;
+  code: string;
+};
+
 export type StartWorkoutSession404 = {
   error: string;
   code: string;
@@ -19565,6 +19570,11 @@ export type GetSportsProfile401 = {
   code: string;
 };
 
+export type GetSportsProfile403 = {
+  error: string;
+  code: string;
+};
+
 export type GetSportsProfile404 = {
   error: string;
   code: string;
@@ -19648,6 +19658,11 @@ export type UpdateSportsProfile400 = {
 };
 
 export type UpdateSportsProfile401 = {
+  error: string;
+  code: string;
+};
+
+export type UpdateSportsProfile403 = {
   error: string;
   code: string;
 };
@@ -21261,6 +21276,11 @@ export type startWorkoutSessionResponse401 = {
   status: 401;
 };
 
+export type startWorkoutSessionResponse403 = {
+  data: StartWorkoutSession403;
+  status: 403;
+};
+
 export type startWorkoutSessionResponse404 = {
   data: StartWorkoutSession404;
   status: 404;
@@ -21287,6 +21307,7 @@ export type startWorkoutSessionResponseSuccess =
   };
 export type startWorkoutSessionResponseError = (
   | startWorkoutSessionResponse401
+  | startWorkoutSessionResponse403
   | startWorkoutSessionResponse404
   | startWorkoutSessionResponse409
   | startWorkoutSessionResponse422
@@ -32183,6 +32204,11 @@ export type getSportsProfileResponse401 = {
   status: 401;
 };
 
+export type getSportsProfileResponse403 = {
+  data: GetSportsProfile403;
+  status: 403;
+};
+
 export type getSportsProfileResponse404 = {
   data: GetSportsProfile404;
   status: 404;
@@ -32199,6 +32225,7 @@ export type getSportsProfileResponseSuccess = getSportsProfileResponse200 & {
 export type getSportsProfileResponseError = (
   | getSportsProfileResponse400
   | getSportsProfileResponse401
+  | getSportsProfileResponse403
   | getSportsProfileResponse404
   | getSportsProfileResponse500
 ) & {
@@ -32240,6 +32267,11 @@ export type updateSportsProfileResponse401 = {
   status: 401;
 };
 
+export type updateSportsProfileResponse403 = {
+  data: UpdateSportsProfile403;
+  status: 403;
+};
+
 export type updateSportsProfileResponse404 = {
   data: UpdateSportsProfile404;
   status: 404;
@@ -32257,6 +32289,7 @@ export type updateSportsProfileResponseSuccess =
 export type updateSportsProfileResponseError = (
   | updateSportsProfileResponse400
   | updateSportsProfileResponse401
+  | updateSportsProfileResponse403
   | updateSportsProfileResponse404
   | updateSportsProfileResponse500
 ) & {
