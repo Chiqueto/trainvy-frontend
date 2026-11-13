@@ -62,7 +62,7 @@ describe("front machine lat pulldown", () => {
       expect(getExerciseAnimation(null, name)).toBeNull();
     expect(
       getExerciseAnimation("00000000-0000-4000-8000-000000000120"),
-    ).toBeNull();
+    ).toBe("front-lat-pulldown");
   });
   it("retains anatomical lengths, fixed seat and feet and exact bar contact through 201 poses", () => {
     const first = getExercisePose("lat-pulldown", 0);

@@ -89,6 +89,7 @@ const FALLBACK_3D_INSTRUCTIONS: Record<
   "sumo-deadlift": SUMO_DEADLIFT_INSTRUCTIONS,
   "standing-calf": STANDING_CALF_INSTRUCTIONS,
   "seated-calf": SEATED_CALF_INSTRUCTIONS,
+  "front-lat-pulldown": LAT_PULLDOWN_INSTRUCTIONS,
   "lat-pulldown": LAT_PULLDOWN_INSTRUCTIONS,
   "hang-power-clean": HANG_POWER_CLEAN_INSTRUCTIONS,
   "goblet-squat": GOBLET_SQUAT_INSTRUCTIONS,

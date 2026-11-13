@@ -193,6 +193,7 @@ export function createTissueMaterial() {
       "standing-calf": 22,
       "seated-calf": 23,
       "hang-power-clean": 24,
+      "front-lat-pulldown": 25,
       "lat-pulldown": 25,
       "flat-dumbbell-fly": 7,
       "smith-bench-press": 5,

@@ -52,7 +52,7 @@ export function Exercise3DViewer(props: {
 }
 
 function phaseLabel(phase: number, exercise: ExerciseAnimation) {
-  if (exercise === "lat-pulldown") {
+  if ((exercise === "lat-pulldown" || exercise === "front-lat-pulldown")) {
     if(phase < 0.04 || phase >= 0.99) return "Barra junto ao alto do peito";
     if(phase < 0.48) return "Retorno controlado da barra";
     if(phase < 0.54) return "Pausa com braços alongados";
