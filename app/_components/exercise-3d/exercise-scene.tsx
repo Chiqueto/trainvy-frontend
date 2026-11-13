@@ -10,6 +10,7 @@ import {
   useGLTF,
 } from "@react-three/drei";
 import { Bone, Group, Skeleton, SkinnedMesh, type BufferGeometry } from "three";
+import { CableRowMachine, type CableRowMachineHandle } from "./cable-row-machine";
 import { LatPulldownMachine, type LatPulldownMachineHandle } from "./lat-pulldown-machine";
 import { createFlyMuscleMask } from "./fly-muscles";
 import { createPecDeckHangCleanAttribute } from "./hang-power-clean-muscles";
@@ -510,6 +511,7 @@ function Athlete({
   const leftDumbbell = useRef<Group>(null);
   const rightDumbbell = useRef<Group>(null);
   const pecDeckMachine = useRef<PecDeckMachineHandle>(null);
+  const cableRowMachine = useRef<CableRowMachineHandle>(null);
   const latPulldownMachine = useRef<LatPulldownMachineHandle>(null);
   const seatedCalfMachine = useRef<SeatedCalfMachineHandle>(null);
   const standingCalfMachine = useRef<StandingCalfMachineHandle>(null);
@@ -594,13 +596,14 @@ function Athlete({
     standingCalfMachine.current?.update(pose);
     seatedCalfMachine.current?.update(pose);
     latPulldownMachine.current?.update(pose);
+    cableRowMachine.current?.update(pose);
     rig.scene.updateMatrixWorld(true);
   });
   return (
     <>
       <primitive object={rig.scene} dispose={null} />
       {exercise === "hip-abduction" && <HipAbductionSupplement athlete={rig.scene} material={rig.material} />}
-      {(exercise === "lat-pulldown" || exercise === "front-lat-pulldown") ? <LatPulldownMachine ref={latPulldownMachine} /> : exercise === "seated-calf" ? (<SeatedCalfMachine ref={seatedCalfMachine} />) : exercise === "standing-calf" ? (
+      {exercise === "cable-row" ? <CableRowMachine ref={cableRowMachine} /> : (exercise === "lat-pulldown" || exercise === "front-lat-pulldown") ? <LatPulldownMachine ref={latPulldownMachine} /> : exercise === "seated-calf" ? (<SeatedCalfMachine ref={seatedCalfMachine} />) : exercise === "standing-calf" ? (
         <StandingCalfMachine ref={standingCalfMachine} />
       ) : exercise === "hip-abduction" ? (
         <HipAbductionMachine ref={hipAbductionMachine} />
@@ -672,6 +675,13 @@ function getCameraParams(
   exercise: ExerciseAnimation,
   view: SceneProps["view"],
 ): { position: [number, number, number]; target: [number, number, number] } {
+  if (exercise === "cable-row") {
+    const target: [number,number,number]=[-.05,.76,.45];
+    if(view === "front")return {position:[0,1.65,4.6],target};
+    if(view === "side")return {position:[3.7,1.6,.45],target};
+    if(view === "back")return {position:[0,1.7,-3.8],target};
+    return {position:[2.8,1.8,3.6],target};
+  }
   if ((exercise === "lat-pulldown" || exercise === "front-lat-pulldown")) {
     const target: [number,number,number] = [-0.1,0.98,0.15];
     if(view === "front") return {position:[0,1.6,4.2],target};

@@ -116,7 +116,7 @@ describe("hang power clean", () => {
     const mask = createHangPowerCleanMuscleMask(mesh.geometry),
       packed = createPecDeckHangCleanAttribute(mesh.geometry),
       pec = createPecDeckMuscleMask(mesh.geometry);
-    expect(packed.itemSize).toBe(3);
+    expect(packed.itemSize).toBe(4);
     for (const a of [lower, calf, arm])
       for (const s of a.selections) {
         if (/^Vastus_lateralis_muscle|^Gluteus_maximus_muscle/.test(s.name))

@@ -22,7 +22,10 @@ import { PRONE_LEG_CURL_INSTRUCTIONS } from "./prone-leg-curl-instructions";
 
 import { LAT_PULLDOWN_INSTRUCTIONS } from "./lat-pulldown-instructions";
 
+import { CABLE_ROW_INSTRUCTIONS } from "./cable-row-instructions";
+
 export type ExerciseAnimation =
+  | "cable-row"
   | "front-lat-pulldown"
   | "lat-pulldown"
   | "hang-power-clean"
@@ -67,6 +70,7 @@ export interface ExerciseDefinition {
 }
 
 export const EXERCISE_ANIMATIONS = {
+  "cable-row": { name:"Remada Baixa no Cabo com Triângulo", id:"120f29ac-733c-478b-8aa9-a3f4c22f5e70", equipment:"Polia baixa com triângulo, banco e plataforma para os pés", instructions:CABLE_ROW_INSTRUCTIONS, muscles:{primary:["Latíssimo do dorso e redondo maior","Trapézio médio e romboides"],secondary:["Bíceps, braquial e braquiorradial","Deltoide posterior e infraespinal","Trapézio superior/inferior","Pegada, abdominais e eretores"]} },
   "front-lat-pulldown": { name: "Puxada Frontal", id: "00000000-0000-4000-8000-000000000120", equipment: "Polia alta com barra, pegada pronada e apoio das coxas", instructions: LAT_PULLDOWN_INSTRUCTIONS, muscles: { primary: ["Latíssimo do dorso", "Redondo maior"], secondary: ["Bíceps, braquial e braquiorradial", "Trapézio e romboides", "Deltoide posterior e infraespinal", "Músculos da pegada", "Abdominais e eretores da coluna"] } },
   "lat-pulldown": { name: "Puxada Frontal na Máquina", id: "00000000-0000-4000-8000-000000000119", equipment: "Polia alta, barra com pegada pronada e apoio sobre as coxas", instructions: LAT_PULLDOWN_INSTRUCTIONS, muscles: { primary: ["Latíssimo do dorso", "Redondo maior"], secondary: ["Bíceps, braquial e braquiorradial", "Trapézio e romboides", "Deltoide posterior e infraespinal", "Músculos da pegada", "Abdominais e eretores da coluna"] } },
   "hang-power-clean": {name:"Hang Power Clean",equipment:"Barra livre, início suspenso acima dos joelhos e recepção em agachamento parcial",id:"1b7764ca-1826-488e-8734-fc88117ed9dd",instructions:HANG_POWER_CLEAN_INSTRUCTIONS,muscles:{primary:["Quadríceps","Glúteo máximo","Isquiotibiais"],secondary:["Panturrilhas","Trapézio, dorsal e eretores","Deltoide anterior","Bíceps e músculos da pegada","Abdominais e adutor magno"]}},
@@ -290,6 +294,7 @@ export function getExerciseAnimation(
   if (id === EXERCISE_ANIMATIONS.stiff.id) return "stiff";
   if (id === EXERCISE_ANIMATIONS.deadlift.id) return "deadlift";
   if (id === EXERCISE_ANIMATIONS["sumo-deadlift"].id) return "sumo-deadlift";
+  if (id === EXERCISE_ANIMATIONS["cable-row"].id) return "cable-row";
   if (id === EXERCISE_ANIMATIONS["front-lat-pulldown"].id) return "front-lat-pulldown";
   if (id === EXERCISE_ANIMATIONS["lat-pulldown"].id) return "lat-pulldown";
   if (id === EXERCISE_ANIMATIONS["hang-power-clean"].id) return "hang-power-clean";
@@ -340,6 +345,7 @@ export function getExerciseAnimation(
     if (["stiff", "stiff com barra", "stiff-leg deadlift", "stiff leg deadlift", "levantamento terra com pernas quase estendidas"].includes(normalized)) return "stiff";
     if (["levantamento terra", "levantamento terra convencional", "levantamento terra com barra", "deadlift", "conventional deadlift"].includes(normalized)) return "deadlift";
     if (["levantamento terra sumo", "terra sumo", "sumo deadlift", "sumo barbell deadlift"].includes(normalized)) return "sumo-deadlift";
+    if (["remada baixa no cabo com triangulo","remada baixa no triangulo","seated cable row with triangle"].includes(normalized)) return "cable-row";
     if (normalized === "puxada frontal") return "front-lat-pulldown";
     if (["puxada frontal na maquina", "puxada frontal na polia alta com pegada pronada"].includes(normalized)) return "lat-pulldown";
     if (["hang power clean","hang power clean com barra"].includes(normalized)) return "hang-power-clean";

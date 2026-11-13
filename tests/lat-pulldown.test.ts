@@ -133,7 +133,7 @@ describe("front machine lat pulldown", () => {
       packed = createPecDeckHangCleanAttribute(mesh.geometry),
       pec = createPecDeckMuscleMask(mesh.geometry),
       clean = createHangPowerCleanMuscleMask(mesh.geometry);
-    expect(packed.itemSize).toBe(3);
+    expect(packed.itemSize).toBe(4);
     let mismatches = 0;
     for (let i = 0; i < mask.count; i++)
       if (

@@ -23,6 +23,7 @@ import type { GetExerciseMedia200 } from "@/app/_lib/api/fetch-generated";
 import { Button } from "@/components/ui/button";
 
 const LAB_MEDIA_DATA: Record<ExerciseAnimation, GetExerciseMedia200> = {
+  "cable-row": {exerciseId:EXERCISE_ANIMATIONS["cable-row"].id,hasMedia:false,mediaType:null,startImagePath:null,endImagePath:null,motionPath:null,attributionName:null,attributionUrl:null,instructions:EXERCISE_ANIMATIONS["cable-row"].instructions},
   "front-lat-pulldown": { exerciseId: EXERCISE_ANIMATIONS["front-lat-pulldown"].id, hasMedia:false, mediaType:null, startImagePath:null, endImagePath:null, motionPath:null, attributionName:null, attributionUrl:null, instructions:EXERCISE_ANIMATIONS["front-lat-pulldown"].instructions },
   "lat-pulldown": { exerciseId: EXERCISE_ANIMATIONS["lat-pulldown"].id, hasMedia:false, mediaType:null, startImagePath:null, endImagePath:null, motionPath:null, attributionName:null, attributionUrl:null, instructions:EXERCISE_ANIMATIONS["lat-pulldown"].instructions },
   "hang-power-clean": {exerciseId:EXERCISE_ANIMATIONS["hang-power-clean"].id,hasMedia:false,mediaType:null,startImagePath:null,endImagePath:null,motionPath:null,attributionName:null,attributionUrl:null,instructions:EXERCISE_ANIMATIONS["hang-power-clean"].instructions},
@@ -200,6 +201,7 @@ export default function Exercise3DLab() {
       cues: string[];
     }
   > = {
+    "cable-row": {primary:EXERCISE_ANIMATIONS["cable-row"].muscles.primary.join(", "),secondary:EXERCISE_ANIMATIONS["cable-row"].muscles.secondary.join(", "),cadence:"Retorno controlado, pausa alongado e puxada suave.",cues:["Pés apoiados na plataforma.","Cotovelos próximos e punhos neutros.","Triângulo ao abdômen, sem embalar o tronco."]},
     "front-lat-pulldown": { primary:EXERCISE_ANIMATIONS["front-lat-pulldown"].muscles.primary.join(", "), secondary:EXERCISE_ANIMATIONS["front-lat-pulldown"].muscles.secondary.join(", "), cadence:"Retorno controlado, pausa e puxada suave.", cues:["Pés apoiados e coxas presas.","Barra à frente do rosto, sem embalar o tronco."] },
     "lat-pulldown": { primary: EXERCISE_ANIMATIONS["lat-pulldown"].muscles.primary.join(", "), secondary: EXERCISE_ANIMATIONS["lat-pulldown"].muscles.secondary.join(", "), cadence: "Retorno controlado, pausa com braços alongados e puxada suave.", cues: ["Coxas apoiadas e pés no chão.", "Cotovelos descem com punhos alinhados.", "Barra à frente do rosto até o alto do peito, sem embalar o tronco."] },
     "sumo-dumbbell-squat": { primary: EXERCISE_ANIMATIONS["sumo-dumbbell-squat"].muscles.primary.join(", "), secondary: EXERCISE_ANIMATIONS["sumo-dumbbell-squat"].muscles.secondary.join(", "), cadence: "Descida controlada, pausa breve e subida suave.", cues: ["Base ampla, pés apoiados e joelhos acompanhando as pontas.", "Halter suspenso entre as pernas e braços alongados.", "Mantenha o tronco estável e não apoie a carga no chão."] },
