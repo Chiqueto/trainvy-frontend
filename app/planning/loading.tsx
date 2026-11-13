@@ -4,7 +4,7 @@ export default function PlanningLoading() {
   return (
     <div className="flex min-h-svh flex-col bg-background pb-28">
       {/* Header Skeleton */}
-      <header className="sticky top-0 z-30 flex flex-col gap-3 border-b border-border/60 bg-background/95 px-5 py-4 backdrop-blur-md">
+      <header className="trainvy-page sticky top-0 z-30 flex flex-col gap-3 border-b border-border/60 bg-background/95 px-5 py-4 backdrop-blur-md">
         <div className="flex items-center justify-between">
           <div className="h-6 w-20 animate-pulse rounded-md bg-muted" />
           <div className="h-8 w-20 animate-pulse rounded-full bg-muted" />
@@ -15,7 +15,7 @@ export default function PlanningLoading() {
         </div>
       </header>
 
-      <main className="flex flex-col gap-6 p-5">
+      <main className="trainvy-page flex flex-col gap-6 p-5">
         {/* Ativo agora Skeleton */}
         <section className="flex flex-col gap-3">
           <div className="h-3.5 w-24 animate-pulse rounded-md bg-muted" />

@@ -50,7 +50,7 @@ export default async function PersonalPage() {
   if (!commercialRes.data.professionalAccessGranted)
     return (
       <div className="personal-workspace min-h-svh bg-background pb-24">
-        <main className="mx-auto max-w-lg p-5 space-y-5">
+        <main className="trainvy-page mx-auto p-5 space-y-5">
           <PersonalHeader />
           <LegalConsent />
           <ProfessionalRegistrationForm registration={registration} />
@@ -65,7 +65,7 @@ export default async function PersonalPage() {
   if (!hasManageAthletes) {
     return (
       <div className="personal-workspace flex min-h-svh min-w-0 flex-col bg-background pb-24 lg:pb-8">
-        <main className="mx-auto w-full max-w-lg px-5 py-4 flex flex-col gap-5">
+        <main className="trainvy-page mx-auto w-full px-5 py-4 flex flex-col gap-5">
           <PersonalHeader />
           <CoachPendingSubscriptionCard
             planName={plan?.name}
@@ -85,7 +85,7 @@ export default async function PersonalPage() {
   if (athletesRes?.status !== 200 || invitationsRes?.status !== 200)
     return (
       <div className="personal-workspace min-h-svh bg-background pb-24">
-        <main className="mx-auto w-full max-w-6xl space-y-5 px-5 py-4">
+        <main className="trainvy-page mx-auto w-full space-y-5 px-5 py-4">
           <PersonalHeader />
           <WorkspaceError message="Não foi possível carregar alunos e convites." />
         </main>
@@ -105,7 +105,7 @@ export default async function PersonalPage() {
 
   return (
     <div className="personal-workspace flex min-h-svh min-w-0 flex-col bg-background pb-24 lg:pb-8">
-      <main className="mx-auto w-full max-w-6xl px-5 py-4 flex flex-col gap-5">
+      <main className="trainvy-page mx-auto w-full px-5 py-4 flex flex-col gap-5">
         <PersonalHeader
           actions={
             <>

@@ -81,7 +81,7 @@ export default async function StatsPage() {
   return (
     <div className="flex min-h-svh flex-col bg-background pb-28">
       {/* Header Mobile-First alinhado à esquerda como nas demais abas */}
-      <header className="sticky top-0 z-30 flex flex-col gap-3 border-b border-border/60 bg-background/95 px-5 py-4 backdrop-blur-md">
+      <header className="trainvy-page sticky top-0 z-30 flex flex-col gap-3 border-b border-border/60 bg-background/95 px-5 py-4 backdrop-blur-md">
         <div className="flex items-center justify-between">
           <Logo size="md" asLink />
         </div>
@@ -96,7 +96,7 @@ export default async function StatsPage() {
         </div>
       </header>
 
-      <main className="flex flex-col gap-6 p-5">
+      <main className="trainvy-page flex flex-col gap-6 p-5">
         <EvolutionDashboard />
 
         <BodyMetricsEvolution

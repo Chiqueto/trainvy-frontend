@@ -69,7 +69,7 @@ export default async function PersonalTemplatesPage() {
 
   return (
     <div className="personal-workspace flex min-h-svh min-w-0 flex-col bg-background pb-28 lg:pb-8">
-      <main className="mx-auto w-full max-w-5xl px-4 sm:px-6 py-6 flex flex-col gap-6">
+      <main className="trainvy-page mx-auto w-full px-4 sm:px-6 py-6 flex flex-col gap-6">
         <PersonalHeader
           title="Modelos de Treino"
           description="Sua biblioteca de rotinas reutilizáveis. Use um modelo como ponto de partida e adapte a prescrição para cada aluno."

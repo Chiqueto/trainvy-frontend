@@ -16,7 +16,7 @@ export default async function VerificationPage() {
   const registration = await getProfessionalRegistration({ cache: "no-store" });
   return (
     <div className="personal-workspace min-h-svh bg-background pb-24 lg:pb-8">
-      <main className="mx-auto w-full max-w-2xl p-5 space-y-5">
+      <main className="trainvy-page mx-auto w-full p-5 space-y-5">
         <Link
           className="inline-flex min-h-10 items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground"
           href="/profile"

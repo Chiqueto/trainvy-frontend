@@ -4,11 +4,11 @@ export default function ProfileLoading() {
   return (
     <div className="flex min-h-svh flex-col bg-background pb-28">
       {/* Header */}
-      <div className="flex h-[56px] items-center px-5">
+      <div className="trainvy-page flex h-[56px] items-center px-5">
         <div className="h-6 w-24 animate-pulse rounded bg-muted/60" />
       </div>
 
-      <main className="flex flex-col items-center gap-5 px-5 pt-5">
+      <main className="trainvy-page flex flex-col items-center gap-5 px-5 pt-5">
         {/* User Card Skeleton */}
         <div className="flex w-full items-center justify-between">
           <div className="flex items-center gap-3">

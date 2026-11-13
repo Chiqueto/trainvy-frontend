@@ -1,7 +1,7 @@
 export default function StatsLoading() {
   return (
-    <div className="min-h-svh animate-pulse bg-background px-4 pb-24 pt-5 sm:px-6">
-      <div className="mx-auto w-full max-w-3xl">
+    <div className="min-h-svh animate-pulse bg-background pb-24 pt-5">
+      <div className="trainvy-page">
         <div className="h-6 w-20 rounded bg-muted" />
         <div className="mt-7 h-8 w-36 rounded bg-muted" />
         <div className="mt-2 h-4 w-64 max-w-full rounded bg-muted/70" />

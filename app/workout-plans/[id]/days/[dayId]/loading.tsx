@@ -23,7 +23,7 @@ export default function WorkoutDayLoading() {
       </div>
 
       {/* Exercises List Skeleton */}
-      <main className="flex flex-col gap-3 p-5">
+      <main className="trainvy-page flex flex-col gap-3 p-5">
         <div className="h-4 w-32 animate-pulse rounded bg-muted/60" />
 
         <div className="flex flex-col gap-3">

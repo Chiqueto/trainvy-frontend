@@ -150,7 +150,7 @@ export function HistoryTimeline({
         : "Nenhum treino concluído ainda";
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 pb-6 pt-4 sm:px-6">
+    <div className="trainvy-page px-4 pb-6 pt-4 sm:px-6">
       <div className="mb-2">
         <Link
           href="/"

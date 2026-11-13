@@ -453,7 +453,7 @@ export function TacticalBuilderArena({
             onDragEnd={dropped}
             onDragCancel={clearDrag}
           >
-            <header className="flex h-14 shrink-0 items-center gap-1.5 border-b border-white/10 bg-zinc-950 px-2 sm:gap-2 sm:px-3">
+            <header className="flex min-h-14 shrink-0 flex-wrap items-center gap-1.5 border-b border-white/10 bg-zinc-950 px-2 py-2 sm:gap-2 sm:px-3">
               {title}
               <div className="min-w-0 max-w-20 sm:max-w-40">{navigation}</div>
               <TrainingBioPanel data={data} />

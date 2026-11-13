@@ -390,6 +390,7 @@ export function SpatialBuilderArena({
         reviewLabel={reviewLabel}
         planName={planName}
         onPlanNameChange={onPlanNameChange}
+        onDayNameChange={(name) => onChange({ name })}
         planNameMaxLength={planNameMaxLength}
         onClassicView={onClassicView}
         onOpenSettings={onOpenSettings}

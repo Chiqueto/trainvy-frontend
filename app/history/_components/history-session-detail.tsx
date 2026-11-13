@@ -38,7 +38,7 @@ export function HistorySessionDetail({
   const title = getHistorySessionTitle(session);
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 pb-8 pt-4 sm:px-6">
+    <main className="trainvy-page mx-auto w-full px-4 pb-8 pt-4 sm:px-6">
       <Link
         href="/history"
         className="inline-flex min-h-10 items-center gap-1.5 rounded-lg pr-3 font-heading text-sm text-muted-foreground outline-none transition hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"

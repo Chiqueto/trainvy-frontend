@@ -45,7 +45,7 @@ export default async function PersonalCustomExercisesPage() {
 
   return (
     <div className="personal-workspace flex min-h-svh min-w-0 flex-col bg-background pb-28 lg:pb-8">
-      <main className="mx-auto w-full max-w-4xl px-4 sm:px-6 py-6 flex flex-col gap-6">
+      <main className="trainvy-page mx-auto w-full px-4 sm:px-6 py-6 flex flex-col gap-6">
         <PersonalHeader
           title="Exercícios Personalizados"
           description="Cadastre variações exclusivas, configure músculos principais e secundários, e utilize-os em todos os seus treinos e modelos."

@@ -5,7 +5,7 @@ import { BottomNav } from "@/app/_components/bottom-nav";
 export default function AthleteDetailsLoading() {
   return (
     <div className="personal-workspace flex min-h-svh min-w-0 flex-col bg-background pb-24 lg:pb-8">
-      <main className="mx-auto w-full max-w-lg px-5 py-4 flex flex-col gap-5">
+      <main className="trainvy-page mx-auto w-full px-5 py-4 flex flex-col gap-5">
         <div className="flex items-center justify-between">
           <Link
             href="/personal"

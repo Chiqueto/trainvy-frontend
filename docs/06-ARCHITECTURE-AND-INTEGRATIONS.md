@@ -18,6 +18,19 @@ Manter os dois repositórios separados.
 
 ## Frontend
 
+### Largura das telas do aplicativo
+
+Os contêineres de conteúdo usam `.trainvy-page`: largura fluida de 100% da área
+disponível, sem limite fixo, com margens internas de 20px no mobile e 32px a partir
+de 768px. A navegação lateral continua reservando seu espaço no desktop.
+Aplicar o mesmo contêiner às telas de carregamento e aos cabeçalhos com conteúdo
+alinhado à página. Cards, diálogos e formulários de autenticação mantêm dimensões
+próprias; não aplicar o contêiner de página dentro de cards.
+
+O editor por deck permite renomear o plano e o treino ativo diretamente no
+cabeçalho. Os nomes compartilham o estado com as configurações, o editor clássico
+e o payload de salvamento dos planos, modelos e prescrições.
+
 ### Capas de treinos e planos
 
 `WorkoutCover` é um fundo decorativo compartilhado entre Home (card do treino),

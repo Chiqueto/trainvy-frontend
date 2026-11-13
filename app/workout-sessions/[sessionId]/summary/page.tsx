@@ -156,7 +156,7 @@ export default async function WorkoutSummaryPage({
         </span>
       </header>
 
-      <main className="mx-auto flex w-full max-w-lg flex-col gap-5 p-5">
+      <main className="trainvy-page mx-auto flex w-full flex-col gap-5 p-5">
         {/* Celebration Hero Card */}
         <div className="relative overflow-hidden rounded-3xl border border-primary/30 bg-gradient-to-b from-primary/15 via-card to-card p-6 text-center shadow-lg">
           <div

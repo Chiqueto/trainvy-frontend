@@ -77,7 +77,7 @@ export default async function WorkoutPlanPage({
 
   return (
     <div className="flex min-h-svh flex-col bg-background pb-24">
-      <div className="relative flex h-[296px] shrink-0 flex-col items-start justify-between overflow-hidden rounded-b-[20px] px-5 pb-10 pt-5">
+      <div className="trainvy-page relative flex h-[296px] shrink-0 flex-col items-start justify-between overflow-hidden rounded-b-[20px] px-5 pb-10 pt-5">
         <WorkoutCover
           src="/workout-plan-banner.png"
           name={name}
@@ -112,7 +112,7 @@ export default async function WorkoutPlanPage({
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 p-5">
+      <div className="trainvy-page flex flex-col gap-3 p-5">
         <Link
           href={`/planning/plans/${id}/edit`}
           className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-border bg-card px-4 text-sm font-semibold"

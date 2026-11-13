@@ -83,7 +83,7 @@ export default async function PeriodizationDetailPage({
   return (
     <div className="flex min-h-svh flex-col bg-background pb-28">
       {/* Top bar with back button */}
-      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border/60 bg-background/95 px-5 py-4 backdrop-blur-md">
+      <header className="trainvy-page sticky top-0 z-30 flex items-center justify-between border-b border-border/60 bg-background/95 px-5 py-4 backdrop-blur-md">
         <Link
           href="/planning"
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground transition hover:text-foreground"
@@ -94,7 +94,7 @@ export default async function PeriodizationDetailPage({
         <Logo size="sm" asLink />
       </header>
 
-      <main className="flex flex-col gap-6 p-5">
+      <main className="trainvy-page flex flex-col gap-6 p-5">
         {/* Info do Ciclo */}
         <section className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5 shadow-xs">
           <div className="flex items-start justify-between gap-3">

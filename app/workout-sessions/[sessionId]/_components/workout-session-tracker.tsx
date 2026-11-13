@@ -368,7 +368,7 @@ export function WorkoutSessionTracker({
   };
 
   return (
-    <div className="flex flex-col gap-5 p-5">
+    <div className="trainvy-page flex flex-col gap-5 p-5">
       {/* Banner de Conclusão / Acesso à Tela Bonitinha */}
       {isReadOnly && (
         <div className="flex items-center justify-between gap-3 rounded-2xl border border-primary/30 bg-gradient-to-r from-primary/15 via-primary/5 to-card p-4 shadow-sm">

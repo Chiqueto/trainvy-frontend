@@ -118,7 +118,7 @@ export async function TrainingHome({
 
   return (
     <div className="flex min-h-svh flex-col bg-background pb-24">
-      <div className="relative flex h-[296px] shrink-0 flex-col items-start justify-between overflow-hidden rounded-b-[20px] px-5 pb-10 pt-5">
+      <div className="trainvy-page relative flex h-[296px] shrink-0 flex-col items-start justify-between overflow-hidden rounded-b-[20px] px-5 pb-10 pt-5">
         <div className="absolute inset-0" aria-hidden="true">
           <Image
             src="/home-banner.jpg"
@@ -179,7 +179,7 @@ export async function TrainingHome({
       </div>
 
       {activeSession && (
-        <div className="px-5 pt-5">
+        <div className="trainvy-page px-5 pt-5">
           <div className="flex flex-col gap-3 rounded-2xl border border-primary/40 bg-primary/10 p-4 shadow-sm">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -218,11 +218,11 @@ export async function TrainingHome({
         </div>
       )}
 
-      <div className="px-5 pt-4">
+      <div className="trainvy-page px-5 pt-4">
         <StartFreeWorkoutButton hasActiveSession={!!activeSession} />
       </div>
 
-      <div className="flex flex-col gap-3 px-5 pt-5">
+      <div className="trainvy-page flex flex-col gap-3 px-5 pt-5">
         <div className="flex items-center justify-between">
           <h2 className="font-heading text-lg font-semibold text-foreground">
             Consistência
@@ -252,7 +252,7 @@ export async function TrainingHome({
       </div>
 
       {todayWorkoutDay ? (
-        <div className="flex flex-col gap-3 p-5">
+        <div className="trainvy-page flex flex-col gap-3 p-5">
           <div className="flex items-center justify-between">
             <div className="flex flex-col">
               <h2 className="font-heading text-lg font-semibold text-foreground">
@@ -303,7 +303,7 @@ export async function TrainingHome({
           </Link>
         </div>
       ) : !activeWorkoutPlanId ? (
-        <div className="flex flex-col gap-3 p-5">
+        <div className="trainvy-page flex flex-col gap-3 p-5">
           <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-border bg-card p-6 text-center">
             <div className="flex flex-col gap-1">
               <h2 className="font-heading text-base font-semibold text-foreground">

@@ -8,7 +8,7 @@ export default function WorkoutSummaryLoading() {
         <div className="size-9" />
       </div>
 
-      <main className="flex flex-col gap-6 p-5">
+      <main className="trainvy-page flex flex-col gap-6 p-5">
         {/* Celebration Card Skeleton */}
         <div className="h-56 w-full rounded-3xl border border-border/60 bg-card/60 p-6 flex flex-col items-center justify-center gap-3">
           <div className="size-16 rounded-full bg-muted/70" />

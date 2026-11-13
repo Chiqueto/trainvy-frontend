@@ -65,6 +65,7 @@ export interface HoloHudProps {
   reviewLabel?: string;
   planName?: string;
   onPlanNameChange?: (name: string) => void;
+  onDayNameChange?: (name: string) => void;
   planNameMaxLength?: number;
   saveLabel?: string;
   disabled?: boolean;
@@ -91,6 +92,7 @@ export function HoloHud({
   reviewLabel,
   planName,
   onPlanNameChange,
+  onDayNameChange,
   planNameMaxLength = 120,
   saveLabel = "Salvar plano",
   disabled,
@@ -211,9 +213,19 @@ export function HoloHud({
           data-tour="builder-days"
           className="flex min-w-0 items-center gap-3 border-t border-white/5 px-3 py-2 sm:px-6"
         >
-          <span className="hidden text-[10px] uppercase tracking-[0.18em] text-slate-500 sm:block">
-            Divisão
-          </span>
+          {onDayNameChange && days[activeDayIndex] && (
+            <label className="block w-32 min-w-0 shrink-0 sm:w-52">
+              <span className="sr-only">Nome do treino</span>
+              <input
+                value={days[activeDayIndex].name}
+                onChange={(event) => onDayNameChange(event.target.value)}
+                disabled={disabled}
+                placeholder="Ex.: Superiores A"
+                title="Nome do treino ativo"
+                className="h-9 w-full min-w-0 rounded-lg border border-white/10 bg-white/[0.03] px-2 text-xs text-white outline-none focus:border-cyan-300/60"
+              />
+            </label>
+          )}
           <div
             role="tablist"
             aria-label="Treinos do plano"

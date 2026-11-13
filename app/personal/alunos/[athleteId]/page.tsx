@@ -101,7 +101,7 @@ export default async function AthleteDetailsPage({
   if (fetchErrorStatus === 403) {
     return (
       <div className="personal-workspace flex min-h-svh min-w-0 flex-col bg-background pb-24 lg:pb-8">
-        <main className="mx-auto w-full max-w-lg px-5 py-16 flex flex-col items-center text-center gap-4">
+        <main className="trainvy-page mx-auto w-full px-5 py-16 flex flex-col items-center text-center gap-4">
           <div className="flex size-14 items-center justify-center rounded-2xl bg-destructive/10 text-destructive mb-2">
             <ShieldAlert className="size-7" />
           </div>
@@ -130,7 +130,7 @@ export default async function AthleteDetailsPage({
   if (!athleteData || (fetchErrorStatus && fetchErrorStatus >= 500)) {
     return (
       <div className="personal-workspace flex min-h-svh min-w-0 flex-col bg-background pb-24 lg:pb-8">
-        <main className="mx-auto w-full max-w-lg px-5 py-16 flex flex-col items-center text-center gap-4">
+        <main className="trainvy-page mx-auto w-full px-5 py-16 flex flex-col items-center text-center gap-4">
           <div className="flex size-14 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-500 mb-2">
             <AlertCircle className="size-7" />
           </div>
@@ -184,7 +184,7 @@ export default async function AthleteDetailsPage({
 
   return (
     <div className="personal-workspace flex min-h-svh min-w-0 flex-col bg-background pb-24 lg:pb-8">
-      <main className="mx-auto w-full max-w-6xl px-5 py-4 flex flex-col gap-5">
+      <main className="trainvy-page mx-auto w-full px-5 py-4 flex flex-col gap-5">
         {/* Header com Navegação de Retorno */}
         <div className="flex items-center justify-between">
           <Link

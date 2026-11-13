@@ -49,7 +49,7 @@ export default async function WorkoutSessionPage({
   if (sessionResponse.status === 404) {
     return (
       <div className="flex min-h-svh flex-col bg-background pb-24">
-        <div className="flex items-center justify-between px-5 py-4 border-b border-border/40">
+        <div className="trainvy-page flex items-center justify-between px-5 py-4 border-b border-border/40">
           <BackButton />
           <h1 className="font-heading text-lg font-semibold text-foreground">
             Sessão de Treino
@@ -81,7 +81,7 @@ export default async function WorkoutSessionPage({
   if (sessionResponse.status !== 200 || !sessionResponse.data) {
     return (
       <div className="flex min-h-svh flex-col bg-background pb-24">
-        <div className="flex items-center justify-between px-5 py-4 border-b border-border/40">
+        <div className="trainvy-page flex items-center justify-between px-5 py-4 border-b border-border/40">
           <BackButton />
           <h1 className="font-heading text-lg font-semibold text-foreground">
             Sessão de Treino
@@ -123,7 +123,7 @@ export default async function WorkoutSessionPage({
   return (
     <div className="flex min-h-svh flex-col bg-background pb-24">
       {/* Top Header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-border/40">
+      <div className="trainvy-page flex items-center justify-between px-5 py-4 border-b border-border/40">
         <BackButton />
         <h1 className="font-heading text-lg font-semibold text-foreground">
           Sessão de Treino

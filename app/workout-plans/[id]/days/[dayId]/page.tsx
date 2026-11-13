@@ -92,7 +92,7 @@ export default async function WorkoutDayPage({
 
   return (
     <div className="flex min-h-svh flex-col bg-background pb-24">
-      <div className="flex items-center justify-between px-5 py-4">
+      <div className="trainvy-page flex items-center justify-between px-5 py-4">
         <BackButton />
         <h1 className="font-heading text-lg font-semibold text-foreground">
           {hasInProgressSession || hasCompletedSession
@@ -103,7 +103,7 @@ export default async function WorkoutDayPage({
         <div className="size-6" />
       </div>
 
-      <div className="px-5">
+      <div className="trainvy-page px-5">
         <div className="relative flex h-[200px] w-full flex-col items-start justify-between overflow-hidden rounded-2xl p-5 shadow-sm">
           <WorkoutCover src={coverImageUrl} name={name} />
 
@@ -165,7 +165,7 @@ export default async function WorkoutDayPage({
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 px-5 pt-5">
+      <div className="trainvy-page flex flex-col gap-3 px-5 pt-5">
         {exercises
           .sort((a, b) => a.order - b.order)
           .map((exercise) => (
@@ -174,7 +174,7 @@ export default async function WorkoutDayPage({
       </div>
 
       {hasInProgressSession && inProgressSession && (
-        <div className="flex flex-col gap-2.5 px-5 pt-5">
+        <div className="trainvy-page flex flex-col gap-2.5 px-5 pt-5">
           <Link
             href={`/workout-sessions/${inProgressSession.id}`}
             className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary py-3.5 font-heading text-sm font-semibold text-primary-foreground shadow-md transition hover:bg-primary/90 active:scale-95"

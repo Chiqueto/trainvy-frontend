@@ -13,7 +13,7 @@ export default async function PrescriptionArchive() {
     throw new Error("Não foi possível carregar o arquivo de prescrições.");
   return (
     <div className="personal-workspace min-h-svh bg-background pb-24 lg:pb-8">
-      <main className="mx-auto w-full max-w-4xl space-y-5 p-5">
+      <main className="trainvy-page mx-auto w-full space-y-5 p-5">
         <Link
           className="inline-flex min-h-10 items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground"
           href="/personal"

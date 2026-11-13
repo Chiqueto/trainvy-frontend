@@ -76,12 +76,12 @@ export default async function ProfilePage() {
 
   return (
     <div className="flex min-h-svh flex-col bg-background pb-24">
-      <div className="flex h-[56px] items-center justify-between px-5">
+      <div className="trainvy-page flex h-[56px] items-center justify-between px-5">
         <Logo size="md" asLink />
         <ThemeToggle />
       </div>
 
-      <div className="flex flex-col items-center gap-5 px-5 pt-5">
+      <div className="trainvy-page flex flex-col items-center gap-5 px-5 pt-5">
         <div className="flex w-full items-center justify-between">
           <div className="flex items-center gap-3">
             <Avatar className="size-[52px]">

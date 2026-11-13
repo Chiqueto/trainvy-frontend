@@ -83,7 +83,7 @@ export function ExerciseEvolutionDetail({
         <Logo size="sm" asLink />
       </div>
 
-      <main className="mx-auto w-full max-w-xl px-5 pt-5 pb-8">
+      <main className="trainvy-page mx-auto w-full px-5 pt-5 pb-8">
         {/* Cabeçalho do Exercício */}
         <header className="flex flex-col gap-2">
           <h1 className="font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">

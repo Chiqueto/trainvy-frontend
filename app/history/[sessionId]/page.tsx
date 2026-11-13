@@ -37,7 +37,7 @@ export default async function HistorySessionPage({
   return (
     <div className="min-h-svh bg-background pb-24">
       <HistorySessionDetail session={response.data} />
-      <div className="mx-auto max-w-3xl px-5 pb-5">
+      <div className="trainvy-page px-5 pb-5">
         <Button
           asChild
           variant="outline"

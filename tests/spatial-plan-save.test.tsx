@@ -259,10 +259,17 @@ describe("Spatial plan editor and save parity", () => {
   it("keeps names and day organization consistent with classic view and saves edits through the original action", async () => {
     render(<WorkoutPlanBuilder mode="edit" initialPlan={plan} />);
     fireEvent.change(header(), { target: { value: "Plano atualizado" } });
-    const dialog = openSettings();
-    fireEvent.change(within(dialog).getByLabelText("Nome do treino"), {
+    fireEvent.change(screen.getByRole("textbox", { name: "Nome do treino" }), {
       target: { value: "Treino de superiores" },
     });
+    expect(
+      screen.getByRole("tab", { name: "Treino de superiores" }),
+    ).toBeDefined();
+    const dialog = openSettings();
+    expect(
+      (within(dialog).getByLabelText("Nome do treino") as HTMLInputElement)
+        .value,
+    ).toBe("Treino de superiores");
     fireEvent.change(within(dialog).getByLabelText("Duração (min)"), {
       target: { value: "42" },
     });

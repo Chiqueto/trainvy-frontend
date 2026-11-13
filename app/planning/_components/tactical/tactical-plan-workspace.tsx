@@ -258,7 +258,7 @@ export function TacticalPlanWorkspace({
                     >
                       <ArrowLeft size={16} />
                     </button>
-                    <div className="hidden min-w-0 w-36 xl:block">
+                    <div className="min-w-0 w-32 sm:w-36">
                       <span className="text-xs font-semibold">
                         Montar Plano
                       </span>

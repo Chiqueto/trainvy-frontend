@@ -21,7 +21,7 @@ export default function WorkoutPlanLoading() {
       </div>
 
       {/* Days list */}
-      <main className="flex flex-col gap-4 p-5">
+      <main className="trainvy-page flex flex-col gap-4 p-5">
         <div className="flex items-center justify-between">
           <div className="h-4 w-32 animate-pulse rounded bg-muted/60" />
           <div className="h-4 w-16 animate-pulse rounded bg-muted/50" />

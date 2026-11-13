@@ -90,7 +90,7 @@ export async function AdminDashboardLayout({
         </div>
       </aside>
 
-      <main className="mx-auto w-full min-w-0 max-w-6xl space-y-6 px-4 py-6 md:p-8">
+      <main className="trainvy-page mx-auto w-full min-w-0 space-y-6 px-4 py-6 md:p-8">
         {children}
       </main>
     </div>

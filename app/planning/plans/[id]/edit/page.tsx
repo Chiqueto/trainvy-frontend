@@ -23,7 +23,7 @@ export default async function EditPlanPage({
     throw new Error("Não foi possível carregar o plano para edição.");
   return (
     <div className="min-h-svh bg-background pb-12">
-      <header className="border-b border-border px-5 py-4">
+      <header className="trainvy-page border-b border-border px-5 py-4">
         <Link
           href={`/workout-plans/${id}`}
           className="inline-flex min-h-11 items-center gap-2 text-sm"
@@ -32,7 +32,7 @@ export default async function EditPlanPage({
           Voltar ao plano
         </Link>
       </header>
-      <main className="mx-auto flex max-w-3xl flex-col gap-5 p-5">
+      <main className="trainvy-page mx-auto flex flex-col gap-5 p-5">
         <h1 className="font-heading text-2xl font-bold">Editar plano</h1>
         <WorkoutPlanBuilder
           key={response.data.id}
