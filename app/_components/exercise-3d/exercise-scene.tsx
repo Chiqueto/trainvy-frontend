@@ -13,7 +13,7 @@ import { Bone, Group, Skeleton, SkinnedMesh, type BufferGeometry } from "three";
 import { MachineRowMachine, type MachineRowMachineHandle } from "./machine-row-machine";
 import { CableRowMachine, type CableRowMachineHandle } from "./cable-row-machine";
 import { LatPulldownMachine, type LatPulldownMachineHandle } from "./lat-pulldown-machine";
-import { createFlyMachineRowAttribute } from "./machine-row-muscles";
+import { createFlyMachineBentRowAttribute } from "./bent-row-muscles";
 import { createPecDeckHangCleanAttribute } from "./hang-power-clean-muscles";
 import { HipAbductionSupplement } from "./hip-abduction-supplement";
 import { HipThrustBench, HipThrustBarPad } from "./hip-thrust-bench";
@@ -536,7 +536,7 @@ function Athlete({
       if (object instanceof SkinnedMesh) {
         object.geometry = object.geometry.clone();
         object.geometry.setAttribute("_pecdeckmuscles",createPecDeckHangCleanAttribute(object.geometry));
-        object.geometry.setAttribute("_flymuscles", createFlyMachineRowAttribute(object.geometry));
+        object.geometry.setAttribute("_flymuscles", createFlyMachineBentRowAttribute(object.geometry));
         object.geometry.setAttribute("_smithbenchmuscles", createSmithBenchMuscleMask(object.geometry));
         object.geometry.setAttribute("_machinechestpressmuscles", createMachineChestPressMuscleMask(object.geometry));
         object.geometry.setAttribute("_hipmachinemuscles",createHipMachineMuscleAttribute(object.geometry));
@@ -678,6 +678,7 @@ function getCameraParams(
   exercise: ExerciseAnimation,
   view: SceneProps["view"],
 ): { position: [number, number, number]; target: [number, number, number] } {
+  if (exercise === "bent-row") { const target:[number,number,number]=[0,.85,.1]; if(view==="front")return {position:[0,1.7,4.3],target}; if(view==="side")return {position:[3.7,1.5,.1],target}; if(view==="back")return {position:[0,1.7,-4],target}; return {position:[2.8,1.9,3.1],target}; }
   if (exercise === "machine-row") {
     const target:[number,number,number]=[0,.76,.22];
     if(view === "front")return {position:[0,1.6,3.9],target};
