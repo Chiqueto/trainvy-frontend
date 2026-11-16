@@ -1,6 +1,6 @@
 export const BENT_ROW_INSTRUCTIONS = {
-  "description": "Remada curvada bilateral com barra livre e pegada pronada, mantendo o quadril recuado e o tronco estável.",
-  "setup": "Apoie os pés no chão, flexione levemente os joelhos e incline o tronco a partir do quadril, preservando a curvatura natural da coluna. Segure a barra um pouco além dos ombros e mantenha o abdômen firme.",
-  "execution": "Puxe a barra em direção ao abdômen conduzindo os cotovelos para trás, sem levantar o tronco. Faça uma pausa breve e desça com controle até alongar os braços, mantendo os mesmos apoios. Na volta, permita que as escápulas se afastem sobre o tórax; ao puxar, aproxime-as de modo coordenado com os braços, mantendo a coluna estável.",
-  "tips": "Evite embalar o quadril, arredondar a coluna ou forçar o contato da barra com o corpo. Costas, braços, abdômen e músculos que sustentam a postura atuam juntos. Ângulos e cores são ilustrativos, sem medir EMG ou esforço real."
+  "description": "Remada Curvada (Baixa) — Pronada, com barra livre. Cotovelos próximos ao corpo e ênfase ilustrativa no dorsal.",
+  "setup": "Pés na largura do quadril, joelhos levemente flexionados e abdômen firme. Recue o quadril, mantenha coluna e pescoço alinhados e o tronco inclinado, aproximadamente 27° acima da horizontal. Use pegada pronada, na largura dos ombros ou um pouco além. Palmas voltadas para trás ao segurar a barra. A barra fica suspensa, abaixo dos ombros.",
+  "execution": "Conduza os cotovelos para trás e próximos das costelas, em direção aos bolsos de trás, aproximando a barra do umbigo/baixo abdômen. Preserve a inclinação do tronco. Estenda os braços com controle, mantendo a barra suspensa entre repetições. Na volta, deixe as escápulas se afastarem sobre o tórax; na puxada, aproxime-as junto com o movimento dos braços, sem arredondar a coluna.",
+  "tips": "Evite elevar a barra ao peito ou levantar o tronco para completar a repetição. A pegada sozinha não determina a ênfase. Cores representam participação muscular ilustrativa, sem EMG medido ou isolamento."
 };

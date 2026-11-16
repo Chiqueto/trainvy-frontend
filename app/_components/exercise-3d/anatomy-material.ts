@@ -41,10 +41,10 @@ export function createTissueMaterial() {
         attribute vec4 _pecdeckmuscles;
         attribute vec4 _flymuscles;
         varying float vFlyMuscles; varying float vMachineRowMuscles; varying float vBentRowMuscles; varying float vOneArmRowMuscles;
-        attribute vec2 _smithbenchmuscles;
+        attribute vec3 _smithbenchmuscles;
         attribute float _machinechestpressmuscles;
         varying float vCableRowMuscles; varying float vPulldownMuscles; varying float vPecDeckMuscles; varying float vHangCleanMuscles;
-        varying float vSmithBenchMuscles; varying float vHighRowMuscles;
+        varying float vSmithBenchMuscles; varying float vHighRowMuscles; varying float vPendlayMuscles;
         varying float vMachineChestPressMuscles;
         attribute vec4 _hipmachinemuscles;
         varying float vDeadliftMuscles;
@@ -70,7 +70,7 @@ export function createTissueMaterial() {
         "#include <uv_vertex>",
         `#include <uv_vertex>
         vTissue = uv; vFibre = uv1; vFlyMuscles = _flymuscles.x; vMachineRowMuscles = _flymuscles.y; vBentRowMuscles = _flymuscles.z; vOneArmRowMuscles = _flymuscles.w; vLegExtensionMuscles = _legdetailmuscles.x; vSeatedLegCurlMuscles = _legdetailmuscles.y; vStiffMuscles = _legdetailmuscles.z; vHipThrustMuscles = _legdetailmuscles.w; vProneLegCurlMuscles = _lowerbodymuscles.x; vHackSquatMuscles = _lowerbodymuscles.y; vLegPress45Muscles = _lowerbodymuscles.z; vHorizontalLegPressMuscles = _lowerbodymuscles.w;
-        vExerciseMuscles = _exercisemuscles; vPecDeckMuscles = _pecdeckmuscles.x; vHangCleanMuscles = _pecdeckmuscles.y; vPulldownMuscles = _pecdeckmuscles.z; vCableRowMuscles = _pecdeckmuscles.w; vSmithBenchMuscles = _smithbenchmuscles.x; vHighRowMuscles = _smithbenchmuscles.y; vMachineChestPressMuscles = _machinechestpressmuscles; vSmithSquatMuscles = _hipmachinemuscles.x; vHipAbductionMuscles = _hipmachinemuscles.y; vSumoDumbbellMuscles = _hipmachinemuscles.z; vDeadliftMuscles = _hipmachinemuscles.w; vGobletSquatMuscles = _gobletsquatmuscles.x; vSumoDeadliftMuscles = _gobletsquatmuscles.y; vStandingCalfMuscles = _gobletsquatmuscles.z; vSeatedCalfMuscles = _gobletsquatmuscles.w; vRestSurface = position;`,
+        vExerciseMuscles = _exercisemuscles; vPecDeckMuscles = _pecdeckmuscles.x; vHangCleanMuscles = _pecdeckmuscles.y; vPulldownMuscles = _pecdeckmuscles.z; vCableRowMuscles = _pecdeckmuscles.w; vSmithBenchMuscles = _smithbenchmuscles.x; vHighRowMuscles = _smithbenchmuscles.y; vPendlayMuscles = _smithbenchmuscles.z; vMachineChestPressMuscles = _machinechestpressmuscles; vSmithSquatMuscles = _hipmachinemuscles.x; vHipAbductionMuscles = _hipmachinemuscles.y; vSumoDumbbellMuscles = _hipmachinemuscles.z; vDeadliftMuscles = _hipmachinemuscles.w; vGobletSquatMuscles = _gobletsquatmuscles.x; vSumoDeadliftMuscles = _gobletsquatmuscles.y; vStandingCalfMuscles = _gobletsquatmuscles.z; vSeatedCalfMuscles = _gobletsquatmuscles.w; vRestSurface = position;`,
       );
     shader.fragmentShader = shader.fragmentShader
       .replace(
@@ -78,7 +78,7 @@ export function createTissueMaterial() {
         `#include <common>
         varying vec2 vTissue; varying vec2 vFibre; varying float vDeadliftMuscles; varying float vSumoDeadliftMuscles; varying float vStandingCalfMuscles; varying float vSeatedCalfMuscles;
         varying vec3 vExerciseMuscles; varying vec3 vRestSurface;
-        varying float vCableRowMuscles; varying float vPulldownMuscles; varying float vPecDeckMuscles; varying float vHangCleanMuscles; varying float vFlyMuscles; varying float vMachineRowMuscles; varying float vBentRowMuscles; varying float vOneArmRowMuscles; varying float vSmithBenchMuscles; varying float vHighRowMuscles; varying float vMachineChestPressMuscles;
+        varying float vCableRowMuscles; varying float vPulldownMuscles; varying float vPecDeckMuscles; varying float vHangCleanMuscles; varying float vFlyMuscles; varying float vMachineRowMuscles; varying float vBentRowMuscles; varying float vOneArmRowMuscles; varying float vSmithBenchMuscles; varying float vHighRowMuscles; varying float vPendlayMuscles; varying float vMachineChestPressMuscles;
         varying float vSmithSquatMuscles; varying float vHipAbductionMuscles; varying float vGobletSquatMuscles; varying float vSumoDumbbellMuscles; varying float vLegExtensionMuscles; varying float vSeatedLegCurlMuscles; varying float vProneLegCurlMuscles; varying float vHackSquatMuscles; varying float vLegPress45Muscles; varying float vHorizontalLegPressMuscles; varying float vStiffMuscles; varying float vHipThrustMuscles;
         uniform float exerciseMode; uniform float highlightMuscles;
         uniform vec3 neutralTissue; uniform vec3 primaryTissue; uniform vec3 secondaryTissue;`,
@@ -139,6 +139,7 @@ export function createTissueMaterial() {
         if (exerciseMode > 15.5 && exerciseMode < 16.5) mask = vHipThrustMuscles;
         if (exerciseMode > 14.5 && exerciseMode < 15.5) mask = vStiffMuscles;
         if (exerciseMode > 29.5 && exerciseMode < 30.5) mask = vHighRowMuscles;
+        if (exerciseMode > 30.5 && exerciseMode < 31.5) mask = vPendlayMuscles;
         float selected = smoothstep(0.12, 0.40, mask) * highlightMuscles;
         float primary = smoothstep(0.72, 0.93, mask);
         // Constant categorical colours, never a measurement of activation.
@@ -170,7 +171,7 @@ export function createTissueMaterial() {
           + (1.0-tissue) * (1.0-smoothstep(0.02,0.12,dot(diffuseColor.rgb,vec3(0.333)))) * 0.28, 0.38, 0.88);`,
       );
   };
-  material.customProgramCacheKey = () => "trainvy-atelier-tissue-v32-scapular-rows";
+  material.customProgramCacheKey = () => "trainvy-atelier-tissue-v33-row-landmarks";
   const setAppearance = (exercise: ExerciseAnimation, highlighted = true) => {
     const modes: Record<ExerciseAnimation, number> = {
       squat: 0,
@@ -200,6 +201,10 @@ export function createTissueMaterial() {
       "hang-power-clean": 24,
       "supinated-bent-row": 28,
       "high-bent-row": 30,
+      "high-supinated-bent-row": 30,
+      "yates-row": 28,
+      "supinated-yates-row": 28,
+      "pendlay-row": 31,
       "one-arm-row": 29,
       "generic-bent-row": 28,
       "bent-row": 28,

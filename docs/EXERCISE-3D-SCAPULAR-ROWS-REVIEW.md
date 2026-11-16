@@ -1,5 +1,9 @@
 # Revisão de remadas, pegadas e movimento escapular — 16/11/2026
 
+**Revisão posterior:** nomes e trajetórias das remadas com barra foram corrigidos
+na [revisão de marcos anatômicos e variantes](EXERCISE-3D-BARBELL-ROW-VARIANTS-REVIEW.md).
+As posições descritas abaixo ficam como registro da entrega anterior.
+
 Pedido: retirar a duplicidade da remada curvada, incluir pegada supinada, diferenciar
 trajetórias ao abdômen/peito e corrigir todas as remadas/puxadas com 3D existente.
 

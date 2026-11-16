@@ -1,67 +1,115 @@
-import { getPullingShoulder } from "./scapular-motion";
 import { MathUtils, Matrix4, Quaternion, Vector3 } from "three";
 import { ARM_LENGTH, FOREARM_LENGTH, solveJoint } from "./kinematics";
+import { getPullingShoulder } from "./scapular-motion";
+
 const v = (x: number, y: number, z: number) => new Vector3(x, y, z);
 export const BENT_ROW_HIP = v(0, 0.78, -0.22);
-export const BENT_ROW_TILT = 0.9;
+export const BENT_ROW_TILT = 1.1; // 27° above horizontal; illustrative, not a universal optimum.
+export const ROW_BAR_RADIUS = 0.014;
+export const ROW_PLATE_RADIUS = 0.2;
+export type RowVariant =
+  | "pronated"
+  | "supinated"
+  | "high"
+  | "high-supinated"
+  | "yates"
+  | "yates-supinated"
+  | "pendlay";
+/** Root-relative landmarks calibrated to this atlas, not arbitrary world heights.
+ * Rest root is y=1.142m; pec lower boundary ~1.191m, abdomen anterior surface z=.22–.234m.
+ * Shaft centres include radius + a small clearance anterior to the anatomical surface.
+ */
+export const ROW_LANDMARKS = {
+  low: v(0, 1.065 - 1.142, 0.25),
+  high: v(0, 1.205 - 1.142, 0.265),
+  yates: v(0, 1.04 - 1.142, 0.247),
+  pendlay: v(0, 1.18 - 1.142, 0.265),
+};
+export function getRowConfiguration(variant: RowVariant) {
+  const high = variant === "high" || variant === "high-supinated";
+  const yates = variant === "yates" || variant === "yates-supinated";
+  const pendlay = variant === "pendlay";
+  return {
+    high,
+    yates,
+    pendlay,
+    supinated: variant === "supinated" || variant.endsWith("-supinated"),
+    hip: pendlay
+      ? v(0, 0.755, -0.34)
+      : yates
+        ? v(0, 0.84, -0.19)
+        : BENT_ROW_HIP.clone(),
+    tilt: pendlay ? 1.49 : yates ? 0.7 : BENT_ROW_TILT,
+    halfWidth: high
+      ? variant === "high-supinated"
+        ? 0.32
+        : 0.34
+      : pendlay
+        ? 0.3
+        : 0.27,
+    landmark:
+      ROW_LANDMARKS[
+        pendlay ? "pendlay" : yates ? "yates" : high ? "high" : "low"
+      ],
+  };
+}
 function frame(direction: Vector3, normal: Vector3) {
-  const y = direction.clone().normalize(),
-    z = normal.clone().addScaledVector(y, -normal.dot(y)).normalize();
+  const y = direction.clone().normalize();
+  const z = normal.clone().addScaledVector(y, -normal.dot(y)).normalize();
   return new Quaternion().setFromRotationMatrix(
     new Matrix4().makeBasis(y.clone().cross(z).normalize(), y, z),
   );
 }
-/** Fixed hip hinge: contracted p=0 and controlled lowering to long arms at p=1. */
-export function getBentRowPose(depth: number, variant: "pronated" | "supinated" | "high" = "pronated") {
+/** p=0 contracted at its named anatomical landmark; p=1 extended (floor for Pendlay). */
+export function getBentRowPose(
+  depth: number,
+  variant: RowVariant = "pronated",
+) {
   const p = MathUtils.clamp(depth, 0, 1),
-    tilt = new Quaternion().setFromAxisAngle(v(1, 0, 0), BENT_ROW_TILT);
+    config = getRowConfiguration(variant);
+  const tilt = new Quaternion().setFromAxisAngle(v(1, 0, 0), config.tilt);
   const body = (point: Vector3) =>
     point
       .clone()
       .sub(v(0, -0.28, 0.08))
       .applyQuaternion(tilt)
-      .add(BENT_ROW_HIP);
-  const high = variant === "high";
-  const bar = v(
-    0,
-    MathUtils.lerp(high ? 1.015 : .855, 0.54, p),
-    MathUtils.lerp(high ? .32 : .145, .30, p),
-  );
+      .add(config.hip);
+  const extendedShoulder = body(getPullingShoulder("bent-row", 1, 1));
+  const hang = config.pendlay
+    ? v(0, ROW_PLATE_RADIUS, 0.17)
+    : v(0, extendedShoulder.y - 0.53, extendedShoulder.z);
+  const bar = body(config.landmark).lerp(hang, p);
   const limbs = [-1, 1].map((side) => {
-    const hip = BENT_ROW_HIP.clone().setX(side * 0.14),
+    const hip = config.hip.clone().setX(side * 0.14),
       ankle = v(side * 0.18, 0.05, 0.08);
     const knee = solveJoint(hip, ankle, 0.44, 0.42, v(0, 0, 1));
-    const shoulder = body(getPullingShoulder('bent-row',p,side));
-    const grip = bar.clone().setX(side * (high ? .37 : .28));
-    const pole = high ? v(side, -.10, -.35) : v(side * .18, -.25, -1);
+    const shoulder = body(getPullingShoulder("bent-row", p, side));
+    const grip = bar.clone().setX(side * config.halfWidth);
+    const pole = config.high
+      ? v(side, -0.1, -0.35)
+      : config.pendlay
+        ? v(side * 0.45, -0.15, -1)
+        : v(side * 0.12, -0.25, -1);
     let wrist = grip.clone(),
       elbow = shoulder.clone(),
       handRotation = new Quaternion();
-    for (let i = 0; i < 12; i++) {
-      elbow = solveJoint(
-        shoulder,
-        wrist,
-        ARM_LENGTH,
-        FOREARM_LENGTH,
-        pole,
-      );
+    for (let i = 0; i < 16; i++) {
+      elbow = solveJoint(shoulder, wrist, ARM_LENGTH, FOREARM_LENGTH, pole);
       handRotation = frame(wrist.clone().sub(elbow), v(1, 0, 0)).multiply(
         frame(v(side * 0.025, -0.265, 0.03), v(1, 0, 0)).invert(),
       );
-      // Supination rolls radius/ulna and the palm together around the forearm.
-      // The transverse bar axis is preserved (its direction may reverse).
-      if(variant === "supinated") handRotation.premultiply(new Quaternion().setFromAxisAngle(wrist.clone().sub(elbow).normalize(), Math.PI));
+      if (config.supinated)
+        handRotation.premultiply(
+          new Quaternion().setFromAxisAngle(
+            wrist.clone().sub(elbow).normalize(),
+            Math.PI,
+          ),
+        );
       wrist = grip
         .clone()
         .sub(v(0, 0.004, 0.012).applyQuaternion(handRotation));
     }
-    elbow = solveJoint(
-      shoulder,
-      wrist,
-      ARM_LENGTH,
-      FOREARM_LENGTH,
-      pole,
-    );
+    elbow = solveJoint(shoulder, wrist, ARM_LENGTH, FOREARM_LENGTH, pole);
     return {
       side,
       hip,

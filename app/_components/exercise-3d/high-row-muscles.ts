@@ -27,9 +27,18 @@ export function createHighRowMuscleMask(geometry: BufferGeometry) {
 }
 export function createSmithHighRowAttribute(geometry: BufferGeometry) {
   const old = createSmithBenchMuscleMask(geometry),
-    high = createHighRowMuscleMask(geometry);
-  const packed = new BufferAttribute(new Float32Array(old.count * 2), 2);
+    high = createHighRowMuscleMask(geometry), pendlay = createPendlayMuscleMask(geometry);
+  const packed = new BufferAttribute(new Float32Array(old.count * 3), 3);
   for (let i = 0; i < old.count; i++)
-    packed.setXY(i, old.getX(i), high.getX(i));
+    packed.setXYZ(i, old.getX(i), high.getX(i), pendlay.getX(i));
   return packed;
+}
+/** Floor row: extension and scapular retraction both primary; posterior deltoid remains secondary. */
+export function createPendlayMuscleMask(geometry: BufferGeometry) {
+  const mask=createBentRowMuscleMask(geometry);
+  for(const atlas of [back,detail]) {
+    if(atlas.baseAssetSha256!==manifest.sha256)throw Error("Pendlay atlas mismatch");
+    for(const s of atlas.selections) if(/Transverse_part_of_trapezius|Rhomboid/.test(s.name))for(const i of s.indices)mask.setX(i,1);
+  }
+  return mask;
 }

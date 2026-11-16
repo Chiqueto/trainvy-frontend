@@ -187,8 +187,12 @@ describe("scapular motion across every implemented row and pulldown", () => {
     const low = getExercisePose("bent-row", 0),
       high = getExercisePose("high-bent-row", 0),
       sup = getExercisePose("supinated-bent-row", 0);
-    expect(high.bar.y - low.bar.y).toBeGreaterThan(0.12);
-    expect(high.bar.z - low.bar.z).toBeGreaterThan(0.12);
+    // Compare in the thorax reference frame: world height alone caused the previous error.
+    const localLow=low.bar.clone().sub(low.origin).applyQuaternion(low.tilt.clone().invert());
+    const localHigh=high.bar.clone().sub(high.origin).applyQuaternion(high.tilt.clone().invert());
+    expect(localHigh.y-localLow.y).toBeGreaterThan(.12);
+    expect(localHigh.y+1.142).toBeLessThan(1.24);
+    expect(localLow.y+1.142).toBeLessThan(1.12);
     expect(Math.abs(high.limbs[1].elbow.x)).toBeGreaterThan(
       Math.abs(low.limbs[1].elbow.x) + 0.08,
     );

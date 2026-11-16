@@ -1,5 +1,7 @@
 "use client";
 
+import { isBarbellRow } from "./row-variants";
+
 import dynamic from "next/dynamic";
 import {
   Component,
@@ -53,8 +55,14 @@ export function Exercise3DViewer(props: {
 
 function phaseLabel(phase: number, exercise: ExerciseAnimation) {
   if (exercise === "one-arm-row") {if(phase<.04||phase>=.99)return "Halter próximo ao tronco";if(phase<.48)return "Descida controlada do halter";if(phase<.54)return "Pausa com braço alongado";return "Remada unilateral com apoios firmes";}
-  if (["bent-row", "generic-bent-row", "supinated-bent-row", "high-bent-row"].includes(exercise)) {
-    if(phase<.04||phase>=.99)return exercise === "high-bent-row" ? "Barra próxima à parte inferior do peito" : "Barra próxima ao abdômen";
+  if (exercise === "pendlay-row") {
+    if(phase<.12 || phase>=.80)return "Anilhas paradas no chão — refaça o brace";
+    if(phase<.30)return "Puxada rápida e controlada";
+    if(phase<.38)return "Barra nas costelas baixas/abdômen superior";
+    return "Descida controlada até o chão";
+  }
+  if (isBarbellRow(exercise)) {
+    if(phase<.04||phase>=.99)return exercise === "high-bent-row" || exercise === "high-supinated-bent-row" ? "Barra nas costelas baixas/base do peito" : "Barra no umbigo/baixo abdômen";
     if(phase<.48)return "Descida controlada da barra";
     if(phase<.54)return "Pausa com braços alongados";
     return "Remada sem embalar o tronco";

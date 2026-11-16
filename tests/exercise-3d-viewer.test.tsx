@@ -51,6 +51,9 @@ describe("Anatomical viewer controls", () => {
     ["generic-bent-row", "Descida controlada da barra", "Remada sem embalar o tronco"],
     ["supinated-bent-row", "Descida controlada da barra", "Remada sem embalar o tronco"],
     ["high-bent-row", "Descida controlada da barra", "Remada sem embalar o tronco"],
+    ["high-supinated-bent-row", "Descida controlada da barra", "Remada sem embalar o tronco"],
+    ["yates-row", "Descida controlada da barra", "Remada sem embalar o tronco"],
+    ["supinated-yates-row", "Descida controlada da barra", "Remada sem embalar o tronco"],
     ["one-arm-row", "Descida controlada do halter", "Remada unilateral com apoios firmes"],
     ["front-lat-pulldown", "Retorno controlado da barra", "Puxada à frente do corpo"],
     ["cable-row", "Retorno controlado dos braços", "Remada com cotovelos próximos"],
@@ -62,6 +65,13 @@ describe("Anatomical viewer controls", () => {
     expect(screen.getByText(returning)).toBeDefined();
     fireEvent.change(slider,{target:{value:"800"}});
     expect(screen.getByText(pulling)).toBeDefined();
+  });
+  it("labels Pendlay floor reset, quick pull and controlled lowering", () => {
+    render(<Exercise3DViewer exercise="pendlay-row" />);
+    const slider=screen.getByRole("slider",{name:"Posição do movimento"});
+    for(const [value,label] of [[0,"Anilhas paradas no chão — refaça o brace"],[200,"Puxada rápida e controlada"],[330,"Barra nas costelas baixas/abdômen superior"],[600,"Descida controlada até o chão"],[900,"Anilhas paradas no chão — refaça o brace"]] as const){
+      fireEvent.change(slider,{target:{value:String(value)}});expect(screen.getByText(label)).toBeDefined();
+    }
   });
   it("labels the pulldown return, overhead pause and pull correctly", () => {
     render(<Exercise3DViewer exercise="lat-pulldown" />);

@@ -1,3 +1,4 @@
+import { BARBELL_ROW_DEFINITIONS, BARBELL_ROW_ALIASES } from "./row-definitions";
 import { HANG_POWER_CLEAN_INSTRUCTIONS } from "./hang-power-clean-instructions";
 import { SUMO_DUMBBELL_INSTRUCTIONS } from "./sumo-dumbbell-instructions";
 import { DEADLIFT_INSTRUCTIONS } from "./deadlift-instructions";
@@ -26,10 +27,12 @@ import { CABLE_ROW_INSTRUCTIONS } from "./cable-row-instructions";
 
 import { MACHINE_ROW_INSTRUCTIONS } from "./machine-row-instructions";
 
-import { HIGH_BENT_ROW_INSTRUCTIONS, SUPINATED_BENT_ROW_INSTRUCTIONS } from "./row-variant-instructions";
-import { BENT_ROW_INSTRUCTIONS } from "./bent-row-instructions";
 import { ONE_ARM_ROW_INSTRUCTIONS } from "./one-arm-row-instructions";
 export type ExerciseAnimation =
+ | "high-supinated-bent-row"
+ | "yates-row"
+ | "supinated-yates-row"
+ | "pendlay-row"
  | "supinated-bent-row"
  | "high-bent-row"
  | "one-arm-row"
@@ -81,11 +84,8 @@ export interface ExerciseDefinition {
 }
 
 export const EXERCISE_ANIMATIONS = {
+  ...BARBELL_ROW_DEFINITIONS,
   "one-arm-row": {name:"Remada Unilateral com Halteres",id:"00000000-0000-4000-8000-000000000138",equipment:"Um halter, banco plano e apoio de mão/joelho opostos",instructions:ONE_ARM_ROW_INSTRUCTIONS,muscles:{primary:["Dorsal, redondo maior, trapézio médio e romboides do lado do halter"],secondary:["Serrátil anterior (controle escapular)","Braço e ombro da puxada, pegada e tronco","Peitoral, deltoide anterior e tríceps do lado de apoio","Glúteos, posteriores, quadríceps e abdutores (sustentação)"]}},
-  "generic-bent-row": {name:"Remada Curvada",id:"00000000-0000-4000-8000-000000000122",equipment:"Barra livre, pegada pronada e quadril recuado",instructions:BENT_ROW_INSTRUCTIONS,muscles:{primary:["Latíssimo do dorso e redondo maior","Trapézio médio e romboides"],secondary:["Serrátil anterior (controle escapular)","Bíceps, braquial e braquiorradial","Deltoide posterior e infraespinal","Trapézio superior/inferior, eretores e abdômen","Pegada, glúteos, posteriores e quadríceps (sustentação)"]}},
-  "supinated-bent-row": {name:"Remada Curvada com Barra e Pegada Supinada",id:"1444333f-9fb0-4d74-843a-42b9480e5cfc",equipment:"Barra livre, pegada supinada e quadril recuado",instructions:SUPINATED_BENT_ROW_INSTRUCTIONS,muscles:{primary:["Latíssimo do dorso e redondo maior","Trapézio médio e romboides"],secondary:["Serrátil anterior (controle escapular)","Bíceps, braquial e braquiorradial","Deltoide posterior e infraespinal","Trapézio superior/inferior, eretores e abdômen","Pegada, glúteos, posteriores e quadríceps (sustentação)"]}},
-  "high-bent-row": {name:"Remada Curvada com Barra ao Peito",id:"7f249b6a-85ad-45ca-9147-6cfa712547c7",equipment:"Barra livre, pegada pronada aberta, cotovelos afastados e puxada ao peito",instructions:HIGH_BENT_ROW_INSTRUCTIONS,muscles:{primary:["Trapézio médio, romboides e deltoide posterior"],secondary:["Serrátil anterior (controle escapular)","Latíssimo do dorso e redondo maior","Bíceps, braquial e braquiorradial","Infraespinal e controle escapular","Trapézio superior/inferior, eretores e abdômen","Pegada, glúteos, posteriores e quadríceps (sustentação)"]}},
-  "bent-row": {name:"Remada Curvada com Barra",id:"00000000-0000-4000-8000-000000000121",equipment:"Barra livre, pegada pronada e quadril recuado",instructions:BENT_ROW_INSTRUCTIONS,muscles:{primary:["Latíssimo do dorso e redondo maior","Trapézio médio e romboides"],secondary:["Serrátil anterior (controle escapular)","Bíceps, braquial e braquiorradial","Deltoide posterior e infraespinal","Trapézio superior/inferior, eretores e abdômen","Pegada, glúteos, posteriores e quadríceps (sustentação)"]}},
   "machine-row": {name:"Remada Sentada na Máquina",id:"43025392-0466-46e7-82ab-27888d53f929",equipment:"Máquina bilateral de alavancas com apoio peitoral e pegadas neutras",instructions:MACHINE_ROW_INSTRUCTIONS,muscles:{primary:["Latíssimo do dorso e redondo maior","Trapézio médio e romboides"],secondary:["Serrátil anterior (controle escapular)","Bíceps, braquial e braquiorradial","Deltoide posterior e infraespinal","Trapézio superior/inferior","Pegada e estabilizadores do tronco"]}},
   "cable-row": { name:"Remada Baixa no Cabo com Triângulo", id:"120f29ac-733c-478b-8aa9-a3f4c22f5e70", equipment:"Polia baixa com triângulo, banco e plataforma para os pés", instructions:CABLE_ROW_INSTRUCTIONS, muscles:{primary:["Latíssimo do dorso e redondo maior","Trapézio médio e romboides"],secondary:["Serrátil anterior (controle escapular)","Bíceps, braquial e braquiorradial","Deltoide posterior e infraespinal","Trapézio superior/inferior","Pegada, abdominais e eretores"]} },
   "front-lat-pulldown": { name: "Puxada Frontal", id: "00000000-0000-4000-8000-000000000120", equipment: "Polia alta com barra, pegada pronada e apoio das coxas", instructions: LAT_PULLDOWN_INSTRUCTIONS, muscles: { primary: ["Latíssimo do dorso", "Redondo maior"], secondary:["Serrátil anterior (controle escapular)","Bíceps, braquial e braquiorradial", "Trapézio e romboides", "Deltoide posterior e infraespinal", "Músculos da pegada", "Abdominais e eretores da coluna"] } },
@@ -311,6 +311,10 @@ export function getExerciseAnimation(
   if (id === EXERCISE_ANIMATIONS.stiff.id) return "stiff";
   if (id === EXERCISE_ANIMATIONS.deadlift.id) return "deadlift";
   if (id === EXERCISE_ANIMATIONS["sumo-deadlift"].id) return "sumo-deadlift";
+  if (id === EXERCISE_ANIMATIONS["high-supinated-bent-row"].id) return "high-supinated-bent-row";
+  if (id === EXERCISE_ANIMATIONS["yates-row"].id) return "yates-row";
+  if (id === EXERCISE_ANIMATIONS["supinated-yates-row"].id) return "supinated-yates-row";
+  if (id === EXERCISE_ANIMATIONS["pendlay-row"].id) return "pendlay-row";
   if (id === EXERCISE_ANIMATIONS["supinated-bent-row"].id) return "supinated-bent-row";
   if (id === EXERCISE_ANIMATIONS["high-bent-row"].id) return "high-bent-row";
   if (id === EXERCISE_ANIMATIONS["one-arm-row"].id) return "one-arm-row";
@@ -368,6 +372,8 @@ export function getExerciseAnimation(
     if (["stiff", "stiff com barra", "stiff-leg deadlift", "stiff leg deadlift", "levantamento terra com pernas quase estendidas"].includes(normalized)) return "stiff";
     if (["levantamento terra", "levantamento terra convencional", "levantamento terra com barra", "deadlift", "conventional deadlift"].includes(normalized)) return "deadlift";
     if (["levantamento terra sumo", "terra sumo", "sumo deadlift", "sumo barbell deadlift"].includes(normalized)) return "sumo-deadlift";
+    const rowAlias = BARBELL_ROW_ALIASES[normalized];
+    if(rowAlias) return rowAlias;
     if (["remada unilateral com halteres","remada unilateral com halter","serrote com halter","single arm dumbbell row"].includes(normalized))return "one-arm-row";
     if (normalized === "remada curvada") return "bent-row";
     if (["remada curvada com barra e pegada supinada","remada curvada supinada"].includes(normalized))return "supinated-bent-row";

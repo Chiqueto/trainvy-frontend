@@ -1,5 +1,7 @@
 "use client";
 
+import { isBarbellRow } from "./row-variants";
+
 import { installScapularRig } from "./scapular-rig";
 import { Suspense, useEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
@@ -687,7 +689,7 @@ function getCameraParams(
   view: SceneProps["view"],
 ): { position: [number, number, number]; target: [number, number, number] } {
   if (exercise === "one-arm-row") {const target:[number,number,number]=[.05,.68,-.05];if(view==="front")return {position:[.05,1.8,3.7],target};if(view==="side")return {position:[3.4,1.6,-.05],target};if(view==="back")return {position:[.05,1.8,-3.8],target};return {position:[2.5,1.9,2.7],target};}
-  if ((["bent-row", "generic-bent-row", "supinated-bent-row", "high-bent-row"].includes(exercise))) { const target:[number,number,number]=[0,.85,.1]; if(view==="front")return {position:[0,1.7,4.3],target}; if(view==="side")return {position:[3.7,1.5,.1],target}; if(view==="back")return {position:[0,1.7,-4],target}; return {position:[2.8,1.9,3.1],target}; }
+  if ((isBarbellRow(exercise))) { const target:[number,number,number]=[0,.85,.1]; if(view==="front")return {position:[0,1.7,4.3],target}; if(view==="side")return {position:[3.7,1.5,.1],target}; if(view==="back")return {position:[0,1.7,-4],target}; return {position:[2.8,1.9,3.1],target}; }
   if (exercise === "machine-row") {
     const target:[number,number,number]=[0,.76,.22];
     if(view === "front")return {position:[0,1.6,3.9],target};

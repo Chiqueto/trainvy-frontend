@@ -1,3 +1,5 @@
+
+import { isBarbellRow, BARBELL_ROW_VARIANTS } from "./row-variants";
 import { getScapularMotion } from "./scapular-motion";
 import { getOneArmRowPose } from "./one-arm-row-pose";
 import { getBentRowPose } from "./bent-row-pose";
@@ -67,6 +69,13 @@ export function getExerciseDepth(phase: number) {
 
 export function getExerciseProgress(exercise:ExerciseAnimation, phase:number){
   if(exercise==="hang-power-clean")return ((phase%1)+1)%1;
+  if(exercise==="pendlay-row") {
+    const p=((phase%1)+1)%1;
+    if(p<.12 || p>=.80)return 1; // Plates settle fully before the next pull.
+    if(p<.30)return 1-MathUtils.smoothstep(p,.12,.30);
+    if(p<.38)return 0;
+    return MathUtils.smoothstep(p,.38,.80);
+  }
   const depth=getExerciseDepth(phase);
   return exercise==="deadlift"||exercise==="sumo-deadlift"?1-depth:depth;
 }
@@ -100,7 +109,7 @@ export function getExercisePose(
   depth: number,
 ): ReturnType<typeof getFlatDumbbellFlyPose> {
   if (exercise === "one-arm-row") return getOneArmRowPose(depth);
-  if (["bent-row", "generic-bent-row", "supinated-bent-row", "high-bent-row"].includes(exercise)) return getBentRowPose(depth, exercise === "supinated-bent-row" ? "supinated" : exercise === "high-bent-row" ? "high" : "pronated");
+  if (isBarbellRow(exercise)) return getBentRowPose(depth, BARBELL_ROW_VARIANTS[exercise]!);
   if (exercise === "machine-row") return getMachineRowPose(depth);
   if (exercise === "cable-row") return getCableRowPose(depth);
   if (exercise === "lat-pulldown" || exercise === "front-lat-pulldown") return getLatPulldownPose(depth);
@@ -410,7 +419,7 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
       const { side, hip, knee, ankle, footRotation, shoulder, elbow, wrist } =
         limb;
       const suffix = side < 0 ? "L" : "R";
-      if (exercise === "one-arm-row" || (["bent-row", "generic-bent-row", "supinated-bent-row", "high-bent-row"].includes(exercise)) || exercise === "machine-row" || exercise === "cable-row" || (exercise === "lat-pulldown" || exercise === "front-lat-pulldown") || exercise === "hang-power-clean" || exercise === "sumo-deadlift" || exercise === "deadlift" || exercise === "sumo-dumbbell-squat" || exercise === "hip-abduction" || exercise === "hip-thrust" || exercise === "stiff" || exercise === "horizontal-leg-press" || exercise === "leg-press-45" || exercise === "hack-squat" || exercise === "prone-leg-curl" || exercise === "seated-leg-curl" || exercise === "leg-extension" || exercise === "decline-bench-press" || exercise === "pec-deck" || exercise === "machine-fly" || exercise === "machine-chest-press") {
+      if (exercise === "one-arm-row" || (isBarbellRow(exercise)) || exercise === "machine-row" || exercise === "cable-row" || (exercise === "lat-pulldown" || exercise === "front-lat-pulldown") || exercise === "hang-power-clean" || exercise === "sumo-deadlift" || exercise === "deadlift" || exercise === "sumo-dumbbell-squat" || exercise === "hip-abduction" || exercise === "hip-thrust" || exercise === "stiff" || exercise === "horizontal-leg-press" || exercise === "leg-press-45" || exercise === "hack-squat" || exercise === "prone-leg-curl" || exercise === "seated-leg-curl" || exercise === "leg-extension" || exercise === "decline-bench-press" || exercise === "pec-deck" || exercise === "machine-fly" || exercise === "machine-chest-press") {
         const restHip = rest.get(`thigh_${suffix}`)!;
         const restKnee = rest.get(`shin_${suffix}`)!;
         const restAnkle = rest.get(`foot_${suffix}`)!;
@@ -501,7 +510,7 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
         restNormal,
         posedNormal,
       );
-      if ((exercise === "one-arm-row" && side > 0) || (["bent-row", "generic-bent-row", "supinated-bent-row", "high-bent-row"].includes(exercise)) || exercise === "machine-row" || exercise === "cable-row" || (exercise === "lat-pulldown" || exercise === "front-lat-pulldown") || exercise === "hang-power-clean" || exercise === "sumo-deadlift" || exercise === "deadlift" || exercise === "sumo-dumbbell-squat" || exercise === "goblet-squat" || exercise === "machine-fly" || exercise === "prone-leg-curl" || exercise === "hack-squat" || exercise === "leg-press-45" || exercise === "horizontal-leg-press" || exercise === "stiff" || exercise === "hip-thrust") {
+      if ((exercise === "one-arm-row" && side > 0) || (isBarbellRow(exercise)) || exercise === "machine-row" || exercise === "cable-row" || (exercise === "lat-pulldown" || exercise === "front-lat-pulldown") || exercise === "hang-power-clean" || exercise === "sumo-deadlift" || exercise === "deadlift" || exercise === "sumo-dumbbell-squat" || exercise === "goblet-squat" || exercise === "machine-fly" || exercise === "prone-leg-curl" || exercise === "hack-squat" || exercise === "leg-press-45" || exercise === "horizontal-leg-press" || exercise === "stiff" || exercise === "hip-thrust") {
         bones.get(`forearm_${suffix}`)!.quaternion.copy(limb.handRotation);
         wristSupport?.quaternion.copy(limb.handRotation);
       }

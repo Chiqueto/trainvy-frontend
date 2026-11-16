@@ -107,7 +107,7 @@ describe("standing bent-over barbell row", () => {
     expect(mismatch).toBe(0);
     for (const s of back.selections)
       if (/^Latissimus|^Transverse/.test(s.name))
-        expect(mask.getX(s.indices[0])).toBe(1);
+        expect(mask.getX(s.indices[0])).toBeCloseTo(/^Latissimus/.test(s.name)?1:.45);
     for (const s of lower.selections)
       if (/^Gluteus|^Vastus|^Long_head_of_biceps_femoris/.test(s.name))
         expect(mask.getX(s.indices[0])).toBeCloseTo(0.45);
