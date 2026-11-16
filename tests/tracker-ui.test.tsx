@@ -161,6 +161,58 @@ describe("Tracker Real UI & Actions (Task 1.6)", () => {
   });
 
   describe("3. Renderização de Exercício e Prescrição", () => {
+    it("começa recolhido e preserva valores não salvos ao fechar e reabrir", async () => {
+      vi.mocked(api.updateWorkoutSet).mockResolvedValueOnce({
+        status: 500,
+        data: { error: "Falha ao salvar", code: "INTERNAL_SERVER_ERROR" },
+        headers: new Headers(),
+      });
+      const onError = vi.fn();
+      render(
+        <SessionExerciseCard
+          sessionId="sess-1"
+          exercise={{
+            id: "ex-1",
+            exerciseNameSnapshot: "Supino Reto",
+            order: 0,
+            plannedSets: 1,
+            plannedReps: 8,
+            plannedRestTimeInSeconds: 90,
+            notes: null,
+            revision: 1,
+            sets: [
+              {
+                id: "set-1",
+                order: 1,
+                type: "WORKING",
+                weightInGrams: 30000,
+                reps: 8,
+                rir: 2,
+                durationInSeconds: null,
+                notes: null,
+                completedAt: null,
+              },
+            ],
+          }}
+          isReadOnly={false}
+          onError={onError}
+        />,
+      );
+      expect(screen.queryByRole("textbox")).toBeNull();
+      fireEvent.click(screen.getByRole("button", { name: /expandir séries/i }));
+      const weightInput = screen.getByDisplayValue("30");
+      fireEvent.change(weightInput, { target: { value: "42" } });
+      fireEvent.blur(weightInput);
+      await waitFor(() =>
+        expect(onError).toHaveBeenCalledWith("Falha ao salvar"),
+      );
+      fireEvent.click(screen.getByRole("button", { name: /recolher séries/i }));
+      expect(screen.queryByRole("textbox")).toBeNull();
+      expect(screen.getByText("0/1 séries concluídas")).toBeDefined();
+      fireEvent.click(screen.getByRole("button", { name: /expandir séries/i }));
+      expect(screen.getByDisplayValue("42")).toBe(weightInput);
+    });
+
     it("renderiza nome do exercício e prescrição de séries e reps", () => {
       const mockExercise = {
         id: "ex-1",
@@ -185,7 +237,17 @@ describe("Tracker Real UI & Actions (Task 1.6)", () => {
 
       expect(screen.getByText("Supino Reto")).toBeDefined();
       expect(screen.getByText(/3 séries × 8 reps/i)).toBeDefined();
-      expect(screen.getByText(/Descanso: 120s/i)).toBeDefined();
+      expect(screen.getByText("120s")).toBeDefined();
+      const toggle = screen.getByRole("button", { name: /expandir séries/i });
+      expect(toggle.getAttribute("aria-expanded")).toBe("false");
+      expect(
+        screen.queryByRole("button", { name: /adicionar série/i }),
+      ).toBeNull();
+      fireEvent.click(toggle);
+      expect(toggle.getAttribute("aria-expanded")).toBe("true");
+      expect(
+        screen.getByRole("button", { name: /adicionar série/i }),
+      ).toBeDefined();
       expect(screen.getByText("Pegada fechada")).toBeDefined();
     });
   });

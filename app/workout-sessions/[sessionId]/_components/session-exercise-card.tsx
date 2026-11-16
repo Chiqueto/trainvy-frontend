@@ -6,6 +6,7 @@ import {
   ArrowRightLeft,
   Box,
   ChevronDown,
+  Check,
   Dumbbell,
   Info,
   Loader2,
@@ -51,6 +52,7 @@ interface SessionExerciseCardProps {
 export function SessionExerciseCard({
   sessionId = "",
   exercise,
+  exerciseIndex = exercise.order + 1,
   isReadOnly,
   isFreeWorkout = false,
   onRemoveExercise,
@@ -60,7 +62,7 @@ export function SessionExerciseCard({
   onMutationStart,
   onMutationEnd,
 }: SessionExerciseCardProps) {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isRemoving, startRemoveTransition] = useTransition();
   const [isMediaOpen, setIsMediaOpen] = useState(false);
@@ -208,42 +210,77 @@ export function SessionExerciseCard({
   }, [exercise]);
 
   return (
-    <div className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4 shadow-sm">
-      <PrescriptionTargets
-        value={{
-          repsMin: exercise.plannedRepsMin,
-          repsMax: exercise.plannedRepsMax,
-          targetRir: exercise.plannedTargetRir,
-          targetLoadInGrams: exercise.plannedTargetLoadInGrams,
-          tempo: exercise.plannedTempo,
-        }}
-        showRange={false}
-      />
-      {/* Header do Exercício */}
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex flex-col gap-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/10 font-heading text-[11px] font-bold text-primary">
-              {exercise.order}
-            </span>
-            <h3 className="font-heading text-base font-bold text-foreground">
+    <div
+      className={`overflow-hidden rounded-2xl border bg-card transition-colors ${isExpanded ? "border-primary/35" : "border-border"}`}
+    >
+      <h3>
+        <button
+          type="button"
+          onClick={() => setIsExpanded((prev) => !prev)}
+          aria-expanded={isExpanded}
+          aria-controls={`exercise-sets-${exercise.id}`}
+          aria-label={`${isExpanded ? "Recolher" : "Expandir"} séries de ${exercise.exerciseNameSnapshot}`}
+          className="flex w-full items-start gap-3 p-3.5 text-left transition-colors hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+        >
+          <span
+            className={`mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full font-heading text-xs font-bold ${sets.length > 0 && completedSetsCount === sets.length ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary"}`}
+          >
+            {sets.length > 0 && completedSetsCount === sets.length ? (
+              <Check className="size-4" />
+            ) : (
+              exerciseIndex
+            )}
+          </span>
+          <span className="flex min-w-0 flex-1 flex-col gap-1.5">
+            <span className="font-heading text-sm font-semibold leading-snug text-foreground">
               {exercise.exerciseNameSnapshot}
-            </h3>
-
-            {/* Badge de Substituído */}
-            {exercise.wasSubstituted && (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-heading font-semibold text-amber-500 bg-amber-500/10 border border-amber-500/20">
-                Substituído
+            </span>
+            <span className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-normal leading-relaxed text-muted-foreground">
+              {prescriptionText && <span>{prescriptionText}</span>}
+              {!!exercise.plannedRestTimeInSeconds &&
+                exercise.plannedRestTimeInSeconds > 0 && (
+                  <span className="inline-flex items-center gap-1">
+                    <Zap className="size-3 text-amber-500" />
+                    {exercise.plannedRestTimeInSeconds}s
+                  </span>
+                )}
+              {exercise.isUnilateral && (
+                <span className="text-primary">Unilateral ×2</span>
+              )}
+              {exercise.wasSubstituted && (
+                <span className="text-amber-500">Substituído</span>
+              )}
+            </span>
+            <span className="flex items-center gap-2 pt-0.5">
+              <span
+                className="h-1 max-w-20 flex-1 overflow-hidden rounded-full bg-muted"
+                aria-hidden="true"
+              >
+                <span
+                  className="block h-full rounded-full bg-primary transition-all"
+                  style={{
+                    width: `${sets.length ? (completedSetsCount / sets.length) * 100 : 0}%`,
+                  }}
+                />
               </span>
-            )}
-
-            {/* Badge de Unilateral */}
-            {exercise.isUnilateral && (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-heading font-semibold text-primary bg-primary/10 border border-primary/20">
-                Unilateral (×2)
+              <span
+                className={`text-[11px] font-normal ${sets.length > 0 && completedSetsCount === sets.length ? "text-primary" : "text-muted-foreground"}`}
+              >
+                {sets.length
+                  ? `${completedSetsCount}/${sets.length} séries concluídas`
+                  : "Nenhuma série"}
               </span>
-            )}
-
+            </span>
+          </span>
+          <ChevronDown
+            className={`mt-1 size-4 shrink-0 text-muted-foreground transition-transform ${isExpanded ? "rotate-180" : ""}`}
+          />
+        </button>
+      </h3>
+      {/* Preserva os rascunhos mesmo quando o exercício está recolhido. */}
+      <div id={`exercise-sets-${exercise.id}`} hidden={!isExpanded}>
+        <div className="flex flex-col gap-3 border-t border-border/60 px-3.5 pb-3.5 pt-3">
+          <div className="flex flex-wrap items-center gap-2 [&_button]:min-h-11 [&_button]:px-3">
             {(() => {
               const has3D =
                 getExerciseAnimation(
@@ -299,146 +336,68 @@ export function SessionExerciseCard({
                 </button>
               </AiFeature>
             )}
-          </div>
 
-          {/* Subtítulo de exercício original se foi substituído */}
-          {exercise.wasSubstituted && exercise.plannedExerciseNameSnapshot && (
-            <p className="font-heading text-xs text-amber-500/90 pl-7 flex items-center gap-1">
-              <span className="font-medium">Original planejado:</span>{" "}
-              {exercise.plannedExerciseNameSnapshot}
-            </p>
-          )}
-
-          {prescriptionText && (
-            <p className="font-heading text-xs text-muted-foreground pl-7">
-              <span className="font-medium text-foreground/80">Planejado:</span>{" "}
-              {prescriptionText}
-            </p>
-          )}
-
-          {exercise.isUnilateral && (
-            <p className="font-heading text-[11px] text-primary/80 pl-7">
-              Unilateral: cada série é feita em ambos os lados (volume ×2)
-            </p>
-          )}
-
-          {exercise.plannedRestTimeInSeconds !== null &&
-            exercise.plannedRestTimeInSeconds > 0 && (
-              <p className="flex items-center gap-1 font-heading text-[11px] text-muted-foreground/80 pl-7">
-                <Zap className="size-3 text-amber-500" />
-                Descanso: {exercise.plannedRestTimeInSeconds}s
-              </p>
+            {isFreeWorkout && !isReadOnly && onRemoveExercise && (
+              <button
+                type="button"
+                onClick={handleRemoveClick}
+                disabled={isRemoving}
+                aria-label="Remover exercício"
+                className="ml-auto rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive disabled:opacity-50"
+              >
+                {isRemoving ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <Trash2 className="size-4" />
+                )}
+              </button>
             )}
-        </div>
-
-        <div className="flex items-center gap-1.5">
-          {/* Seletor de Modo: Reps vs Tempo (habilitado apenas se editável e expandido) */}
-          {!isReadOnly && isExpanded && (
-            <div className="flex items-center rounded-lg border border-border bg-muted/40 p-0.5 text-[11px] font-heading font-semibold">
-              <button
-                type="button"
-                onClick={() => setMode("reps")}
-                className={`rounded-md px-2 py-1 transition-colors ${
-                  mode === "reps"
-                    ? "bg-background text-foreground shadow-xs"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                Reps
-              </button>
-              <button
-                type="button"
-                onClick={() => setMode("duration")}
-                className={`rounded-md px-2 py-1 transition-colors ${
-                  mode === "duration"
-                    ? "bg-background text-foreground shadow-xs"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                Tempo
-              </button>
+          </div>
+          <PrescriptionTargets
+            value={{
+              repsMin: exercise.plannedRepsMin,
+              repsMax: exercise.plannedRepsMax,
+              targetRir: exercise.plannedTargetRir,
+              targetLoadInGrams: exercise.plannedTargetLoadInGrams,
+              tempo: exercise.plannedTempo,
+            }}
+            showRange={false}
+          />
+          {exercise.wasSubstituted && exercise.plannedExerciseNameSnapshot && (
+            <p className="text-xs text-amber-500">
+              Original planejado: {exercise.plannedExerciseNameSnapshot}
+            </p>
+          )}
+          {exercise.isUnilateral && (
+            <p className="text-xs text-muted-foreground">
+              Cada série é feita em ambos os lados (volume ×2).
+            </p>
+          )}
+          {exercise.notes && (
+            <p className="border-l-2 border-primary/30 pl-3 text-xs text-muted-foreground">
+              {exercise.notes}
+            </p>
+          )}
+          {!isReadOnly && (
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-xs font-medium text-muted-foreground">
+                Registrar séries
+              </span>
+              <div className="flex rounded-xl border border-border bg-muted/40 p-0.5 text-xs font-semibold">
+                {(["reps", "duration"] as const).map((value) => (
+                  <button
+                    key={value}
+                    type="button"
+                    aria-pressed={mode === value}
+                    onClick={() => setMode(value)}
+                    className={`min-h-11 rounded-lg px-3 transition-colors ${mode === value ? "bg-background text-foreground shadow-xs" : "text-muted-foreground hover:text-foreground"}`}
+                  >
+                    {value === "reps" ? "Reps" : "Tempo"}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
-
-          {/* Botão de Excluir Exercício (Apenas em treino avulso aberto) */}
-          {isFreeWorkout && !isReadOnly && onRemoveExercise && (
-            <button
-              type="button"
-              onClick={handleRemoveClick}
-              disabled={isRemoving}
-              title="Remover exercício"
-              aria-label="Remover exercício"
-              className="rounded-lg p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors disabled:opacity-50"
-            >
-              {isRemoving ? (
-                <Loader2 className="size-4 animate-spin" />
-              ) : (
-                <Trash2 className="size-4" />
-              )}
-            </button>
-          )}
-
-          {/* Botão de Expandir / Recolher Séries */}
-          <button
-            type="button"
-            onClick={() => setIsExpanded((prev) => !prev)}
-            title={isExpanded ? "Recolher séries" : "Expandir séries"}
-            aria-expanded={isExpanded}
-            className="flex size-7 items-center justify-center rounded-lg border border-border/60 bg-muted/30 text-muted-foreground hover:bg-muted/70 hover:text-foreground transition-all active:scale-95"
-          >
-            <ChevronDown
-              className={`size-4 transition-transform duration-200 ${
-                isExpanded ? "rotate-180" : ""
-              }`}
-            />
-          </button>
-        </div>
-      </div>
-
-      {exercise.notes && (
-        <p className="text-xs text-muted-foreground italic pl-7 border-l-2 border-border/60">
-          {exercise.notes}
-        </p>
-      )}
-
-      {/* Resumo compacto quando recolhido */}
-      {!isExpanded && (
-        <div
-          onClick={() => setIsExpanded(true)}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") setIsExpanded(true);
-          }}
-          className="flex cursor-pointer items-center justify-between rounded-xl border border-dashed border-border/80 bg-muted/20 px-3.5 py-2.5 transition-colors hover:bg-muted/40"
-        >
-          <div className="flex items-center gap-2">
-            <span className="font-heading text-xs font-semibold text-foreground">
-              {sets.length === 0
-                ? "Nenhuma série"
-                : `${sets.length} ${sets.length === 1 ? "série" : "séries"}`}
-            </span>
-            {sets.length > 0 && (
-              <span
-                className={`rounded-full px-2 py-0.5 font-heading text-[10px] font-bold ${
-                  completedSetsCount === sets.length
-                    ? "bg-emerald-500/15 text-emerald-500"
-                    : "bg-muted text-muted-foreground"
-                }`}
-              >
-                {completedSetsCount}/{sets.length} concluídas
-              </span>
-            )}
-          </div>
-          <span className="font-heading text-xs font-semibold text-primary">
-            Toque para expandir
-          </span>
-        </div>
-      )}
-
-      {/* Conteúdo Expansível: Séries e Ações */}
-      {isExpanded && (
-        <>
           {/* Lista de Séries */}
           <div className="flex flex-col gap-2 pt-1 animate-in fade-in duration-200">
             {sets.length === 0 ? (
@@ -488,8 +447,8 @@ export function SessionExerciseCard({
               )}
             </Button>
           )}
-        </>
-      )}
+        </div>
+      </div>
 
       {/* Modal de Confirmação para Excluir Exercício com Séries */}
       {showDeleteConfirm && (

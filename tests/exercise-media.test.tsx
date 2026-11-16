@@ -430,6 +430,7 @@ describe("Task 4.X — Exercise Media Foundation (Frontend)", () => {
         />,
       );
 
+      fireEvent.click(screen.getByRole("button", { name: /expandir séries/i }));
       // Verifica que a série preenchida está visível nos inputs
       expect(screen.getByDisplayValue("80")).toBeDefined(); // 80 kg
       expect(screen.getByDisplayValue("10")).toBeDefined(); // 10 reps

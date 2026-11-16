@@ -8,12 +8,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   AlertCircle,
-  Calendar,
   CheckCircle2,
   Dumbbell,
   Loader2,
   Plus,
-  Sparkles,
   Trophy,
   X,
 } from "lucide-react";
@@ -368,7 +366,7 @@ export function WorkoutSessionTracker({
   };
 
   return (
-    <div className="trainvy-page flex flex-col gap-5 p-5">
+    <div className="trainvy-page flex flex-col gap-4 px-4 py-3 sm:px-5">
       {/* Banner de Conclusão / Acesso à Tela Bonitinha */}
       {isReadOnly && (
         <div className="flex items-center justify-between gap-3 rounded-2xl border border-primary/30 bg-gradient-to-r from-primary/15 via-primary/5 to-card p-4 shadow-sm">
@@ -390,87 +388,52 @@ export function WorkoutSessionTracker({
         </div>
       )}
 
-      {/* Card de Informações e Status da Sessão */}
-      <div className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5 shadow-sm">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {isFreeWorkout ? (
-              <span className="rounded-full bg-secondary px-2.5 py-0.5 font-heading text-xs font-bold uppercase tracking-wider text-secondary-foreground">
+      <div className="flex flex-col gap-2 border-b border-border/60 pb-4">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <span className="inline-flex items-center gap-2 font-heading text-xs font-semibold text-primary">
+            {isReadOnly ? (
+              <CheckCircle2 className="size-3.5" />
+            ) : (
+              <span className="size-1.5 rounded-full bg-primary" />
+            )}
+            {isReadOnly ? "Concluído" : "Em Andamento"}
+            {isFreeWorkout && (
+              <span className="font-normal text-muted-foreground">
                 Treino avulso
               </span>
-            ) : (
-              <span className="font-heading text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                ID #{sessionData.id.slice(0, 8)}
-              </span>
             )}
-          </div>
-
-          {isReadOnly ? (
-            <Link
-              href={`/workout-sessions/${sessionData.id}/summary`}
-              className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 px-3 py-1 font-heading text-xs font-semibold text-primary transition hover:bg-primary/25"
+          </span>
+          {!isReadOnly && pendingMutationsCount > 0 && (
+            <span
+              role="status"
+              className="inline-flex items-center gap-1 text-[11px] text-muted-foreground"
             >
-              <CheckCircle2 className="size-3.5" />
-              <span>Concluído • Ver Resumo</span>
-            </Link>
-          ) : (
-            <div className="flex items-center gap-2">
-              {pendingMutationsCount > 0 && (
-                <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground animate-in fade-in">
-                  <Loader2 className="size-3 animate-spin text-primary" />
-                  Salvando...
-                </span>
-              )}
-              <AiFeature capability="chat">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleOpenAiDrawer()}
-                  className="rounded-full border-primary/30 bg-primary/10 px-3 py-1 font-heading text-xs font-semibold text-primary hover:bg-primary/20 hover:border-primary/50 cursor-pointer"
-                >
-                  <Sparkles className="mr-1.5 size-3.5 text-primary" />
-                  <span>Coach IA</span>
-                </Button>
-              </AiFeature>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 font-heading text-xs font-semibold text-primary">
-                <span className="relative flex size-2">
-                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-75" />
-                  <span className="relative inline-flex size-2 rounded-full bg-primary" />
-                </span>
-                Em Andamento
-              </span>
-            </div>
+              <Loader2 className="size-3 animate-spin" />
+              Salvando...
+            </span>
           )}
         </div>
-
-        <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Calendar className="size-3.5" />
-            <span>Iniciado em: {startedAtFormatted}</span>
-          </div>
-
-          {completedAtFormatted && (
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <CheckCircle2 className="size-3.5 text-primary" />
-              <span>Finalizado em: {completedAtFormatted}</span>
-            </div>
-          )}
-        </div>
-
+        <span className="text-xs text-muted-foreground">
+          Iniciado em: {startedAtFormatted}
+        </span>
+        {completedAtFormatted && (
+          <span className="text-xs text-muted-foreground">
+            Finalizado em: {completedAtFormatted}
+          </span>
+        )}
         {isReadOnly && (
-          <div className="rounded-lg bg-muted/60 p-2.5 text-xs text-muted-foreground">
+          <p className="text-xs text-muted-foreground">
             Esta sessão foi finalizada e os registros estão em modo somente
             leitura.
-          </div>
+          </p>
         )}
       </div>
 
       {/* Seção de Exercícios */}
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
-          <h2 className="font-heading text-lg font-semibold text-foreground flex items-center gap-2">
-            <Dumbbell className="size-5 text-primary" />
+          <h2 className="font-heading text-sm font-semibold text-foreground flex items-center gap-2">
+            <Dumbbell className="size-4 text-primary" />
             Exercícios ({exercises.length})
           </h2>
 
@@ -513,12 +476,13 @@ export function WorkoutSessionTracker({
             )}
           </div>
         ) : (
-          <div className="flex flex-col gap-4">
-            {exercises.map((exercise) => (
+          <div className="flex flex-col gap-2.5">
+            {exercises.map((exercise, index) => (
               <SessionExerciseCard
                 key={exercise.id}
                 sessionId={sessionData.id}
                 exercise={exercise}
+                exerciseIndex={index + 1}
                 isReadOnly={isReadOnly}
                 isFreeWorkout={isFreeWorkout}
                 onRemoveExercise={handleRemoveExercise}
@@ -555,7 +519,7 @@ export function WorkoutSessionTracker({
             size="lg"
             disabled={isFinishing || isCancelling || pendingMutationsCount > 0}
             onClick={handleOpenFinishModal}
-            className="w-full rounded-2xl py-6 font-heading text-base font-bold shadow-md active:scale-[0.99]"
+            className="h-12 w-full rounded-2xl font-heading text-sm font-bold shadow-md active:scale-[0.99]"
           >
             {isFinishing ? (
               <span className="flex items-center gap-2">

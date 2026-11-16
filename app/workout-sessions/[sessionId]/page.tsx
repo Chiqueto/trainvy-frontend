@@ -97,7 +97,8 @@ export default async function WorkoutSessionPage({
             Erro ao carregar sessão
           </h2>
           <p className="mt-2 text-sm text-muted-foreground max-w-xs">
-            Não foi possível recuperar os dados da sessão de treino. Tente novamente mais tarde.
+            Não foi possível recuperar os dados da sessão de treino. Tente
+            novamente mais tarde.
           </p>
           <Button asChild className="mt-6 rounded-full px-6">
             <Link href="/">Voltar ao Início</Link>
@@ -132,7 +133,17 @@ export default async function WorkoutSessionPage({
       </div>
 
       {/* Tracker Interativo */}
-      <PlanLegalLabel data={{ originType: sessionResponse.data.originType ?? "PERSONAL_SELF_LOG", prescriptionStatus: sessionResponse.data.prescriptionStatus ?? "APPROVED_PRESCRIBED", prescribedCrefSnapshot: sessionResponse.data.prescribedCrefSnapshot ?? null }} />
+      <div className="trainvy-page px-4 pt-3 sm:px-5 [&>p]:rounded-none [&>p]:border-0 [&>p]:bg-transparent [&>p]:p-0 [&>p]:text-muted-foreground">
+        <PlanLegalLabel
+          data={{
+            originType: sessionResponse.data.originType ?? "PERSONAL_SELF_LOG",
+            prescriptionStatus:
+              sessionResponse.data.prescriptionStatus ?? "APPROVED_PRESCRIBED",
+            prescribedCrefSnapshot:
+              sessionResponse.data.prescribedCrefSnapshot ?? null,
+          }}
+        />
+      </div>
       <WorkoutSessionTracker
         session={sessionResponse.data}
         coachInfo={coachInfo}

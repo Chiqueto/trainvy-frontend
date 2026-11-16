@@ -85,7 +85,10 @@ describe("Task 6.4 — Substituição de Exercícios na Sessão de Treino", () =
     it("trata erro retornado pela API", async () => {
       vi.mocked(api.substituteSessionExercise).mockResolvedValueOnce({
         status: 400,
-        data: { error: "Exercício não encontrado no catálogo.", code: "NOT_FOUND" },
+        data: {
+          error: "Exercício não encontrado no catálogo.",
+          code: "NOT_FOUND",
+        },
       } as any);
 
       const res = await substituteSessionExerciseAction(
@@ -137,6 +140,7 @@ describe("Task 6.4 — Substituição de Exercícios na Sessão de Treino", () =
         />,
       );
 
+      fireEvent.click(screen.getByRole("button", { name: /expandir séries/i }));
       expect(screen.getByRole("button", { name: /substituir/i })).toBeDefined();
     });
 
@@ -178,6 +182,7 @@ describe("Task 6.4 — Substituição de Exercícios na Sessão de Treino", () =
         />,
       );
 
+      fireEvent.click(screen.getByRole("button", { name: /expandir séries/i }));
       const subBtn = screen.getByRole("button", { name: /substituir/i });
       fireEvent.click(subBtn);
 
@@ -215,7 +220,9 @@ describe("Task 6.4 — Substituição de Exercícios na Sessão de Treino", () =
 
       expect(screen.getByText("Substituído")).toBeDefined();
       expect(screen.getByText(/Original planejado:/i)).toBeDefined();
-      expect(screen.getByText("Agachamento Livre")).toBeDefined();
+      expect(
+        screen.getByText(/Original planejado: Agachamento Livre/),
+      ).toBeDefined();
     });
   });
 

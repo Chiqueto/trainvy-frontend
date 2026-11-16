@@ -138,11 +138,11 @@ describe("Task 1.8 — Treino Avulso Frontend Tests", () => {
       expect(screen.queryByText(/ID #free-ses/)).toBeNull();
     });
 
-    it("exibe 'ID #' em sessão planejada com workoutDayId != null", () => {
+    it("exibe status compacto em sessão planejada com workoutDayId != null", () => {
       render(<WorkoutSessionTracker session={plannedSession} />);
 
       expect(screen.queryByText("Treino avulso")).toBeNull();
-      expect(screen.getByText(/ID #planned-/)).toBeDefined();
+      expect(screen.getByText("Em Andamento")).toBeDefined();
     });
 
     it("exibe botão '+ Adicionar exercício' em sessão avulsa aberta", () => {
@@ -391,6 +391,7 @@ describe("Task 1.8 — Treino Avulso Frontend Tests", () => {
 
       render(<WorkoutSessionTracker session={sessionWithExercise} />);
 
+      fireEvent.click(screen.getByRole("button", { name: /expandir séries/i }));
       const addSetBtn = screen.getByRole("button", {
         name: /adicionar série/i,
       });
@@ -431,6 +432,7 @@ describe("Task 1.8 — Treino Avulso Frontend Tests", () => {
 
       render(<WorkoutSessionTracker session={sessionWithExercise} />);
 
+      fireEvent.click(screen.getByRole("button", { name: /expandir séries/i }));
       const deleteBtn = screen.getByRole("button", {
         name: /remover exercício/i,
       });
@@ -476,6 +478,7 @@ describe("Task 1.8 — Treino Avulso Frontend Tests", () => {
 
       render(<WorkoutSessionTracker session={sessionWithExerciseAndSets} />);
 
+      fireEvent.click(screen.getByRole("button", { name: /expandir séries/i }));
       const deleteBtn = screen.getByRole("button", {
         name: /remover exercício/i,
       });
