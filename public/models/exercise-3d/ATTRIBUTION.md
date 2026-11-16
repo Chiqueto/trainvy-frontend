@@ -85,6 +85,15 @@ agreement. Regenerate with `scripts/create-lat-pulldown-detail-map.mjs
 the map. This selection changes no athlete geometry; its categories are
 illustrative roles, not EMG measurements.
 
+## Supported one-arm row surface selection
+
+`one-arm-row-support-map.json` selects bilateral triceps surfaces from the same
+Z-Anatomy / BodyParts3D muscular source under CC BY-SA 4.0. Source and avatar
+checksums and match confidence are embedded in the map. Regeneration:
+`scripts/create-one-arm-row-support-map.mjs <MuscularSystem100.fbx>`.
+Roles are selected independently for the support side; the source selection
+does not measure activation. Athlete geometry is unchanged.
+
 ## Previous model — anatomical-lifter.glb
 
 The following notice is retained for the previous, source-derived prototype, which is no longer

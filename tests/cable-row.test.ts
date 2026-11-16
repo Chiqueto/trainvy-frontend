@@ -54,7 +54,7 @@ describe("neutral triangle seated cable row", () => {
     for (const n of [
       "Remada baixa com barra aberta",
       "Remada unilateral no cabo",
-      "Remada curvada",
+      "Remada curvada com halteres",
     ])
       expect(getExerciseAnimation(null, n)).toBeNull();
   });

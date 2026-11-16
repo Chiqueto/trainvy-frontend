@@ -13,7 +13,8 @@ import { Bone, Group, Skeleton, SkinnedMesh, type BufferGeometry } from "three";
 import { MachineRowMachine, type MachineRowMachineHandle } from "./machine-row-machine";
 import { CableRowMachine, type CableRowMachineHandle } from "./cable-row-machine";
 import { LatPulldownMachine, type LatPulldownMachineHandle } from "./lat-pulldown-machine";
-import { createFlyMachineBentRowAttribute } from "./bent-row-muscles";
+import { createPackedRowAttribute } from "./one-arm-row-muscles";
+import { OneArmRowBench } from "./one-arm-row-bench";
 import { createPecDeckHangCleanAttribute } from "./hang-power-clean-muscles";
 import { HipAbductionSupplement } from "./hip-abduction-supplement";
 import { HipThrustBench, HipThrustBarPad } from "./hip-thrust-bench";
@@ -536,7 +537,7 @@ function Athlete({
       if (object instanceof SkinnedMesh) {
         object.geometry = object.geometry.clone();
         object.geometry.setAttribute("_pecdeckmuscles",createPecDeckHangCleanAttribute(object.geometry));
-        object.geometry.setAttribute("_flymuscles", createFlyMachineBentRowAttribute(object.geometry));
+        object.geometry.setAttribute("_flymuscles", createPackedRowAttribute(object.geometry));
         object.geometry.setAttribute("_smithbenchmuscles", createSmithBenchMuscleMask(object.geometry));
         object.geometry.setAttribute("_machinechestpressmuscles", createMachineChestPressMuscleMask(object.geometry));
         object.geometry.setAttribute("_hipmachinemuscles",createHipMachineMuscleAttribute(object.geometry));
@@ -606,7 +607,7 @@ function Athlete({
     <>
       <primitive object={rig.scene} dispose={null} />
       {exercise === "hip-abduction" && <HipAbductionSupplement athlete={rig.scene} material={rig.material} />}
-      {exercise === "machine-row" ? <MachineRowMachine ref={machineRowMachine} /> : exercise === "cable-row" ? <CableRowMachine ref={cableRowMachine} /> : (exercise === "lat-pulldown" || exercise === "front-lat-pulldown") ? <LatPulldownMachine ref={latPulldownMachine} /> : exercise === "seated-calf" ? (<SeatedCalfMachine ref={seatedCalfMachine} />) : exercise === "standing-calf" ? (
+      {exercise === "one-arm-row" ? <><OneArmRowBench /><group ref={rightDumbbell}><Dumbbell /></group></> : exercise === "machine-row" ? <MachineRowMachine ref={machineRowMachine} /> : exercise === "cable-row" ? <CableRowMachine ref={cableRowMachine} /> : (exercise === "lat-pulldown" || exercise === "front-lat-pulldown") ? <LatPulldownMachine ref={latPulldownMachine} /> : exercise === "seated-calf" ? (<SeatedCalfMachine ref={seatedCalfMachine} />) : exercise === "standing-calf" ? (
         <StandingCalfMachine ref={standingCalfMachine} />
       ) : exercise === "hip-abduction" ? (
         <HipAbductionMachine ref={hipAbductionMachine} />
@@ -678,6 +679,7 @@ function getCameraParams(
   exercise: ExerciseAnimation,
   view: SceneProps["view"],
 ): { position: [number, number, number]; target: [number, number, number] } {
+  if (exercise === "one-arm-row") {const target:[number,number,number]=[.05,.68,-.05];if(view==="front")return {position:[.05,1.8,3.7],target};if(view==="side")return {position:[3.4,1.6,-.05],target};if(view==="back")return {position:[.05,1.8,-3.8],target};return {position:[2.5,1.9,2.7],target};}
   if ((exercise === "bent-row" || exercise === "generic-bent-row")) { const target:[number,number,number]=[0,.85,.1]; if(view==="front")return {position:[0,1.7,4.3],target}; if(view==="side")return {position:[3.7,1.5,.1],target}; if(view==="back")return {position:[0,1.7,-4],target}; return {position:[2.8,1.9,3.1],target}; }
   if (exercise === "machine-row") {
     const target:[number,number,number]=[0,.76,.22];

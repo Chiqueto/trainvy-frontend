@@ -23,6 +23,7 @@ import type { GetExerciseMedia200 } from "@/app/_lib/api/fetch-generated";
 import { Button } from "@/components/ui/button";
 
 const LAB_MEDIA_DATA: Record<ExerciseAnimation, GetExerciseMedia200> = {
+  "one-arm-row": {exerciseId:EXERCISE_ANIMATIONS["one-arm-row"].id,hasMedia:false,mediaType:null,startImagePath:null,endImagePath:null,motionPath:null,attributionName:null,attributionUrl:null,instructions:EXERCISE_ANIMATIONS["one-arm-row"].instructions},
   "generic-bent-row": {exerciseId:EXERCISE_ANIMATIONS["generic-bent-row"].id,hasMedia:false,mediaType:null,startImagePath:null,endImagePath:null,motionPath:null,attributionName:null,attributionUrl:null,instructions:EXERCISE_ANIMATIONS["generic-bent-row"].instructions},
   "bent-row": {exerciseId:EXERCISE_ANIMATIONS["bent-row"].id,hasMedia:false,mediaType:null,startImagePath:null,endImagePath:null,motionPath:null,attributionName:null,attributionUrl:null,instructions:EXERCISE_ANIMATIONS["bent-row"].instructions},
   "machine-row": {exerciseId:EXERCISE_ANIMATIONS["machine-row"].id,hasMedia:false,mediaType:null,startImagePath:null,endImagePath:null,motionPath:null,attributionName:null,attributionUrl:null,instructions:EXERCISE_ANIMATIONS["machine-row"].instructions},
@@ -204,6 +205,7 @@ export default function Exercise3DLab() {
       cues: string[];
     }
   > = {
+    "one-arm-row": {primary:EXERCISE_ANIMATIONS["one-arm-row"].muscles.primary.join(", "),secondary:EXERCISE_ANIMATIONS["one-arm-row"].muscles.secondary.join(", "),cadence:"Descida controlada, pausa e puxada suave.",cues:["Mão e joelho opostos apoiados no banco.","Tronco firme e cotovelo em direção ao quadril.","Repita do outro lado após terminar."]},
     "generic-bent-row": {primary:EXERCISE_ANIMATIONS["generic-bent-row"].muscles.primary.join(", "),secondary:EXERCISE_ANIMATIONS["generic-bent-row"].muscles.secondary.join(", "),cadence:"Descida controlada, pausa e puxada suave.",cues:["Quadril recuado e pés apoiados.","Tronco estável e cotovelos para trás."]},
     "bent-row": {primary:EXERCISE_ANIMATIONS["bent-row"].muscles.primary.join(", "),secondary:EXERCISE_ANIMATIONS["bent-row"].muscles.secondary.join(", "),cadence:"Descida controlada, pausa e puxada suave.",cues:["Quadril recuado e pés apoiados.","Tronco estável e cotovelos para trás."]},
     "machine-row": {primary:EXERCISE_ANIMATIONS["machine-row"].muscles.primary.join(", "),secondary:EXERCISE_ANIMATIONS["machine-row"].muscles.secondary.join(", "),cadence:"Retorno controlado, pausa e puxada suave.",cues:["Peito apoiado e pés no chão.","Punhos neutros e pegadores separados.","Cotovelos até a linha do tronco, sem tirar o peito do apoio."]},
