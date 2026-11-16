@@ -1,3 +1,4 @@
+import { getPullingShoulder } from "./scapular-motion";
 import { MathUtils, Matrix4, Quaternion, Vector3 } from "three";
 import { ARM_LENGTH, FOREARM_LENGTH, solveJoint } from "./kinematics";
 
@@ -30,9 +31,7 @@ export function getCableRowPose(depth: number) {
     const hip = CABLE_ROW_HIP.clone().setX(side * 0.14),
       ankle = CABLE_ROW_ANKLE.clone().setX(side * 0.17);
     const knee = solveJoint(hip, ankle, 0.44, 0.42, v(0, 1, 1));
-    const shoulder = origin
-      .clone()
-      .add(v(side * 0.215, 0.224, 0.132 + 0.015 * p));
+    const shoulder = origin.clone().add(getPullingShoulder('cable-row',p,side));
     const grip = bar.clone().setX(side * CABLE_ROW_GRIP_HALF_WIDTH);
     let wrist = grip.clone(),
       elbow = shoulder.clone(),

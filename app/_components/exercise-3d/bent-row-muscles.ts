@@ -1,3 +1,4 @@
+import { addScapularSynergists } from "./scapular-muscles";
 import { BufferAttribute, type BufferGeometry } from "three";
 import back from "./deadlift-upper-back-map.json";
 import detail from "./lat-pulldown-detail-map.json";
@@ -23,7 +24,7 @@ export function createBentRowMuscleMask(geometry: BufferGeometry) {
       }
     }
   }
-  return new BufferAttribute(values, 1);
+  return addScapularSynergists(geometry, new BufferAttribute(values, 1));
 }
 export function createFlyMachineBentRowAttribute(geometry: BufferGeometry) {
   const old = createFlyMachineRowAttribute(geometry),

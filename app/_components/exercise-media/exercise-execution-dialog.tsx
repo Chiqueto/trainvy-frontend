@@ -94,6 +94,8 @@ const FALLBACK_3D_INSTRUCTIONS: Record<
   "standing-calf": STANDING_CALF_INSTRUCTIONS,
   "seated-calf": SEATED_CALF_INSTRUCTIONS,
   "one-arm-row": ONE_ARM_ROW_INSTRUCTIONS,
+  "supinated-bent-row": EXERCISE_ANIMATIONS["supinated-bent-row"].instructions,
+  "high-bent-row": EXERCISE_ANIMATIONS["high-bent-row"].instructions,
   "generic-bent-row": BENT_ROW_INSTRUCTIONS,
   "bent-row": BENT_ROW_INSTRUCTIONS,
   "machine-row": MACHINE_ROW_INSTRUCTIONS,

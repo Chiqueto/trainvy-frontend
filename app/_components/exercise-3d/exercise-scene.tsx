@@ -1,5 +1,6 @@
 "use client";
 
+import { installScapularRig } from "./scapular-rig";
 import { Suspense, useEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
@@ -18,7 +19,7 @@ import { OneArmRowBench } from "./one-arm-row-bench";
 import { createPecDeckHangCleanAttribute } from "./hang-power-clean-muscles";
 import { HipAbductionSupplement } from "./hip-abduction-supplement";
 import { HipThrustBench, HipThrustBarPad } from "./hip-thrust-bench";
-import { createSmithBenchMuscleMask } from "./smith-bench-muscles";
+import { createSmithHighRowAttribute } from "./high-row-muscles";
 import { SmithMachineFrame, SmithBarbell } from "./smith-machine";
 import { PecDeckMachine, type PecDeckMachineHandle } from "./pec-deck-machine";
 import { createMachineChestPressMuscleMask } from "./machine-chest-press-muscles";
@@ -538,7 +539,7 @@ function Athlete({
         object.geometry = object.geometry.clone();
         object.geometry.setAttribute("_pecdeckmuscles",createPecDeckHangCleanAttribute(object.geometry));
         object.geometry.setAttribute("_flymuscles", createPackedRowAttribute(object.geometry));
-        object.geometry.setAttribute("_smithbenchmuscles", createSmithBenchMuscleMask(object.geometry));
+        object.geometry.setAttribute("_smithbenchmuscles", createSmithHighRowAttribute(object.geometry));
         object.geometry.setAttribute("_machinechestpressmuscles", createMachineChestPressMuscleMask(object.geometry));
         object.geometry.setAttribute("_hipmachinemuscles",createHipMachineMuscleAttribute(object.geometry));
         object.geometry.setAttribute("_gobletsquatmuscles", createGobletSumoDeadliftAttribute(object.geometry));
@@ -549,6 +550,12 @@ function Athlete({
         object.castShadow = true;
         object.frustumCulled = false;
         skeletons.add(object.skeleton);
+      }
+    });
+    scene.traverse((object) => {
+      if (object instanceof SkinnedMesh) {
+        skeletons.delete(object.skeleton);
+        skeletons.add(installScapularRig(object,bones));
       }
     });
     return {
@@ -680,7 +687,7 @@ function getCameraParams(
   view: SceneProps["view"],
 ): { position: [number, number, number]; target: [number, number, number] } {
   if (exercise === "one-arm-row") {const target:[number,number,number]=[.05,.68,-.05];if(view==="front")return {position:[.05,1.8,3.7],target};if(view==="side")return {position:[3.4,1.6,-.05],target};if(view==="back")return {position:[.05,1.8,-3.8],target};return {position:[2.5,1.9,2.7],target};}
-  if ((exercise === "bent-row" || exercise === "generic-bent-row")) { const target:[number,number,number]=[0,.85,.1]; if(view==="front")return {position:[0,1.7,4.3],target}; if(view==="side")return {position:[3.7,1.5,.1],target}; if(view==="back")return {position:[0,1.7,-4],target}; return {position:[2.8,1.9,3.1],target}; }
+  if ((["bent-row", "generic-bent-row", "supinated-bent-row", "high-bent-row"].includes(exercise))) { const target:[number,number,number]=[0,.85,.1]; if(view==="front")return {position:[0,1.7,4.3],target}; if(view==="side")return {position:[3.7,1.5,.1],target}; if(view==="back")return {position:[0,1.7,-4],target}; return {position:[2.8,1.9,3.1],target}; }
   if (exercise === "machine-row") {
     const target:[number,number,number]=[0,.76,.22];
     if(view === "front")return {position:[0,1.6,3.9],target};

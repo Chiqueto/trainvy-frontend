@@ -1,3 +1,4 @@
+import { getPullingShoulder } from "./scapular-motion";
 import { MathUtils, Matrix4, Quaternion, Vector3 } from "three";
 import { ARM_LENGTH, FOREARM_LENGTH, solveJoint } from "./kinematics";
 const v = (x: number, y: number, z: number) => new Vector3(x, y, z);
@@ -45,9 +46,7 @@ export function getMachineRowPose(depth: number) {
     const hip = MACHINE_ROW_HIP.clone().setX(side * 0.14),
       ankle = v(side * 0.19, 0.05, 0.52);
     const knee = solveJoint(hip, ankle, 0.44, 0.42, v(0, 1, 1));
-    const shoulder = origin
-      .clone()
-      .add(v(side * 0.215, 0.224, 0.132 + 0.015 * p));
+    const shoulder = origin.clone().add(getPullingShoulder('machine-row',p,side));
     const grip = bar.clone().setX(side * MACHINE_ROW_GRIP_HALF_WIDTH);
     let wrist = grip.clone(),
       elbow = shoulder.clone(),

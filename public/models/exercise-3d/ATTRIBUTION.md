@@ -111,6 +111,14 @@ The source-preserving GLB conversion is from [programasweights/avatar](https://g
 
 Changes: the head, eyes and eyebrows are cropped from the character, resized, welded to the body's neck with shared normals, rendered in grayscale with a short hair cap and irises, and bound to the athlete's skeleton.
 
+## Scapular motion runtime derivative (November 2026)
+
+Independent scapular controls and source-labelled thoracic skin weights are added
+to each viewer copy for rows and pulldowns. The distributed GLB topology is unchanged.
+The checksum-bound serratus anterior selection map derives from the same licensed
+Z-Anatomy / BodyParts3D `MuscularSystem100.fbx` and is shared under CC-BY-SA-4.0.
+Regeneration: `node scripts/create-scapular-detail-map.mjs <MuscularSystem100.fbx>`.
+
 ## Trainvy exercise prototype
 
 Body mesh and anatomical material reused from the user's `digital-twin/first-app` project. The Trainvy derivative adds upper-arm, forearm and hand bones (13 bones total), reweights the arms, removes the hack-squat activation mask, and applies procedural free-squat/bench-press poses. Original head attribution and CC0 license above are preserved.

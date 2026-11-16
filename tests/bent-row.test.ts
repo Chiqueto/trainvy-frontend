@@ -44,7 +44,7 @@ describe("standing bent-over barbell row", () => {
     expect(getExerciseAnimation(null, "Remada Curvada com Barra")).toBe(
       "bent-row",
     );
-    expect(getExerciseAnimation(null, "Remada Curvada Supinada")).toBeNull();
+    expect(getExerciseAnimation(null, "Remada Curvada Supinada")).toBe("supinated-bent-row");
   });
   it("preserves hinge, feet, segment lengths and two-hand shaft contact through 201 poses", () => {
     const first = getExercisePose("bent-row", 0);

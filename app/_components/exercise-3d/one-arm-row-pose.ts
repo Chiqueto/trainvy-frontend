@@ -1,3 +1,4 @@
+import { getPullingShoulder } from "./scapular-motion";
 import { MathUtils, Matrix4, Quaternion, Vector3 } from "three";
 import { ARM_LENGTH, FOREARM_LENGTH, solveJoint } from "./kinematics";
 const v = (x: number, y: number, z: number) => new Vector3(x, y, z);
@@ -39,7 +40,7 @@ export function getOneArmRowPose(depth: number) {
       side < 0
         ? ONE_ARM_ROW_SUPPORT_KNEE.clone()
         : solveJoint(hip, ankle, 0.44, 0.42, v(0, 0, 1));
-    const shoulder = body(v(side * 0.215, 0.224, 0.132));
+    const shoulder = body(getPullingShoulder('one-arm-row',p,side));
     if (side < 0) {
       const wrist = ONE_ARM_ROW_SUPPORT_WRIST.clone(),
         elbow = solveJoint(

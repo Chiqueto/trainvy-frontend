@@ -31,6 +31,20 @@ Os grupos são amplos: BACK inclui dorsais, trapézios, romboides e eretores; SH
 
 A classificação é uma **inferência editorial biomecânica**, apoiada pelas ações articulares e referências abaixo. Nem todas as variações possuem estudo individual, e EMG de uma condição não estabelece percentuais de ativação, equivalência de séries ou hipertrofia em outra. Técnica, amplitude, apoio, equipamento e intenção podem alterar a contribuição relativa. As notas por exercício documentam ambiguidades, como o equipamento do supino inclinado genérico e a execução da extensão lombar. A revisão não modifica modelos ou cores 3D; esse trabalho exige validação própria.
 
+## Conferência de remadas e puxadas 3D
+
+Ao criar ou revisar estas animações, conferir a cintura escapular além dos braços:
+retração/protração nas remadas e elevação/rotação superior na volta das puxadas,
+coordenadas com o úmero conforme a variante pesquisada. Uma técnica com escápulas
+fixas precisa ser identificada como tal; não usar ombros imóveis como padrão por
+limitação do rig. Validar a deformação da superfície dorsal e preservar os apoios.
+
+Pegada, abertura dos cotovelos e destino da carga precisam ser explícitos no cadastro,
+instruções, animação e legenda. Distinguir trajetórias ao abdômen e ao peito sem
+prometer isolamento. Antes de criar outro UUID, conferir duplicidades e variantes
+existentes; preservar IDs históricos ao retirar opções repetidas da seleção.
+Ver [revisão das remadas e escápulas](EXERCISE-3D-SCAPULAR-ROWS-REVIEW.md).
+
 ## Referências consultadas
 
 - [Supino e crucifixo: estudo comparativo (2020)](https://pmc.ncbi.nlm.nih.gov/articles/PMC7675616/).

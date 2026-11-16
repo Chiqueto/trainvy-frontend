@@ -1,3 +1,4 @@
+import { getPullingShoulder } from "./scapular-motion";
 import { MathUtils, Matrix4, Quaternion, Vector3 } from "three";
 import { ARM_LENGTH, FOREARM_LENGTH, solveJoint } from "./kinematics";
 
@@ -5,7 +6,9 @@ const v = (x: number, y: number, z: number) => new Vector3(x, y, z);
 export const PULLDOWN_HIP = v(0, 0.51, 0);
 export const PULLDOWN_PULLEY = v(0, 1.94, 0.28);
 export const PULLDOWN_GRIP_HALF_WIDTH = 0.3225; // 1.5 × the rig's 0.43 m shoulder span.
-export const PULLDOWN_BAR_TOP = v(0, 1.51, 0.25);
+// Overhead return includes the scapular rise: retain elbow extension instead of
+// leaving the original low bar endpoint after adding scapulothoracic rotation.
+export const PULLDOWN_BAR_TOP = v(0, 1.60, 0.25);
 export const PULLDOWN_BAR_BOTTOM = v(0, 0.995, 0.14);
 
 function frame(direction: Vector3, shaft: Vector3) {
@@ -32,7 +35,7 @@ export function getLatPulldownPose(depth: number) {
     const ankle = v(side * 0.19, 0.05, 0.54);
     const knee = solveJoint(hip, ankle, 0.44, 0.42, v(0, 1, 1));
     // Small shoulder elevation on return, with no trunk rocking or body translation.
-    const shoulder = body(v(side * 0.215, 0.224 + 0.018 * p, 0.132));
+    const shoulder = body(getPullingShoulder('lat-pulldown',p,side));
     const grip = bar.clone().setX(side * PULLDOWN_GRIP_HALF_WIDTH);
     // Solve the small authored palm offset together with the elbow, rather than
     // moving the bar off the hands or forcing the wrist into an axial spin.

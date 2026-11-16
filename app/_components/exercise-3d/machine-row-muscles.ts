@@ -1,3 +1,4 @@
+import { addScapularSynergists } from "./scapular-muscles";
 import { BufferAttribute, type BufferGeometry } from "three";
 import back from "./deadlift-upper-back-map.json";
 import detail from "./lat-pulldown-detail-map.json";
@@ -29,7 +30,7 @@ export function createMachineRowMuscleMask(geometry: BufferGeometry) {
       }
     }
   }
-  return new BufferAttribute(values, 1);
+  return addScapularSynergists(geometry, new BufferAttribute(values, 1));
 }
 /** Keep one GPU slot: original fly in X, independently reviewed machine row in Y. */
 export function createFlyMachineRowAttribute(geometry: BufferGeometry) {

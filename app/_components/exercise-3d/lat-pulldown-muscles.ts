@@ -1,3 +1,4 @@
+import { addScapularSynergists } from "./scapular-muscles";
 import { BufferAttribute, type BufferGeometry } from "three";
 import upper from "./deadlift-upper-back-map.json";
 import detail from "./lat-pulldown-detail-map.json";
@@ -29,5 +30,5 @@ export function createLatPulldownMuscleMask(geometry: BufferGeometry) {
       }
     }
   }
-  return new BufferAttribute(values, 1);
+  return addScapularSynergists(geometry, new BufferAttribute(values, 1));
 }

@@ -49,6 +49,8 @@ describe("Anatomical viewer controls", () => {
   it.each([
     ["bent-row", "Descida controlada da barra", "Remada sem embalar o tronco"],
     ["generic-bent-row", "Descida controlada da barra", "Remada sem embalar o tronco"],
+    ["supinated-bent-row", "Descida controlada da barra", "Remada sem embalar o tronco"],
+    ["high-bent-row", "Descida controlada da barra", "Remada sem embalar o tronco"],
     ["one-arm-row", "Descida controlada do halter", "Remada unilateral com apoios firmes"],
     ["front-lat-pulldown", "Retorno controlado da barra", "Puxada à frente do corpo"],
     ["cable-row", "Retorno controlado dos braços", "Remada com cotovelos próximos"],
