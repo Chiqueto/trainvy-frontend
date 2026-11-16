@@ -92,6 +92,7 @@ const FALLBACK_3D_INSTRUCTIONS: Record<
   "sumo-deadlift": SUMO_DEADLIFT_INSTRUCTIONS,
   "standing-calf": STANDING_CALF_INSTRUCTIONS,
   "seated-calf": SEATED_CALF_INSTRUCTIONS,
+  "generic-bent-row": BENT_ROW_INSTRUCTIONS,
   "bent-row": BENT_ROW_INSTRUCTIONS,
   "machine-row": MACHINE_ROW_INSTRUCTIONS,
   "cable-row": CABLE_ROW_INSTRUCTIONS,

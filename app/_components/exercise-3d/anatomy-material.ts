@@ -196,6 +196,7 @@ export function createTissueMaterial() {
       "standing-calf": 22,
       "seated-calf": 23,
       "hang-power-clean": 24,
+      "generic-bent-row": 28,
       "bent-row": 28,
       "machine-row": 27,
       "cable-row": 26,

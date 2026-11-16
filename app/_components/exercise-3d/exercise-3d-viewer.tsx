@@ -52,7 +52,7 @@ export function Exercise3DViewer(props: {
 }
 
 function phaseLabel(phase: number, exercise: ExerciseAnimation) {
-  if (exercise === "bent-row") { if(phase<.04||phase>=.99)return "Barra próxima ao abdômen"; if(phase<.48)return "Descida controlada da barra"; if(phase<.54)return "Pausa com braços alongados"; return "Remada sem embalar o tronco"; }
+  if ((exercise === "bent-row" || exercise === "generic-bent-row")) { if(phase<.04||phase>=.99)return "Barra próxima ao abdômen"; if(phase<.48)return "Descida controlada da barra"; if(phase<.54)return "Pausa com braços alongados"; return "Remada sem embalar o tronco"; }
   if (exercise === "machine-row") {
     if(phase<.04 || phase>=.99)return "Pegadores junto ao tronco";
     if(phase<.48)return "Retorno controlado dos pegadores";

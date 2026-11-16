@@ -28,6 +28,7 @@ import { MACHINE_ROW_INSTRUCTIONS } from "./machine-row-instructions";
 
 import { BENT_ROW_INSTRUCTIONS } from "./bent-row-instructions";
 export type ExerciseAnimation =
+ | "generic-bent-row"
  | "bent-row"
   | "machine-row"
   | "cable-row"
@@ -75,6 +76,7 @@ export interface ExerciseDefinition {
 }
 
 export const EXERCISE_ANIMATIONS = {
+  "generic-bent-row": {name:"Remada Curvada",id:"00000000-0000-4000-8000-000000000122",equipment:"Barra livre, pegada pronada e quadril recuado",instructions:BENT_ROW_INSTRUCTIONS,muscles:{primary:["Latíssimo do dorso e redondo maior","Trapézio médio e romboides"],secondary:["Bíceps, braquial e braquiorradial","Deltoide posterior e infraespinal","Trapézio superior/inferior, eretores e abdômen","Pegada, glúteos, posteriores e quadríceps (sustentação)"]}},
   "bent-row": {name:"Remada Curvada com Barra",id:"00000000-0000-4000-8000-000000000121",equipment:"Barra livre, pegada pronada e quadril recuado",instructions:BENT_ROW_INSTRUCTIONS,muscles:{primary:["Latíssimo do dorso e redondo maior","Trapézio médio e romboides"],secondary:["Bíceps, braquial e braquiorradial","Deltoide posterior e infraespinal","Trapézio superior/inferior, eretores e abdômen","Pegada, glúteos, posteriores e quadríceps (sustentação)"]}},
   "machine-row": {name:"Remada Sentada na Máquina",id:"43025392-0466-46e7-82ab-27888d53f929",equipment:"Máquina bilateral de alavancas com apoio peitoral e pegadas neutras",instructions:MACHINE_ROW_INSTRUCTIONS,muscles:{primary:["Latíssimo do dorso e redondo maior","Trapézio médio e romboides"],secondary:["Bíceps, braquial e braquiorradial","Deltoide posterior e infraespinal","Trapézio superior/inferior","Pegada e estabilizadores do tronco"]}},
   "cable-row": { name:"Remada Baixa no Cabo com Triângulo", id:"120f29ac-733c-478b-8aa9-a3f4c22f5e70", equipment:"Polia baixa com triângulo, banco e plataforma para os pés", instructions:CABLE_ROW_INSTRUCTIONS, muscles:{primary:["Latíssimo do dorso e redondo maior","Trapézio médio e romboides"],secondary:["Bíceps, braquial e braquiorradial","Deltoide posterior e infraespinal","Trapézio superior/inferior","Pegada, abdominais e eretores"]} },
@@ -301,6 +303,7 @@ export function getExerciseAnimation(
   if (id === EXERCISE_ANIMATIONS.stiff.id) return "stiff";
   if (id === EXERCISE_ANIMATIONS.deadlift.id) return "deadlift";
   if (id === EXERCISE_ANIMATIONS["sumo-deadlift"].id) return "sumo-deadlift";
+  if (id === EXERCISE_ANIMATIONS["generic-bent-row"].id) return "generic-bent-row";
   if (id === EXERCISE_ANIMATIONS["bent-row"].id) return "bent-row";
   if (id === EXERCISE_ANIMATIONS["machine-row"].id) return "machine-row";
   if (id === EXERCISE_ANIMATIONS["cable-row"].id) return "cable-row";
@@ -354,6 +357,7 @@ export function getExerciseAnimation(
     if (["stiff", "stiff com barra", "stiff-leg deadlift", "stiff leg deadlift", "levantamento terra com pernas quase estendidas"].includes(normalized)) return "stiff";
     if (["levantamento terra", "levantamento terra convencional", "levantamento terra com barra", "deadlift", "conventional deadlift"].includes(normalized)) return "deadlift";
     if (["levantamento terra sumo", "terra sumo", "sumo deadlift", "sumo barbell deadlift"].includes(normalized)) return "sumo-deadlift";
+    if (normalized === "remada curvada") return "generic-bent-row";
     if (["remada curvada com barra","bent over barbell row","barbell bent-over row"].includes(normalized)) return "bent-row";
     if (["remada sentada na maquina","remada bilateral na maquina com apoio peitoral","chest supported machine row"].includes(normalized)) return "machine-row";
     if (["remada baixa no cabo com triangulo","remada baixa no triangulo","seated cable row with triangle"].includes(normalized)) return "cable-row";
