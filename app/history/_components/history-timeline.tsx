@@ -184,6 +184,16 @@ export function HistoryTimeline({
         </AiFeature>
       </header>
 
+      <Link
+        href="/stats"
+        className="mt-5 flex min-h-12 items-center justify-between rounded-xl border border-border bg-card px-4 text-sm font-medium hover:bg-secondary"
+      >
+        Resumo da semana e mapa muscular
+        <span aria-hidden="true" className="text-primary">
+          →
+        </span>
+      </Link>
+
       <div
         className="mt-5 grid grid-cols-3 rounded-xl bg-secondary p-1"
         aria-label="Filtrar histórico"

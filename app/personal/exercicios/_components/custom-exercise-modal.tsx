@@ -1,23 +1,30 @@
 "use client";
 
-import { useState, useTransition, useEffect } from "react";
+import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { X, Dumbbell, Loader2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import {
-  ALL_MUSCLE_GROUPS,
-  type MuscleGroup,
-} from "@/app/_lib/muscle-labels";
+import { ALL_MUSCLE_GROUPS, type MuscleGroup } from "@/app/_lib/muscle-labels";
 import {
   createCustomExerciseAction,
   updateCustomExerciseAction,
 } from "@/app/personal/_actions";
 import { cn } from "@/lib/utils";
+import {
+  DemonstrationFields,
+  type DemonstrationValue,
+} from "./demonstration-fields";
+import { youtubeVideoId } from "@/app/_lib/youtube";
+import type { ExerciseAnimation } from "@/app/_components/exercise-3d/exercises";
 
 export interface CustomExerciseItem {
+  demonstration?: {
+    youtubeUrl: string | null;
+    animationKey: ExerciseAnimation | null;
+  } | null;
   id: string;
   name: string;
   isUnilateral?: boolean;
@@ -34,40 +41,38 @@ interface CustomExerciseModalProps {
   onSuccess?: () => void;
 }
 
-export function CustomExerciseModal({
-  isOpen,
+export function CustomExerciseModal(props: CustomExerciseModalProps) {
+  if (!props.isOpen) return null;
+  return (
+    <CustomExerciseForm key={props.exerciseToEdit?.id ?? "new"} {...props} />
+  );
+}
+
+function CustomExerciseForm({
   onClose,
   exerciseToEdit,
   onSuccess,
 }: CustomExerciseModalProps) {
   const isEditing = Boolean(exerciseToEdit);
-  const [name, setName] = useState("");
-  const [isUnilateral, setIsUnilateral] = useState(false);
-  const [primaryMuscles, setPrimaryMuscles] = useState<MuscleGroup[]>([]);
-  const [secondaryMuscles, setSecondaryMuscles] = useState<MuscleGroup[]>([]);
+  const [name, setName] = useState(exerciseToEdit?.name ?? "");
+  const [isUnilateral, setIsUnilateral] = useState(
+    Boolean(exerciseToEdit?.isUnilateral),
+  );
+  const [demonstration, setDemonstration] = useState<DemonstrationValue>({
+    youtubeUrl: exerciseToEdit?.demonstration?.youtubeUrl ?? "",
+    animationKey: exerciseToEdit?.demonstration?.animationKey ?? "",
+  });
+  const [primaryMuscles, setPrimaryMuscles] = useState<MuscleGroup[]>(() =>
+    (exerciseToEdit?.muscles ?? [])
+      .filter((m) => m.role === "PRIMARY")
+      .map((m) => m.muscleGroup as MuscleGroup),
+  );
+  const [secondaryMuscles, setSecondaryMuscles] = useState<MuscleGroup[]>(() =>
+    (exerciseToEdit?.muscles ?? [])
+      .filter((m) => m.role === "SECONDARY")
+      .map((m) => m.muscleGroup as MuscleGroup),
+  );
   const [isPending, startTransition] = useTransition();
-
-  useEffect(() => {
-    if (exerciseToEdit) {
-      setName(exerciseToEdit.name);
-      setIsUnilateral(Boolean(exerciseToEdit.isUnilateral));
-      const primaries = (exerciseToEdit.muscles ?? [])
-        .filter((m) => m.role === "PRIMARY")
-        .map((m) => m.muscleGroup as MuscleGroup);
-      const secondaries = (exerciseToEdit.muscles ?? [])
-        .filter((m) => m.role === "SECONDARY")
-        .map((m) => m.muscleGroup as MuscleGroup);
-      setPrimaryMuscles(primaries);
-      setSecondaryMuscles(secondaries);
-    } else {
-      setName("");
-      setIsUnilateral(false);
-      setPrimaryMuscles([]);
-      setSecondaryMuscles([]);
-    }
-  }, [exerciseToEdit, isOpen]);
-
-  if (!isOpen) return null;
 
   const togglePrimary = (group: MuscleGroup) => {
     if (primaryMuscles.includes(group)) {
@@ -92,6 +97,13 @@ export function CustomExerciseModal({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedName = name.trim();
+    if (
+      demonstration.youtubeUrl.trim() &&
+      !youtubeVideoId(demonstration.youtubeUrl.trim())
+    ) {
+      toast.error("Informe um link válido de vídeo do YouTube.");
+      return;
+    }
     if (!trimmedName) {
       toast.error("Informe o nome do exercício.");
       return;
@@ -100,10 +112,14 @@ export function CustomExerciseModal({
     startTransition(async () => {
       if (isEditing && exerciseToEdit) {
         const res = await updateCustomExerciseAction(exerciseToEdit.id, {
+          demonstration: {
+            youtubeUrl: demonstration.youtubeUrl.trim() || null,
+            animationKey: demonstration.animationKey || null,
+          },
           name: trimmedName,
           isUnilateral,
-          primaryMuscleGroups: primaryMuscles as any,
-          secondaryMuscleGroups: secondaryMuscles as any,
+          primaryMuscleGroups: primaryMuscles,
+          secondaryMuscleGroups: secondaryMuscles,
         });
 
         if (res.success) {
@@ -115,10 +131,14 @@ export function CustomExerciseModal({
         }
       } else {
         const res = await createCustomExerciseAction({
+          demonstration: {
+            youtubeUrl: demonstration.youtubeUrl.trim() || null,
+            animationKey: demonstration.animationKey || null,
+          },
           name: trimmedName,
           isUnilateral,
-          primaryMuscleGroups: primaryMuscles as any,
-          secondaryMuscleGroups: secondaryMuscles as any,
+          primaryMuscleGroups: primaryMuscles,
+          secondaryMuscleGroups: secondaryMuscles,
         });
 
         if (res.success) {
@@ -133,8 +153,13 @@ export function CustomExerciseModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-xs p-0 sm:p-4 animate-in fade-in duration-200">
-      <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-t-3xl sm:rounded-2xl border border-border bg-card p-6 shadow-2xl flex flex-col gap-5">
+    <div className="fixed inset-0 z-[80] flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-xs p-0 sm:p-4 animate-in fade-in duration-200">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="custom-exercise-title"
+        className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-t-3xl sm:rounded-2xl border border-border bg-card p-6 shadow-2xl flex flex-col gap-5"
+      >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border/50 pb-4">
           <div className="flex items-center gap-2.5">
@@ -142,8 +167,13 @@ export function CustomExerciseModal({
               <Dumbbell className="size-5" />
             </div>
             <div>
-              <h2 className="font-heading text-lg font-bold text-foreground">
-                {isEditing ? "Editar Exercício" : "Novo Exercício Personalizado"}
+              <h2
+                id="custom-exercise-title"
+                className="font-heading text-lg font-bold text-foreground"
+              >
+                {isEditing
+                  ? "Editar Exercício"
+                  : "Novo Exercício Personalizado"}
               </h2>
               <p className="text-xs text-muted-foreground">
                 {isEditing
@@ -155,6 +185,7 @@ export function CustomExerciseModal({
           <button
             type="button"
             onClick={onClose}
+            aria-label="Fechar cadastro de exercício"
             className="size-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
           >
             <X className="size-4" />
@@ -165,7 +196,10 @@ export function CustomExerciseModal({
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           {/* Nome */}
           <div className="space-y-1.5">
-            <Label htmlFor="exercise-name" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <Label
+              htmlFor="exercise-name"
+              className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+            >
               Nome do Exercício *
             </Label>
             <Input
@@ -182,11 +216,15 @@ export function CustomExerciseModal({
           {/* Unilateral */}
           <div className="flex items-center justify-between rounded-2xl border border-border/70 bg-muted/30 p-3.5">
             <div className="space-y-0.5">
-              <Label htmlFor="is-unilateral" className="text-sm font-heading font-medium cursor-pointer">
+              <Label
+                htmlFor="is-unilateral"
+                className="text-sm font-heading font-medium cursor-pointer"
+              >
                 Execução Unilateral
               </Label>
               <p className="text-xs text-muted-foreground">
-                Marque se o exercício for realizado um lado por vez (ex: Rosca Concentrada).
+                Marque se o exercício for realizado um lado por vez (ex: Rosca
+                Concentrada).
               </p>
             </div>
             <Switch
@@ -204,7 +242,8 @@ export function CustomExerciseModal({
                 Músculos Principais / Alvo
               </Label>
               <span className="text-[11px] text-muted-foreground">
-                {primaryMuscles.length} selecionado{primaryMuscles.length !== 1 ? "s" : ""}
+                {primaryMuscles.length} selecionado
+                {primaryMuscles.length !== 1 ? "s" : ""}
               </span>
             </div>
             <div className="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto p-1 rounded-xl border border-border/50 bg-background/50">
@@ -238,7 +277,8 @@ export function CustomExerciseModal({
                 Músculos Secundários / Sinergistas
               </Label>
               <span className="text-[11px] text-muted-foreground">
-                {secondaryMuscles.length} selecionado{secondaryMuscles.length !== 1 ? "s" : ""}
+                {secondaryMuscles.length} selecionado
+                {secondaryMuscles.length !== 1 ? "s" : ""}
               </span>
             </div>
             <div className="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto p-1 rounded-xl border border-border/50 bg-background/50">
@@ -264,6 +304,13 @@ export function CustomExerciseModal({
               })}
             </div>
           </div>
+
+          <DemonstrationFields
+            value={demonstration}
+            onChange={setDemonstration}
+            disabled={isPending}
+            name={name}
+          />
 
           {/* Botões */}
           <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-border/50">

@@ -6,11 +6,12 @@ import {
 } from "@/app/_lib/api/fetch-generated";
 import { requireAccountSetup } from "@/app/_lib/require-account-setup";
 import { PersonalHeader } from "../_components/personal-header";
-import { CustomExercisesList } from "./_components/custom-exercises-list";
+import { ExerciseLibrary } from "./_components/exercise-library";
 
 export const metadata = {
   title: "Exercícios Personalizados | Trainvy Pro",
-  description: "Gerencie seu catálogo de exercícios personalizados e variações exclusivas.",
+  description:
+    "Gerencie seu catálogo de exercícios personalizados e variações exclusivas.",
 };
 
 export default async function PersonalCustomExercisesPage() {
@@ -35,24 +36,24 @@ export default async function PersonalCustomExercisesPage() {
     redirect("/personal");
   }
 
-  const exercisesRes = await listExercises(
-    { onlyCustom: "true" },
-    { cache: "no-store" },
-  );
-
-  const customExercises =
-    exercisesRes.status === 200 ? exercisesRes.data : [];
+  const [customRes, globalRes] = await Promise.all([
+    listExercises({ onlyCustom: "true" }, { cache: "no-store" }),
+    listExercises({ onlyGlobal: "true" }, { cache: "no-store" }),
+  ]);
 
   return (
     <div className="personal-workspace flex min-h-svh min-w-0 flex-col bg-background pb-28 lg:pb-8">
       <main className="trainvy-page mx-auto w-full px-4 sm:px-6 py-6 flex flex-col gap-6">
         <PersonalHeader
-          title="Exercícios Personalizados"
-          description="Cadastre variações exclusivas, configure músculos principais e secundários, e utilize-os em todos os seus treinos e modelos."
+          title="Exercícios e demonstrações"
+          description="Cadastre seus exercícios e personalize a execução com vídeos do YouTube e referências da biblioteca 3D."
           activeTab="exercises"
         />
 
-        <CustomExercisesList initialExercises={customExercises as any} />
+        <ExerciseLibrary
+          customExercises={customRes.status === 200 ? customRes.data : []}
+          globalExercises={globalRes.status === 200 ? globalRes.data : []}
+        />
       </main>
       <BottomNav isCoach={true} activePage="exercises" />
     </div>

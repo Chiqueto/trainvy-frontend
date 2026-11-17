@@ -11148,6 +11148,58 @@ export const ListCoachAthleteProgressExercisesOnlyWithHistory = {
   false: "false",
 } as const;
 
+/**
+ * @nullable
+ */
+export type ListCoachAthleteProgressExercises200ItemDemonstration = {
+  /** @nullable */
+  youtubeUrl: string | null;
+  /** @nullable */
+  animationKey:
+    | "high-supinated-bent-row"
+    | "yates-row"
+    | "supinated-yates-row"
+    | "pendlay-row"
+    | "supinated-bent-row"
+    | "high-bent-row"
+    | "one-arm-row"
+    | "generic-bent-row"
+    | "bent-row"
+    | "machine-row"
+    | "cable-row"
+    | "front-lat-pulldown"
+    | "lat-pulldown"
+    | "hang-power-clean"
+    | "squat"
+    | "bench-press"
+    | "incline-dumbbell-press"
+    | "flat-dumbbell-press"
+    | "incline-bench-press"
+    | "decline-bench-press"
+    | "pec-deck"
+    | "machine-fly"
+    | "flat-dumbbell-fly"
+    | "smith-bench-press"
+    | "machine-chest-press"
+    | "smith-squat"
+    | "leg-extension"
+    | "seated-leg-curl"
+    | "prone-leg-curl"
+    | "hack-squat"
+    | "leg-press-45"
+    | "horizontal-leg-press"
+    | "stiff"
+    | "deadlift"
+    | "sumo-deadlift"
+    | "seated-calf"
+    | "standing-calf"
+    | "hip-thrust"
+    | "hip-abduction"
+    | "goblet-squat"
+    | "sumo-dumbbell-squat"
+    | null;
+} | null;
+
 export type ListCoachAthleteProgressExercises200ItemMusclesItemMuscleGroup =
   (typeof ListCoachAthleteProgressExercises200ItemMusclesItemMuscleGroup)[keyof typeof ListCoachAthleteProgressExercises200ItemMusclesItemMuscleGroup];
 
@@ -11185,6 +11237,8 @@ export type ListCoachAthleteProgressExercises200ItemMusclesItem = {
 };
 
 export type ListCoachAthleteProgressExercises200Item = {
+  /** @nullable */
+  demonstration?: ListCoachAthleteProgressExercises200ItemDemonstration;
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
   name: string;
@@ -15656,6 +15710,155 @@ export type CancelManualSubscription500 = {
   code: string;
 };
 
+/**
+ * @nullable
+ */
+export type SaveExerciseDemonstrationBodyAnimationKey =
+  | (typeof SaveExerciseDemonstrationBodyAnimationKey)[keyof typeof SaveExerciseDemonstrationBodyAnimationKey]
+  | null;
+
+export const SaveExerciseDemonstrationBodyAnimationKey = {
+  "high-supinated-bent-row": "high-supinated-bent-row",
+  "yates-row": "yates-row",
+  "supinated-yates-row": "supinated-yates-row",
+  "pendlay-row": "pendlay-row",
+  "supinated-bent-row": "supinated-bent-row",
+  "high-bent-row": "high-bent-row",
+  "one-arm-row": "one-arm-row",
+  "generic-bent-row": "generic-bent-row",
+  "bent-row": "bent-row",
+  "machine-row": "machine-row",
+  "cable-row": "cable-row",
+  "front-lat-pulldown": "front-lat-pulldown",
+  "lat-pulldown": "lat-pulldown",
+  "hang-power-clean": "hang-power-clean",
+  squat: "squat",
+  "bench-press": "bench-press",
+  "incline-dumbbell-press": "incline-dumbbell-press",
+  "flat-dumbbell-press": "flat-dumbbell-press",
+  "incline-bench-press": "incline-bench-press",
+  "decline-bench-press": "decline-bench-press",
+  "pec-deck": "pec-deck",
+  "machine-fly": "machine-fly",
+  "flat-dumbbell-fly": "flat-dumbbell-fly",
+  "smith-bench-press": "smith-bench-press",
+  "machine-chest-press": "machine-chest-press",
+  "smith-squat": "smith-squat",
+  "leg-extension": "leg-extension",
+  "seated-leg-curl": "seated-leg-curl",
+  "prone-leg-curl": "prone-leg-curl",
+  "hack-squat": "hack-squat",
+  "leg-press-45": "leg-press-45",
+  "horizontal-leg-press": "horizontal-leg-press",
+  stiff: "stiff",
+  deadlift: "deadlift",
+  "sumo-deadlift": "sumo-deadlift",
+  "seated-calf": "seated-calf",
+  "standing-calf": "standing-calf",
+  "hip-thrust": "hip-thrust",
+  "hip-abduction": "hip-abduction",
+  "goblet-squat": "goblet-squat",
+  "sumo-dumbbell-squat": "sumo-dumbbell-squat",
+} as const;
+
+export type SaveExerciseDemonstrationBody = {
+  /**
+   * @maxLength 2048
+   * @nullable
+   */
+  youtubeUrl: string | null;
+  /** @nullable */
+  animationKey: SaveExerciseDemonstrationBodyAnimationKey;
+};
+
+/**
+ * @nullable
+ */
+export type SaveExerciseDemonstration200AnimationKey =
+  | (typeof SaveExerciseDemonstration200AnimationKey)[keyof typeof SaveExerciseDemonstration200AnimationKey]
+  | null;
+
+export const SaveExerciseDemonstration200AnimationKey = {
+  "high-supinated-bent-row": "high-supinated-bent-row",
+  "yates-row": "yates-row",
+  "supinated-yates-row": "supinated-yates-row",
+  "pendlay-row": "pendlay-row",
+  "supinated-bent-row": "supinated-bent-row",
+  "high-bent-row": "high-bent-row",
+  "one-arm-row": "one-arm-row",
+  "generic-bent-row": "generic-bent-row",
+  "bent-row": "bent-row",
+  "machine-row": "machine-row",
+  "cable-row": "cable-row",
+  "front-lat-pulldown": "front-lat-pulldown",
+  "lat-pulldown": "lat-pulldown",
+  "hang-power-clean": "hang-power-clean",
+  squat: "squat",
+  "bench-press": "bench-press",
+  "incline-dumbbell-press": "incline-dumbbell-press",
+  "flat-dumbbell-press": "flat-dumbbell-press",
+  "incline-bench-press": "incline-bench-press",
+  "decline-bench-press": "decline-bench-press",
+  "pec-deck": "pec-deck",
+  "machine-fly": "machine-fly",
+  "flat-dumbbell-fly": "flat-dumbbell-fly",
+  "smith-bench-press": "smith-bench-press",
+  "machine-chest-press": "machine-chest-press",
+  "smith-squat": "smith-squat",
+  "leg-extension": "leg-extension",
+  "seated-leg-curl": "seated-leg-curl",
+  "prone-leg-curl": "prone-leg-curl",
+  "hack-squat": "hack-squat",
+  "leg-press-45": "leg-press-45",
+  "horizontal-leg-press": "horizontal-leg-press",
+  stiff: "stiff",
+  deadlift: "deadlift",
+  "sumo-deadlift": "sumo-deadlift",
+  "seated-calf": "seated-calf",
+  "standing-calf": "standing-calf",
+  "hip-thrust": "hip-thrust",
+  "hip-abduction": "hip-abduction",
+  "goblet-squat": "goblet-squat",
+  "sumo-dumbbell-squat": "sumo-dumbbell-squat",
+} as const;
+
+export type SaveExerciseDemonstration200 = {
+  /** @nullable */
+  youtubeUrl: string | null;
+  /** @nullable */
+  animationKey: SaveExerciseDemonstration200AnimationKey;
+};
+
+export type SaveExerciseDemonstration400 = {
+  error: string;
+  code: string;
+};
+
+export type SaveExerciseDemonstration401 = {
+  error: string;
+  code: string;
+};
+
+export type SaveExerciseDemonstration403 = {
+  error: string;
+  code: string;
+};
+
+export type SaveExerciseDemonstration404 = {
+  error: string;
+  code: string;
+};
+
+export type SaveExerciseDemonstration409 = {
+  error: string;
+  code: string;
+};
+
+export type SaveExerciseDemonstration500 = {
+  error: string;
+  code: string;
+};
+
 export type GetExerciseCatalogVersion200 = {
   version: string;
   /**
@@ -15678,10 +15881,63 @@ export type GetExerciseCatalogVersion500 = {
 };
 
 export type ListExercisesParams = {
+  onlyGlobal?: string;
   q?: string;
   onlyWithHistory?: string;
   onlyCustom?: string;
 };
+
+/**
+ * @nullable
+ */
+export type ListExercises200ItemDemonstration = {
+  /** @nullable */
+  youtubeUrl: string | null;
+  /** @nullable */
+  animationKey:
+    | "high-supinated-bent-row"
+    | "yates-row"
+    | "supinated-yates-row"
+    | "pendlay-row"
+    | "supinated-bent-row"
+    | "high-bent-row"
+    | "one-arm-row"
+    | "generic-bent-row"
+    | "bent-row"
+    | "machine-row"
+    | "cable-row"
+    | "front-lat-pulldown"
+    | "lat-pulldown"
+    | "hang-power-clean"
+    | "squat"
+    | "bench-press"
+    | "incline-dumbbell-press"
+    | "flat-dumbbell-press"
+    | "incline-bench-press"
+    | "decline-bench-press"
+    | "pec-deck"
+    | "machine-fly"
+    | "flat-dumbbell-fly"
+    | "smith-bench-press"
+    | "machine-chest-press"
+    | "smith-squat"
+    | "leg-extension"
+    | "seated-leg-curl"
+    | "prone-leg-curl"
+    | "hack-squat"
+    | "leg-press-45"
+    | "horizontal-leg-press"
+    | "stiff"
+    | "deadlift"
+    | "sumo-deadlift"
+    | "seated-calf"
+    | "standing-calf"
+    | "hip-thrust"
+    | "hip-abduction"
+    | "goblet-squat"
+    | "sumo-dumbbell-squat"
+    | null;
+} | null;
 
 export type ListExercises200ItemMusclesItemMuscleGroup =
   (typeof ListExercises200ItemMusclesItemMuscleGroup)[keyof typeof ListExercises200ItemMusclesItemMuscleGroup];
@@ -15720,6 +15976,8 @@ export type ListExercises200ItemMusclesItem = {
 };
 
 export type ListExercises200Item = {
+  /** @nullable */
+  demonstration?: ListExercises200ItemDemonstration;
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
   name: string;
@@ -15749,6 +16007,67 @@ export type ListExercises401 = {
 export type ListExercises500 = {
   error: string;
   code: string;
+};
+
+/**
+ * @nullable
+ */
+export type CreateExerciseBodyDemonstrationAnimationKey =
+  | (typeof CreateExerciseBodyDemonstrationAnimationKey)[keyof typeof CreateExerciseBodyDemonstrationAnimationKey]
+  | null;
+
+export const CreateExerciseBodyDemonstrationAnimationKey = {
+  "high-supinated-bent-row": "high-supinated-bent-row",
+  "yates-row": "yates-row",
+  "supinated-yates-row": "supinated-yates-row",
+  "pendlay-row": "pendlay-row",
+  "supinated-bent-row": "supinated-bent-row",
+  "high-bent-row": "high-bent-row",
+  "one-arm-row": "one-arm-row",
+  "generic-bent-row": "generic-bent-row",
+  "bent-row": "bent-row",
+  "machine-row": "machine-row",
+  "cable-row": "cable-row",
+  "front-lat-pulldown": "front-lat-pulldown",
+  "lat-pulldown": "lat-pulldown",
+  "hang-power-clean": "hang-power-clean",
+  squat: "squat",
+  "bench-press": "bench-press",
+  "incline-dumbbell-press": "incline-dumbbell-press",
+  "flat-dumbbell-press": "flat-dumbbell-press",
+  "incline-bench-press": "incline-bench-press",
+  "decline-bench-press": "decline-bench-press",
+  "pec-deck": "pec-deck",
+  "machine-fly": "machine-fly",
+  "flat-dumbbell-fly": "flat-dumbbell-fly",
+  "smith-bench-press": "smith-bench-press",
+  "machine-chest-press": "machine-chest-press",
+  "smith-squat": "smith-squat",
+  "leg-extension": "leg-extension",
+  "seated-leg-curl": "seated-leg-curl",
+  "prone-leg-curl": "prone-leg-curl",
+  "hack-squat": "hack-squat",
+  "leg-press-45": "leg-press-45",
+  "horizontal-leg-press": "horizontal-leg-press",
+  stiff: "stiff",
+  deadlift: "deadlift",
+  "sumo-deadlift": "sumo-deadlift",
+  "seated-calf": "seated-calf",
+  "standing-calf": "standing-calf",
+  "hip-thrust": "hip-thrust",
+  "hip-abduction": "hip-abduction",
+  "goblet-squat": "goblet-squat",
+  "sumo-dumbbell-squat": "sumo-dumbbell-squat",
+} as const;
+
+export type CreateExerciseBodyDemonstration = {
+  /**
+   * @maxLength 2048
+   * @nullable
+   */
+  youtubeUrl: string | null;
+  /** @nullable */
+  animationKey: CreateExerciseBodyDemonstrationAnimationKey;
 };
 
 export type CreateExerciseBodyPrimaryMuscleGroupsItem =
@@ -15794,12 +16113,65 @@ export const CreateExerciseBodySecondaryMuscleGroupsItem = {
 } as const;
 
 export type CreateExerciseBody = {
+  demonstration?: CreateExerciseBodyDemonstration;
   /** @minLength 1 */
   name: string;
   isUnilateral?: boolean;
   primaryMuscleGroups?: CreateExerciseBodyPrimaryMuscleGroupsItem[];
   secondaryMuscleGroups?: CreateExerciseBodySecondaryMuscleGroupsItem[];
 };
+
+/**
+ * @nullable
+ */
+export type CreateExercise201Demonstration = {
+  /** @nullable */
+  youtubeUrl: string | null;
+  /** @nullable */
+  animationKey:
+    | "high-supinated-bent-row"
+    | "yates-row"
+    | "supinated-yates-row"
+    | "pendlay-row"
+    | "supinated-bent-row"
+    | "high-bent-row"
+    | "one-arm-row"
+    | "generic-bent-row"
+    | "bent-row"
+    | "machine-row"
+    | "cable-row"
+    | "front-lat-pulldown"
+    | "lat-pulldown"
+    | "hang-power-clean"
+    | "squat"
+    | "bench-press"
+    | "incline-dumbbell-press"
+    | "flat-dumbbell-press"
+    | "incline-bench-press"
+    | "decline-bench-press"
+    | "pec-deck"
+    | "machine-fly"
+    | "flat-dumbbell-fly"
+    | "smith-bench-press"
+    | "machine-chest-press"
+    | "smith-squat"
+    | "leg-extension"
+    | "seated-leg-curl"
+    | "prone-leg-curl"
+    | "hack-squat"
+    | "leg-press-45"
+    | "horizontal-leg-press"
+    | "stiff"
+    | "deadlift"
+    | "sumo-deadlift"
+    | "seated-calf"
+    | "standing-calf"
+    | "hip-thrust"
+    | "hip-abduction"
+    | "goblet-squat"
+    | "sumo-dumbbell-squat"
+    | null;
+} | null;
 
 export type CreateExercise201MusclesItemMuscleGroup =
   (typeof CreateExercise201MusclesItemMuscleGroup)[keyof typeof CreateExercise201MusclesItemMuscleGroup];
@@ -15838,6 +16210,8 @@ export type CreateExercise201MusclesItem = {
 };
 
 export type CreateExercise201 = {
+  /** @nullable */
+  demonstration?: CreateExercise201Demonstration;
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
   name: string;
@@ -15917,6 +16291,58 @@ export type UpdateExerciseMusclesBody = {
   secondaryMuscleGroups?: UpdateExerciseMusclesBodySecondaryMuscleGroupsItem[];
 };
 
+/**
+ * @nullable
+ */
+export type UpdateExerciseMuscles200Demonstration = {
+  /** @nullable */
+  youtubeUrl: string | null;
+  /** @nullable */
+  animationKey:
+    | "high-supinated-bent-row"
+    | "yates-row"
+    | "supinated-yates-row"
+    | "pendlay-row"
+    | "supinated-bent-row"
+    | "high-bent-row"
+    | "one-arm-row"
+    | "generic-bent-row"
+    | "bent-row"
+    | "machine-row"
+    | "cable-row"
+    | "front-lat-pulldown"
+    | "lat-pulldown"
+    | "hang-power-clean"
+    | "squat"
+    | "bench-press"
+    | "incline-dumbbell-press"
+    | "flat-dumbbell-press"
+    | "incline-bench-press"
+    | "decline-bench-press"
+    | "pec-deck"
+    | "machine-fly"
+    | "flat-dumbbell-fly"
+    | "smith-bench-press"
+    | "machine-chest-press"
+    | "smith-squat"
+    | "leg-extension"
+    | "seated-leg-curl"
+    | "prone-leg-curl"
+    | "hack-squat"
+    | "leg-press-45"
+    | "horizontal-leg-press"
+    | "stiff"
+    | "deadlift"
+    | "sumo-deadlift"
+    | "seated-calf"
+    | "standing-calf"
+    | "hip-thrust"
+    | "hip-abduction"
+    | "goblet-squat"
+    | "sumo-dumbbell-squat"
+    | null;
+} | null;
+
 export type UpdateExerciseMuscles200MusclesItemMuscleGroup =
   (typeof UpdateExerciseMuscles200MusclesItemMuscleGroup)[keyof typeof UpdateExerciseMuscles200MusclesItemMuscleGroup];
 
@@ -15954,6 +16380,8 @@ export type UpdateExerciseMuscles200MusclesItem = {
 };
 
 export type UpdateExerciseMuscles200 = {
+  /** @nullable */
+  demonstration?: UpdateExerciseMuscles200Demonstration;
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
   name: string;
@@ -15988,6 +16416,58 @@ export type UpdateExerciseMuscles500 = {
 /**
  * @nullable
  */
+export type GetExerciseMedia200Demonstration = {
+  /** @nullable */
+  youtubeUrl: string | null;
+  /** @nullable */
+  animationKey:
+    | "high-supinated-bent-row"
+    | "yates-row"
+    | "supinated-yates-row"
+    | "pendlay-row"
+    | "supinated-bent-row"
+    | "high-bent-row"
+    | "one-arm-row"
+    | "generic-bent-row"
+    | "bent-row"
+    | "machine-row"
+    | "cable-row"
+    | "front-lat-pulldown"
+    | "lat-pulldown"
+    | "hang-power-clean"
+    | "squat"
+    | "bench-press"
+    | "incline-dumbbell-press"
+    | "flat-dumbbell-press"
+    | "incline-bench-press"
+    | "decline-bench-press"
+    | "pec-deck"
+    | "machine-fly"
+    | "flat-dumbbell-fly"
+    | "smith-bench-press"
+    | "machine-chest-press"
+    | "smith-squat"
+    | "leg-extension"
+    | "seated-leg-curl"
+    | "prone-leg-curl"
+    | "hack-squat"
+    | "leg-press-45"
+    | "horizontal-leg-press"
+    | "stiff"
+    | "deadlift"
+    | "sumo-deadlift"
+    | "seated-calf"
+    | "standing-calf"
+    | "hip-thrust"
+    | "hip-abduction"
+    | "goblet-squat"
+    | "sumo-dumbbell-squat"
+    | null;
+} | null;
+
+/**
+ * @nullable
+ */
 export type GetExerciseMedia200MediaType =
   | (typeof GetExerciseMedia200MediaType)[keyof typeof GetExerciseMedia200MediaType]
   | null;
@@ -16009,6 +16489,8 @@ export type GetExerciseMedia200Instructions = {
 } | null;
 
 export type GetExerciseMedia200 = {
+  /** @nullable */
+  demonstration?: GetExerciseMedia200Demonstration;
   biomechanicalReviewStatus?: string;
   /** @nullable */
   safetyDisclaimerMd?: string | null;
@@ -16045,6 +16527,67 @@ export type GetExerciseMedia404 = {
 export type GetExerciseMedia500 = {
   error: string;
   code: string;
+};
+
+/**
+ * @nullable
+ */
+export type UpdateCustomExerciseBodyDemonstrationAnimationKey =
+  | (typeof UpdateCustomExerciseBodyDemonstrationAnimationKey)[keyof typeof UpdateCustomExerciseBodyDemonstrationAnimationKey]
+  | null;
+
+export const UpdateCustomExerciseBodyDemonstrationAnimationKey = {
+  "high-supinated-bent-row": "high-supinated-bent-row",
+  "yates-row": "yates-row",
+  "supinated-yates-row": "supinated-yates-row",
+  "pendlay-row": "pendlay-row",
+  "supinated-bent-row": "supinated-bent-row",
+  "high-bent-row": "high-bent-row",
+  "one-arm-row": "one-arm-row",
+  "generic-bent-row": "generic-bent-row",
+  "bent-row": "bent-row",
+  "machine-row": "machine-row",
+  "cable-row": "cable-row",
+  "front-lat-pulldown": "front-lat-pulldown",
+  "lat-pulldown": "lat-pulldown",
+  "hang-power-clean": "hang-power-clean",
+  squat: "squat",
+  "bench-press": "bench-press",
+  "incline-dumbbell-press": "incline-dumbbell-press",
+  "flat-dumbbell-press": "flat-dumbbell-press",
+  "incline-bench-press": "incline-bench-press",
+  "decline-bench-press": "decline-bench-press",
+  "pec-deck": "pec-deck",
+  "machine-fly": "machine-fly",
+  "flat-dumbbell-fly": "flat-dumbbell-fly",
+  "smith-bench-press": "smith-bench-press",
+  "machine-chest-press": "machine-chest-press",
+  "smith-squat": "smith-squat",
+  "leg-extension": "leg-extension",
+  "seated-leg-curl": "seated-leg-curl",
+  "prone-leg-curl": "prone-leg-curl",
+  "hack-squat": "hack-squat",
+  "leg-press-45": "leg-press-45",
+  "horizontal-leg-press": "horizontal-leg-press",
+  stiff: "stiff",
+  deadlift: "deadlift",
+  "sumo-deadlift": "sumo-deadlift",
+  "seated-calf": "seated-calf",
+  "standing-calf": "standing-calf",
+  "hip-thrust": "hip-thrust",
+  "hip-abduction": "hip-abduction",
+  "goblet-squat": "goblet-squat",
+  "sumo-dumbbell-squat": "sumo-dumbbell-squat",
+} as const;
+
+export type UpdateCustomExerciseBodyDemonstration = {
+  /**
+   * @maxLength 2048
+   * @nullable
+   */
+  youtubeUrl: string | null;
+  /** @nullable */
+  animationKey: UpdateCustomExerciseBodyDemonstrationAnimationKey;
 };
 
 export type UpdateCustomExerciseBodyPrimaryMuscleGroupsItem =
@@ -16090,12 +16633,65 @@ export const UpdateCustomExerciseBodySecondaryMuscleGroupsItem = {
 } as const;
 
 export type UpdateCustomExerciseBody = {
+  demonstration?: UpdateCustomExerciseBodyDemonstration;
   /** @minLength 1 */
   name?: string;
   isUnilateral?: boolean;
   primaryMuscleGroups?: UpdateCustomExerciseBodyPrimaryMuscleGroupsItem[];
   secondaryMuscleGroups?: UpdateCustomExerciseBodySecondaryMuscleGroupsItem[];
 };
+
+/**
+ * @nullable
+ */
+export type UpdateCustomExercise200Demonstration = {
+  /** @nullable */
+  youtubeUrl: string | null;
+  /** @nullable */
+  animationKey:
+    | "high-supinated-bent-row"
+    | "yates-row"
+    | "supinated-yates-row"
+    | "pendlay-row"
+    | "supinated-bent-row"
+    | "high-bent-row"
+    | "one-arm-row"
+    | "generic-bent-row"
+    | "bent-row"
+    | "machine-row"
+    | "cable-row"
+    | "front-lat-pulldown"
+    | "lat-pulldown"
+    | "hang-power-clean"
+    | "squat"
+    | "bench-press"
+    | "incline-dumbbell-press"
+    | "flat-dumbbell-press"
+    | "incline-bench-press"
+    | "decline-bench-press"
+    | "pec-deck"
+    | "machine-fly"
+    | "flat-dumbbell-fly"
+    | "smith-bench-press"
+    | "machine-chest-press"
+    | "smith-squat"
+    | "leg-extension"
+    | "seated-leg-curl"
+    | "prone-leg-curl"
+    | "hack-squat"
+    | "leg-press-45"
+    | "horizontal-leg-press"
+    | "stiff"
+    | "deadlift"
+    | "sumo-deadlift"
+    | "seated-calf"
+    | "standing-calf"
+    | "hip-thrust"
+    | "hip-abduction"
+    | "goblet-squat"
+    | "sumo-dumbbell-squat"
+    | null;
+} | null;
 
 export type UpdateCustomExercise200MusclesItemMuscleGroup =
   (typeof UpdateCustomExercise200MusclesItemMuscleGroup)[keyof typeof UpdateCustomExercise200MusclesItemMuscleGroup];
@@ -16134,6 +16730,8 @@ export type UpdateCustomExercise200MusclesItem = {
 };
 
 export type UpdateCustomExercise200 = {
+  /** @nullable */
+  demonstration?: UpdateCustomExercise200Demonstration;
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
   name: string;
@@ -19712,6 +20310,125 @@ export type PostFeedback401 = {
 };
 
 export type PostFeedback500 = {
+  error: string;
+  code: string;
+};
+
+export type GetCurrentTrainingWeekParams = {
+  tz: string;
+};
+
+export type GetCurrentTrainingWeek200Attributes = {
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  shortReps: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  mediumReps: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  longReps: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  withoutReps: number;
+};
+
+export type GetCurrentTrainingWeek200DaysItem = {
+  date: string;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  workoutsCompleted: number;
+};
+
+export type GetCurrentTrainingWeek200MusclesItemMuscleGroup =
+  (typeof GetCurrentTrainingWeek200MusclesItemMuscleGroup)[keyof typeof GetCurrentTrainingWeek200MusclesItemMuscleGroup];
+
+export const GetCurrentTrainingWeek200MusclesItemMuscleGroup = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
+} as const;
+
+export type GetCurrentTrainingWeek200MusclesItem = {
+  muscleGroup: GetCurrentTrainingWeek200MusclesItemMuscleGroup;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  directWorkingSets: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  indirectWorkingSets: number;
+  /** @minimum 0 */
+  directLoadVolumeKg: number;
+};
+
+export type GetCurrentTrainingWeek200 = {
+  startDate: string;
+  endDate: string;
+  timezone: string;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  workoutsCompleted: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  workingSets: number;
+  /** @minimum 0 */
+  loadVolumeKg: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  durationInSeconds: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  unclassifiedWorkingSets: number;
+  attributes: GetCurrentTrainingWeek200Attributes;
+  days: GetCurrentTrainingWeek200DaysItem[];
+  muscles: GetCurrentTrainingWeek200MusclesItem[];
+};
+
+export type GetCurrentTrainingWeek400 = {
+  error: string;
+  code: string;
+};
+
+export type GetCurrentTrainingWeek401 = {
+  error: string;
+  code: string;
+};
+
+export type GetCurrentTrainingWeek500 = {
   error: string;
   code: string;
 };
@@ -30212,6 +30929,83 @@ export const cancelManualSubscription = async (
 };
 
 /**
+ * @summary Save or remove a private exercise demonstration; never changes global media
+ */
+export type saveExerciseDemonstrationResponse200 = {
+  data: SaveExerciseDemonstration200;
+  status: 200;
+};
+
+export type saveExerciseDemonstrationResponse400 = {
+  data: SaveExerciseDemonstration400;
+  status: 400;
+};
+
+export type saveExerciseDemonstrationResponse401 = {
+  data: SaveExerciseDemonstration401;
+  status: 401;
+};
+
+export type saveExerciseDemonstrationResponse403 = {
+  data: SaveExerciseDemonstration403;
+  status: 403;
+};
+
+export type saveExerciseDemonstrationResponse404 = {
+  data: SaveExerciseDemonstration404;
+  status: 404;
+};
+
+export type saveExerciseDemonstrationResponse409 = {
+  data: SaveExerciseDemonstration409;
+  status: 409;
+};
+
+export type saveExerciseDemonstrationResponse500 = {
+  data: SaveExerciseDemonstration500;
+  status: 500;
+};
+
+export type saveExerciseDemonstrationResponseSuccess =
+  saveExerciseDemonstrationResponse200 & {
+    headers: Headers;
+  };
+export type saveExerciseDemonstrationResponseError = (
+  | saveExerciseDemonstrationResponse400
+  | saveExerciseDemonstrationResponse401
+  | saveExerciseDemonstrationResponse403
+  | saveExerciseDemonstrationResponse404
+  | saveExerciseDemonstrationResponse409
+  | saveExerciseDemonstrationResponse500
+) & {
+  headers: Headers;
+};
+
+export type saveExerciseDemonstrationResponse =
+  | saveExerciseDemonstrationResponseSuccess
+  | saveExerciseDemonstrationResponseError;
+
+export const getSaveExerciseDemonstrationUrl = (exerciseId: string) => {
+  return `/exercises/${exerciseId}/demonstration`;
+};
+
+export const saveExerciseDemonstration = async (
+  exerciseId: string,
+  saveExerciseDemonstrationBody: SaveExerciseDemonstrationBody,
+  options?: RequestInit,
+): Promise<saveExerciseDemonstrationResponse> => {
+  return customFetch<saveExerciseDemonstrationResponse>(
+    getSaveExerciseDemonstrationUrl(exerciseId),
+    {
+      ...options,
+      method: "PUT",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(saveExerciseDemonstrationBody),
+    },
+  );
+};
+
+/**
  * @summary Get the current version and timestamp of the exercise catalog for caching
  */
 export type getExerciseCatalogVersionResponse200 = {
@@ -32368,6 +33162,76 @@ export const postFeedback = async (
     headers: { "Content-Type": "application/json", ...options?.headers },
     body: JSON.stringify(postFeedbackBody),
   });
+};
+
+/**
+ * @summary Get completed training for the current Sunday–Saturday week
+ */
+export type getCurrentTrainingWeekResponse200 = {
+  data: GetCurrentTrainingWeek200;
+  status: 200;
+};
+
+export type getCurrentTrainingWeekResponse400 = {
+  data: GetCurrentTrainingWeek400;
+  status: 400;
+};
+
+export type getCurrentTrainingWeekResponse401 = {
+  data: GetCurrentTrainingWeek401;
+  status: 401;
+};
+
+export type getCurrentTrainingWeekResponse500 = {
+  data: GetCurrentTrainingWeek500;
+  status: 500;
+};
+
+export type getCurrentTrainingWeekResponseSuccess =
+  getCurrentTrainingWeekResponse200 & {
+    headers: Headers;
+  };
+export type getCurrentTrainingWeekResponseError = (
+  | getCurrentTrainingWeekResponse400
+  | getCurrentTrainingWeekResponse401
+  | getCurrentTrainingWeekResponse500
+) & {
+  headers: Headers;
+};
+
+export type getCurrentTrainingWeekResponse =
+  | getCurrentTrainingWeekResponseSuccess
+  | getCurrentTrainingWeekResponseError;
+
+export const getGetCurrentTrainingWeekUrl = (
+  params: GetCurrentTrainingWeekParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/history/analytics/current-week?${stringifiedParams}`
+    : `/history/analytics/current-week`;
+};
+
+export const getCurrentTrainingWeek = async (
+  params: GetCurrentTrainingWeekParams,
+  options?: RequestInit,
+): Promise<getCurrentTrainingWeekResponse> => {
+  return customFetch<getCurrentTrainingWeekResponse>(
+    getGetCurrentTrainingWeekUrl(params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
 };
 
 /**
