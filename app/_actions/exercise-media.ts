@@ -2,6 +2,8 @@
 
 import {
   getExerciseMedia,
+  saveExerciseDemonstration,
+  type SaveExerciseDemonstrationBody,
   type GetExerciseMedia200,
 } from "@/app/_lib/api/fetch-generated";
 
@@ -17,7 +19,7 @@ export async function getExerciseMediaAction(
   exerciseId: string,
 ): Promise<ActionResult<GetExerciseMedia200>> {
   try {
-    const response = await getExerciseMedia(exerciseId);
+    const response = await getExerciseMedia(exerciseId, { cache: "no-store" });
     if (response.status !== 200) {
       const errorMsg =
         (response.data as { error?: string })?.error ||
@@ -32,6 +34,30 @@ export async function getExerciseMediaAction(
       error:
         (err as Error)?.message ||
         "Erro de conexão ao buscar demonstração do exercício",
+    };
+  }
+}
+
+export async function saveExerciseDemonstrationAction(
+  exerciseId: string,
+  body: SaveExerciseDemonstrationBody,
+) {
+  try {
+    const result = await saveExerciseDemonstration(exerciseId, body, {
+      cache: "no-store",
+    });
+    if (result.status === 200)
+      return { success: true as const, data: result.data };
+    return {
+      success: false as const,
+      error:
+        (result.data as { error?: string }).error ??
+        "Não foi possível salvar a demonstração.",
+    };
+  } catch {
+    return {
+      success: false as const,
+      error: "Falha na comunicação com o servidor.",
     };
   }
 }

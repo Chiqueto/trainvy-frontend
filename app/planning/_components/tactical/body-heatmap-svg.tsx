@@ -146,17 +146,34 @@ export function heatColor(volume: number) {
 }
 export function BodyHeatmapSVG({
   volumes,
+  recordedIndirectVolumes,
 }: {
   volumes: Record<string, number>;
+  recordedIndirectVolumes?: Record<string, number>;
 }) {
+  const recorded = recordedIndirectVolumes !== undefined;
+  const fill = (muscle: string, amount: number) =>
+    recorded
+      ? amount > 0
+        ? "#ef4444"
+        : (recordedIndirectVolumes?.[muscle] ?? 0) > 0
+          ? "#fca5a5"
+          : "#334155"
+      : heatColor(amount);
   const id = useId().replaceAll(":", "");
   const [view, setView] = useState<"front" | "back">("front"),
-    [selected, setSelected] = useState<MuscleGroup>("CHEST");
+    [selected, setSelected] = useState<MuscleGroup | null>(
+      recorded ? null : "CHEST",
+    );
   const visible = regions.filter((region) => region.views.includes(view));
-  const selectedKey = visible.some((region) => region.muscle === selected)
-    ? selected
-    : (visible.find((region) => (volumes[region.muscle] ?? 0) > 0)?.muscle ??
-      visible[0].muscle);
+  const selectedKey =
+    selected !== null && visible.some((region) => region.muscle === selected)
+      ? selected
+      : (visible.find(
+          (region) =>
+            (volumes[region.muscle] ?? 0) > 0 ||
+            (recordedIndirectVolumes?.[region.muscle] ?? 0) > 0,
+        )?.muscle ?? visible[0].muscle);
   const volume = volumes[selectedKey] ?? 0;
   const activeGroups = Object.entries(volumes)
     .filter(([, value]) => value > 0)
@@ -164,13 +181,19 @@ export function BodyHeatmapSVG({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-xs font-medium uppercase tracking-widest text-slate-400">
-          Volume por músculo
+        <p
+          className={`text-xs font-medium uppercase tracking-widest ${recorded ? "text-muted-foreground" : "text-slate-400"}`}
+        >
+          {recorded ? "Grupos treinados" : "Volume por músculo"}
         </p>
         <div
           role="group"
           aria-label="Vista do corpo"
-          className="flex rounded-xl border border-white/10 bg-slate-950/60 p-1"
+          className={
+            recorded
+              ? "flex rounded-xl border border-border bg-secondary p-1"
+              : "flex rounded-xl border border-white/10 bg-slate-950/60 p-1"
+          }
         >
           {(
             [
@@ -183,7 +206,7 @@ export function BodyHeatmapSVG({
               type="button"
               aria-pressed={view === key}
               onClick={() => setView(key)}
-              className={`min-h-9 rounded-lg px-3 text-xs font-medium ${view === key ? "bg-cyan-300/15 text-cyan-100" : "text-slate-400 hover:text-white"}`}
+              className={`min-h-9 rounded-lg px-3 text-xs font-medium ${recorded ? (view === key ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground") : view === key ? "bg-cyan-300/15 text-cyan-100" : "text-slate-400 hover:text-white"}`}
             >
               {label}
             </button>
@@ -256,7 +279,7 @@ export function BodyHeatmapSVG({
                 role="button"
                 tabIndex={0}
                 aria-pressed={selected}
-                aria-label={`${getMuscleGroupLabel(region.muscle)}: ${format(amount)} séries equivalentes`}
+                aria-label={`${getMuscleGroupLabel(region.muscle)}: ${format(amount)} ${recorded ? `séries diretas e ${recordedIndirectVolumes?.[region.muscle] ?? 0} indiretas` : "séries equivalentes"}`}
                 onClick={() => setSelected(region.muscle)}
                 onKeyDown={(event) => {
                   if (event.key === "Enter" || event.key === " ") {
@@ -279,7 +302,11 @@ export function BodyHeatmapSVG({
                         <path
                           d={path}
                           fill={
-                            amount > 0 ? heatColor(amount) : `url(#${id}-body)`
+                            recorded
+                              ? fill(region.muscle, amount)
+                              : amount > 0
+                                ? heatColor(amount)
+                                : `url(#${id}-body)`
                           }
                           stroke={
                             selected
@@ -335,25 +362,38 @@ export function BodyHeatmapSVG({
           <span className="text-right font-mono text-sm text-cyan-100">
             {format(volume)}{" "}
             <span className="font-sans text-xs text-slate-400">
-              séries equiv.
+              {recorded
+                ? `diretas · ${recordedIndirectVolumes?.[selectedKey] ?? 0} indiretas`
+                : "séries equiv."}
             </span>
           </span>
         </div>
       </div>
       <div
-        className="grid grid-cols-2 gap-x-3 gap-y-2 text-xs text-slate-400"
+        className={`grid grid-cols-2 gap-x-3 gap-y-2 text-xs ${recorded ? "text-muted-foreground" : "text-slate-400"}`}
         aria-label="Legenda de volume"
       >
-        {[
-          ["Neutro", "0", 0],
-          ["Ativo", "< 4", 1],
-          ["Moderado", "4 a < 9", 4],
-          ["Elevado", "9+", 9],
-        ].map(([label, range, amount]) => (
+        {(recorded
+          ? [
+              ["Principal", "Diretas", "#ef4444"],
+              ["Secundário", "Indiretas", "#fca5a5"],
+              ["Neutro", "Sem séries", "#334155"],
+            ]
+          : [
+              ["Neutro", "0", 0],
+              ["Ativo", "< 4", 1],
+              ["Moderado", "4 a < 9", 4],
+              ["Elevado", "9+", 9],
+            ]
+        ).map(([label, range, amount]) => (
           <div key={label} className="flex items-center gap-2">
             <span
               className="size-2 shrink-0 rounded-full"
-              style={{ background: heatColor(Number(amount)) }}
+              style={{
+                background: recorded
+                  ? String(amount)
+                  : heatColor(Number(amount)),
+              }}
             />
             {label}
             <span className="ml-auto font-mono text-[11px] text-slate-500">
@@ -362,7 +402,7 @@ export function BodyHeatmapSVG({
           </div>
         ))}
       </div>
-      {activeGroups.length > 0 && (
+      {!recorded && activeGroups.length > 0 && (
         <div className="border-t border-white/10 pt-3">
           <p className="mb-2 text-xs text-slate-400">
             Grupos presentes na ficha
@@ -392,10 +432,12 @@ export function BodyHeatmapSVG({
           </div>
         </div>
       )}
-      <p className="text-xs leading-relaxed text-slate-500">
-        Toque nos músculos ou nos nomes para explorar. Séries principais ×1 e
-        secundárias ×0,5. Cores representam volume planejado ilustrativo, sem
-        medição de ativação muscular.
+      <p
+        className={`text-xs leading-relaxed ${recorded ? "text-muted-foreground" : "text-slate-500"}`}
+      >
+        {recorded
+          ? "Toque nos músculos para ver séries diretas e indiretas. Se houver ambas, prevalece a cor principal. Cores ilustrativas, sem medição de ativação muscular."
+          : "Toque nos músculos ou nos nomes para explorar. Séries principais ×1 e secundárias ×0,5. Cores representam volume planejado ilustrativo, sem medição de ativação muscular."}
       </p>
     </div>
   );

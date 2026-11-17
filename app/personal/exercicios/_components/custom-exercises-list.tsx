@@ -11,18 +11,19 @@ import {
   Sparkles,
   Loader2,
   Activity,
-  Layers,
+  Video,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { getMuscleGroupLabel, type MuscleGroup } from "@/app/_lib/muscle-labels";
+import { getMuscleGroupLabel } from "@/app/_lib/muscle-labels";
 import { deleteCustomExerciseAction } from "@/app/personal/_actions";
 import {
   CustomExerciseModal,
   type CustomExerciseItem,
 } from "./custom-exercise-modal";
 import { cn } from "@/lib/utils";
+import { ExerciseExecutionDialog } from "@/app/_components/exercise-media";
 
 interface CustomExercisesListProps {
   initialExercises: CustomExerciseItem[];
@@ -38,14 +39,19 @@ const FILTER_CHIPS = [
   { id: "CORE", label: "Core / Abdômen" },
 ];
 
-export function CustomExercisesList({ initialExercises }: CustomExercisesListProps) {
-  const [exercises, setExercises] = useState<CustomExerciseItem[]>(initialExercises);
+export function CustomExercisesList({
+  initialExercises,
+}: CustomExercisesListProps) {
+  const [exercises, setExercises] =
+    useState<CustomExerciseItem[]>(initialExercises);
   const [search, setSearch] = useState("");
+  const [preview, setPreview] = useState<CustomExerciseItem | null>(null);
   const [selectedFilter, setSelectedFilter] = useState("ALL");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [exerciseToEdit, setExerciseToEdit] = useState<CustomExerciseItem | null>(null);
+  const [exerciseToEdit, setExerciseToEdit] =
+    useState<CustomExerciseItem | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   const handleOpenCreate = () => {
     setExerciseToEdit(null);
@@ -84,7 +90,14 @@ export function CustomExercisesList({ initialExercises }: CustomExercisesListPro
 
     if (selectedFilter === "LEGS") {
       return muscles.some((m) =>
-        ["QUADRICEPS", "HAMSTRINGS", "GLUTES", "CALVES", "ADDUCTORS", "HIP_ABDUCTORS"].includes(m),
+        [
+          "QUADRICEPS",
+          "HAMSTRINGS",
+          "GLUTES",
+          "CALVES",
+          "ADDUCTORS",
+          "HIP_ABDUCTORS",
+        ].includes(m),
       );
     }
     if (selectedFilter === "ARMS") {
@@ -140,8 +153,12 @@ export function CustomExercisesList({ initialExercises }: CustomExercisesListPro
       {/* Contagem e Status */}
       <div className="flex items-center justify-between text-xs text-muted-foreground px-1">
         <span>
-          Mostrando <strong className="text-foreground">{filteredExercises.length}</strong> de{" "}
-          <strong className="text-foreground">{exercises.length}</strong> exercícios personalizados
+          Mostrando{" "}
+          <strong className="text-foreground">
+            {filteredExercises.length}
+          </strong>{" "}
+          de <strong className="text-foreground">{exercises.length}</strong>{" "}
+          exercícios personalizados
         </span>
       </div>
 
@@ -149,8 +166,12 @@ export function CustomExercisesList({ initialExercises }: CustomExercisesListPro
       {filteredExercises.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
           {filteredExercises.map((exercise) => {
-            const primaryMuscles = (exercise.muscles ?? []).filter((m) => m.role === "PRIMARY");
-            const secondaryMuscles = (exercise.muscles ?? []).filter((m) => m.role === "SECONDARY");
+            const primaryMuscles = (exercise.muscles ?? []).filter(
+              (m) => m.role === "PRIMARY",
+            );
+            const secondaryMuscles = (exercise.muscles ?? []).filter(
+              (m) => m.role === "SECONDARY",
+            );
             const isDeleting = deletingId === exercise.id;
 
             return (
@@ -204,6 +225,16 @@ export function CustomExercisesList({ initialExercises }: CustomExercisesListPro
                     </div>
                   </div>
 
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="self-start"
+                    onClick={() => setPreview(exercise)}
+                  >
+                    <Video className="mr-2 size-4" />
+                    Ver execução
+                  </Button>
                   {/* Badges de Grupos Musculares */}
                   <div className="flex flex-col gap-1.5 pt-1">
                     {primaryMuscles.length > 0 && (
@@ -287,6 +318,12 @@ export function CustomExercisesList({ initialExercises }: CustomExercisesListPro
       )}
 
       {/* Modal de Criação / Edição */}
+      <ExerciseExecutionDialog
+        isOpen={Boolean(preview)}
+        onClose={() => setPreview(null)}
+        exerciseId={preview?.id}
+        exerciseName={preview?.name ?? ""}
+      />
       <CustomExerciseModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

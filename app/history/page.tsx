@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
 import { BottomNav } from "@/app/_components/bottom-nav";
 import {
@@ -16,6 +17,32 @@ export default async function HistoryPage() {
   });
   if (!session.data?.user) redirect("/auth");
 
+  return (
+    <div className="min-h-svh bg-background pb-24">
+      <Suspense
+        fallback={
+          <div
+            className="trainvy-page space-y-4 p-5"
+            aria-label="Carregando histórico"
+          >
+            <h1 className="font-heading text-2xl font-semibold">Histórico</h1>
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className="h-32 animate-pulse rounded-2xl bg-muted"
+              />
+            ))}
+          </div>
+        }
+      >
+        <HistoryContent />
+      </Suspense>
+      <BottomNav />
+    </div>
+  );
+}
+
+async function HistoryContent() {
   let initialPage: ListWorkoutHistory200 | null = null;
   let initialError: string | null = null;
 
@@ -32,9 +59,6 @@ export default async function HistoryPage() {
   }
 
   return (
-    <div className="min-h-svh bg-background pb-24">
-      <HistoryTimeline initialPage={initialPage} initialError={initialError} />
-      <BottomNav />
-    </div>
+    <HistoryTimeline initialPage={initialPage} initialError={initialError} />
   );
 }

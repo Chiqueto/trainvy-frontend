@@ -21,8 +21,13 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 import { ExerciseMediaPreview } from "./exercise-media-preview";
+import { YoutubePlayer } from "./youtube-player";
 import { PEC_DECK_INSTRUCTIONS } from "../exercise-3d/pec-deck-instructions";
-import { EXERCISE_ANIMATIONS, getExerciseAnimation, type ExerciseAnimation } from "../exercise-3d/exercises";
+import {
+  EXERCISE_ANIMATIONS,
+  getExerciseAnimation,
+  type ExerciseAnimation,
+} from "../exercise-3d/exercises";
 import { MACHINE_CHEST_PRESS_INSTRUCTIONS } from "../exercise-3d/machine-chest-press-instructions";
 import { SMITH_SQUAT_INSTRUCTIONS } from "../exercise-3d/smith-squat-instructions";
 import { LEG_EXTENSION_INSTRUCTIONS } from "../exercise-3d/leg-extension-instructions";
@@ -95,9 +100,11 @@ const FALLBACK_3D_INSTRUCTIONS: Record<
   "seated-calf": SEATED_CALF_INSTRUCTIONS,
   "one-arm-row": ONE_ARM_ROW_INSTRUCTIONS,
   "supinated-bent-row": EXERCISE_ANIMATIONS["supinated-bent-row"].instructions,
-  "high-supinated-bent-row": EXERCISE_ANIMATIONS["high-supinated-bent-row"].instructions,
+  "high-supinated-bent-row":
+    EXERCISE_ANIMATIONS["high-supinated-bent-row"].instructions,
   "yates-row": EXERCISE_ANIMATIONS["yates-row"].instructions,
-  "supinated-yates-row": EXERCISE_ANIMATIONS["supinated-yates-row"].instructions,
+  "supinated-yates-row":
+    EXERCISE_ANIMATIONS["supinated-yates-row"].instructions,
   "pendlay-row": EXERCISE_ANIMATIONS["pendlay-row"].instructions,
   "high-bent-row": EXERCISE_ANIMATIONS["high-bent-row"].instructions,
   "generic-bent-row": BENT_ROW_INSTRUCTIONS,
@@ -183,12 +190,14 @@ export function ExerciseExecutionDialog({
   exerciseName,
   initialData,
 }: ExerciseExecutionDialogProps) {
-  const [data, setData] = useState<GetExerciseMedia200 | null>(initialData ?? null);
+  const [data, setData] = useState<GetExerciseMedia200 | null>(
+    initialData ?? null,
+  );
   const [isLoading, setIsLoading] = useState(
     Boolean(isOpen && exerciseId && !initialData),
   );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [mediaTab, setMediaTab] = useState<"3d" | "2d">("3d");
+  const [mediaTab, setMediaTab] = useState<"3d" | "2d" | "video" | null>(null);
 
   // Armazena a chave de rastreamento para limpar dados síncronamente durante a renderização se mudar o exercício ou status de abertura
   const dialogKey = `${isOpen ? "open" : "closed"}-${exerciseId ?? ""}`;
@@ -199,7 +208,7 @@ export function ExerciseExecutionDialog({
     setData(initialData ?? null);
     setErrorMessage(null);
     setIsLoading(Boolean(isOpen && exerciseId && !initialData));
-    setMediaTab("3d");
+    setMediaTab(null);
   }
 
   const previousActiveElementRef = useRef<HTMLElement | null>(null);
@@ -209,7 +218,8 @@ export function ExerciseExecutionDialog({
   // Gerenciamento de foco ao abrir e fechar o diálogo
   useEffect(() => {
     if (isOpen) {
-      previousActiveElementRef.current = document.activeElement as HTMLElement | null;
+      previousActiveElementRef.current =
+        document.activeElement as HTMLElement | null;
       const timer = window.setTimeout(() => {
         closeButtonRef.current?.focus();
       }, 50);
@@ -255,7 +265,7 @@ export function ExerciseExecutionDialog({
     return () => {
       isCurrent = false;
     };
-  }, [isOpen, exerciseId]);
+  }, [isOpen, exerciseId, initialData]);
 
   // Fechamento via teclado (ESC) e contenção básica de foco
   useEffect(() => {
@@ -270,9 +280,10 @@ export function ExerciseExecutionDialog({
 
       // Tab trap simples para conter foco no modal
       if (e.key === "Tab" && dialogRef.current) {
-        const focusableElements = dialogRef.current.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-        );
+        const focusableElements =
+          dialogRef.current.querySelectorAll<HTMLElement>(
+            'button, [href], input, select, textarea, iframe, [tabindex]:not([tabindex="-1"])',
+          );
         if (focusableElements.length > 0) {
           const first = focusableElements[0];
           const last = focusableElements[focusableElements.length - 1];
@@ -294,9 +305,16 @@ export function ExerciseExecutionDialog({
 
   if (!isOpen) return null;
 
-  const animation = getExerciseAnimation(exerciseId, exerciseName);
+  const animation =
+    data?.demonstration?.animationKey ??
+    getExerciseAnimation(exerciseId, exerciseName);
+  const youtubeUrl = data?.demonstration?.youtubeUrl;
+  const activeTab =
+    mediaTab ?? (youtubeUrl ? "video" : animation ? "3d" : "2d");
   const instructions =
-    data?.instructions ??
+    (data?.demonstration?.animationKey && activeTab === "3d"
+      ? FALLBACK_3D_INSTRUCTIONS[animation!]
+      : data?.instructions) ??
     (animation ? FALLBACK_3D_INSTRUCTIONS[animation] : undefined);
 
   return (
@@ -316,9 +334,17 @@ export function ExerciseExecutionDialog({
         aria-labelledby="execution-dialog-title"
       >
         <div className="shrink-0 border-b bg-muted/30 px-5 py-3 text-xs leading-relaxed">
-          Representação biomecânica ilustrativa. A amplitude e postura ideais variam conforme sua individualidade biológica. Em caso de dor ou desconforto articular, interrompa o exercício.
-          {data?.biomechanicalReviewStatus === "REVIEWED_APPROVED" && <p className="mt-2 font-semibold">Demonstração revisada tecnicamente</p>}
-          {data?.safetyDisclaimerMd && <p className="mt-2">{data.safetyDisclaimerMd}</p>}
+          Representação biomecânica ilustrativa. A amplitude e postura ideais
+          variam conforme sua individualidade biológica. Em caso de dor ou
+          desconforto articular, interrompa o exercício.
+          {data?.biomechanicalReviewStatus === "REVIEWED_APPROVED" && (
+            <p className="mt-2 font-semibold">
+              Demonstração revisada tecnicamente
+            </p>
+          )}
+          {data?.safetyDisclaimerMd && (
+            <p className="mt-2">{data.safetyDisclaimerMd}</p>
+          )}
         </div>
         {/* Cabeçalho */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-border/60 bg-muted/20">
@@ -352,7 +378,12 @@ export function ExerciseExecutionDialog({
         </div>
 
         {/* Corpo com Scroll */}
-        <div className={cn("flex-1 overflow-y-auto", animation ? "p-3.5 sm:p-4 space-y-3" : "p-4 sm:p-5 space-y-4")}>
+        <div
+          className={cn(
+            "flex-1 overflow-y-auto",
+            animation ? "p-3.5 sm:p-4 space-y-3" : "p-4 sm:p-5 space-y-4",
+          )}
+        >
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-16 text-muted-foreground space-y-3">
               <Loader2 className="size-7 animate-spin text-primary" />
@@ -399,6 +430,28 @@ export function ExerciseExecutionDialog({
             </div>
           ) : (
             <>
+              {youtubeUrl && (
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant={activeTab === "video" ? "default" : "outline"}
+                    onClick={() => setMediaTab("video")}
+                  >
+                    Vídeo do personal
+                  </Button>
+                  {!animation && (
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant={activeTab === "2d" ? "default" : "outline"}
+                      onClick={() => setMediaTab("2d")}
+                    >
+                      Guia ilustrado
+                    </Button>
+                  )}
+                </div>
+              )}
               {/* Alternador de Modo (3D vs 2D) quando o exercício possui modelagem 3D */}
               {animation && (
                 <div className="flex items-center gap-1.5 p-1 rounded-xl bg-muted/60 border border-border/60">
@@ -407,7 +460,7 @@ export function ExerciseExecutionDialog({
                     onClick={() => setMediaTab("3d")}
                     className={cn(
                       "flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg text-xs font-heading font-semibold transition-all cursor-pointer",
-                      mediaTab === "3d"
+                      activeTab === "3d"
                         ? "bg-card text-foreground shadow-xs border border-border/60 font-bold"
                         : "text-muted-foreground hover:text-foreground",
                     )}
@@ -424,7 +477,7 @@ export function ExerciseExecutionDialog({
                     onClick={() => setMediaTab("2d")}
                     className={cn(
                       "flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg text-xs font-heading font-semibold transition-all cursor-pointer",
-                      mediaTab === "2d"
+                      activeTab === "2d"
                         ? "bg-card text-foreground shadow-xs border border-border/60 font-bold"
                         : "text-muted-foreground hover:text-foreground",
                     )}
@@ -436,7 +489,13 @@ export function ExerciseExecutionDialog({
               )}
 
               {/* Visualização Ativa: 3D ou Sequência 2D */}
-              {animation && mediaTab === "3d" ? (
+              {youtubeUrl && activeTab === "video" ? (
+                <YoutubePlayer
+                  key={`${dialogKey}-${youtubeUrl}`}
+                  url={youtubeUrl}
+                  title={exerciseName}
+                />
+              ) : animation && activeTab === "3d" ? (
                 <Exercise3DViewer
                   key={dialogKey}
                   exercise={animation}
@@ -456,7 +515,8 @@ export function ExerciseExecutionDialog({
                     Guia ilustrado 2D em sincronização
                   </p>
                   <p className="text-[11px] text-muted-foreground max-w-xs">
-                    A demonstração 3D interativa está ativa na aba &ldquo;Simulação 3D&rdquo;.
+                    A demonstração 3D interativa está ativa na aba
+                    &ldquo;Simulação 3D&rdquo;.
                   </p>
                   <Button
                     type="button"
@@ -471,8 +531,15 @@ export function ExerciseExecutionDialog({
                 </div>
               )}
 
+              {data?.demonstration?.animationKey && activeTab === "3d" && (
+                <p className="text-xs text-muted-foreground">
+                  Referência 3D:{" "}
+                  {EXERCISE_ANIMATIONS[data.demonstration.animationKey].name}.
+                  Anatomia e execução ilustrativas dessa referência.
+                </p>
+              )}
               {/* Instruções Detalhadas em PT-BR */}
-              {instructions ? (
+              {instructions && activeTab !== "video" ? (
                 <div className="space-y-3 pt-2">
                   {/* Padrão de Movimento */}
                   {instructions.description && (
@@ -529,23 +596,27 @@ export function ExerciseExecutionDialog({
               ) : null}
 
               {/* Atribuição da Fonte (Obrigatória e visível) */}
-              <div className="pt-2 border-t border-border/50 flex items-center justify-between text-[11px] text-muted-foreground">
-                <span>
-                  Ilustrações por{" "}
-                  <strong className="font-semibold text-foreground/80">
-                    RepDB Free
-                  </strong>
-                </span>
-                <a
-                  href="https://repdb.co"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-primary hover:underline font-medium"
-                >
-                  <span>repdb.co</span>
-                  <ExternalLink className="size-3" />
-                </a>
-              </div>
+              {activeTab !== "video" &&
+                data?.attributionName &&
+                (!data.demonstration?.animationKey || activeTab === "2d") && (
+                  <div className="pt-2 border-t border-border/50 flex items-center justify-between text-[11px] text-muted-foreground">
+                    <span>
+                      Ilustrações por{" "}
+                      <strong className="font-semibold text-foreground/80">
+                        {data.attributionName}
+                      </strong>
+                    </span>
+                    <a
+                      href="https://repdb.co"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-primary hover:underline font-medium"
+                    >
+                      <span>repdb.co</span>
+                      <ExternalLink className="size-3" />
+                    </a>
+                  </div>
+                )}
             </>
           )}
         </div>

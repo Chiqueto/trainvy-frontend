@@ -29686,6 +29686,69 @@
                   "items": {
                     "type": "object",
                     "properties": {
+                      "demonstration": {
+                        "nullable": true,
+                        "type": "object",
+                        "properties": {
+                          "youtubeUrl": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uri"
+                          },
+                          "animationKey": {
+                            "nullable": true,
+                            "type": "string",
+                            "enum": [
+                              "high-supinated-bent-row",
+                              "yates-row",
+                              "supinated-yates-row",
+                              "pendlay-row",
+                              "supinated-bent-row",
+                              "high-bent-row",
+                              "one-arm-row",
+                              "generic-bent-row",
+                              "bent-row",
+                              "machine-row",
+                              "cable-row",
+                              "front-lat-pulldown",
+                              "lat-pulldown",
+                              "hang-power-clean",
+                              "squat",
+                              "bench-press",
+                              "incline-dumbbell-press",
+                              "flat-dumbbell-press",
+                              "incline-bench-press",
+                              "decline-bench-press",
+                              "pec-deck",
+                              "machine-fly",
+                              "flat-dumbbell-fly",
+                              "smith-bench-press",
+                              "machine-chest-press",
+                              "smith-squat",
+                              "leg-extension",
+                              "seated-leg-curl",
+                              "prone-leg-curl",
+                              "hack-squat",
+                              "leg-press-45",
+                              "horizontal-leg-press",
+                              "stiff",
+                              "deadlift",
+                              "sumo-deadlift",
+                              "seated-calf",
+                              "standing-calf",
+                              "hip-thrust",
+                              "hip-abduction",
+                              "goblet-squat",
+                              "sumo-dumbbell-squat"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "youtubeUrl",
+                          "animationKey"
+                        ],
+                        "additionalProperties": false
+                      },
                       "id": {
                         "type": "string",
                         "format": "uuid",
@@ -40463,6 +40526,304 @@
         }
       }
     },
+    "/exercises/{exerciseId}/demonstration": {
+      "put": {
+        "operationId": "saveExerciseDemonstration",
+        "summary": "Save or remove a private exercise demonstration; never changes global media",
+        "tags": [
+          "Exercise"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "youtubeUrl": {
+                    "nullable": true,
+                    "type": "string",
+                    "maxLength": 2048
+                  },
+                  "animationKey": {
+                    "nullable": true,
+                    "type": "string",
+                    "enum": [
+                      "high-supinated-bent-row",
+                      "yates-row",
+                      "supinated-yates-row",
+                      "pendlay-row",
+                      "supinated-bent-row",
+                      "high-bent-row",
+                      "one-arm-row",
+                      "generic-bent-row",
+                      "bent-row",
+                      "machine-row",
+                      "cable-row",
+                      "front-lat-pulldown",
+                      "lat-pulldown",
+                      "hang-power-clean",
+                      "squat",
+                      "bench-press",
+                      "incline-dumbbell-press",
+                      "flat-dumbbell-press",
+                      "incline-bench-press",
+                      "decline-bench-press",
+                      "pec-deck",
+                      "machine-fly",
+                      "flat-dumbbell-fly",
+                      "smith-bench-press",
+                      "machine-chest-press",
+                      "smith-squat",
+                      "leg-extension",
+                      "seated-leg-curl",
+                      "prone-leg-curl",
+                      "hack-squat",
+                      "leg-press-45",
+                      "horizontal-leg-press",
+                      "stiff",
+                      "deadlift",
+                      "sumo-deadlift",
+                      "seated-calf",
+                      "standing-calf",
+                      "hip-thrust",
+                      "hip-abduction",
+                      "goblet-squat",
+                      "sumo-dumbbell-squat"
+                    ]
+                  }
+                },
+                "required": [
+                  "youtubeUrl",
+                  "animationKey"
+                ]
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "exerciseId",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "youtubeUrl": {
+                      "nullable": true,
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "animationKey": {
+                      "nullable": true,
+                      "type": "string",
+                      "enum": [
+                        "high-supinated-bent-row",
+                        "yates-row",
+                        "supinated-yates-row",
+                        "pendlay-row",
+                        "supinated-bent-row",
+                        "high-bent-row",
+                        "one-arm-row",
+                        "generic-bent-row",
+                        "bent-row",
+                        "machine-row",
+                        "cable-row",
+                        "front-lat-pulldown",
+                        "lat-pulldown",
+                        "hang-power-clean",
+                        "squat",
+                        "bench-press",
+                        "incline-dumbbell-press",
+                        "flat-dumbbell-press",
+                        "incline-bench-press",
+                        "decline-bench-press",
+                        "pec-deck",
+                        "machine-fly",
+                        "flat-dumbbell-fly",
+                        "smith-bench-press",
+                        "machine-chest-press",
+                        "smith-squat",
+                        "leg-extension",
+                        "seated-leg-curl",
+                        "prone-leg-curl",
+                        "hack-squat",
+                        "leg-press-45",
+                        "horizontal-leg-press",
+                        "stiff",
+                        "deadlift",
+                        "sumo-deadlift",
+                        "seated-calf",
+                        "standing-calf",
+                        "hip-thrust",
+                        "hip-abduction",
+                        "goblet-squat",
+                        "sumo-dumbbell-squat"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "youtubeUrl",
+                    "animationKey"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/exercises/version": {
       "get": {
         "operationId": "getExerciseCatalogVersion",
@@ -40563,6 +40924,14 @@
               "type": "string"
             },
             "in": "query",
+            "name": "onlyGlobal",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
             "name": "q",
             "required": false
           },
@@ -40593,6 +40962,69 @@
                   "items": {
                     "type": "object",
                     "properties": {
+                      "demonstration": {
+                        "nullable": true,
+                        "type": "object",
+                        "properties": {
+                          "youtubeUrl": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uri"
+                          },
+                          "animationKey": {
+                            "nullable": true,
+                            "type": "string",
+                            "enum": [
+                              "high-supinated-bent-row",
+                              "yates-row",
+                              "supinated-yates-row",
+                              "pendlay-row",
+                              "supinated-bent-row",
+                              "high-bent-row",
+                              "one-arm-row",
+                              "generic-bent-row",
+                              "bent-row",
+                              "machine-row",
+                              "cable-row",
+                              "front-lat-pulldown",
+                              "lat-pulldown",
+                              "hang-power-clean",
+                              "squat",
+                              "bench-press",
+                              "incline-dumbbell-press",
+                              "flat-dumbbell-press",
+                              "incline-bench-press",
+                              "decline-bench-press",
+                              "pec-deck",
+                              "machine-fly",
+                              "flat-dumbbell-fly",
+                              "smith-bench-press",
+                              "machine-chest-press",
+                              "smith-squat",
+                              "leg-extension",
+                              "seated-leg-curl",
+                              "prone-leg-curl",
+                              "hack-squat",
+                              "leg-press-45",
+                              "horizontal-leg-press",
+                              "stiff",
+                              "deadlift",
+                              "sumo-deadlift",
+                              "seated-calf",
+                              "standing-calf",
+                              "hip-thrust",
+                              "hip-abduction",
+                              "goblet-squat",
+                              "sumo-dumbbell-squat"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "youtubeUrl",
+                          "animationKey"
+                        ],
+                        "additionalProperties": false
+                      },
                       "id": {
                         "type": "string",
                         "format": "uuid",
@@ -40758,6 +41190,67 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "demonstration": {
+                    "type": "object",
+                    "properties": {
+                      "youtubeUrl": {
+                        "nullable": true,
+                        "type": "string",
+                        "maxLength": 2048
+                      },
+                      "animationKey": {
+                        "nullable": true,
+                        "type": "string",
+                        "enum": [
+                          "high-supinated-bent-row",
+                          "yates-row",
+                          "supinated-yates-row",
+                          "pendlay-row",
+                          "supinated-bent-row",
+                          "high-bent-row",
+                          "one-arm-row",
+                          "generic-bent-row",
+                          "bent-row",
+                          "machine-row",
+                          "cable-row",
+                          "front-lat-pulldown",
+                          "lat-pulldown",
+                          "hang-power-clean",
+                          "squat",
+                          "bench-press",
+                          "incline-dumbbell-press",
+                          "flat-dumbbell-press",
+                          "incline-bench-press",
+                          "decline-bench-press",
+                          "pec-deck",
+                          "machine-fly",
+                          "flat-dumbbell-fly",
+                          "smith-bench-press",
+                          "machine-chest-press",
+                          "smith-squat",
+                          "leg-extension",
+                          "seated-leg-curl",
+                          "prone-leg-curl",
+                          "hack-squat",
+                          "leg-press-45",
+                          "horizontal-leg-press",
+                          "stiff",
+                          "deadlift",
+                          "sumo-deadlift",
+                          "seated-calf",
+                          "standing-calf",
+                          "hip-thrust",
+                          "hip-abduction",
+                          "goblet-squat",
+                          "sumo-dumbbell-squat"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "youtubeUrl",
+                      "animationKey"
+                    ]
+                  },
                   "name": {
                     "type": "string",
                     "minLength": 1
@@ -40828,6 +41321,69 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "demonstration": {
+                      "nullable": true,
+                      "type": "object",
+                      "properties": {
+                        "youtubeUrl": {
+                          "nullable": true,
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "animationKey": {
+                          "nullable": true,
+                          "type": "string",
+                          "enum": [
+                            "high-supinated-bent-row",
+                            "yates-row",
+                            "supinated-yates-row",
+                            "pendlay-row",
+                            "supinated-bent-row",
+                            "high-bent-row",
+                            "one-arm-row",
+                            "generic-bent-row",
+                            "bent-row",
+                            "machine-row",
+                            "cable-row",
+                            "front-lat-pulldown",
+                            "lat-pulldown",
+                            "hang-power-clean",
+                            "squat",
+                            "bench-press",
+                            "incline-dumbbell-press",
+                            "flat-dumbbell-press",
+                            "incline-bench-press",
+                            "decline-bench-press",
+                            "pec-deck",
+                            "machine-fly",
+                            "flat-dumbbell-fly",
+                            "smith-bench-press",
+                            "machine-chest-press",
+                            "smith-squat",
+                            "leg-extension",
+                            "seated-leg-curl",
+                            "prone-leg-curl",
+                            "hack-squat",
+                            "leg-press-45",
+                            "horizontal-leg-press",
+                            "stiff",
+                            "deadlift",
+                            "sumo-deadlift",
+                            "seated-calf",
+                            "standing-calf",
+                            "hip-thrust",
+                            "hip-abduction",
+                            "goblet-squat",
+                            "sumo-dumbbell-squat"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "youtubeUrl",
+                        "animationKey"
+                      ],
+                      "additionalProperties": false
+                    },
                     "id": {
                       "type": "string",
                       "format": "uuid",
@@ -41100,6 +41656,69 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "demonstration": {
+                      "nullable": true,
+                      "type": "object",
+                      "properties": {
+                        "youtubeUrl": {
+                          "nullable": true,
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "animationKey": {
+                          "nullable": true,
+                          "type": "string",
+                          "enum": [
+                            "high-supinated-bent-row",
+                            "yates-row",
+                            "supinated-yates-row",
+                            "pendlay-row",
+                            "supinated-bent-row",
+                            "high-bent-row",
+                            "one-arm-row",
+                            "generic-bent-row",
+                            "bent-row",
+                            "machine-row",
+                            "cable-row",
+                            "front-lat-pulldown",
+                            "lat-pulldown",
+                            "hang-power-clean",
+                            "squat",
+                            "bench-press",
+                            "incline-dumbbell-press",
+                            "flat-dumbbell-press",
+                            "incline-bench-press",
+                            "decline-bench-press",
+                            "pec-deck",
+                            "machine-fly",
+                            "flat-dumbbell-fly",
+                            "smith-bench-press",
+                            "machine-chest-press",
+                            "smith-squat",
+                            "leg-extension",
+                            "seated-leg-curl",
+                            "prone-leg-curl",
+                            "hack-squat",
+                            "leg-press-45",
+                            "horizontal-leg-press",
+                            "stiff",
+                            "deadlift",
+                            "sumo-deadlift",
+                            "seated-calf",
+                            "standing-calf",
+                            "hip-thrust",
+                            "hip-abduction",
+                            "goblet-squat",
+                            "sumo-dumbbell-squat"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "youtubeUrl",
+                        "animationKey"
+                      ],
+                      "additionalProperties": false
+                    },
                     "id": {
                       "type": "string",
                       "format": "uuid",
@@ -41310,6 +41929,69 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "demonstration": {
+                      "nullable": true,
+                      "type": "object",
+                      "properties": {
+                        "youtubeUrl": {
+                          "nullable": true,
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "animationKey": {
+                          "nullable": true,
+                          "type": "string",
+                          "enum": [
+                            "high-supinated-bent-row",
+                            "yates-row",
+                            "supinated-yates-row",
+                            "pendlay-row",
+                            "supinated-bent-row",
+                            "high-bent-row",
+                            "one-arm-row",
+                            "generic-bent-row",
+                            "bent-row",
+                            "machine-row",
+                            "cable-row",
+                            "front-lat-pulldown",
+                            "lat-pulldown",
+                            "hang-power-clean",
+                            "squat",
+                            "bench-press",
+                            "incline-dumbbell-press",
+                            "flat-dumbbell-press",
+                            "incline-bench-press",
+                            "decline-bench-press",
+                            "pec-deck",
+                            "machine-fly",
+                            "flat-dumbbell-fly",
+                            "smith-bench-press",
+                            "machine-chest-press",
+                            "smith-squat",
+                            "leg-extension",
+                            "seated-leg-curl",
+                            "prone-leg-curl",
+                            "hack-squat",
+                            "leg-press-45",
+                            "horizontal-leg-press",
+                            "stiff",
+                            "deadlift",
+                            "sumo-deadlift",
+                            "seated-calf",
+                            "standing-calf",
+                            "hip-thrust",
+                            "hip-abduction",
+                            "goblet-squat",
+                            "sumo-dumbbell-squat"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "youtubeUrl",
+                        "animationKey"
+                      ],
+                      "additionalProperties": false
+                    },
                     "biomechanicalReviewStatus": {
                       "type": "string"
                     },
@@ -41490,6 +42172,67 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "demonstration": {
+                    "type": "object",
+                    "properties": {
+                      "youtubeUrl": {
+                        "nullable": true,
+                        "type": "string",
+                        "maxLength": 2048
+                      },
+                      "animationKey": {
+                        "nullable": true,
+                        "type": "string",
+                        "enum": [
+                          "high-supinated-bent-row",
+                          "yates-row",
+                          "supinated-yates-row",
+                          "pendlay-row",
+                          "supinated-bent-row",
+                          "high-bent-row",
+                          "one-arm-row",
+                          "generic-bent-row",
+                          "bent-row",
+                          "machine-row",
+                          "cable-row",
+                          "front-lat-pulldown",
+                          "lat-pulldown",
+                          "hang-power-clean",
+                          "squat",
+                          "bench-press",
+                          "incline-dumbbell-press",
+                          "flat-dumbbell-press",
+                          "incline-bench-press",
+                          "decline-bench-press",
+                          "pec-deck",
+                          "machine-fly",
+                          "flat-dumbbell-fly",
+                          "smith-bench-press",
+                          "machine-chest-press",
+                          "smith-squat",
+                          "leg-extension",
+                          "seated-leg-curl",
+                          "prone-leg-curl",
+                          "hack-squat",
+                          "leg-press-45",
+                          "horizontal-leg-press",
+                          "stiff",
+                          "deadlift",
+                          "sumo-deadlift",
+                          "seated-calf",
+                          "standing-calf",
+                          "hip-thrust",
+                          "hip-abduction",
+                          "goblet-squat",
+                          "sumo-dumbbell-squat"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "youtubeUrl",
+                      "animationKey"
+                    ]
+                  },
                   "name": {
                     "type": "string",
                     "minLength": 1
@@ -41568,6 +42311,69 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "demonstration": {
+                      "nullable": true,
+                      "type": "object",
+                      "properties": {
+                        "youtubeUrl": {
+                          "nullable": true,
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "animationKey": {
+                          "nullable": true,
+                          "type": "string",
+                          "enum": [
+                            "high-supinated-bent-row",
+                            "yates-row",
+                            "supinated-yates-row",
+                            "pendlay-row",
+                            "supinated-bent-row",
+                            "high-bent-row",
+                            "one-arm-row",
+                            "generic-bent-row",
+                            "bent-row",
+                            "machine-row",
+                            "cable-row",
+                            "front-lat-pulldown",
+                            "lat-pulldown",
+                            "hang-power-clean",
+                            "squat",
+                            "bench-press",
+                            "incline-dumbbell-press",
+                            "flat-dumbbell-press",
+                            "incline-bench-press",
+                            "decline-bench-press",
+                            "pec-deck",
+                            "machine-fly",
+                            "flat-dumbbell-fly",
+                            "smith-bench-press",
+                            "machine-chest-press",
+                            "smith-squat",
+                            "leg-extension",
+                            "seated-leg-curl",
+                            "prone-leg-curl",
+                            "hack-squat",
+                            "leg-press-45",
+                            "horizontal-leg-press",
+                            "stiff",
+                            "deadlift",
+                            "sumo-deadlift",
+                            "seated-calf",
+                            "standing-calf",
+                            "hip-thrust",
+                            "hip-abduction",
+                            "goblet-squat",
+                            "sumo-dumbbell-squat"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "youtubeUrl",
+                        "animationKey"
+                      ],
+                      "additionalProperties": false
+                    },
                     "id": {
                       "type": "string",
                       "format": "uuid",
@@ -49727,6 +50533,257 @@
                   "required": [
                     "success",
                     "id"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/history/analytics/current-week": {
+      "get": {
+        "operationId": "getCurrentTrainingWeek",
+        "summary": "Get completed training for the current Sunday–Saturday week",
+        "tags": [
+          "History"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "tz",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "startDate": {
+                      "type": "string"
+                    },
+                    "endDate": {
+                      "type": "string"
+                    },
+                    "timezone": {
+                      "type": "string"
+                    },
+                    "workoutsCompleted": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "workingSets": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "loadVolumeKg": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "durationInSeconds": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "unclassifiedWorkingSets": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "attributes": {
+                      "type": "object",
+                      "properties": {
+                        "shortReps": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "mediumReps": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "longReps": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "withoutReps": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "shortReps",
+                        "mediumReps",
+                        "longReps",
+                        "withoutReps"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "days": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "date": {
+                            "type": "string"
+                          },
+                          "workoutsCompleted": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          }
+                        },
+                        "required": [
+                          "date",
+                          "workoutsCompleted"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "muscles": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "muscleGroup": {
+                            "type": "string",
+                            "enum": [
+                              "CHEST",
+                              "BACK",
+                              "SHOULDERS",
+                              "BICEPS",
+                              "TRICEPS",
+                              "FOREARMS",
+                              "QUADRICEPS",
+                              "HAMSTRINGS",
+                              "GLUTES",
+                              "ADDUCTORS",
+                              "HIP_ABDUCTORS",
+                              "CALVES",
+                              "CORE",
+                              "HIP_FLEXORS",
+                              "TIBIALIS_ANTERIOR"
+                            ]
+                          },
+                          "directWorkingSets": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "indirectWorkingSets": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "directLoadVolumeKg": {
+                            "type": "number",
+                            "minimum": 0
+                          }
+                        },
+                        "required": [
+                          "muscleGroup",
+                          "directWorkingSets",
+                          "indirectWorkingSets",
+                          "directLoadVolumeKg"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "startDate",
+                    "endDate",
+                    "timezone",
+                    "workoutsCompleted",
+                    "workingSets",
+                    "loadVolumeKg",
+                    "durationInSeconds",
+                    "unclassifiedWorkingSets",
+                    "attributes",
+                    "days",
+                    "muscles"
                   ],
                   "additionalProperties": false
                 }
