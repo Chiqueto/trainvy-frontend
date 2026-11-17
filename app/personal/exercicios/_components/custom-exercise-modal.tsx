@@ -19,8 +19,11 @@ import {
 } from "./demonstration-fields";
 import { youtubeVideoId } from "@/app/_lib/youtube";
 import type { ExerciseAnimation } from "@/app/_components/exercise-3d/exercises";
+import { MuscleDetailsFields } from "./muscle-details-fields";
+import type { CreateExerciseBody } from "@/app/_lib/api/fetch-generated";
 
 export interface CustomExerciseItem {
+  muscleDetails?: CreateExerciseBody["muscleDetails"];
   demonstration?: {
     youtubeUrl: string | null;
     animationKey: ExerciseAnimation | null;
@@ -73,9 +76,34 @@ function CustomExerciseForm({
       .map((m) => m.muscleGroup as MuscleGroup),
   );
   const [isPending, startTransition] = useTransition();
+  const [muscleDetails, setMuscleDetails] = useState<
+    Partial<Record<MuscleGroup, string[]>>
+  >(() =>
+    Object.fromEntries(
+      (exerciseToEdit?.muscleDetails ?? []).map((d) => [
+        d.muscleGroup,
+        d.detailIds,
+      ]),
+    ),
+  );
+  const changeDetails = (group: MuscleGroup, ids: string[]) =>
+    setMuscleDetails((current) => ({ ...current, [group]: ids }));
+  const selectedDetails: CreateExerciseBody["muscleDetails"] = [
+    ...primaryMuscles.map((muscleGroup) => ({
+      muscleGroup,
+      role: "PRIMARY" as const,
+      detailIds: muscleDetails[muscleGroup] ?? [],
+    })),
+    ...secondaryMuscles.map((muscleGroup) => ({
+      muscleGroup,
+      role: "SECONDARY" as const,
+      detailIds: muscleDetails[muscleGroup] ?? [],
+    })),
+  ].filter((d) => d.detailIds.length > 0);
 
   const togglePrimary = (group: MuscleGroup) => {
     if (primaryMuscles.includes(group)) {
+      changeDetails(group, []);
       setPrimaryMuscles(primaryMuscles.filter((g) => g !== group));
     } else {
       setPrimaryMuscles([...primaryMuscles, group]);
@@ -86,6 +114,7 @@ function CustomExerciseForm({
 
   const toggleSecondary = (group: MuscleGroup) => {
     if (secondaryMuscles.includes(group)) {
+      changeDetails(group, []);
       setSecondaryMuscles(secondaryMuscles.filter((g) => g !== group));
     } else {
       setSecondaryMuscles([...secondaryMuscles, group]);
@@ -112,6 +141,7 @@ function CustomExerciseForm({
     startTransition(async () => {
       if (isEditing && exerciseToEdit) {
         const res = await updateCustomExerciseAction(exerciseToEdit.id, {
+          muscleDetails: selectedDetails,
           demonstration: {
             youtubeUrl: demonstration.youtubeUrl.trim() || null,
             animationKey: demonstration.animationKey || null,
@@ -131,6 +161,7 @@ function CustomExerciseForm({
         }
       } else {
         const res = await createCustomExerciseAction({
+          muscleDetails: selectedDetails,
           demonstration: {
             youtubeUrl: demonstration.youtubeUrl.trim() || null,
             animationKey: demonstration.animationKey || null,
@@ -271,6 +302,12 @@ function CustomExerciseForm({
           </div>
 
           {/* Músculos Secundários */}
+          <MuscleDetailsFields
+            groups={primaryMuscles}
+            value={muscleDetails}
+            onChange={changeDetails}
+            disabled={isPending}
+          />
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -304,6 +341,13 @@ function CustomExerciseForm({
               })}
             </div>
           </div>
+
+          <MuscleDetailsFields
+            groups={secondaryMuscles}
+            value={muscleDetails}
+            onChange={changeDetails}
+            disabled={isPending}
+          />
 
           <DemonstrationFields
             value={demonstration}

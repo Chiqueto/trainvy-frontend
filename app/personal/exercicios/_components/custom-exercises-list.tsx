@@ -24,6 +24,8 @@ import {
 } from "./custom-exercise-modal";
 import { cn } from "@/lib/utils";
 import { ExerciseExecutionDialog } from "@/app/_components/exercise-media";
+import { MuscleDetailsSummary } from "@/app/_components/muscle-details-summary";
+import detailOptions from "@/app/_lib/muscle-detail-options.json";
 
 interface CustomExercisesListProps {
   initialExercises: CustomExerciseItem[];
@@ -81,7 +83,22 @@ export function CustomExercisesList({
 
   // Filtragem
   const filteredExercises = exercises.filter((ex) => {
-    const matchesSearch = ex.name.toLowerCase().includes(search.toLowerCase());
+    const searchTerms = [
+      ex.name,
+      ...(ex.muscleDetails ?? []).flatMap((d) =>
+        detailOptions[d.muscleGroup]
+          .filter((o) => d.detailIds.includes(o.id))
+          .map((o) => o.label),
+      ),
+    ];
+    const normalize = (value: string) =>
+      value
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
+    const matchesSearch = searchTerms.some((term) =>
+      normalize(term).includes(normalize(search)),
+    );
     if (!matchesSearch) return false;
 
     if (selectedFilter === "ALL") return true;
@@ -236,6 +253,7 @@ export function CustomExercisesList({
                     Ver execução
                   </Button>
                   {/* Badges de Grupos Musculares */}
+                  <MuscleDetailsSummary details={exercise.muscleDetails} />
                   <div className="flex flex-col gap-1.5 pt-1">
                     {primaryMuscles.length > 0 && (
                       <div className="flex flex-wrap items-center gap-1.5">

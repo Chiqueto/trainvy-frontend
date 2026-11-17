@@ -105,8 +105,16 @@ export function CoachGuidedTour({ tour }: { tour: "workspace" | "builder" }) {
       setRect({
         top: Math.max(4, box.top - 4),
         left: Math.max(4, box.left - 4),
-        width: Math.min(box.width + 8, window.innerWidth - 8),
-        height: Math.min(box.height + 8, window.innerHeight - 8),
+        width: Math.max(
+          0,
+          Math.min(box.right + 4, window.innerWidth - 4) -
+            Math.max(4, box.left - 4),
+        ),
+        height: Math.max(
+          0,
+          Math.min(box.bottom + 4, window.innerHeight - 4) -
+            Math.max(4, box.top - 4),
+        ),
       });
     };
     update();
@@ -163,7 +171,7 @@ export function CoachGuidedTour({ tour }: { tour: "workspace" | "builder" }) {
         )}
         <Dialog.Content
           onPointerDownOutside={(event) => event.preventDefault()}
-          className="fixed bottom-4 left-1/2 z-[82] max-h-[65dvh] w-[calc(100%-2rem)] max-w-md -translate-x-1/2 overflow-y-auto rounded-2xl border border-border bg-card p-5 text-foreground shadow-2xl outline-none sm:bottom-8"
+          className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] left-1/2 z-[82] max-h-[65dvh] w-[calc(100%-2rem)] max-w-md -translate-x-1/2 overflow-y-auto rounded-2xl border border-border bg-card p-5 text-foreground shadow-2xl outline-none sm:bottom-8 lg:left-[calc(50%+7.5rem)] lg:w-[calc(100%-17rem)]"
         >
           <div className="mb-3 flex items-center justify-between gap-3 text-xs text-muted-foreground">
             <span className="flex items-center gap-2">

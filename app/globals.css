@@ -194,9 +194,12 @@ body:has(.app-navigation) {
 }
 
 @media (min-width: 1024px) {
+  /* Dialog scroll locks reset body padding. Reserve the sidebar on the root. */
+  html:has(.app-navigation) {
+    padding-left: 15rem;
+  }
   body:has(.app-navigation) {
     --workout-builder-bottom: 1.5rem;
-    padding-left: 15rem;
   }
   .app-navigation {
     top: 0;

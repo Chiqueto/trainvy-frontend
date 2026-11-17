@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, ArrowRight, Trophy, Dumbbell, Loader2, Calendar } from "lucide-react";
 
 import { LocalDate } from "@/app/_components/local-date";
+import { MuscleDetailsSummary } from "@/app/_components/muscle-details-summary";
 import type {
   GetExerciseEvolution200,
   GetExerciseEvolution200ItemsItem,
@@ -101,6 +102,7 @@ export function ExerciseEvolutionDetail({
               </Badge>
             ))}
           </div>
+          <MuscleDetailsSummary details={initialData.exercise.muscleDetails} />
         </header>
 
         {/* PR de Carga */}

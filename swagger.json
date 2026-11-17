@@ -29686,6 +29686,57 @@
                   "items": {
                     "type": "object",
                     "properties": {
+                      "muscleDetails": {
+                        "maxItems": 15,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "muscleGroup": {
+                              "type": "string",
+                              "enum": [
+                                "CHEST",
+                                "BACK",
+                                "SHOULDERS",
+                                "BICEPS",
+                                "TRICEPS",
+                                "FOREARMS",
+                                "QUADRICEPS",
+                                "HAMSTRINGS",
+                                "GLUTES",
+                                "ADDUCTORS",
+                                "HIP_ABDUCTORS",
+                                "CALVES",
+                                "CORE",
+                                "HIP_FLEXORS",
+                                "TIBIALIS_ANTERIOR"
+                              ]
+                            },
+                            "role": {
+                              "type": "string",
+                              "enum": [
+                                "PRIMARY",
+                                "SECONDARY"
+                              ]
+                            },
+                            "detailIds": {
+                              "maxItems": 30,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 80
+                              }
+                            }
+                          },
+                          "required": [
+                            "muscleGroup",
+                            "role",
+                            "detailIds"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
                       "demonstration": {
                         "nullable": true,
                         "type": "object",
@@ -30057,6 +30108,57 @@
                     "exercise": {
                       "type": "object",
                       "properties": {
+                        "muscleDetails": {
+                          "maxItems": 15,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "muscleGroup": {
+                                "type": "string",
+                                "enum": [
+                                  "CHEST",
+                                  "BACK",
+                                  "SHOULDERS",
+                                  "BICEPS",
+                                  "TRICEPS",
+                                  "FOREARMS",
+                                  "QUADRICEPS",
+                                  "HAMSTRINGS",
+                                  "GLUTES",
+                                  "ADDUCTORS",
+                                  "HIP_ABDUCTORS",
+                                  "CALVES",
+                                  "CORE",
+                                  "HIP_FLEXORS",
+                                  "TIBIALIS_ANTERIOR"
+                                ]
+                              },
+                              "role": {
+                                "type": "string",
+                                "enum": [
+                                  "PRIMARY",
+                                  "SECONDARY"
+                                ]
+                              },
+                              "detailIds": {
+                                "maxItems": 30,
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 80
+                                }
+                              }
+                            },
+                            "required": [
+                              "muscleGroup",
+                              "role",
+                              "detailIds"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
                         "id": {
                           "type": "string",
                           "format": "uuid",
@@ -40962,6 +41064,57 @@
                   "items": {
                     "type": "object",
                     "properties": {
+                      "muscleDetails": {
+                        "maxItems": 15,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "muscleGroup": {
+                              "type": "string",
+                              "enum": [
+                                "CHEST",
+                                "BACK",
+                                "SHOULDERS",
+                                "BICEPS",
+                                "TRICEPS",
+                                "FOREARMS",
+                                "QUADRICEPS",
+                                "HAMSTRINGS",
+                                "GLUTES",
+                                "ADDUCTORS",
+                                "HIP_ABDUCTORS",
+                                "CALVES",
+                                "CORE",
+                                "HIP_FLEXORS",
+                                "TIBIALIS_ANTERIOR"
+                              ]
+                            },
+                            "role": {
+                              "type": "string",
+                              "enum": [
+                                "PRIMARY",
+                                "SECONDARY"
+                              ]
+                            },
+                            "detailIds": {
+                              "maxItems": 30,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 80
+                              }
+                            }
+                          },
+                          "required": [
+                            "muscleGroup",
+                            "role",
+                            "detailIds"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
                       "demonstration": {
                         "nullable": true,
                         "type": "object",
@@ -41190,6 +41343,57 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "muscleDetails": {
+                    "maxItems": 15,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "muscleGroup": {
+                          "type": "string",
+                          "enum": [
+                            "CHEST",
+                            "BACK",
+                            "SHOULDERS",
+                            "BICEPS",
+                            "TRICEPS",
+                            "FOREARMS",
+                            "QUADRICEPS",
+                            "HAMSTRINGS",
+                            "GLUTES",
+                            "ADDUCTORS",
+                            "HIP_ABDUCTORS",
+                            "CALVES",
+                            "CORE",
+                            "HIP_FLEXORS",
+                            "TIBIALIS_ANTERIOR"
+                          ]
+                        },
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "PRIMARY",
+                            "SECONDARY"
+                          ]
+                        },
+                        "detailIds": {
+                          "maxItems": 30,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 80
+                          }
+                        }
+                      },
+                      "required": [
+                        "muscleGroup",
+                        "role",
+                        "detailIds"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
                   "demonstration": {
                     "type": "object",
                     "properties": {
@@ -41321,6 +41525,57 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "muscleDetails": {
+                      "maxItems": 15,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "muscleGroup": {
+                            "type": "string",
+                            "enum": [
+                              "CHEST",
+                              "BACK",
+                              "SHOULDERS",
+                              "BICEPS",
+                              "TRICEPS",
+                              "FOREARMS",
+                              "QUADRICEPS",
+                              "HAMSTRINGS",
+                              "GLUTES",
+                              "ADDUCTORS",
+                              "HIP_ABDUCTORS",
+                              "CALVES",
+                              "CORE",
+                              "HIP_FLEXORS",
+                              "TIBIALIS_ANTERIOR"
+                            ]
+                          },
+                          "role": {
+                            "type": "string",
+                            "enum": [
+                              "PRIMARY",
+                              "SECONDARY"
+                            ]
+                          },
+                          "detailIds": {
+                            "maxItems": 30,
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 80
+                            }
+                          }
+                        },
+                        "required": [
+                          "muscleGroup",
+                          "role",
+                          "detailIds"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
                     "demonstration": {
                       "nullable": true,
                       "type": "object",
@@ -41656,6 +41911,57 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "muscleDetails": {
+                      "maxItems": 15,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "muscleGroup": {
+                            "type": "string",
+                            "enum": [
+                              "CHEST",
+                              "BACK",
+                              "SHOULDERS",
+                              "BICEPS",
+                              "TRICEPS",
+                              "FOREARMS",
+                              "QUADRICEPS",
+                              "HAMSTRINGS",
+                              "GLUTES",
+                              "ADDUCTORS",
+                              "HIP_ABDUCTORS",
+                              "CALVES",
+                              "CORE",
+                              "HIP_FLEXORS",
+                              "TIBIALIS_ANTERIOR"
+                            ]
+                          },
+                          "role": {
+                            "type": "string",
+                            "enum": [
+                              "PRIMARY",
+                              "SECONDARY"
+                            ]
+                          },
+                          "detailIds": {
+                            "maxItems": 30,
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 80
+                            }
+                          }
+                        },
+                        "required": [
+                          "muscleGroup",
+                          "role",
+                          "detailIds"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
                     "demonstration": {
                       "nullable": true,
                       "type": "object",
@@ -42172,6 +42478,57 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "muscleDetails": {
+                    "maxItems": 15,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "muscleGroup": {
+                          "type": "string",
+                          "enum": [
+                            "CHEST",
+                            "BACK",
+                            "SHOULDERS",
+                            "BICEPS",
+                            "TRICEPS",
+                            "FOREARMS",
+                            "QUADRICEPS",
+                            "HAMSTRINGS",
+                            "GLUTES",
+                            "ADDUCTORS",
+                            "HIP_ABDUCTORS",
+                            "CALVES",
+                            "CORE",
+                            "HIP_FLEXORS",
+                            "TIBIALIS_ANTERIOR"
+                          ]
+                        },
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "PRIMARY",
+                            "SECONDARY"
+                          ]
+                        },
+                        "detailIds": {
+                          "maxItems": 30,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 80
+                          }
+                        }
+                      },
+                      "required": [
+                        "muscleGroup",
+                        "role",
+                        "detailIds"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
                   "demonstration": {
                     "type": "object",
                     "properties": {
@@ -42311,6 +42668,57 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "muscleDetails": {
+                      "maxItems": 15,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "muscleGroup": {
+                            "type": "string",
+                            "enum": [
+                              "CHEST",
+                              "BACK",
+                              "SHOULDERS",
+                              "BICEPS",
+                              "TRICEPS",
+                              "FOREARMS",
+                              "QUADRICEPS",
+                              "HAMSTRINGS",
+                              "GLUTES",
+                              "ADDUCTORS",
+                              "HIP_ABDUCTORS",
+                              "CALVES",
+                              "CORE",
+                              "HIP_FLEXORS",
+                              "TIBIALIS_ANTERIOR"
+                            ]
+                          },
+                          "role": {
+                            "type": "string",
+                            "enum": [
+                              "PRIMARY",
+                              "SECONDARY"
+                            ]
+                          },
+                          "detailIds": {
+                            "maxItems": 30,
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 80
+                            }
+                          }
+                        },
+                        "required": [
+                          "muscleGroup",
+                          "role",
+                          "detailIds"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
                     "demonstration": {
                       "nullable": true,
                       "type": "object",
@@ -52111,6 +52519,57 @@
                     "exercise": {
                       "type": "object",
                       "properties": {
+                        "muscleDetails": {
+                          "maxItems": 15,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "muscleGroup": {
+                                "type": "string",
+                                "enum": [
+                                  "CHEST",
+                                  "BACK",
+                                  "SHOULDERS",
+                                  "BICEPS",
+                                  "TRICEPS",
+                                  "FOREARMS",
+                                  "QUADRICEPS",
+                                  "HAMSTRINGS",
+                                  "GLUTES",
+                                  "ADDUCTORS",
+                                  "HIP_ABDUCTORS",
+                                  "CALVES",
+                                  "CORE",
+                                  "HIP_FLEXORS",
+                                  "TIBIALIS_ANTERIOR"
+                                ]
+                              },
+                              "role": {
+                                "type": "string",
+                                "enum": [
+                                  "PRIMARY",
+                                  "SECONDARY"
+                                ]
+                              },
+                              "detailIds": {
+                                "maxItems": 30,
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 80
+                                }
+                              }
+                            },
+                            "required": [
+                              "muscleGroup",
+                              "role",
+                              "detailIds"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
                         "id": {
                           "type": "string",
                           "format": "uuid",

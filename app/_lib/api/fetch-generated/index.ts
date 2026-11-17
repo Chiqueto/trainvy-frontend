@@ -11148,6 +11148,43 @@ export const ListCoachAthleteProgressExercisesOnlyWithHistory = {
   false: "false",
 } as const;
 
+export type ListCoachAthleteProgressExercises200ItemMuscleDetailsItemMuscleGroup =
+  (typeof ListCoachAthleteProgressExercises200ItemMuscleDetailsItemMuscleGroup)[keyof typeof ListCoachAthleteProgressExercises200ItemMuscleDetailsItemMuscleGroup];
+
+export const ListCoachAthleteProgressExercises200ItemMuscleDetailsItemMuscleGroup =
+  {
+    CHEST: "CHEST",
+    BACK: "BACK",
+    SHOULDERS: "SHOULDERS",
+    BICEPS: "BICEPS",
+    TRICEPS: "TRICEPS",
+    FOREARMS: "FOREARMS",
+    QUADRICEPS: "QUADRICEPS",
+    HAMSTRINGS: "HAMSTRINGS",
+    GLUTES: "GLUTES",
+    ADDUCTORS: "ADDUCTORS",
+    HIP_ABDUCTORS: "HIP_ABDUCTORS",
+    CALVES: "CALVES",
+    CORE: "CORE",
+    HIP_FLEXORS: "HIP_FLEXORS",
+    TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
+  } as const;
+
+export type ListCoachAthleteProgressExercises200ItemMuscleDetailsItemRole =
+  (typeof ListCoachAthleteProgressExercises200ItemMuscleDetailsItemRole)[keyof typeof ListCoachAthleteProgressExercises200ItemMuscleDetailsItemRole];
+
+export const ListCoachAthleteProgressExercises200ItemMuscleDetailsItemRole = {
+  PRIMARY: "PRIMARY",
+  SECONDARY: "SECONDARY",
+} as const;
+
+export type ListCoachAthleteProgressExercises200ItemMuscleDetailsItem = {
+  muscleGroup: ListCoachAthleteProgressExercises200ItemMuscleDetailsItemMuscleGroup;
+  role: ListCoachAthleteProgressExercises200ItemMuscleDetailsItemRole;
+  /** @maxItems 30 */
+  detailIds: string[];
+};
+
 /**
  * @nullable
  */
@@ -11237,6 +11274,8 @@ export type ListCoachAthleteProgressExercises200ItemMusclesItem = {
 };
 
 export type ListCoachAthleteProgressExercises200Item = {
+  /** @maxItems 15 */
+  muscleDetails?: ListCoachAthleteProgressExercises200ItemMuscleDetailsItem[];
   /** @nullable */
   demonstration?: ListCoachAthleteProgressExercises200ItemDemonstration;
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
@@ -11294,6 +11333,45 @@ export type GetCoachAthleteProgressExerciseEvolutionParams = {
   limit?: number;
 };
 
+export type GetCoachAthleteProgressExerciseEvolution200ExerciseMuscleDetailsItemMuscleGroup =
+  (typeof GetCoachAthleteProgressExerciseEvolution200ExerciseMuscleDetailsItemMuscleGroup)[keyof typeof GetCoachAthleteProgressExerciseEvolution200ExerciseMuscleDetailsItemMuscleGroup];
+
+export const GetCoachAthleteProgressExerciseEvolution200ExerciseMuscleDetailsItemMuscleGroup =
+  {
+    CHEST: "CHEST",
+    BACK: "BACK",
+    SHOULDERS: "SHOULDERS",
+    BICEPS: "BICEPS",
+    TRICEPS: "TRICEPS",
+    FOREARMS: "FOREARMS",
+    QUADRICEPS: "QUADRICEPS",
+    HAMSTRINGS: "HAMSTRINGS",
+    GLUTES: "GLUTES",
+    ADDUCTORS: "ADDUCTORS",
+    HIP_ABDUCTORS: "HIP_ABDUCTORS",
+    CALVES: "CALVES",
+    CORE: "CORE",
+    HIP_FLEXORS: "HIP_FLEXORS",
+    TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
+  } as const;
+
+export type GetCoachAthleteProgressExerciseEvolution200ExerciseMuscleDetailsItemRole =
+  (typeof GetCoachAthleteProgressExerciseEvolution200ExerciseMuscleDetailsItemRole)[keyof typeof GetCoachAthleteProgressExerciseEvolution200ExerciseMuscleDetailsItemRole];
+
+export const GetCoachAthleteProgressExerciseEvolution200ExerciseMuscleDetailsItemRole =
+  {
+    PRIMARY: "PRIMARY",
+    SECONDARY: "SECONDARY",
+  } as const;
+
+export type GetCoachAthleteProgressExerciseEvolution200ExerciseMuscleDetailsItem =
+  {
+    muscleGroup: GetCoachAthleteProgressExerciseEvolution200ExerciseMuscleDetailsItemMuscleGroup;
+    role: GetCoachAthleteProgressExerciseEvolution200ExerciseMuscleDetailsItemRole;
+    /** @maxItems 30 */
+    detailIds: string[];
+  };
+
 export type GetCoachAthleteProgressExerciseEvolution200ExerciseMusclesItemMuscleGroup =
   (typeof GetCoachAthleteProgressExerciseEvolution200ExerciseMusclesItemMuscleGroup)[keyof typeof GetCoachAthleteProgressExerciseEvolution200ExerciseMusclesItemMuscleGroup];
 
@@ -11331,6 +11409,8 @@ export type GetCoachAthleteProgressExerciseEvolution200ExerciseMusclesItem = {
 };
 
 export type GetCoachAthleteProgressExerciseEvolution200Exercise = {
+  /** @maxItems 15 */
+  muscleDetails?: GetCoachAthleteProgressExerciseEvolution200ExerciseMuscleDetailsItem[];
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
   name: string;
@@ -15887,6 +15967,42 @@ export type ListExercisesParams = {
   onlyCustom?: string;
 };
 
+export type ListExercises200ItemMuscleDetailsItemMuscleGroup =
+  (typeof ListExercises200ItemMuscleDetailsItemMuscleGroup)[keyof typeof ListExercises200ItemMuscleDetailsItemMuscleGroup];
+
+export const ListExercises200ItemMuscleDetailsItemMuscleGroup = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
+} as const;
+
+export type ListExercises200ItemMuscleDetailsItemRole =
+  (typeof ListExercises200ItemMuscleDetailsItemRole)[keyof typeof ListExercises200ItemMuscleDetailsItemRole];
+
+export const ListExercises200ItemMuscleDetailsItemRole = {
+  PRIMARY: "PRIMARY",
+  SECONDARY: "SECONDARY",
+} as const;
+
+export type ListExercises200ItemMuscleDetailsItem = {
+  muscleGroup: ListExercises200ItemMuscleDetailsItemMuscleGroup;
+  role: ListExercises200ItemMuscleDetailsItemRole;
+  /** @maxItems 30 */
+  detailIds: string[];
+};
+
 /**
  * @nullable
  */
@@ -15976,6 +16092,8 @@ export type ListExercises200ItemMusclesItem = {
 };
 
 export type ListExercises200Item = {
+  /** @maxItems 15 */
+  muscleDetails?: ListExercises200ItemMuscleDetailsItem[];
   /** @nullable */
   demonstration?: ListExercises200ItemDemonstration;
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
@@ -16007,6 +16125,42 @@ export type ListExercises401 = {
 export type ListExercises500 = {
   error: string;
   code: string;
+};
+
+export type CreateExerciseBodyMuscleDetailsItemMuscleGroup =
+  (typeof CreateExerciseBodyMuscleDetailsItemMuscleGroup)[keyof typeof CreateExerciseBodyMuscleDetailsItemMuscleGroup];
+
+export const CreateExerciseBodyMuscleDetailsItemMuscleGroup = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
+} as const;
+
+export type CreateExerciseBodyMuscleDetailsItemRole =
+  (typeof CreateExerciseBodyMuscleDetailsItemRole)[keyof typeof CreateExerciseBodyMuscleDetailsItemRole];
+
+export const CreateExerciseBodyMuscleDetailsItemRole = {
+  PRIMARY: "PRIMARY",
+  SECONDARY: "SECONDARY",
+} as const;
+
+export type CreateExerciseBodyMuscleDetailsItem = {
+  muscleGroup: CreateExerciseBodyMuscleDetailsItemMuscleGroup;
+  role: CreateExerciseBodyMuscleDetailsItemRole;
+  /** @maxItems 30 */
+  detailIds: string[];
 };
 
 /**
@@ -16113,12 +16267,50 @@ export const CreateExerciseBodySecondaryMuscleGroupsItem = {
 } as const;
 
 export type CreateExerciseBody = {
+  /** @maxItems 15 */
+  muscleDetails?: CreateExerciseBodyMuscleDetailsItem[];
   demonstration?: CreateExerciseBodyDemonstration;
   /** @minLength 1 */
   name: string;
   isUnilateral?: boolean;
   primaryMuscleGroups?: CreateExerciseBodyPrimaryMuscleGroupsItem[];
   secondaryMuscleGroups?: CreateExerciseBodySecondaryMuscleGroupsItem[];
+};
+
+export type CreateExercise201MuscleDetailsItemMuscleGroup =
+  (typeof CreateExercise201MuscleDetailsItemMuscleGroup)[keyof typeof CreateExercise201MuscleDetailsItemMuscleGroup];
+
+export const CreateExercise201MuscleDetailsItemMuscleGroup = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
+} as const;
+
+export type CreateExercise201MuscleDetailsItemRole =
+  (typeof CreateExercise201MuscleDetailsItemRole)[keyof typeof CreateExercise201MuscleDetailsItemRole];
+
+export const CreateExercise201MuscleDetailsItemRole = {
+  PRIMARY: "PRIMARY",
+  SECONDARY: "SECONDARY",
+} as const;
+
+export type CreateExercise201MuscleDetailsItem = {
+  muscleGroup: CreateExercise201MuscleDetailsItemMuscleGroup;
+  role: CreateExercise201MuscleDetailsItemRole;
+  /** @maxItems 30 */
+  detailIds: string[];
 };
 
 /**
@@ -16210,6 +16402,8 @@ export type CreateExercise201MusclesItem = {
 };
 
 export type CreateExercise201 = {
+  /** @maxItems 15 */
+  muscleDetails?: CreateExercise201MuscleDetailsItem[];
   /** @nullable */
   demonstration?: CreateExercise201Demonstration;
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
@@ -16289,6 +16483,42 @@ export type UpdateExerciseMusclesBody = {
   /** @minItems 1 */
   primaryMuscleGroups: UpdateExerciseMusclesBodyPrimaryMuscleGroupsItem[];
   secondaryMuscleGroups?: UpdateExerciseMusclesBodySecondaryMuscleGroupsItem[];
+};
+
+export type UpdateExerciseMuscles200MuscleDetailsItemMuscleGroup =
+  (typeof UpdateExerciseMuscles200MuscleDetailsItemMuscleGroup)[keyof typeof UpdateExerciseMuscles200MuscleDetailsItemMuscleGroup];
+
+export const UpdateExerciseMuscles200MuscleDetailsItemMuscleGroup = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
+} as const;
+
+export type UpdateExerciseMuscles200MuscleDetailsItemRole =
+  (typeof UpdateExerciseMuscles200MuscleDetailsItemRole)[keyof typeof UpdateExerciseMuscles200MuscleDetailsItemRole];
+
+export const UpdateExerciseMuscles200MuscleDetailsItemRole = {
+  PRIMARY: "PRIMARY",
+  SECONDARY: "SECONDARY",
+} as const;
+
+export type UpdateExerciseMuscles200MuscleDetailsItem = {
+  muscleGroup: UpdateExerciseMuscles200MuscleDetailsItemMuscleGroup;
+  role: UpdateExerciseMuscles200MuscleDetailsItemRole;
+  /** @maxItems 30 */
+  detailIds: string[];
 };
 
 /**
@@ -16380,6 +16610,8 @@ export type UpdateExerciseMuscles200MusclesItem = {
 };
 
 export type UpdateExerciseMuscles200 = {
+  /** @maxItems 15 */
+  muscleDetails?: UpdateExerciseMuscles200MuscleDetailsItem[];
   /** @nullable */
   demonstration?: UpdateExerciseMuscles200Demonstration;
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
@@ -16529,6 +16761,42 @@ export type GetExerciseMedia500 = {
   code: string;
 };
 
+export type UpdateCustomExerciseBodyMuscleDetailsItemMuscleGroup =
+  (typeof UpdateCustomExerciseBodyMuscleDetailsItemMuscleGroup)[keyof typeof UpdateCustomExerciseBodyMuscleDetailsItemMuscleGroup];
+
+export const UpdateCustomExerciseBodyMuscleDetailsItemMuscleGroup = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
+} as const;
+
+export type UpdateCustomExerciseBodyMuscleDetailsItemRole =
+  (typeof UpdateCustomExerciseBodyMuscleDetailsItemRole)[keyof typeof UpdateCustomExerciseBodyMuscleDetailsItemRole];
+
+export const UpdateCustomExerciseBodyMuscleDetailsItemRole = {
+  PRIMARY: "PRIMARY",
+  SECONDARY: "SECONDARY",
+} as const;
+
+export type UpdateCustomExerciseBodyMuscleDetailsItem = {
+  muscleGroup: UpdateCustomExerciseBodyMuscleDetailsItemMuscleGroup;
+  role: UpdateCustomExerciseBodyMuscleDetailsItemRole;
+  /** @maxItems 30 */
+  detailIds: string[];
+};
+
 /**
  * @nullable
  */
@@ -16633,12 +16901,50 @@ export const UpdateCustomExerciseBodySecondaryMuscleGroupsItem = {
 } as const;
 
 export type UpdateCustomExerciseBody = {
+  /** @maxItems 15 */
+  muscleDetails?: UpdateCustomExerciseBodyMuscleDetailsItem[];
   demonstration?: UpdateCustomExerciseBodyDemonstration;
   /** @minLength 1 */
   name?: string;
   isUnilateral?: boolean;
   primaryMuscleGroups?: UpdateCustomExerciseBodyPrimaryMuscleGroupsItem[];
   secondaryMuscleGroups?: UpdateCustomExerciseBodySecondaryMuscleGroupsItem[];
+};
+
+export type UpdateCustomExercise200MuscleDetailsItemMuscleGroup =
+  (typeof UpdateCustomExercise200MuscleDetailsItemMuscleGroup)[keyof typeof UpdateCustomExercise200MuscleDetailsItemMuscleGroup];
+
+export const UpdateCustomExercise200MuscleDetailsItemMuscleGroup = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
+} as const;
+
+export type UpdateCustomExercise200MuscleDetailsItemRole =
+  (typeof UpdateCustomExercise200MuscleDetailsItemRole)[keyof typeof UpdateCustomExercise200MuscleDetailsItemRole];
+
+export const UpdateCustomExercise200MuscleDetailsItemRole = {
+  PRIMARY: "PRIMARY",
+  SECONDARY: "SECONDARY",
+} as const;
+
+export type UpdateCustomExercise200MuscleDetailsItem = {
+  muscleGroup: UpdateCustomExercise200MuscleDetailsItemMuscleGroup;
+  role: UpdateCustomExercise200MuscleDetailsItemRole;
+  /** @maxItems 30 */
+  detailIds: string[];
 };
 
 /**
@@ -16730,6 +17036,8 @@ export type UpdateCustomExercise200MusclesItem = {
 };
 
 export type UpdateCustomExercise200 = {
+  /** @maxItems 15 */
+  muscleDetails?: UpdateCustomExercise200MuscleDetailsItem[];
   /** @nullable */
   demonstration?: UpdateCustomExercise200Demonstration;
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
@@ -21034,6 +21342,42 @@ export type GetExerciseEvolutionParams = {
   limit?: number;
 };
 
+export type GetExerciseEvolution200ExerciseMuscleDetailsItemMuscleGroup =
+  (typeof GetExerciseEvolution200ExerciseMuscleDetailsItemMuscleGroup)[keyof typeof GetExerciseEvolution200ExerciseMuscleDetailsItemMuscleGroup];
+
+export const GetExerciseEvolution200ExerciseMuscleDetailsItemMuscleGroup = {
+  CHEST: "CHEST",
+  BACK: "BACK",
+  SHOULDERS: "SHOULDERS",
+  BICEPS: "BICEPS",
+  TRICEPS: "TRICEPS",
+  FOREARMS: "FOREARMS",
+  QUADRICEPS: "QUADRICEPS",
+  HAMSTRINGS: "HAMSTRINGS",
+  GLUTES: "GLUTES",
+  ADDUCTORS: "ADDUCTORS",
+  HIP_ABDUCTORS: "HIP_ABDUCTORS",
+  CALVES: "CALVES",
+  CORE: "CORE",
+  HIP_FLEXORS: "HIP_FLEXORS",
+  TIBIALIS_ANTERIOR: "TIBIALIS_ANTERIOR",
+} as const;
+
+export type GetExerciseEvolution200ExerciseMuscleDetailsItemRole =
+  (typeof GetExerciseEvolution200ExerciseMuscleDetailsItemRole)[keyof typeof GetExerciseEvolution200ExerciseMuscleDetailsItemRole];
+
+export const GetExerciseEvolution200ExerciseMuscleDetailsItemRole = {
+  PRIMARY: "PRIMARY",
+  SECONDARY: "SECONDARY",
+} as const;
+
+export type GetExerciseEvolution200ExerciseMuscleDetailsItem = {
+  muscleGroup: GetExerciseEvolution200ExerciseMuscleDetailsItemMuscleGroup;
+  role: GetExerciseEvolution200ExerciseMuscleDetailsItemRole;
+  /** @maxItems 30 */
+  detailIds: string[];
+};
+
 export type GetExerciseEvolution200ExerciseMusclesItemMuscleGroup =
   (typeof GetExerciseEvolution200ExerciseMusclesItemMuscleGroup)[keyof typeof GetExerciseEvolution200ExerciseMusclesItemMuscleGroup];
 
@@ -21069,6 +21413,8 @@ export type GetExerciseEvolution200ExerciseMusclesItem = {
 };
 
 export type GetExerciseEvolution200Exercise = {
+  /** @maxItems 15 */
+  muscleDetails?: GetExerciseEvolution200ExerciseMuscleDetailsItem[];
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
   name: string;
