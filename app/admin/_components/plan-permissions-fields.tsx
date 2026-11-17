@@ -1,16 +1,26 @@
 "use client";
 import type { ListAdminPlans200Item } from "@/app/_lib/api/fetch-generated";
 import { entitlementLabels } from "../_lib/presentation";
+import { useAiAvailability } from "@/app/_components/ai-availability-provider";
 export type PlanPermission = ListAdminPlans200Item["entitlements"][number];
 export function PlanPermissionsFields({
   value,
   onChange,
   disabled = false,
+  audience = "COACH",
 }: {
   value: PlanPermission[];
   onChange: (next: PlanPermission[]) => void;
   disabled?: boolean;
+  audience?: ListAdminPlans200Item["audience"];
 }) {
+  const policy = useAiAvailability();
+  const aiEnabled =
+    audience === "COACH"
+      ? policy.professionalAiEnabled
+      : audience === "ATHLETE"
+        ? policy.athleteAiEnabled
+        : policy.professionalAiEnabled && policy.athleteAiEnabled;
   return (
     <fieldset disabled={disabled} className="space-y-3">
       <legend className="mb-3 text-sm font-semibold">
@@ -19,12 +29,16 @@ export function PlanPermissionsFields({
       {(Object.keys(entitlementLabels) as PlanPermission["entitlement"][]).map(
         (key) => {
           const current = value.find((e) => e.entitlement === key);
+          const isAi = key === "AI_CHAT" || key === "AI_PLAN_GENERATION";
+          if (isAi && !aiEnabled && !current) return null;
+          if (key === "SOURCE_LIBRARY" && !current) return null;
           return (
             <div key={key} className="rounded-xl border border-border p-3">
               <label className="flex min-h-7 items-center gap-2 text-sm">
                 <input
                   type="checkbox"
                   checked={Boolean(current)}
+                  disabled={isAi && !aiEnabled && !current}
                   onChange={(event) =>
                     onChange(
                       event.target.checked
@@ -63,34 +77,36 @@ export function PlanPermissionsFields({
                   />
                 </label>
               )}
-              {(key === "AI_CHAT" || key === "AI_PLAN_GENERATION") && current && (
-                <label className="mt-2 flex flex-col gap-1 text-xs text-muted-foreground">
-                  Cota diária compartilhada de IA (chat, fichas e análises; vazio = padrão)
-                  <input
-                    type="number"
-                    min={0}
-                    max={2147483647}
-                    step={1}
-                    value={current.limitValue ?? ""}
-                    onChange={(event) =>
-                      onChange(
-                        value.map((e) =>
-                          e.entitlement === key
-                            ? {
-                                ...e,
-                                limitValue:
-                                  event.target.value === ""
-                                    ? null
-                                    : Number(event.target.value),
-                              }
-                            : e,
-                        ),
-                      )
-                    }
-                    className="h-11 rounded-lg border border-input bg-background px-3 text-sm"
-                  />
-                </label>
-              )}
+              {(key === "AI_CHAT" || key === "AI_PLAN_GENERATION") &&
+                current && (
+                  <label className="mt-2 flex flex-col gap-1 text-xs text-muted-foreground">
+                    Cota diária compartilhada de IA (chat, fichas e análises;
+                    vazio = padrão)
+                    <input
+                      type="number"
+                      min={0}
+                      max={2147483647}
+                      step={1}
+                      value={current.limitValue ?? ""}
+                      onChange={(event) =>
+                        onChange(
+                          value.map((e) =>
+                            e.entitlement === key
+                              ? {
+                                  ...e,
+                                  limitValue:
+                                    event.target.value === ""
+                                      ? null
+                                      : Number(event.target.value),
+                                }
+                              : e,
+                          ),
+                        )
+                      }
+                      className="h-11 rounded-lg border border-input bg-background px-3 text-sm"
+                    />
+                  </label>
+                )}
               {key === "SOURCE_LIBRARY" && (
                 <p className="mt-1 text-[11px] text-muted-foreground">
                   Recurso futuro; a biblioteca ainda não está disponível.
@@ -101,6 +117,9 @@ export function PlanPermissionsFields({
         },
       )}
       <p className="text-xs text-muted-foreground">
+        {aiEnabled
+          ? "IA opcional: selecione os recursos e defina uma cota para incluí-los neste plano. "
+          : "Para incluir IA, habilite a flag do público deste plano no admin. No uso interno, habilite as duas flags. "}
         As alterações atualizam as permissões comerciais do plano. Os recursos
         individuais e as proteções técnicas do beta continuam seguindo as regras
         atuais.

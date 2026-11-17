@@ -41,6 +41,7 @@ export function PlanPermissionsEditor({
         }}
       >
         <PlanPermissionsFields
+          audience={plan.audience}
           value={permissions}
           disabled={pending}
           onChange={(next) => {

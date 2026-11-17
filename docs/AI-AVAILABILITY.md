@@ -1,5 +1,7 @@
 # Disponibilidade de IA por perfil
 
+> Revisão de 17/11/2026: [catálogo sem IA](COMMERCIAL-CATALOG-2026-11.md). A remoção de permissões dos planos existentes é uma migração pontual; desligar ou religar flags continua sem modificar as permissões armazenadas. Cadastro e edição de planos agora exigem a flag da audiência para conceder IA.
+
 Implementado em 10/11/2026.
 
 ## Controles

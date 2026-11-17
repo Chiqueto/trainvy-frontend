@@ -32,6 +32,14 @@ export function PlansList({ initial }: { initial: ListAdminPlans200Item[] }) {
         </Badge>
       </div>
 
+      <p className="rounded-xl border border-border bg-card p-4 text-sm text-muted-foreground">
+        Recursos individuais: treinos manuais, registro por série, histórico e
+        evolução. Os planos de personal acrescentam gestão, fichas e
+        acompanhamento de alunos. IA é opcional e depende da flag do público.
+        Preços de catálogo não alteram o valor contratado por assinantes
+        existentes.
+      </p>
+
       <Button
         onClick={() => {
           setCreating(true);
@@ -89,7 +97,11 @@ export function PlansList({ initial }: { initial: ListAdminPlans200Item[] }) {
                   </span>
                 </div>
                 <span className="rounded-md bg-muted px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-muted-foreground">
-                  {plan.audience}
+                  {plan.audience === "COACH"
+                    ? "Personal"
+                    : plan.audience === "ATHLETE"
+                      ? "Atleta"
+                      : "Interno"}
                 </span>
               </div>
 
@@ -100,6 +112,11 @@ export function PlansList({ initial }: { initial: ListAdminPlans200Item[] }) {
               )}
 
               <div className="pt-2">
+                <p className="mb-2 text-xs text-muted-foreground">
+                  {plan.isPublic
+                    ? "Disponível no cadastro"
+                    : "Privado · atribuição manual"}
+                </p>
                 <span className="text-xs text-muted-foreground">
                   Preço base:
                 </span>
@@ -128,11 +145,17 @@ export function PlansList({ initial }: { initial: ListAdminPlans200Item[] }) {
                           {entitlementLabels[e.entitlement] ?? e.entitlement}
                         </span>
                       </div>
-                      {e.limitValue !== null && (
+                      {(e.limitValue !== null ||
+                        e.entitlement === "MANAGE_ATHLETES") && (
                         <span className="font-mono text-[11px] font-bold text-primary">
-                          {e.entitlement === "AI_CHAT"
-                            ? `limite: ${e.limitValue} msgs/dia`
-                            : `limite: ${e.limitValue}`}
+                          {e.entitlement === "MANAGE_ATHLETES"
+                            ? e.limitValue === null
+                              ? "Ilimitados"
+                              : `Até ${e.limitValue} alunos`
+                            : e.entitlement === "AI_CHAT" ||
+                                e.entitlement === "AI_PLAN_GENERATION"
+                              ? `Cota compartilhada: ${e.limitValue}/dia`
+                              : `limite: ${e.limitValue}`}
                         </span>
                       )}
                     </li>

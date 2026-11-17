@@ -156,6 +156,7 @@ export function CreatePlanForm({
         </p>
       )}
       <PlanPermissionsFields
+        audience={audience}
         value={permissions}
         onChange={setPermissions}
         disabled={pending}

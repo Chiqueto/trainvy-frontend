@@ -63,6 +63,8 @@ export function adminDate(value: string | null) {
   );
 }
 const errors: Record<string, string> = {
+  PLAN_AI_DISABLED:
+    "A IA está desativada para o público deste plano. Habilite a flag correspondente ou remova as permissões de IA.",
   EXERCISE_CHANGED:
     "Este exercício foi alterado enquanto você editava. Atualize o catálogo antes de tentar novamente.",
   EXERCISE_NOT_FOUND: "Exercício global não encontrado.",
