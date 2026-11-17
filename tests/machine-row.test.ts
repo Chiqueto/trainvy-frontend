@@ -1,3 +1,4 @@
+import { forearmDirectionError } from "./helpers/forearm-direction-error";
 // @vitest-environment node
 import { readFile } from "node:fs/promises";
 import { beforeAll, describe, expect, it } from "vitest";
@@ -127,15 +128,13 @@ describe("chest-supported bilateral lever row", () => {
         for (const n of names)
           expect(current.get(n)!.angleTo(previous.get(n)!)).toBeLessThan(0.03);
       for (const [j, s] of ["L", "R"].entries()) {
-        expect(
-          bones
-            .get(`forearm_${s}`)!
-            .quaternion.angleTo(pose.limbs[j].handRotation),
-        ).toBeLessThan(1e-6);
+        expect(forearmDirectionError(mesh, s, pose.limbs[j])).toBeLessThan(
+          1e-6,
+        );
         expect(
           bones
             .get(`wrist_${s}`)!
-            .quaternion.angleTo(pose.limbs[j].handRotation),
+            .quaternion.angleTo(bones.get(`forearm_${s}`)!.quaternion),
         ).toBeLessThan(1e-6);
       }
       previous = current;

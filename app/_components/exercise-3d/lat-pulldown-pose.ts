@@ -1,5 +1,6 @@
+import { getPowerGripRotation } from "./power-grip";
 import { getPullingShoulder } from "./scapular-motion";
-import { MathUtils, Matrix4, Quaternion, Vector3 } from "three";
+import { MathUtils, Quaternion, Vector3 } from "three";
 import { ARM_LENGTH, FOREARM_LENGTH, solveJoint } from "./kinematics";
 
 const v = (x: number, y: number, z: number) => new Vector3(x, y, z);
@@ -8,16 +9,8 @@ export const PULLDOWN_PULLEY = v(0, 1.94, 0.28);
 export const PULLDOWN_GRIP_HALF_WIDTH = 0.3225; // 1.5 × the rig's 0.43 m shoulder span.
 // Overhead return includes the scapular rise: retain elbow extension instead of
 // leaving the original low bar endpoint after adding scapulothoracic rotation.
-export const PULLDOWN_BAR_TOP = v(0, 1.60, 0.25);
+export const PULLDOWN_BAR_TOP = v(0, 1.6, 0.25);
 export const PULLDOWN_BAR_BOTTOM = v(0, 0.995, 0.14);
-
-function frame(direction: Vector3, shaft: Vector3) {
-  const y = direction.clone().normalize();
-  const z = shaft.clone().addScaledVector(y, -shaft.dot(y)).normalize();
-  return new Quaternion().setFromRotationMatrix(
-    new Matrix4().makeBasis(y.clone().cross(z).normalize(), y, z),
-  );
-}
 
 /** p=0: contracted; p=1: controlled overhead return. Seat and feet remain fixed. */
 export function getLatPulldownPose(depth: number) {
@@ -35,7 +28,7 @@ export function getLatPulldownPose(depth: number) {
     const ankle = v(side * 0.19, 0.05, 0.54);
     const knee = solveJoint(hip, ankle, 0.44, 0.42, v(0, 1, 1));
     // Small shoulder elevation on return, with no trunk rocking or body translation.
-    const shoulder = body(getPullingShoulder('lat-pulldown',p,side));
+    const shoulder = body(getPullingShoulder("lat-pulldown", p, side));
     const grip = bar.clone().setX(side * PULLDOWN_GRIP_HALF_WIDTH);
     // Solve the small authored palm offset together with the elbow, rather than
     // moving the bar off the hands or forcing the wrist into an axial spin.
@@ -50,8 +43,10 @@ export function getLatPulldownPose(depth: number) {
         FOREARM_LENGTH,
         v(side * 0.3, -1, -0.2),
       );
-      handRotation = frame(wrist.clone().sub(elbow), v(1, 0, 0)).multiply(
-        frame(v(side * 0.025, -0.265, 0.03), v(1, 0, 0)).invert(),
+      handRotation = getPowerGripRotation(
+        wrist.clone().sub(elbow),
+        v(1, 0, 0),
+        -1,
       );
       wrist = grip
         .clone()

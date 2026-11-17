@@ -435,7 +435,8 @@ export default function Exercise3DLab() {
         aria-label="Selecionar exercício"
       >
         {(
-          Object.entries(EXERCISE_ANIMATIONS).filter(([key]) => key !== "generic-bent-row") as [
+          Object.entries(EXERCISE_ANIMATIONS).filter(([key]) => key !== "generic-bent-row" && key !== "front-lat-pulldown",
+          ) as [
             ExerciseAnimation,
             ExerciseDefinition,
           ][]

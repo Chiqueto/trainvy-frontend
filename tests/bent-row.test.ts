@@ -1,3 +1,4 @@
+import { forearmDirectionError } from "./helpers/forearm-direction-error";
 // @vitest-environment node
 import { readFile } from "node:fs/promises";
 import { beforeAll, describe, expect, it } from "vitest";
@@ -44,7 +45,9 @@ describe("standing bent-over barbell row", () => {
     expect(getExerciseAnimation(null, "Remada Curvada com Barra")).toBe(
       "bent-row",
     );
-    expect(getExerciseAnimation(null, "Remada Curvada Supinada")).toBe("supinated-bent-row");
+    expect(getExerciseAnimation(null, "Remada Curvada Supinada")).toBe(
+      "supinated-bent-row",
+    );
   });
   it("preserves hinge, feet, segment lengths and two-hand shaft contact through 201 poses", () => {
     const first = getExercisePose("bent-row", 0);
@@ -84,11 +87,7 @@ describe("standing bent-over barbell row", () => {
       if (previous)
         q.forEach((v, j) => expect(v.angleTo(previous![j])).toBeLessThan(0.04));
       for (const [j, s] of ["L", "R"].entries())
-        expect(
-          bones
-            .get("forearm_" + s)!
-            .quaternion.angleTo(p.limbs[j].handRotation),
-        ).toBeLessThan(1e-6);
+        expect(forearmDirectionError(mesh, s, p.limbs[j])).toBeLessThan(1e-6);
       previous = q;
     }
   });
@@ -107,7 +106,9 @@ describe("standing bent-over barbell row", () => {
     expect(mismatch).toBe(0);
     for (const s of back.selections)
       if (/^Latissimus|^Transverse/.test(s.name))
-        expect(mask.getX(s.indices[0])).toBeCloseTo(/^Latissimus/.test(s.name)?1:.45);
+        expect(mask.getX(s.indices[0])).toBeCloseTo(
+          /^Latissimus/.test(s.name) ? 1 : 0.45,
+        );
     for (const s of lower.selections)
       if (/^Gluteus|^Vastus|^Long_head_of_biceps_femoris/.test(s.name))
         expect(mask.getX(s.indices[0])).toBeCloseTo(0.45);

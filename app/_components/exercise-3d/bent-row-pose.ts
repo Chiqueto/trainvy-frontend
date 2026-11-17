@@ -1,4 +1,5 @@
-import { MathUtils, Matrix4, Quaternion, Vector3 } from "three";
+import { getPowerGripRotation } from "./power-grip";
+import { MathUtils, Quaternion, Vector3 } from "three";
 import { ARM_LENGTH, FOREARM_LENGTH, solveJoint } from "./kinematics";
 import { getPullingShoulder } from "./scapular-motion";
 
@@ -42,8 +43,8 @@ export function getRowConfiguration(variant: RowVariant) {
     tilt: pendlay ? 1.49 : yates ? 0.7 : BENT_ROW_TILT,
     halfWidth: high
       ? variant === "high-supinated"
-        ? 0.32
-        : 0.34
+        ? 0.35
+        : 0.36
       : pendlay
         ? 0.3
         : 0.27,
@@ -52,13 +53,6 @@ export function getRowConfiguration(variant: RowVariant) {
         pendlay ? "pendlay" : yates ? "yates" : high ? "high" : "low"
       ],
   };
-}
-function frame(direction: Vector3, normal: Vector3) {
-  const y = direction.clone().normalize();
-  const z = normal.clone().addScaledVector(y, -normal.dot(y)).normalize();
-  return new Quaternion().setFromRotationMatrix(
-    new Matrix4().makeBasis(y.clone().cross(z).normalize(), y, z),
-  );
 }
 /** p=0 contracted at its named anatomical landmark; p=1 extended (floor for Pendlay). */
 export function getBentRowPose(
@@ -86,7 +80,7 @@ export function getBentRowPose(
     const shoulder = body(getPullingShoulder("bent-row", p, side));
     const grip = bar.clone().setX(side * config.halfWidth);
     const pole = config.high
-      ? v(side, -0.1, -0.35)
+      ? v(side * 0.55, -0.1, -0.5)
       : config.pendlay
         ? v(side * 0.45, -0.15, -1)
         : v(side * 0.12, -0.25, -1);
@@ -95,16 +89,12 @@ export function getBentRowPose(
       handRotation = new Quaternion();
     for (let i = 0; i < 16; i++) {
       elbow = solveJoint(shoulder, wrist, ARM_LENGTH, FOREARM_LENGTH, pole);
-      handRotation = frame(wrist.clone().sub(elbow), v(1, 0, 0)).multiply(
-        frame(v(side * 0.025, -0.265, 0.03), v(1, 0, 0)).invert(),
+      handRotation = getPowerGripRotation(
+        wrist.clone().sub(elbow),
+        v(1, 0, 0),
+        config.supinated ? 1 : -1,
       );
-      if (config.supinated)
-        handRotation.premultiply(
-          new Quaternion().setFromAxisAngle(
-            wrist.clone().sub(elbow).normalize(),
-            Math.PI,
-          ),
-        );
+
       wrist = grip
         .clone()
         .sub(v(0, 0.004, 0.012).applyQuaternion(handRotation));

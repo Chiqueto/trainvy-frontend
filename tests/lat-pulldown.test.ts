@@ -1,3 +1,4 @@
+import { forearmDirectionError } from "./helpers/forearm-direction-error";
 // @vitest-environment node
 import { readFile } from "node:fs/promises";
 import { beforeAll, describe, expect, it } from "vitest";
@@ -60,9 +61,9 @@ describe("front machine lat pulldown", () => {
       "Puxada atrás da nuca",
     ])
       expect(getExerciseAnimation(null, name)).toBeNull();
-    expect(
-      getExerciseAnimation("00000000-0000-4000-8000-000000000120"),
-    ).toBe("front-lat-pulldown");
+    expect(getExerciseAnimation("00000000-0000-4000-8000-000000000120")).toBe(
+      "front-lat-pulldown",
+    );
   });
   it("retains anatomical lengths, fixed seat and feet and exact bar contact through 201 poses", () => {
     const first = getExercisePose("lat-pulldown", 0);
@@ -114,15 +115,13 @@ describe("front machine lat pulldown", () => {
         for (const n of names)
           expect(current.get(n)!.angleTo(previous.get(n)!)).toBeLessThan(0.03);
       for (const [j, suffix] of ["L", "R"].entries()) {
-        expect(
-          bones
-            .get(`forearm_${suffix}`)!
-            .quaternion.angleTo(pose.limbs[j].handRotation),
-        ).toBeLessThan(1e-6);
+        expect(forearmDirectionError(mesh, suffix, pose.limbs[j])).toBeLessThan(
+          1e-6,
+        );
         expect(
           bones
             .get(`wrist_${suffix}`)!
-            .quaternion.angleTo(pose.limbs[j].handRotation),
+            .quaternion.angleTo(bones.get(`forearm_${suffix}`)!.quaternion),
         ).toBeLessThan(1e-6);
       }
       previous = current;

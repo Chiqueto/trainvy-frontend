@@ -1,3 +1,4 @@
+import { forearmDirectionError } from "./helpers/forearm-direction-error";
 // @vitest-environment node
 import { readFile } from "node:fs/promises";
 import { beforeAll, describe, expect, it } from "vitest";
@@ -116,15 +117,13 @@ describe("neutral triangle seated cable row", () => {
         for (const n of names)
           expect(current.get(n)!.angleTo(previous.get(n)!)).toBeLessThan(0.03);
       for (const [j, suffix] of ["L", "R"].entries()) {
-        expect(
-          bones
-            .get(`forearm_${suffix}`)!
-            .quaternion.angleTo(pose.limbs[j].handRotation),
-        ).toBeLessThan(1e-6);
+        expect(forearmDirectionError(mesh, suffix, pose.limbs[j])).toBeLessThan(
+          1e-6,
+        );
         expect(
           bones
             .get(`wrist_${suffix}`)!
-            .quaternion.angleTo(pose.limbs[j].handRotation),
+            .quaternion.angleTo(bones.get(`forearm_${suffix}`)!.quaternion),
         ).toBeLessThan(1e-6);
       }
       previous = current;

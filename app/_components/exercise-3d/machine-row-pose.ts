@@ -1,5 +1,6 @@
+import { getPowerGripRotation } from "./power-grip";
 import { getPullingShoulder } from "./scapular-motion";
-import { MathUtils, Matrix4, Quaternion, Vector3 } from "three";
+import { MathUtils, Quaternion, Vector3 } from "three";
 import { ARM_LENGTH, FOREARM_LENGTH, solveJoint } from "./kinematics";
 const v = (x: number, y: number, z: number) => new Vector3(x, y, z);
 export const MACHINE_ROW_HIP = v(0, 0.51, 0);
@@ -9,13 +10,6 @@ export const MACHINE_ROW_PAD_CENTER = v(0, 0.87, 0.1875);
 export const MACHINE_ROW_PAD_SIZE = [0.27, 0.22, 0.055] as const;
 export const MACHINE_ROW_GRIP_HALF_WIDTH = 0.25;
 export const MACHINE_ROW_LEVER_X = 0.37;
-function frame(direction: Vector3, normal: Vector3) {
-  const y = direction.clone().normalize(),
-    z = normal.clone().addScaledVector(y, -normal.dot(y)).normalize();
-  return new Quaternion().setFromRotationMatrix(
-    new Matrix4().makeBasis(y.clone().cross(z).normalize(), y, z),
-  );
-}
 /** Fixed-axis lever, rather than an independently animated equipment/hand path. */
 export function getMachineRowLever(depth: number) {
   const p = MathUtils.clamp(depth, 0, 1),
@@ -46,7 +40,9 @@ export function getMachineRowPose(depth: number) {
     const hip = MACHINE_ROW_HIP.clone().setX(side * 0.14),
       ankle = v(side * 0.19, 0.05, 0.52);
     const knee = solveJoint(hip, ankle, 0.44, 0.42, v(0, 1, 1));
-    const shoulder = origin.clone().add(getPullingShoulder('machine-row',p,side));
+    const shoulder = origin
+      .clone()
+      .add(getPullingShoulder("machine-row", p, side));
     const grip = bar.clone().setX(side * MACHINE_ROW_GRIP_HALF_WIDTH);
     let wrist = grip.clone(),
       elbow = shoulder.clone(),
@@ -57,10 +53,12 @@ export function getMachineRowPose(depth: number) {
         wrist,
         ARM_LENGTH,
         FOREARM_LENGTH,
-        v(side * 0.3, -1, -0.4),
+        v(side * 0.25, -0.05, -1),
       );
-      handRotation = frame(wrist.clone().sub(elbow), v(-side, 0, 0)).multiply(
-        frame(v(side * 0.025, -0.265, 0.03), v(0, 0, 1)).invert(),
+      handRotation = getPowerGripRotation(
+        wrist.clone().sub(elbow),
+        v(0, 1, 0),
+        side,
       );
       wrist = grip
         .clone()
@@ -71,7 +69,7 @@ export function getMachineRowPose(depth: number) {
       wrist,
       ARM_LENGTH,
       FOREARM_LENGTH,
-      v(side * 0.3, -1, -0.4),
+      v(side * 0.25, -0.05, -1),
     );
     return {
       side,

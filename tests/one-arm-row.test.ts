@@ -1,3 +1,4 @@
+import { forearmDirectionError } from "./helpers/forearm-direction-error";
 // @vitest-environment node
 import { readFile } from "node:fs/promises";
 import { beforeAll, describe, expect, it } from "vitest";
@@ -85,9 +86,7 @@ describe("supported single-arm dumbbell row", () => {
         ].map((n) => bones.get(n)!.quaternion.clone());
       if (previous)
         q.forEach((v, j) => expect(v.angleTo(previous![j])).toBeLessThan(0.04));
-      expect(
-        bones.get("forearm_R")!.quaternion.angleTo(p.limbs[1].handRotation),
-      ).toBeLessThan(1e-6);
+      expect(forearmDirectionError(mesh, "R", p.limbs[1])).toBeLessThan(1e-6);
       expect(
         bones.get("forearm_L")!.quaternion.angleTo(p.limbs[0].handRotation),
       ).toBeGreaterThan(0.5);

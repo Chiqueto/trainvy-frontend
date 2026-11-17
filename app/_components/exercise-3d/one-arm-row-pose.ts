@@ -1,3 +1,4 @@
+import { getPowerGripRotation } from "./power-grip";
 import { getPullingShoulder } from "./scapular-motion";
 import { MathUtils, Matrix4, Quaternion, Vector3 } from "three";
 import { ARM_LENGTH, FOREARM_LENGTH, solveJoint } from "./kinematics";
@@ -13,13 +14,6 @@ export const ONE_ARM_ROW_SUPPORT_KNEE = v(
 const supportHand = new Quaternion().setFromRotationMatrix(
   new Matrix4().makeBasis(v(-1, 0, 0), v(0, 0, -1), v(0, -1, 0)),
 );
-function frame(direction: Vector3, normal: Vector3) {
-  const y = direction.clone().normalize(),
-    z = normal.clone().addScaledVector(y, -normal.dot(y)).normalize();
-  return new Quaternion().setFromRotationMatrix(
-    new Matrix4().makeBasis(y.clone().cross(z).normalize(), y, z),
-  );
-}
 /** Demonstrates one side per cycle; the other hand/knee and standing foot stay planted. */
 export function getOneArmRowPose(depth: number) {
   const p = MathUtils.clamp(depth, 0, 1),
@@ -40,7 +34,7 @@ export function getOneArmRowPose(depth: number) {
       side < 0
         ? ONE_ARM_ROW_SUPPORT_KNEE.clone()
         : solveJoint(hip, ankle, 0.44, 0.42, v(0, 0, 1));
-    const shoulder = body(getPullingShoulder('one-arm-row',p,side));
+    const shoulder = body(getPullingShoulder("one-arm-row", p, side));
     if (side < 0) {
       const wrist = ONE_ARM_ROW_SUPPORT_WRIST.clone(),
         elbow = solveJoint(
@@ -82,8 +76,10 @@ export function getOneArmRowPose(depth: number) {
         FOREARM_LENGTH,
         v(0.3, 0.15, -1),
       );
-      handRotation = frame(wrist.clone().sub(elbow), v(-1, 0, 0)).multiply(
-        frame(v(0.025, -0.265, 0.03), v(0, 0, 1)).invert(),
+      handRotation = getPowerGripRotation(
+        wrist.clone().sub(elbow),
+        v(0, 0, 1),
+        side,
       );
       wrist = grip
         .clone()

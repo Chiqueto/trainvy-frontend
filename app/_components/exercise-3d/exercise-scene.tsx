@@ -1,6 +1,9 @@
 "use client";
 
 import { isBarbellRow } from "./row-variants";
+import { PULLING_EXERCISES } from "./scapular-motion";
+import { prepareHandReplacement } from "./gripping-hand-geometry";
+import { GrippingHands, type GrippingHandsHandle } from "./gripping-hands";
 
 import { installScapularRig } from "./scapular-rig";
 import { Suspense, useEffect, useMemo, useRef } from "react";
@@ -513,6 +516,7 @@ function Athlete({
     true,
   );
   const bar = useRef<Group>(null);
+  const grippingHands = useRef<GrippingHandsHandle>(null);
   const leftDumbbell = useRef<Group>(null);
   const rightDumbbell = useRef<Group>(null);
   const pecDeckMachine = useRef<PecDeckMachineHandle>(null);
@@ -535,6 +539,7 @@ function Athlete({
     const bones = new Map<string, Bone>();
     const skeletons = new Set<Skeleton>();
     const geometries = new Set<BufferGeometry>();
+    const handReplacements: ReturnType<typeof prepareHandReplacement>[] = [];
     scene.traverse((object) => {
       if (object instanceof Bone) bones.set(object.name, object);
       if (object instanceof SkinnedMesh) {
@@ -558,6 +563,7 @@ function Athlete({
       if (object instanceof SkinnedMesh) {
         skeletons.delete(object.skeleton);
         skeletons.add(installScapularRig(object,bones));
+        handReplacements.push(prepareHandReplacement(object));
       }
     });
     return {
@@ -566,12 +572,16 @@ function Athlete({
       setAppearance,
       skeletons,
       geometries,
+      handReplacements,
       applyPose: createPoseDriver(bones),
     };
   }, [source]);
   const invalidate = useThree((state) => state.invalidate);
   useEffect(() => {
     rig.setAppearance(exercise, highlighted);
+    rig.handReplacements.forEach((replacement) =>
+      replacement.setEnabled(PULLING_EXERCISES.includes(exercise)),
+    );
     invalidate();
   }, [rig, exercise, highlighted, invalidate]);
   useEffect(() => {
@@ -586,6 +596,7 @@ function Athlete({
     const phase = tick(delta);
     const depth = getExerciseProgress(exercise,phase);
     const pose = rig.applyPose(exercise, depth);
+    grippingHands.current?.update(pose);
     bar.current?.position.copy(pose.bar);
     if (exercise === "goblet-squat") {
       bar.current?.quaternion.copy(pose.tilt);
@@ -615,6 +626,9 @@ function Athlete({
   return (
     <>
       <primitive object={rig.scene} dispose={null} />
+      {PULLING_EXERCISES.includes(exercise) && (
+        <GrippingHands ref={grippingHands} leftSupport={exercise === "one-arm-row"} />
+      )}
       {exercise === "hip-abduction" && <HipAbductionSupplement athlete={rig.scene} material={rig.material} />}
       {exercise === "one-arm-row" ? <><OneArmRowBench /><group ref={rightDumbbell}><Dumbbell /></group></> : exercise === "machine-row" ? <MachineRowMachine ref={machineRowMachine} /> : exercise === "cable-row" ? <CableRowMachine ref={cableRowMachine} /> : (exercise === "lat-pulldown" || exercise === "front-lat-pulldown") ? <LatPulldownMachine ref={latPulldownMachine} /> : exercise === "seated-calf" ? (<SeatedCalfMachine ref={seatedCalfMachine} />) : exercise === "standing-calf" ? (
         <StandingCalfMachine ref={standingCalfMachine} />
