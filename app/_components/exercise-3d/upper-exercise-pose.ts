@@ -33,11 +33,11 @@ export function getUpperExercisePose(exercise: UpperExercise, depth: number) {
       handRotation: Quaternion;
     if (press) {
       const halfWidth = seated ? MathUtils.lerp(0.24, 0.42, p) : 0.3;
-      // A smooth, almost vertical press ends over the head. Cervical retraction
-      // clears the face instead of making the bar loop around a stationary head.
+      // The strict barbell press leaves the shoulders vertically. The head
+      // clears its path; only above the forehead does the bar settle over the feet.
       const z = seated
         ? MathUtils.lerp(0.07, 0.16, p)
-        : MathUtils.lerp(0.055, 0.265, p);
+        : MathUtils.lerp(0.18, 0.065, MathUtils.smoothstep(lifted, 0.5, 0.95));
       const overheadShoulder = getScapularMotion(exercise, 0, side)
         .point(v(side * 0.215, 0.224, 0.132))
         .add(origin);
@@ -47,11 +47,11 @@ export function getUpperExercisePose(exercise: UpperExercise, depth: number) {
         Math.sqrt(
           fullReach ** 2 -
             (side * (seated ? 0.24 : 0.3) - overheadShoulder.x) ** 2 -
-            ((seated ? 0.08 : 0.055) - overheadShoulder.z) ** 2,
+            ((seated ? 0.08 : 0.065) - overheadShoulder.z) ** 2,
         );
       grip = v(
         side * halfWidth,
-        MathUtils.lerp(topY, origin.y + (seated ? 0.25 : 0.23), p),
+        MathUtils.lerp(topY, origin.y + (seated ? 0.25 : 0.26), p),
         z,
       );
       wrist = grip.clone();

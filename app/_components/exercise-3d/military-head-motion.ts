@@ -12,8 +12,8 @@ const HEAD_PIVOT = new Vector3(0, 1.49, 0.103);
 function headClearanceWindow(depth: number) {
   const lift = 1 - MathUtils.clamp(depth, 0, 1);
   return (
-    MathUtils.smoothstep(lift, 0, 0.18) *
-    (1 - MathUtils.smoothstep(lift, 0.62, 0.85))
+    MathUtils.smoothstep(lift, 0, 0.1) *
+    (1 - MathUtils.smoothstep(lift, 0.5, 0.74))
   );
 }
 
@@ -21,13 +21,13 @@ function headClearanceWindow(depth: number) {
  * neutral as it clears the crown. Editorial avatar motion, not a clinical angle.
  */
 export function getMilitaryHeadRetraction(depth: number) {
-  return 0.008 * headClearanceWindow(depth);
+  return 0.045 * headClearanceWindow(depth);
 }
 
 export function getMilitaryHeadRotation(depth: number) {
   return new Quaternion().setFromAxisAngle(
     new Vector3(1, 0, 0),
-    MathUtils.degToRad(6) * headClearanceWindow(depth),
+    MathUtils.degToRad(2) * headClearanceWindow(depth),
   );
 }
 

@@ -12,6 +12,7 @@ import {
 import { installScapularRig } from "../app/_components/exercise-3d/scapular-rig";
 import {
   getMilitaryHeadRetraction,
+  getMilitaryHeadRotation,
   installMilitaryHeadRig,
 } from "../app/_components/exercise-3d/military-head-motion";
 
@@ -36,6 +37,32 @@ beforeAll(async () => {
   apply = createPoseDriver(bones);
 });
 describe("postural corrections from rendered arm orientation", () => {
+  it("starts from the front shoulders with wrists stacked over elbows and elbows slightly in front of the bar", () => {
+    const pose = getExercisePose("military-press", 1);
+    for (const limb of pose.limbs) {
+      expect(pose.bar.z - limb.shoulder.z).toBeLessThan(0.15);
+      expect(limb.elbow.y).toBeLessThan(limb.wrist.y - 0.24);
+      expect(limb.elbow.z - pose.bar.z).toBeGreaterThan(0.003);
+      expect(limb.elbow.z - pose.bar.z).toBeLessThan(0.05);
+      const fore = limb.wrist.clone().sub(limb.elbow).normalize();
+      expect(fore.y).toBeGreaterThan(0.95);
+    }
+  });
+  it("presses nearly vertically past the face, then settles over the feet after clearing the forehead", () => {
+    const bottom = getExercisePose("military-press", 1);
+    for (let step = 0; step <= 50; step++) {
+      const pose = getExercisePose("military-press", 1 - step / 100);
+      expect(Math.abs(pose.bar.z - bottom.bar.z)).toBeLessThan(0.005);
+    }
+    expect(
+      Math.abs(getExercisePose("military-press", 0).bar.z - 0.08),
+    ).toBeLessThan(0.025);
+    // Head accommodates the bar before chin height, without a large head tilt.
+    expect(getMilitaryHeadRetraction(0.9)).toBeGreaterThan(0.025);
+    expect(
+      getMilitaryHeadRotation(0.6).angleTo(getMilitaryHeadRotation(1)),
+    ).toBeLessThan(0.06);
+  });
   it("keeps the military press elbow hinge facing forward without opening sideways through the repetition", () => {
     for (let step = 0; step <= 200; step++) {
       const pose = apply("military-press", step / 200);
@@ -202,7 +229,7 @@ describe("postural corrections from rendered arm orientation", () => {
     expect(getMilitaryHeadRetraction(0)).toBe(0);
     expect(getMilitaryHeadRetraction(1)).toBe(0);
     expect(getMilitaryHeadRetraction(0.5)).toBeGreaterThan(0);
-    expect(getMilitaryHeadRetraction(0.5)).toBeLessThan(0.01);
+    expect(getMilitaryHeadRetraction(0.5)).toBeLessThan(0.05);
     let minimum = Infinity;
     for (let i = 0; i <= 100; i++) {
       const pose = apply("military-press", i / 100);
