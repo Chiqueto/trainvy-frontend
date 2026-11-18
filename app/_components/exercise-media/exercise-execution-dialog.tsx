@@ -87,6 +87,7 @@ const FALLBACK_3D_INSTRUCTIONS: Record<
   "lateral-raise": EXERCISE_ANIMATIONS["lateral-raise"].instructions,
   "barbell-curl": EXERCISE_ANIMATIONS["barbell-curl"].instructions,
   "legacy-barbell-curl": EXERCISE_ANIMATIONS["legacy-barbell-curl"].instructions,
+  "rope-pushdown": EXERCISE_ANIMATIONS["rope-pushdown"].instructions,
   "hammer-curl": EXERCISE_ANIMATIONS["hammer-curl"].instructions,
   "machine-fly": EXERCISE_ANIMATIONS["machine-fly"].instructions,
   "machine-chest-press": MACHINE_CHEST_PRESS_INSTRUCTIONS,

@@ -182,6 +182,7 @@ export function createTissueMaterial() {
       "lateral-raise": 32,
       "barbell-curl": 32,
       "legacy-barbell-curl": 32,
+      "rope-pushdown": 32,
       "hammer-curl": 32,
       squat: 0,
       "bench-press": 1,

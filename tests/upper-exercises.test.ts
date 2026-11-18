@@ -26,6 +26,8 @@ import { forearmDirectionError } from "./helpers/forearm-direction-error";
 import shoulder from "../app/_components/exercise-3d/upper-shoulder-detail-map.json";
 import arms from "../app/_components/exercise-3d/fly-muscle-map.json";
 import cuff from "../app/_components/exercise-3d/lat-pulldown-detail-map.json";
+import triceps from "../app/_components/exercise-3d/one-arm-row-support-map.json";
+import { getRopePushdownAttachment } from "../app/_components/exercise-3d/rope-pushdown-machine";
 let mesh: SkinnedMesh, apply: ReturnType<typeof createPoseDriver>;
 beforeAll(async () => {
   const b = await readFile(
@@ -128,6 +130,30 @@ describe("five shoulder and elbow movements, with historical curl identity", () 
       expect(bottom.limbs[index].grip.y).toBeLessThan(arm.elbow.y);
     }
   });
+  it("keeps the pushdown rope taut and gripped as the elbows extend", () => {
+    const extended = getExercisePose("rope-pushdown", 0);
+    const flexed = getExercisePose("rope-pushdown", 1);
+    expect(getExerciseAnimation("00000000-0000-4000-8000-000000000131")).toBe(
+      "rope-pushdown",
+    );
+    expect(flexed.bar.y - extended.bar.y).toBeGreaterThan(0.25);
+    expect(extended.limbs[1].grip.x).toBeGreaterThan(flexed.limbs[1].grip.x);
+    for (let i = 0; i <= 48; i++) {
+      const pose = getExercisePose("rope-pushdown", i / 48);
+      const { ends, junction } = getRopePushdownAttachment(pose);
+      for (const [index, end] of ends.entries()) {
+        const arm = pose.limbs[index];
+        expect(arm.elbow.distanceTo(extended.limbs[index].elbow)).toBeLessThan(
+          1e-9,
+        );
+        expect(end.top.distanceTo(junction)).toBeCloseTo(0.39);
+        expect(
+          end.top.clone().lerp(end.stopper, 0.5).distanceTo(arm.grip),
+        ).toBeLessThan(1e-9);
+        expect(end.top.y).toBeLessThan(junction.y);
+      }
+    }
+  });
   it("lateral raise preserves a small fixed elbow bend, outward motion and moving scapulae", () => {
     const up = getExercisePose("lateral-raise", 0),
       down = getExercisePose("lateral-raise", 1);
@@ -183,7 +209,7 @@ describe("five shoulder and elbow movements, with historical curl identity", () 
       const mask = createUpperExerciseMuscleMask(mesh.geometry, exercise),
         roles = UPPER_MUSCLE_ROLES[exercise];
       let primary = 0;
-      for (const atlas of [shoulder, arms, cuff])
+      for (const atlas of [shoulder, arms, cuff, triceps])
         for (const s of atlas.selections) {
           const name = s.name.replace(/[lr]$/, ""),
             expected = roles.primary.includes(name)

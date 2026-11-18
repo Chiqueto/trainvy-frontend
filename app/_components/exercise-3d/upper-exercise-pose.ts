@@ -95,6 +95,38 @@ export function getUpperExercisePose(exercise: UpperExercise, depth: number) {
           .sub(palmOffset.clone().applyQuaternion(handRotation));
       }
       elbow = solvePressElbow(wrist);
+    } else if (exercise === "rope-pushdown") {
+      const upperLean = MathUtils.degToRad(5);
+      const angle = upperLean + MathUtils.degToRad(MathUtils.lerp(6, 91, p));
+      elbow = shoulder
+        .clone()
+        .add(
+          v(
+            side * 0.035,
+            -Math.sqrt(
+              ARM_LENGTH ** 2 -
+                0.035 ** 2 -
+                (ARM_LENGTH * Math.sin(upperLean)) ** 2,
+            ),
+            ARM_LENGTH * Math.sin(upperLean),
+          ),
+        );
+      const forearm = v(
+        side * MathUtils.lerp(0.2, -0.12, p),
+        -Math.cos(angle),
+        Math.sin(angle),
+      ).normalize();
+      wrist = elbow.clone().addScaledVector(forearm, FOREARM_LENGTH);
+      // The rope bends just outside the closed hand. Keep the grasp neutral
+      // and the wrist aligned even when the two tails spread at the bottom.
+      handRotation = getPowerGripRotation(
+        forearm,
+        v(0, Math.sin(angle), Math.cos(angle)),
+        side,
+      );
+      grip = wrist
+        .clone()
+        .add(palmOffset.clone().applyQuaternion(handRotation));
     } else if (preacher) {
       const upper = PREACHER_CURL_ANGLE;
       const fore = upper + MathUtils.degToRad(MathUtils.lerp(12, 112, lifted));

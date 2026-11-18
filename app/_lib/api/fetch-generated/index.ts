@@ -11199,6 +11199,7 @@ export type ListCoachAthleteProgressExercises200ItemDemonstration = {
     | "barbell-curl"
     | "legacy-barbell-curl"
     | "hammer-curl"
+    | "rope-pushdown"
     | "preacher-curl"
     | "high-supinated-bent-row"
     | "yates-row"
@@ -15811,6 +15812,7 @@ export const SaveExerciseDemonstrationBodyAnimationKey = {
   "barbell-curl": "barbell-curl",
   "legacy-barbell-curl": "legacy-barbell-curl",
   "hammer-curl": "hammer-curl",
+  "rope-pushdown": "rope-pushdown",
   "preacher-curl": "preacher-curl",
   "high-supinated-bent-row": "high-supinated-bent-row",
   "yates-row": "yates-row",
@@ -15879,6 +15881,7 @@ export const SaveExerciseDemonstration200AnimationKey = {
   "barbell-curl": "barbell-curl",
   "legacy-barbell-curl": "legacy-barbell-curl",
   "hammer-curl": "hammer-curl",
+  "rope-pushdown": "rope-pushdown",
   "preacher-curl": "preacher-curl",
   "high-supinated-bent-row": "high-supinated-bent-row",
   "yates-row": "yates-row",
@@ -16038,6 +16041,7 @@ export type ListExercises200ItemDemonstration = {
     | "barbell-curl"
     | "legacy-barbell-curl"
     | "hammer-curl"
+    | "rope-pushdown"
     | "preacher-curl"
     | "high-supinated-bent-row"
     | "yates-row"
@@ -16205,6 +16209,7 @@ export const CreateExerciseBodyDemonstrationAnimationKey = {
   "barbell-curl": "barbell-curl",
   "legacy-barbell-curl": "legacy-barbell-curl",
   "hammer-curl": "hammer-curl",
+  "rope-pushdown": "rope-pushdown",
   "preacher-curl": "preacher-curl",
   "high-supinated-bent-row": "high-supinated-bent-row",
   "yates-row": "yates-row",
@@ -16362,6 +16367,7 @@ export type CreateExercise201Demonstration = {
     | "barbell-curl"
     | "legacy-barbell-curl"
     | "hammer-curl"
+    | "rope-pushdown"
     | "preacher-curl"
     | "high-supinated-bent-row"
     | "yates-row"
@@ -16577,6 +16583,7 @@ export type UpdateExerciseMuscles200Demonstration = {
     | "barbell-curl"
     | "legacy-barbell-curl"
     | "hammer-curl"
+    | "rope-pushdown"
     | "preacher-curl"
     | "high-supinated-bent-row"
     | "yates-row"
@@ -16708,6 +16715,7 @@ export type GetExerciseMedia200Demonstration = {
     | "barbell-curl"
     | "legacy-barbell-curl"
     | "hammer-curl"
+    | "rope-pushdown"
     | "preacher-curl"
     | "high-supinated-bent-row"
     | "yates-row"
@@ -16867,6 +16875,7 @@ export const UpdateCustomExerciseBodyDemonstrationAnimationKey = {
   "barbell-curl": "barbell-curl",
   "legacy-barbell-curl": "legacy-barbell-curl",
   "hammer-curl": "hammer-curl",
+  "rope-pushdown": "rope-pushdown",
   "preacher-curl": "preacher-curl",
   "high-supinated-bent-row": "high-supinated-bent-row",
   "yates-row": "yates-row",
@@ -17024,6 +17033,7 @@ export type UpdateCustomExercise200Demonstration = {
     | "barbell-curl"
     | "legacy-barbell-curl"
     | "hammer-curl"
+    | "rope-pushdown"
     | "preacher-curl"
     | "high-supinated-bent-row"
     | "yates-row"

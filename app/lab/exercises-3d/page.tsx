@@ -28,6 +28,17 @@ const LAB_MEDIA_DATA: Record<ExerciseAnimation, GetExerciseMedia200> = {
   "lateral-raise": { exerciseId: EXERCISE_ANIMATIONS["lateral-raise"].id, hasMedia:false, mediaType:null, startImagePath:null,endImagePath:null,motionPath:null,attributionName:null,attributionUrl:null,instructions: EXERCISE_ANIMATIONS["lateral-raise"].instructions },
   "barbell-curl": { exerciseId: EXERCISE_ANIMATIONS["barbell-curl"].id, hasMedia:false, mediaType:null, startImagePath:null,endImagePath:null,motionPath:null,attributionName:null,attributionUrl:null,instructions: EXERCISE_ANIMATIONS["barbell-curl"].instructions },
   "legacy-barbell-curl": { exerciseId: EXERCISE_ANIMATIONS["legacy-barbell-curl"].id, hasMedia:false, mediaType:null, startImagePath:null,endImagePath:null,motionPath:null,attributionName:null,attributionUrl:null,instructions: EXERCISE_ANIMATIONS["legacy-barbell-curl"].instructions },
+  "rope-pushdown": {
+    exerciseId: EXERCISE_ANIMATIONS["rope-pushdown"].id,
+    hasMedia: false,
+    mediaType: null,
+    startImagePath: null,
+    endImagePath: null,
+    motionPath: null,
+    attributionName: null,
+    attributionUrl: null,
+    instructions: EXERCISE_ANIMATIONS["rope-pushdown"].instructions,
+  },
   "preacher-curl": {
     exerciseId: EXERCISE_ANIMATIONS["preacher-curl"].id,
     hasMedia: false,
@@ -228,6 +239,15 @@ export default function Exercise3DLab() {
       cues: string[];
     }
   > = {
+    "rope-pushdown": {
+      primary: EXERCISE_ANIMATIONS["rope-pushdown"].muscles.primary.join(", "),
+      secondary: EXERCISE_ANIMATIONS["rope-pushdown"].muscles.secondary.join(", "),
+      cadence: "Retorno controlado, pausa breve e extensão suave.",
+      cues: [
+        EXERCISE_ANIMATIONS["rope-pushdown"].instructions.setup,
+        EXERCISE_ANIMATIONS["rope-pushdown"].instructions.execution,
+      ],
+    },
     "military-press": {primary:EXERCISE_ANIMATIONS["military-press"].muscles.primary.join(", "),secondary:EXERCISE_ANIMATIONS["military-press"].muscles.secondary.join(", "),cadence:"Descida controlada, pausa breve e subida suave.",cues:[EXERCISE_ANIMATIONS["military-press"].instructions.setup,EXERCISE_ANIMATIONS["military-press"].instructions.execution]},
     "dumbbell-shoulder-press": {primary:EXERCISE_ANIMATIONS["dumbbell-shoulder-press"].muscles.primary.join(", "),secondary:EXERCISE_ANIMATIONS["dumbbell-shoulder-press"].muscles.secondary.join(", "),cadence:"Descida controlada, pausa breve e subida suave.",cues:[EXERCISE_ANIMATIONS["dumbbell-shoulder-press"].instructions.setup,EXERCISE_ANIMATIONS["dumbbell-shoulder-press"].instructions.execution]},
     "lateral-raise": {primary:EXERCISE_ANIMATIONS["lateral-raise"].muscles.primary.join(", "),secondary:EXERCISE_ANIMATIONS["lateral-raise"].muscles.secondary.join(", "),cadence:"Descida controlada, pausa breve e subida suave.",cues:[EXERCISE_ANIMATIONS["lateral-raise"].instructions.setup,EXERCISE_ANIMATIONS["lateral-raise"].instructions.execution]},

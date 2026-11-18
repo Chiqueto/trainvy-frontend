@@ -203,5 +203,27 @@
       "execution": "Dobre os cotovelos para subir a barra mantendo os braços apoiados. Desça devagar até quase estender os cotovelos e faça uma pausa breve antes de subir.",
       "tips": "Mantenha o apoio dos braços e evite usar o tronco para dar impulso. As cores mostram participação muscular ilustrativa, sem medição de EMG."
     }
+  },
+  "rope-pushdown": {
+    "name": "Tríceps Corda",
+    "id": "00000000-0000-4000-8000-000000000131",
+    "equipment": "Polia alta com corda de duas pontas, pegada neutra",
+    "muscles": {
+      "primary": [
+        "Tríceps braquial"
+      ],
+      "secondary": [
+        "Ancôneo",
+        "Flexor ulnar do carpo",
+        "Flexor superficial dos dedos",
+        "Extensor radial curto do carpo"
+      ]
+    },
+    "instructions": {
+      "description": "Extensão bilateral de cotovelos em pé na polia alta, com corda e pegada neutra.",
+      "setup": "Prenda uma corda à polia alta. Fique de frente para a máquina, com os pés firmes, as palmas voltadas uma para a outra e os cotovelos junto ao tronco.",
+      "execution": "Estenda os cotovelos para levar a corda em direção às coxas e deixe as pontas se separarem ligeiramente. Faça uma pausa breve e deixe a corda subir com controle até que os cotovelos estejam perto de 90°.",
+      "tips": "Mantenha os punhos alinhados. Use apenas uma abertura que permita manter os braços junto ao tronco. As cores mostram participação muscular ilustrativa, sem medição de EMG."
+    }
   }
 }
