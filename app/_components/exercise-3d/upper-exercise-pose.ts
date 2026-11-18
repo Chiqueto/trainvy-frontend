@@ -37,7 +37,7 @@ export function getUpperExercisePose(exercise: UpperExercise, depth: number) {
       // clears the face instead of making the bar loop around a stationary head.
       const z = seated
         ? MathUtils.lerp(0.07, 0.16, p)
-        : MathUtils.lerp(0.055, 0.205, p);
+        : MathUtils.lerp(0.055, 0.265, p);
       const overheadShoulder = getScapularMotion(exercise, 0, side)
         .point(v(side * 0.215, 0.224, 0.132))
         .add(origin);
@@ -97,17 +97,25 @@ export function getUpperExercisePose(exercise: UpperExercise, depth: number) {
         );
       if (lateral) {
         // Modest forward plane, neutral humerus: no internally rotated "pouring" gesture.
-        const plane = MathUtils.degToRad(20),
+        const plane = MathUtils.degToRad(25),
           radial = v(side * Math.cos(plane), 0, Math.sin(plane));
         elbow = shoulder
           .clone()
           .addScaledVector(radial, ARM_LENGTH * Math.sin(angle))
           .add(v(0, -ARM_LENGTH * Math.cos(angle), 0));
-        wrist = elbow
+        const upper = elbow.clone().sub(shoulder).normalize();
+        // Match the user's overhead reference: the slight elbow bend is forward
+        // across the horizontal plane, not a downward bend below the upper arm.
+        const forward = v(0, 0, 1).addScaledVector(upper, -upper.z).normalize();
+        const bend = MathUtils.degToRad(15);
+        const fore = upper
           .clone()
-          .addScaledVector(radial, FOREARM_LENGTH * Math.sin(angle - 0.35))
-          .add(v(0, -FOREARM_LENGTH * Math.cos(angle - 0.35), 0));
+          .multiplyScalar(Math.cos(bend))
+          .addScaledVector(forward, Math.sin(bend));
+        wrist = elbow.clone().addScaledVector(fore, FOREARM_LENGTH);
+        // A free dumbbell follows the forearm without forcing wrist deviation.
         shaft = v(-Math.sin(plane), 0, side * Math.cos(plane));
+        shaft.addScaledVector(fore, -shaft.dot(fore)).normalize();
       } else {
         // Upper arm fixed beside ribs; elbow flexion drives the load, not shoulder swing.
         elbow = shoulder

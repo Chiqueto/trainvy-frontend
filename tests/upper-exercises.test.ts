@@ -107,14 +107,15 @@ describe("five shoulder and elbow movements, with historical curl identity", () 
         for (let i = 0; i <= 100; i++) {
           const p = getExercisePose(exercise, i / 100);
           expect(p.bar.z).toBeGreaterThanOrEqual(0.05);
-          expect(p.bar.z).toBeLessThanOrEqual(0.21);
+          expect(p.bar.z).toBeLessThanOrEqual(0.27);
         }
     },
   );
   it("lateral raise preserves a small fixed elbow bend, outward motion and moving scapulae", () => {
     const up = getExercisePose("lateral-raise", 0),
       down = getExercisePose("lateral-raise", 1);
-    expect(up.limbs[1].grip.x - down.limbs[1].grip.x).toBeGreaterThan(0.4);
+    // The forward V seen from above reduces the projected sideways span.
+    expect(up.limbs[1].grip.x - down.limbs[1].grip.x).toBeGreaterThan(0.35);
     expect(up.limbs[1].grip.y - up.limbs[1].shoulder.y).toBeLessThan(0.02);
     expect(
       getScapularMotion("lateral-raise", 0, 1).rotation.angleTo(
@@ -129,7 +130,7 @@ describe("five shoulder and elbow movements, with historical curl identity", () 
           .sub(l.shoulder)
           .normalize()
           .dot(l.wrist.clone().sub(l.elbow).normalize()),
-      ).toBeCloseTo(Math.cos(0.35), 6);
+      ).toBeCloseTo(Math.cos(Math.PI / 12), 6);
     }
   });
   it("curls keep elbows stable, differentiate a neutral grip and preserve legacy lookup", () => {

@@ -2,7 +2,7 @@
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { beforeAll, describe, expect, it } from "vitest";
-import { Bone, Group, SkinnedMesh, Vector3 } from "three";
+import { Bone, Group, Matrix4, SkinnedMesh, Vector3 } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "meshoptimizer";
 import {
@@ -66,9 +66,83 @@ describe("postural corrections from rendered arm orientation", () => {
         expect(l.shoulder.y - bottom.limbs[j].shoulder.y).toBeLessThan(0.008);
         const upper = l.elbow.clone().sub(l.shoulder),
           fore = l.wrist.clone().sub(l.elbow);
-        expect(upper.angleTo(fore)).toBeGreaterThan(0.3);
-        expect(upper.angleTo(fore)).toBeLessThan(0.4);
+        expect(upper.angleTo(fore)).toBeGreaterThan(0.24);
+        expect(upper.angleTo(fore)).toBeLessThan(0.29);
       });
+    }
+  });
+  it("matches the supplied top-view reference: forearms bend forward, not down below the elbows", () => {
+    const pose = getExercisePose("lateral-raise", 0);
+    for (const limb of pose.limbs) {
+      const upper = limb.elbow.clone().sub(limb.shoulder).normalize();
+      const fore = limb.wrist.clone().sub(limb.elbow).normalize();
+      expect(Math.abs(fore.y - upper.y)).toBeLessThan(0.05);
+      expect(limb.wrist.z - limb.elbow.z).toBeGreaterThan(0.12);
+      expect(Math.abs(limb.wrist.y - limb.elbow.y)).toBeLessThan(0.03);
+      const upperTopAngle = Math.atan2(upper.z, Math.abs(upper.x));
+      const foreTopAngle = Math.atan2(fore.z, Math.abs(fore.x));
+      expect(foreTopAngle - upperTopAngle).toBeGreaterThan(0.15);
+      expect(foreTopAngle - upperTopAngle).toBeLessThan(0.35);
+    }
+  });
+  it("keeps the entire head rigid: jaw, nose, crown and ears retain their pairwise distances throughout the press", () => {
+    const position = mesh.geometry.getAttribute("position"),
+      uv = mesh.geometry.getAttribute("uv");
+    const indices = Array.from({ length: position.count }, (_, i) => i).filter(
+      (i) => uv.getY(i) < 0.1 && position.getY(i) >= 1.49 - 1e-5,
+    );
+    const anchors: number[] = [];
+    for (const axis of ["X", "Y", "Z"] as const) {
+      const component = (i: number) => position[`get${axis}`](i);
+      anchors.push(
+        indices.reduce((a, b) => (component(a) < component(b) ? a : b)),
+      );
+      anchors.push(
+        indices.reduce((a, b) => (component(a) > component(b) ? a : b)),
+      );
+    }
+    for (let step = 0; step <= 100; step++) {
+      apply("military-press", step / 100);
+      scene.updateMatrixWorld(true);
+      const source = anchors.map((i) =>
+        new Vector3().fromBufferAttribute(position, i),
+      );
+      const posed = anchors.map((i, j) =>
+        mesh.applyBoneTransform(i, source[j].clone()),
+      );
+      for (let a = 0; a < anchors.length; a++)
+        for (let b = a + 1; b < anchors.length; b++) {
+          expect(
+            Math.abs(
+              posed[a].distanceTo(posed[b]) - source[a].distanceTo(source[b]),
+            ),
+          ).toBeLessThan(1e-6);
+        }
+    }
+  });
+  it("moves every fitted head vertex with a single rigid transform, including cheeks and the jaw below the old blend boundary", () => {
+    const position = mesh.geometry.getAttribute("position"),
+      uv = mesh.geometry.getAttribute("uv");
+    const indices = Array.from({ length: position.count }, (_, i) => i).filter(
+      (i) => uv.getY(i) < 0.1 && position.getY(i) >= 1.49 - 1e-5,
+    );
+    const boneIndex = mesh.skeleton.bones.findIndex(
+      (b) => b.name === "military_head",
+    );
+    for (let step = 0; step <= 10; step++) {
+      apply("military-press", step / 10);
+      scene.updateMatrixWorld(true);
+      const transform = new Matrix4().multiplyMatrices(
+        mesh.skeleton.bones[boneIndex].matrixWorld,
+        mesh.skeleton.boneInverses[boneIndex],
+      );
+      for (const i of indices) {
+        const source = new Vector3().fromBufferAttribute(position, i);
+        const expected = source.clone().applyMatrix4(transform);
+        expect(
+          mesh.applyBoneTransform(i, source).distanceTo(expected),
+        ).toBeLessThan(1e-6);
+      }
     }
   });
   it("preserves the approved seated dumbbell press at every sampled phase", () => {
@@ -108,7 +182,8 @@ describe("postural corrections from rendered arm orientation", () => {
     expect(headIndices.length).toBeGreaterThan(1000);
     expect(getMilitaryHeadRetraction(0)).toBe(0);
     expect(getMilitaryHeadRetraction(1)).toBe(0);
-    expect(getMilitaryHeadRetraction(0.5)).toBeGreaterThan(0.04);
+    expect(getMilitaryHeadRetraction(0.5)).toBeGreaterThan(0);
+    expect(getMilitaryHeadRetraction(0.5)).toBeLessThan(0.01);
     let minimum = Infinity;
     for (let i = 0; i <= 100; i++) {
       const pose = apply("military-press", i / 100);

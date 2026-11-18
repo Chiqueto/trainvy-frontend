@@ -1,5 +1,8 @@
 # Correção de postura do militar, lateral e roscas — 18/11/2026
 
+Os detalhes da lateral e do controle cervical abaixo foram substituídos pela
+[revisão com referência visual e cabeça rígida](EXERCISE-3D-LATERAL-HEAD-REFERENCE-REVIEW.md).
+
 Branch: `exercise-3d/upper-form-n472`; base frontend `24f9974`, API `b221200`.
 Complementa e substitui os detalhes de trajetória/postura correspondentes da
 [revisão inicial dos cinco movimentos](EXERCISE-3D-UPPER-FIVE-REVIEW.md).
