@@ -483,7 +483,7 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
         .sub(restShoulder)
         .cross(v(0, 0, 1))
         .normalize();
-      const curl = exercise === "barbell-curl" || exercise === "legacy-barbell-curl" || exercise === "hammer-curl";
+      const curl = exercise === "preacher-curl" || exercise === "barbell-curl" || exercise === "legacy-barbell-curl" || exercise === "hammer-curl";
       const posedNormal = elbow
         .clone()
         .sub(shoulder)

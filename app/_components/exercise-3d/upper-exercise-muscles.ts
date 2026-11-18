@@ -88,6 +88,10 @@ export const UPPER_MUSCLE_ROLES: Record<
     primary: biceps,
     secondary: [anterior, ...forearm, ...trunk],
   },
+  "preacher-curl": {
+    primary: biceps,
+    secondary: forearm,
+  },
   "hammer-curl": {
     primary: [...biceps, "Brachioradialis_muscle"],
     secondary: [anterior, ...forearm.slice(1), ...trunk],

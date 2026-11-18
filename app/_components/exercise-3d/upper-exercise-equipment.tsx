@@ -3,13 +3,23 @@ import { forwardRef, useImperativeHandle, useRef } from "react";
 import { Group } from "three";
 import type { getExercisePose } from "./kinematics";
 import type { UpperExercise } from "./upper-exercise-types";
+import { PreacherCurlBench } from "./preacher-curl-bench";
+
 export interface UpperEquipmentHandle {
   update(pose: ReturnType<typeof getExercisePose>): void;
 }
-function Weight({ barbell, small }: { barbell: boolean; small: boolean }) {
-  const length = barbell ? 1.5 : 0.25,
-    radius = barbell ? 0.14 : small ? 0.055 : 0.08,
-    offset = barbell ? 0.59 : 0.095;
+function Weight({
+  barbell,
+  small,
+  preacher,
+}: {
+  barbell: boolean;
+  small: boolean;
+  preacher: boolean;
+}) {
+  const length = preacher ? 1.1 : barbell ? 1.5 : 0.25,
+    radius = preacher ? 0.095 : barbell ? 0.14 : small ? 0.055 : 0.08,
+    offset = preacher ? 0.45 : barbell ? 0.59 : 0.095;
   return (
     <>
       <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
@@ -42,6 +52,7 @@ export const UpperExerciseEquipment = forwardRef<
 >(function UpperExerciseEquipment({ exercise }, ref) {
   const groups = useRef<(Group | null)[]>([]),
     barbell =
+      exercise === "preacher-curl" ||
       exercise === "military-press" ||
       exercise === "barbell-curl" ||
       exercise === "legacy-barbell-curl";
@@ -70,9 +81,14 @@ export const UpperExerciseEquipment = forwardRef<
             groups.current[i] = g;
           }}
         >
-          <Weight barbell={barbell} small={exercise === "lateral-raise"} />
+          <Weight
+            barbell={barbell}
+            small={exercise === "lateral-raise"}
+            preacher={exercise === "preacher-curl"}
+          />
         </group>
       ))}
+      {exercise === "preacher-curl" && <PreacherCurlBench />}
       {exercise === "dumbbell-shoulder-press" && (
         <group>
           <mesh position={[0, 0.455, -0.04]} castShadow>

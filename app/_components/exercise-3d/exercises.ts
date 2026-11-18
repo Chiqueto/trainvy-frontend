@@ -36,6 +36,7 @@ export type ExerciseAnimation =
  | "barbell-curl"
  | "legacy-barbell-curl"
  | "hammer-curl"
+ | "preacher-curl"
  | "high-supinated-bent-row"
  | "yates-row"
  | "supinated-yates-row"

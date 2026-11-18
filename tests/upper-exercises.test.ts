@@ -111,6 +111,23 @@ describe("five shoulder and elbow movements, with historical curl identity", () 
         }
     },
   );
+  it("supports both upper arms on the Scott bench through the curl", () => {
+    const top = getExercisePose("preacher-curl", 0);
+    const bottom = getExercisePose("preacher-curl", 1);
+    expect(getExerciseAnimation("00000000-0000-4000-8000-000000000130")).toBe(
+      "preacher-curl",
+    );
+    expect(top.bar.y - bottom.bar.y).toBeGreaterThan(0.3);
+    for (const [index, arm] of top.limbs.entries()) {
+      expect(arm.elbow.distanceTo(bottom.limbs[index].elbow)).toBeLessThan(
+        1e-9,
+      );
+      const upper = arm.elbow.clone().sub(arm.shoulder).normalize();
+      expect(upper.z).toBeGreaterThan(0.6);
+      expect(arm.grip.y).toBeGreaterThan(arm.elbow.y);
+      expect(bottom.limbs[index].grip.y).toBeLessThan(arm.elbow.y);
+    }
+  });
   it("lateral raise preserves a small fixed elbow bend, outward motion and moving scapulae", () => {
     const up = getExercisePose("lateral-raise", 0),
       down = getExercisePose("lateral-raise", 1);

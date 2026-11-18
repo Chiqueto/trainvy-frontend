@@ -5,6 +5,9 @@ import { getScapularMotion } from "./scapular-motion";
 import type { UpperExercise } from "./upper-exercise-types";
 const v = (x: number, y: number, z: number) => new Vector3(x, y, z);
 const palmOffset = v(0, 0.004, 0.012);
+export const PREACHER_CURL_ANGLE = MathUtils.degToRad(42);
+export const PREACHER_CURL_HIP_HEIGHT = 0.56;
+
 export const isShoulderPress = (key: UpperExercise) =>
   key === "military-press" || key === "dumbbell-shoulder-press";
 
@@ -14,14 +17,23 @@ export const isShoulderPress = (key: UpperExercise) =>
 export function getUpperExercisePose(exercise: UpperExercise, depth: number) {
   const p = MathUtils.clamp(depth, 0, 1),
     lifted = 1 - p;
+  const preacher = exercise === "preacher-curl";
   const seated = exercise === "dumbbell-shoulder-press",
     press = isShoulderPress(exercise);
-  const hipCenter = v(0, seated ? 0.53 : 0.9, 0),
+  const hipCenter = v(
+      0,
+      preacher ? PREACHER_CURL_HIP_HEIGHT : seated ? 0.53 : 0.9,
+      0,
+    ),
     origin = hipCenter.clone().sub(v(0, -0.28, 0.08)),
     tilt = new Quaternion();
   const limbs = [-1, 1].map((side) => {
     const hip = hipCenter.clone().setX(side * 0.14),
-      ankle = v(side * 0.18, 0.05, seated ? 0.49 : 0.08);
+      ankle = v(
+        side * (preacher ? 0.25 : 0.18),
+        0.05,
+        preacher ? 0.47 : seated ? 0.49 : 0.08,
+      );
     const knee = solveJoint(hip, ankle, 0.44, 0.42, v(0, 1, 1));
     const shoulder = getScapularMotion(exercise, p, side)
       .point(v(side * 0.215, 0.224, 0.132))
@@ -83,6 +95,18 @@ export function getUpperExercisePose(exercise: UpperExercise, depth: number) {
           .sub(palmOffset.clone().applyQuaternion(handRotation));
       }
       elbow = solvePressElbow(wrist);
+    } else if (preacher) {
+      const upper = PREACHER_CURL_ANGLE;
+      const fore = upper + MathUtils.degToRad(MathUtils.lerp(12, 112, lifted));
+      elbow = shoulder
+        .clone()
+        .add(v(0, -ARM_LENGTH * Math.cos(upper), ARM_LENGTH * Math.sin(upper)));
+      const forearm = v(0, -Math.cos(fore), Math.sin(fore));
+      wrist = elbow.clone().addScaledVector(forearm, FOREARM_LENGTH);
+      handRotation = getPowerGripRotation(forearm, v(1, 0, 0), 1);
+      grip = wrist
+        .clone()
+        .add(palmOffset.clone().applyQuaternion(handRotation));
     } else {
       const lateral = exercise === "lateral-raise",
         angle = MathUtils.degToRad(

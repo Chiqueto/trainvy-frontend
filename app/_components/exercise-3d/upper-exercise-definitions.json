@@ -180,5 +180,28 @@
       "execution": "Flexione os cotovelos mantendo as palmas voltadas uma para a outra durante toda a subida. Os halteres mudam de inclinação junto com os antebraços; não gire o punho para supinar. Desça com controle, sem impulso do quadril ou balanço do tronco.",
       "tips": "Braquial, bíceps e braquiorradial participam conjuntamente. A pegada neutra diferencia o movimento, mas não elimina o bíceps nem garante maior ativação medida de um músculo. Cores mostram participação ilustrativa, sem medir esforço ou EMG."
     }
+  },
+  "preacher-curl": {
+    "name": "Rosca Scott",
+    "id": "00000000-0000-4000-8000-000000000130",
+    "equipment": "Banco Scott e barra reta, pegada supinada",
+    "muscles": {
+      "primary": [
+        "Bíceps braquial",
+        "Braquial"
+      ],
+      "secondary": [
+        "Braquiorradial",
+        "Flexor ulnar do carpo",
+        "Flexor superficial dos dedos",
+        "Extensor radial curto do carpo"
+      ]
+    },
+    "instructions": {
+      "description": "Rosca sentada bilateral com barra reta, pegada supinada e braços apoiados no banco Scott.",
+      "setup": "Sente-se no banco Scott, firme os pés no chão e apoie a parte de trás dos braços na almofada inclinada. Segure a barra com as palmas para cima e os punhos alinhados.",
+      "execution": "Dobre os cotovelos para subir a barra mantendo os braços apoiados. Desça devagar até quase estender os cotovelos e faça uma pausa breve antes de subir.",
+      "tips": "Mantenha o apoio dos braços e evite usar o tronco para dar impulso. As cores mostram participação muscular ilustrativa, sem medição de EMG."
+    }
   }
 }

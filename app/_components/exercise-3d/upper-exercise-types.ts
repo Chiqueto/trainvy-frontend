@@ -5,6 +5,7 @@ export const UPPER_EXERCISES = [
   "barbell-curl",
   "legacy-barbell-curl",
   "hammer-curl",
+  "preacher-curl",
 ] as const;
 export type UpperExercise = (typeof UPPER_EXERCISES)[number];
 export const isUpperExercise = (key: string): key is UpperExercise =>
