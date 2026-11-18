@@ -33,10 +33,11 @@ export function getUpperExercisePose(exercise: UpperExercise, depth: number) {
       handRotation: Quaternion;
     if (press) {
       const halfWidth = seated ? MathUtils.lerp(0.24, 0.42, p) : 0.3;
-      // Bar stays in front of the face until it clears the crown; no bar through the skull.
+      // A smooth, almost vertical press ends over the head. Cervical retraction
+      // clears the face instead of making the bar loop around a stationary head.
       const z = seated
         ? MathUtils.lerp(0.07, 0.16, p)
-        : MathUtils.lerp(0.08, 0.265, MathUtils.smoothstep(p, 0.1, 0.36));
+        : MathUtils.lerp(0.055, 0.205, p);
       const overheadShoulder = getScapularMotion(exercise, 0, side)
         .point(v(side * 0.215, 0.224, 0.132))
         .add(origin);
@@ -46,7 +47,7 @@ export function getUpperExercisePose(exercise: UpperExercise, depth: number) {
         Math.sqrt(
           fullReach ** 2 -
             (side * (seated ? 0.24 : 0.3) - overheadShoulder.x) ** 2 -
-            (0.08 - overheadShoulder.z) ** 2,
+            ((seated ? 0.08 : 0.055) - overheadShoulder.z) ** 2,
         );
       grip = v(
         side * halfWidth,
@@ -86,7 +87,13 @@ export function getUpperExercisePose(exercise: UpperExercise, depth: number) {
         angle = MathUtils.degToRad(
           lateral
             ? MathUtils.lerp(10, 85, lifted)
-            : MathUtils.lerp(15, 120, lifted),
+            : MathUtils.lerp(12, 125, lifted) +
+                MathUtils.radToDeg(
+                  Math.atan2(
+                    0.055,
+                    Math.sqrt(ARM_LENGTH ** 2 - 0.025 ** 2 - 0.055 ** 2),
+                  ),
+                ),
         );
       if (lateral) {
         // Modest forward plane, neutral humerus: no internally rotated "pouring" gesture.
@@ -98,8 +105,8 @@ export function getUpperExercisePose(exercise: UpperExercise, depth: number) {
           .add(v(0, -ARM_LENGTH * Math.cos(angle), 0));
         wrist = elbow
           .clone()
-          .addScaledVector(radial, FOREARM_LENGTH * Math.sin(angle - 0.17))
-          .add(v(0, -FOREARM_LENGTH * Math.cos(angle - 0.17), 0));
+          .addScaledVector(radial, FOREARM_LENGTH * Math.sin(angle - 0.35))
+          .add(v(0, -FOREARM_LENGTH * Math.cos(angle - 0.35), 0));
         shaft = v(-Math.sin(plane), 0, side * Math.cos(plane));
       } else {
         // Upper arm fixed beside ribs; elbow flexion drives the load, not shoulder swing.
@@ -107,9 +114,9 @@ export function getUpperExercisePose(exercise: UpperExercise, depth: number) {
           .clone()
           .add(
             v(
-              side * 0.035,
-              -Math.sqrt(ARM_LENGTH ** 2 - 0.035 ** 2 - 0.1 ** 2),
-              0.1,
+              side * 0.025,
+              -Math.sqrt(ARM_LENGTH ** 2 - 0.025 ** 2 - 0.055 ** 2),
+              0.055,
             ),
           );
         wrist = elbow

@@ -1,5 +1,9 @@
 # Desenvolvimentos, elevação lateral e roscas — 18/11/2026
 
+Correção posterior de trajetória, giro axial e elevação dos ombros:
+[revisão de postura](EXERCISE-3D-UPPER-FORM-CORRECTIONS.md). Seus detalhes
+substituem os valores de cinemática anteriores abaixo; o cadastro permanece coerente.
+
 Branch do par frontend/API: `exercise-3d/five-upper-m218`. Bases: frontend
 `7e18460`, API `b8d6cd5`. Trabalho por UUID; cinco movimentos novos e uma
 identidade histórica equivalente, sem reaproveitar uma execução incompatível.

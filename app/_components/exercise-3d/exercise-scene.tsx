@@ -9,6 +9,7 @@ import { prepareHandReplacement } from "./gripping-hand-geometry";
 import { GrippingHands, type GrippingHandsHandle } from "./gripping-hands";
 
 import { installScapularRig } from "./scapular-rig";
+import { installMilitaryHeadRig } from "./military-head-motion";
 import { Suspense, useEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
@@ -568,6 +569,8 @@ function Athlete({
       if (object instanceof SkinnedMesh) {
         skeletons.delete(object.skeleton);
         skeletons.add(installScapularRig(object,bones));
+        skeletons.delete(object.skeleton);
+        skeletons.add(installMilitaryHeadRig(object,bones));
         handReplacements.push(prepareHandReplacement(object));
       }
     });

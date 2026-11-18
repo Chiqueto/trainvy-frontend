@@ -36,8 +36,16 @@ export function getScapularMotion(
     exercise === "lat-pulldown" || exercise === "front-lat-pulldown";
   const upper=isUpperExercise(exercise), pressing=exercise === "military-press" || exercise === "dumbbell-shoulder-press", raising=exercise === "lateral-raise";
   const lift=1-p;
-  if(upper && (pressing || raising)){
-    const rotation=new Quaternion().setFromEuler(new Euler(-.10*lift,-side*.07*lift,side*(pressing?.10+.58*lift:.38*lift),"YXZ"));
+  if(raising){
+    // Keep the acromion at a quiet shoulder height: upward rotation is not a shrug.
+    // Rotating around the middle of the thorax had lifted the shoulders by ~9 cm.
+    const rotation=new Quaternion().setFromEuler(new Euler(-.045*lift,-side*.035*lift,side*.38*lift,"YXZ"));
+    const pivot=new Vector3(side*.215,.224,.132);
+    const point=(rest:Vector3)=>rest.clone().sub(pivot).applyQuaternion(rotation).add(pivot);
+    return {rotation,point};
+  }
+  if(upper && pressing){
+    const rotation=new Quaternion().setFromEuler(new Euler(-.10*lift,-side*.07*lift,side*(.10+.58*lift),"YXZ"));
     const point=(rest:Vector3)=>rest.clone().sub(thorax).applyQuaternion(rotation).add(thorax).add(new Vector3(0,.022*lift,0));
     return {rotation,point};
   }

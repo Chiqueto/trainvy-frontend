@@ -1,4 +1,5 @@
 import { isUpperExercise } from "./upper-exercise-types";
+import { updateMilitaryHead } from "./military-head-motion";
 import { getUpperExercisePose } from "./upper-exercise-pose";
 
 import { isBarbellRow, BARBELL_ROW_VARIANTS } from "./row-variants";
@@ -412,6 +413,7 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
     const root = bones.get("sled")!;
     root.position.copy(pose.origin);
     root.quaternion.copy(pose.tilt).multiply(restTilt.clone().invert());
+    updateMilitaryHead(bones,pose.origin,pose.tilt,depth,exercise === "military-press");
     for (const side of [-1, 1]) {
       const name = side < 0 ? "scapula_L" : "scapula_R", bone = bones.get(name);
       if (!bone) continue;
@@ -481,10 +483,11 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
         .sub(restShoulder)
         .cross(v(0, 0, 1))
         .normalize();
+      const curl = exercise === "barbell-curl" || exercise === "legacy-barbell-curl" || exercise === "hammer-curl";
       const posedNormal = elbow
         .clone()
         .sub(shoulder)
-        .cross(wrist.clone().sub(elbow))
+        .cross(curl ? v(0,0,1) : wrist.clone().sub(elbow))
         .normalize();
       orientedSegment(
         `upperArm_${suffix}`,

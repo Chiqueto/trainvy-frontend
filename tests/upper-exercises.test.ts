@@ -106,8 +106,8 @@ describe("five shoulder and elbow movements, with historical curl identity", () 
       if (exercise === "military-press")
         for (let i = 0; i <= 100; i++) {
           const p = getExercisePose(exercise, i / 100);
-          if (p.bar.y > 1.53 && p.bar.y < 1.83)
-            expect(p.bar.z).toBeGreaterThan(0.19);
+          expect(p.bar.z).toBeGreaterThanOrEqual(0.05);
+          expect(p.bar.z).toBeLessThanOrEqual(0.21);
         }
     },
   );
@@ -129,7 +129,7 @@ describe("five shoulder and elbow movements, with historical curl identity", () 
           .sub(l.shoulder)
           .normalize()
           .dot(l.wrist.clone().sub(l.elbow).normalize()),
-      ).toBeCloseTo(Math.cos(0.17), 6);
+      ).toBeCloseTo(Math.cos(0.35), 6);
     }
   });
   it("curls keep elbows stable, differentiate a neutral grip and preserve legacy lookup", () => {
