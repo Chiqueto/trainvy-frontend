@@ -177,6 +177,7 @@ export function createTissueMaterial() {
   material.customProgramCacheKey = () => "trainvy-atelier-tissue-v34-upper-exercises";
   const setAppearance = (exercise: ExerciseAnimation, highlighted = true) => {
     const modes: Record<ExerciseAnimation, number> = {
+      "preacher-curl": 32,
       "military-press": 32,
       "dumbbell-shoulder-press": 32,
       "lateral-raise": 32,

@@ -82,6 +82,7 @@ const FALLBACK_3D_INSTRUCTIONS: Record<
   ExerciseAnimation,
   NonNullable<GetExerciseMedia200["instructions"]>
 > = {
+  "preacher-curl": EXERCISE_ANIMATIONS["preacher-curl"].instructions,
   "military-press": EXERCISE_ANIMATIONS["military-press"].instructions,
   "dumbbell-shoulder-press": EXERCISE_ANIMATIONS["dumbbell-shoulder-press"].instructions,
   "lateral-raise": EXERCISE_ANIMATIONS["lateral-raise"].instructions,
