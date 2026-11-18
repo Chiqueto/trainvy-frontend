@@ -36,6 +36,25 @@ beforeAll(async () => {
   apply = createPoseDriver(bones);
 });
 describe("postural corrections from rendered arm orientation", () => {
+  it("keeps the military press elbow hinge facing forward without opening sideways through the repetition", () => {
+    for (let step = 0; step <= 200; step++) {
+      const pose = apply("military-press", step / 200);
+      for (const limb of pose.limbs) {
+        const reach = limb.wrist.clone().sub(limb.shoulder).normalize();
+        const upper = limb.elbow.clone().sub(limb.shoulder);
+        const bend = upper.clone().addScaledVector(reach, -upper.dot(reach));
+        // The elbow bends in the anterior plane, with no lateral swing around
+        // the shoulder-to-wrist line. This must hold in both ascent and descent.
+        expect(Math.abs(bend.x)).toBeLessThan(0.002);
+        const normal = upper
+          .cross(limb.wrist.clone().sub(limb.elbow))
+          .normalize();
+        // The fixed grip is wider than the shoulder centres, so the hinge
+        // normal is oblique. Its anterior flexion side must never invert.
+        expect(normal.x).toBeLessThan(-0.5);
+      }
+    }
+  });
   it.each(["barbell-curl", "legacy-barbell-curl", "hammer-curl"] as const)(
     "%s fixes the humerus throughout the curl instead of rolling it around the elbow",
     (exercise) => {

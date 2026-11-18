@@ -58,14 +58,21 @@ export function getUpperExercisePose(exercise: UpperExercise, depth: number) {
       handRotation = new Quaternion();
       shaft = v(1, 0, 0);
       elbow = shoulder.clone();
-      for (let i = 0; i < 16; i++) {
-        elbow = solveJoint(
+      const solvePressElbow = (target: Vector3) =>
+        solveJoint(
           shoulder,
-          wrist,
+          target,
           ARM_LENGTH,
           FOREARM_LENGTH,
-          v(side * 0.5, -1, -0.18),
+          seated
+            ? v(side * 0.5, -1, -0.18)
+            : // Anterior elbow hinge: axis × -X gives a bend perpendicular to
+              // the reach, with no lateral component or outward swivel. It
+              // points down near the rack and forward as the arm rises.
+              v(0, shoulder.z - target.z, target.y - shoulder.y),
         );
+      for (let i = 0; i < 16; i++) {
+        elbow = solvePressElbow(wrist);
         handRotation = getPowerGripRotation(
           wrist.clone().sub(elbow),
           shaft,
@@ -75,13 +82,7 @@ export function getUpperExercisePose(exercise: UpperExercise, depth: number) {
           .clone()
           .sub(palmOffset.clone().applyQuaternion(handRotation));
       }
-      elbow = solveJoint(
-        shoulder,
-        wrist,
-        ARM_LENGTH,
-        FOREARM_LENGTH,
-        v(side * 0.5, -1, -0.18),
-      );
+      elbow = solvePressElbow(wrist);
     } else {
       const lateral = exercise === "lateral-raise",
         angle = MathUtils.degToRad(
