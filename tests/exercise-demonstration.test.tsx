@@ -7,6 +7,7 @@ import { EXERCISE_ANIMATIONS } from "@/app/_components/exercise-3d/exercises";
 import type { GetExerciseMedia200 } from "@/app/_lib/api/fetch-generated";
 import { readFileSync } from "node:fs";
 import path from "node:path";
+import { DemonstrationFields } from "@/app/personal/exercicios/_components/demonstration-fields";
 
 vi.mock("@/app/_actions/exercise-media", () => ({
   getExerciseMediaAction: vi.fn(),
@@ -34,6 +35,15 @@ const data: GetExerciseMedia200 = {
 };
 
 describe("Exercise video and 3D demonstrations", () => {
+  it("offers the canonical curl for new demonstrations while retaining a saved legacy choice", () => {
+    const onChange = vi.fn();
+    const { rerender } = render(<DemonstrationFields name="Rosca" value={{ youtubeUrl: "", animationKey: "" }} onChange={onChange} />);
+    expect(screen.queryByRole("option", { name: /^Rosca Direta$/ })).toBeNull();
+    expect(screen.getByRole("option", { name: "Rosca Direta com Barra" })).toBeDefined();
+    rerender(<DemonstrationFields name="Rosca" value={{ youtubeUrl: "", animationKey: "legacy-barbell-curl" }} onChange={onChange} />);
+    expect(screen.getByRole("option", { name: /^Rosca Direta$/ })).toBeDefined();
+    expect(screen.getByTestId("viewer").textContent).toBe("legacy-barbell-curl");
+  });
   it("only embeds a validated video after the user requests playback", () => {
     const { container } = render(
       <YoutubePlayer url={url} title="Meu exercício" />,

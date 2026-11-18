@@ -37,6 +37,7 @@ export function createTissueMaterial() {
       .replace(
         "#include <common>",
         `#include <common>
+
         attribute vec3 _exercisemuscles;
         attribute vec4 _pecdeckmuscles;
         attribute vec4 _flymuscles;
@@ -76,6 +77,7 @@ export function createTissueMaterial() {
       .replace(
         "#include <common>",
         `#include <common>
+
         varying vec2 vTissue; varying vec2 vFibre; varying float vDeadliftMuscles; varying float vSumoDeadliftMuscles; varying float vStandingCalfMuscles; varying float vSeatedCalfMuscles;
         varying vec3 vExerciseMuscles; varying vec3 vRestSurface;
         varying float vCableRowMuscles; varying float vPulldownMuscles; varying float vPecDeckMuscles; varying float vHangCleanMuscles; varying float vFlyMuscles; varying float vMachineRowMuscles; varying float vBentRowMuscles; varying float vOneArmRowMuscles; varying float vSmithBenchMuscles; varying float vHighRowMuscles; varying float vPendlayMuscles; varying float vMachineChestPressMuscles;
@@ -140,6 +142,7 @@ export function createTissueMaterial() {
         if (exerciseMode > 14.5 && exerciseMode < 15.5) mask = vStiffMuscles;
         if (exerciseMode > 29.5 && exerciseMode < 30.5) mask = vHighRowMuscles;
         if (exerciseMode > 30.5 && exerciseMode < 31.5) mask = vPendlayMuscles;
+        if (exerciseMode > 31.5 && exerciseMode < 32.5) mask = vMachineChestPressMuscles;
         float selected = smoothstep(0.12, 0.40, mask) * highlightMuscles;
         float primary = smoothstep(0.72, 0.93, mask);
         // Constant categorical colours, never a measurement of activation.
@@ -171,9 +174,15 @@ export function createTissueMaterial() {
           + (1.0-tissue) * (1.0-smoothstep(0.02,0.12,dot(diffuseColor.rgb,vec3(0.333)))) * 0.28, 0.38, 0.88);`,
       );
   };
-  material.customProgramCacheKey = () => "trainvy-atelier-tissue-v33-row-landmarks";
+  material.customProgramCacheKey = () => "trainvy-atelier-tissue-v34-upper-exercises";
   const setAppearance = (exercise: ExerciseAnimation, highlighted = true) => {
     const modes: Record<ExerciseAnimation, number> = {
+      "military-press": 32,
+      "dumbbell-shoulder-press": 32,
+      "lateral-raise": 32,
+      "barbell-curl": 32,
+      "legacy-barbell-curl": 32,
+      "hammer-curl": 32,
       squat: 0,
       "bench-press": 1,
       "incline-dumbbell-press": 2,
@@ -221,4 +230,3 @@ export function createTissueMaterial() {
   };
   return { material, setAppearance };
 }
-

@@ -1,0 +1,191 @@
+// @vitest-environment node
+import { readFile } from "node:fs/promises";
+import { beforeAll, describe, expect, it } from "vitest";
+import { Bone, Quaternion, SkinnedMesh, Vector3 } from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { MeshoptDecoder } from "meshoptimizer";
+import {
+  ARM_LENGTH,
+  FOREARM_LENGTH,
+  createPoseDriver,
+  getExercisePose,
+  getExerciseProgress,
+} from "../app/_components/exercise-3d/kinematics";
+import { UPPER_EXERCISES } from "../app/_components/exercise-3d/upper-exercise-types";
+import { getScapularMotion } from "../app/_components/exercise-3d/scapular-motion";
+import { installScapularRig } from "../app/_components/exercise-3d/scapular-rig";
+import {
+  createUpperExerciseMuscleMask,
+  UPPER_MUSCLE_ROLES,
+} from "../app/_components/exercise-3d/upper-exercise-muscles";
+import {
+  EXERCISE_ANIMATIONS,
+  getExerciseAnimation,
+} from "../app/_components/exercise-3d/exercises";
+import { forearmDirectionError } from "./helpers/forearm-direction-error";
+import shoulder from "../app/_components/exercise-3d/upper-shoulder-detail-map.json";
+import arms from "../app/_components/exercise-3d/fly-muscle-map.json";
+import cuff from "../app/_components/exercise-3d/lat-pulldown-detail-map.json";
+let mesh: SkinnedMesh, apply: ReturnType<typeof createPoseDriver>;
+beforeAll(async () => {
+  const b = await readFile(
+    new URL(
+      "../public/models/exercise-3d/trainvy-athlete.glb",
+      import.meta.url,
+    ),
+  );
+  const { scene } = await new GLTFLoader()
+    .setMeshoptDecoder(MeshoptDecoder)
+    .parseAsync(b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength), "");
+  const bones = new Map<string, Bone>();
+  scene.traverse((o) => {
+    if (o instanceof Bone) bones.set(o.name, o);
+    if (o instanceof SkinnedMesh) mesh = o;
+  });
+  installScapularRig(mesh, bones);
+  apply = createPoseDriver(bones);
+});
+describe("five shoulder and elbow movements, with historical curl identity", () => {
+  it.each(UPPER_EXERCISES)(
+    "%s retains real bones, stable supports, contact and continuous hand orientation",
+    (exercise) => {
+      const support = getExercisePose(exercise, 0),
+        rotations: (Quaternion | undefined)[] = [];
+      for (let i = 0; i <= 120; i++) {
+        const pose = apply(exercise, i / 120);
+        expect(pose.origin.distanceTo(support.origin)).toBeLessThan(1e-10);
+        for (const [j, limb] of pose.limbs.entries()) {
+          expect(limb.shoulder.distanceTo(limb.elbow)).toBeCloseTo(
+            ARM_LENGTH,
+            5,
+          );
+          expect(limb.elbow.distanceTo(limb.wrist)).toBeCloseTo(
+            FOREARM_LENGTH,
+            5,
+          );
+          expect(limb.hip.distanceTo(limb.knee)).toBeCloseTo(0.44, 5);
+          expect(limb.knee.distanceTo(limb.ankle)).toBeCloseTo(0.42, 5);
+          expect(limb.ankle.distanceTo(support.limbs[j].ankle)).toBeLessThan(
+            1e-10,
+          );
+          expect(
+            limb.wrist
+              .clone()
+              .add(
+                new Vector3(0, 0.004, 0.012).applyQuaternion(limb.handRotation),
+              )
+              .distanceTo(limb.grip),
+          ).toBeLessThan(1e-7);
+          expect(forearmDirectionError(mesh, j ? "R" : "L", limb)).toBeLessThan(
+            1e-6,
+          );
+          if (rotations[j])
+            expect(limb.handRotation.angleTo(rotations[j]!)).toBeLessThan(0.14);
+          rotations[j] = limb.handRotation.clone();
+        }
+        expect(pose.limbs[0].grip.x).toBeCloseTo(-pose.limbs[1].grip.x, 5);
+      }
+    },
+  );
+  it.each(["military-press", "dumbbell-shoulder-press"] as const)(
+    "%s clears the face and finishes with extended elbows and independent scapular motion",
+    (exercise) => {
+      const top = getExercisePose(exercise, 0),
+        bottom = getExercisePose(exercise, 1);
+      expect(top.bar.y - bottom.bar.y).toBeGreaterThan(0.5);
+      for (const limb of top.limbs) {
+        const upper = limb.elbow.clone().sub(limb.shoulder).normalize(),
+          fore = limb.wrist.clone().sub(limb.elbow).normalize();
+        expect(upper.dot(fore)).toBeGreaterThan(0.9);
+        expect(
+          getScapularMotion(exercise, 0, limb.side).rotation.angleTo(
+            getScapularMotion(exercise, 1, limb.side).rotation,
+          ),
+        ).toBeGreaterThan(0.5);
+      }
+      if (exercise === "military-press")
+        for (let i = 0; i <= 100; i++) {
+          const p = getExercisePose(exercise, i / 100);
+          if (p.bar.y > 1.53 && p.bar.y < 1.83)
+            expect(p.bar.z).toBeGreaterThan(0.19);
+        }
+    },
+  );
+  it("lateral raise preserves a small fixed elbow bend, outward motion and moving scapulae", () => {
+    const up = getExercisePose("lateral-raise", 0),
+      down = getExercisePose("lateral-raise", 1);
+    expect(up.limbs[1].grip.x - down.limbs[1].grip.x).toBeGreaterThan(0.4);
+    expect(up.limbs[1].grip.y - up.limbs[1].shoulder.y).toBeLessThan(0.02);
+    expect(
+      getScapularMotion("lateral-raise", 0, 1).rotation.angleTo(
+        getScapularMotion("lateral-raise", 1, 1).rotation,
+      ),
+    ).toBeGreaterThan(0.35);
+    for (let i = 0; i <= 20; i++) {
+      const l = getExercisePose("lateral-raise", i / 20).limbs[1];
+      expect(
+        l.elbow
+          .clone()
+          .sub(l.shoulder)
+          .normalize()
+          .dot(l.wrist.clone().sub(l.elbow).normalize()),
+      ).toBeCloseTo(Math.cos(0.17), 6);
+    }
+  });
+  it("curls keep elbows stable, differentiate a neutral grip and preserve legacy lookup", () => {
+    for (const key of ["barbell-curl", "hammer-curl"] as const) {
+      const a = getExercisePose(key, 0),
+        b = getExercisePose(key, 1);
+      for (let i = 0; i < 2; i++)
+        expect(a.limbs[i].elbow.distanceTo(b.limbs[i].elbow)).toBeLessThan(
+          1e-9,
+        );
+    }
+    for (let i = 0; i <= 20; i++) {
+      const a = getExercisePose("barbell-curl", i / 20).limbs[1],
+        b = getExercisePose("hammer-curl", i / 20).limbs[1];
+      expect(a.handRotation.angleTo(b.handRotation)).toBeGreaterThan(1.4);
+      expect(
+        new Vector3(0, 0, 1).applyQuaternion(b.handRotation).x,
+      ).toBeLessThan(-0.99);
+    }
+    expect(
+      getExerciseAnimation(
+        "00000000-0000-4000-8000-000000000128",
+        "Rosca Direta",
+      ),
+    ).toBe("legacy-barbell-curl");
+    expect(getExerciseAnimation(undefined, "Rosca Direta")).toBe(
+      "barbell-curl",
+    );
+  });
+  it.each(UPPER_EXERCISES)(
+    "%s maps only explicitly reviewed source surfaces",
+    (exercise) => {
+      const mask = createUpperExerciseMuscleMask(mesh.geometry, exercise),
+        roles = UPPER_MUSCLE_ROLES[exercise];
+      let primary = 0;
+      for (const atlas of [shoulder, arms, cuff])
+        for (const s of atlas.selections) {
+          const name = s.name.replace(/[lr]$/, ""),
+            expected = roles.primary.includes(name)
+              ? 1
+              : roles.secondary.includes(name)
+                ? 0.45
+                : 0;
+          for (const index of s.indices)
+            expect(mask.getX(index)).toBeCloseTo(expected, 5);
+          if (expected === 1) primary += s.indices.length;
+        }
+      expect(primary).toBeGreaterThan(900);
+      expect(
+        EXERCISE_ANIMATIONS[exercise].instructions.execution.length,
+      ).toBeGreaterThan(80);
+    },
+  );
+  it("uses a slower lowering phase and real pauses in both endpoints", () => {
+    expect(getExerciseProgress("military-press", 0.01)).toBe(0);
+    expect(getExerciseProgress("military-press", 0.5)).toBe(1);
+    expect(getExerciseProgress("military-press", 0.52)).toBe(1);
+  });
+});

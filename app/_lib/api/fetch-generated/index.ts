@@ -11193,6 +11193,12 @@ export type ListCoachAthleteProgressExercises200ItemDemonstration = {
   youtubeUrl: string | null;
   /** @nullable */
   animationKey:
+    | "military-press"
+    | "dumbbell-shoulder-press"
+    | "lateral-raise"
+    | "barbell-curl"
+    | "legacy-barbell-curl"
+    | "hammer-curl"
     | "high-supinated-bent-row"
     | "yates-row"
     | "supinated-yates-row"
@@ -15798,6 +15804,12 @@ export type SaveExerciseDemonstrationBodyAnimationKey =
   | null;
 
 export const SaveExerciseDemonstrationBodyAnimationKey = {
+  "military-press": "military-press",
+  "dumbbell-shoulder-press": "dumbbell-shoulder-press",
+  "lateral-raise": "lateral-raise",
+  "barbell-curl": "barbell-curl",
+  "legacy-barbell-curl": "legacy-barbell-curl",
+  "hammer-curl": "hammer-curl",
   "high-supinated-bent-row": "high-supinated-bent-row",
   "yates-row": "yates-row",
   "supinated-yates-row": "supinated-yates-row",
@@ -15859,6 +15871,12 @@ export type SaveExerciseDemonstration200AnimationKey =
   | null;
 
 export const SaveExerciseDemonstration200AnimationKey = {
+  "military-press": "military-press",
+  "dumbbell-shoulder-press": "dumbbell-shoulder-press",
+  "lateral-raise": "lateral-raise",
+  "barbell-curl": "barbell-curl",
+  "legacy-barbell-curl": "legacy-barbell-curl",
+  "hammer-curl": "hammer-curl",
   "high-supinated-bent-row": "high-supinated-bent-row",
   "yates-row": "yates-row",
   "supinated-yates-row": "supinated-yates-row",
@@ -16011,6 +16029,12 @@ export type ListExercises200ItemDemonstration = {
   youtubeUrl: string | null;
   /** @nullable */
   animationKey:
+    | "military-press"
+    | "dumbbell-shoulder-press"
+    | "lateral-raise"
+    | "barbell-curl"
+    | "legacy-barbell-curl"
+    | "hammer-curl"
     | "high-supinated-bent-row"
     | "yates-row"
     | "supinated-yates-row"
@@ -16171,6 +16195,12 @@ export type CreateExerciseBodyDemonstrationAnimationKey =
   | null;
 
 export const CreateExerciseBodyDemonstrationAnimationKey = {
+  "military-press": "military-press",
+  "dumbbell-shoulder-press": "dumbbell-shoulder-press",
+  "lateral-raise": "lateral-raise",
+  "barbell-curl": "barbell-curl",
+  "legacy-barbell-curl": "legacy-barbell-curl",
+  "hammer-curl": "hammer-curl",
   "high-supinated-bent-row": "high-supinated-bent-row",
   "yates-row": "yates-row",
   "supinated-yates-row": "supinated-yates-row",
@@ -16321,6 +16351,12 @@ export type CreateExercise201Demonstration = {
   youtubeUrl: string | null;
   /** @nullable */
   animationKey:
+    | "military-press"
+    | "dumbbell-shoulder-press"
+    | "lateral-raise"
+    | "barbell-curl"
+    | "legacy-barbell-curl"
+    | "hammer-curl"
     | "high-supinated-bent-row"
     | "yates-row"
     | "supinated-yates-row"
@@ -16529,6 +16565,12 @@ export type UpdateExerciseMuscles200Demonstration = {
   youtubeUrl: string | null;
   /** @nullable */
   animationKey:
+    | "military-press"
+    | "dumbbell-shoulder-press"
+    | "lateral-raise"
+    | "barbell-curl"
+    | "legacy-barbell-curl"
+    | "hammer-curl"
     | "high-supinated-bent-row"
     | "yates-row"
     | "supinated-yates-row"
@@ -16653,6 +16695,12 @@ export type GetExerciseMedia200Demonstration = {
   youtubeUrl: string | null;
   /** @nullable */
   animationKey:
+    | "military-press"
+    | "dumbbell-shoulder-press"
+    | "lateral-raise"
+    | "barbell-curl"
+    | "legacy-barbell-curl"
+    | "hammer-curl"
     | "high-supinated-bent-row"
     | "yates-row"
     | "supinated-yates-row"
@@ -16805,6 +16853,12 @@ export type UpdateCustomExerciseBodyDemonstrationAnimationKey =
   | null;
 
 export const UpdateCustomExerciseBodyDemonstrationAnimationKey = {
+  "military-press": "military-press",
+  "dumbbell-shoulder-press": "dumbbell-shoulder-press",
+  "lateral-raise": "lateral-raise",
+  "barbell-curl": "barbell-curl",
+  "legacy-barbell-curl": "legacy-barbell-curl",
+  "hammer-curl": "hammer-curl",
   "high-supinated-bent-row": "high-supinated-bent-row",
   "yates-row": "yates-row",
   "supinated-yates-row": "supinated-yates-row",
@@ -16955,6 +17009,12 @@ export type UpdateCustomExercise200Demonstration = {
   youtubeUrl: string | null;
   /** @nullable */
   animationKey:
+    | "military-press"
+    | "dumbbell-shoulder-press"
+    | "lateral-raise"
+    | "barbell-curl"
+    | "legacy-barbell-curl"
+    | "hammer-curl"
     | "high-supinated-bent-row"
     | "yates-row"
     | "supinated-yates-row"

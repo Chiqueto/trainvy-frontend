@@ -1,3 +1,4 @@
+import { isUpperExercise } from "./upper-exercise-types";
 import { Euler, MathUtils, Quaternion, Vector3 } from "three";
 import type { ExerciseAnimation } from "./exercises";
 
@@ -33,6 +34,13 @@ export function getScapularMotion(
     !(exercise === "one-arm-row" && side < 0);
   const overhead =
     exercise === "lat-pulldown" || exercise === "front-lat-pulldown";
+  const upper=isUpperExercise(exercise), pressing=exercise === "military-press" || exercise === "dumbbell-shoulder-press", raising=exercise === "lateral-raise";
+  const lift=1-p;
+  if(upper && (pressing || raising)){
+    const rotation=new Quaternion().setFromEuler(new Euler(-.10*lift,-side*.07*lift,side*(pressing?.10+.58*lift:.38*lift),"YXZ"));
+    const point=(rest:Vector3)=>rest.clone().sub(thorax).applyQuaternion(rotation).add(thorax).add(new Vector3(0,.022*lift,0));
+    return {rotation,point};
+  }
   const rotation = active
     ? new Quaternion().setFromEuler(
         new Euler(

@@ -54,6 +54,10 @@ export function Exercise3DViewer(props: {
 }
 
 function phaseLabel(phase: number, exercise: ExerciseAnimation) {
+  if (["military-press","dumbbell-shoulder-press","lateral-raise","barbell-curl","legacy-barbell-curl","hammer-curl"].includes(exercise)) {
+    if(phase<.04||phase>=.99)return exercise==="lateral-raise"?"Braços próximos da altura dos ombros":exercise.includes("press")?"Carga acima dos ombros":"Cotovelos flexionados, punhos alinhados";
+    if(phase<.48)return "Descida controlada"; if(phase<.54)return "Pausa na posição baixa"; return exercise==="lateral-raise"?"Elevação lateral sem impulso":exercise.includes("press")?"Desenvolvimento com controle escapular":"Flexão dos cotovelos sem balanço";
+  }
   if (exercise === "one-arm-row") {if(phase<.04||phase>=.99)return "Halter próximo ao tronco";if(phase<.48)return "Descida controlada do halter";if(phase<.54)return "Pausa com braço alongado";return "Remada unilateral com apoios firmes";}
   if (exercise === "pendlay-row") {
     if(phase<.12 || phase>=.80)return "Anilhas paradas no chão — refaça o brace";

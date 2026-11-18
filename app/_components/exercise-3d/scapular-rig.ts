@@ -1,3 +1,4 @@
+import upper from "./upper-shoulder-detail-map.json";
 import {
   Bone,
   Matrix4,
@@ -46,12 +47,12 @@ export function installScapularRig(
     index = mesh.geometry.getAttribute("skinIndex"),
     weight = mesh.geometry.getAttribute("skinWeight");
   const influence = new Float32Array(pos.count);
-  for (const atlas of [back, detail, chest, scapular]) {
+  for (const atlas of [back, detail, chest, scapular, upper]) {
     if (atlas.baseAssetSha256 !== manifest.sha256)
       throw Error("Scapular atlas mismatch");
     for (const selection of atlas.selections) {
       if (
-        !/trapezius|Rhomboid|Infraspinatus|Teres_major|Latissimus|deltoid|pectoralis|Serratus_anterior/.test(
+        !/trapezius|Rhomboid|Infraspinatus|Teres_minor|Teres_major|Latissimus|deltoid|pectoralis|Serratus_anterior/.test(
           selection.name,
         )
       )

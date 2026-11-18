@@ -1,3 +1,5 @@
+import { isUpperExercise } from "./upper-exercise-types";
+import { getUpperExercisePose } from "./upper-exercise-pose";
 
 import { isBarbellRow, BARBELL_ROW_VARIANTS } from "./row-variants";
 import { usesPowerGrip } from "./power-grip";
@@ -109,6 +111,7 @@ export function getExercisePose(
   exercise: ExerciseAnimation,
   depth: number,
 ): ReturnType<typeof getFlatDumbbellFlyPose> {
+  if (isUpperExercise(exercise)) return getUpperExercisePose(exercise,depth);
   if (exercise === "one-arm-row") return getOneArmRowPose(depth);
   if (isBarbellRow(exercise)) return getBentRowPose(depth, BARBELL_ROW_VARIANTS[exercise]!);
   if (exercise === "machine-row") return getMachineRowPose(depth);
@@ -420,7 +423,7 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
       const { side, hip, knee, ankle, footRotation, shoulder, elbow, wrist } =
         limb;
       const suffix = side < 0 ? "L" : "R";
-      if (exercise === "one-arm-row" ||
+      if (isUpperExercise(exercise) || exercise === "one-arm-row" ||
         isBarbellRow(exercise) || exercise === "machine-row" || exercise === "cable-row" ||
         exercise === "lat-pulldown" || exercise === "front-lat-pulldown" || exercise === "hang-power-clean" || exercise === "sumo-deadlift" || exercise === "deadlift" || exercise === "sumo-dumbbell-squat" || exercise === "hip-abduction" || exercise === "hip-thrust" || exercise === "stiff" || exercise === "horizontal-leg-press" || exercise === "leg-press-45" || exercise === "hack-squat" || exercise === "prone-leg-curl" || exercise === "seated-leg-curl" || exercise === "leg-extension" || exercise === "decline-bench-press" || exercise === "pec-deck" || exercise === "machine-fly" || exercise === "machine-chest-press") {
         const restHip = rest.get(`thigh_${suffix}`)!;

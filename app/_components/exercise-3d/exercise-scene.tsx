@@ -1,5 +1,8 @@
 "use client";
 
+import { isUpperExercise } from "./upper-exercise-types";
+import { UpperExerciseEquipment, type UpperEquipmentHandle } from "./upper-exercise-equipment";
+import { createUpperExerciseMuscleMask } from "./upper-exercise-muscles";
 import { isBarbellRow } from "./row-variants";
 import { PULLING_EXERCISES } from "./scapular-motion";
 import { prepareHandReplacement } from "./gripping-hand-geometry";
@@ -516,6 +519,7 @@ function Athlete({
     true,
   );
   const bar = useRef<Group>(null);
+  const upperEquipment = useRef<UpperEquipmentHandle>(null);
   const grippingHands = useRef<GrippingHandsHandle>(null);
   const leftDumbbell = useRef<Group>(null);
   const rightDumbbell = useRef<Group>(null);
@@ -544,6 +548,7 @@ function Athlete({
       if (object instanceof Bone) bones.set(object.name, object);
       if (object instanceof SkinnedMesh) {
         object.geometry = object.geometry.clone();
+
         object.geometry.setAttribute("_pecdeckmuscles",createPecDeckHangCleanAttribute(object.geometry));
         object.geometry.setAttribute("_flymuscles", createPackedRowAttribute(object.geometry));
         object.geometry.setAttribute("_smithbenchmuscles", createSmithHighRowAttribute(object.geometry));
@@ -579,8 +584,9 @@ function Athlete({
   const invalidate = useThree((state) => state.invalidate);
   useEffect(() => {
     rig.setAppearance(exercise, highlighted);
+    rig.geometries.forEach(g=>g.setAttribute("_machinechestpressmuscles",isUpperExercise(exercise)?createUpperExerciseMuscleMask(g,exercise):createMachineChestPressMuscleMask(g)));
     rig.handReplacements.forEach((replacement) =>
-      replacement.setEnabled(PULLING_EXERCISES.includes(exercise)),
+      replacement.setEnabled(PULLING_EXERCISES.includes(exercise) || isUpperExercise(exercise)),
     );
     invalidate();
   }, [rig, exercise, highlighted, invalidate]);
@@ -597,6 +603,7 @@ function Athlete({
     const depth = getExerciseProgress(exercise,phase);
     const pose = rig.applyPose(exercise, depth);
     grippingHands.current?.update(pose);
+    upperEquipment.current?.update(pose);
     bar.current?.position.copy(pose.bar);
     if (exercise === "goblet-squat") {
       bar.current?.quaternion.copy(pose.tilt);
@@ -626,11 +633,11 @@ function Athlete({
   return (
     <>
       <primitive object={rig.scene} dispose={null} />
-      {PULLING_EXERCISES.includes(exercise) && (
+      {(PULLING_EXERCISES.includes(exercise) || isUpperExercise(exercise)) && (
         <GrippingHands ref={grippingHands} leftSupport={exercise === "one-arm-row"} />
       )}
       {exercise === "hip-abduction" && <HipAbductionSupplement athlete={rig.scene} material={rig.material} />}
-      {exercise === "one-arm-row" ? <><OneArmRowBench /><group ref={rightDumbbell}><Dumbbell /></group></> : exercise === "machine-row" ? <MachineRowMachine ref={machineRowMachine} /> : exercise === "cable-row" ? <CableRowMachine ref={cableRowMachine} /> : (exercise === "lat-pulldown" || exercise === "front-lat-pulldown") ? <LatPulldownMachine ref={latPulldownMachine} /> : exercise === "seated-calf" ? (<SeatedCalfMachine ref={seatedCalfMachine} />) : exercise === "standing-calf" ? (
+      {isUpperExercise(exercise) ? <UpperExerciseEquipment ref={upperEquipment} exercise={exercise} /> : exercise === "one-arm-row" ? <><OneArmRowBench /><group ref={rightDumbbell}><Dumbbell /></group></> : exercise === "machine-row" ? <MachineRowMachine ref={machineRowMachine} /> : exercise === "cable-row" ? <CableRowMachine ref={cableRowMachine} /> : (exercise === "lat-pulldown" || exercise === "front-lat-pulldown") ? <LatPulldownMachine ref={latPulldownMachine} /> : exercise === "seated-calf" ? (<SeatedCalfMachine ref={seatedCalfMachine} />) : exercise === "standing-calf" ? (
         <StandingCalfMachine ref={standingCalfMachine} />
       ) : exercise === "hip-abduction" ? (
         <HipAbductionMachine ref={hipAbductionMachine} />
@@ -702,6 +709,7 @@ function getCameraParams(
   exercise: ExerciseAnimation,
   view: SceneProps["view"],
 ): { position: [number, number, number]; target: [number, number, number] } {
+  if (isUpperExercise(exercise)) {const y=exercise==="dumbbell-shoulder-press"?.85:1.08; const target:[number,number,number]=[0,y,.05]; const distance=exercise==="military-press"?4.5:4; if(view==="front")return {position:[0,y+.6,distance],target}; if(view==="side")return {position:[distance,y+.35,.05],target}; if(view==="back")return {position:[0,y+.6,-distance],target};return {position:[distance*.7,y+.8,distance*.8],target};}
   if (exercise === "one-arm-row") {const target:[number,number,number]=[.05,.68,-.05];if(view==="front")return {position:[.05,1.8,3.7],target};if(view==="side")return {position:[3.4,1.6,-.05],target};if(view==="back")return {position:[.05,1.8,-3.8],target};return {position:[2.5,1.9,2.7],target};}
   if ((isBarbellRow(exercise))) { const target:[number,number,number]=[0,.85,.1]; if(view==="front")return {position:[0,1.7,4.3],target}; if(view==="side")return {position:[3.7,1.5,.1],target}; if(view==="back")return {position:[0,1.7,-4],target}; return {position:[2.8,1.9,3.1],target}; }
   if (exercise === "machine-row") {

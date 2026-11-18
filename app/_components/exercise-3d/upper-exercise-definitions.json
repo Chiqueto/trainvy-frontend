@@ -1,0 +1,184 @@
+{
+  "military-press": {
+    "name": "Desenvolvimento Militar",
+    "id": "00000000-0000-4000-8000-000000000123",
+    "equipment": "Barra livre, em pé, pegada pronada à frente da cabeça",
+    "muscles": {
+      "primary": [
+        "Deltoide anterior",
+        "Deltoide lateral"
+      ],
+      "secondary": [
+        "Tríceps braquial",
+        "Deltoide posterior",
+        "Peitoral maior",
+        "Trapézio",
+        "Serrátil anterior",
+        "Supraespinal",
+        "Infraespinal",
+        "Redondo menor",
+        "Subescapular",
+        "Flexor superficial dos dedos",
+        "Flexor ulnar do carpo",
+        "Extensor radial curto do carpo",
+        "Reto abdominal",
+        "Oblíquo externo",
+        "Eretores da coluna"
+      ]
+    },
+    "instructions": {
+      "description": "Desenvolvimento militar estrito em pé com barra, pegada pronada e passagem à frente da cabeça.",
+      "setup": "Fique em pé com os pés firmes, abdômen sustentado e barra à frente dos ombros. Segure um pouco além dos ombros, com antebraços próximos da vertical e cotovelos discretamente à frente.",
+      "execution": "Empurre a barra para cima mantendo joelhos e quadril estáveis. Deixe a barra passar à frente do rosto e terminar acima dos ombros, sem arquear a lombar. As escápulas acompanham com rotação superior e elevação natural. Desça com controle até a posição inicial.",
+      "tips": "Não transforme a execução em push press. Use amplitude confortável e deixe espaço para o rosto; não leve a barra atrás da nuca. Cores mostram participação ilustrativa, sem medir esforço ou EMG."
+    }
+  },
+  "dumbbell-shoulder-press": {
+    "name": "Desenvolvimento com Halteres",
+    "id": "00000000-0000-4000-8000-000000000124",
+    "equipment": "Dois halteres e banco com encosto vertical, execução sentada",
+    "muscles": {
+      "primary": [
+        "Deltoide anterior",
+        "Deltoide lateral"
+      ],
+      "secondary": [
+        "Tríceps braquial",
+        "Deltoide posterior",
+        "Peitoral maior",
+        "Trapézio",
+        "Serrátil anterior",
+        "Supraespinal",
+        "Infraespinal",
+        "Redondo menor",
+        "Subescapular",
+        "Flexor superficial dos dedos",
+        "Flexor ulnar do carpo",
+        "Extensor radial curto do carpo",
+        "Reto abdominal",
+        "Oblíquo externo",
+        "Eretores da coluna"
+      ]
+    },
+    "instructions": {
+      "description": "Desenvolvimento bilateral sentado com halteres, encosto vertical e pegada pronada; não é Arnold press.",
+      "setup": "Sente-se com quadril apoiado, costas sustentadas pelo encosto e pés no chão. Posicione os halteres ao lado da cabeça, cotovelos um pouco à frente do tronco e punhos alinhados.",
+      "execution": "Estenda os cotovelos e eleve os braços com trajetória própria de cada halter, aproximando-os moderadamente no alto sem bater um no outro. Permita que as escápulas acompanhem a elevação. Desça de forma controlada, sem perder os apoios nem exagerar a extensão lombar.",
+      "tips": "Não gire os halteres como no Arnold press. O banco é vertical nesta demonstração; ajuste carga e amplitude à sua mobilidade. Cores mostram participação ilustrativa, sem medir esforço ou EMG."
+    }
+  },
+  "lateral-raise": {
+    "name": "Elevação Lateral",
+    "id": "00000000-0000-4000-8000-000000000125",
+    "equipment": "Dois halteres leves, em pé",
+    "muscles": {
+      "primary": [
+        "Deltoide lateral"
+      ],
+      "secondary": [
+        "Deltoide anterior",
+        "Deltoide posterior",
+        "Trapézio",
+        "Serrátil anterior",
+        "Tríceps braquial",
+        "Supraespinal",
+        "Infraespinal",
+        "Redondo menor",
+        "Subescapular",
+        "Flexor superficial dos dedos",
+        "Flexor ulnar do carpo",
+        "Extensor radial curto do carpo",
+        "Reto abdominal",
+        "Oblíquo externo",
+        "Eretores da coluna"
+      ]
+    },
+    "instructions": {
+      "description": "Elevação lateral em pé com halteres, cotovelos levemente flexionados e braços discretamente à frente do plano frontal.",
+      "setup": "Fique em pé com pés firmes, halteres junto às laterais e cotovelos ligeiramente flexionados. Mantenha tronco estável e punhos confortáveis.",
+      "execution": "Eleve os braços para os lados e um pouco à frente até perto da altura dos ombros, mantendo a pequena flexão dos cotovelos. Permita o acompanhamento das escápulas, sem dar impulso com o tronco. Faça uma pausa breve e desça com controle.",
+      "tips": "Evite o gesto de derramar água com polegares forçados para baixo. A amplitude até perto dos ombros é ilustrativa; não prenda as escápulas para baixo. Cores mostram participação ilustrativa, sem medir esforço ou EMG."
+    }
+  },
+  "barbell-curl": {
+    "name": "Rosca Direta com Barra",
+    "id": "00000000-0000-4000-8000-000000000127",
+    "equipment": "Barra reta, pegada supinada, em pé",
+    "muscles": {
+      "primary": [
+        "Bíceps braquial",
+        "Braquial"
+      ],
+      "secondary": [
+        "Braquiorradial",
+        "Deltoide anterior",
+        "Flexor superficial dos dedos",
+        "Flexor ulnar do carpo",
+        "Extensor radial curto do carpo",
+        "Reto abdominal",
+        "Oblíquo externo",
+        "Eretores da coluna"
+      ]
+    },
+    "instructions": {
+      "description": "Rosca bilateral em pé com barra reta e pegada supinada; braços próximos às costelas.",
+      "setup": "Fique em pé com os pés firmes e segure a barra na largura confortável dos ombros, com palmas para a frente. Deixe os braços próximos ao tronco e os punhos alinhados.",
+      "execution": "Flexione os cotovelos para elevar a barra sem lançar o quadril ou levar os cotovelos muito à frente. Pare antes de perder o alinhamento do punho. Desça devagar até quase estender os cotovelos, sem bater a barra nas coxas.",
+      "tips": "Mantenha a pegada supinada durante todo o percurso. Bíceps, braquial e braquiorradial trabalham juntos; esta execução não isola uma cabeça do bíceps. Cores mostram participação ilustrativa, sem medir esforço ou EMG."
+    }
+  },
+  "legacy-barbell-curl": {
+    "name": "Rosca Direta",
+    "id": "00000000-0000-4000-8000-000000000128",
+    "equipment": "Barra reta, pegada supinada, em pé",
+    "muscles": {
+      "primary": [
+        "Bíceps braquial",
+        "Braquial"
+      ],
+      "secondary": [
+        "Braquiorradial",
+        "Deltoide anterior",
+        "Flexor superficial dos dedos",
+        "Flexor ulnar do carpo",
+        "Extensor radial curto do carpo",
+        "Reto abdominal",
+        "Oblíquo externo",
+        "Eretores da coluna"
+      ]
+    },
+    "instructions": {
+      "description": "Rosca bilateral em pé com barra reta e pegada supinada; braços próximos às costelas.",
+      "setup": "Fique em pé com os pés firmes e segure a barra na largura confortável dos ombros, com palmas para a frente. Deixe os braços próximos ao tronco e os punhos alinhados.",
+      "execution": "Flexione os cotovelos para elevar a barra sem lançar o quadril ou levar os cotovelos muito à frente. Pare antes de perder o alinhamento do punho. Desça devagar até quase estender os cotovelos, sem bater a barra nas coxas.",
+      "tips": "Mantenha a pegada supinada durante todo o percurso. Bíceps, braquial e braquiorradial trabalham juntos; esta execução não isola uma cabeça do bíceps. Cores mostram participação ilustrativa, sem medir esforço ou EMG."
+    }
+  },
+  "hammer-curl": {
+    "name": "Rosca Martelo",
+    "id": "00000000-0000-4000-8000-000000000129",
+    "equipment": "Dois halteres, pegada neutra bilateral, em pé",
+    "muscles": {
+      "primary": [
+        "Bíceps braquial",
+        "Braquial",
+        "Braquiorradial"
+      ],
+      "secondary": [
+        "Deltoide anterior",
+        "Flexor superficial dos dedos",
+        "Flexor ulnar do carpo",
+        "Extensor radial curto do carpo",
+        "Reto abdominal",
+        "Oblíquo externo",
+        "Eretores da coluna"
+      ]
+    },
+    "instructions": {
+      "description": "Rosca martelo bilateral em pé com halteres e pegada neutra, sem alternância nem supinação dinâmica.",
+      "setup": "Fique em pé com halteres ao lado do corpo, palmas voltadas uma para a outra e polegares orientados para a frente. Mantenha os braços próximos às costelas e punhos firmes.",
+      "execution": "Flexione os cotovelos mantendo as palmas voltadas uma para a outra durante toda a subida. Os halteres mudam de inclinação junto com os antebraços; não gire o punho para supinar. Desça com controle, sem impulso do quadril ou balanço do tronco.",
+      "tips": "Braquial, bíceps e braquiorradial participam conjuntamente. A pegada neutra diferencia o movimento, mas não elimina o bíceps nem garante maior ativação medida de um músculo. Cores mostram participação ilustrativa, sem medir esforço ou EMG."
+    }
+  }
+}

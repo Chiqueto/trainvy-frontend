@@ -1,3 +1,4 @@
+import { UPPER_EXERCISE_DEFINITIONS } from "./upper-exercise-definitions";
 import { BARBELL_ROW_DEFINITIONS, BARBELL_ROW_ALIASES } from "./row-definitions";
 import { HANG_POWER_CLEAN_INSTRUCTIONS } from "./hang-power-clean-instructions";
 import { SUMO_DUMBBELL_INSTRUCTIONS } from "./sumo-dumbbell-instructions";
@@ -29,6 +30,12 @@ import { MACHINE_ROW_INSTRUCTIONS } from "./machine-row-instructions";
 
 import { ONE_ARM_ROW_INSTRUCTIONS } from "./one-arm-row-instructions";
 export type ExerciseAnimation =
+ | "military-press"
+ | "dumbbell-shoulder-press"
+ | "lateral-raise"
+ | "barbell-curl"
+ | "legacy-barbell-curl"
+ | "hammer-curl"
  | "high-supinated-bent-row"
  | "yates-row"
  | "supinated-yates-row"
@@ -85,6 +92,7 @@ export interface ExerciseDefinition {
 
 export const EXERCISE_ANIMATIONS = {
   ...BARBELL_ROW_DEFINITIONS,
+  ...UPPER_EXERCISE_DEFINITIONS,
   "one-arm-row": {name:"Remada Unilateral com Halteres",id:"00000000-0000-4000-8000-000000000138",equipment:"Um halter, banco plano e apoio de mão/joelho opostos",instructions:ONE_ARM_ROW_INSTRUCTIONS,muscles:{primary:["Dorsal, redondo maior, trapézio médio e romboides do lado do halter"],secondary:["Serrátil anterior (controle escapular)","Braço e ombro da puxada, pegada e tronco","Peitoral, deltoide anterior e tríceps do lado de apoio","Glúteos, posteriores, quadríceps e abdutores (sustentação)"]}},
   "machine-row": {name:"Remada Sentada na Máquina",id:"43025392-0466-46e7-82ab-27888d53f929",equipment:"Máquina bilateral de alavancas com apoio peitoral e pegadas neutras",instructions:MACHINE_ROW_INSTRUCTIONS,muscles:{primary:["Latíssimo do dorso e redondo maior","Trapézio médio e romboides"],secondary:["Serrátil anterior (controle escapular)","Bíceps, braquial e braquiorradial","Deltoide posterior e infraespinal","Trapézio superior/inferior","Pegada e estabilizadores do tronco"]}},
   "cable-row": { name:"Remada Baixa no Cabo com Triângulo", id:"120f29ac-733c-478b-8aa9-a3f4c22f5e70", equipment:"Polia baixa com triângulo, banco e plataforma para os pés", instructions:CABLE_ROW_INSTRUCTIONS, muscles:{primary:["Latíssimo do dorso e redondo maior","Trapézio médio e romboides"],secondary:["Serrátil anterior (controle escapular)","Bíceps, braquial e braquiorradial","Deltoide posterior e infraespinal","Trapézio superior/inferior","Pegada, abdominais e eretores"]} },
@@ -304,6 +312,8 @@ export function getExerciseAnimation(
   id?: string | null,
   name?: string | null,
 ): ExerciseAnimation | null {
+  const upperById = Object.entries(UPPER_EXERCISE_DEFINITIONS).find(([, definition]) => definition.id === id);
+  if (upperById) return upperById[0] as ExerciseAnimation;
   if (id === EXERCISE_ANIMATIONS["sumo-dumbbell-squat"].id) return "sumo-dumbbell-squat";
   if (id === EXERCISE_ANIMATIONS["goblet-squat"].id) return "goblet-squat";
   if (id === EXERCISE_ANIMATIONS["hip-thrust"].id) return "hip-thrust";
@@ -381,6 +391,9 @@ export function getExerciseAnimation(
     if (["remada curvada com barra","bent over barbell row","barbell bent-over row"].includes(normalized)) return "bent-row";
     if (["remada sentada na maquina","remada bilateral na maquina com apoio peitoral","chest supported machine row"].includes(normalized)) return "machine-row";
     if (["remada baixa no cabo com triangulo","remada baixa no triangulo","seated cable row with triangle"].includes(normalized)) return "cable-row";
+    const upper = Object.entries(UPPER_EXERCISE_DEFINITIONS).find(([, d]) => d.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() === normalized);
+    if (normalized === "rosca direta") return "barbell-curl";
+    if (upper) return upper[0] as ExerciseAnimation;
     if (normalized === "puxada frontal") return "lat-pulldown";
     if (normalized === "puxada frontal no cabo (pronada)")
       return "lat-pulldown";

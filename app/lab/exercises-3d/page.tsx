@@ -23,6 +23,12 @@ import type { GetExerciseMedia200 } from "@/app/_lib/api/fetch-generated";
 import { Button } from "@/components/ui/button";
 
 const LAB_MEDIA_DATA: Record<ExerciseAnimation, GetExerciseMedia200> = {
+  "military-press": { exerciseId: EXERCISE_ANIMATIONS["military-press"].id, hasMedia:false, mediaType:null, startImagePath:null,endImagePath:null,motionPath:null,attributionName:null,attributionUrl:null,instructions: EXERCISE_ANIMATIONS["military-press"].instructions },
+  "dumbbell-shoulder-press": { exerciseId: EXERCISE_ANIMATIONS["dumbbell-shoulder-press"].id, hasMedia:false, mediaType:null, startImagePath:null,endImagePath:null,motionPath:null,attributionName:null,attributionUrl:null,instructions: EXERCISE_ANIMATIONS["dumbbell-shoulder-press"].instructions },
+  "lateral-raise": { exerciseId: EXERCISE_ANIMATIONS["lateral-raise"].id, hasMedia:false, mediaType:null, startImagePath:null,endImagePath:null,motionPath:null,attributionName:null,attributionUrl:null,instructions: EXERCISE_ANIMATIONS["lateral-raise"].instructions },
+  "barbell-curl": { exerciseId: EXERCISE_ANIMATIONS["barbell-curl"].id, hasMedia:false, mediaType:null, startImagePath:null,endImagePath:null,motionPath:null,attributionName:null,attributionUrl:null,instructions: EXERCISE_ANIMATIONS["barbell-curl"].instructions },
+  "legacy-barbell-curl": { exerciseId: EXERCISE_ANIMATIONS["legacy-barbell-curl"].id, hasMedia:false, mediaType:null, startImagePath:null,endImagePath:null,motionPath:null,attributionName:null,attributionUrl:null,instructions: EXERCISE_ANIMATIONS["legacy-barbell-curl"].instructions },
+  "hammer-curl": { exerciseId: EXERCISE_ANIMATIONS["hammer-curl"].id, hasMedia:false, mediaType:null, startImagePath:null,endImagePath:null,motionPath:null,attributionName:null,attributionUrl:null,instructions: EXERCISE_ANIMATIONS["hammer-curl"].instructions },
   "high-supinated-bent-row": {exerciseId:EXERCISE_ANIMATIONS["high-supinated-bent-row"].id,hasMedia:false,mediaType:null,startImagePath:null,endImagePath:null,motionPath:null,attributionName:null,attributionUrl:null,instructions:EXERCISE_ANIMATIONS["high-supinated-bent-row"].instructions},
   "yates-row": {exerciseId:EXERCISE_ANIMATIONS["yates-row"].id,hasMedia:false,mediaType:null,startImagePath:null,endImagePath:null,motionPath:null,attributionName:null,attributionUrl:null,instructions:EXERCISE_ANIMATIONS["yates-row"].instructions},
   "supinated-yates-row": {exerciseId:EXERCISE_ANIMATIONS["supinated-yates-row"].id,hasMedia:false,mediaType:null,startImagePath:null,endImagePath:null,motionPath:null,attributionName:null,attributionUrl:null,instructions:EXERCISE_ANIMATIONS["supinated-yates-row"].instructions},
@@ -211,6 +217,12 @@ export default function Exercise3DLab() {
       cues: string[];
     }
   > = {
+    "military-press": {primary:EXERCISE_ANIMATIONS["military-press"].muscles.primary.join(", "),secondary:EXERCISE_ANIMATIONS["military-press"].muscles.secondary.join(", "),cadence:"Descida controlada, pausa breve e subida suave.",cues:[EXERCISE_ANIMATIONS["military-press"].instructions.setup,EXERCISE_ANIMATIONS["military-press"].instructions.execution]},
+    "dumbbell-shoulder-press": {primary:EXERCISE_ANIMATIONS["dumbbell-shoulder-press"].muscles.primary.join(", "),secondary:EXERCISE_ANIMATIONS["dumbbell-shoulder-press"].muscles.secondary.join(", "),cadence:"Descida controlada, pausa breve e subida suave.",cues:[EXERCISE_ANIMATIONS["dumbbell-shoulder-press"].instructions.setup,EXERCISE_ANIMATIONS["dumbbell-shoulder-press"].instructions.execution]},
+    "lateral-raise": {primary:EXERCISE_ANIMATIONS["lateral-raise"].muscles.primary.join(", "),secondary:EXERCISE_ANIMATIONS["lateral-raise"].muscles.secondary.join(", "),cadence:"Descida controlada, pausa breve e subida suave.",cues:[EXERCISE_ANIMATIONS["lateral-raise"].instructions.setup,EXERCISE_ANIMATIONS["lateral-raise"].instructions.execution]},
+    "barbell-curl": {primary:EXERCISE_ANIMATIONS["barbell-curl"].muscles.primary.join(", "),secondary:EXERCISE_ANIMATIONS["barbell-curl"].muscles.secondary.join(", "),cadence:"Descida controlada, pausa breve e subida suave.",cues:[EXERCISE_ANIMATIONS["barbell-curl"].instructions.setup,EXERCISE_ANIMATIONS["barbell-curl"].instructions.execution]},
+    "legacy-barbell-curl": {primary:EXERCISE_ANIMATIONS["legacy-barbell-curl"].muscles.primary.join(", "),secondary:EXERCISE_ANIMATIONS["legacy-barbell-curl"].muscles.secondary.join(", "),cadence:"Descida controlada, pausa breve e subida suave.",cues:[EXERCISE_ANIMATIONS["legacy-barbell-curl"].instructions.setup,EXERCISE_ANIMATIONS["legacy-barbell-curl"].instructions.execution]},
+    "hammer-curl": {primary:EXERCISE_ANIMATIONS["hammer-curl"].muscles.primary.join(", "),secondary:EXERCISE_ANIMATIONS["hammer-curl"].muscles.secondary.join(", "),cadence:"Descida controlada, pausa breve e subida suave.",cues:[EXERCISE_ANIMATIONS["hammer-curl"].instructions.setup,EXERCISE_ANIMATIONS["hammer-curl"].instructions.execution]},
     "one-arm-row": {primary:EXERCISE_ANIMATIONS["one-arm-row"].muscles.primary.join(", "),secondary:EXERCISE_ANIMATIONS["one-arm-row"].muscles.secondary.join(", "),cadence:"Descida controlada, pausa e puxada suave.",cues:["Mão e joelho opostos apoiados no banco.","Tronco firme e cotovelo em direção ao quadril.","Repita do outro lado após terminar."]},
     "generic-bent-row": {primary:EXERCISE_ANIMATIONS["generic-bent-row"].muscles.primary.join(", "),secondary:EXERCISE_ANIMATIONS["generic-bent-row"].muscles.secondary.join(", "),cadence:"Descida controlada, pausa e puxada suave.",cues:["Quadril recuado e pés apoiados.","Tronco estável e cotovelos para trás."]},
     "supinated-bent-row": {primary:EXERCISE_ANIMATIONS["supinated-bent-row"].muscles.primary.join(", "),secondary:EXERCISE_ANIMATIONS["supinated-bent-row"].muscles.secondary.join(", "),cadence:"Descida controlada, pausa e puxada suave.",cues:["Quadril recuado e pés apoiados.","Tronco estável e cotovelos para trás."]},
@@ -435,7 +447,7 @@ export default function Exercise3DLab() {
         aria-label="Selecionar exercício"
       >
         {(
-          Object.entries(EXERCISE_ANIMATIONS).filter(([key]) => key !== "generic-bent-row" && key !== "front-lat-pulldown",
+          Object.entries(EXERCISE_ANIMATIONS).filter(([key]) => key !== "generic-bent-row" && key !== "front-lat-pulldown" && key !== "legacy-barbell-curl",
           ) as [
             ExerciseAnimation,
             ExerciseDefinition,

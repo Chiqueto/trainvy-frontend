@@ -94,6 +94,7 @@ export function DemonstrationFields({
         >
           <option value="">Usar demonstração padrão, quando disponível</option>
           {Object.entries(EXERCISE_ANIMATIONS)
+            .filter(([key]) => key !== "legacy-barbell-curl" || value.animationKey === key)
             .sort((a, b) => a[1].name.localeCompare(b[1].name, "pt-BR"))
             .map(([key, exercise]) => (
               <option key={key} value={key}>

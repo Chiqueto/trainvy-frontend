@@ -1,3 +1,4 @@
+import { isUpperExercise } from "./upper-exercise-types";
 import { Matrix4, Quaternion, Vector3 } from "three";
 import type { ExerciseAnimation } from "./exercises";
 import { PULLING_EXERCISES } from "./scapular-motion";
@@ -24,7 +25,7 @@ export function getPowerGripRotation(
 }
 export function usesPowerGrip(exercise: ExerciseAnimation, side: number) {
   return (
-    PULLING_EXERCISES.includes(exercise) &&
+    (PULLING_EXERCISES.includes(exercise) || isUpperExercise(exercise)) &&
     !(exercise === "one-arm-row" && side < 0)
   );
 }
