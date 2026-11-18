@@ -233,6 +233,15 @@ export default function Exercise3DLab() {
     "lateral-raise": {primary:EXERCISE_ANIMATIONS["lateral-raise"].muscles.primary.join(", "),secondary:EXERCISE_ANIMATIONS["lateral-raise"].muscles.secondary.join(", "),cadence:"Descida controlada, pausa breve e subida suave.",cues:[EXERCISE_ANIMATIONS["lateral-raise"].instructions.setup,EXERCISE_ANIMATIONS["lateral-raise"].instructions.execution]},
     "barbell-curl": {primary:EXERCISE_ANIMATIONS["barbell-curl"].muscles.primary.join(", "),secondary:EXERCISE_ANIMATIONS["barbell-curl"].muscles.secondary.join(", "),cadence:"Descida controlada, pausa breve e subida suave.",cues:[EXERCISE_ANIMATIONS["barbell-curl"].instructions.setup,EXERCISE_ANIMATIONS["barbell-curl"].instructions.execution]},
     "legacy-barbell-curl": {primary:EXERCISE_ANIMATIONS["legacy-barbell-curl"].muscles.primary.join(", "),secondary:EXERCISE_ANIMATIONS["legacy-barbell-curl"].muscles.secondary.join(", "),cadence:"Descida controlada, pausa breve e subida suave.",cues:[EXERCISE_ANIMATIONS["legacy-barbell-curl"].instructions.setup,EXERCISE_ANIMATIONS["legacy-barbell-curl"].instructions.execution]},
+    "preacher-curl": {
+      primary: EXERCISE_ANIMATIONS["preacher-curl"].muscles.primary.join(", "),
+      secondary: EXERCISE_ANIMATIONS["preacher-curl"].muscles.secondary.join(", "),
+      cadence: "Descida controlada, pausa breve e subida suave.",
+      cues: [
+        EXERCISE_ANIMATIONS["preacher-curl"].instructions.setup,
+        EXERCISE_ANIMATIONS["preacher-curl"].instructions.execution,
+      ],
+    },
     "hammer-curl": {primary:EXERCISE_ANIMATIONS["hammer-curl"].muscles.primary.join(", "),secondary:EXERCISE_ANIMATIONS["hammer-curl"].muscles.secondary.join(", "),cadence:"Descida controlada, pausa breve e subida suave.",cues:[EXERCISE_ANIMATIONS["hammer-curl"].instructions.setup,EXERCISE_ANIMATIONS["hammer-curl"].instructions.execution]},
     "one-arm-row": {primary:EXERCISE_ANIMATIONS["one-arm-row"].muscles.primary.join(", "),secondary:EXERCISE_ANIMATIONS["one-arm-row"].muscles.secondary.join(", "),cadence:"Descida controlada, pausa e puxada suave.",cues:["Mão e joelho opostos apoiados no banco.","Tronco firme e cotovelo em direção ao quadril.","Repita do outro lado após terminar."]},
     "generic-bent-row": {primary:EXERCISE_ANIMATIONS["generic-bent-row"].muscles.primary.join(", "),secondary:EXERCISE_ANIMATIONS["generic-bent-row"].muscles.secondary.join(", "),cadence:"Descida controlada, pausa e puxada suave.",cues:["Quadril recuado e pés apoiados.","Tronco estável e cotovelos para trás."]},
