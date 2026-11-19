@@ -53,6 +53,7 @@ export const UpperExerciseEquipment = forwardRef<
   const groups = useRef<(Group | null)[]>([]),
     barbell =
       exercise === "preacher-curl" ||
+      exercise === "skull-crusher" ||
       exercise === "military-press" ||
       exercise === "barbell-curl" ||
       exercise === "legacy-barbell-curl";
@@ -84,7 +85,7 @@ export const UpperExerciseEquipment = forwardRef<
           <Weight
             barbell={barbell}
             small={exercise === "lateral-raise"}
-            preacher={exercise === "preacher-curl"}
+            preacher={exercise === "preacher-curl" || exercise === "skull-crusher"}
           />
         </group>
       ))}

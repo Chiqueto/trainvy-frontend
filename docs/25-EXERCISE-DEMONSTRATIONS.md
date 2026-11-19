@@ -21,3 +21,20 @@ A exclusividade é dentro do Trainvy: links públicos ou não listados continuam
 Migration aditiva: `20261117150000_exercise_demonstrations`. Aplicar na API antes de publicar o código. O contrato Zod/OpenAPI e cliente Orval foram atualizados. Upload de vídeo permanece futuro.
 
 Testes cobrem URLs maliciosas, formatos de link, referência 3D explícita, carregamento do player mediante clique, ownership, personalizações de coaches diferentes, aluno sem vínculo, revogação, preservação/remoção e imutabilidade do catálogo global.
+
+## Miniaturas das animações 3D
+
+Sempre que uma execução 3D for criada ou revisada, regenere a miniatura no próprio
+visualizador. No frontend, com o servidor local rodando, use
+`node scripts/capture-exercise-thumbnails.mjs http://localhost:3000 <chave>=<fase>`.
+A fase vai de 0 a menos de 1 e o padrão é 0,5. O comando usa o Chrome e gera
+um WebP de 288 × 288 em `scripts/assets/exercise-thumbnails/`. Em laboratório
+com autenticação, indique o estado de uma sessão de teste autorizada em
+`TRAINVY_THUMBNAIL_STORAGE_STATE` (arquivo local do Playwright).
+
+Confira o enquadramento, os apoios, o equipamento e os destaques anatômicos
+no frame. A partir da API, rode
+`npm run media:upload-thumbnails -- <caminho-do-frontend> --animation=<chave>`
+para validar o arquivo e repita com `--apply` para enviar ao bucket configurado
+e vincular o objeto ao UUID do catálogo. Repita `--animation=<chave>` para cada
+execução do lote. Confira a leitura pelo endpoint de miniatura do exercício.

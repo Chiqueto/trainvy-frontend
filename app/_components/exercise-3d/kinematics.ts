@@ -35,7 +35,7 @@ const restTilt = new Quaternion();
 const hipLocal = v(0, -0.28, 0.08);
 export const ARM_LENGTH = v(0.08, -0.284, -0.012).length();
 export const FOREARM_LENGTH = v(0.025, -0.265, 0.03).length();
-export const INCLINE_BENCH_ANGLE = Math.PI / 6; // 30° conforme literatura biomecânica para maximizar feixe clavicular sem sobrecarga excessiva no deltoide anterior
+export const INCLINE_BENCH_ANGLE = Math.PI / 6; // Illustrative bench setting (+30°).
 export const DECLINE_BENCH_ANGLE = -Math.PI / 10; // Existing illustrative bench setting (-18°), not a universal optimum.
 export const DECLINE_ROLLER_RADIUS = 0.055;
 const DECLINE_BAR_TOP = v(0, 0.88, -0.06);
@@ -483,7 +483,7 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
         .sub(restShoulder)
         .cross(v(0, 0, 1))
         .normalize();
-      const fixedUpperArm = exercise === "rope-pushdown" || exercise === "preacher-curl" || exercise === "barbell-curl" || exercise === "legacy-barbell-curl" || exercise === "hammer-curl";
+      const fixedUpperArm = exercise === "straight-bar-pushdown" || exercise === "rope-pushdown" || exercise === "preacher-curl" || exercise === "barbell-curl" || exercise === "legacy-barbell-curl" || exercise === "hammer-curl";
       const posedNormal = elbow
         .clone()
         .sub(shoulder)

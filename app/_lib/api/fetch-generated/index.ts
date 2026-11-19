@@ -11200,6 +11200,11 @@ export type ListCoachAthleteProgressExercises200ItemDemonstration = {
     | "legacy-barbell-curl"
     | "hammer-curl"
     | "rope-pushdown"
+    | "skull-crusher"
+    | "straight-bar-pushdown"
+    | "decline-dumbbell-press"
+    | "incline-smith-press"
+    | "decline-smith-press"
     | "preacher-curl"
     | "high-supinated-bent-row"
     | "yates-row"
@@ -15834,6 +15839,11 @@ export const SaveExerciseDemonstrationBodyAnimationKey = {
   "legacy-barbell-curl": "legacy-barbell-curl",
   "hammer-curl": "hammer-curl",
   "rope-pushdown": "rope-pushdown",
+  "skull-crusher": "skull-crusher",
+  "straight-bar-pushdown": "straight-bar-pushdown",
+  "decline-dumbbell-press": "decline-dumbbell-press",
+  "incline-smith-press": "incline-smith-press",
+  "decline-smith-press": "decline-smith-press",
   "preacher-curl": "preacher-curl",
   "high-supinated-bent-row": "high-supinated-bent-row",
   "yates-row": "yates-row",
@@ -15903,6 +15913,11 @@ export const SaveExerciseDemonstration200AnimationKey = {
   "legacy-barbell-curl": "legacy-barbell-curl",
   "hammer-curl": "hammer-curl",
   "rope-pushdown": "rope-pushdown",
+  "skull-crusher": "skull-crusher",
+  "straight-bar-pushdown": "straight-bar-pushdown",
+  "decline-dumbbell-press": "decline-dumbbell-press",
+  "incline-smith-press": "incline-smith-press",
+  "decline-smith-press": "decline-smith-press",
   "preacher-curl": "preacher-curl",
   "high-supinated-bent-row": "high-supinated-bent-row",
   "yates-row": "yates-row",
@@ -16063,6 +16078,11 @@ export type ListExercises200ItemDemonstration = {
     | "legacy-barbell-curl"
     | "hammer-curl"
     | "rope-pushdown"
+    | "skull-crusher"
+    | "straight-bar-pushdown"
+    | "decline-dumbbell-press"
+    | "incline-smith-press"
+    | "decline-smith-press"
     | "preacher-curl"
     | "high-supinated-bent-row"
     | "yates-row"
@@ -16233,6 +16253,11 @@ export const CreateExerciseBodyDemonstrationAnimationKey = {
   "legacy-barbell-curl": "legacy-barbell-curl",
   "hammer-curl": "hammer-curl",
   "rope-pushdown": "rope-pushdown",
+  "skull-crusher": "skull-crusher",
+  "straight-bar-pushdown": "straight-bar-pushdown",
+  "decline-dumbbell-press": "decline-dumbbell-press",
+  "incline-smith-press": "incline-smith-press",
+  "decline-smith-press": "decline-smith-press",
   "preacher-curl": "preacher-curl",
   "high-supinated-bent-row": "high-supinated-bent-row",
   "yates-row": "yates-row",
@@ -16391,6 +16416,11 @@ export type CreateExercise201Demonstration = {
     | "legacy-barbell-curl"
     | "hammer-curl"
     | "rope-pushdown"
+    | "skull-crusher"
+    | "straight-bar-pushdown"
+    | "decline-dumbbell-press"
+    | "incline-smith-press"
+    | "decline-smith-press"
     | "preacher-curl"
     | "high-supinated-bent-row"
     | "yates-row"
@@ -16609,6 +16639,11 @@ export type UpdateExerciseMuscles200Demonstration = {
     | "legacy-barbell-curl"
     | "hammer-curl"
     | "rope-pushdown"
+    | "skull-crusher"
+    | "straight-bar-pushdown"
+    | "decline-dumbbell-press"
+    | "incline-smith-press"
+    | "decline-smith-press"
     | "preacher-curl"
     | "high-supinated-bent-row"
     | "yates-row"
@@ -16743,6 +16778,11 @@ export type GetExerciseMedia200Demonstration = {
     | "legacy-barbell-curl"
     | "hammer-curl"
     | "rope-pushdown"
+    | "skull-crusher"
+    | "straight-bar-pushdown"
+    | "decline-dumbbell-press"
+    | "incline-smith-press"
+    | "decline-smith-press"
     | "preacher-curl"
     | "high-supinated-bent-row"
     | "yates-row"
@@ -16903,6 +16943,11 @@ export const UpdateCustomExerciseBodyDemonstrationAnimationKey = {
   "legacy-barbell-curl": "legacy-barbell-curl",
   "hammer-curl": "hammer-curl",
   "rope-pushdown": "rope-pushdown",
+  "skull-crusher": "skull-crusher",
+  "straight-bar-pushdown": "straight-bar-pushdown",
+  "decline-dumbbell-press": "decline-dumbbell-press",
+  "incline-smith-press": "incline-smith-press",
+  "decline-smith-press": "decline-smith-press",
   "preacher-curl": "preacher-curl",
   "high-supinated-bent-row": "high-supinated-bent-row",
   "yates-row": "yates-row",
@@ -17061,6 +17106,11 @@ export type UpdateCustomExercise200Demonstration = {
     | "legacy-barbell-curl"
     | "hammer-curl"
     | "rope-pushdown"
+    | "skull-crusher"
+    | "straight-bar-pushdown"
+    | "decline-dumbbell-press"
+    | "incline-smith-press"
+    | "decline-smith-press"
     | "preacher-curl"
     | "high-supinated-bent-row"
     | "yates-row"

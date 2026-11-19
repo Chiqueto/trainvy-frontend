@@ -10,7 +10,7 @@
  * - Travas de segurança inferiores reguláveis com molas amortecedoras.
  * - Pinos/dentes de engate ao longo de cada coluna para travamento dos ganchos da barra.
  */
-export function SmithMachineFrame() {
+export function SmithMachineFrame({ railOffset = 0, stopHeight = 0.56 }: { railOffset?: number; stopHeight?: number } = {}) {
   const railX = 0.75;
   const railZ = -0.035;
   const columnZ = -0.11;
@@ -19,7 +19,7 @@ export function SmithMachineFrame() {
   ];
 
   return (
-    <group>
+    <group position={[0, 0, railOffset]}>
       {/* Trilhos Guia Verticais de Aço Cromado Polido (onde os mancais da barra deslizam) */}
       {[-railX, railX].map((x) => (
         <group key={`rail-${x}`}>
@@ -56,7 +56,7 @@ export function SmithMachineFrame() {
           </mesh>
 
           {/* Batentes/Travas de Segurança Inferiores com Molas Amortecedoras */}
-          <group position={[x, 0.56, railZ]}>
+          <group position={[x, stopHeight, railZ]}>
             {/* Colar de travamento anodizado */}
             <mesh position={[0, 0.03, 0]} castShadow>
               <cylinderGeometry args={[0.025, 0.025, 0.04, 20]} />

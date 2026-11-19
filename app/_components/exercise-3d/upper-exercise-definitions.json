@@ -225,5 +225,110 @@
       "execution": "Estenda os cotovelos para levar a corda em direção às coxas e deixe as pontas se separarem ligeiramente. Faça uma pausa breve e deixe a corda subir com controle até que os cotovelos estejam perto de 90°.",
       "tips": "Mantenha os punhos alinhados. Use apenas uma abertura que permita manter os braços junto ao tronco. As cores mostram participação muscular ilustrativa, sem medição de EMG."
     }
+  },
+  "skull-crusher": {
+    "id": "00000000-0000-4000-8000-000000000132",
+    "name": "Tríceps Testa",
+    "equipment": "Banco plano e barra curta",
+    "instructions": {
+      "description": "Extensão bilateral dos cotovelos deitado, com barra curta e pegada pronada.",
+      "setup": "Deite-se no banco com cabeça, costas e quadril apoiados. Plante os pés e segure a barra com as mãos na largura dos ombros.",
+      "execution": "Com os braços ligeiramente inclinados para trás, flexione os cotovelos e aproxime a barra da testa. Faça uma pausa breve e estenda os cotovelos mantendo os braços estáveis.",
+      "tips": "Mantenha os punhos alinhados e deixe espaço entre a barra e a cabeça. As cores indicam participação muscular ilustrativa."
+    },
+    "muscles": {
+      "primary": [
+        "Tríceps braquial: cabeças longa, lateral e medial"
+      ],
+      "secondary": [
+        "Ancôneo",
+        "Deltoide anterior",
+        "Músculos da pegada e do punho"
+      ]
+    }
+  },
+  "straight-bar-pushdown": {
+    "id": "044421ae-d368-47a5-83e0-2af37dc61131",
+    "name": "Tríceps no Cabo com Barra Reta",
+    "equipment": "Polia alta, barra reta e pegada pronada",
+    "instructions": {
+      "description": "Extensão bilateral dos cotovelos em pé com barra reta na polia alta.",
+      "setup": "Prenda a barra reta na polia alta. Fique de frente para a torre, com os pés firmes e a pegada pronada na largura dos ombros.",
+      "execution": "Estenda os cotovelos e leve a barra em direção às coxas. Retorne devagar até aproximadamente 90° de flexão, faça uma pausa breve e repita.",
+      "tips": "Mantenha os braços junto ao tronco e os punhos alinhados durante todo o arco. As cores indicam participação muscular ilustrativa."
+    },
+    "muscles": {
+      "primary": [
+        "Tríceps braquial: cabeças longa, lateral e medial"
+      ],
+      "secondary": [
+        "Ancôneo",
+        "Músculos da pegada e do punho",
+        "Abdominais e eretores da coluna"
+      ]
+    }
+  },
+  "decline-dumbbell-press": {
+    "id": "d8e07a71-16ec-4ed8-8236-861a26c869e8",
+    "name": "Supino Declinado com Halteres",
+    "equipment": "Banco declinado a 18° com rolos e dois halteres",
+    "instructions": {
+      "description": "Supino com halteres em banco declinado, com cabeça abaixo do quadril.",
+      "setup": "Prenda as pernas nos rolos, apoie cabeça, costas e quadril e posicione os halteres sobre o peito.",
+      "execution": "Desça os halteres para os lados da parte inferior do peito. Faça uma pausa breve e suba aproximando as cargas, deixando um espaço entre elas no topo.",
+      "tips": "Mantenha os punhos sobre os cotovelos no ponto baixo e os apoios firmes durante a repetição. As cores indicam participação muscular ilustrativa."
+    },
+    "muscles": {
+      "primary": [
+        "Peitoral maior: porções clavicular e esternocostal"
+      ],
+      "secondary": [
+        "Tríceps braquial",
+        "Deltoide anterior",
+        "Bíceps braquial e músculos da pegada"
+      ]
+    }
+  },
+  "incline-smith-press": {
+    "id": "cf30614a-819d-42ee-8dfd-5564f9ea9da2",
+    "name": "Supino Inclinado no Smith",
+    "equipment": "Banco inclinado a 30° e máquina Smith de trilhos verticais",
+    "instructions": {
+      "description": "Supino inclinado com barra guiada em trilhos verticais.",
+      "setup": "Posicione o banco a cerca de 30° para alinhar a descida da barra à parte alta do peito. Apoie cabeça e costas, plante os pés e ajuste os batentes.",
+      "execution": "Desça a barra pelo trilho em direção à parte alta do peito. Faça uma pausa breve e empurre para cima, mantendo os punhos alinhados.",
+      "tips": "Mantenha o banco centralizado e termine a subida com os cotovelos próximos da extensão. As cores indicam participação muscular ilustrativa."
+    },
+    "muscles": {
+      "primary": [
+        "Peitoral maior: porções clavicular e esternocostal"
+      ],
+      "secondary": [
+        "Tríceps braquial",
+        "Deltoide anterior",
+        "Músculos da pegada e do punho"
+      ]
+    }
+  },
+  "decline-smith-press": {
+    "id": "d0a2d0cf-c6b3-4bfb-889e-82ccd3701ede",
+    "name": "Supino Declinado no Smith",
+    "equipment": "Banco declinado a 18° com rolos e máquina Smith de trilhos verticais",
+    "instructions": {
+      "description": "Supino declinado com barra guiada em trilhos verticais.",
+      "setup": "Centralize o banco declinado, prenda as pernas nos rolos e alinhe o trilho com a parte inferior do peito. Ajuste os batentes antes da série.",
+      "execution": "Desça a barra em direção à parte inferior do peito. Faça uma pausa breve e empurre pelo trilho mantendo cabeça, costas e pernas apoiadas.",
+      "tips": "Use pegada pronada com os punhos alinhados e controle a amplitude ao se aproximar do peito. As cores indicam participação muscular ilustrativa."
+    },
+    "muscles": {
+      "primary": [
+        "Peitoral maior: porções clavicular e esternocostal"
+      ],
+      "secondary": [
+        "Tríceps braquial",
+        "Deltoide anterior",
+        "Músculos da pegada e do punho"
+      ]
+    }
   }
 }

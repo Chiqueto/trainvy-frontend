@@ -2,7 +2,8 @@ import { MathUtils, Quaternion, Vector3 } from "three";
 import { ARM_LENGTH, FOREARM_LENGTH, solveJoint } from "./kinematics";
 import { getPowerGripRotation } from "./power-grip";
 import { getScapularMotion } from "./scapular-motion";
-import type { UpperExercise } from "./upper-exercise-types";
+import { isBenchVariant, type UpperExercise } from "./upper-exercise-types";
+import { getBenchVariantPose } from "./bench-variant-pose";
 const v = (x: number, y: number, z: number) => new Vector3(x, y, z);
 const palmOffset = v(0, 0.004, 0.012);
 export const PREACHER_CURL_ANGLE = MathUtils.degToRad(42);
@@ -15,6 +16,8 @@ export const isShoulderPress = (key: UpperExercise) =>
  * All dimensions/angles describe this avatar, not universal prescription.
  */
 export function getUpperExercisePose(exercise: UpperExercise, depth: number) {
+  if (isBenchVariant(exercise)) return getBenchVariantPose(exercise, depth);
+
   const p = MathUtils.clamp(depth, 0, 1),
     lifted = 1 - p;
   const preacher = exercise === "preacher-curl";
@@ -127,6 +130,16 @@ export function getUpperExercisePose(exercise: UpperExercise, depth: number) {
       grip = wrist
         .clone()
         .add(palmOffset.clone().applyQuaternion(handRotation));
+    } else if (exercise === "straight-bar-pushdown") {
+      // Fixed pronated grip and a fixed humerus. Only the elbows drive the bar.
+      const upper = MathUtils.degToRad(6);
+      const flexion = MathUtils.degToRad(MathUtils.lerp(7, 93, p));
+      elbow = shoulder.clone().add(v(0, -Math.cos(upper), Math.sin(upper)).multiplyScalar(ARM_LENGTH));
+      const angle = upper + flexion;
+      const forearm = v(0, -Math.cos(angle), Math.sin(angle));
+      wrist = elbow.clone().addScaledVector(forearm, FOREARM_LENGTH);
+      handRotation = getPowerGripRotation(forearm, v(1, 0, 0), -1);
+      grip = wrist.clone().add(palmOffset.clone().applyQuaternion(handRotation));
     } else if (preacher) {
       const upper = PREACHER_CURL_ANGLE;
       const fore = upper + MathUtils.degToRad(MathUtils.lerp(12, 112, lifted));

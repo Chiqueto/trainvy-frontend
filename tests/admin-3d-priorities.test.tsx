@@ -50,7 +50,7 @@ const rows = [
     1,
   ),
   exercise("second", "Cadeira Adutora", 1, 3),
-  exercise("first", "Supino Declinado com Halteres", 1, 2),
+  exercise("first", "Supino Inclinado na M?quina", 1, 2),
   exercise("third", "Power Clean", 4, 4),
 ];
 afterEach(cleanup);
@@ -119,7 +119,7 @@ describe("3D implementation queue", () => {
     render(<ExercisesCatalog exercises={rows} />);
     const table = screen.getByRole("table");
     expect(within(table).getAllByRole("row")[1].textContent).toContain(
-      "Supino Declinado com Halteres",
+      "Supino Inclinado na M?quina",
     );
     fireEvent.change(screen.getByLabelText("Prioridade 3D"), {
       target: { value: "4" },

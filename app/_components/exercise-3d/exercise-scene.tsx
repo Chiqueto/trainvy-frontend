@@ -1,6 +1,7 @@
 "use client";
 
-import { isUpperExercise } from "./upper-exercise-types";
+import { isAngledSmithPress, isBenchVariant, isUpperExercise } from "./upper-exercise-types";
+import { SMITH_PRESS_RAIL_Z } from "./bench-variant-pose";
 import { UpperExerciseEquipment, type UpperEquipmentHandle } from "./upper-exercise-equipment";
 import { RopePushdownMachine } from "./rope-pushdown-machine";
 import { createUpperExerciseMuscleMask } from "./upper-exercise-muscles";
@@ -641,7 +642,9 @@ function Athlete({
         <GrippingHands ref={grippingHands} leftSupport={exercise === "one-arm-row"} />
       )}
       {exercise === "hip-abduction" && <HipAbductionSupplement athlete={rig.scene} material={rig.material} />}
-      {exercise === "rope-pushdown" ? <RopePushdownMachine ref={upperEquipment} /> : isUpperExercise(exercise) ? <UpperExerciseEquipment ref={upperEquipment} exercise={exercise} /> : exercise === "one-arm-row" ? <><OneArmRowBench /><group ref={rightDumbbell}><Dumbbell /></group></> : exercise === "machine-row" ? <MachineRowMachine ref={machineRowMachine} /> : exercise === "cable-row" ? <CableRowMachine ref={cableRowMachine} /> : (exercise === "lat-pulldown" || exercise === "front-lat-pulldown") ? <LatPulldownMachine ref={latPulldownMachine} /> : exercise === "seated-calf" ? (<SeatedCalfMachine ref={seatedCalfMachine} />) : exercise === "standing-calf" ? (
+      {exercise === "rope-pushdown" || exercise === "straight-bar-pushdown" ? (
+        <RopePushdownMachine ref={upperEquipment} straightBar={exercise === "straight-bar-pushdown"} />
+      ) : isUpperExercise(exercise) && (!isBenchVariant(exercise) || exercise === "skull-crusher") ? <UpperExerciseEquipment ref={upperEquipment} exercise={exercise} /> : exercise === "one-arm-row" ? <><OneArmRowBench /><group ref={rightDumbbell}><Dumbbell /></group></> : exercise === "machine-row" ? <MachineRowMachine ref={machineRowMachine} /> : exercise === "cable-row" ? <CableRowMachine ref={cableRowMachine} /> : (exercise === "lat-pulldown" || exercise === "front-lat-pulldown") ? <LatPulldownMachine ref={latPulldownMachine} /> : exercise === "seated-calf" ? (<SeatedCalfMachine ref={seatedCalfMachine} />) : exercise === "standing-calf" ? (
         <StandingCalfMachine ref={standingCalfMachine} />
       ) : exercise === "hip-abduction" ? (
         <HipAbductionMachine ref={hipAbductionMachine} />
@@ -663,11 +666,11 @@ function Athlete({
         <PecDeckMachine ref={pecDeckMachine} handGrips />
       ) : exercise === "pec-deck" ? (
         <PecDeckMachine ref={pecDeckMachine} />
-      ) : exercise === "smith-bench-press" ? (
+      ) : exercise === "smith-bench-press" || isAngledSmithPress(exercise) ? (
         <group ref={bar}>
           <SmithBarbell />
         </group>
-      ) : exercise === "incline-dumbbell-press" || exercise === "flat-dumbbell-press" || exercise === "flat-dumbbell-fly" ? (
+      ) : exercise === "incline-dumbbell-press" || exercise === "flat-dumbbell-press" || exercise === "decline-dumbbell-press" || exercise === "flat-dumbbell-fly" ? (
         <>
           <group ref={leftDumbbell}>
             <Dumbbell />
@@ -713,14 +716,15 @@ function getCameraParams(
   exercise: ExerciseAnimation,
   view: SceneProps["view"],
 ): { position: [number, number, number]; target: [number, number, number] } {
-  if (exercise === "rope-pushdown") {
+  if (exercise === "rope-pushdown" || exercise === "straight-bar-pushdown") {
     const target: [number, number, number] = [0, 1.07, 0.32];
     if (view === "front") return { position: [0, 1.57, 4.65], target };
-    if (view === "side") return { position: [4.1, 1.4, 0.32], target };
+    const cameraSide = exercise === "straight-bar-pushdown" ? -1 : 1;
+    if (view === "side") return { position: [cameraSide * 4.1, 1.4, 0.32], target };
     if (view === "back") return { position: [0, 1.57, -4.05], target };
-    return { position: [2.85, 1.68, 3.65], target };
+    return { position: [cameraSide * 2.85, 1.68, 3.65], target };
   }
-  if (isUpperExercise(exercise)) {const y=exercise==="dumbbell-shoulder-press" || exercise==="preacher-curl" ? .85 : 1.08; const target:[number,number,number]=[0,y,.05]; const distance=exercise==="military-press"?4.5:4; if(view==="front")return {position:[0,y+.6,distance],target}; if(view==="side")return {position:[distance,y+.35,.05],target}; if(view==="back")return {position:[0,y+.6,-distance],target};return {position:[distance*.7,y+.8,distance*.8],target};}
+  if (isUpperExercise(exercise) && !isBenchVariant(exercise)) {const y=exercise==="dumbbell-shoulder-press" || exercise==="preacher-curl" ? .85 : 1.08; const target:[number,number,number]=[0,y,.05]; const distance=exercise==="military-press"?4.5:4; if(view==="front")return {position:[0,y+.6,distance],target}; if(view==="side")return {position:[distance,y+.35,.05],target}; if(view==="back")return {position:[0,y+.6,-distance],target};return {position:[distance*.7,y+.8,distance*.8],target};}
   if (exercise === "one-arm-row") {const target:[number,number,number]=[.05,.68,-.05];if(view==="front")return {position:[.05,1.8,3.7],target};if(view==="side")return {position:[3.4,1.6,-.05],target};if(view==="back")return {position:[.05,1.8,-3.8],target};return {position:[2.5,1.9,2.7],target};}
   if ((isBarbellRow(exercise))) { const target:[number,number,number]=[0,.85,.1]; if(view==="front")return {position:[0,1.7,4.3],target}; if(view==="side")return {position:[3.7,1.5,.1],target}; if(view==="back")return {position:[0,1.7,-4],target}; return {position:[2.8,1.9,3.1],target}; }
   if (exercise === "machine-row") {
@@ -921,7 +925,7 @@ function getCameraParams(
     }
   }
 
-  if (exercise === "decline-bench-press") {
+  if (exercise === "decline-bench-press" || exercise === "decline-dumbbell-press") {
     // Centre the full supported pose, including the feet at the raised end.
     const target: [number, number, number] = [0, 0.52, 0.18];
     switch (view) {
@@ -944,6 +948,15 @@ function getCameraParams(
       case "side": return { position: [3.5, 1.25, 0.08], target };
       case "back": return { position: [-0.5, 1.4, -3.5], target };
       default: return { position: [2.6, 1.7, 3.1], target };
+    }
+  }
+  if (isAngledSmithPress(exercise)) {
+    const target: [number, number, number] = [0, 0.93, 0.15];
+    switch (view) {
+      case "front": return { position: [0, 1.68, 4.25], target };
+      case "side": return { position: [4.1, 1.35, 0.15], target };
+      case "back": return { position: [-0.45, 1.7, -4], target };
+      default: return { position: [3.15, 1.95, 2.85], target };
     }
   }
   if (exercise === "smith-bench-press") {
@@ -1071,11 +1084,13 @@ export default function ExerciseScene(props: SceneProps) {
       <StudioPlatform />
 
       {/* Banco olímpico / plano para supino reto (barra ou halteres) */}
-      {(benchPress || props.exercise === "flat-dumbbell-press" || props.exercise === "flat-dumbbell-fly" || props.exercise === "smith-bench-press") && <Bench />}
+      {(benchPress || props.exercise === "skull-crusher" || props.exercise === "flat-dumbbell-press" || props.exercise === "flat-dumbbell-fly" || props.exercise === "smith-bench-press") && <Bench />}
       {props.exercise === "smith-bench-press" && <SmithMachineFrame />}
+      {props.exercise === "incline-smith-press" && <SmithMachineFrame railOffset={SMITH_PRESS_RAIL_Z.incline + 0.035} />}
+      {props.exercise === "decline-smith-press" && <SmithMachineFrame railOffset={SMITH_PRESS_RAIL_Z.decline + 0.035} stopHeight={0.46} />}
       {(props.exercise === "incline-dumbbell-press" ||
-        props.exercise === "incline-bench-press") && <InclineBench />}
-      {props.exercise === "decline-bench-press" && <DeclineBench />}
+        props.exercise === "incline-bench-press" || props.exercise === "incline-smith-press") && <InclineBench />}
+      {(props.exercise === "decline-bench-press" || props.exercise === "decline-dumbbell-press" || props.exercise === "decline-smith-press") && <DeclineBench />}
       {props.exercise === "hip-thrust" && <HipThrustBench />}
       {props.exercise === "smith-squat" && <SmithMachineFrame />}
 

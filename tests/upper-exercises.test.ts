@@ -227,6 +227,28 @@ describe("five shoulder and elbow movements, with historical curl identity", () 
       ).toBeGreaterThan(80);
     },
   );
+  it("keeps the new extensions supported and the fixed Smith path distinct from dumbbells", () => {
+    for (const exercise of ["skull-crusher", "straight-bar-pushdown"] as const) {
+      const extended = getExercisePose(exercise, 0);
+      const flexed = getExercisePose(exercise, 1);
+      expect(extended.limbs[0].elbow.distanceTo(flexed.limbs[0].elbow)).toBeLessThan(1e-9);
+      expect(extended.limbs[0].wrist.distanceTo(flexed.limbs[0].wrist)).toBeGreaterThan(0.3);
+      expect(extended.limbs[0].grip.x).toBeCloseTo(flexed.limbs[0].grip.x, 6);
+    }
+    for (const exercise of ["incline-smith-press", "decline-smith-press"] as const) {
+      const top = getExercisePose(exercise, 0);
+      for (const depth of [0.25, 0.5, 0.75, 1]) {
+        const pose = getExercisePose(exercise, depth);
+        expect(pose.bar.z).toBe(top.bar.z);
+        expect(pose.bar.y).toBeLessThan(top.bar.y);
+        expect(pose.limbs[0].grip.x).toBe(top.limbs[0].grip.x);
+      }
+    }
+    const open = getExercisePose("decline-dumbbell-press", 1).limbs;
+    const closed = getExercisePose("decline-dumbbell-press", 0).limbs;
+    expect(open[0].grip.distanceTo(open[1].grip)).toBeGreaterThan(closed[0].grip.distanceTo(closed[1].grip));
+  });
+
   it("uses a slower lowering phase and real pauses in both endpoints", () => {
     expect(getExerciseProgress("military-press", 0.01)).toBe(0);
     expect(getExerciseProgress("military-press", 0.5)).toBe(1);

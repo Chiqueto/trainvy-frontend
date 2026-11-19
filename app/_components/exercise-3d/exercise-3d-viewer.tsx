@@ -120,7 +120,7 @@ function phaseLabel(phase: number, exercise: ExerciseAnimation) {
     if (phase < 0.54) return "Pausa na extensão";
     return "Flexão dos joelhos";
   }
-  if (exercise === "rope-pushdown") {
+  if (exercise === "rope-pushdown" || exercise === "straight-bar-pushdown" || exercise === "skull-crusher") {
     if (phase < 0.04 || phase >= 0.99) return "Cotovelos estendidos";
     if (phase < 0.48) return "Retorno controlado";
     if (phase < 0.54) return "Pausa na flexão";

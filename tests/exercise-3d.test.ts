@@ -56,13 +56,15 @@ describe("exercise 3D scope", () => {
 });
 
 describe("incline press variants", () => {
-  it("enables supported barbell and dumbbell variants while keeping Smith or declinado halteres unsupported", () => {
-    for (const name of [
-      "Supino Inclinado no Smith",
-      "Supino Declinado com Halteres",
-      "Supino Declinado no Smith",
-    ])
-      expect(getExerciseAnimation(undefined, name)).toBeNull();
+  it("resolves each supported press variant by its own animation", () => {
+    for (const [id, name, animation] of [
+      ["cf30614a-819d-42ee-8dfd-5564f9ea9da2", "Supino Inclinado no Smith", "incline-smith-press"],
+      ["d8e07a71-16ec-4ed8-8236-861a26c869e8", "Supino Declinado com Halteres", "decline-dumbbell-press"],
+      ["d0a2d0cf-c6b3-4bfb-889e-82ccd3701ede", "Supino Declinado no Smith", "decline-smith-press"],
+    ]) {
+      expect(getExerciseAnimation(id)).toBe(animation);
+      expect(getExerciseAnimation(undefined, name)).toBe(animation);
+    }
 
     expect(
       getExerciseAnimation(undefined, "Supino Inclinado com Halteres"),

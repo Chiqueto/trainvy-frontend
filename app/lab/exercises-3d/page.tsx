@@ -22,7 +22,7 @@ import { ExerciseExecutionDialog } from "@/app/_components/exercise-media";
 import type { GetExerciseMedia200 } from "@/app/_lib/api/fetch-generated";
 import { Button } from "@/components/ui/button";
 
-const LAB_MEDIA_DATA: Record<ExerciseAnimation, GetExerciseMedia200> = {
+const LAB_MEDIA_DATA: Partial<Record<ExerciseAnimation, GetExerciseMedia200>> = {
   "military-press": { exerciseId: EXERCISE_ANIMATIONS["military-press"].id, hasMedia:false, mediaType:null, startImagePath:null,endImagePath:null,motionPath:null,attributionName:null,attributionUrl:null,instructions: EXERCISE_ANIMATIONS["military-press"].instructions },
   "dumbbell-shoulder-press": { exerciseId: EXERCISE_ANIMATIONS["dumbbell-shoulder-press"].id, hasMedia:false, mediaType:null, startImagePath:null,endImagePath:null,motionPath:null,attributionName:null,attributionUrl:null,instructions: EXERCISE_ANIMATIONS["dumbbell-shoulder-press"].instructions },
   "lateral-raise": { exerciseId: EXERCISE_ANIMATIONS["lateral-raise"].id, hasMedia:false, mediaType:null, startImagePath:null,endImagePath:null,motionPath:null,attributionName:null,attributionUrl:null,instructions: EXERCISE_ANIMATIONS["lateral-raise"].instructions },
@@ -228,9 +228,9 @@ export default function Exercise3DLab() {
   const [exercise, setExercise] = useState<ExerciseAnimation>("squat");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const currentDef = EXERCISE_ANIMATIONS[exercise];
+  const currentDef: ExerciseDefinition = EXERCISE_ANIMATIONS[exercise];
 
-  const exerciseDetails: Record<
+  const exerciseDetails: Partial<Record<
     ExerciseAnimation,
     {
       primary: string;
@@ -238,7 +238,7 @@ export default function Exercise3DLab() {
       cadence: string;
       cues: string[];
     }
-  > = {
+  >> = {
     "rope-pushdown": {
       primary: EXERCISE_ANIMATIONS["rope-pushdown"].muscles.primary.join(", "),
       secondary: EXERCISE_ANIMATIONS["rope-pushdown"].muscles.secondary.join(", "),
@@ -444,7 +444,25 @@ export default function Exercise3DLab() {
     },
   };
 
-  const details = exerciseDetails[exercise];
+  const details = exerciseDetails[exercise] ?? {
+    primary: currentDef.muscles.primary.join(", "),
+    secondary: currentDef.muscles.secondary.join(", "),
+    cadence: "Fase excêntrica controlada, pausa breve e retorno suave.",
+    cues: currentDef.instructions
+      ? [currentDef.instructions.setup, currentDef.instructions.execution]
+      : [],
+  };
+  const media = LAB_MEDIA_DATA[exercise] ?? {
+    exerciseId: currentDef.id,
+    hasMedia: false,
+    mediaType: null,
+    startImagePath: null,
+    endImagePath: null,
+    motionPath: null,
+    attributionName: null,
+    attributionUrl: null,
+    instructions: currentDef.instructions ?? null,
+  };
 
   return (
     <main className="mx-auto min-h-screen max-w-5xl space-y-8 px-4 py-8 sm:px-8 bg-background">
@@ -494,12 +512,12 @@ export default function Exercise3DLab() {
           ][]
         ).map(([key, item]) => {
           const isSelected = exercise === key;
-          const info = exerciseDetails[key];
 
           return (
             <button
               type="button"
               key={key}
+              data-exercise-animation={key}
               aria-pressed={isSelected}
               onClick={() => setExercise(key)}
               className={`relative flex flex-col justify-between rounded-2xl border p-5 text-left transition-all cursor-pointer ${
@@ -536,7 +554,7 @@ export default function Exercise3DLab() {
                   <strong className="text-foreground font-semibold">
                     Foco:
                   </strong>{" "}
-                  {info.primary}
+                  {exerciseDetails[key]?.primary ?? item.muscles.primary.join(", ")}
                 </p>
               </div>
             </button>
@@ -624,7 +642,7 @@ export default function Exercise3DLab() {
         onClose={() => setIsDialogOpen(false)}
         exerciseId={currentDef.id}
         exerciseName={currentDef.name}
-        initialData={LAB_MEDIA_DATA[exercise]}
+        initialData={media}
       />
     </main>
   );

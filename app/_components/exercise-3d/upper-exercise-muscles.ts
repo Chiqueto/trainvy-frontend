@@ -92,6 +92,26 @@ export const UPPER_MUSCLE_ROLES: Record<
     primary: extensors,
     secondary: forearm.slice(1),
   },
+  "skull-crusher": {
+    primary: extensors,
+    secondary: [anterior, ...forearm.slice(1)],
+  },
+  "straight-bar-pushdown": {
+    primary: extensors,
+    secondary: [...forearm.slice(1), ...trunk],
+  },
+  "decline-dumbbell-press": {
+    primary: pec,
+    secondary: [anterior, ...extensors, ...biceps.slice(0, 2), ...forearm.slice(1)],
+  },
+  "incline-smith-press": {
+    primary: pec,
+    secondary: [anterior, ...extensors, ...forearm.slice(1)],
+  },
+  "decline-smith-press": {
+    primary: pec,
+    secondary: [anterior, ...extensors, ...forearm.slice(1)],
+  },
   "preacher-curl": {
     primary: biceps,
     secondary: forearm,
