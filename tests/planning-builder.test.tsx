@@ -24,13 +24,14 @@ const mocks = vi.hoisted(() => ({
   createPeriodizationAction: vi.fn(),
   createStandaloneWorkoutPlanAction: vi.fn(),
   createWorkoutPlanInPeriodizationAction: vi.fn(),
+  getExerciseMediaAction: vi.fn(),
   catalogRefresh: vi.fn().mockResolvedValue([]),
   catalog: ["Agachamento", "Remada", "Desenvolvimento"].map((name, index) => ({
     id: `catalog-${index}`,
     name,
     muscles: [],
     ownerUserId: null,
-    hasMedia: false,
+    hasMedia: name === "Remada",
   })),
 }));
 
@@ -44,6 +45,10 @@ vi.mock("@/app/_lib/hooks/use-exercise-catalog", () => ({
     isSyncing: false,
     refresh: mocks.catalogRefresh,
   }),
+}));
+
+vi.mock("@/app/_actions/exercise-media", () => ({
+  getExerciseMediaAction: mocks.getExerciseMediaAction,
 }));
 
 vi.mock("next/navigation", () => ({
@@ -208,6 +213,13 @@ describe("WorkoutPlanBuilder — lógica de contrato", () => {
 describe("WorkoutPlanBuilder — interface", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mocks.getExerciseMediaAction.mockResolvedValue({
+      success: true,
+      data: {
+        startImagePath: "/exercise-media/repdb/t-bar-row-start.webp",
+        endImagePath: "/exercise-media/repdb/t-bar-row-peak.webp",
+      },
+    });
     mocks.createStandaloneWorkoutPlanAction.mockResolvedValue({
       success: true,
       data: {
@@ -225,31 +237,43 @@ describe("WorkoutPlanBuilder — interface", () => {
 
   afterEach(cleanup);
 
-  function configureMonday() {
+  function workoutTabs() {
+    return within(
+      screen.getByRole("navigation", { name: "Selecionar treino para editar" }),
+    ).getAllByRole("button");
+  }
+
+  function addExercise(name: string) {
+    fireEvent.click(
+      screen.getByRole("button", { name: "Adicionar exercícios" }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: `Selecionar ${name}` }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Adicionar 1 ao treino" }),
+    );
+  }
+
+  function configureWorkouts() {
     fireEvent.change(screen.getByLabelText("Nome do plano *"), {
       target: { value: "Plano novo" },
     });
     const exercises = ["Agachamento", "Remada", "Desenvolvimento"];
-    screen.getAllByRole("article").forEach((card, index) => {
-      const expandBtn = within(card).queryByRole("button", {
-        name: "Expandir treino",
-      });
-      if (expandBtn) fireEvent.click(expandBtn);
-      fireEvent.click(
-        within(card).getByRole("button", {
-          name: "Exercício: Selecionar exercício",
-        }),
-      );
-      fireEvent.click(
-        screen.getByRole("button", { name: `Selecionar ${exercises[index]}` }),
-      );
+    workoutTabs().forEach((tab, index) => {
+      fireEvent.click(tab);
+      addExercise(exercises[index]);
     });
+    fireEvent.click(workoutTabs()[0]);
+  }
+
+  function openAlternatives() {
+    fireEvent.click(screen.getByText("Agachamento", { exact: true }));
+    fireEvent.click(screen.getByText("Alternativas do exercício (opcional)"));
   }
 
   it("cria standalone inativo por padrão", async () => {
     render(<WorkoutPlanBuilder mode="standalone" />);
     expect(screen.queryByLabelText(/dia de descanso/i)).toBeNull();
-    configureMonday();
+    configureWorkouts();
     fireEvent.click(screen.getByRole("button", { name: "Criar plano" }));
 
     await waitFor(() => {
@@ -268,13 +292,13 @@ describe("WorkoutPlanBuilder — interface", () => {
 
   it("permite duplicar e revisar sem gravar até confirmar", async () => {
     render(<WorkoutPlanBuilder mode="standalone" />);
-    configureMonday();
+    configureWorkouts();
     fireEvent.click(
       screen.getByRole("button", {
         name: "Duplicar Treino A - Peito e Tríceps",
       }),
     );
-    expect(screen.getAllByRole("article")).toHaveLength(4);
+    expect(workoutTabs()).toHaveLength(4);
     fireEvent.click(screen.getByRole("button", { name: "Revisar ficha" }));
     expect(screen.getByRole("dialog")).toBeDefined();
     expect(mocks.createStandaloneWorkoutPlanAction).not.toHaveBeenCalled();
@@ -295,7 +319,7 @@ describe("WorkoutPlanBuilder — interface", () => {
       new Error("offline"),
     );
     render(<WorkoutPlanBuilder mode="standalone" />);
-    configureMonday();
+    configureWorkouts();
     fireEvent.click(screen.getByRole("button", { name: "Criar plano" }));
     await waitFor(() =>
       expect(screen.getByRole("alert").textContent).toContain(
@@ -310,7 +334,7 @@ describe("WorkoutPlanBuilder — interface", () => {
 
   it("oferece ativação explícita no standalone", async () => {
     render(<WorkoutPlanBuilder mode="standalone" />);
-    configureMonday();
+    configureWorkouts();
     fireEvent.click(screen.getByLabelText("Tornar este meu plano atual"));
     fireEvent.click(screen.getByRole("button", { name: "Criar plano" }));
     await waitFor(() =>
@@ -323,10 +347,9 @@ describe("WorkoutPlanBuilder — interface", () => {
 
   it("reordena treinos e serializa ordem sequencial com os exercícios preservados", async () => {
     render(<WorkoutPlanBuilder mode="standalone" />);
-    configureMonday();
-    const first = screen.getAllByRole("article")[0];
+    configureWorkouts();
     fireEvent.click(
-      within(first).getByRole("button", { name: "Mover treino para baixo" }),
+      screen.getByRole("button", { name: "Mover treino para baixo" }),
     );
     fireEvent.click(screen.getByRole("button", { name: "Criar plano" }));
     await waitFor(() =>
@@ -352,7 +375,7 @@ describe("WorkoutPlanBuilder — interface", () => {
         periodizationId="periodization-1"
       />,
     );
-    configureMonday();
+    configureWorkouts();
     expect(screen.queryByLabelText("Tornar este meu plano atual")).toBeNull();
     fireEvent.click(
       screen.getByRole("button", { name: "Criar plano e adicionar etapa" }),
@@ -375,7 +398,7 @@ describe("WorkoutPlanBuilder — interface", () => {
       code: "ACTIVE_PERIODIZATION",
     });
     render(<WorkoutPlanBuilder mode="standalone" />);
-    configureMonday();
+    configureWorkouts();
     fireEvent.change(screen.getByLabelText("Nome do plano *"), {
       target: { value: "Meu plano preservado" },
     });
@@ -391,11 +414,11 @@ describe("WorkoutPlanBuilder — interface", () => {
 
   it("busca no catálogo e vincula alternativas e novos exercícios por ID", async () => {
     render(<WorkoutPlanBuilder mode="standalone" />);
-    configureMonday();
-    const card = screen.getAllByRole("article")[0];
-    expect(within(card).queryByRole("textbox", { name: "Nome" })).toBeNull();
+    configureWorkouts();
+    openAlternatives();
+    expect(screen.queryByRole("textbox", { name: "Nome" })).toBeNull();
     fireEvent.click(
-      within(card).getByRole("button", {
+      screen.getByRole("button", {
         name: "Alternativa 1: Selecionar exercício",
       }),
     );
@@ -408,14 +431,7 @@ describe("WorkoutPlanBuilder — interface", () => {
     ).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Selecionar Remada" }));
     expect(screen.queryByRole("dialog")).toBeNull();
-    fireEvent.click(
-      within(card).getByRole("button", {
-        name: "Adicionar exercício: Selecionar exercício",
-      }),
-    );
-    fireEvent.click(
-      screen.getByRole("button", { name: "Selecionar Desenvolvimento" }),
-    );
+    addExercise("Desenvolvimento");
     fireEvent.click(screen.getByRole("button", { name: "Criar plano" }));
     await waitFor(() =>
       expect(mocks.createStandaloneWorkoutPlanAction).toHaveBeenCalled(),
@@ -439,21 +455,19 @@ describe("WorkoutPlanBuilder — interface", () => {
 
   it("permite remover uma alternativa e cancelar uma adição sem alterar o treino", async () => {
     render(<WorkoutPlanBuilder mode="standalone" />);
-    configureMonday();
-    const card = screen.getAllByRole("article")[0];
+    configureWorkouts();
+    openAlternatives();
     fireEvent.click(
-      within(card).getByRole("button", {
+      screen.getByRole("button", {
         name: "Alternativa 2: Selecionar exercício",
       }),
     );
     fireEvent.click(screen.getByRole("button", { name: "Selecionar Remada" }));
     fireEvent.click(
-      within(card).getByRole("button", { name: "Remover alternativa 2" }),
+      screen.getByRole("button", { name: "Remover alternativa 2" }),
     );
     fireEvent.click(
-      within(card).getByRole("button", {
-        name: "Adicionar exercício: Selecionar exercício",
-      }),
+      screen.getByRole("button", { name: "Adicionar exercícios" }),
     );
     fireEvent.change(
       screen.getByRole("textbox", { name: "Buscar exercícios" }),
@@ -478,83 +492,67 @@ describe("WorkoutPlanBuilder — interface", () => {
     });
   });
 
-  it("abre o primeiro treino para orientar o início e permite recolher os cards", () => {
+  it("usa o quadro 3D, a mídia 2D cadastrada e o aviso de imagem ausente", async () => {
     render(<WorkoutPlanBuilder mode="standalone" />);
-    const articles = screen.getAllByRole("article");
-    expect(articles).toHaveLength(3);
+    addExercise("Agachamento");
+    addExercise("Remada");
+    addExercise("Desenvolvimento");
 
-    expect(within(articles[1]).queryByLabelText("Nome do treino")).toBeNull();
-    expect(within(articles[0]).getByLabelText("Nome do treino")).toBeDefined();
-    expect(within(articles[0]).getByLabelText("Duração (min)")).toBeDefined();
-    expect(
-      within(articles[0]).getByRole("button", { name: "Recolher treino" }),
-    ).toBeDefined();
-
-    // Clica para recolher novamente
-    fireEvent.click(
-      within(articles[0]).getByRole("button", { name: "Recolher treino" }),
+    const squat = screen.getByRole("article", {
+      name: "Exercício 1: Agachamento",
+    });
+    expect(squat.querySelector("img")?.getAttribute("src")).toMatch(
+      /\/exercise-media\/3d\/squat\.webp$/,
     );
-    expect(within(articles[0]).queryByLabelText("Nome do treino")).toBeNull();
+
+    const row = screen.getByRole("article", { name: "Exercício 2: Remada" });
+    await waitFor(() =>
+      expect(row.querySelector("img")?.getAttribute("src")).toMatch(
+        /\/exercise-media\/repdb\/t-bar-row-peak\.webp$/,
+      ),
+    );
+    expect(mocks.getExerciseMediaAction).toHaveBeenCalledExactlyOnceWith(
+      "catalog-1",
+    );
+    const missing = screen.getByRole("article", {
+      name: "Exercício 3: Desenvolvimento",
+    });
+    expect(within(missing).getByText("Sem imagem cadastrada")).toBeDefined();
   });
 
-  it("atalhos abrem o treino escolhido e ações ficam fora do botão de expansão", () => {
+  it("edita um treino por vez e mantém as alterações ao alternar", () => {
     render(<WorkoutPlanBuilder mode="standalone" />);
-    const cards = screen.getAllByRole("article");
-    const navigation = screen.getByRole("navigation", {
-      name: "Atalhos dos treinos",
-    });
-    fireEvent.click(within(navigation).getAllByRole("button")[1]);
-    expect(within(cards[1]).getByLabelText("Nome do treino")).toBeDefined();
-    const duplicate = within(cards[0]).getByRole("button", {
-      name: /Duplicar/,
-    });
-    expect(duplicate.parentElement?.closest("button")).toBeNull();
+    expect(screen.getAllByLabelText("Nome do treino")).toHaveLength(1);
     expect(
-      within(cards[0])
-        .getByRole("button", { name: "Recolher treino" })
-        .getAttribute("aria-controls"),
-    ).toBeTruthy();
+      screen.getByDisplayValue("Treino A - Peito e Tríceps"),
+    ).toBeDefined();
+    fireEvent.change(screen.getByLabelText("Duração estimada (min)"), {
+      target: { value: "42" },
+    });
+    fireEvent.click(workoutTabs()[1]);
+    expect(
+      screen.getByDisplayValue("Treino B - Costas e Bíceps"),
+    ).toBeDefined();
+    expect(workoutTabs()[1].getAttribute("aria-pressed")).toBe("true");
+    expect(screen.queryByDisplayValue("42")).toBeNull();
+    fireEvent.click(workoutTabs()[0]);
+    expect(screen.getByDisplayValue("42")).toBeDefined();
   });
 
-  it("expande e recolhe todos os treinos pelo botão global", () => {
+  it("abre o treino novo e mostra o resumo no editor compartilhado", () => {
     render(<WorkoutPlanBuilder mode="standalone" />);
-    const toggleAllBtn = screen.getByRole("button", { name: "Expandir todos" });
-    fireEvent.click(toggleAllBtn);
-
-    const articles = screen.getAllByRole("article");
-    articles.forEach((card) => {
-      expect(within(card).getByLabelText("Nome do treino")).toBeDefined();
+    fireEvent.click(screen.getByRole("button", { name: "Adicionar treino" }));
+    expect(workoutTabs()).toHaveLength(4);
+    expect(screen.getByDisplayValue("Treino D")).toBeDefined();
+    expect(workoutTabs()[3].getAttribute("aria-pressed")).toBe("true");
+    const summary = screen.getByRole("complementary", {
+      name: "Resumo do treino",
     });
-
-    const collapseAllBtn = screen.getByRole("button", {
-      name: "Recolher todos",
-    });
-    fireEvent.click(collapseAllBtn);
-
-    articles.forEach((card) => {
-      expect(within(card).queryByLabelText("Nome do treino")).toBeNull();
-    });
-  });
-
-  it("usa os mesmos IDs dos cards ao iniciar com todos os treinos expandidos", () => {
-    render(<WorkoutPlanBuilder mode="standalone" defaultExpandedAll />);
-    for (const card of screen.getAllByRole("article")) {
-      expect(within(card).getByLabelText("Nome do treino")).toBeDefined();
-    }
-    fireEvent.click(screen.getByRole("button", { name: "Recolher todos" }));
-    expect(screen.queryByLabelText("Nome do treino")).toBeNull();
-  });
-
-  it("ao adicionar um novo treino, ele vem automaticamente expandido", () => {
-    render(<WorkoutPlanBuilder mode="standalone" />);
-    fireEvent.click(screen.getByRole("button", { name: "Adicionar Treino" }));
-
-    const articles = screen.getAllByRole("article");
-    expect(articles).toHaveLength(4);
-    // O último treino (recém adicionado) está expandido
-    expect(within(articles[3]).getByLabelText("Nome do treino")).toBeDefined();
-    // O primeiro treino continua aberto, sem perder o conteúdo.
-    expect(within(articles[0]).getByLabelText("Nome do treino")).toBeDefined();
+    expect(within(summary).getByText("Volume por músculo")).toBeDefined();
+    expect(
+      within(summary).getByRole("tab", { name: "Atributos" }),
+    ).toBeDefined();
+    expect(within(summary).getByRole("tab", { name: "SNC" })).toBeDefined();
   });
 
   it("não salva nomes livres de exercícios em rascunhos novos", () => {

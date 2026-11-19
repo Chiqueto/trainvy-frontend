@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { Tabs } from "radix-ui";
 import { Activity, Brain, Radar } from "lucide-react";
 import { TelemetryHeader } from "./telemetry-header";
@@ -11,14 +11,16 @@ import type { telemetry } from "../../_lib/tactical";
 
 export function TrainingBioDetails({
   data,
+  inline = false,
 }: {
   data: ReturnType<typeof telemetry>;
+  inline?: boolean;
 }) {
   return (
     <Tabs.Root defaultValue="muscles" className="space-y-5">
       <Tabs.List
         aria-label="Análise da ficha"
-        className="sticky top-0 z-10 grid grid-cols-3 gap-1 rounded-xl border border-white/10 bg-slate-950 p-1 shadow-lg"
+        className={`grid grid-cols-3 gap-1 rounded-xl border border-white/10 bg-slate-950 p-1 ${inline ? "" : "sticky top-0 z-10 shadow-lg"}`}
       >
         {[
           { key: "muscles", label: "Músculos", Icon: Activity },
@@ -36,7 +38,7 @@ export function TrainingBioDetails({
         ))}
       </Tabs.List>
       <Tabs.Content value="muscles" className="outline-none">
-        <BodyHeatmapSVG volumes={data.muscles} />
+        <BodyHeatmapSVG volumes={data.muscles} showVolumeBars={inline} />
       </Tabs.Content>
       <Tabs.Content value="neural" className="outline-none">
         <NeuralDemandPanel data={data} />

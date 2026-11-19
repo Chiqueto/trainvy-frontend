@@ -147,9 +147,11 @@ export function heatColor(volume: number) {
 export function BodyHeatmapSVG({
   volumes,
   recordedIndirectVolumes,
+  showVolumeBars = false,
 }: {
   volumes: Record<string, number>;
   recordedIndirectVolumes?: Record<string, number>;
+  showVolumeBars?: boolean;
 }) {
   const recorded = recordedIndirectVolumes !== undefined;
   const fill = (muscle: string, amount: number) =>
@@ -163,7 +165,7 @@ export function BodyHeatmapSVG({
   const id = useId().replaceAll(":", "");
   const [view, setView] = useState<"front" | "back">("front"),
     [selected, setSelected] = useState<MuscleGroup | null>(
-      recorded ? null : "CHEST",
+      recorded || showVolumeBars ? null : "CHEST",
     );
   const visible = regions.filter((region) => region.views.includes(view));
   const selectedKey =
@@ -220,7 +222,7 @@ export function BodyHeatmapSVG({
         </span>
         <svg
           viewBox="0 0 200 430"
-          className="relative mx-auto h-[320px] w-[180px] sm:h-[350px] sm:w-[196px]"
+          className={`relative mx-auto ${showVolumeBars ? "h-[245px] w-[138px]" : "h-[320px] w-[180px] sm:h-[350px] sm:w-[196px]"}`}
           role="group"
           aria-label={view === "front" ? "Mapa frontal" : "Mapa posterior"}
         >
@@ -407,7 +409,9 @@ export function BodyHeatmapSVG({
           <p className="mb-2 text-xs text-slate-400">
             Grupos presentes na ficha
           </p>
-          <div className="flex flex-wrap gap-2">
+          <div
+            className={showVolumeBars ? "space-y-1" : "flex flex-wrap gap-2"}
+          >
             {activeGroups.map(([muscle, amount]) => (
               <button
                 type="button"
@@ -421,9 +425,22 @@ export function BodyHeatmapSVG({
                     if (!match.views.includes(view)) setView(match.views[0]);
                   }
                 }}
-                className={`min-h-9 rounded-lg border px-2.5 text-xs ${selectedKey === muscle ? "border-cyan-300/30 bg-cyan-300/10 text-cyan-100" : "border-white/10 text-slate-300 hover:bg-white/5"}`}
+                className={`min-h-9 rounded-lg px-2.5 text-xs ${showVolumeBars ? "grid w-full grid-cols-[minmax(0,1fr)_1fr_auto] items-center gap-2 border border-transparent text-left" : "border"} ${selectedKey === muscle ? "border-cyan-300/30 bg-cyan-300/10 text-cyan-100" : "border-white/10 text-slate-300 hover:bg-white/5"}`}
               >
-                {getMuscleGroupLabel(muscle)}{" "}
+                <span>{getMuscleGroupLabel(muscle)}</span>{" "}
+                {showVolumeBars && (
+                  <span
+                    aria-hidden="true"
+                    className="h-1.5 w-full overflow-hidden rounded-full bg-white/10"
+                  >
+                    <span
+                      className="block h-full rounded-full bg-cyan-300/75"
+                      style={{
+                        width: (amount / activeGroups[0][1]) * 100 + "%",
+                      }}
+                    />
+                  </span>
+                )}
                 <span className="ml-1 font-mono text-slate-400">
                   {format(amount)}
                 </span>

@@ -1,5 +1,12 @@
 // Existing form coverage explicitly exercises the classic view. Tactical parity has its own suite.
-vi.mock("@/app/planning/_components/tactical/view-mode-toggle", () => ({ useBuilderMode: () => ({ builderMode: "classic", changeMode: vi.fn(), syncError: false }), ViewModeToggle: () => null }));
+vi.mock("@/app/planning/_components/tactical/view-mode-toggle", () => ({
+  useBuilderMode: () => ({
+    builderMode: "classic",
+    changeMode: vi.fn(),
+    syncError: false,
+  }),
+  ViewModeToggle: () => null,
+}));
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { toast } from "sonner";
@@ -181,9 +188,7 @@ describe("Salvar prescrição do personal", () => {
     await waitFor(() =>
       expect(toast.error).toHaveBeenCalledWith("Revise as séries."),
     );
-    expect(
-      screen.getByRole("button", { name: "Exercício principal: Supino" }),
-    ).toBeDefined();
+    expect(screen.getByText("Supino", { exact: true })).toBeDefined();
     expect(push).not.toHaveBeenCalled();
   });
 
@@ -193,6 +198,7 @@ describe("Salvar prescrição do personal", () => {
       data: { id: "draft", version: 1 },
     } as Awaited<ReturnType<typeof createPrescriptionDraftAction>>);
     renderBuilder();
+    fireEvent.click(screen.getByText("Supino", { exact: true }));
     fireEvent.click(
       screen.getByRole("button", {
         name: "Exercício principal: Supino",
@@ -255,6 +261,7 @@ describe("Salvar prescrição do personal", () => {
     } as Awaited<ReturnType<typeof createPrescriptionDraftAction>>);
     renderBuilder();
     fireEvent.click(screen.getByRole("button", { name: "Duplicar Treino A" }));
+    fireEvent.click(screen.getByText("Supino", { exact: true }));
     fireEvent.change(screen.getByLabelText("Séries de trabalho"), {
       target: { value: "5" },
     });
@@ -345,10 +352,11 @@ describe("Salvar prescrição do personal", () => {
       ],
     };
     renderBuilder(data);
+    fireEvent.click(screen.getByText("Supino", { exact: true }));
     fireEvent.click(
-      screen.getAllByRole("button", {
+      screen.getByRole("button", {
         name: "Aplicar séries, reps e descanso aos demais",
-      })[0],
+      }),
     );
     fireEvent.click(screen.getByRole("button", { name: /salvar rascunho/i }));
     await waitFor(() =>
@@ -390,6 +398,7 @@ describe("Salvar prescrição do personal", () => {
       ],
     };
     renderBuilder(data);
+    fireEvent.click(screen.getByText("Supino", { exact: true }));
     fireEvent.click(screen.getByText("Alternativas do exercício (2/2)"));
     fireEvent.click(
       screen.getByRole("button", { name: "Remover alternativa 1" }),

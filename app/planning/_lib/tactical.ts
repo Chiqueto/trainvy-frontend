@@ -352,45 +352,50 @@ export function telemetry(
     .forEach((e) => {
       const entry = catalog.find((x) => x.id === e.exerciseId);
       const meta = entry ? tacticalMetadata(entry) : null;
-      const sets = prescriptionSets(e);
+      const sets = e.setPrescription?.length ? e.setPrescription : null;
+      const setCount = sets?.length ?? (Number.isSafeInteger(e.sets) && e.sets > 0 ? e.sets : 0);
+      const workSeconds = sets
+        ? sets.reduce((sum, set) => sum + set.reps * 3 + set.restSeconds, 0)
+        : (e.reps * 3 + e.restTimeInSeconds) * setCount;
       const multiplier = 1 + (e.runes?.length ?? 0) * 0.15;
       seconds +=
-        sets.reduce((sum, s) => sum + s.reps * 3 + s.restSeconds, 0) *
-          multiplier +
+        workSeconds * multiplier +
         (e.warmupSets ?? 0) * 60 +
         30;
       const base =
         (meta ? { low: 2, medium: 4, high: 7 }[meta.cnsDemand] : 3) *
-        sets.length;
+        setCount;
       const techniqueBonus = base * (multiplier - 1);
       neural += base * multiplier;
       neuralBase += base;
       neuralTechniques += techniqueBonus;
       neuralSources.push({
         name: e.name,
-        sets: sets.length,
+        sets: setCount,
         demand: meta?.cnsDemand ?? "unknown",
         points: base * multiplier,
       });
       meta?.primaryMuscles.forEach((m) => {
-        muscles[m] = (muscles[m] ?? 0) + sets.length;
+        muscles[m] = (muscles[m] ?? 0) + setCount;
       });
       meta?.secondaryMuscles.forEach((m) => {
-        muscles[m] = (muscles[m] ?? 0) + sets.length * 0.5;
+        muscles[m] = (muscles[m] ?? 0) + setCount * 0.5;
       });
-      sets.forEach((s) => {
-        count++;
+      function addAttributes(zone: Zone, repetitions: number) {
         for (const key of Object.keys(
           attributes,
         ) as (keyof typeof attributes)[])
           attributes[key] +=
             (meta?.attributeWeights[key] ?? 4) *
-            ((s.zone === "strength" && key === "strength") ||
-            (s.zone === "endurance" && key === "metabolic") ||
-            (s.zone === "hypertrophy" && key === "hypertrophy")
+            ((zone === "strength" && key === "strength") ||
+            (zone === "endurance" && key === "metabolic") ||
+            (zone === "hypertrophy" && key === "hypertrophy")
               ? 1.2
-              : 1);
-      });
+              : 1) * repetitions;
+      }
+      count += setCount;
+      if (sets) sets.forEach((set) => addAttributes(set.zone, 1));
+      else if (setCount) addAttributes(zoneFor(e.reps), setCount);
     });
   for (const key of Object.keys(attributes) as (keyof typeof attributes)[])
     attributes[key] = Math.min(10, attributes[key] / Math.max(1, count));

@@ -43,3 +43,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local source files for S3 thumbnail imports
+/scripts/assets/exercise-thumbnails/

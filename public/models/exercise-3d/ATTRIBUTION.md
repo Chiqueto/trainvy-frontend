@@ -122,3 +122,9 @@ Regeneration: `node scripts/create-scapular-detail-map.mjs <MuscularSystem100.fb
 ## Trainvy exercise prototype
 
 Body mesh and anatomical material reused from the user's `digital-twin/first-app` project. The Trainvy derivative adds upper-arm, forearm and hand bones (13 bones total), reweights the arms, removes the hack-squat activation mask, and applies procedural free-squat/bench-press poses. Original head attribution and CC0 license above are preserved.
+
+## Static exercise thumbnails
+
+The WebP images in `/exercise-media/3d/` are still renders of the Trainvy exercise
+scenes using the anatomical assets credited above. Trainvy selected the frames and
+rendered the equipment and anatomical poses against a plain background. The stills are distributed under CC BY-SA 4.0.
