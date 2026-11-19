@@ -249,12 +249,17 @@ describe("Tactical builder", () => {
     fireEvent.click(
       screen.getByRole("button", { name: "Editor por cards" }),
     );
+    const firstExercise = within(
+      screen.getByRole("article", { name: "Exercício 1: Supino com barra" }),
+    );
+    fireEvent.click(firstExercise.getByText("Supino com barra", { exact: true }));
     expect(
-      screen
-        .getAllByRole("button", { name: "🔥 Drop-set" })[0]
+      firstExercise
+        .getByRole("button", { name: "🔥 Drop-set" })
         .getAttribute("aria-pressed"),
     ).toBe("true");
-    fireEvent.change(screen.getAllByLabelText("Carga kg · 1")[0], {
+    fireEvent.click(firstExercise.getByText("Prescrição individual por série"));
+    fireEvent.change(firstExercise.getByLabelText("Carga kg · 1"), {
       target: { value: "20.5" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Deck 3D" }));

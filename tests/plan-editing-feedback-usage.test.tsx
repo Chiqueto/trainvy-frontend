@@ -101,7 +101,8 @@ describe("Editing saved plans", () => {
       (screen.getByLabelText("Nome do plano *") as HTMLInputElement).value,
     ).toBe("Plano atual");
     const card = screen.getByRole("article");
-    fireEvent.change(within(card).getByLabelText("Séries válidas"), {
+    fireEvent.click(within(card).getByText("Supino", { exact: true }));
+    fireEvent.change(within(card).getByLabelText("Séries de trabalho"), {
       target: { value: "5" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Salvar alterações" }));
@@ -136,9 +137,11 @@ describe("Editing saved plans", () => {
       error: "Conclua sua sessão",
     });
     render(<WorkoutPlanBuilder mode="edit" initialPlan={plan} />);
+    const card = screen.getByRole("article");
+    fireEvent.click(within(card).getByText("Supino", { exact: true }));
     fireEvent.click(
-      within(screen.getByRole("article")).getByRole("button", {
-        name: "Exercício: Supino",
+      within(card).getByRole("button", {
+        name: "Exercício principal: Supino",
       }),
     );
     fireEvent.click(screen.getByRole("button", { name: "Selecionar Remada" }));
@@ -149,8 +152,8 @@ describe("Editing saved plans", () => {
       ),
     );
     expect(
-      within(screen.getByRole("article")).getByRole("button", {
-        name: "Exercício: Remada",
+      within(card).getByRole("button", {
+        name: "Exercício principal: Remada",
       }),
     ).toBeDefined();
     expect(

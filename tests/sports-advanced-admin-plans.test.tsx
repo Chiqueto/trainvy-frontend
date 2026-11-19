@@ -209,6 +209,7 @@ describe("Optional advanced prescription", () => {
     mocks.edit.mockResolvedValue({ success: true, data: { id: "plan" } });
     render(<WorkoutPlanBuilder mode="edit" initialPlan={initial} />);
     const article = screen.getByRole("article");
+    fireEvent.click(within(article).getByText("Supino", { exact: true }));
     fireEvent.click(
       within(article).getByText("Prescrição avançada (opcional)"),
     );
