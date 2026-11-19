@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { CoachGuidedTour } from "@/app/personal/_components/coach-guided-tour";
-import { LayoutGrid, Layers3 } from "lucide-react";
+import { ArrowLeft, LayoutGrid, Layers3 } from "lucide-react";
 import {
   loadBuilderPreference,
   saveBuilderPreference,
@@ -96,33 +97,45 @@ export function ViewModeToggle({
   value,
   onChange,
   syncError,
+  backHref,
 }: {
   value: "tactical" | "classic";
   onChange: (value: "tactical" | "classic") => void;
   syncError?: boolean;
+  backHref?: string;
 }) {
+  const router = useRouter();
   return (
-    <div className="flex flex-col items-stretch gap-3 rounded-2xl border border-border bg-card p-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
-      <div className="min-w-0 flex-1">
-        <p className="text-sm font-semibold">Como você prefere montar?</p>
-        <p className="text-xs text-muted-foreground">
-          Edite por cards ou organize os exercícios no deck 3D.
-        </p>
-      </div>
-      {value === "classic" && <CoachGuidedTour tour="builder" />}
+    <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-border bg-card p-2 text-card-foreground sm:px-3">
+      {backHref && (
+        <button
+          type="button"
+          aria-label="Voltar"
+          onClick={() => {
+            if (window.history.length > 1) router.back();
+            else router.replace(backHref);
+          }}
+          className="inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-xl text-sm hover:bg-accent sm:px-3"
+        >
+          <ArrowLeft className="size-4" />
+          <span className="hidden sm:inline">Voltar</span>
+        </button>
+      )}
       <div
         data-tour="builder-views"
         role="group"
         aria-label="Visualização do editor"
-        className="inline-flex self-start rounded-xl bg-muted p-1 text-sm text-muted-foreground sm:self-auto"
+        className="inline-flex shrink-0 rounded-xl bg-muted p-1 text-sm text-muted-foreground"
       >
         {(["tactical", "classic"] as const).map((mode) => (
           <button
             type="button"
             key={mode}
             aria-pressed={value === mode}
-            onClick={() => onChange(mode)}
-            className={`flex min-h-11 items-center gap-2 rounded-xl px-4 transition-colors ${value === mode ? "bg-primary text-primary-foreground shadow-sm" : "hover:bg-accent hover:text-foreground"}`}
+            onClick={() => {
+              if (value !== mode) onChange(mode);
+            }}
+            className={`flex min-h-11 items-center gap-2 rounded-xl px-2.5 transition-colors sm:px-4 ${value === mode ? "bg-primary text-primary-foreground shadow-sm" : "hover:bg-accent hover:text-foreground"}`}
           >
             {mode === "tactical" ? (
               <Layers3 size={16} />
@@ -133,6 +146,7 @@ export function ViewModeToggle({
           </button>
         ))}
       </div>
+      <CoachGuidedTour tour="builder" />
       {syncError && (
         <p role="status" className="text-xs text-amber-600">
           Preferência local; sincronização indisponível.

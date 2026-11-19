@@ -24,6 +24,7 @@ import { useSpatialState } from "./use-spatial-state";
 import { HoloExerciseCard } from "./holo-exercise-card";
 import { EnergyLinksSvg, type EnergyConnection } from "./energy-links-svg";
 import { PlayerHand } from "./player-hand";
+import { CatalogExerciseBatchPicker } from "../catalog-exercise-picker";
 import { HoloHud } from "./holo-hud";
 import { SummonManager, type SummonEvent } from "./summon-effect";
 import {
@@ -42,12 +43,12 @@ export interface SpatialBuilderArenaProps {
   days: WorkoutPlanDraftDay[];
   activeDayIndex: number;
   onSelectDay: (index: number) => void;
-  onAddDay: () => void;
+  onAddDay?: () => void;
   onChange: (patch: Partial<WorkoutPlanDraftDay>) => void;
   disabled?: boolean;
   onSave?: () => void;
   saveLabel?: string;
-  onClassicView?: () => void;
+  settingsLabel?: string;
   onOpenSettings?: () => void;
   onReview?: () => void;
   reviewLabel?: string;
@@ -55,7 +56,6 @@ export interface SpatialBuilderArenaProps {
   onPlanNameChange?: (name: string) => void;
   planNameMaxLength?: number;
   error?: string | null;
-  syncError?: boolean;
 }
 
 export function SpatialBuilderArena({
@@ -68,7 +68,7 @@ export function SpatialBuilderArena({
   disabled = false,
   onSave,
   saveLabel,
-  onClassicView,
+  settingsLabel,
   onOpenSettings,
   onReview,
   reviewLabel,
@@ -76,7 +76,6 @@ export function SpatialBuilderArena({
   onPlanNameChange,
   planNameMaxLength,
   error,
-  syncError,
 }: SpatialBuilderArenaProps) {
   const { exercises: catalog, isSyncing } = useExerciseCatalog();
   const [summons, setSummons] = useState<SummonEvent[]>([]);
@@ -252,6 +251,28 @@ export function SpatialBuilderArena({
     haptic(30);
   }
 
+  function addExerciseBatch(selected: ListExercises200Item[]) {
+    if (disabled) return;
+    const exercises = [
+      ...day.exercises.filter((exercise) => exercise.name || exercise.exerciseId),
+      ...selected.map((entry) => ({
+        ...createDraftExercise(),
+        clientId: `spatial-${crypto.randomUUID()}`,
+        exerciseId: entry.id,
+        name: entry.name,
+      })),
+    ];
+    commit(exercises);
+    spatial.autoArrange(
+      exercises.length,
+      exercises.map((exercise, index) =>
+        exercise.id ?? exercise.clientId ?? `slot:${index}`,
+      ),
+    );
+    spatial.resetCamera();
+    haptic(30);
+  }
+
   function isOverDeck(point: Point) {
     const rect = viewportRef.current
       ?.querySelector("[data-deck-drop-zone]")
@@ -389,7 +410,7 @@ export function SpatialBuilderArena({
         onPlanNameChange={onPlanNameChange}
         onDayNameChange={(name) => onChange({ name })}
         planNameMaxLength={planNameMaxLength}
-        onClassicView={onClassicView}
+        settingsLabel={settingsLabel}
         onOpenSettings={onOpenSettings}
         disabled={disabled}
       />
@@ -627,7 +648,7 @@ export function SpatialBuilderArena({
             O treino começa com uma carta.
           </p>
           <p className="mx-auto mt-2 max-w-64 text-xs leading-relaxed text-slate-500">
-            Escolha um exercício no deck abaixo e monte sua sequência.
+            Adicione exercícios para montar a sequência do treino.
           </p>
         </div>
       )}
@@ -639,16 +660,19 @@ export function SpatialBuilderArena({
           {error}
         </p>
       )}
-      {syncError && (
-        <p className="pointer-events-none absolute right-6 top-32 text-[10px] text-amber-200">
-          Preferência local · sincronização indisponível
-        </p>
-      )}
-      {/* 3. A MÃO DO JOGADOR (DECK EM LEQUE NA BASE) */}
       <PlayerHand
         catalog={catalog}
         disabled={disabled}
         isLoading={isSyncing}
+        batchPicker={
+          <CatalogExerciseBatchPicker
+            disabled={disabled}
+            excludeIds={day.exercises.flatMap((exercise) =>
+              exercise.exerciseId ? [exercise.exerciseId] : [],
+            )}
+            onSelect={addExerciseBatch}
+          />
+        }
         onSummonExercise={summonExercise}
         isDropTarget={boardDragging}
         onCatalogDrag={(entry, point) =>

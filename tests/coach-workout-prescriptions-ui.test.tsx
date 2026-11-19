@@ -213,11 +213,18 @@ describe("TASK 6.2B — Coach Workout Prescriptions UI & UX Hardening", () => {
     ];
 
     it("renderiza lista de prescrições com badges e links de navegação", () => {
+      const accepted = {
+        ...mockPrescriptions[1],
+        id: "presc-3",
+        name: "Treino aceito",
+        status: "ACCEPTED",
+        acceptedWorkoutPlanId: "plan-1",
+      };
       render(
         <CoachPrescriptionsList
           athleteId="ath-1"
           athleteName="Carlos Atleta"
-          prescriptions={mockPrescriptions as any}
+          prescriptions={[...mockPrescriptions, accepted] as any}
         />,
       );
 
@@ -232,10 +239,11 @@ describe("TASK 6.2B — Coach Workout Prescriptions UI & UX Hardening", () => {
         "/personal/alunos/ath-1/prescrever",
       );
 
-      // Botão Editar Rascunho
-      const editBtn = screen.getByRole("button", { name: /editar/i });
-      expect(editBtn.closest("a")?.getAttribute("href")).toBe(
-        "/personal/alunos/ath-1/prescricoes/presc-1/editar",
+      const editLinks = screen.getAllByRole("link", { name: "Editar prescrição" });
+      expect(editLinks.map((link) => link.getAttribute("href"))).toEqual(
+        ["presc-1", "presc-2", "presc-3"].map(
+          (id) => `/personal/alunos/ath-1/prescricoes/${id}/editar`,
+        ),
       );
     });
 

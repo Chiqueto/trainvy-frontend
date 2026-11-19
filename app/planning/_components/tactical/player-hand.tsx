@@ -5,6 +5,7 @@ import {
   useRef,
   useState,
   type CSSProperties,
+  type ReactNode,
 } from "react";
 import {
   Cable,
@@ -63,6 +64,7 @@ export interface PlayerHandProps {
   disabled?: boolean;
   isLoading?: boolean;
   isDropTarget?: boolean;
+  batchPicker?: ReactNode;
   onCatalogDrag?: (entry: ListExercises200Item | null, point?: Point) => void;
   onCatalogDrop?: (entry: ListExercises200Item, point: Point) => void;
 }
@@ -72,6 +74,7 @@ export function PlayerHand({
   disabled,
   isLoading,
   isDropTarget,
+  batchPicker,
   onCatalogDrag,
   onCatalogDrop,
 }: PlayerHandProps) {
@@ -177,6 +180,7 @@ export function PlayerHand({
               </button>
             )}
           </label>
+          {batchPicker}
           <button
             type="button"
             onClick={() => setCollapsed(!collapsed)}

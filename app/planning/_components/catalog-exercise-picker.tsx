@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Dialog } from "radix-ui";
 import { Check, Dumbbell, LoaderCircle, Plus, Search, X } from "lucide-react";
+import { ExerciseThumbnail } from "@/app/_components/exercise-media/exercise-thumbnail";
 import type { ListExercises200Item } from "@/app/_lib/api/fetch-generated";
 import { useExerciseCatalog } from "@/app/_lib/hooks/use-exercise-catalog";
 import {
@@ -185,8 +186,8 @@ function CatalogDialog({
             </Dialog.Title>
             <Dialog.Description className="mt-1 text-sm text-muted-foreground">
               {onSelectMany
-                ? "Selecione vários exercícios, na ordem em que o aluno vai executar."
-                : "Escolha um exercício cadastrado para sua prescrição."}
+                ? "Selecione os exercícios na ordem de execução do treino."
+                : "Escolha um exercício cadastrado no catálogo."}
             </Dialog.Description>
           </div>
           <Dialog.Close asChild>
@@ -313,13 +314,16 @@ function CatalogDialog({
                   }
                   className={`flex min-w-0 items-center gap-3 rounded-2xl border p-4 text-left transition hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${selectedIndex !== -1 ? "border-primary bg-primary/10" : "border-border bg-background/50 hover:bg-primary/5"}`}
                 >
-                  <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                    {selectedIndex !== -1 ? (
-                      <span className="text-sm font-bold">
+                  <span className="relative shrink-0">
+                    <ExerciseThumbnail
+                      exerciseId={exercise.id}
+                      name={exercise.name}
+                      catalogEntry={exercise}
+                    />
+                    {selectedIndex !== -1 && (
+                      <span className="absolute -right-1.5 -bottom-1.5 grid size-6 place-items-center rounded-full border-2 border-card bg-primary text-xs font-bold text-primary-foreground">
                         {selectedIndex + 1}
                       </span>
-                    ) : (
-                      <Dumbbell className="size-4" />
                     )}
                   </span>
                   <span className="min-w-0 flex-1">
@@ -360,7 +364,7 @@ function CatalogDialog({
               <Dumbbell className="mx-auto mb-3 size-7 opacity-50" />
               <p>
                 {source === "mine" && mineCount === 0
-                  ? "Você ainda não tem exercícios próprios. Cadastre-os em Meus exercícios no painel do personal."
+                  ? "Você ainda não tem exercícios próprios."
                   : "Nenhum exercício encontrado com esses filtros. Experimente outro grupo ou nome."}
               </p>
               <Button

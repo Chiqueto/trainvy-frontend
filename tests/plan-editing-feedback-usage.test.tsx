@@ -21,6 +21,7 @@ const mocks = vi.hoisted(() => ({
   editDay: vi.fn(),
   save: vi.fn(),
   push: vi.fn(),
+  replace: vi.fn(),
   refresh: vi.fn(),
   catalogRefresh: vi.fn().mockResolvedValue([]),
   catalog: [
@@ -42,7 +43,11 @@ vi.mock("@/app/_lib/hooks/use-exercise-catalog", () => ({
   }),
 }));
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({ push: mocks.push, refresh: mocks.refresh }),
+  useRouter: () => ({
+    push: mocks.push,
+    replace: mocks.replace,
+    refresh: mocks.refresh,
+  }),
 }));
 vi.mock("@/app/planning/_actions", () => ({
   editWorkoutPlanAction: mocks.edit,
@@ -119,7 +124,7 @@ describe("Editing saved plans", () => {
       }),
     ));
     expect(mocks.edit).not.toHaveBeenCalled();
-    expect(mocks.push).toHaveBeenCalledWith("/workout-plans/plan/days/day");
+    expect(mocks.replace).toHaveBeenCalledWith("/workout-plans/plan/days/day");
   });
 
   it("loads the existing plan and saves IDs, cover, alternatives and edited sets without reactivating", async () => {

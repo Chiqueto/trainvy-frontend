@@ -44,18 +44,22 @@ import { CoachAiPrescriptionModal } from "./coach-ai-prescription-modal";
 
 export interface InitialPrescriptionData {
   originType?: string;
+  status?: "DRAFT" | "SENT" | "ACCEPTED";
   allowStudentSubstitution?: boolean;
   id?: string;
   name: string;
   notes?: string | null;
   version?: number;
   workoutDays?: Array<{
+    id?: string;
     name: string;
     order?: number;
     weekDay?: (typeof WEEK_DAYS)[number]["value"];
     isRest: boolean;
     estimatedDurationInSeconds: number;
+    coverImageUrl?: string | null;
     exercises: Array<{
+      id?: string;
       exerciseId?: string | null;
       alternative1ExerciseId?: string | null;
       alternative2ExerciseId?: string | null;
@@ -92,6 +96,8 @@ export function CoachPrescriptionBuilder({
   initialData,
 }: CoachPrescriptionBuilderProps) {
   const router = useRouter();
+  const publishingRevision =
+    initialData?.status === "SENT" || initialData?.status === "ACCEPTED";
   const [activeDayIndex, setActiveDayIndex] = useState(0);
   const { builderMode, changeMode, syncError } = useBuilderMode();
   const hydrated = useHydrated();
@@ -107,15 +113,18 @@ export function CoachPrescriptionBuilder({
   const [days, setDays] = useState<WorkoutPlanDraftDay[]>(() => {
     if (initialData?.workoutDays && initialData.workoutDays.length > 0) {
       return trainingDaysOnly(initialData.workoutDays).map((d, index) => ({
+        id: d.id,
         clientId: createClientDayId(),
         name: d.name,
         weekDay: d.weekDay ?? WEEK_DAYS[index % 7].value,
         isRest: d.isRest,
+        coverImageUrl: d.coverImageUrl,
         estimatedDurationInMinutes: Math.max(
           1,
           Math.round(d.estimatedDurationInSeconds / 60),
         ),
         exercises: (d.exercises ?? []).map((e) => ({
+          id: e.id,
           exerciseId: e.exerciseId,
           alternative1ExerciseId: e.alternative1ExerciseId,
           alternative2ExerciseId: e.alternative2ExerciseId,
@@ -149,11 +158,13 @@ export function CoachPrescriptionBuilder({
   }
   const [isAiModalOpen, setIsAiModalOpen] = useState(false);
   const { planningEnabled } = useAiAvailability();
-  const aiModalVisible = planningEnabled && isAiModalOpen;
+  const aiModalVisible =
+    planningEnabled && !publishingRevision && isAiModalOpen;
   const [isPending, startTransition] = useTransition();
 
   function serializeDaysForApi() {
     return trainingDaysOnly(days).map((day, dayIndex) => ({
+      ...(day.id ? { id: day.id } : {}),
       name: day.name.trim(),
       order: dayIndex,
       weekDay: day.weekDay ?? "MONDAY",
@@ -161,6 +172,7 @@ export function CoachPrescriptionBuilder({
       estimatedDurationInSeconds: Math.round(
         day.estimatedDurationInMinutes * 60,
       ),
+      ...(day.coverImageUrl ? { coverImageUrl: day.coverImageUrl } : {}),
       exercises: day.exercises.map((exercise, exerciseIndex) => {
         const name = exercise.name.trim();
         const alternatives = [
@@ -180,6 +192,7 @@ export function CoachPrescriptionBuilder({
         );
 
         return {
+          ...(exercise.id ? { id: exercise.id } : {}),
           name,
           exerciseId: exercise.exerciseId,
           order: exerciseIndex,
@@ -202,6 +215,13 @@ export function CoachPrescriptionBuilder({
     reviewed = false,
   ) {
     if (isPending) return;
+    if (
+      publishingRevision &&
+      (!savedDraft.id || savedDraft.version === undefined)
+    ) {
+      reportError("Recarregue a prescrição antes de publicar a atualização.");
+      return;
+    }
     const validationError =
       validateWorkoutPlanDraft(name, days) ||
       (name.trim().length > 100
@@ -224,7 +244,7 @@ export function CoachPrescriptionBuilder({
     }
 
     setError(null);
-    if (sendImmediately && !reviewed) {
+    if ((sendImmediately || publishingRevision) && !reviewed) {
       setReviewOpen(true);
       return;
     }
@@ -237,7 +257,6 @@ export function CoachPrescriptionBuilder({
         let reviewedVersion = savedDraft.version;
 
         if (savedDraft.id) {
-          // Atualiza rascunho existente
           const updateRes = await updatePrescriptionDraftAction({
             id: savedDraft.id,
             athleteId,
@@ -247,6 +266,7 @@ export function CoachPrescriptionBuilder({
               allowStudentSubstitution,
               workoutDays: serializedWorkoutDays,
               version: savedDraft.version!,
+              ...(publishingRevision ? { approval: true as const } : {}),
             },
           });
 
@@ -282,7 +302,7 @@ export function CoachPrescriptionBuilder({
         }
 
         // Se solicitado envio imediato
-        if (sendImmediately && savedPrescriptionId) {
+        if (sendImmediately && savedPrescriptionId && !publishingRevision) {
           const sendRes = await sendPrescriptionAction({
             id: savedPrescriptionId,
             athleteId,
@@ -296,9 +316,11 @@ export function CoachPrescriptionBuilder({
         }
 
         toast.success(
-          sendImmediately
-            ? "Prescrição enviada ao aluno!"
-            : "Rascunho salvo com sucesso!",
+          publishingRevision
+            ? "Prescrição atualizada com sucesso!"
+            : sendImmediately
+              ? "Prescrição enviada ao aluno!"
+              : "Rascunho salvo com sucesso!",
         );
         router.push(`/personal/alunos/${athleteId}?tab=prescriptions`);
         router.refresh();
@@ -400,38 +422,40 @@ export function CoachPrescriptionBuilder({
           antes de liberar ao aluno.
         </p>
       )}
-      <AiFeature capability="planning">
-        <section className="relative overflow-hidden rounded-3xl border border-primary/20 bg-linear-to-r from-primary/10 via-primary/5 to-transparent p-5 shadow-xs">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="inline-flex size-7 items-center justify-center rounded-xl bg-primary/20 text-primary">
-                  <Sparkles className="size-4" />
-                </span>
-                <h2 className="font-heading text-sm font-bold text-foreground">
-                  Prescrição Assistida por IA
-                </h2>
+      {!publishingRevision && (
+        <AiFeature capability="planning">
+          <section className="relative overflow-hidden rounded-3xl border border-primary/20 bg-linear-to-r from-primary/10 via-primary/5 to-transparent p-5 shadow-xs">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex size-7 items-center justify-center rounded-xl bg-primary/20 text-primary">
+                    <Sparkles className="size-4" />
+                  </span>
+                  <h2 className="font-heading text-sm font-bold text-foreground">
+                    Prescrição Assistida por IA
+                  </h2>
+                </div>
+                <p className="text-xs text-muted-foreground max-w-xl">
+                  Monte divisões e selecione exercícios canônicos ditando por
+                  voz, enviando uma ficha em PDF/foto ou descrevendo a
+                  estratégia para {athleteName}.
+                </p>
               </div>
-              <p className="text-xs text-muted-foreground max-w-xl">
-                Monte divisões e selecione exercícios canônicos ditando por voz,
-                enviando uma ficha em PDF/foto ou descrevendo a estratégia para{" "}
-                {athleteName}.
-              </p>
-            </div>
 
-            <Button
-              type="button"
-              variant="default"
-              size="sm"
-              onClick={() => setIsAiModalOpen(true)}
-              className="h-10 rounded-xl font-heading text-xs font-bold gap-2 shadow-xs shrink-0"
-            >
-              <Sparkles className="size-3.5" />
-              <span>Prescrever com IA</span>
-            </Button>
-          </div>
-        </section>
-      </AiFeature>
+              <Button
+                type="button"
+                variant="default"
+                size="sm"
+                onClick={() => setIsAiModalOpen(true)}
+                className="h-10 rounded-xl font-heading text-xs font-bold gap-2 shadow-xs shrink-0"
+              >
+                <Sparkles className="size-3.5" />
+                <span>Prescrever com IA</span>
+              </Button>
+            </div>
+          </section>
+        </AiFeature>
+      )}
 
       {builderMode === "classic" && planSettings}
       <ViewModeToggle
@@ -445,13 +469,17 @@ export function CoachPrescriptionBuilder({
             planName={name}
             onPlanNameChange={setName}
             planNameMaxLength={100}
-            saveLabel="Salvar rascunho"
+            saveLabel={
+              publishingRevision ? "Revisar atualização" : "Salvar rascunho"
+            }
             settings={planSettings}
-            onAi={() => setIsAiModalOpen(true)}
+            onAi={publishingRevision ? undefined : () => setIsAiModalOpen(true)}
             onClassic={() => changeMode("classic")}
             syncError={syncError}
             onSave={() => void handleSave(false)}
-            onReview={() => void handleSave(true)}
+            onReview={
+              publishingRevision ? undefined : () => void handleSave(true)
+            }
             reviewLabel="Revisar e enviar"
             error={error}
             activeIndex={activeDayIndex}
@@ -483,25 +511,26 @@ export function CoachPrescriptionBuilder({
         )}
         <WorkoutPlanSummary days={days} />
         <div className="flex flex-col items-center gap-2.5 sm:flex-row">
-          {builderMode === "tactical" ? (
-            <SealButton
-              disabled={isPending}
-              onSave={() => void handleSave(false)}
-            />
-          ) : (
-            <Button
-              type="button"
-              variant="outline"
-              disabled={isPending}
-              onClick={() => handleSave(false)}
-              className="w-full sm:flex-1 h-11 rounded-xl font-heading text-xs font-semibold border-border/80"
-            >
-              {isPending && (
-                <LoaderCircle className="size-3.5 animate-spin mr-1.5" />
-              )}
-              <span>Salvar Rascunho</span>
-            </Button>
-          )}
+          {!publishingRevision &&
+            (builderMode === "tactical" ? (
+              <SealButton
+                disabled={isPending}
+                onSave={() => void handleSave(false)}
+              />
+            ) : (
+              <Button
+                type="button"
+                variant="outline"
+                disabled={isPending}
+                onClick={() => handleSave(false)}
+                className="w-full sm:flex-1 h-11 rounded-xl font-heading text-xs font-semibold border-border/80"
+              >
+                {isPending && (
+                  <LoaderCircle className="size-3.5 animate-spin mr-1.5" />
+                )}
+                <span>Salvar Rascunho</span>
+              </Button>
+            ))}
 
           <Button
             type="button"
@@ -515,7 +544,11 @@ export function CoachPrescriptionBuilder({
             ) : (
               <Send className="size-3.5" />
             )}
-            <span>Revisar e Aprovar Prescrição</span>
+            <span>
+              {publishingRevision
+                ? "Revisar atualização"
+                : "Revisar e Aprovar Prescrição"}
+            </span>
           </Button>
         </div>
       </div>
@@ -528,8 +561,13 @@ export function CoachPrescriptionBuilder({
           }))}
           notes={notes}
           recipient={athleteName}
+          publicationRevision={publishingRevision}
           allowStudentSubstitution={allowStudentSubstitution}
-          confirmLabel="Confirmar e enviar ao aluno"
+          confirmLabel={
+            publishingRevision
+              ? "Aprovar e atualizar prescrição"
+              : "Confirmar e enviar ao aluno"
+          }
           onClose={() => setReviewOpen(false)}
           onConfirm={() => void handleSave(true, true)}
           pending={isPending}

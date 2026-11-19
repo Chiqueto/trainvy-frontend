@@ -4,7 +4,6 @@ import { useCallback, useId, useState, useSyncExternalStore } from "react";
 import { Popover } from "radix-ui";
 import {
   Activity,
-  ArrowLeft,
   Clock3,
   Compass,
   Eye,
@@ -47,7 +46,7 @@ export interface HoloHudProps {
   days: WorkoutPlanDraftDay[];
   activeDayIndex: number;
   onSelectDay: (index: number) => void;
-  onAddDay: () => void;
+  onAddDay?: () => void;
   telemetryData: ReturnType<typeof telemetry>;
   tilt: number;
   zoom: number;
@@ -57,7 +56,7 @@ export interface HoloHudProps {
   onResetCamera: () => void;
   onAutoArrange: () => void;
   onSave?: () => void;
-  onClassicView?: () => void;
+  settingsLabel?: string;
   onOpenSettings?: () => void;
   onReview?: () => void;
   reviewLabel?: string;
@@ -83,7 +82,7 @@ export function HoloHud({
   onResetCamera,
   onAutoArrange,
   onSave,
-  onClassicView,
+  settingsLabel = "Configurações do plano",
   onOpenSettings,
   onReview,
   reviewLabel,
@@ -116,16 +115,6 @@ export function HoloHud({
     <>
       <header className="spatial-header pointer-events-auto absolute inset-x-0 top-0 z-40">
         <div className="flex min-w-0 items-center gap-3 px-3 py-3 sm:px-6 sm:py-4">
-          {onClassicView && (
-            <button
-              type="button"
-              onClick={onClassicView}
-              aria-label="Voltar ao editor por cards"
-              className="spatial-icon-button"
-            >
-              <ArrowLeft size={17} />
-            </button>
-          )}
           <div className="min-w-0 flex-1">
             <div className="mb-1 flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.24em] text-cyan-300/80">
               <Layers3 size={12} /> Trainvy{" "}
@@ -156,18 +145,6 @@ export function HoloHud({
             )}
           </div>
           <div className="hidden shrink-0 items-center gap-1.5 sm:flex sm:gap-2">
-            {onClassicView && (
-              <button
-                type="button"
-                onClick={onClassicView}
-                aria-label="Editor por cards"
-                data-tour="builder-views"
-                className="spatial-icon-button sm:!w-auto sm:gap-2 sm:px-3"
-              >
-                <Layers3 size={16} />
-                <span className="hidden text-xs sm:inline">Cards</span>
-              </button>
-            )}
             {onReview && (
               <button
                 type="button"
@@ -186,7 +163,7 @@ export function HoloHud({
               <button
                 type="button"
                 onClick={onOpenSettings}
-                aria-label="Configurações do plano"
+                aria-label={settingsLabel}
                 className="spatial-icon-button"
               >
                 <Settings2 size={16} />
@@ -211,7 +188,13 @@ export function HoloHud({
           className="flex min-w-0 items-center gap-3 border-t border-white/5 px-3 py-2 sm:px-6"
         >
           {onDayNameChange && days[activeDayIndex] && (
-            <label className="block w-32 min-w-0 shrink-0 sm:w-52">
+            <label
+              className={
+                onAddDay
+                  ? "block w-32 min-w-0 shrink-0 sm:w-52"
+                  : "block min-w-0 flex-1"
+              }
+            >
               <span className="sr-only">Nome do treino</span>
               <input
                 value={days[activeDayIndex].name}
@@ -223,44 +206,48 @@ export function HoloHud({
               />
             </label>
           )}
-          <div
-            role="tablist"
-            aria-label="Treinos do plano"
-            className="no-scrollbar flex min-w-0 flex-1 gap-1.5 overflow-x-auto"
-          >
-            {days.map((day, i) => (
+          {onAddDay && (
+            <>
+              <div
+                role="tablist"
+                aria-label="Treinos do plano"
+                className="no-scrollbar flex min-w-0 flex-1 gap-1.5 overflow-x-auto"
+              >
+                {days.map((day, i) => (
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-label={day.name}
+                    aria-selected={i === activeDayIndex}
+                    onClick={() => onSelectDay(i)}
+                    key={day.clientId ?? day.id ?? i}
+                    className={`flex h-9 shrink-0 items-center gap-2 rounded-lg px-3 text-xs transition-colors ${i === activeDayIndex ? "border border-cyan-300/30 bg-cyan-300/10 text-cyan-200" : "border border-transparent text-slate-400 hover:bg-white/5 hover:text-white"}`}
+                  >
+                    <span className="font-mono font-semibold">
+                      {String.fromCharCode(65 + (i % 26))}
+                    </span>
+                    <span
+                      className={
+                        i === activeDayIndex ? "max-w-36 truncate" : "hidden"
+                      }
+                    >
+                      {day.name.replace(/^Treino [A-Z]\s*[-–·]?\s*/i, "") ||
+                        "Treino"}
+                    </span>
+                  </button>
+                ))}
+              </div>
               <button
                 type="button"
-                role="tab"
-                aria-label={day.name}
-                aria-selected={i === activeDayIndex}
-                onClick={() => onSelectDay(i)}
-                key={day.clientId ?? day.id ?? i}
-                className={`flex h-9 shrink-0 items-center gap-2 rounded-lg px-3 text-xs transition-colors ${i === activeDayIndex ? "border border-cyan-300/30 bg-cyan-300/10 text-cyan-200" : "border border-transparent text-slate-400 hover:bg-white/5 hover:text-white"}`}
+                onClick={onAddDay}
+                disabled={disabled}
+                aria-label="Novo treino"
+                className="spatial-icon-button !size-9 border-dashed"
               >
-                <span className="font-mono font-semibold">
-                  {String.fromCharCode(65 + (i % 26))}
-                </span>
-                <span
-                  className={
-                    i === activeDayIndex ? "max-w-36 truncate" : "hidden"
-                  }
-                >
-                  {day.name.replace(/^Treino [A-Z]\s*[-–·]?\s*/i, "") ||
-                    "Treino"}
-                </span>
+                <Plus size={15} />
               </button>
-            ))}
-          </div>
-          <button
-            type="button"
-            onClick={onAddDay}
-            disabled={disabled}
-            aria-label="Novo treino"
-            className="spatial-icon-button !size-9 border-dashed"
-          >
-            <Plus size={15} />
-          </button>
+            </>
+          )}
           <div className="hidden items-center gap-4 border-l border-white/10 pl-4 text-xs text-slate-400 md:flex">
             <span className="flex items-center gap-1.5">
               <Clock3 size={13} />
@@ -417,7 +404,6 @@ export function HoloHud({
         <button
           type="button"
           aria-label="Mais ações do treino"
-          data-tour="builder-views"
           onClick={() => setControlsOpen(true)}
           className="flex min-h-12 flex-1 flex-col items-center justify-center gap-1 rounded-xl text-[11px] text-slate-300"
         >
@@ -477,18 +463,6 @@ export function HoloHud({
             <Activity size={18} />
             Mapa muscular
           </button>
-          {onClassicView && (
-            <button
-              type="button"
-              onClick={() => {
-                setControlsOpen(false);
-                onClassicView();
-              }}
-            >
-              <ArrowLeft size={18} />
-              Editor por cards
-            </button>
-          )}
           <button
             type="button"
             onClick={() => {

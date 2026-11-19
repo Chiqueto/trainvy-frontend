@@ -57,12 +57,20 @@ export default async function EditPrescriptionPage({
     // 404
   }
 
-  if (!athleteData || !prescriptionData) {
+  if (
+    !athleteData ||
+    !prescriptionData ||
+    prescriptionData.athleteId !== athleteId
+  ) {
     notFound();
   }
 
-  // Apenas rascunhos podem ser editados
-  if (prescriptionData.status !== "DRAFT") {
+  const { status } = prescriptionData;
+  if (
+    status !== "DRAFT" &&
+    status !== "SENT" &&
+    !(status === "ACCEPTED" && prescriptionData.acceptedWorkoutPlanId)
+  ) {
     redirect(`/personal/alunos/${athleteId}?tab=prescriptions`);
   }
 
@@ -78,19 +86,22 @@ export default async function EditPrescriptionPage({
             <ArrowLeft className="size-4 group-hover:-translate-x-0.5 transition-transform" />
             <span>Voltar para {athleteData.name}</span>
           </Link>
-          <span className="font-heading text-[10px] uppercase font-bold tracking-wider text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded-full">
-            Editando Rascunho
-          </span>
         </div>
 
         {/* Título */}
         <div className="space-y-1">
           <h1 className="font-heading text-xl font-bold text-foreground">
-            Editar Rascunho de Prescrição
+            {status === "DRAFT"
+              ? "Editar rascunho de prescrição"
+              : "Editar prescrição"}
           </h1>
           <p className="text-xs text-muted-foreground">
-            Ajuste os exercícios e parâmetros antes de enviar para{" "}
-            <strong>{athleteData.name}</strong>
+            {status === "ACCEPTED"
+              ? "A atualização aprovada será aplicada ao plano vinculado de "
+              : status === "SENT"
+                ? "A nova versão será exibida no envio para "
+                : "Ajuste os exercícios e parâmetros antes de enviar para "}
+            <strong>{athleteData.name}</strong>.
           </p>
         </div>
 
@@ -99,6 +110,7 @@ export default async function EditPrescriptionPage({
           athleteName={athleteData.name}
           initialData={{
             id: prescriptionData.id,
+            status,
             originType: prescriptionData.originType,
             allowStudentSubstitution: prescriptionData.allowStudentSubstitution,
             name: prescriptionData.name,

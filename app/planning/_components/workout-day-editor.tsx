@@ -12,6 +12,8 @@ import {
   type WorkoutPlanDraftDay,
 } from "../_lib/workout-plan-builder";
 import { WorkoutCardsWorkspace } from "./workout-cards-workspace";
+import { TacticalPlanWorkspace } from "./tactical/tactical-plan-workspace";
+import { useBuilderMode, ViewModeToggle } from "./tactical/view-mode-toggle";
 
 export function WorkoutDayEditor({
   planId,
@@ -24,6 +26,8 @@ export function WorkoutDayEditor({
 }) {
   const router = useRouter();
   const hydrated = useHydrated();
+  const { builderMode, changeMode, syncError } = useBuilderMode();
+  const backHref = `/workout-plans/${planId}/days/${dayId}`;
   const [day, setDay] = useState(initialDay);
   const [error, setError] = useState<string>();
   const [pending, startTransition] = useTransition();
@@ -46,7 +50,7 @@ export function WorkoutDayEditor({
           setError(result.error);
           return;
         }
-        router.push(`/workout-plans/${planId}/days/${dayId}`);
+        router.replace(backHref);
         router.refresh();
       } catch {
         setError("Não foi possível salvar o treino. Tente novamente.");
@@ -54,8 +58,34 @@ export function WorkoutDayEditor({
     });
   }
 
+  if (builderMode === "tactical") {
+    return (
+      <TacticalPlanWorkspace
+        singleDay
+        days={[day]}
+        onChange={([next]) => setDay(next)}
+        planName={day.name}
+        backHref={backHref}
+        onClassic={() => changeMode("classic")}
+        onSave={save}
+        saveLabel="Salvar treino"
+        disabled={!hydrated || pending}
+        error={error}
+        syncError={syncError}
+      />
+    );
+  }
+
   return (
     <>
+      <div className="sticky top-0 z-30 bg-background py-2">
+        <ViewModeToggle
+          value={builderMode}
+          onChange={changeMode}
+          syncError={syncError}
+          backHref={backHref}
+        />
+      </div>
       <WorkoutCardsWorkspace
         days={[day]}
         onChange={([next]) => setDay(next)}

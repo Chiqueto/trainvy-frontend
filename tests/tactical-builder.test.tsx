@@ -9,6 +9,7 @@ import {
   within,
 } from "@testing-library/react";
 import { WorkoutPlanBuilder } from "@/app/planning/_components/workout-plan-builder";
+import { WorkoutDayEditor } from "@/app/planning/_components/workout-day-editor";
 import {
   biomechanicalAlternatives,
   mergeExercises,
@@ -29,6 +30,8 @@ import type {
 
 const mocks = vi.hoisted(() => ({
   save: vi.fn(),
+  back: vi.fn(),
+  replace: vi.fn(),
   pref: vi.fn(),
   catalog: [
     {
@@ -51,7 +54,12 @@ const mocks = vi.hoisted(() => ({
   ],
 }));
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
+  useRouter: () => ({
+    push: vi.fn(),
+    back: mocks.back,
+    replace: mocks.replace,
+    refresh: vi.fn(),
+  }),
 }));
 vi.mock("@/app/planning/_actions", () => ({
   editWorkoutPlanAction: mocks.save,
@@ -129,9 +137,13 @@ describe("Tactical builder", () => {
     fireEvent.change(screen.getByRole("textbox", { name: "Nome do treino" }), {
       target: { value: "Superiores" },
     });
-    fireEvent.click(
-      screen.getByRole("button", { name: "Editor por cards" }),
+    const deckModes = within(
+      screen.getByRole("group", { name: "Visualização do editor" }),
     );
+    expect(
+      deckModes.getByRole("button", { name: "Deck 3D", pressed: true }),
+    ).toBeDefined();
+    fireEvent.click(deckModes.getByRole("button", { name: "Cards" }));
     const modes = screen.getByRole("group", { name: "Visualização do editor" });
     expect(within(modes).getAllByRole("button")).toHaveLength(2);
     expect(
@@ -149,6 +161,44 @@ describe("Tactical builder", () => {
         "tactical",
       ),
     );
+  });
+  it("keeps the mode selector and back navigation available while editing a single workout", () => {
+    const historyLength = vi
+      .spyOn(window.history, "length", "get")
+      .mockReturnValue(2);
+    try {
+      render(
+        <WorkoutDayEditor
+          planId="plan"
+          dayId="day"
+          initialDay={deserializeWorkoutDays(plan())[0]}
+        />,
+      );
+      const modes = () =>
+        within(screen.getByRole("group", { name: "Visualização do editor" }));
+      expect(
+        modes().getByRole("button", { name: "Deck 3D", pressed: true }),
+      ).toBeDefined();
+      expect(screen.queryByRole("button", { name: "Novo treino" })).toBeNull();
+      fireEvent.click(modes().getByRole("button", { name: "Cards" }));
+      expect(
+        modes().getByRole("button", { name: "Cards", pressed: true }),
+      ).toBeDefined();
+      fireEvent.change(screen.getByLabelText("Nome do treino"), {
+        target: { value: "Treino revisado" },
+      });
+      fireEvent.click(screen.getByRole("button", { name: "Voltar" }));
+      expect(mocks.back).toHaveBeenCalledOnce();
+      fireEvent.click(modes().getByRole("button", { name: "Deck 3D" }));
+      expect(screen.getByDisplayValue("Treino revisado")).toBeDefined();
+      historyLength.mockReturnValue(1);
+      fireEvent.click(screen.getByRole("button", { name: "Voltar" }));
+      expect(mocks.replace).toHaveBeenCalledWith(
+        "/workout-plans/plan/days/day",
+      );
+    } finally {
+      historyLength.mockRestore();
+    }
   });
   it("edits plan settings inside the immersive view using the existing save state", async () => {
     render(<WorkoutPlanBuilder mode="edit" initialPlan={plan()} />);
@@ -246,13 +296,13 @@ describe("Tactical builder", () => {
       }),
     );
     render(<WorkoutPlanBuilder mode="edit" initialPlan={initial} />);
-    fireEvent.click(
-      screen.getByRole("button", { name: "Editor por cards" }),
-    );
+    fireEvent.click(screen.getByRole("button", { name: "Cards" }));
     const firstExercise = within(
       screen.getByRole("article", { name: "Exercício 1: Supino com barra" }),
     );
-    fireEvent.click(firstExercise.getByText("Supino com barra", { exact: true }));
+    fireEvent.click(
+      firstExercise.getByText("Supino com barra", { exact: true }),
+    );
     expect(
       firstExercise
         .getByRole("button", { name: "🔥 Drop-set" })

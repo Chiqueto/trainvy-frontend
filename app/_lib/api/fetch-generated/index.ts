@@ -6238,6 +6238,8 @@ export type GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItem
 
 export type GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItem =
   {
+    /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+    id?: string;
     runeConfig?: GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
@@ -6298,6 +6300,8 @@ export type GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemExercisesItem
   };
 
 export type GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
   name: string;
   order: number;
   weekDay: GetMyArchivedPrescriptions200ItemPayloadWorkoutDaysItemWeekDay;
@@ -7605,6 +7609,8 @@ export type CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItem
 
 export type CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItem =
   {
+    /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+    id?: string;
     runeConfig?: CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
@@ -7665,6 +7671,8 @@ export type CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemExercisesItem
   };
 
 export type CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
   name: string;
   order: number;
   weekDay: CreateWorkoutPrescriptionDraft201PayloadWorkoutDaysItemWeekDay;
@@ -7919,6 +7927,8 @@ export type UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItem = {
    * @maximum 9007199254740991
    */
   restTimeInSeconds: number;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
 };
 
 export type UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItem = {
@@ -7939,9 +7949,12 @@ export type UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItem = {
   /** @nullable */
   coverImageUrl?: string | null;
   exercises: UpdateWorkoutPrescriptionDraftBodyWorkoutDaysItemExercisesItem[];
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
 };
 
 export type UpdateWorkoutPrescriptionDraftBody = {
+  approval?: boolean;
   allowStudentSubstitution?: boolean;
   /**
    * @minLength 1
@@ -8078,6 +8091,8 @@ export type UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItem
 
 export type UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItem =
   {
+    /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+    id?: string;
     runeConfig?: UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
@@ -8138,6 +8153,8 @@ export type UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemExercisesItem
   };
 
 export type UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
   name: string;
   order: number;
   weekDay: UpdateWorkoutPrescriptionDraft200PayloadWorkoutDaysItemWeekDay;
@@ -8342,6 +8359,8 @@ export type GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemSet
 
 export type GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItem =
   {
+    /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+    id?: string;
     runeConfig?: GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
@@ -8402,6 +8421,8 @@ export type GetCoachPrescriptionDetails200PayloadWorkoutDaysItemExercisesItem =
   };
 
 export type GetCoachPrescriptionDetails200PayloadWorkoutDaysItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
   name: string;
   order: number;
   weekDay: GetCoachPrescriptionDetails200PayloadWorkoutDaysItemWeekDay;
@@ -8614,6 +8635,8 @@ export type SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetPres
   };
 
 export type SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
   runeConfig?: SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfig;
   /**
    * @minLength 1
@@ -8674,6 +8697,8 @@ export type SendWorkoutPrescription200PayloadWorkoutDaysItemExercisesItem = {
 };
 
 export type SendWorkoutPrescription200PayloadWorkoutDaysItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
   name: string;
   order: number;
   weekDay: SendWorkoutPrescription200PayloadWorkoutDaysItemWeekDay;
@@ -8877,6 +8902,8 @@ export type CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetPr
   };
 
 export type CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
   runeConfig?: CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfig;
   /**
    * @minLength 1
@@ -8937,6 +8964,8 @@ export type CancelWorkoutPrescription200PayloadWorkoutDaysItemExercisesItem = {
 };
 
 export type CancelWorkoutPrescription200PayloadWorkoutDaysItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
   name: string;
   order: number;
   weekDay: CancelWorkoutPrescription200PayloadWorkoutDaysItemWeekDay;
@@ -9142,6 +9171,8 @@ export type ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesI
 
 export type ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItem =
   {
+    /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+    id?: string;
     runeConfig?: ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
@@ -9202,6 +9233,8 @@ export type ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesI
   };
 
 export type ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
   name: string;
   order: number;
   weekDay: ListCoachAthletePrescriptions200ItemPayloadWorkoutDaysItemWeekDay;
@@ -9406,6 +9439,8 @@ export type ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemSe
 
 export type ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItem =
   {
+    /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+    id?: string;
     runeConfig?: ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
@@ -9466,6 +9501,8 @@ export type ListAthletePrescriptions200ItemPayloadWorkoutDaysItemExercisesItem =
   };
 
 export type ListAthletePrescriptions200ItemPayloadWorkoutDaysItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
   name: string;
   order: number;
   weekDay: ListAthletePrescriptions200ItemPayloadWorkoutDaysItemWeekDay;
@@ -9670,6 +9707,8 @@ export type GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemS
 
 export type GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItem =
   {
+    /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+    id?: string;
     runeConfig?: GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
@@ -9730,6 +9769,8 @@ export type GetAthletePrescriptionDetails200PayloadWorkoutDaysItemExercisesItem 
   };
 
 export type GetAthletePrescriptionDetails200PayloadWorkoutDaysItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
   name: string;
   order: number;
   weekDay: GetAthletePrescriptionDetails200PayloadWorkoutDaysItemWeekDay;
@@ -9935,6 +9976,8 @@ export type AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExerci
 
 export type AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItem =
   {
+    /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+    id?: string;
     runeConfig?: AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
@@ -9995,6 +10038,8 @@ export type AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemExerci
   };
 
 export type AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
   name: string;
   order: number;
   weekDay: AcceptWorkoutPrescription200PrescriptionPayloadWorkoutDaysItemWeekDay;
@@ -10205,6 +10250,8 @@ export type DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemSetP
   };
 
 export type DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
   runeConfig?: DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItemRuneConfig;
   /**
    * @minLength 1
@@ -10265,6 +10312,8 @@ export type DeclineWorkoutPrescription200PayloadWorkoutDaysItemExercisesItem = {
 };
 
 export type DeclineWorkoutPrescription200PayloadWorkoutDaysItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
   name: string;
   order: number;
   weekDay: DeclineWorkoutPrescription200PayloadWorkoutDaysItemWeekDay;
@@ -12005,6 +12054,8 @@ export type ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesI
 
 export type ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItem =
   {
+    /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+    id?: string;
     runeConfig?: ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
@@ -12065,6 +12116,8 @@ export type ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemExercisesI
   };
 
 export type ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
   name: string;
   order: number;
   weekDay: ListCoachWorkoutPlanTemplates200ItemPayloadWorkoutDaysItemWeekDay;
@@ -12398,6 +12451,8 @@ export type CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItem
 
 export type CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItem =
   {
+    /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+    id?: string;
     runeConfig?: CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
@@ -12458,6 +12513,8 @@ export type CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemExercisesItem
   };
 
 export type CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
   name: string;
   order: number;
   weekDay: CreateCoachWorkoutPlanTemplate201PayloadWorkoutDaysItemWeekDay;
@@ -12588,6 +12645,8 @@ export type GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemSet
 
 export type GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItem =
   {
+    /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+    id?: string;
     runeConfig?: GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
@@ -12648,6 +12707,8 @@ export type GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItem =
   };
 
 export type GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
   name: string;
   order: number;
   weekDay: GetCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemWeekDay;
@@ -12981,6 +13042,8 @@ export type UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItem
 
 export type UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItem =
   {
+    /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+    id?: string;
     runeConfig?: UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
@@ -13041,6 +13104,8 @@ export type UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemExercisesItem
   };
 
 export type UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
   name: string;
   order: number;
   weekDay: UpdateCoachWorkoutPlanTemplate200PayloadWorkoutDaysItemWeekDay;
@@ -13247,6 +13312,8 @@ export type AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysIte
 
 export type AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItem =
   {
+    /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+    id?: string;
     runeConfig?: AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
@@ -13308,6 +13375,8 @@ export type AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysIte
 
 export type AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItem =
   {
+    /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+    id?: string;
     name: string;
     order: number;
     weekDay: AllocateCoachWorkoutPlanTemplate200PrescriptionPayloadWorkoutDaysItemWeekDay;
@@ -13477,6 +13546,8 @@ export type CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExerc
 
 export type CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItem =
   {
+    /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+    id?: string;
     runeConfig?: CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExercisesItemRuneConfig;
     /**
      * @minLength 1
@@ -13537,6 +13608,8 @@ export type CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemExerc
   };
 
 export type CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItem = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
   name: string;
   order: number;
   weekDay: CreateCoachWorkoutPlanTemplateFromPlan201PayloadWorkoutDaysItemWeekDay;
@@ -28233,7 +28306,7 @@ export const createWorkoutPrescriptionDraft = async (
 };
 
 /**
- * @summary Atualizar rascunho de prescrição existente antes do envio
+ * @summary Atualizar rascunho ou publicar uma revisão da prescrição
  */
 export type updateWorkoutPrescriptionDraftResponse200 = {
   data: UpdateWorkoutPrescriptionDraft200;

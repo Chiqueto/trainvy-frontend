@@ -8,6 +8,7 @@ vi.mock("@/app/planning/_components/tactical/view-mode-toggle", () => ({
   ViewModeToggle: () => null,
 }));
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import type { ComponentProps } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { toast } from "sonner";
 import { CoachPrescriptionBuilder } from "@/app/personal/alunos/[athleteId]/_components/coach-prescription-builder";
@@ -73,7 +74,9 @@ const initialData = {
     },
   ],
 };
-function renderBuilder(data = initialData) {
+function renderBuilder(
+  data: ComponentProps<typeof CoachPrescriptionBuilder>["initialData"] = initialData,
+) {
   return render(
     <CoachPrescriptionBuilder
       athleteId="aluno"
@@ -190,6 +193,50 @@ describe("Salvar prescrição do personal", () => {
     );
     expect(screen.getByText("Supino", { exact: true })).toBeDefined();
     expect(push).not.toHaveBeenCalled();
+  });
+
+  it("publica a revisão do plano aceito com os identificadores originais", async () => {
+    vi.mocked(updatePrescriptionDraftAction).mockResolvedValue({
+      success: true,
+      data: { id: "published", version: 4 },
+    } as Awaited<ReturnType<typeof updatePrescriptionDraftAction>>);
+    const [day] = initialData.workoutDays;
+    renderBuilder({
+      ...initialData,
+      id: "published",
+      version: 3,
+      status: "ACCEPTED",
+      workoutDays: [
+        { ...day, id: "saved-day", exercises: [{ ...day.exercises[0], id: "saved-exercise" }] },
+      ],
+    });
+
+    fireEvent.click(screen.getByText("Supino", { exact: true }));
+    fireEvent.change(screen.getByLabelText(/Séries de trabalho/i), {
+      target: { value: "5" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Revisar atualização" }));
+    expect(updatePrescriptionDraftAction).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("checkbox", { name: /Revisei os exercícios/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Aprovar e atualizar prescrição" }));
+
+    await waitFor(() => expect(push).toHaveBeenCalled());
+    expect(updatePrescriptionDraftAction).toHaveBeenCalledWith({
+      id: "published",
+      athleteId: "aluno",
+      body: expect.objectContaining({
+        approval: true,
+        version: 3,
+        workoutDays: [
+          expect.objectContaining({
+            id: "saved-day",
+            exercises: [expect.objectContaining({ id: "saved-exercise", sets: 5 })],
+          }),
+        ],
+      }),
+    });
+    expect(createPrescriptionDraftAction).not.toHaveBeenCalled();
+    expect(sendPrescriptionAction).not.toHaveBeenCalled();
   });
 
   it("seleciona um exercício cadastrado e salva seu ID sem campo de nome livre", async () => {

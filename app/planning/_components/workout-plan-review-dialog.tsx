@@ -30,6 +30,7 @@ export function WorkoutPlanReviewDialog({
   days,
   notes,
   recipient,
+  publicationRevision = false,
   allowStudentSubstitution,
   pending,
   confirmLabel,
@@ -40,6 +41,7 @@ export function WorkoutPlanReviewDialog({
   days: WorkoutPlanDraftDay[];
   notes?: string;
   recipient?: string;
+  publicationRevision?: boolean;
   allowStudentSubstitution?: boolean;
   pending?: boolean;
   confirmLabel: string;
@@ -64,7 +66,9 @@ export function WorkoutPlanReviewDialog({
               </Dialog.Title>
               <Dialog.Description className="text-sm text-muted-foreground">
                 {recipient
-                  ? `Confira os treinos antes de enviar para ${recipient}.`
+                  ? publicationRevision
+                    ? `Confira as alterações antes de atualizar a prescrição de ${recipient}.`
+                    : `Confira os treinos antes de enviar para ${recipient}.`
                   : "Confira a sequência e os parâmetros antes de salvar."}
               </Dialog.Description>
             </div>
@@ -176,7 +180,9 @@ export function WorkoutPlanReviewDialog({
                   className="mt-0.5 size-4 shrink-0 accent-primary"
                   disabled={pending}
                 />
-                Revisei os exercícios e parâmetros e aprovo o envio desta ficha.
+                {publicationRevision
+                  ? "Revisei os exercícios e parâmetros e aprovo esta atualização."
+                  : "Revisei os exercícios e parâmetros e aprovo o envio desta ficha."}
               </label>
             )}
             <div className="flex flex-col gap-2 sm:flex-row">

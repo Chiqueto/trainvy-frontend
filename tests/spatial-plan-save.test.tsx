@@ -31,6 +31,20 @@ const mocks = vi.hoisted(() => ({
       hasMedia: false,
       muscles: [{ id: "chest", muscleGroup: "CHEST", role: "PRIMARY" }],
     },
+    {
+      id: "catalog-row",
+      name: "Remada",
+      ownerUserId: null,
+      hasMedia: false,
+      muscles: [],
+    },
+    {
+      id: "catalog-curl",
+      name: "Rosca direta",
+      ownerUserId: null,
+      hasMedia: false,
+      muscles: [],
+    },
   ],
 }));
 vi.mock("next/navigation", () => ({
@@ -286,7 +300,7 @@ describe("Spatial plan editor and save parity", () => {
     );
     closeSettings(dialog);
     fireEvent.click(
-      screen.getByRole("button", { name: "Voltar ao editor por cards" }),
+      screen.getByRole("button", { name: "Cards" }),
     );
     expect(
       (screen.getByLabelText("Nome do plano *") as HTMLInputElement).value,
@@ -310,6 +324,52 @@ describe("Spatial plan editor and save parity", () => {
       ["Treino B", 1800, "WEDNESDAY"],
       ["Treino de superiores", 2520, "WEDNESDAY"],
     ]);
+  });
+  it("adds multiple exercises from the shared picker in selection order in the student's deck", async () => {
+    render(<WorkoutPlanBuilder mode="edit" initialPlan={plan} />);
+    fireEvent.click(
+      screen.getByRole("button", { name: "Adicionar exercícios" }),
+    );
+    const picker = within(
+      screen.getByRole("dialog", { name: "Montar sequência de exercícios" }),
+    );
+    expect(
+      picker.queryByRole("button", { name: "Selecionar Supino com barra" }),
+    ).toBeNull();
+    fireEvent.click(
+      picker.getByRole("button", { name: "Selecionar Rosca direta" }),
+    );
+    fireEvent.click(picker.getByRole("button", { name: "Selecionar Remada" }));
+    fireEvent.click(
+      picker.getByRole("button", { name: "Adicionar 2 ao treino" }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Salvar plano" }));
+
+    await waitFor(() =>
+      expect(mocks.edit).toHaveBeenCalledWith(
+        "plan",
+        expect.objectContaining({
+          workoutDays: [
+            expect.objectContaining({
+              exercises: [
+                expect.objectContaining({
+                  exerciseId: "catalog-bench",
+                  order: 0,
+                }),
+                expect.objectContaining({
+                  exerciseId: "catalog-curl",
+                  order: 1,
+                }),
+                expect.objectContaining({
+                  exerciseId: "catalog-row",
+                  order: 2,
+                }),
+              ],
+            }),
+          ],
+        }),
+      ),
+    );
   });
   it("edits periodization dates and notes from the same settings used by the normal editor", async () => {
     render(

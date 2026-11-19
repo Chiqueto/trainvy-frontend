@@ -1,6 +1,6 @@
 "use client";
 import { useState, type ReactNode } from "react";
-import { CoachGuidedTour } from "@/app/personal/_components/coach-guided-tour";
+import { ViewModeToggle } from "./view-mode-toggle";
 import { Dialog } from "radix-ui";
 import { Copy, Trash2 } from "lucide-react";
 import { SpatialBuilderArena } from "./spatial-builder-arena";
@@ -21,6 +21,8 @@ export function TacticalPlanWorkspace({
   activeIndex,
   onActiveChange,
   onClassic,
+  backHref,
+  singleDay = false,
   settings,
   planName,
   onPlanNameChange,
@@ -38,7 +40,9 @@ export function TacticalPlanWorkspace({
   disabled?: boolean;
   activeIndex?: number;
   onActiveChange?: (index: number) => void;
-  onClassic?: () => void;
+  onClassic: () => void;
+  backHref?: string;
+  singleDay?: boolean;
   settings?: ReactNode;
   planName?: string;
   onPlanNameChange?: (name: string) => void;
@@ -51,6 +55,9 @@ export function TacticalPlanWorkspace({
   syncError?: boolean;
   onAi?: () => void;
 }) {
+  const settingsLabel = singleDay
+    ? "Configurações do treino"
+    : "Configurações do plano";
   const [localActive, setLocalActive] = useState(0);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const active = activeIndex ?? localActive,
@@ -67,7 +74,7 @@ export function TacticalPlanWorkspace({
     <Dialog.Root
       open
       onOpenChange={(value) => {
-        if (!value) onClassic?.();
+        if (!value) onClassic();
       }}
     >
       <Dialog.Portal>
@@ -78,13 +85,18 @@ export function TacticalPlanWorkspace({
           className="dark fixed inset-0 z-50 flex h-dvh flex-col overflow-hidden bg-zinc-950 text-zinc-100 outline-none"
         >
           <Dialog.Title className="sr-only">
-            Montar plano · {planName}
+            {singleDay ? "Editar treino" : "Montar plano"} · {planName}
           </Dialog.Title>
           <Dialog.Description className="sr-only">
-            Organize exercícios, séries e técnicas do plano.
+            Organize exercícios, séries e técnicas.
           </Dialog.Description>
-          <div className="absolute right-3 top-[120px] z-[60] rounded-xl bg-zinc-900 text-zinc-100 sm:bottom-3 sm:left-3 sm:right-auto sm:top-auto">
-            <CoachGuidedTour tour="builder" />
+          <div className="shrink-0 px-2 py-2 sm:px-4">
+            <ViewModeToggle
+              value="tactical"
+              onChange={onClassic}
+              syncError={syncError}
+              backHref={backHref}
+            />
           </div>
           <div
             data-tour="builder-arena"
@@ -97,18 +109,22 @@ export function TacticalPlanWorkspace({
                 days={days}
                 activeDayIndex={index}
                 onSelectDay={setActive}
-                onAddDay={() => {
-                  onChange([
-                    ...days,
-                    {
-                      ...createDraftWorkoutDay(
-                        String.fromCharCode(65 + (days.length % 26)),
-                      ),
-                      exercises: [],
-                    },
-                  ]);
-                  setActive(days.length);
-                }}
+                onAddDay={
+                  singleDay
+                    ? undefined
+                    : () => {
+                        onChange([
+                          ...days,
+                          {
+                            ...createDraftWorkoutDay(
+                              String.fromCharCode(65 + (days.length % 26)),
+                            ),
+                            exercises: [],
+                          },
+                        ]);
+                        setActive(days.length);
+                      }
+                }
                 onChange={updateDay}
                 disabled={disabled}
                 onSave={onSave}
@@ -119,8 +135,7 @@ export function TacticalPlanWorkspace({
                 onPlanNameChange={onPlanNameChange}
                 planNameMaxLength={planNameMaxLength}
                 error={error}
-                syncError={syncError}
-                onClassicView={onClassic}
+                settingsLabel={settingsLabel}
                 onOpenSettings={() => setSettingsOpen(true)}
               />
             ) : null}
@@ -128,8 +143,12 @@ export function TacticalPlanWorkspace({
           <TacticalSheet
             open={settingsOpen}
             onClose={() => setSettingsOpen(false)}
-            title="Configurações do plano"
-            description="Nome, informações gerais e organização das divisões."
+            title={settingsLabel}
+            description={
+              singleDay
+                ? "Nome, dia de referência e duração do treino."
+                : "Nome, informações gerais e organização das divisões."
+            }
           >
             <fieldset
               disabled={disabled}
@@ -199,61 +218,66 @@ export function TacticalPlanWorkspace({
                       </select>
                     </label>
                   </div>
-                  <p className="text-[11px] leading-relaxed text-slate-400">
-                    A divisão segue a ordem dos treinos. O dia é uma referência
-                    e a duração informada será preservada.
-                  </p>
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const copy = duplicateDraftWorkoutDay(day);
-                        onChange([
-                          ...days.slice(0, index + 1),
-                          copy,
-                          ...days.slice(index + 1),
-                        ]);
-                        setActive(index + 1);
-                      }}
-                      className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-white/5"
-                    >
-                      <Copy size={13} />
-                      Duplicar treino
-                    </button>
-                    <button
-                      type="button"
-                      disabled={days.length <= 1}
-                      onClick={() => {
-                        onChange(days.filter((_, i) => i !== index));
-                        setActive(Math.max(0, index - 1));
-                      }}
-                      className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-rose-500/10 text-rose-300 disabled:opacity-30"
-                    >
-                      <Trash2 size={13} />
-                      Excluir treino
-                    </button>
-                    {([-1, 1] as const).map((offset) => (
-                      <button
-                        type="button"
-                        key={offset}
-                        disabled={
-                          index + offset < 0 || index + offset >= days.length
-                        }
-                        onClick={() => {
-                          const next = [...days];
-                          [next[index], next[index + offset]] = [
-                            next[index + offset],
-                            next[index],
-                          ];
-                          onChange(next);
-                          setActive(index + offset);
-                        }}
-                        className="min-h-11 rounded-xl bg-white/5 disabled:opacity-30"
-                      >
-                        {offset < 0 ? "← Mover antes" : "Mover depois →"}
-                      </button>
-                    ))}
-                  </div>
+                  {!singleDay && (
+                    <>
+                      <p className="text-[11px] leading-relaxed text-slate-400">
+                        A divisão segue a ordem dos treinos. O dia é uma
+                        referência e a duração informada será preservada.
+                      </p>
+                      <div className="grid grid-cols-2 gap-2 text-xs">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const copy = duplicateDraftWorkoutDay(day);
+                            onChange([
+                              ...days.slice(0, index + 1),
+                              copy,
+                              ...days.slice(index + 1),
+                            ]);
+                            setActive(index + 1);
+                          }}
+                          className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-white/5"
+                        >
+                          <Copy size={13} />
+                          Duplicar treino
+                        </button>
+                        <button
+                          type="button"
+                          disabled={days.length <= 1}
+                          onClick={() => {
+                            onChange(days.filter((_, i) => i !== index));
+                            setActive(Math.max(0, index - 1));
+                          }}
+                          className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-rose-500/10 text-rose-300 disabled:opacity-30"
+                        >
+                          <Trash2 size={13} />
+                          Excluir treino
+                        </button>
+                        {([-1, 1] as const).map((offset) => (
+                          <button
+                            type="button"
+                            key={offset}
+                            disabled={
+                              index + offset < 0 ||
+                              index + offset >= days.length
+                            }
+                            onClick={() => {
+                              const next = [...days];
+                              [next[index], next[index + offset]] = [
+                                next[index + offset],
+                                next[index],
+                              ];
+                              onChange(next);
+                              setActive(index + offset);
+                            }}
+                            className="min-h-11 rounded-xl bg-white/5 disabled:opacity-30"
+                          >
+                            {offset < 0 ? "← Mover antes" : "Mover depois →"}
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </section>
               )}
             </fieldset>

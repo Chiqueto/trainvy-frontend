@@ -187,12 +187,20 @@ export async function updatePrescriptionDraftAction({
 
     if (res.status === 200) {
       revalidatePath(`/personal/alunos/${athleteId}`);
+      if (body.approval) {
+        revalidatePath("/");
+        revalidatePath("/planning");
+        revalidatePath("/meu-treino");
+        if (res.data.acceptedWorkoutPlanId) {
+          revalidatePath(`/workout-plans/${res.data.acceptedWorkoutPlanId}`, "layout");
+        }
+      }
       return { success: true as const, data: res.data };
     }
 
     const errorMsg = getActionError(
       res.data,
-      "Erro ao atualizar rascunho de prescrição.",
+      "Erro ao atualizar a prescrição.",
     );
 
     return { success: false as const, error: errorMsg };

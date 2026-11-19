@@ -439,7 +439,19 @@ describe("WorkoutPlanBuilder — interface", () => {
     ).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Selecionar Remada" }));
     expect(screen.queryByRole("dialog")).toBeNull();
-    addExercise("Desenvolvimento");
+    fireEvent.click(
+      screen.getByRole("button", { name: "Adicionar exercícios" }),
+    );
+    const picker = within(
+      screen.getByRole("dialog", { name: "Montar sequência de exercícios" }),
+    );
+    fireEvent.click(
+      picker.getByRole("button", { name: "Selecionar Desenvolvimento" }),
+    );
+    fireEvent.click(picker.getByRole("button", { name: "Selecionar Remada" }));
+    fireEvent.click(
+      picker.getByRole("button", { name: "Adicionar 2 ao treino" }),
+    );
     fireEvent.click(screen.getByRole("button", { name: "Criar plano" }));
     await waitFor(() =>
       expect(mocks.createStandaloneWorkoutPlanAction).toHaveBeenCalled(),
@@ -457,6 +469,11 @@ describe("WorkoutPlanBuilder — interface", () => {
         exerciseId: "catalog-2",
         name: "Desenvolvimento",
         order: 1,
+      }),
+      expect.objectContaining({
+        exerciseId: "catalog-1",
+        name: "Remada",
+        order: 2,
       }),
     ]);
   });
@@ -502,9 +519,37 @@ describe("WorkoutPlanBuilder — interface", () => {
 
   it("carrega a miniatura 3D do S3 e recorre à mídia 2D ou ao aviso", async () => {
     render(<WorkoutPlanBuilder mode="standalone" />);
-    addExercise("Agachamento");
-    addExercise("Remada");
-    addExercise("Desenvolvimento");
+    fireEvent.click(
+      screen.getByRole("button", { name: "Adicionar exercícios" }),
+    );
+    const picker = within(
+      screen.getByRole("dialog", { name: "Montar sequência de exercícios" }),
+    );
+    const squatOption = picker.getByRole("button", {
+      name: "Selecionar Agachamento",
+    });
+    const rowOption = picker.getByRole("button", { name: "Selecionar Remada" });
+    const missingOption = picker.getByRole("button", {
+      name: "Selecionar Desenvolvimento",
+    });
+    fireEvent.click(squatOption);
+    expect(squatOption.getAttribute("aria-pressed")).toBe("true");
+    expect(squatOption.querySelector("img")?.getAttribute("src")).toContain(
+      "/backend/exercises/catalog-0/thumbnail?v=frame.webp",
+    );
+    await waitFor(() =>
+      expect(rowOption.querySelector("img")?.getAttribute("src")).toMatch(
+        /\/exercise-media\/repdb\/t-bar-row-peak\.webp$/,
+      ),
+    );
+    expect(
+      within(missingOption).getByText("Sem imagem cadastrada"),
+    ).toBeDefined();
+    fireEvent.click(rowOption);
+    fireEvent.click(missingOption);
+    fireEvent.click(
+      picker.getByRole("button", { name: "Adicionar 3 ao treino" }),
+    );
 
     const squat = screen.getByRole("article", {
       name: "Exercício 1: Agachamento",

@@ -306,21 +306,26 @@ export function CoachPrescriptionsList({
                   </Button>
 
                   <div className="flex items-center gap-1.5">
-                    {item.status === "DRAFT" && (
-                      <>
+                    {(item.status === "DRAFT" ||
+                      item.status === "SENT" ||
+                      (item.status === "ACCEPTED" &&
+                        item.acceptedWorkoutPlanId)) && (
+                      <Button
+                        asChild
+                        size="sm"
+                        variant="outline"
+                        className="h-8 px-2.5 text-xs font-heading font-medium gap-1 rounded-lg"
+                      >
                         <Link
                           href={`/personal/alunos/${athleteId}/prescricoes/${item.id}/editar`}
                         >
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="h-8 px-2.5 text-xs font-heading font-medium gap-1 rounded-lg"
-                          >
-                            <FileEdit className="size-3" />
-                            <span>Editar</span>
-                          </Button>
+                          <FileEdit className="size-3" />
+                          Editar prescrição
                         </Link>
-
+                      </Button>
+                    )}
+                    {item.status === "DRAFT" && (
+                      <>
                         <Button
                           size="sm"
                           variant="default"

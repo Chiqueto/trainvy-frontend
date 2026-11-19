@@ -71,6 +71,10 @@ export function WorkoutPlanBuilder({
   const [isAiModalOpen, setIsAiModalOpen] = useState(initialOpenAi);
   const { planningEnabled } = useAiAvailability();
   const aiModalVisible = planningEnabled && isAiModalOpen;
+  const backHref =
+    mode === "edit" && initialPlan
+      ? `/workout-plans/${initialPlan.id}`
+      : undefined;
 
   function submit(reviewOnly = false) {
     if (isPending) return;
@@ -213,6 +217,16 @@ export function WorkoutPlanBuilder({
       aria-label="Editor de plano de treino"
       className="flex min-w-0 flex-col gap-6"
     >
+      {(builderMode === "classic" || aiModalVisible) && (
+        <div className="sticky top-0 z-30 bg-background py-2">
+          <ViewModeToggle
+            value={builderMode}
+            onChange={changeMode}
+            syncError={syncError}
+            backHref={backHref}
+          />
+        </div>
+      )}
       {/* Banner de Geração com IA / Importação de Ficha */}
       <AiFeature capability="planning">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-2xl border border-primary/30 bg-primary/5 shadow-xs">
@@ -245,11 +259,6 @@ export function WorkoutPlanBuilder({
 
       {builderMode === "classic" && planSettings}
 
-      <ViewModeToggle
-        value={builderMode}
-        onChange={changeMode}
-        syncError={syncError}
-      />
       {builderMode === "tactical" && !aiModalVisible && (
         <TacticalPlanWorkspace
           planName={name}
@@ -257,6 +266,7 @@ export function WorkoutPlanBuilder({
           settings={planSettings}
           onAi={() => setIsAiModalOpen(true)}
           onClassic={() => changeMode("classic")}
+          backHref={backHref}
           syncError={syncError}
           onSave={() => submit()}
           onReview={() => submit(true)}
