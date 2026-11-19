@@ -18,6 +18,7 @@ import type {
 
 const mocks = vi.hoisted(() => ({
   edit: vi.fn(),
+  editDay: vi.fn(),
   save: vi.fn(),
   push: vi.fn(),
   refresh: vi.fn(),
@@ -45,6 +46,7 @@ vi.mock("next/navigation", () => ({
 }));
 vi.mock("@/app/planning/_actions", () => ({
   editWorkoutPlanAction: mocks.edit,
+  editWorkoutDayAction: mocks.editDay,
   createStandaloneWorkoutPlanAction: vi.fn(),
   createWorkoutPlanInPeriodizationAction: vi.fn(),
 }));
@@ -56,6 +58,8 @@ vi.mock("@/app/planning/_components/athlete-ai-workout-plan-modal", () => ({
 }));
 
 import { WorkoutPlanBuilder } from "@/app/planning/_components/workout-plan-builder";
+import { WorkoutDayEditor } from "@/app/planning/_components/workout-day-editor";
+import { deserializeWorkoutDays } from "@/app/planning/_lib/workout-plan-builder";
 import { SummaryFeedbackWidget } from "@/app/workout-sessions/[sessionId]/summary/_components/summary-feedback-widget";
 import { AiUsageDashboard } from "@/app/admin/_components/ai-usage-dashboard";
 
@@ -94,6 +98,30 @@ const plan: GetEditableWorkoutPlan200 = {
 };
 
 describe("Editing saved plans", () => {
+  it("saves the selected workout from its own editor and returns to its details", async () => {
+    mocks.editDay.mockResolvedValue({ success: true, data: { id: plan.id } });
+    render(
+      <WorkoutDayEditor planId="plan" dayId="day" initialDay={deserializeWorkoutDays(plan)[0]} />,
+    );
+    expect(screen.queryByLabelText("Nome do plano *")).toBeNull();
+    expect(screen.queryByRole("button", { name: "Adicionar treino" })).toBeNull();
+    fireEvent.click(screen.getByText("Supino", { exact: true }));
+    fireEvent.change(screen.getByLabelText("Séries de trabalho"), {
+      target: { value: "5" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Salvar treino" }));
+    await waitFor(() => expect(mocks.editDay).toHaveBeenCalledWith(
+      "plan",
+      "day",
+      expect.objectContaining({
+        id: "day",
+        exercises: [expect.objectContaining({ id: "prescription", sets: 5 })],
+      }),
+    ));
+    expect(mocks.edit).not.toHaveBeenCalled();
+    expect(mocks.push).toHaveBeenCalledWith("/workout-plans/plan/days/day");
+  });
+
   it("loads the existing plan and saves IDs, cover, alternatives and edited sets without reactivating", async () => {
     mocks.edit.mockResolvedValue({ success: true, data: { id: plan.id } });
     render(<WorkoutPlanBuilder mode="edit" initialPlan={plan} />);

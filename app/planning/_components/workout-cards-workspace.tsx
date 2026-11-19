@@ -28,14 +28,14 @@ const EMPTY_EXERCISES: WorkoutPlanDraftExercise[] = [];
 export function WorkoutCardsWorkspace({
   days,
   onChange,
-  activeIndex,
+  activeIndex = 0,
   onActiveChange,
   disabled,
 }: {
   days: WorkoutPlanDraftDay[];
   onChange: (days: WorkoutPlanDraftDay[]) => void;
-  activeIndex: number;
-  onActiveChange: (index: number) => void;
+  activeIndex?: number;
+  onActiveChange?: (index: number) => void;
   disabled?: boolean;
 }) {
   const hydrated = useHydrated();
@@ -69,57 +69,63 @@ export function WorkoutCardsWorkspace({
 
   return (
     <fieldset disabled={disabled} className="min-w-0 space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="font-heading text-lg font-bold">Divisão de treinos</h2>
-        <div className="flex flex-wrap items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => {
-              const next = createDraftWorkoutDay(
-                String.fromCharCode(65 + (days.length % 26)),
-              );
-              onChange([
-                ...days,
-                {
-                  ...next,
-                  exercises: [],
-                  weekDay: WEEK_DAYS[days.length % 7].value,
-                },
-              ]);
-              onActiveChange(days.length);
-            }}
-          >
-            <Plus className="size-4 text-primary" />
-            Adicionar treino
-          </Button>
-        </div>
-      </div>
+      {onActiveChange && (
+        <>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h2 className="font-heading text-lg font-bold">
+              Divisão de treinos
+            </h2>
+            <div className="flex flex-wrap items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  const next = createDraftWorkoutDay(
+                    String.fromCharCode(65 + (days.length % 26)),
+                  );
+                  onChange([
+                    ...days,
+                    {
+                      ...next,
+                      exercises: [],
+                      weekDay: WEEK_DAYS[days.length % 7].value,
+                    },
+                  ]);
+                  onActiveChange(days.length);
+                }}
+              >
+                <Plus className="size-4 text-primary" />
+                Adicionar treino
+              </Button>
+            </div>
+          </div>
 
-      <nav
-        aria-label="Selecionar treino para editar"
-        className="flex gap-2 overflow-x-auto pb-2"
-      >
-        {days.map((entry, position) => (
-          <button
-            key={entry.clientId ?? entry.id ?? position}
-            type="button"
-            aria-pressed={position === index}
-            onClick={() => onActiveChange(position)}
-            className="flex min-h-14 max-w-60 shrink-0 items-center gap-3 rounded-xl border bg-card px-3 py-2 text-left transition hover:border-primary/50 focus-visible:outline-2 focus-visible:outline-ring aria-pressed:border-primary/50 aria-pressed:bg-primary/10"
+          <nav
+            aria-label="Selecionar treino para editar"
+            className="flex gap-2 overflow-x-auto pb-2"
           >
-            <span
-              aria-hidden="true"
-              className="grid size-8 shrink-0 place-items-center rounded-lg bg-primary/10 text-sm font-bold text-primary"
-            >
-              {String.fromCharCode(65 + (position % 26))}
-            </span>
-            <span className="min-w-0 truncate text-sm font-semibold">
-              {entry.name || "Treino sem nome"}
-            </span>
-          </button>
-        ))}
-      </nav>
+            {days.map((entry, position) => (
+              <button
+                key={entry.clientId ?? entry.id ?? position}
+                type="button"
+                aria-pressed={position === index}
+                onClick={() => onActiveChange(position)}
+                className="flex min-h-14 max-w-60 shrink-0 items-center gap-3 rounded-xl border bg-card px-3 py-2 text-left transition hover:border-primary/50 focus-visible:outline-2 focus-visible:outline-ring aria-pressed:border-primary/50 aria-pressed:bg-primary/10"
+              >
+                <span
+                  aria-hidden="true"
+                  className="grid size-8 shrink-0 place-items-center rounded-lg bg-primary/10 text-sm font-bold text-primary"
+                >
+                  {String.fromCharCode(65 + (position % 26))}
+                </span>
+                <span className="min-w-0 truncate text-sm font-semibold">
+                  {entry.name || "Treino sem nome"}
+                </span>
+              </button>
+            ))}
+          </nav>
+        </>
+      )}
 
       {day && (
         <div
@@ -139,71 +145,73 @@ export function WorkoutCardsWorkspace({
                     className="h-10 text-sm font-semibold text-foreground"
                   />
                 </label>
-                <div className="flex gap-0.5">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    aria-label={`Duplicar ${day.name}`}
-                    title="Duplicar treino"
-                    onClick={() => {
-                      const copy = duplicateDraftWorkoutDay(day);
-                      onChange([
-                        ...days.slice(0, index + 1),
-                        copy,
-                        ...days.slice(index + 1),
-                      ]);
-                      onActiveChange(index + 1);
-                    }}
-                  >
-                    <Copy />
-                  </Button>
-                  {([-1, 1] as const).map((offset) => {
-                    const to = index + offset;
-                    return (
-                      <Button
-                        key={offset}
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        aria-label={
-                          offset < 0
-                            ? "Mover treino para cima"
-                            : "Mover treino para baixo"
-                        }
-                        disabled={!days[to]}
-                        onClick={() => {
-                          const reordered = [...days];
-                          [reordered[index], reordered[to]] = [
-                            reordered[to],
-                            reordered[index],
-                          ];
-                          onChange(reordered);
-                          onActiveChange(to);
-                        }}
-                      >
-                        {offset < 0 ? <ArrowUp /> : <ArrowDown />}
-                      </Button>
-                    );
-                  })}
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    aria-label="Excluir dia"
-                    title="Excluir treino"
-                    disabled={days.length <= 1}
-                    className="text-destructive"
-                    onClick={() => {
-                      onChange(
-                        days.filter((_, position) => position !== index),
+                {onActiveChange && (
+                  <div className="flex gap-0.5">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      aria-label={`Duplicar ${day.name}`}
+                      title="Duplicar treino"
+                      onClick={() => {
+                        const copy = duplicateDraftWorkoutDay(day);
+                        onChange([
+                          ...days.slice(0, index + 1),
+                          copy,
+                          ...days.slice(index + 1),
+                        ]);
+                        onActiveChange(index + 1);
+                      }}
+                    >
+                      <Copy />
+                    </Button>
+                    {([-1, 1] as const).map((offset) => {
+                      const to = index + offset;
+                      return (
+                        <Button
+                          key={offset}
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          aria-label={
+                            offset < 0
+                              ? "Mover treino para cima"
+                              : "Mover treino para baixo"
+                          }
+                          disabled={!days[to]}
+                          onClick={() => {
+                            const reordered = [...days];
+                            [reordered[index], reordered[to]] = [
+                              reordered[to],
+                              reordered[index],
+                            ];
+                            onChange(reordered);
+                            onActiveChange(to);
+                          }}
+                        >
+                          {offset < 0 ? <ArrowUp /> : <ArrowDown />}
+                        </Button>
                       );
-                      onActiveChange(Math.max(0, index - 1));
-                    }}
-                  >
-                    <Trash2 />
-                  </Button>
-                </div>
+                    })}
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      aria-label="Excluir dia"
+                      title="Excluir treino"
+                      disabled={days.length <= 1}
+                      className="text-destructive"
+                      onClick={() => {
+                        onChange(
+                          days.filter((_, position) => position !== index),
+                        );
+                        onActiveChange(Math.max(0, index - 1));
+                      }}
+                    >
+                      <Trash2 />
+                    </Button>
+                  </div>
+                )}
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <label className="space-y-1 text-xs font-medium text-muted-foreground">

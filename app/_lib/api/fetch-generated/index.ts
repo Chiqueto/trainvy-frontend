@@ -1365,6 +1365,229 @@ export type GetWorkoutDay500 = {
   code: string;
 };
 
+export type EditWorkoutDayBodyWeekDay =
+  (typeof EditWorkoutDayBodyWeekDay)[keyof typeof EditWorkoutDayBodyWeekDay];
+
+export const EditWorkoutDayBodyWeekDay = {
+  MONDAY: "MONDAY",
+  TUESDAY: "TUESDAY",
+  WEDNESDAY: "WEDNESDAY",
+  THURSDAY: "THURSDAY",
+  FRIDAY: "FRIDAY",
+  SATURDAY: "SATURDAY",
+  SUNDAY: "SUNDAY",
+} as const;
+
+export type EditWorkoutDayBodyExercisesItemRuneConfig = {
+  /**
+   * @minimum 1
+   * @maximum 10
+   */
+  DROP_SET?: number;
+  /**
+   * @minimum 1
+   * @maximum 600
+   */
+  REST_PAUSE?: number;
+  /** @pattern ^(peak|base)([1-9]|[1-9]\d|[1-5]\d\d|600)$ */
+  ISOMETRIC_HOLD?: string;
+  /**
+   * @minimum 2
+   * @maximum 20
+   */
+  CLUSTER_SET?: number;
+  /** @pattern ^(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)-(?:[0-9]|[1-5][0-9]|60)$ */
+  TEMPO_CONTROL?: string;
+};
+
+export type EditWorkoutDayBodyExercisesItemRunesItem =
+  (typeof EditWorkoutDayBodyExercisesItemRunesItem)[keyof typeof EditWorkoutDayBodyExercisesItemRunesItem];
+
+export const EditWorkoutDayBodyExercisesItemRunesItem = {
+  DROP_SET: "DROP_SET",
+  REST_PAUSE: "REST_PAUSE",
+  ISOMETRIC_HOLD: "ISOMETRIC_HOLD",
+  CLUSTER_SET: "CLUSTER_SET",
+  TEMPO_CONTROL: "TEMPO_CONTROL",
+} as const;
+
+export type EditWorkoutDayBodyExercisesItemSetPrescriptionItemZone =
+  (typeof EditWorkoutDayBodyExercisesItemSetPrescriptionItemZone)[keyof typeof EditWorkoutDayBodyExercisesItemSetPrescriptionItemZone];
+
+export const EditWorkoutDayBodyExercisesItemSetPrescriptionItemZone = {
+  strength: "strength",
+  hypertrophy: "hypertrophy",
+  endurance: "endurance",
+} as const;
+
+export type EditWorkoutDayBodyExercisesItemSetPrescriptionItem = {
+  /**
+   * @minimum 1
+   * @maximum 10000
+   */
+  reps: number;
+  zone: EditWorkoutDayBodyExercisesItemSetPrescriptionItemZone;
+  /**
+   * @minimum 1
+   * @maximum 86400
+   */
+  restSeconds: number;
+  /**
+   * @minimum 0
+   * @maximum 2000
+   */
+  load?: number;
+};
+
+export type EditWorkoutDayBodyExercisesItem = {
+  runeConfig?: EditWorkoutDayBodyExercisesItemRuneConfig;
+  /**
+   * @minLength 1
+   * @maxLength 100
+   * @nullable
+   */
+  supersetGroupId?: string | null;
+  /** @maxItems 5 */
+  runes?: EditWorkoutDayBodyExercisesItemRunesItem[];
+  /** @maxItems 100 */
+  setPrescription?: EditWorkoutDayBodyExercisesItemSetPrescriptionItem[];
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMin?: number | null;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   * @nullable
+   */
+  repsMax?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 10
+   * @nullable
+   */
+  targetRir?: number | null;
+  /**
+   * @minimum 0
+   * @maximum 2000000
+   * @nullable
+   */
+  targetLoadInGrams?: number | null;
+  /**
+   * @minLength 1
+   * @maxLength 80
+   * @nullable
+   */
+  tempo?: string | null;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  order: number;
+  /** @minLength 1 */
+  name: string;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  exerciseId?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative1ExerciseId?: string | null;
+  /**
+   * @minLength 1
+   * @nullable
+   */
+  alternative1Name?: string | null;
+  /**
+   * @nullable
+   * @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+   */
+  alternative2ExerciseId?: string | null;
+  /**
+   * @minLength 1
+   * @nullable
+   */
+  alternative2Name?: string | null;
+  /**
+   * @minimum 1
+   * @maximum 100
+   */
+  sets: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  warmupSets?: number;
+  /**
+   * @minimum 1
+   * @maximum 10000
+   */
+  reps: number;
+  /**
+   * @minimum 1
+   * @maximum 86400
+   */
+  restTimeInSeconds: number;
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
+};
+
+export type EditWorkoutDayBody = {
+  /** @minLength 1 */
+  name: string;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   */
+  order?: number;
+  weekDay?: EditWorkoutDayBodyWeekDay;
+  isRest: boolean;
+  /** @minimum 0 */
+  estimatedDurationInSeconds: number;
+  /** @nullable */
+  coverImageUrl?: string | null;
+  /** @maxItems 100 */
+  exercises: EditWorkoutDayBodyExercisesItem[];
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id?: string;
+};
+
+export type EditWorkoutDay200 = {
+  /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
+  id: string;
+  success: boolean;
+};
+
+export type EditWorkoutDay400 = {
+  error: string;
+  code: string;
+};
+
+export type EditWorkoutDay401 = {
+  error: string;
+  code: string;
+};
+
+export type EditWorkoutDay404 = {
+  error: string;
+  code: string;
+};
+
+export type EditWorkoutDay409 = {
+  error: string;
+  code: string;
+};
+
+export type EditWorkoutDay500 = {
+  error: string;
+  code: string;
+};
+
 export type ActivateWorkoutPlan200 = {
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
@@ -20409,6 +20632,7 @@ export type GetEditableWorkoutPlan200 = {
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   id: string;
   isActive: boolean;
+  canEdit?: boolean;
 };
 
 export type GetEditableWorkoutPlan400 = {
@@ -22287,6 +22511,74 @@ export const getWorkoutDay = async (
   return customFetch<getWorkoutDayResponse>(getGetWorkoutDayUrl(id, dayId), {
     ...options,
     method: "GET",
+  });
+};
+
+/**
+ * @summary Edit a single workout in an owned plan
+ */
+export type editWorkoutDayResponse200 = {
+  data: EditWorkoutDay200;
+  status: 200;
+};
+
+export type editWorkoutDayResponse400 = {
+  data: EditWorkoutDay400;
+  status: 400;
+};
+
+export type editWorkoutDayResponse401 = {
+  data: EditWorkoutDay401;
+  status: 401;
+};
+
+export type editWorkoutDayResponse404 = {
+  data: EditWorkoutDay404;
+  status: 404;
+};
+
+export type editWorkoutDayResponse409 = {
+  data: EditWorkoutDay409;
+  status: 409;
+};
+
+export type editWorkoutDayResponse500 = {
+  data: EditWorkoutDay500;
+  status: 500;
+};
+
+export type editWorkoutDayResponseSuccess = editWorkoutDayResponse200 & {
+  headers: Headers;
+};
+export type editWorkoutDayResponseError = (
+  | editWorkoutDayResponse400
+  | editWorkoutDayResponse401
+  | editWorkoutDayResponse404
+  | editWorkoutDayResponse409
+  | editWorkoutDayResponse500
+) & {
+  headers: Headers;
+};
+
+export type editWorkoutDayResponse =
+  | editWorkoutDayResponseSuccess
+  | editWorkoutDayResponseError;
+
+export const getEditWorkoutDayUrl = (id: string, dayId: string) => {
+  return `/workout-plans/${id}/days/${dayId}`;
+};
+
+export const editWorkoutDay = async (
+  id: string,
+  dayId: string,
+  editWorkoutDayBody: EditWorkoutDayBody,
+  options?: RequestInit,
+): Promise<editWorkoutDayResponse> => {
+  return customFetch<editWorkoutDayResponse>(getEditWorkoutDayUrl(id, dayId), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(editWorkoutDayBody),
   });
 };
 

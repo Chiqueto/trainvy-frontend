@@ -17,6 +17,7 @@ import {
   deletePeriodization,
   deleteWorkoutPlan,
   duplicateWorkoutPlan,
+  editWorkoutDay,
   editWorkoutPlan,
   generateWorkoutPlanDraftWithAi,
   removeWorkoutPlanFromPeriodization,
@@ -33,6 +34,7 @@ import {
   type CreatePeriodizationBody,
   type CreateWorkoutPlan201,
   type CreateWorkoutPlanBody,
+  type EditWorkoutDayBody,
   type EditWorkoutPlanBody,
   type CreateWorkoutPlanInPeriodization201,
   type CreateWorkoutPlanInPeriodizationBody,
@@ -491,6 +493,28 @@ export async function editWorkoutPlanAction(
     if (response.status !== 200) return apiError(response.data);
     revalidatePlanning(`/workout-plans/${planId}`);
     revalidatePath(`/workout-plans/${planId}`, "layout");
+    revalidatePath(`/planning/plans/${planId}/edit`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    return connectionError(error);
+  }
+}
+
+export async function editWorkoutDayAction(
+  id: string,
+  dayId: string,
+  body: EditWorkoutDayBody,
+): Promise<PlanningActionResult<{ id: string; success: boolean }>> {
+  const planId = validId(id);
+  const workoutDayId = validId(dayId);
+  if (!planId || !workoutDayId) return invalidInput("Treino inválido.");
+
+  try {
+    const response = await editWorkoutDay(planId, workoutDayId, body);
+    if (response.status !== 200) return apiError(response.data);
+    const planPath = `/workout-plans/${planId}`;
+    revalidatePlanning(planPath);
+    revalidatePath(`${planPath}/days/${workoutDayId}`);
     revalidatePath(`/planning/plans/${planId}/edit`);
     return { success: true, data: response.data };
   } catch (error) {

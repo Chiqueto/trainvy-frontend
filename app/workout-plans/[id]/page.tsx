@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { BottomNav } from "@/app/_components/bottom-nav";
 import { WorkoutDayCard } from "@/app/_components/workout-day-card";
 import { Logo } from "@/app/_components/logo";
+import { canEditPersonalWorkout } from "@/app/_lib/can-edit-personal-workout";
 import { SavePlanAsTemplateButton } from "./_components/save-plan-as-template-button";
 
 const WEEKDAY_ORDER = [
@@ -74,6 +75,7 @@ export default async function WorkoutPlanPage({
   });
 
   const trainingDays = sortedDays.filter((day) => !day.isRest);
+  const canEdit = canEditPersonalWorkout(workoutPlanData.data);
 
   return (
     <div className="flex min-h-svh flex-col bg-background pb-24">
@@ -113,12 +115,14 @@ export default async function WorkoutPlanPage({
       </div>
 
       <div className="trainvy-page flex flex-col gap-3 p-5">
-        <Link
-          href={`/planning/plans/${id}/edit`}
-          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-border bg-card px-4 text-sm font-semibold"
-        >
-          <Pencil className="size-4" /> Editar plano
-        </Link>
+        {canEdit && (
+          <Link
+            href={`/planning/plans/${id}/edit`}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-border bg-card px-4 text-sm font-semibold"
+          >
+            <Pencil className="size-4" /> Editar plano
+          </Link>
+        )}
         {trainingDays.map((day, index) => {
           const isNext = day.id === nextWorkoutDayId;
           const isLastCompleted = day.id === lastCompletedWorkoutDayId;
@@ -128,22 +132,34 @@ export default async function WorkoutPlanPage({
               ? "ÚLTIMO REALIZADO"
               : `TREINO ${String.fromCharCode(65 + (index % 26))}`;
 
+          const dayHref = `/workout-plans/${id}/days/${day.id}`;
           return (
-            <Link
-              key={day.id}
-              href={`/workout-plans/${id}/days/${day.id}`}
-              className={isNext ? "rounded-xl ring-2 ring-primary" : ""}
-            >
-              <WorkoutDayCard
-                name={day.name}
-                weekDay={day.weekDay}
-                tag={tag}
-                rotationLabel={isNext ? "Sua vez" : undefined}
-                estimatedDurationInSeconds={day.estimatedDurationInSeconds}
-                exercisesCount={day.exercisesCount}
-                coverImageUrl={day.coverImageUrl}
-              />
-            </Link>
+            <div key={day.id} className="flex flex-col gap-1">
+              <Link
+                href={dayHref}
+                className={isNext ? "rounded-xl ring-2 ring-primary" : ""}
+              >
+                <WorkoutDayCard
+                  name={day.name}
+                  weekDay={day.weekDay}
+                  tag={tag}
+                  rotationLabel={isNext ? "Sua vez" : undefined}
+                  estimatedDurationInSeconds={day.estimatedDurationInSeconds}
+                  exercisesCount={day.exercisesCount}
+                  coverImageUrl={day.coverImageUrl}
+                />
+              </Link>
+              {canEdit && (
+                <Link
+                  href={`${dayHref}/edit`}
+                  aria-label={`Editar treino ${day.name}`}
+                  className="inline-flex min-h-11 items-center gap-2 self-end rounded-full px-4 text-sm font-semibold text-primary hover:bg-accent focus-visible:outline-2 focus-visible:outline-ring"
+                >
+                  <Pencil className="size-4" />
+                  Editar treino
+                </Link>
+              )}
+            </div>
           );
         })}
       </div>

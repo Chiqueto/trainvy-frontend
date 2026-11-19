@@ -2,6 +2,7 @@ import { PlanLegalLabel } from "@/app/_components/plan-legal-label";
 import { redirect } from "next/navigation";
 import { authClient } from "@/app/_lib/auth-client";
 import { headers } from "next/headers";
+import { canEditPersonalWorkout } from "@/app/_lib/can-edit-personal-workout";
 import {
   getCommercialContext,
   getWorkoutDay,
@@ -10,7 +11,7 @@ import {
 import Link from "next/link";
 import dayjs from "dayjs";
 import { WorkoutCover } from "@/app/_components/workout-cover";
-import { Calendar, Timer, Dumbbell, Play } from "lucide-react";
+import { Calendar, Timer, Dumbbell, Pencil, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BottomNav } from "@/app/_components/bottom-nav";
 import { BackButton } from "./_components/back-button";
@@ -89,6 +90,8 @@ export default async function WorkoutDayPage({
   );
   const hasInProgressSession = !!inProgressSession;
   const hasCompletedSession = !!completedTodaySession;
+  const canEdit =
+    !workoutDayData.data.isRest && canEditPersonalWorkout(workoutDayData.data);
 
   return (
     <div className="flex min-h-svh flex-col bg-background pb-24">
@@ -166,6 +169,14 @@ export default async function WorkoutDayPage({
       </div>
 
       <div className="trainvy-page flex flex-col gap-3 px-5 pt-5">
+        {canEdit && (
+          <Button asChild variant="outline" className="min-h-11 self-end rounded-full">
+            <Link href={`/workout-plans/${workoutPlanId}/days/${dayId}/edit`}>
+              <Pencil className="size-4" />
+              Editar treino
+            </Link>
+          </Button>
+        )}
         {exercises
           .sort((a, b) => a.order - b.order)
           .map((exercise) => (
