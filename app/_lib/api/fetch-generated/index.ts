@@ -11293,6 +11293,8 @@ export type ListCoachAthleteProgressExercises200Item = {
   ownerUserId: string | null;
   isUnilateral?: boolean;
   hasMedia: boolean;
+  /** Public API path to the catalog thumbnail */
+  thumbnailUrl?: string;
   muscles: ListCoachAthleteProgressExercises200ItemMusclesItem[];
   anatomy?: ExerciseAnatomyReview | null;
 };
@@ -15801,6 +15803,25 @@ export type CancelManualSubscription500 = {
 /**
  * @nullable
  */
+export type GetExerciseThumbnail307 =
+  | (typeof GetExerciseThumbnail307)[keyof typeof GetExerciseThumbnail307]
+  | null;
+
+export const GetExerciseThumbnail307 = {} as const;
+
+export type GetExerciseThumbnail404 = {
+  error: string;
+  code: string;
+};
+
+export type GetExerciseThumbnail500 = {
+  error: string;
+  code: string;
+};
+
+/**
+ * @nullable
+ */
 export type SaveExerciseDemonstrationBodyAnimationKey =
   | (typeof SaveExerciseDemonstrationBodyAnimationKey)[keyof typeof SaveExerciseDemonstrationBodyAnimationKey]
   | null;
@@ -16135,6 +16156,8 @@ export type ListExercises200Item = {
   ownerUserId: string | null;
   isUnilateral?: boolean;
   hasMedia: boolean;
+  /** Public API path to the catalog thumbnail */
+  thumbnailUrl?: string;
   muscles: ListExercises200ItemMusclesItem[];
   anatomy?: ExerciseAnatomyReview | null;
 };
@@ -16461,6 +16484,8 @@ export type CreateExercise201 = {
   ownerUserId: string | null;
   isUnilateral?: boolean;
   hasMedia: boolean;
+  /** Public API path to the catalog thumbnail */
+  thumbnailUrl?: string;
   muscles: CreateExercise201MusclesItem[];
   anatomy?: ExerciseAnatomyReview | null;
 };
@@ -16677,6 +16702,8 @@ export type UpdateExerciseMuscles200 = {
   ownerUserId: string | null;
   isUnilateral?: boolean;
   hasMedia: boolean;
+  /** Public API path to the catalog thumbnail */
+  thumbnailUrl?: string;
   muscles: UpdateExerciseMuscles200MusclesItem[];
   anatomy?: ExerciseAnatomyReview | null;
 };
@@ -17127,6 +17154,8 @@ export type UpdateCustomExercise200 = {
   ownerUserId: string | null;
   isUnilateral?: boolean;
   hasMedia: boolean;
+  /** Public API path to the catalog thumbnail */
+  thumbnailUrl?: string;
   muscles: UpdateCustomExercise200MusclesItem[];
   anatomy?: ExerciseAnatomyReview | null;
 };
@@ -31350,6 +31379,50 @@ export const cancelManualSubscription = async (
       method: "POST",
       headers: { "Content-Type": "application/json", ...options?.headers },
       body: JSON.stringify(cancelManualSubscriptionBody),
+    },
+  );
+};
+
+/**
+ * @summary Redirect to a short-lived URL for a global exercise thumbnail
+ */
+export type getExerciseThumbnailResponse307 = {
+  data: GetExerciseThumbnail307;
+  status: 307;
+};
+
+export type getExerciseThumbnailResponse404 = {
+  data: GetExerciseThumbnail404;
+  status: 404;
+};
+
+export type getExerciseThumbnailResponse500 = {
+  data: GetExerciseThumbnail500;
+  status: 500;
+};
+export type getExerciseThumbnailResponseError = (
+  | getExerciseThumbnailResponse307
+  | getExerciseThumbnailResponse404
+  | getExerciseThumbnailResponse500
+) & {
+  headers: Headers;
+};
+
+export type getExerciseThumbnailResponse = getExerciseThumbnailResponseError;
+
+export const getGetExerciseThumbnailUrl = (exerciseId: string) => {
+  return `/exercises/${exerciseId}/thumbnail`;
+};
+
+export const getExerciseThumbnail = async (
+  exerciseId: string,
+  options?: RequestInit,
+): Promise<getExerciseThumbnailResponse> => {
+  return customFetch<getExerciseThumbnailResponse>(
+    getGetExerciseThumbnailUrl(exerciseId),
+    {
+      ...options,
+      method: "GET",
     },
   );
 };

@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { ImageOff } from "lucide-react";
 import { getExerciseMediaAction } from "@/app/_actions/exercise-media";
-import { getExerciseAnimation } from "@/app/_components/exercise-3d/exercises";
+import {
+  EXERCISE_ANIMATIONS,
+  getExerciseAnimation,
+} from "@/app/_components/exercise-3d/exercises";
 import type { ListExercises200Item } from "@/app/_lib/api/fetch-generated";
 
 export function ExerciseThumbnail({
@@ -18,17 +21,27 @@ export function ExerciseThumbnail({
   catalogEntry?: ListExercises200Item;
   eager?: boolean;
 }) {
-  const animation =
-    catalogEntry?.demonstration?.animationKey ??
-    getExerciseAnimation(
-      exerciseId,
-      catalogEntry?.ownerUserId ? undefined : name,
-    );
-  const image3D = animation && `/exercise-media/3d/${animation}.webp`;
+  const globalAnimation = getExerciseAnimation(
+    exerciseId,
+    catalogEntry?.ownerUserId ? undefined : name,
+  );
+  const animationOverride = catalogEntry?.demonstration?.animationKey;
+  const animation = animationOverride ?? globalAnimation;
+  const catalogPath =
+    !animationOverride || animationOverride === globalAnimation
+      ? catalogEntry?.thumbnailUrl
+      : undefined;
+  const referenceId = animation && EXERCISE_ANIMATIONS[animation]?.id;
+  const thumbnailPath =
+    catalogPath ??
+    (referenceId ? "/exercises/" + referenceId + "/thumbnail" : null);
+  const remoteImage = thumbnailPath && "/backend" + thumbnailPath;
   const mediaId = catalogEntry?.hasMedia ? catalogEntry.id : null;
   const [failed, setFailed] = useState<string[]>([]);
   const [image2D, setImage2D] = useState<{ id: string; paths: string[] }>();
-  const use2D = Boolean(mediaId && (!image3D || failed.includes(image3D)));
+  const image3D =
+    remoteImage && !failed.includes(remoteImage) ? remoteImage : undefined;
+  const use2D = Boolean(mediaId && !image3D);
 
   useEffect(() => {
     if (!use2D || !mediaId) return;
@@ -52,11 +65,10 @@ export function ExerciseThumbnail({
   }, [use2D, mediaId]);
 
   const src =
-    image3D && !use2D && !failed.includes(image3D)
-      ? image3D
-      : image2D?.id === mediaId
-        ? image2D.paths.find((path) => !failed.includes(path))
-        : undefined;
+    image3D ??
+    (image2D?.id === mediaId
+      ? image2D.paths.find((path) => !failed.includes(path))
+      : undefined);
   const loading = use2D && image2D?.id !== mediaId;
 
   return (

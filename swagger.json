@@ -29828,6 +29828,10 @@
                         "default": false,
                         "type": "boolean"
                       },
+                      "thumbnailUrl": {
+                        "description": "Public API path to the catalog thumbnail",
+                        "type": "string"
+                      },
                       "muscles": {
                         "default": [],
                         "type": "array",
@@ -40636,6 +40640,89 @@
         }
       }
     },
+    "/exercises/{exerciseId}/thumbnail": {
+      "get": {
+        "operationId": "getExerciseThumbnail",
+        "summary": "Redirect to a short-lived URL for a global exercise thumbnail",
+        "tags": [
+          "Exercise"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "in": "path",
+            "name": "exerciseId",
+            "required": true
+          }
+        ],
+        "responses": {
+          "307": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "nullable": true,
+                  "enum": [
+                    null
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/exercises/{exerciseId}/demonstration": {
       "put": {
         "operationId": "saveExerciseDemonstration",
@@ -41230,6 +41317,10 @@
                         "default": false,
                         "type": "boolean"
                       },
+                      "thumbnailUrl": {
+                        "description": "Public API path to the catalog thumbnail",
+                        "type": "string"
+                      },
                       "muscles": {
                         "default": [],
                         "type": "array",
@@ -41707,6 +41798,10 @@
                       "default": false,
                       "type": "boolean"
                     },
+                    "thumbnailUrl": {
+                      "description": "Public API path to the catalog thumbnail",
+                      "type": "string"
+                    },
                     "muscles": {
                       "default": [],
                       "type": "array",
@@ -42100,6 +42195,10 @@
                     "hasMedia": {
                       "default": false,
                       "type": "boolean"
+                    },
+                    "thumbnailUrl": {
+                      "description": "Public API path to the catalog thumbnail",
+                      "type": "string"
                     },
                     "muscles": {
                       "default": [],
@@ -42881,6 +42980,10 @@
                     "hasMedia": {
                       "default": false,
                       "type": "boolean"
+                    },
+                    "thumbnailUrl": {
+                      "description": "Public API path to the catalog thumbnail",
+                      "type": "string"
                     },
                     "muscles": {
                       "default": [],

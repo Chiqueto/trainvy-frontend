@@ -125,6 +125,6 @@ Body mesh and anatomical material reused from the user's `digital-twin/first-app
 
 ## Static exercise thumbnails
 
-The WebP images in `/exercise-media/3d/` are still renders of the Trainvy exercise
+The WebP images served from the Trainvy object store are still renders of the Trainvy exercise
 scenes using the anatomical assets credited above. Trainvy selected the frames and
 rendered the equipment and anatomical poses against a plain background. The stills are distributed under CC BY-SA 4.0.

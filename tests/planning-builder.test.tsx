@@ -31,7 +31,11 @@ const mocks = vi.hoisted(() => ({
     name,
     muscles: [],
     ownerUserId: null,
-    hasMedia: name === "Remada",
+    hasMedia: name !== "Desenvolvimento",
+    thumbnailUrl:
+      name === "Agachamento"
+        ? "/exercises/catalog-0/thumbnail?v=frame.webp"
+        : undefined,
   })),
 }));
 
@@ -62,6 +66,8 @@ vi.mock("@/app/planning/_actions", () => ({
     mocks.createWorkoutPlanInPeriodizationAction,
 }));
 
+import { ExerciseThumbnail } from "@/app/_components/exercise-media/exercise-thumbnail";
+import { EXERCISE_ANIMATIONS } from "@/app/_components/exercise-3d/exercises";
 import { PeriodizationForm } from "@/app/planning/_components/periodization-form";
 import { WorkoutPlanBuilder } from "@/app/planning/_components/workout-plan-builder";
 import {
@@ -213,13 +219,15 @@ describe("WorkoutPlanBuilder — lógica de contrato", () => {
 describe("WorkoutPlanBuilder — interface", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mocks.getExerciseMediaAction.mockResolvedValue({
+    mocks.getExerciseMediaAction.mockImplementation(async (id: string) => ({
       success: true,
       data: {
-        startImagePath: "/exercise-media/repdb/t-bar-row-start.webp",
-        endImagePath: "/exercise-media/repdb/t-bar-row-peak.webp",
+        endImagePath:
+          id === "catalog-0"
+            ? "/exercise-media/repdb/squat-peak.webp"
+            : "/exercise-media/repdb/t-bar-row-peak.webp",
       },
-    });
+    }));
     mocks.createStandaloneWorkoutPlanAction.mockResolvedValue({
       success: true,
       data: {
@@ -492,7 +500,7 @@ describe("WorkoutPlanBuilder — interface", () => {
     });
   });
 
-  it("usa o quadro 3D, a mídia 2D cadastrada e o aviso de imagem ausente", async () => {
+  it("carrega a miniatura 3D do S3 e recorre à mídia 2D ou ao aviso", async () => {
     render(<WorkoutPlanBuilder mode="standalone" />);
     addExercise("Agachamento");
     addExercise("Remada");
@@ -501,8 +509,15 @@ describe("WorkoutPlanBuilder — interface", () => {
     const squat = screen.getByRole("article", {
       name: "Exercício 1: Agachamento",
     });
-    expect(squat.querySelector("img")?.getAttribute("src")).toMatch(
-      /\/exercise-media\/3d\/squat\.webp$/,
+    const hostedFrame = squat.querySelector("img")!;
+    expect(hostedFrame.getAttribute("src")).toContain(
+      "/backend/exercises/catalog-0/thumbnail?v=frame.webp",
+    );
+    fireEvent.error(hostedFrame);
+    await waitFor(() =>
+      expect(squat.querySelector("img")?.getAttribute("src")).toMatch(
+        /\/exercise-media\/repdb\/squat-peak\.webp$/,
+      ),
     );
 
     const row = screen.getByRole("article", { name: "Exercício 2: Remada" });
@@ -511,13 +526,32 @@ describe("WorkoutPlanBuilder — interface", () => {
         /\/exercise-media\/repdb\/t-bar-row-peak\.webp$/,
       ),
     );
-    expect(mocks.getExerciseMediaAction).toHaveBeenCalledExactlyOnceWith(
-      "catalog-1",
-    );
+    expect(mocks.getExerciseMediaAction).toHaveBeenCalledWith("catalog-0");
+    expect(mocks.getExerciseMediaAction).toHaveBeenCalledWith("catalog-1");
     const missing = screen.getByRole("article", {
       name: "Exercício 3: Desenvolvimento",
     });
     expect(within(missing).getByText("Sem imagem cadastrada")).toBeDefined();
+  });
+
+  it("usa a miniatura remota da animação escolhida pelo personal", () => {
+    const item = mocks.catalog[0];
+    const { container } = render(
+      <ExerciseThumbnail
+        name={item.name}
+        exerciseId={item.id}
+        catalogEntry={{
+          ...item,
+          demonstration: { animationKey: "hammer-curl", youtubeUrl: null },
+        }}
+      />,
+    );
+    expect(container.querySelector("img")?.getAttribute("src")).toContain(
+      "/backend/exercises/" +
+        EXERCISE_ANIMATIONS["hammer-curl"].id +
+        "/thumbnail",
+    );
+    expect(mocks.getExerciseMediaAction).not.toHaveBeenCalled();
   });
 
   it("edita um treino por vez e mantém as alterações ao alternar", () => {
