@@ -59,3 +59,23 @@ it("unavailable context is not silently treated as an initialized account", asyn
     "Não foi possível verificar sua conta.",
   );
 });
+it("coach without professional access goes to verification", async () => {
+  vi.mocked(getCommercialContext).mockResolvedValue({
+    status: 200,
+    data: {
+      accountSetupCompletedAt: "2026-01-01T00:00:00Z",
+      entitlements: [],
+      accountType: "COACH",
+      professionalVerification: null,
+      crefVerificationRequired: true,
+      professionalAccessGranted: false,
+      systemRole: "USER",
+      plan: null,
+      subscription: null,
+    },
+    headers: new Headers(),
+  });
+  await expect(requireAccountSetup()).rejects.toThrow(
+    "redirect:/personal/verification",
+  );
+});

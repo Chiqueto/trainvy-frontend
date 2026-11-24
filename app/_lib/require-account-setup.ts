@@ -8,4 +8,10 @@ export async function requireAccountSetup() {
   if (result.status !== 200)
     throw new Error("Não foi possível verificar sua conta.");
   if (!result.data.accountSetupCompletedAt) redirect("/auth/complete");
+  if (
+    result.data.accountType === "COACH" &&
+    !result.data.professionalAccessGranted
+  ) {
+    redirect("/personal/verification");
+  }
 }

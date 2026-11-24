@@ -23,7 +23,9 @@ export default async function WelcomePage() {
     throw new Error("Não foi possível carregar sua conta.");
   if (!result.data.accountSetupCompletedAt) redirect("/auth/complete");
   if (result.data.accountType !== "COACH") redirect("/");
+  if (!result.data.professionalAccessGranted) redirect("/personal/verification");
   const planName = result.data.plan?.name ?? "Personal Trainer";
+  const isTrialing = result.data.subscription?.status === "TRIALING";
   const active = ["ACTIVE", "TRIALING"].includes(
     result.data.subscription?.status ?? "",
   );
@@ -46,14 +48,26 @@ export default async function WelcomePage() {
           <span className={styles.overline}>PLANO SELECIONADO</span>
           <strong>{planName}</strong>
         </div>
-        <span>{active ? "Assinatura ativa" : "Aguardando liberação"}</span>
+        <span>
+          {isTrialing
+            ? "Período de teste ativo (30 dias)"
+            : active
+              ? "Assinatura ativa"
+              : "Aguardando liberação"}
+        </span>
       </div>
-      {!active && (
+      {isTrialing ? (
+        <p className={styles.plansNote}>
+          Você ganhou 30 dias de teste grátis com acesso total a todos os
+          recursos. Aproveite para cadastrar seus primeiros alunos e prescrever
+          treinos.
+        </p>
+      ) : !active ? (
         <p className={styles.plansNote}>
           Seu cadastro foi concluído. Os recursos do plano ficam disponíveis
           após liberação da assinatura.
         </p>
-      )}
+      ) : null}
       {!active && (
         <a
           href={supportUrl("Solicitar liberação do plano profissional Trainvy")}

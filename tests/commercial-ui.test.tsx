@@ -25,12 +25,21 @@ vi.mock("@/app/_lib/auth-client", () => ({
 vi.mock("@/app/auth/_actions", () => ({
   beginSignup: vi.fn(),
   loadCoachPlans: vi.fn(),
+  loadCoachDeclarationTerm: vi.fn().mockResolvedValue({
+    success: true,
+    term: {
+      version: "1.0",
+      contentHash: "hash123",
+      contentMd: "Termo de teste",
+    },
+  }),
   finishSignup: vi.fn(),
   setAuthReturnToAction: vi.fn(),
 }));
 import {
   beginSignup,
   finishSignup,
+  loadCoachDeclarationTerm,
   loadCoachPlans,
   setAuthReturnToAction,
 } from "@/app/auth/_actions";
@@ -56,11 +65,36 @@ const plans = [
     entitlements: [],
   },
 ];
+async function fillCoachCredentials() {
+  await screen.findByText("Declaração de Habilitação e Responsabilidade Técnica");
+  fireEvent.change(screen.getByPlaceholderText("Seu nome completo"), {
+    target: { value: "Personal Trainer QA" },
+  });
+  fireEvent.change(screen.getByPlaceholderText("000.000.000-00"), {
+    target: { value: "52998224725" },
+  });
+  fireEvent.change(screen.getByPlaceholderText("123456-G"), {
+    target: { value: "123456-G" },
+  });
+  fireEvent.change(screen.getByRole("combobox"), {
+    target: { value: "SP" },
+  });
+  fireEvent.click(screen.getByRole("checkbox"));
+}
+
 beforeEach(() => {
   vi.resetAllMocks();
   mocks.social.mockResolvedValue({});
   vi.mocked(beginSignup).mockResolvedValue({ success: true });
   vi.mocked(loadCoachPlans).mockResolvedValue({ success: true, plans });
+  vi.mocked(loadCoachDeclarationTerm).mockResolvedValue({
+    success: true,
+    term: {
+      version: "1.0",
+      contentHash: "hash123",
+      contentMd: "Termo de teste",
+    },
+  });
 });
 afterEach(cleanup);
 
@@ -102,6 +136,7 @@ describe("Account signup UI", () => {
     render(<SignupForm initialAccountType="COACH" />);
     await screen.findByText("Personal AI");
     fireEvent.click(screen.getByRole("button", { name: /Personal AI/ }));
+    await fillCoachCredentials();
     fireEvent.click(
       screen.getByRole("button", { name: "Continuar com Google" }),
     );
@@ -136,15 +171,17 @@ describe("Account signup UI", () => {
         .getByRole("button", { name: /Sou Personal/ })
         .getAttribute("aria-pressed"),
     ).toBe("true");
+    await fillCoachCredentials();
     fireEvent.click(
       screen.getByRole("button", { name: "Continuar com Google" }),
     );
     await waitFor(() =>
-      expect(beginSignup).toHaveBeenCalledWith({
-        accountType: "COACH",
-        planCode: "COACH",
-        returnTo: undefined,
-      }),
+      expect(beginSignup).toHaveBeenCalledWith(
+        expect.objectContaining({
+          accountType: "COACH",
+          planCode: "COACH",
+        }),
+      ),
     );
   });
   it("existing login uses OAuth without signup intent or implicit signup", async () => {
@@ -182,14 +219,17 @@ describe("Account signup UI", () => {
     fireEvent.click(screen.getByRole("button", { name: /Sou Personal/ }));
     expect(await screen.findByText(/49,90/)).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: /Personal AI/ }));
+    await fillCoachCredentials();
     fireEvent.click(
       screen.getByRole("button", { name: "Continuar com Google" }),
     );
     await waitFor(() =>
-      expect(beginSignup).toHaveBeenCalledWith({
-        accountType: "COACH",
-        planCode: "COACH_AI",
-      }),
+      expect(beginSignup).toHaveBeenCalledWith(
+        expect.objectContaining({
+          accountType: "COACH",
+          planCode: "COACH_AI",
+        }),
+      ),
     );
   });
   it("plan errors support retry", async () => {
