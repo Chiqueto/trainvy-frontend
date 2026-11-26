@@ -148,15 +148,15 @@ export function CoachGuidedTour({ tour }: { tour: "workspace" | "builder" }) {
       <Dialog.Trigger asChild>
         <Button
           type="button"
-          variant="ghost"
+          variant="outline"
           size="sm"
           onClick={() => {
             setStep(0);
             setOpen(true);
           }}
-          className="gap-2 text-xs"
+          className="h-8 gap-1.5 rounded-lg border-border/60 bg-background/60 px-2.5 font-heading text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
         >
-          <CircleHelp className="size-4" />
+          <CircleHelp className="size-3.5 shrink-0" />
           {tour === "workspace" ? "Rever guia" : "Guia do editor"}
         </Button>
       </Dialog.Trigger>
@@ -171,7 +171,7 @@ export function CoachGuidedTour({ tour }: { tour: "workspace" | "builder" }) {
         )}
         <Dialog.Content
           onPointerDownOutside={(event) => event.preventDefault()}
-          className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] left-1/2 z-[82] max-h-[65dvh] w-[calc(100%-2rem)] max-w-md -translate-x-1/2 overflow-y-auto rounded-2xl border border-border bg-card p-5 text-foreground shadow-2xl outline-none sm:bottom-8 lg:left-[calc(50%+7.5rem)] lg:w-[calc(100%-17rem)]"
+          className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom,0px))] left-1/2 z-[82] max-h-[65dvh] w-[calc(100%-2rem)] max-w-md -translate-x-1/2 overflow-y-auto rounded-2xl border border-border bg-card p-5 text-foreground shadow-2xl outline-none sm:bottom-8 lg:left-[calc(50%+7.5rem)] lg:w-[calc(100%-17rem)]"
         >
           <div className="mb-3 flex items-center justify-between gap-3 text-xs text-muted-foreground">
             <span className="flex items-center gap-2">

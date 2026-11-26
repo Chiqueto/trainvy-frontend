@@ -90,7 +90,7 @@ export function InviteStudentModal({
         disabled={isFull}
         className={
           compact
-            ? "h-10 rounded-xl px-3 font-heading text-xs font-semibold"
+            ? "h-10 w-full sm:w-auto rounded-xl px-3 font-heading text-xs font-semibold gap-1.5 sm:gap-2"
             : "w-full h-12 rounded-xl font-heading font-bold text-sm flex items-center justify-center gap-2 shadow-sm"
         }
       >

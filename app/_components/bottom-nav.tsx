@@ -23,18 +23,18 @@ import { ThemeToggle } from "@/components/theme-toggle";
 
 export interface BottomNavProps {
   activePage?:
-    | "home"
-    | "planning"
-    | "calendar"
-    | "stats"
-    | "evolution"
-    | "profile"
-    | "personal"
-    | "athletes"
-    | "prescriptions"
-    | "templates"
-    | "exercises"
-    | "my-workout";
+  | "home"
+  | "planning"
+  | "calendar"
+  | "stats"
+  | "evolution"
+  | "profile"
+  | "personal"
+  | "athletes"
+  | "prescriptions"
+  | "templates"
+  | "exercises"
+  | "my-workout";
   isCoach?: boolean;
 }
 
@@ -116,8 +116,8 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
     isPersonalRoute && !isProfileSubRoute
       ? !isTemplatesRoute && !isExercisesRoute
       : activePage === "personal" ||
-        activePage === "athletes" ||
-        (effectiveIsCoach && activePage === "prescriptions");
+      activePage === "athletes" ||
+      (effectiveIsCoach && activePage === "prescriptions");
 
   const isTemplatesActive = activePage
     ? activePage === "templates"
@@ -127,48 +127,48 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
     ? false
     : activePage
       ? activePage === "planning" ||
-        activePage === "calendar" ||
-        (!effectiveIsCoach && activePage === "prescriptions")
+      activePage === "calendar" ||
+      (!effectiveIsCoach && activePage === "prescriptions")
       : Boolean(
-          pathname &&
-          (pathname === "/planning" ||
-            pathname.startsWith("/planning/") ||
-            pathname === "/workout-plans" ||
-            pathname.startsWith("/workout-plans/")),
-        );
+        pathname &&
+        (pathname === "/planning" ||
+          pathname.startsWith("/planning/") ||
+          pathname === "/workout-plans" ||
+          pathname.startsWith("/workout-plans/")),
+      );
 
   const isEvolutionActive = activePage
     ? activePage === "stats" || activePage === "evolution"
     : Boolean(
-        pathname &&
-        (pathname === "/stats" ||
-          pathname.startsWith("/stats/") ||
-          pathname === "/history" ||
-          pathname.startsWith("/history/")),
-      );
+      pathname &&
+      (pathname === "/stats" ||
+        pathname.startsWith("/stats/") ||
+        pathname === "/history" ||
+        pathname.startsWith("/history/")),
+    );
 
   const isProfileActive =
     isProfileSubRoute ||
     (activePage
       ? activePage === "profile"
       : Boolean(
-          pathname &&
-          (pathname === "/profile" || pathname.startsWith("/profile/")),
-        ));
+        pathname &&
+        (pathname === "/profile" || pathname.startsWith("/profile/")),
+      ));
 
   const isHomeActive =
     !isPersonalRoute &&
     (activePage
       ? activePage === "home" || activePage === "my-workout"
       : Boolean(
-          pathname === "/" ||
-          pathname === MY_WORKOUT_PATH ||
-          (!isPlanningActive &&
-            !isEvolutionActive &&
-            !isProfileActive &&
-            !isAthletesActive &&
-            !isTemplatesActive),
-        ));
+        pathname === "/" ||
+        pathname === MY_WORKOUT_PATH ||
+        (!isPlanningActive &&
+          !isEvolutionActive &&
+          !isProfileActive &&
+          !isAthletesActive &&
+          !isTemplatesActive),
+      ));
 
   const [optimisticTab, setOptimisticTab] = useState<string | null>(null);
   const [prevPathname, setPrevPathname] = useState(pathname);

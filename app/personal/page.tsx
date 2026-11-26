@@ -107,14 +107,15 @@ export default async function PersonalPage() {
     <div className="personal-workspace flex min-h-svh min-w-0 flex-col bg-background pb-24 lg:pb-8">
       <main className="trainvy-page mx-auto w-full px-5 py-4 flex flex-col gap-5">
         <PersonalHeader
+          utilityActions={<CoachGuidedTour tour="workspace" />}
           actions={
-            <>
-              <CoachGuidedTour tour="workspace" />
-              <div data-tour="student-actions" className="flex flex-wrap gap-2">
-                <CreateStudentModal isFull={isFull} />
-                <InviteStudentModal isFull={isFull} compact />
-              </div>
-            </>
+            <div
+              data-tour="student-actions"
+              className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center"
+            >
+              <CreateStudentModal isFull={isFull} />
+              <InviteStudentModal isFull={isFull} compact />
+            </div>
           }
         />
 

@@ -11,6 +11,7 @@ interface PersonalHeaderProps {
   title?: string;
   description?: string;
   activeTab?: "athletes" | "templates" | "exercises" | "subscription";
+  utilityActions?: ReactNode;
   actions?: ReactNode;
 }
 
@@ -18,6 +19,7 @@ export function PersonalHeader({
   title,
   description,
   activeTab,
+  utilityActions,
   actions,
 }: PersonalHeaderProps) {
   const pathname = usePathname();
@@ -54,37 +56,40 @@ export function PersonalHeader({
   ] as const;
 
   return (
-    <div className="flex flex-col gap-5 rounded-3xl border border-border/70 bg-card p-5 shadow-xs sm:p-7">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <div className="flex flex-col gap-4 sm:gap-5 rounded-3xl border border-border/70 bg-card p-4 sm:p-7 shadow-xs">
+      <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
         <Badge
           variant="secondary"
-          className="flex items-center gap-1.5 px-3 py-1 font-heading text-xs font-semibold text-primary bg-primary/10 border-primary/20"
+          className="self-start flex items-center gap-1.5 px-3 py-1 font-heading text-xs font-semibold text-primary bg-primary/10 border-primary/20"
         >
-          <UserCheck className="size-3.5" />
-          Trainvy Pro · Gestão de Treinadores
+          <UserCheck className="size-3.5 shrink-0" />
+          <span>Trainvy Pro · Gestão de Treinadores</span>
         </Badge>
 
-        <div className="flex flex-wrap items-center gap-2">
-          {actions}
+        <div className="flex flex-wrap items-center gap-2 sm:justify-end">
+          {utilityActions}
           <Link
             href="/profile"
-            className="flex items-center gap-1.5 text-xs font-heading font-medium text-muted-foreground hover:text-foreground transition-colors px-2.5 py-1.5 rounded-lg hover:bg-muted"
+            className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-border/60 bg-background/60 px-2.5 text-xs font-heading font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             title="Configurações do Perfil"
           >
-            <Settings className="size-3.5" />
+            <Settings className="size-3.5 shrink-0" />
             <span>Configurações</span>
           </Link>
         </div>
       </div>
 
-      <div>
-        <h1 className="font-heading text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-          {title ?? "Painel do Personal"}
-        </h1>
-        <p className="text-sm text-muted-foreground mt-1.5 max-w-2xl leading-relaxed">
-          {description ??
-            "Gerencie seus alunos, acompanhe execuções e crie modelos reutilizáveis de treino."}
-        </p>
+      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div className="min-w-0">
+          <h1 className="font-heading text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+            {title ?? "Painel do Personal"}
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1.5 max-w-2xl leading-relaxed">
+            {description ??
+              "Gerencie seus alunos, acompanhe execuções e crie modelos reutilizáveis de treino."}
+          </p>
+        </div>
+        {actions && <div className="w-full md:w-auto shrink-0">{actions}</div>}
       </div>
 
       {/* Navegação Rápida entre Alunos, Modelos e Exercícios */}

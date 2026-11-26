@@ -24,9 +24,12 @@ export function CreateStudentModal({ isFull }: { isFull: boolean }) {
       }}
     >
       <Dialog.Trigger asChild>
-        <Button disabled={isFull} className="h-10 gap-2 rounded-xl text-xs">
-          <UserPlus className="size-4" />
-          Cadastrar aluno
+        <Button
+          disabled={isFull}
+          className="h-10 w-full sm:w-auto gap-1.5 sm:gap-2 rounded-xl px-3 text-xs font-heading font-semibold"
+        >
+          <UserPlus className="size-4 shrink-0" />
+          <span>Cadastrar aluno</span>
         </Button>
       </Dialog.Trigger>
       <Dialog.Portal>
