@@ -11,7 +11,6 @@ import type { Metadata } from "next";
 import { getCommercialContext } from "@/app/_lib/api/fetch-generated";
 import { MY_WORKOUT_PATH } from "@/app/_lib/account-navigation";
 import styles from "../_components/auth.module.css";
-import { supportUrl } from "@/app/_lib/support";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Bem-vindo ao Trainvy | Trainvy" };
@@ -69,12 +68,9 @@ export default async function WelcomePage() {
         </p>
       ) : null}
       {!active && (
-        <a
-          href={supportUrl("Solicitar liberação do plano profissional Trainvy")}
-          className={styles.secondaryLink}
-        >
-          Solicitar liberação ao suporte
-        </a>
+        <Link href="/personal/assinatura" className={styles.secondaryLink}>
+          Ativar assinatura agora
+        </Link>
       )}
       <div className={styles.welcomeFeatures}>
         <div>

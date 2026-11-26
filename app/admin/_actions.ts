@@ -40,6 +40,11 @@ export async function loadAdminSubscriptions(
 export async function loadAdminAudit(input: ListAdminAuditParams) {
   return invoke(() => api.listAdminAudit(input, { cache: "no-store" }));
 }
+export async function loadAdminAsaasErrors(
+  input: api.ListAdminAsaasErrorsParams = {},
+) {
+  return invoke(() => api.listAdminAsaasErrors(input, { cache: "no-store" }));
+}
 export async function saveAdminPlan(
   planId: string,
   input: UpdateAdminPlanBody,

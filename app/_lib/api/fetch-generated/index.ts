@@ -4767,6 +4767,896 @@ export type GetCommercialContext503 = {
   code: string;
 };
 
+/**
+ * @nullable
+ */
+export type GetCoachBillingOverview200Subscription = {
+  id: string;
+  planCode: string;
+  planName: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  monthlyPriceInCents: number;
+  currency: string;
+  status:
+    | "PENDING"
+    | "TRIALING"
+    | "ACTIVE"
+    | "PAST_DUE"
+    | "CANCELED"
+    | "EXPIRED";
+  billingProvider: "NONE" | "MANUAL" | "ASAAS";
+  /** @nullable */
+  trialEndsAt: string | null;
+  /** @nullable */
+  currentPeriodStart: string | null;
+  /** @nullable */
+  currentPeriodEnd: string | null;
+  /** @nullable */
+  paidUntil: string | null;
+  /** @nullable */
+  graceUntil: string | null;
+  /** @nullable */
+  coolingOffUntil: string | null;
+  /** @nullable */
+  nextDueDate: string | null;
+  cancelAtPeriodEnd: boolean;
+  /** @nullable */
+  canceledAt: string | null;
+} | null;
+
+/**
+ * @nullable
+ */
+export type GetCoachBillingOverview200PendingUpgrade = {
+  upgradeId: string;
+  /** @nullable */
+  asaasPaymentId: string | null;
+  /** @nullable */
+  invoiceUrl: string | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  differenceInCents: number;
+  fromPlanCode: string;
+  fromPlanName: string;
+  targetPlanCode: string;
+  targetPlanName: string;
+  status: string;
+  createdAt: string;
+  expiresAt: string;
+} | null;
+
+/**
+ * @nullable
+ */
+export type GetCoachBillingOverview200PendingDowngrade = {
+  downgradeId: string;
+  fromPlanCode: string;
+  fromPlanName: string;
+  targetPlanCode: string;
+  targetPlanName: string;
+  effectiveAt: string;
+  status: string;
+  asaasSyncStatus: string;
+  retainedAthleteIds: string[];
+  createdAt: string;
+} | null;
+
+export type GetCoachBillingOverview200PaymentsItem = {
+  id: string;
+  status: string;
+  /** @nullable */
+  billingType: string | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  amountInCents: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  netAmountInCents: number | null;
+  currency: string;
+  /** @nullable */
+  dueDate: string | null;
+  /** @nullable */
+  confirmedAt: string | null;
+  /** @nullable */
+  receivedAt: string | null;
+  /** @nullable */
+  refundedAt: string | null;
+  /** @nullable */
+  checkoutUrl: string | null;
+  /** @nullable */
+  invoiceUrl: string | null;
+  /** @nullable */
+  bankSlipUrl: string | null;
+  createdAt: string;
+};
+
+export type GetCoachBillingOverview200RefundsItem = {
+  id: string;
+  refundType: string;
+  status: string;
+  /** @nullable */
+  reason: string | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  amountInCents: number;
+  currency: string;
+  requestedAt: string;
+  /** @nullable */
+  processedAt: string | null;
+  /** @nullable */
+  failedAt: string | null;
+};
+
+export type GetCoachBillingOverview200AvailablePlansItemEntitlementsItemEntitlement =
+  (typeof GetCoachBillingOverview200AvailablePlansItemEntitlementsItemEntitlement)[keyof typeof GetCoachBillingOverview200AvailablePlansItemEntitlementsItemEntitlement];
+
+export const GetCoachBillingOverview200AvailablePlansItemEntitlementsItemEntitlement =
+  {
+    COACH_DASHBOARD: "COACH_DASHBOARD",
+    MANAGE_ATHLETES: "MANAGE_ATHLETES",
+    ASSIGN_WORKOUTS: "ASSIGN_WORKOUTS",
+    VIEW_ATHLETE_HISTORY: "VIEW_ATHLETE_HISTORY",
+    ADVANCED_STATS: "ADVANCED_STATS",
+    AI_CHAT: "AI_CHAT",
+    AI_PLAN_GENERATION: "AI_PLAN_GENERATION",
+    SOURCE_LIBRARY: "SOURCE_LIBRARY",
+  } as const;
+
+export type GetCoachBillingOverview200AvailablePlansItemEntitlementsItem = {
+  entitlement: GetCoachBillingOverview200AvailablePlansItemEntitlementsItemEntitlement;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  limitValue: number | null;
+};
+
+export type GetCoachBillingOverview200AvailablePlansItem = {
+  code: string;
+  name: string;
+  /** @nullable */
+  description: string | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  monthlyPriceInCents: number;
+  currency: string;
+  entitlements: GetCoachBillingOverview200AvailablePlansItemEntitlementsItem[];
+};
+
+export type GetCoachBillingOverview200 = {
+  accessActive: boolean;
+  /** @nullable */
+  pendingCheckoutUrl: string | null;
+  /** @nullable */
+  subscription: GetCoachBillingOverview200Subscription;
+  /** @nullable */
+  pendingUpgrade: GetCoachBillingOverview200PendingUpgrade;
+  /** @nullable */
+  pendingDowngrade: GetCoachBillingOverview200PendingDowngrade;
+  payments: GetCoachBillingOverview200PaymentsItem[];
+  refunds: GetCoachBillingOverview200RefundsItem[];
+  availablePlans: GetCoachBillingOverview200AvailablePlansItem[];
+};
+
+export type GetCoachBillingOverview400 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachBillingOverview401 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachBillingOverview403 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachBillingOverview404 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachBillingOverview409 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachBillingOverview500 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachBillingOverview502 = {
+  error: string;
+  code: string;
+};
+
+export type GetCoachBillingOverview503 = {
+  error: string;
+  code: string;
+};
+
+export type StartCoachSubscriptionBody = {
+  /**
+   * @minLength 1
+   * @maxLength 80
+   */
+  planCode: string;
+  /**
+   * @minLength 11
+   * @maxLength 20
+   */
+  cpfCnpj: string;
+};
+
+export type StartCoachSubscription200Status =
+  (typeof StartCoachSubscription200Status)[keyof typeof StartCoachSubscription200Status];
+
+export const StartCoachSubscription200Status = {
+  PENDING: "PENDING",
+  TRIALING: "TRIALING",
+  ACTIVE: "ACTIVE",
+  PAST_DUE: "PAST_DUE",
+  CANCELED: "CANCELED",
+  EXPIRED: "EXPIRED",
+} as const;
+
+export type StartCoachSubscription200 = {
+  subscriptionId: string;
+  planCode: string;
+  planName: string;
+  checkoutUrl: string;
+  status: StartCoachSubscription200Status;
+  reusedExistingCheckout: boolean;
+  message: string;
+};
+
+export type StartCoachSubscription400 = {
+  error: string;
+  code: string;
+};
+
+export type StartCoachSubscription401 = {
+  error: string;
+  code: string;
+};
+
+export type StartCoachSubscription403 = {
+  error: string;
+  code: string;
+};
+
+export type StartCoachSubscription404 = {
+  error: string;
+  code: string;
+};
+
+export type StartCoachSubscription409 = {
+  error: string;
+  code: string;
+};
+
+export type StartCoachSubscription500 = {
+  error: string;
+  code: string;
+};
+
+export type StartCoachSubscription502 = {
+  error: string;
+  code: string;
+};
+
+export type StartCoachSubscription503 = {
+  error: string;
+  code: string;
+};
+
+export type CancelCoachSubscriptionBody = {
+  /** @maxLength 500 */
+  reason?: string;
+};
+
+export type CancelCoachSubscription200Status =
+  (typeof CancelCoachSubscription200Status)[keyof typeof CancelCoachSubscription200Status];
+
+export const CancelCoachSubscription200Status = {
+  PENDING: "PENDING",
+  TRIALING: "TRIALING",
+  ACTIVE: "ACTIVE",
+  PAST_DUE: "PAST_DUE",
+  CANCELED: "CANCELED",
+  EXPIRED: "EXPIRED",
+} as const;
+
+export type CancelCoachSubscription200 = {
+  subscriptionId: string;
+  status: CancelCoachSubscription200Status;
+  cancelAtPeriodEnd: boolean;
+  /** @nullable */
+  paidUntil: string | null;
+  refundRequested: boolean;
+  /** @nullable */
+  refundStatus: string | null;
+  message: string;
+};
+
+export type CancelCoachSubscription400 = {
+  error: string;
+  code: string;
+};
+
+export type CancelCoachSubscription401 = {
+  error: string;
+  code: string;
+};
+
+export type CancelCoachSubscription403 = {
+  error: string;
+  code: string;
+};
+
+export type CancelCoachSubscription404 = {
+  error: string;
+  code: string;
+};
+
+export type CancelCoachSubscription409 = {
+  error: string;
+  code: string;
+};
+
+export type CancelCoachSubscription500 = {
+  error: string;
+  code: string;
+};
+
+export type CancelCoachSubscription502 = {
+  error: string;
+  code: string;
+};
+
+export type CancelCoachSubscription503 = {
+  error: string;
+  code: string;
+};
+
+export type InitiateCoachSubscriptionUpgradeBody = {
+  /**
+   * @minLength 1
+   * @maxLength 80
+   */
+  planCode: string;
+};
+
+export type InitiateCoachSubscriptionUpgrade200 = {
+  upgradeId: string;
+  /** @nullable */
+  asaasPaymentId: string | null;
+  /** @nullable */
+  invoiceUrl: string | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  differenceInCents: number;
+  fromPlanCode: string;
+  targetPlanCode: string;
+  targetPlanName: string;
+  status: string;
+  message: string;
+};
+
+export type InitiateCoachSubscriptionUpgrade400 = {
+  error: string;
+  code: string;
+};
+
+export type InitiateCoachSubscriptionUpgrade401 = {
+  error: string;
+  code: string;
+};
+
+export type InitiateCoachSubscriptionUpgrade403 = {
+  error: string;
+  code: string;
+};
+
+export type InitiateCoachSubscriptionUpgrade404 = {
+  error: string;
+  code: string;
+};
+
+export type InitiateCoachSubscriptionUpgrade409 = {
+  error: string;
+  code: string;
+};
+
+export type InitiateCoachSubscriptionUpgrade500 = {
+  error: string;
+  code: string;
+};
+
+export type InitiateCoachSubscriptionUpgrade502 = {
+  error: string;
+  code: string;
+};
+
+export type InitiateCoachSubscriptionUpgrade503 = {
+  error: string;
+  code: string;
+};
+
+/**
+ * @nullable
+ */
+export type GetPendingCoachSubscriptionUpgrade200 = {
+  upgradeId: string;
+  /** @nullable */
+  asaasPaymentId: string | null;
+  /** @nullable */
+  invoiceUrl: string | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  differenceInCents: number;
+  fromPlanCode: string;
+  fromPlanName: string;
+  targetPlanCode: string;
+  targetPlanName: string;
+  status: string;
+  createdAt: string;
+  expiresAt: string;
+} | null;
+
+export type GetPendingCoachSubscriptionUpgrade400 = {
+  error: string;
+  code: string;
+};
+
+export type GetPendingCoachSubscriptionUpgrade401 = {
+  error: string;
+  code: string;
+};
+
+export type GetPendingCoachSubscriptionUpgrade403 = {
+  error: string;
+  code: string;
+};
+
+export type GetPendingCoachSubscriptionUpgrade404 = {
+  error: string;
+  code: string;
+};
+
+export type GetPendingCoachSubscriptionUpgrade409 = {
+  error: string;
+  code: string;
+};
+
+export type GetPendingCoachSubscriptionUpgrade500 = {
+  error: string;
+  code: string;
+};
+
+export type GetPendingCoachSubscriptionUpgrade502 = {
+  error: string;
+  code: string;
+};
+
+export type GetPendingCoachSubscriptionUpgrade503 = {
+  error: string;
+  code: string;
+};
+
+export type CancelPendingCoachSubscriptionUpgrade200 = {
+  success: boolean;
+};
+
+export type CancelPendingCoachSubscriptionUpgrade400 = {
+  error: string;
+  code: string;
+};
+
+export type CancelPendingCoachSubscriptionUpgrade401 = {
+  error: string;
+  code: string;
+};
+
+export type CancelPendingCoachSubscriptionUpgrade403 = {
+  error: string;
+  code: string;
+};
+
+export type CancelPendingCoachSubscriptionUpgrade404 = {
+  error: string;
+  code: string;
+};
+
+export type CancelPendingCoachSubscriptionUpgrade409 = {
+  error: string;
+  code: string;
+};
+
+export type CancelPendingCoachSubscriptionUpgrade500 = {
+  error: string;
+  code: string;
+};
+
+export type CancelPendingCoachSubscriptionUpgrade502 = {
+  error: string;
+  code: string;
+};
+
+export type CancelPendingCoachSubscriptionUpgrade503 = {
+  error: string;
+  code: string;
+};
+
+export type PreviewCoachSubscriptionDowngradeBody = {
+  /**
+   * @minLength 1
+   * @maxLength 80
+   */
+  planCode: string;
+};
+
+export type PreviewCoachSubscriptionDowngrade200FromPlan = {
+  code: string;
+  name: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  monthlyPriceInCents: number;
+};
+
+export type PreviewCoachSubscriptionDowngrade200TargetPlan = {
+  code: string;
+  name: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  monthlyPriceInCents: number;
+};
+
+export type PreviewCoachSubscriptionDowngrade200AthletesItem = {
+  linkId: string;
+  athleteId: string;
+  name: string;
+  /** @nullable */
+  email: string | null;
+  isManagedProfile: boolean;
+  createdAt: string;
+};
+
+export type PreviewCoachSubscriptionDowngrade200 = {
+  effectiveAt: string;
+  fromPlan: PreviewCoachSubscriptionDowngrade200FromPlan;
+  targetPlan: PreviewCoachSubscriptionDowngrade200TargetPlan;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  targetAthleteLimit: number | null;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  activeAthletesCount: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  excessAthletesCount: number;
+  athletes: PreviewCoachSubscriptionDowngrade200AthletesItem[];
+  hasPendingTransition: boolean;
+  /** @nullable */
+  pendingTransitionMessage: string | null;
+};
+
+export type PreviewCoachSubscriptionDowngrade400 = {
+  error: string;
+  code: string;
+};
+
+export type PreviewCoachSubscriptionDowngrade401 = {
+  error: string;
+  code: string;
+};
+
+export type PreviewCoachSubscriptionDowngrade403 = {
+  error: string;
+  code: string;
+};
+
+export type PreviewCoachSubscriptionDowngrade404 = {
+  error: string;
+  code: string;
+};
+
+export type PreviewCoachSubscriptionDowngrade409 = {
+  error: string;
+  code: string;
+};
+
+export type PreviewCoachSubscriptionDowngrade500 = {
+  error: string;
+  code: string;
+};
+
+export type PreviewCoachSubscriptionDowngrade502 = {
+  error: string;
+  code: string;
+};
+
+export type PreviewCoachSubscriptionDowngrade503 = {
+  error: string;
+  code: string;
+};
+
+export type ScheduleCoachSubscriptionDowngradeBody = {
+  /**
+   * @minLength 1
+   * @maxLength 80
+   */
+  planCode: string;
+  /** @maxItems 500 */
+  retainedAthleteIds?: string[];
+  acknowledgeExcessAthletes?: boolean;
+};
+
+export type ScheduleCoachSubscriptionDowngrade200 = {
+  downgradeId: string;
+  targetPlanCode: string;
+  targetPlanName: string;
+  effectiveAt: string;
+  status: string;
+  message: string;
+};
+
+export type ScheduleCoachSubscriptionDowngrade400 = {
+  error: string;
+  code: string;
+};
+
+export type ScheduleCoachSubscriptionDowngrade401 = {
+  error: string;
+  code: string;
+};
+
+export type ScheduleCoachSubscriptionDowngrade403 = {
+  error: string;
+  code: string;
+};
+
+export type ScheduleCoachSubscriptionDowngrade404 = {
+  error: string;
+  code: string;
+};
+
+export type ScheduleCoachSubscriptionDowngrade409 = {
+  error: string;
+  code: string;
+};
+
+export type ScheduleCoachSubscriptionDowngrade500 = {
+  error: string;
+  code: string;
+};
+
+export type ScheduleCoachSubscriptionDowngrade502 = {
+  error: string;
+  code: string;
+};
+
+export type ScheduleCoachSubscriptionDowngrade503 = {
+  error: string;
+  code: string;
+};
+
+/**
+ * @nullable
+ */
+export type GetPendingCoachSubscriptionDowngrade200 = {
+  downgradeId: string;
+  fromPlanCode: string;
+  fromPlanName: string;
+  targetPlanCode: string;
+  targetPlanName: string;
+  effectiveAt: string;
+  status: string;
+  asaasSyncStatus: string;
+  retainedAthleteIds: string[];
+  createdAt: string;
+} | null;
+
+export type GetPendingCoachSubscriptionDowngrade400 = {
+  error: string;
+  code: string;
+};
+
+export type GetPendingCoachSubscriptionDowngrade401 = {
+  error: string;
+  code: string;
+};
+
+export type GetPendingCoachSubscriptionDowngrade403 = {
+  error: string;
+  code: string;
+};
+
+export type GetPendingCoachSubscriptionDowngrade404 = {
+  error: string;
+  code: string;
+};
+
+export type GetPendingCoachSubscriptionDowngrade409 = {
+  error: string;
+  code: string;
+};
+
+export type GetPendingCoachSubscriptionDowngrade500 = {
+  error: string;
+  code: string;
+};
+
+export type GetPendingCoachSubscriptionDowngrade502 = {
+  error: string;
+  code: string;
+};
+
+export type GetPendingCoachSubscriptionDowngrade503 = {
+  error: string;
+  code: string;
+};
+
+export type CancelScheduledCoachSubscriptionDowngrade200 = {
+  success: boolean;
+};
+
+export type CancelScheduledCoachSubscriptionDowngrade400 = {
+  error: string;
+  code: string;
+};
+
+export type CancelScheduledCoachSubscriptionDowngrade401 = {
+  error: string;
+  code: string;
+};
+
+export type CancelScheduledCoachSubscriptionDowngrade403 = {
+  error: string;
+  code: string;
+};
+
+export type CancelScheduledCoachSubscriptionDowngrade404 = {
+  error: string;
+  code: string;
+};
+
+export type CancelScheduledCoachSubscriptionDowngrade409 = {
+  error: string;
+  code: string;
+};
+
+export type CancelScheduledCoachSubscriptionDowngrade500 = {
+  error: string;
+  code: string;
+};
+
+export type CancelScheduledCoachSubscriptionDowngrade502 = {
+  error: string;
+  code: string;
+};
+
+export type CancelScheduledCoachSubscriptionDowngrade503 = {
+  error: string;
+  code: string;
+};
+
+/**
+ * @nullable
+ */
+export type ReceiveAsaasBillingWebhookBodyPayment = {
+  /** @nullable */
+  id?: string | null;
+  /** @nullable */
+  customer?: string | null;
+  /** @nullable */
+  subscription?: string | null;
+  /** @nullable */
+  checkout?: string | null;
+  /** @nullable */
+  checkoutSession?: string | null;
+  /** @nullable */
+  paymentLink?: string | null;
+  /** @nullable */
+  status?: string | null;
+  /** @nullable */
+  billingType?: string | null;
+  /** @nullable */
+  value?: number | null;
+  /** @nullable */
+  netValue?: number | null;
+  /** @nullable */
+  dueDate?: string | null;
+  /** @nullable */
+  paymentDate?: string | null;
+  /** @nullable */
+  clientPaymentDate?: string | null;
+  /** @nullable */
+  invoiceUrl?: string | null;
+  /** @nullable */
+  bankSlipUrl?: string | null;
+  /** @nullable */
+  externalReference?: string | null;
+  [key: string]: unknown;
+} | null;
+
+/**
+ * @nullable
+ */
+export type ReceiveAsaasBillingWebhookBodySubscription = {
+  /** @nullable */
+  id?: string | null;
+  /** @nullable */
+  customer?: string | null;
+  /** @nullable */
+  status?: string | null;
+  /** @nullable */
+  nextDueDate?: string | null;
+  /** @nullable */
+  externalReference?: string | null;
+  [key: string]: unknown;
+} | null;
+
+export type ReceiveAsaasBillingWebhookBody = {
+  /** @nullable */
+  id?: string | null;
+  /** @minLength 1 */
+  event: string;
+  /** @nullable */
+  payment?: ReceiveAsaasBillingWebhookBodyPayment;
+  /** @nullable */
+  subscription?: ReceiveAsaasBillingWebhookBodySubscription;
+  [key: string]: unknown;
+};
+
+export type ReceiveAsaasBillingWebhook200 = {
+  received: boolean;
+  message: string;
+};
+
+export type ReceiveAsaasBillingWebhook401 = {
+  error: string;
+  code: string;
+};
+
+export type ReceiveAsaasBillingWebhook500 = {
+  error: string;
+  code: string;
+};
+
 export type GetCoachOnboarding200 = {
   coachOnboardingCompleted: boolean;
   workoutBuilderOnboardingCompleted: boolean;
@@ -16103,6 +16993,80 @@ export type CancelManualSubscription500 = {
   code: string;
 };
 
+export type ListAdminAsaasErrorsParams = {
+  /**
+   * @maxLength 120
+   */
+  processName?: string;
+  /**
+   * @minimum 1
+   * @maximum 100
+   */
+  limit?: number;
+};
+
+export type ListAdminAsaasErrors200ItemsItem = {
+  id: string;
+  processName: string;
+  errorType: string;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  httpStatus: number | null;
+  shortMessage: string;
+  /** @nullable */
+  detailedStacktrace: string | null;
+  /** @nullable */
+  requestMethod: string | null;
+  /** @nullable */
+  requestPath: string | null;
+  /** @nullable */
+  responseBody: string | null;
+  /** @nullable */
+  userId: string | null;
+  /** @nullable */
+  subscriptionId: string | null;
+  /** @nullable */
+  externalReference: string | null;
+  createdAt: string;
+};
+
+export type ListAdminAsaasErrors200 = {
+  items: ListAdminAsaasErrors200ItemsItem[];
+};
+
+export type ListAdminAsaasErrors400 = {
+  error: string;
+  code: string;
+};
+
+export type ListAdminAsaasErrors401 = {
+  error: string;
+  code: string;
+};
+
+export type ListAdminAsaasErrors403 = {
+  error: string;
+  code: string;
+};
+
+export type ListAdminAsaasErrors404 = {
+  error: string;
+  code: string;
+};
+
+export type ListAdminAsaasErrors409 = {
+  error: string;
+  code: string;
+};
+
+export type ListAdminAsaasErrors500 = {
+  error: string;
+  code: string;
+};
+
 /**
  * @nullable
  */
@@ -22259,6 +23223,44 @@ export type CronStreakReminders500 = {
   code: string;
 };
 
+export type CronBillingReconciliation200 = {
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  pendingSubscriptionsChecked: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  activePaymentsChecked: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  expiredAccessChecked: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  upgradesReconciled: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  downgradesReconciled: number;
+};
+
+export type CronBillingReconciliation401 = {
+  error: string;
+  code: string;
+};
+
+export type CronBillingReconciliation500 = {
+  error: string;
+  code: string;
+};
+
 /**
  * @summary List workout plans
  */
@@ -25321,6 +26323,923 @@ export const getCommercialContext = async (
     {
       ...options,
       method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Consultar assinatura, pagamentos, reembolsos e planos do treinador
+ */
+export type getCoachBillingOverviewResponse200 = {
+  data: GetCoachBillingOverview200;
+  status: 200;
+};
+
+export type getCoachBillingOverviewResponse400 = {
+  data: GetCoachBillingOverview400;
+  status: 400;
+};
+
+export type getCoachBillingOverviewResponse401 = {
+  data: GetCoachBillingOverview401;
+  status: 401;
+};
+
+export type getCoachBillingOverviewResponse403 = {
+  data: GetCoachBillingOverview403;
+  status: 403;
+};
+
+export type getCoachBillingOverviewResponse404 = {
+  data: GetCoachBillingOverview404;
+  status: 404;
+};
+
+export type getCoachBillingOverviewResponse409 = {
+  data: GetCoachBillingOverview409;
+  status: 409;
+};
+
+export type getCoachBillingOverviewResponse500 = {
+  data: GetCoachBillingOverview500;
+  status: 500;
+};
+
+export type getCoachBillingOverviewResponse502 = {
+  data: GetCoachBillingOverview502;
+  status: 502;
+};
+
+export type getCoachBillingOverviewResponse503 = {
+  data: GetCoachBillingOverview503;
+  status: 503;
+};
+
+export type getCoachBillingOverviewResponseSuccess =
+  getCoachBillingOverviewResponse200 & {
+    headers: Headers;
+  };
+export type getCoachBillingOverviewResponseError = (
+  | getCoachBillingOverviewResponse400
+  | getCoachBillingOverviewResponse401
+  | getCoachBillingOverviewResponse403
+  | getCoachBillingOverviewResponse404
+  | getCoachBillingOverviewResponse409
+  | getCoachBillingOverviewResponse500
+  | getCoachBillingOverviewResponse502
+  | getCoachBillingOverviewResponse503
+) & {
+  headers: Headers;
+};
+
+export type getCoachBillingOverviewResponse =
+  | getCoachBillingOverviewResponseSuccess
+  | getCoachBillingOverviewResponseError;
+
+export const getGetCoachBillingOverviewUrl = () => {
+  return `/billing/overview`;
+};
+
+export const getCoachBillingOverview = async (
+  options?: RequestInit,
+): Promise<getCoachBillingOverviewResponse> => {
+  return customFetch<getCoachBillingOverviewResponse>(
+    getGetCoachBillingOverviewUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Iniciar assinatura profissional com checkout Asaas
+ */
+export type startCoachSubscriptionResponse200 = {
+  data: StartCoachSubscription200;
+  status: 200;
+};
+
+export type startCoachSubscriptionResponse400 = {
+  data: StartCoachSubscription400;
+  status: 400;
+};
+
+export type startCoachSubscriptionResponse401 = {
+  data: StartCoachSubscription401;
+  status: 401;
+};
+
+export type startCoachSubscriptionResponse403 = {
+  data: StartCoachSubscription403;
+  status: 403;
+};
+
+export type startCoachSubscriptionResponse404 = {
+  data: StartCoachSubscription404;
+  status: 404;
+};
+
+export type startCoachSubscriptionResponse409 = {
+  data: StartCoachSubscription409;
+  status: 409;
+};
+
+export type startCoachSubscriptionResponse500 = {
+  data: StartCoachSubscription500;
+  status: 500;
+};
+
+export type startCoachSubscriptionResponse502 = {
+  data: StartCoachSubscription502;
+  status: 502;
+};
+
+export type startCoachSubscriptionResponse503 = {
+  data: StartCoachSubscription503;
+  status: 503;
+};
+
+export type startCoachSubscriptionResponseSuccess =
+  startCoachSubscriptionResponse200 & {
+    headers: Headers;
+  };
+export type startCoachSubscriptionResponseError = (
+  | startCoachSubscriptionResponse400
+  | startCoachSubscriptionResponse401
+  | startCoachSubscriptionResponse403
+  | startCoachSubscriptionResponse404
+  | startCoachSubscriptionResponse409
+  | startCoachSubscriptionResponse500
+  | startCoachSubscriptionResponse502
+  | startCoachSubscriptionResponse503
+) & {
+  headers: Headers;
+};
+
+export type startCoachSubscriptionResponse =
+  | startCoachSubscriptionResponseSuccess
+  | startCoachSubscriptionResponseError;
+
+export const getStartCoachSubscriptionUrl = () => {
+  return `/billing/subscription/start`;
+};
+
+export const startCoachSubscription = async (
+  startCoachSubscriptionBody: StartCoachSubscriptionBody,
+  options?: RequestInit,
+): Promise<startCoachSubscriptionResponse> => {
+  return customFetch<startCoachSubscriptionResponse>(
+    getStartCoachSubscriptionUrl(),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(startCoachSubscriptionBody),
+    },
+  );
+};
+
+/**
+ * @summary Cancelar assinatura profissional (com reembolso em até 7 dias)
+ */
+export type cancelCoachSubscriptionResponse200 = {
+  data: CancelCoachSubscription200;
+  status: 200;
+};
+
+export type cancelCoachSubscriptionResponse400 = {
+  data: CancelCoachSubscription400;
+  status: 400;
+};
+
+export type cancelCoachSubscriptionResponse401 = {
+  data: CancelCoachSubscription401;
+  status: 401;
+};
+
+export type cancelCoachSubscriptionResponse403 = {
+  data: CancelCoachSubscription403;
+  status: 403;
+};
+
+export type cancelCoachSubscriptionResponse404 = {
+  data: CancelCoachSubscription404;
+  status: 404;
+};
+
+export type cancelCoachSubscriptionResponse409 = {
+  data: CancelCoachSubscription409;
+  status: 409;
+};
+
+export type cancelCoachSubscriptionResponse500 = {
+  data: CancelCoachSubscription500;
+  status: 500;
+};
+
+export type cancelCoachSubscriptionResponse502 = {
+  data: CancelCoachSubscription502;
+  status: 502;
+};
+
+export type cancelCoachSubscriptionResponse503 = {
+  data: CancelCoachSubscription503;
+  status: 503;
+};
+
+export type cancelCoachSubscriptionResponseSuccess =
+  cancelCoachSubscriptionResponse200 & {
+    headers: Headers;
+  };
+export type cancelCoachSubscriptionResponseError = (
+  | cancelCoachSubscriptionResponse400
+  | cancelCoachSubscriptionResponse401
+  | cancelCoachSubscriptionResponse403
+  | cancelCoachSubscriptionResponse404
+  | cancelCoachSubscriptionResponse409
+  | cancelCoachSubscriptionResponse500
+  | cancelCoachSubscriptionResponse502
+  | cancelCoachSubscriptionResponse503
+) & {
+  headers: Headers;
+};
+
+export type cancelCoachSubscriptionResponse =
+  | cancelCoachSubscriptionResponseSuccess
+  | cancelCoachSubscriptionResponseError;
+
+export const getCancelCoachSubscriptionUrl = () => {
+  return `/billing/subscription/cancel`;
+};
+
+export const cancelCoachSubscription = async (
+  cancelCoachSubscriptionBody: CancelCoachSubscriptionBody,
+  options?: RequestInit,
+): Promise<cancelCoachSubscriptionResponse> => {
+  return customFetch<cancelCoachSubscriptionResponse>(
+    getCancelCoachSubscriptionUrl(),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(cancelCoachSubscriptionBody),
+    },
+  );
+};
+
+/**
+ * @summary Iniciar upgrade imediato de plano da assinatura
+ */
+export type initiateCoachSubscriptionUpgradeResponse200 = {
+  data: InitiateCoachSubscriptionUpgrade200;
+  status: 200;
+};
+
+export type initiateCoachSubscriptionUpgradeResponse400 = {
+  data: InitiateCoachSubscriptionUpgrade400;
+  status: 400;
+};
+
+export type initiateCoachSubscriptionUpgradeResponse401 = {
+  data: InitiateCoachSubscriptionUpgrade401;
+  status: 401;
+};
+
+export type initiateCoachSubscriptionUpgradeResponse403 = {
+  data: InitiateCoachSubscriptionUpgrade403;
+  status: 403;
+};
+
+export type initiateCoachSubscriptionUpgradeResponse404 = {
+  data: InitiateCoachSubscriptionUpgrade404;
+  status: 404;
+};
+
+export type initiateCoachSubscriptionUpgradeResponse409 = {
+  data: InitiateCoachSubscriptionUpgrade409;
+  status: 409;
+};
+
+export type initiateCoachSubscriptionUpgradeResponse500 = {
+  data: InitiateCoachSubscriptionUpgrade500;
+  status: 500;
+};
+
+export type initiateCoachSubscriptionUpgradeResponse502 = {
+  data: InitiateCoachSubscriptionUpgrade502;
+  status: 502;
+};
+
+export type initiateCoachSubscriptionUpgradeResponse503 = {
+  data: InitiateCoachSubscriptionUpgrade503;
+  status: 503;
+};
+
+export type initiateCoachSubscriptionUpgradeResponseSuccess =
+  initiateCoachSubscriptionUpgradeResponse200 & {
+    headers: Headers;
+  };
+export type initiateCoachSubscriptionUpgradeResponseError = (
+  | initiateCoachSubscriptionUpgradeResponse400
+  | initiateCoachSubscriptionUpgradeResponse401
+  | initiateCoachSubscriptionUpgradeResponse403
+  | initiateCoachSubscriptionUpgradeResponse404
+  | initiateCoachSubscriptionUpgradeResponse409
+  | initiateCoachSubscriptionUpgradeResponse500
+  | initiateCoachSubscriptionUpgradeResponse502
+  | initiateCoachSubscriptionUpgradeResponse503
+) & {
+  headers: Headers;
+};
+
+export type initiateCoachSubscriptionUpgradeResponse =
+  | initiateCoachSubscriptionUpgradeResponseSuccess
+  | initiateCoachSubscriptionUpgradeResponseError;
+
+export const getInitiateCoachSubscriptionUpgradeUrl = () => {
+  return `/billing/subscription/upgrade`;
+};
+
+export const initiateCoachSubscriptionUpgrade = async (
+  initiateCoachSubscriptionUpgradeBody: InitiateCoachSubscriptionUpgradeBody,
+  options?: RequestInit,
+): Promise<initiateCoachSubscriptionUpgradeResponse> => {
+  return customFetch<initiateCoachSubscriptionUpgradeResponse>(
+    getInitiateCoachSubscriptionUpgradeUrl(),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(initiateCoachSubscriptionUpgradeBody),
+    },
+  );
+};
+
+/**
+ * @summary Consultar upgrade pendente da assinatura
+ */
+export type getPendingCoachSubscriptionUpgradeResponse200 = {
+  data: GetPendingCoachSubscriptionUpgrade200;
+  status: 200;
+};
+
+export type getPendingCoachSubscriptionUpgradeResponse400 = {
+  data: GetPendingCoachSubscriptionUpgrade400;
+  status: 400;
+};
+
+export type getPendingCoachSubscriptionUpgradeResponse401 = {
+  data: GetPendingCoachSubscriptionUpgrade401;
+  status: 401;
+};
+
+export type getPendingCoachSubscriptionUpgradeResponse403 = {
+  data: GetPendingCoachSubscriptionUpgrade403;
+  status: 403;
+};
+
+export type getPendingCoachSubscriptionUpgradeResponse404 = {
+  data: GetPendingCoachSubscriptionUpgrade404;
+  status: 404;
+};
+
+export type getPendingCoachSubscriptionUpgradeResponse409 = {
+  data: GetPendingCoachSubscriptionUpgrade409;
+  status: 409;
+};
+
+export type getPendingCoachSubscriptionUpgradeResponse500 = {
+  data: GetPendingCoachSubscriptionUpgrade500;
+  status: 500;
+};
+
+export type getPendingCoachSubscriptionUpgradeResponse502 = {
+  data: GetPendingCoachSubscriptionUpgrade502;
+  status: 502;
+};
+
+export type getPendingCoachSubscriptionUpgradeResponse503 = {
+  data: GetPendingCoachSubscriptionUpgrade503;
+  status: 503;
+};
+
+export type getPendingCoachSubscriptionUpgradeResponseSuccess =
+  getPendingCoachSubscriptionUpgradeResponse200 & {
+    headers: Headers;
+  };
+export type getPendingCoachSubscriptionUpgradeResponseError = (
+  | getPendingCoachSubscriptionUpgradeResponse400
+  | getPendingCoachSubscriptionUpgradeResponse401
+  | getPendingCoachSubscriptionUpgradeResponse403
+  | getPendingCoachSubscriptionUpgradeResponse404
+  | getPendingCoachSubscriptionUpgradeResponse409
+  | getPendingCoachSubscriptionUpgradeResponse500
+  | getPendingCoachSubscriptionUpgradeResponse502
+  | getPendingCoachSubscriptionUpgradeResponse503
+) & {
+  headers: Headers;
+};
+
+export type getPendingCoachSubscriptionUpgradeResponse =
+  | getPendingCoachSubscriptionUpgradeResponseSuccess
+  | getPendingCoachSubscriptionUpgradeResponseError;
+
+export const getGetPendingCoachSubscriptionUpgradeUrl = () => {
+  return `/billing/subscription/upgrade/pending`;
+};
+
+export const getPendingCoachSubscriptionUpgrade = async (
+  options?: RequestInit,
+): Promise<getPendingCoachSubscriptionUpgradeResponse> => {
+  return customFetch<getPendingCoachSubscriptionUpgradeResponse>(
+    getGetPendingCoachSubscriptionUpgradeUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Cancelar upgrade pendente da assinatura
+ */
+export type cancelPendingCoachSubscriptionUpgradeResponse200 = {
+  data: CancelPendingCoachSubscriptionUpgrade200;
+  status: 200;
+};
+
+export type cancelPendingCoachSubscriptionUpgradeResponse400 = {
+  data: CancelPendingCoachSubscriptionUpgrade400;
+  status: 400;
+};
+
+export type cancelPendingCoachSubscriptionUpgradeResponse401 = {
+  data: CancelPendingCoachSubscriptionUpgrade401;
+  status: 401;
+};
+
+export type cancelPendingCoachSubscriptionUpgradeResponse403 = {
+  data: CancelPendingCoachSubscriptionUpgrade403;
+  status: 403;
+};
+
+export type cancelPendingCoachSubscriptionUpgradeResponse404 = {
+  data: CancelPendingCoachSubscriptionUpgrade404;
+  status: 404;
+};
+
+export type cancelPendingCoachSubscriptionUpgradeResponse409 = {
+  data: CancelPendingCoachSubscriptionUpgrade409;
+  status: 409;
+};
+
+export type cancelPendingCoachSubscriptionUpgradeResponse500 = {
+  data: CancelPendingCoachSubscriptionUpgrade500;
+  status: 500;
+};
+
+export type cancelPendingCoachSubscriptionUpgradeResponse502 = {
+  data: CancelPendingCoachSubscriptionUpgrade502;
+  status: 502;
+};
+
+export type cancelPendingCoachSubscriptionUpgradeResponse503 = {
+  data: CancelPendingCoachSubscriptionUpgrade503;
+  status: 503;
+};
+
+export type cancelPendingCoachSubscriptionUpgradeResponseSuccess =
+  cancelPendingCoachSubscriptionUpgradeResponse200 & {
+    headers: Headers;
+  };
+export type cancelPendingCoachSubscriptionUpgradeResponseError = (
+  | cancelPendingCoachSubscriptionUpgradeResponse400
+  | cancelPendingCoachSubscriptionUpgradeResponse401
+  | cancelPendingCoachSubscriptionUpgradeResponse403
+  | cancelPendingCoachSubscriptionUpgradeResponse404
+  | cancelPendingCoachSubscriptionUpgradeResponse409
+  | cancelPendingCoachSubscriptionUpgradeResponse500
+  | cancelPendingCoachSubscriptionUpgradeResponse502
+  | cancelPendingCoachSubscriptionUpgradeResponse503
+) & {
+  headers: Headers;
+};
+
+export type cancelPendingCoachSubscriptionUpgradeResponse =
+  | cancelPendingCoachSubscriptionUpgradeResponseSuccess
+  | cancelPendingCoachSubscriptionUpgradeResponseError;
+
+export const getCancelPendingCoachSubscriptionUpgradeUrl = () => {
+  return `/billing/subscription/upgrade/cancel`;
+};
+
+export const cancelPendingCoachSubscriptionUpgrade = async (
+  options?: RequestInit,
+): Promise<cancelPendingCoachSubscriptionUpgradeResponse> => {
+  return customFetch<cancelPendingCoachSubscriptionUpgradeResponse>(
+    getCancelPendingCoachSubscriptionUpgradeUrl(),
+    {
+      ...options,
+      method: "POST",
+    },
+  );
+};
+
+/**
+ * @summary Preview de alteração para plano inferior (downgrade)
+ */
+export type previewCoachSubscriptionDowngradeResponse200 = {
+  data: PreviewCoachSubscriptionDowngrade200;
+  status: 200;
+};
+
+export type previewCoachSubscriptionDowngradeResponse400 = {
+  data: PreviewCoachSubscriptionDowngrade400;
+  status: 400;
+};
+
+export type previewCoachSubscriptionDowngradeResponse401 = {
+  data: PreviewCoachSubscriptionDowngrade401;
+  status: 401;
+};
+
+export type previewCoachSubscriptionDowngradeResponse403 = {
+  data: PreviewCoachSubscriptionDowngrade403;
+  status: 403;
+};
+
+export type previewCoachSubscriptionDowngradeResponse404 = {
+  data: PreviewCoachSubscriptionDowngrade404;
+  status: 404;
+};
+
+export type previewCoachSubscriptionDowngradeResponse409 = {
+  data: PreviewCoachSubscriptionDowngrade409;
+  status: 409;
+};
+
+export type previewCoachSubscriptionDowngradeResponse500 = {
+  data: PreviewCoachSubscriptionDowngrade500;
+  status: 500;
+};
+
+export type previewCoachSubscriptionDowngradeResponse502 = {
+  data: PreviewCoachSubscriptionDowngrade502;
+  status: 502;
+};
+
+export type previewCoachSubscriptionDowngradeResponse503 = {
+  data: PreviewCoachSubscriptionDowngrade503;
+  status: 503;
+};
+
+export type previewCoachSubscriptionDowngradeResponseSuccess =
+  previewCoachSubscriptionDowngradeResponse200 & {
+    headers: Headers;
+  };
+export type previewCoachSubscriptionDowngradeResponseError = (
+  | previewCoachSubscriptionDowngradeResponse400
+  | previewCoachSubscriptionDowngradeResponse401
+  | previewCoachSubscriptionDowngradeResponse403
+  | previewCoachSubscriptionDowngradeResponse404
+  | previewCoachSubscriptionDowngradeResponse409
+  | previewCoachSubscriptionDowngradeResponse500
+  | previewCoachSubscriptionDowngradeResponse502
+  | previewCoachSubscriptionDowngradeResponse503
+) & {
+  headers: Headers;
+};
+
+export type previewCoachSubscriptionDowngradeResponse =
+  | previewCoachSubscriptionDowngradeResponseSuccess
+  | previewCoachSubscriptionDowngradeResponseError;
+
+export const getPreviewCoachSubscriptionDowngradeUrl = () => {
+  return `/billing/subscription/downgrade/preview`;
+};
+
+export const previewCoachSubscriptionDowngrade = async (
+  previewCoachSubscriptionDowngradeBody: PreviewCoachSubscriptionDowngradeBody,
+  options?: RequestInit,
+): Promise<previewCoachSubscriptionDowngradeResponse> => {
+  return customFetch<previewCoachSubscriptionDowngradeResponse>(
+    getPreviewCoachSubscriptionDowngradeUrl(),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(previewCoachSubscriptionDowngradeBody),
+    },
+  );
+};
+
+/**
+ * @summary Agendar downgrade de plano para o fim do ciclo atual
+ */
+export type scheduleCoachSubscriptionDowngradeResponse200 = {
+  data: ScheduleCoachSubscriptionDowngrade200;
+  status: 200;
+};
+
+export type scheduleCoachSubscriptionDowngradeResponse400 = {
+  data: ScheduleCoachSubscriptionDowngrade400;
+  status: 400;
+};
+
+export type scheduleCoachSubscriptionDowngradeResponse401 = {
+  data: ScheduleCoachSubscriptionDowngrade401;
+  status: 401;
+};
+
+export type scheduleCoachSubscriptionDowngradeResponse403 = {
+  data: ScheduleCoachSubscriptionDowngrade403;
+  status: 403;
+};
+
+export type scheduleCoachSubscriptionDowngradeResponse404 = {
+  data: ScheduleCoachSubscriptionDowngrade404;
+  status: 404;
+};
+
+export type scheduleCoachSubscriptionDowngradeResponse409 = {
+  data: ScheduleCoachSubscriptionDowngrade409;
+  status: 409;
+};
+
+export type scheduleCoachSubscriptionDowngradeResponse500 = {
+  data: ScheduleCoachSubscriptionDowngrade500;
+  status: 500;
+};
+
+export type scheduleCoachSubscriptionDowngradeResponse502 = {
+  data: ScheduleCoachSubscriptionDowngrade502;
+  status: 502;
+};
+
+export type scheduleCoachSubscriptionDowngradeResponse503 = {
+  data: ScheduleCoachSubscriptionDowngrade503;
+  status: 503;
+};
+
+export type scheduleCoachSubscriptionDowngradeResponseSuccess =
+  scheduleCoachSubscriptionDowngradeResponse200 & {
+    headers: Headers;
+  };
+export type scheduleCoachSubscriptionDowngradeResponseError = (
+  | scheduleCoachSubscriptionDowngradeResponse400
+  | scheduleCoachSubscriptionDowngradeResponse401
+  | scheduleCoachSubscriptionDowngradeResponse403
+  | scheduleCoachSubscriptionDowngradeResponse404
+  | scheduleCoachSubscriptionDowngradeResponse409
+  | scheduleCoachSubscriptionDowngradeResponse500
+  | scheduleCoachSubscriptionDowngradeResponse502
+  | scheduleCoachSubscriptionDowngradeResponse503
+) & {
+  headers: Headers;
+};
+
+export type scheduleCoachSubscriptionDowngradeResponse =
+  | scheduleCoachSubscriptionDowngradeResponseSuccess
+  | scheduleCoachSubscriptionDowngradeResponseError;
+
+export const getScheduleCoachSubscriptionDowngradeUrl = () => {
+  return `/billing/subscription/downgrade`;
+};
+
+export const scheduleCoachSubscriptionDowngrade = async (
+  scheduleCoachSubscriptionDowngradeBody: ScheduleCoachSubscriptionDowngradeBody,
+  options?: RequestInit,
+): Promise<scheduleCoachSubscriptionDowngradeResponse> => {
+  return customFetch<scheduleCoachSubscriptionDowngradeResponse>(
+    getScheduleCoachSubscriptionDowngradeUrl(),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(scheduleCoachSubscriptionDowngradeBody),
+    },
+  );
+};
+
+/**
+ * @summary Consultar downgrade agendado pendente
+ */
+export type getPendingCoachSubscriptionDowngradeResponse200 = {
+  data: GetPendingCoachSubscriptionDowngrade200;
+  status: 200;
+};
+
+export type getPendingCoachSubscriptionDowngradeResponse400 = {
+  data: GetPendingCoachSubscriptionDowngrade400;
+  status: 400;
+};
+
+export type getPendingCoachSubscriptionDowngradeResponse401 = {
+  data: GetPendingCoachSubscriptionDowngrade401;
+  status: 401;
+};
+
+export type getPendingCoachSubscriptionDowngradeResponse403 = {
+  data: GetPendingCoachSubscriptionDowngrade403;
+  status: 403;
+};
+
+export type getPendingCoachSubscriptionDowngradeResponse404 = {
+  data: GetPendingCoachSubscriptionDowngrade404;
+  status: 404;
+};
+
+export type getPendingCoachSubscriptionDowngradeResponse409 = {
+  data: GetPendingCoachSubscriptionDowngrade409;
+  status: 409;
+};
+
+export type getPendingCoachSubscriptionDowngradeResponse500 = {
+  data: GetPendingCoachSubscriptionDowngrade500;
+  status: 500;
+};
+
+export type getPendingCoachSubscriptionDowngradeResponse502 = {
+  data: GetPendingCoachSubscriptionDowngrade502;
+  status: 502;
+};
+
+export type getPendingCoachSubscriptionDowngradeResponse503 = {
+  data: GetPendingCoachSubscriptionDowngrade503;
+  status: 503;
+};
+
+export type getPendingCoachSubscriptionDowngradeResponseSuccess =
+  getPendingCoachSubscriptionDowngradeResponse200 & {
+    headers: Headers;
+  };
+export type getPendingCoachSubscriptionDowngradeResponseError = (
+  | getPendingCoachSubscriptionDowngradeResponse400
+  | getPendingCoachSubscriptionDowngradeResponse401
+  | getPendingCoachSubscriptionDowngradeResponse403
+  | getPendingCoachSubscriptionDowngradeResponse404
+  | getPendingCoachSubscriptionDowngradeResponse409
+  | getPendingCoachSubscriptionDowngradeResponse500
+  | getPendingCoachSubscriptionDowngradeResponse502
+  | getPendingCoachSubscriptionDowngradeResponse503
+) & {
+  headers: Headers;
+};
+
+export type getPendingCoachSubscriptionDowngradeResponse =
+  | getPendingCoachSubscriptionDowngradeResponseSuccess
+  | getPendingCoachSubscriptionDowngradeResponseError;
+
+export const getGetPendingCoachSubscriptionDowngradeUrl = () => {
+  return `/billing/subscription/downgrade/pending`;
+};
+
+export const getPendingCoachSubscriptionDowngrade = async (
+  options?: RequestInit,
+): Promise<getPendingCoachSubscriptionDowngradeResponse> => {
+  return customFetch<getPendingCoachSubscriptionDowngradeResponse>(
+    getGetPendingCoachSubscriptionDowngradeUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
+ * @summary Cancelar downgrade agendado antes do próximo ciclo
+ */
+export type cancelScheduledCoachSubscriptionDowngradeResponse200 = {
+  data: CancelScheduledCoachSubscriptionDowngrade200;
+  status: 200;
+};
+
+export type cancelScheduledCoachSubscriptionDowngradeResponse400 = {
+  data: CancelScheduledCoachSubscriptionDowngrade400;
+  status: 400;
+};
+
+export type cancelScheduledCoachSubscriptionDowngradeResponse401 = {
+  data: CancelScheduledCoachSubscriptionDowngrade401;
+  status: 401;
+};
+
+export type cancelScheduledCoachSubscriptionDowngradeResponse403 = {
+  data: CancelScheduledCoachSubscriptionDowngrade403;
+  status: 403;
+};
+
+export type cancelScheduledCoachSubscriptionDowngradeResponse404 = {
+  data: CancelScheduledCoachSubscriptionDowngrade404;
+  status: 404;
+};
+
+export type cancelScheduledCoachSubscriptionDowngradeResponse409 = {
+  data: CancelScheduledCoachSubscriptionDowngrade409;
+  status: 409;
+};
+
+export type cancelScheduledCoachSubscriptionDowngradeResponse500 = {
+  data: CancelScheduledCoachSubscriptionDowngrade500;
+  status: 500;
+};
+
+export type cancelScheduledCoachSubscriptionDowngradeResponse502 = {
+  data: CancelScheduledCoachSubscriptionDowngrade502;
+  status: 502;
+};
+
+export type cancelScheduledCoachSubscriptionDowngradeResponse503 = {
+  data: CancelScheduledCoachSubscriptionDowngrade503;
+  status: 503;
+};
+
+export type cancelScheduledCoachSubscriptionDowngradeResponseSuccess =
+  cancelScheduledCoachSubscriptionDowngradeResponse200 & {
+    headers: Headers;
+  };
+export type cancelScheduledCoachSubscriptionDowngradeResponseError = (
+  | cancelScheduledCoachSubscriptionDowngradeResponse400
+  | cancelScheduledCoachSubscriptionDowngradeResponse401
+  | cancelScheduledCoachSubscriptionDowngradeResponse403
+  | cancelScheduledCoachSubscriptionDowngradeResponse404
+  | cancelScheduledCoachSubscriptionDowngradeResponse409
+  | cancelScheduledCoachSubscriptionDowngradeResponse500
+  | cancelScheduledCoachSubscriptionDowngradeResponse502
+  | cancelScheduledCoachSubscriptionDowngradeResponse503
+) & {
+  headers: Headers;
+};
+
+export type cancelScheduledCoachSubscriptionDowngradeResponse =
+  | cancelScheduledCoachSubscriptionDowngradeResponseSuccess
+  | cancelScheduledCoachSubscriptionDowngradeResponseError;
+
+export const getCancelScheduledCoachSubscriptionDowngradeUrl = () => {
+  return `/billing/subscription/downgrade/cancel`;
+};
+
+export const cancelScheduledCoachSubscriptionDowngrade = async (
+  options?: RequestInit,
+): Promise<cancelScheduledCoachSubscriptionDowngradeResponse> => {
+  return customFetch<cancelScheduledCoachSubscriptionDowngradeResponse>(
+    getCancelScheduledCoachSubscriptionDowngradeUrl(),
+    {
+      ...options,
+      method: "POST",
+    },
+  );
+};
+
+/**
+ * @summary Receber eventos de webhook do Asaas para assinaturas
+ */
+export type receiveAsaasBillingWebhookResponse200 = {
+  data: ReceiveAsaasBillingWebhook200;
+  status: 200;
+};
+
+export type receiveAsaasBillingWebhookResponse401 = {
+  data: ReceiveAsaasBillingWebhook401;
+  status: 401;
+};
+
+export type receiveAsaasBillingWebhookResponse500 = {
+  data: ReceiveAsaasBillingWebhook500;
+  status: 500;
+};
+
+export type receiveAsaasBillingWebhookResponseSuccess =
+  receiveAsaasBillingWebhookResponse200 & {
+    headers: Headers;
+  };
+export type receiveAsaasBillingWebhookResponseError = (
+  | receiveAsaasBillingWebhookResponse401
+  | receiveAsaasBillingWebhookResponse500
+) & {
+  headers: Headers;
+};
+
+export type receiveAsaasBillingWebhookResponse =
+  | receiveAsaasBillingWebhookResponseSuccess
+  | receiveAsaasBillingWebhookResponseError;
+
+export const getReceiveAsaasBillingWebhookUrl = () => {
+  return `/webhooks/asaas/billing`;
+};
+
+export const receiveAsaasBillingWebhook = async (
+  receiveAsaasBillingWebhookBody: ReceiveAsaasBillingWebhookBody,
+  options?: RequestInit,
+): Promise<receiveAsaasBillingWebhookResponse> => {
+  return customFetch<receiveAsaasBillingWebhookResponse>(
+    getReceiveAsaasBillingWebhookUrl(),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(receiveAsaasBillingWebhookBody),
     },
   );
 };
@@ -31819,6 +33738,94 @@ export const cancelManualSubscription = async (
 };
 
 /**
+ * @summary List Asaas integration and webhook error logs
+ */
+export type listAdminAsaasErrorsResponse200 = {
+  data: ListAdminAsaasErrors200;
+  status: 200;
+};
+
+export type listAdminAsaasErrorsResponse400 = {
+  data: ListAdminAsaasErrors400;
+  status: 400;
+};
+
+export type listAdminAsaasErrorsResponse401 = {
+  data: ListAdminAsaasErrors401;
+  status: 401;
+};
+
+export type listAdminAsaasErrorsResponse403 = {
+  data: ListAdminAsaasErrors403;
+  status: 403;
+};
+
+export type listAdminAsaasErrorsResponse404 = {
+  data: ListAdminAsaasErrors404;
+  status: 404;
+};
+
+export type listAdminAsaasErrorsResponse409 = {
+  data: ListAdminAsaasErrors409;
+  status: 409;
+};
+
+export type listAdminAsaasErrorsResponse500 = {
+  data: ListAdminAsaasErrors500;
+  status: 500;
+};
+
+export type listAdminAsaasErrorsResponseSuccess =
+  listAdminAsaasErrorsResponse200 & {
+    headers: Headers;
+  };
+export type listAdminAsaasErrorsResponseError = (
+  | listAdminAsaasErrorsResponse400
+  | listAdminAsaasErrorsResponse401
+  | listAdminAsaasErrorsResponse403
+  | listAdminAsaasErrorsResponse404
+  | listAdminAsaasErrorsResponse409
+  | listAdminAsaasErrorsResponse500
+) & {
+  headers: Headers;
+};
+
+export type listAdminAsaasErrorsResponse =
+  | listAdminAsaasErrorsResponseSuccess
+  | listAdminAsaasErrorsResponseError;
+
+export const getListAdminAsaasErrorsUrl = (
+  params?: ListAdminAsaasErrorsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/admin/asaas-errors?${stringifiedParams}`
+    : `/admin/asaas-errors`;
+};
+
+export const listAdminAsaasErrors = async (
+  params?: ListAdminAsaasErrorsParams,
+  options?: RequestInit,
+): Promise<listAdminAsaasErrorsResponse> => {
+  return customFetch<listAdminAsaasErrorsResponse>(
+    getListAdminAsaasErrorsUrl(params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+/**
  * @summary Redirect to a short-lived URL for a global exercise thumbnail
  */
 export type getExerciseThumbnailResponse307 = {
@@ -34925,4 +36932,53 @@ export const cronStreakReminders = async (
     ...options,
     method: "GET",
   });
+};
+
+/**
+ * @summary Reconcile Asaas billing subscriptions, upgrades and downgrades (Vercel Cron)
+ */
+export type cronBillingReconciliationResponse200 = {
+  data: CronBillingReconciliation200;
+  status: 200;
+};
+
+export type cronBillingReconciliationResponse401 = {
+  data: CronBillingReconciliation401;
+  status: 401;
+};
+
+export type cronBillingReconciliationResponse500 = {
+  data: CronBillingReconciliation500;
+  status: 500;
+};
+
+export type cronBillingReconciliationResponseSuccess =
+  cronBillingReconciliationResponse200 & {
+    headers: Headers;
+  };
+export type cronBillingReconciliationResponseError = (
+  | cronBillingReconciliationResponse401
+  | cronBillingReconciliationResponse500
+) & {
+  headers: Headers;
+};
+
+export type cronBillingReconciliationResponse =
+  | cronBillingReconciliationResponseSuccess
+  | cronBillingReconciliationResponseError;
+
+export const getCronBillingReconciliationUrl = () => {
+  return `/cron/billing-reconciliation`;
+};
+
+export const cronBillingReconciliation = async (
+  options?: RequestInit,
+): Promise<cronBillingReconciliationResponse> => {
+  return customFetch<cronBillingReconciliationResponse>(
+    getCronBillingReconciliationUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
 };

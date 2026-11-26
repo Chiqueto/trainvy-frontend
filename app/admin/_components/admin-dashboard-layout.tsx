@@ -10,6 +10,7 @@ import {
   Dumbbell,
   Sparkles,
   MessageSquare,
+  AlertTriangle,
 } from "lucide-react";
 import { requireAdminPage } from "@/app/admin/_lib/server";
 import { Logo } from "@/app/_components/logo";
@@ -23,6 +24,7 @@ const links = [
   { href: "/admin/exercises", label: "Exercícios", icon: Dumbbell },
   { href: "/admin/users", label: "Usuários", icon: Users },
   { href: "/admin/subscriptions", label: "Assinaturas", icon: CreditCard },
+  { href: "/admin/asaas-errors", label: "Erros Asaas", icon: AlertTriangle },
   { href: "/admin/plans", label: "Planos Comerciais", icon: Layers },
   { href: "/admin/audit", label: "Auditoria", icon: History },
   { href: "/admin/feature-terms", label: "Aceites de IA e 3D", icon: History },

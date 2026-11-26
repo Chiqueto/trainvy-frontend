@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { UserCheck, Settings, Users, Layers, Dumbbell } from "lucide-react";
+import { UserCheck, Settings, Users, Layers, Dumbbell, CreditCard } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
@@ -10,7 +10,7 @@ import type { ReactNode } from "react";
 interface PersonalHeaderProps {
   title?: string;
   description?: string;
-  activeTab?: "athletes" | "templates" | "exercises";
+  activeTab?: "athletes" | "templates" | "exercises" | "subscription";
   actions?: ReactNode;
 }
 
@@ -28,7 +28,9 @@ export function PersonalHeader({
       ? "templates"
       : pathname.startsWith("/personal/exercicios")
         ? "exercises"
-        : "athletes");
+        : pathname.startsWith("/personal/assinatura")
+          ? "subscription"
+          : "athletes");
 
   const tabs = [
     {
@@ -48,6 +50,12 @@ export function PersonalHeader({
       label: "Exercícios Personalizados",
       href: "/personal/exercicios",
       icon: Dumbbell,
+    },
+    {
+      id: "subscription",
+      label: "Assinatura",
+      href: "/personal/assinatura",
+      icon: CreditCard,
     },
   ] as const;
 

@@ -31,9 +31,8 @@ export function CoachPendingSubscriptionCard({
 
       <p className="text-xs text-foreground/80 leading-relaxed">
         Sua conta de treinador está registrada, porém o recurso de gerenciamento
-        de alunos ainda não está ativo na sua assinatura. A liberação é manual.
-        Fale com o suporte para combinar o período de acesso e receber a
-        confirmação de ativação.
+        de alunos não está ativo na sua assinatura no momento. Ative ou
+        regularize seu plano profissional para liberar a gestão de alunos.
       </p>
 
       <div className="rounded-xl border border-border/60 bg-background/50 p-3.5 text-xs text-muted-foreground space-y-1">
@@ -43,24 +42,23 @@ export function CoachPendingSubscriptionCard({
         </div>
         <p>
           Você pode continuar criando seus próprios planos e registrando suas
-          sessões de treino normalmente enquanto aguarda a liberação.
+          sessões de treino normalmente enquanto regulariza sua assinatura.
         </p>
       </div>
 
       <div className="pt-1">
         <Button asChild className="mb-3 w-full h-11 rounded-xl">
+          <Link href="/personal/assinatura">Assinar ou gerenciar plano</Link>
+        </Button>
+        <Button asChild variant="outline" className="mb-3 w-full h-11 rounded-xl">
           <a
             href={supportUrl(
-              "Solicitar liberação do plano profissional Trainvy",
+              "Suporte sobre assinatura profissional Trainvy",
             )}
           >
-            Solicitar liberação ao suporte
+            Falar com suporte
           </a>
         </Button>
-        <p className="mb-3 text-xs text-muted-foreground">
-          Não há cobrança ou renovação automática. O suporte informa as
-          condições e o prazo de liberação pelo canal de atendimento.
-        </p>
         <Link href={MY_WORKOUT_PATH}>
           <Button
             variant="outline"
