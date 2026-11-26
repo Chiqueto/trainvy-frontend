@@ -105,9 +105,15 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
     pathname === "/personal/verification" ||
     pathname?.startsWith("/personal/verification/");
 
+  const isSubscriptionRoute =
+    pathname === "/personal/assinatura" ||
+    pathname?.startsWith("/personal/assinatura/");
+
+  const isProfileSubRoute = isVerificationRoute || isSubscriptionRoute;
+
   // Mapeamentos de estado ativo por rota e prop
   const isAthletesActive =
-    isPersonalRoute && !isVerificationRoute
+    isPersonalRoute && !isProfileSubRoute
       ? !isTemplatesRoute && !isExercisesRoute
       : activePage === "personal" ||
         activePage === "athletes" ||
@@ -142,7 +148,7 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
       );
 
   const isProfileActive =
-    isVerificationRoute ||
+    isProfileSubRoute ||
     (activePage
       ? activePage === "profile"
       : Boolean(

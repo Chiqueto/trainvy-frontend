@@ -49,7 +49,7 @@ export default async function PersonalSubscriptionPage({
           checkoutReturned={resolvedParams.checkout === "success"}
         />
       </main>
-      <BottomNav isCoach={true} activePage="athletes" />
+      <BottomNav isCoach={true} activePage="profile" />
     </div>
   );
 }

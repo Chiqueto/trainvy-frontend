@@ -243,6 +243,21 @@ describe("BottomNav — Task 2.8.2 Mobile Polish & Route-derived State", () => {
       ).toBeNull();
     });
 
+    it("mantém Perfil ativo na página de assinatura e pagamentos", () => {
+      mockPathname = "/personal/assinatura";
+      render(<BottomNav isCoach activePage="profile" />);
+      expect(
+        screen
+          .getByRole("link", { name: "Perfil" })
+          .getAttribute("aria-current"),
+      ).toBe("page");
+      expect(
+        screen
+          .getByRole("link", { name: "Alunos" })
+          .getAttribute("aria-current"),
+      ).toBeNull();
+    });
+
     it("marca 'Meu Treino' como ativo na rota explícita quando no modo coach", () => {
       mockPathname = "/meu-treino";
       render(<BottomNav isCoach={true} />);
