@@ -2,7 +2,15 @@ import Link from "next/link";
 import { MY_WORKOUT_PATH } from "@/app/_lib/account-navigation";
 import { AlertCircle, Dumbbell } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { supportUrl } from "@/app/_lib/support";
+
+const STATUS_LABELS: Record<string, string> = {
+  PENDING: "Pagamento pendente",
+  TRIALING: "Período de teste encerrado",
+  ACTIVE: "Ativa",
+  PAST_DUE: "Pagamento em atraso",
+  CANCELED: "Cancelada",
+  EXPIRED: "Expirada",
+};
 
 interface CoachPendingSubscriptionCardProps {
   planName?: string | null;
@@ -13,6 +21,8 @@ export function CoachPendingSubscriptionCard({
   planName,
   status,
 }: CoachPendingSubscriptionCardProps) {
+  const friendlyStatus = status ? (STATUS_LABELS[status] ?? "Pendente") : "Pendente";
+
   return (
     <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-6 flex flex-col gap-4 text-left shadow-xs">
       <div className="flex items-center gap-3">
@@ -24,7 +34,7 @@ export function CoachPendingSubscriptionCard({
             Assessoria de Alunos Aguardando Liberação
           </h2>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Plano: {planName ?? "Personal"} • Status: {status ?? "Pendente"}
+            Plano: {planName ?? "Personal"} • Status: {friendlyStatus}
           </p>
         </div>
       </div>
@@ -46,18 +56,9 @@ export function CoachPendingSubscriptionCard({
         </p>
       </div>
 
-      <div className="pt-1">
-        <Button asChild className="mb-3 w-full h-11 rounded-xl">
+      <div className="pt-1 flex flex-col gap-3">
+        <Button asChild className="w-full h-11 rounded-xl">
           <Link href="/personal/assinatura">Assinar ou gerenciar plano</Link>
-        </Button>
-        <Button asChild variant="outline" className="mb-3 w-full h-11 rounded-xl">
-          <a
-            href={supportUrl(
-              "Suporte sobre assinatura profissional Trainvy",
-            )}
-          >
-            Falar com suporte
-          </a>
         </Button>
         <Link href={MY_WORKOUT_PATH}>
           <Button

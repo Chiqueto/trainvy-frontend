@@ -54,7 +54,7 @@ function formatDate(iso: string | null | undefined) {
 
 const statusLabels: Record<string, string> = {
   PENDING: "Pagamento pendente",
-  TRIALING: "Período de teste (Trial)",
+  TRIALING: "Período de teste",
   ACTIVE: "Ativa",
   PAST_DUE: "Pagamento em atraso",
   CANCELED: "Cancelada",

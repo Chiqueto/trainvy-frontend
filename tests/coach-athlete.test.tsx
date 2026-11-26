@@ -235,12 +235,14 @@ describe("Coach ↔ Athlete Foundation (Task 6.1 Frontend)", () => {
 
     it("CoachPendingSubscriptionCard explica status pendente preservando treinos próprios", () => {
       render(
-        <CoachPendingSubscriptionCard planName="Coach Pro" status="PENDING" />,
+        <CoachPendingSubscriptionCard planName="Coach Pro" status="EXPIRED" />,
       );
 
       expect(
         screen.getByText("Assessoria de Alunos Aguardando Liberação"),
       ).toBeDefined();
+      expect(screen.getByText(/Status: Expirada/i)).toBeDefined();
+      expect(screen.queryByRole("link", { name: "Falar com suporte" })).toBeNull();
       expect(
         screen.getByText(/Seus treinos pessoais continuam ativos/i),
       ).toBeDefined();
