@@ -75,6 +75,15 @@ describe("notification hub", () => {
     expect(push).not.toHaveBeenCalled();
   });
 
+  it("renders header bell variant with unread badge", async () => {
+    render(<NotificationHub variant="header" />);
+    const trigger = await screen.findByRole("button", {
+      name: "Notificações, 1 não lidas",
+    });
+    expect(trigger).toBeDefined();
+    expect(trigger.textContent).toContain("1");
+  });
+
   it("marks all notifications and updates the count", async () => {
     render(<NotificationHub />);
     await openHub();

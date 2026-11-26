@@ -12,6 +12,7 @@ import {
 } from "@/app/_lib/api/fetch-generated";
 import { BottomNav } from "@/app/_components/bottom-nav";
 import { Logo } from "@/app/_components/logo";
+import { NotificationHub } from "@/app/_components/notification-hub";
 import { WeeklySummary } from "./_components/weekly-summary";
 import { EvolutionExplorer } from "./_components/evolution-explorer";
 import { BodyMetricsEvolution } from "./_components/body-metrics-evolution";
@@ -164,7 +165,10 @@ export default async function StatsPage() {
   return (
     <div className="min-h-svh bg-background pb-28">
       <header className="trainvy-page border-b border-border/60 px-5 py-4">
-        <Logo size="md" asLink />
+        <div className="flex items-center justify-between gap-2">
+          <Logo size="md" asLink />
+          <NotificationHub variant="header" />
+        </div>
         <h1 className="mt-4 font-heading text-xl font-bold tracking-tight">
           Evolução
         </h1>

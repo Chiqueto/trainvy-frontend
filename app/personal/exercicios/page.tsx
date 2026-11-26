@@ -15,9 +15,18 @@ export const metadata = {
 };
 
 export default async function PersonalCustomExercisesPage() {
-  await requireAccountSetup();
+  const [
+    ,
+    commercialRes,
+    customRes,
+    globalRes,
+  ] = await Promise.all([
+    requireAccountSetup(),
+    getCommercialContext({ cache: "no-store" }),
+    listExercises({ onlyCustom: "true" }, { cache: "no-store" }).catch(() => null),
+    listExercises({ onlyGlobal: "true" }, { cache: "no-store" }).catch(() => null),
+  ]);
 
-  const commercialRes = await getCommercialContext({ cache: "no-store" });
   if (commercialRes.status !== 200 || !commercialRes.data) {
     redirect("/profile");
   }
@@ -36,11 +45,6 @@ export default async function PersonalCustomExercisesPage() {
     redirect("/personal");
   }
 
-  const [customRes, globalRes] = await Promise.all([
-    listExercises({ onlyCustom: "true" }, { cache: "no-store" }),
-    listExercises({ onlyGlobal: "true" }, { cache: "no-store" }),
-  ]);
-
   return (
     <div className="personal-workspace flex min-h-svh min-w-0 flex-col bg-background pb-28 lg:pb-8">
       <main className="trainvy-page mx-auto w-full px-4 sm:px-6 py-6 flex flex-col gap-6">
@@ -51,8 +55,8 @@ export default async function PersonalCustomExercisesPage() {
         />
 
         <ExerciseLibrary
-          customExercises={customRes.status === 200 ? customRes.data : []}
-          globalExercises={globalRes.status === 200 ? globalRes.data : []}
+          customExercises={customRes?.status === 200 ? customRes.data : []}
+          globalExercises={globalRes?.status === 200 ? globalRes.data : []}
         />
       </main>
       <BottomNav isCoach={true} activePage="exercises" />

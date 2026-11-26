@@ -24,29 +24,34 @@ import {
   type AthletePrescriptionItem,
 } from "./_components/received-prescriptions-card";
 import { Logo } from "@/app/_components/logo";
+import { NotificationHub } from "@/app/_components/notification-hub";
 import { AiFeature } from "@/app/_components/ai-availability-provider";
 
 export const dynamic = "force-dynamic";
 
 export default async function PlanningPage() {
-  const session = await authClient.getSession({
-    fetchOptions: {
-      headers: await headers(),
-    },
-  });
+  const [
+    session,
+    overviewResponse,
+    trainData,
+    prescriptionsResponse,
+    commercialRes,
+  ] = await Promise.all([
+    authClient.getSession({
+      fetchOptions: {
+        headers: await headers(),
+      },
+    }),
+    getPlanningOverview().catch((err) => {
+      console.error("Failed to fetch planning overview:", err);
+      return null;
+    }),
+    getUserTrainData({ cache: "no-store" }),
+    listAthletePrescriptions().catch(() => null),
+    getCommercialContext({ cache: "no-store" }).catch(() => null),
+  ]);
 
   if (!session.data?.user) redirect("/auth");
-
-  const [overviewResponse, trainData, prescriptionsResponse, commercialRes] =
-    await Promise.all([
-      getPlanningOverview().catch((err) => {
-        console.error("Failed to fetch planning overview:", err);
-        return null;
-      }),
-      getUserTrainData({ cache: "no-store" }),
-      listAthletePrescriptions().catch(() => null),
-      getCommercialContext({ cache: "no-store" }).catch(() => null),
-    ]);
 
   const isCoach =
     commercialRes?.status === 200 && commercialRes.data.accountType === "COACH";
@@ -113,9 +118,12 @@ export default async function PlanningPage() {
     <div className="flex min-h-svh flex-col bg-background pb-28">
       {/* Header Mobile-First */}
       <header className="trainvy-page sticky top-0 z-30 flex flex-col gap-3 border-b border-border/60 bg-background/95 px-5 py-4 backdrop-blur-md">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2">
           <Logo size="md" asLink />
-          <PlanningCreateMenu />
+          <div className="flex items-center gap-2">
+            <NotificationHub variant="header" />
+            <PlanningCreateMenu />
+          </div>
         </div>
 
         <div className="flex flex-col gap-0.5">

@@ -25,9 +25,20 @@ import { WorkspaceError } from "./_components/workspace-error";
 import { ProfessionalWorkspaceEvent } from "@/app/_components/product-event";
 
 export default async function PersonalPage() {
-  await requireAccountSetup();
+  const [
+    ,
+    commercialRes,
+    registrationRes,
+    athletesRes,
+    invitationsRes,
+  ] = await Promise.all([
+    requireAccountSetup(),
+    getCommercialContext({ cache: "no-store" }),
+    getProfessionalRegistration({ cache: "no-store" }),
+    listCoachAthletes({ cache: "no-store" }).catch(() => null),
+    listCoachInvitations({ cache: "no-store" }).catch(() => null),
+  ]);
 
-  const commercialRes = await getCommercialContext({ cache: "no-store" });
   if (commercialRes.status !== 200 || !commercialRes.data) {
     if (commercialRes.status === 401) redirect("/auth");
     throw new Error("Não foi possível consultar o acesso profissional.");
@@ -40,9 +51,6 @@ export default async function PersonalPage() {
     redirect("/profile");
   }
 
-  const registrationRes = await getProfessionalRegistration({
-    cache: "no-store",
-  });
   const registration =
     registrationRes.status === 200 ? registrationRes.data : null;
   if (registrationRes.status !== 200)
@@ -76,11 +84,6 @@ export default async function PersonalPage() {
       </div>
     );
   }
-
-  const [athletesRes, invitationsRes] = await Promise.all([
-    listCoachAthletes({ cache: "no-store" }).catch(() => null),
-    listCoachInvitations({ cache: "no-store" }).catch(() => null),
-  ]);
 
   if (athletesRes?.status !== 200 || invitationsRes?.status !== 200)
     return (

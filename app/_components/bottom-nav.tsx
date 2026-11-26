@@ -213,7 +213,6 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
     >
       <Link
         href={effectiveIsCoach ? "/personal" : "/"}
-        prefetch={false}
         className="hidden lg:flex items-center gap-3 px-3 pb-8 pt-2"
         aria-label="Trainvy"
       >
@@ -244,7 +243,6 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
             {/* 1. Alunos (Gestão Pro do Personal) */}
             <Link
               href="/personal"
-              prefetch={false}
               onClick={() => setOptimisticTab("athletes")}
               className={cn(
                 "group relative flex w-full flex-1 flex-col items-center justify-center rounded-xl px-1 py-1.5 transition-all duration-150",
@@ -274,7 +272,6 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
             {/* Biblioteca de modelos reutilizáveis para os alunos */}
             <Link
               href="/personal/modelos"
-              prefetch={false}
               onClick={() => setOptimisticTab("templates")}
               className={cn(
                 "group relative flex w-full flex-1 flex-col items-center justify-center rounded-xl px-1 py-1.5 transition-all duration-150",
@@ -320,7 +317,6 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
             {/* 4. Meu Treino (Rotina pessoal de atleta do Personal) */}
             <Link
               href={MY_WORKOUT_PATH}
-              prefetch={false}
               onClick={() => setOptimisticTab("home")}
               className={cn(
                 "group relative flex w-full flex-1 flex-col items-center justify-center rounded-xl px-1 py-1.5 transition-all duration-150",
@@ -349,7 +345,6 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
 
             <Link
               href="/planning"
-              prefetch={false}
               onClick={() => setOptimisticTab("planning")}
               className={cn(
                 "group relative flex w-full flex-1 flex-col items-center justify-center rounded-xl px-1 py-1.5 transition-all duration-150",
@@ -374,7 +369,6 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
             {/* Perfil Pro */}
             <Link
               href="/profile"
-              prefetch={false}
               onClick={() => setOptimisticTab("profile")}
               className={cn(
                 "group relative flex w-full flex-1 flex-col items-center justify-center rounded-xl px-1 py-1.5 transition-all duration-150",
@@ -407,7 +401,6 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
             {/* 1. Início */}
             <Link
               href="/"
-              prefetch={false}
               onClick={() => setOptimisticTab("home")}
               className={cn(
                 "group relative flex w-full flex-1 flex-col items-center justify-center rounded-xl px-1 py-1.5 transition-all duration-150",
@@ -437,7 +430,6 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
             {/* 2. Treinos */}
             <Link
               href="/planning"
-              prefetch={false}
               onClick={() => setOptimisticTab("planning")}
               className={cn(
                 "group relative flex w-full flex-1 flex-col items-center justify-center rounded-xl px-1 py-1.5 transition-all duration-150",
@@ -483,7 +475,6 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
             {/* 4. Evolução */}
             <Link
               href="/stats"
-              prefetch={false}
               onClick={() => setOptimisticTab("evolution")}
               className={cn(
                 "group relative flex w-full flex-1 flex-col items-center justify-center rounded-xl px-1 py-1.5 transition-all duration-150",
@@ -513,7 +504,6 @@ export function BottomNav({ activePage, isCoach }: BottomNavProps) {
             {/* 5. Perfil */}
             <Link
               href="/profile"
-              prefetch={false}
               onClick={() => setOptimisticTab("profile")}
               className={cn(
                 "group relative flex w-full flex-1 flex-col items-center justify-center rounded-xl px-1 py-1.5 transition-all duration-150",

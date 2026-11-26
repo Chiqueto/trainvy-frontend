@@ -33,7 +33,7 @@ function destination(data: unknown): string | null {
 export function NotificationHub({
   variant = "bell",
 }: {
-  variant?: "bell" | "card";
+  variant?: "bell" | "card" | "header";
 }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -156,10 +156,12 @@ export function NotificationHub({
           className={
             variant === "bell"
               ? "relative flex size-11 items-center justify-center rounded-full border border-white/30 bg-black/40 text-white backdrop-blur-sm focus-visible:outline-2 focus-visible:outline-primary"
-              : "flex w-full items-center gap-3 rounded-xl border border-border bg-card p-4 text-left"
+              : variant === "header"
+                ? "relative inline-flex size-8 items-center justify-center rounded-xl border border-border/70 bg-card text-foreground shadow-xs transition-all hover:border-primary/40 hover:bg-muted/40 active:scale-95 focus-visible:outline-2 focus-visible:outline-primary"
+                : "flex w-full items-center gap-3 rounded-xl border border-border bg-card p-4 text-left"
           }
         >
-          <Bell className="size-5 shrink-0" />
+          <Bell className={variant === "header" ? "size-4 shrink-0" : "size-5 shrink-0"} />
           {variant === "card" && (
             <span className="flex-1">
               <span className="block font-heading text-sm font-semibold">
@@ -173,7 +175,13 @@ export function NotificationHub({
           {unread > 0 && (
             <span
               aria-hidden="true"
-              className={`${variant === "bell" ? "absolute -right-1 -top-1" : ""} min-w-5 rounded-full bg-primary px-1.5 py-0.5 text-center text-xs font-bold text-primary-foreground`}
+              className={
+                variant === "bell"
+                  ? "absolute -right-1 -top-1 min-w-5 rounded-full bg-primary px-1.5 py-0.5 text-center text-xs font-bold text-primary-foreground"
+                  : variant === "header"
+                    ? "absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold leading-none text-primary-foreground"
+                    : "min-w-5 rounded-full bg-primary px-1.5 py-0.5 text-center text-xs font-bold text-primary-foreground"
+              }
             >
               {unread > 99 ? "99+" : unread}
             </span>

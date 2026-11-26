@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { LegalConsent } from "@/app/_components/legal-consent";
 import { PrivacyRights } from "./_components/privacy-rights";
 import { redirect } from "next/navigation";
@@ -30,22 +31,43 @@ import { ArrowRight, CreditCard, Shield } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
-export default async function ProfilePage() {
-  const session = await authClient.getSession({
-    fetchOptions: {
-      headers: await headers(),
-    },
-  });
+function ProfileContentSkeleton() {
+  return (
+    <div className="trainvy-page flex flex-col items-center gap-5 px-5 pt-5 animate-pulse">
+      <div className="flex w-full items-center gap-3">
+        <div className="size-[52px] rounded-full bg-muted/70" />
+        <div className="flex flex-col gap-2">
+          <div className="h-5 w-32 rounded bg-muted/70" />
+          <div className="h-3.5 w-20 rounded bg-muted/50" />
+        </div>
+      </div>
+      <div className="grid w-full grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="h-20 rounded-2xl border border-border/60 bg-card/60" />
+        <div className="h-20 rounded-2xl border border-border/60 bg-card/60" />
+        <div className="h-20 rounded-2xl border border-border/60 bg-card/60" />
+        <div className="h-20 rounded-2xl border border-border/60 bg-card/60" />
+      </div>
+      <div className="h-28 w-full rounded-2xl border border-border/60 bg-card/60" />
+      <div className="h-24 w-full rounded-2xl border border-border/60 bg-card/60" />
+    </div>
+  );
+}
 
-  if (!session.data?.user) redirect("/auth");
-
-  const [trainData, commercialRes, relationshipRes, sharingRes] =
+async function ProfileContent() {
+  const [session, trainData, commercialRes, relationshipRes, sharingRes] =
     await Promise.all([
+      authClient.getSession({
+        fetchOptions: {
+          headers: await headers(),
+        },
+      }),
       getUserTrainData({ cache: "no-store" }),
       getCommercialContext({ cache: "no-store" }),
       getAthleteCoachRelationship({ cache: "no-store" }),
       getAthleteCoachProgressSharing({ cache: "no-store" }).catch(() => null),
     ]);
+
+  if (!session.data?.user) redirect("/auth");
 
   if (trainData.status === 401) redirect("/auth");
 
@@ -75,13 +97,7 @@ export default async function ProfilePage() {
       : null;
 
   return (
-    <div className="flex min-h-svh flex-col bg-background pb-24">
-      <div className="trainvy-page flex h-[56px] items-center justify-between px-5">
-        <Logo size="md" asLink />
-        <ThemeToggle />
-      </div>
-
-      <div className="trainvy-page flex flex-col items-center gap-5 px-5 pt-5">
+    <div className="trainvy-page flex flex-col items-center gap-5 px-5 pt-5">
         <div className="flex w-full items-center justify-between">
           <div className="flex items-center gap-3">
             <Avatar className="size-[52px]">
@@ -236,8 +252,25 @@ export default async function ProfilePage() {
 
         <LogoutButton />
       </div>
+  );
+}
 
-      <BottomNav isCoach={isCoach} activePage="profile" />
+export default function ProfilePage() {
+  return (
+    <div className="flex min-h-svh flex-col bg-background pb-24">
+      <div className="trainvy-page flex h-[56px] items-center justify-between px-5">
+        <Logo size="md" asLink />
+        <div className="flex items-center gap-2">
+          <NotificationHub variant="header" />
+          <ThemeToggle />
+        </div>
+      </div>
+
+      <Suspense fallback={<ProfileContentSkeleton />}>
+        <ProfileContent />
+      </Suspense>
+
+      <BottomNav activePage="profile" />
     </div>
   );
 }

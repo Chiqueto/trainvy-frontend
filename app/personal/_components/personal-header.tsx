@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserCheck, Users, Layers, Dumbbell } from "lucide-react";
 import { Logo } from "@/app/_components/logo";
+import { NotificationHub } from "@/app/_components/notification-hub";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -63,6 +64,7 @@ export function PersonalHeader({
         <Logo size="md" asLink />
         <div className="flex items-center gap-2">
           {utilityActions}
+          <NotificationHub variant="header" />
           <ThemeToggle />
         </div>
       </header>

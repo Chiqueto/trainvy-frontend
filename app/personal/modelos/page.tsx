@@ -18,9 +18,20 @@ export const metadata = {
 };
 
 export default async function PersonalTemplatesPage() {
-  await requireAccountSetup();
+  const [
+    ,
+    commercialRes,
+    templatesRes,
+    athletesRes,
+    plansRes,
+  ] = await Promise.all([
+    requireAccountSetup(),
+    getCommercialContext({ cache: "no-store" }),
+    listCoachWorkoutPlanTemplates({ cache: "no-store" }).catch(() => null),
+    listCoachAthletes({ cache: "no-store" }).catch(() => null),
+    listWorkoutPlans(undefined, { cache: "no-store" }).catch(() => null),
+  ]);
 
-  const commercialRes = await getCommercialContext({ cache: "no-store" });
   if (commercialRes.status !== 200 || !commercialRes.data) {
     redirect("/profile");
   }
@@ -39,17 +50,13 @@ export default async function PersonalTemplatesPage() {
     redirect("/personal");
   }
 
-  const [templatesRes, athletesRes, plansRes] = await Promise.all([
-    listCoachWorkoutPlanTemplates({ cache: "no-store" }),
-    listCoachAthletes({ cache: "no-store" }),
-    listWorkoutPlans(undefined, { cache: "no-store" }),
-  ]);
-
   const templates: TemplateItem[] =
-    templatesRes.status === 200 ? (templatesRes.data as any) : [];
+    templatesRes?.status === 200
+      ? (templatesRes.data as unknown as TemplateItem[])
+      : [];
 
   const athletes =
-    athletesRes.status === 200
+    athletesRes?.status === 200
       ? athletesRes.data.athletes.map((a) => ({
           id: a.athleteId,
           name: a.name,
@@ -59,7 +66,7 @@ export default async function PersonalTemplatesPage() {
       : [];
 
   const coachPlans =
-    plansRes.status === 200 && plansRes.data.workoutPlans
+    plansRes?.status === 200 && plansRes.data.workoutPlans
       ? plansRes.data.workoutPlans.map((p) => ({
           id: p.id,
           name: p.name,
