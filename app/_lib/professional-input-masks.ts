@@ -22,10 +22,17 @@ export function maskCpfOrCnpj(value: string) {
 }
 
 export function maskCref(value: string) {
-  const normalized = value.toUpperCase().replace(/[^0-9GP]/g, "");
+  const upper = value.toUpperCase();
+  const normalized = upper.replace(/[^0-9GP]/g, "");
   const digits = normalized.replace(/\D/g, "").slice(0, 6);
   const category = normalized.match(/[GP]/)?.[0];
-  return digits + (digits.length === 6 && category ? `-${category}` : "");
+  if (digits.length === 6 && category) {
+    return `${digits}-${category}`;
+  }
+  if (digits.length === 6 && upper.includes("-")) {
+    return `${digits}-`;
+  }
+  return digits;
 }
 
 export function validCpf(value: string) {

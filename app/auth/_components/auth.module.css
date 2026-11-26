@@ -703,7 +703,7 @@
 .plansGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  gap: 12px;
 }
 .planCard {
   position: relative;
@@ -711,26 +711,36 @@
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
-  padding: 17px 14px;
-  border: 1px solid #ffffff17;
-  background: #111c28;
-  color: #dce7f3;
-  border-radius: 8px;
+  padding: 20px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(180deg, rgba(20, 34, 49, 0.92), rgba(14, 24, 35, 0.98));
+  color: #e4edf7;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px -16px rgba(0, 0, 0, 0.7);
   transition:
     background 0.2s,
-    border-color 0.2s;
+    border-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.15s;
   min-width: 0;
   overflow-wrap: break-word;
 }
+.planCard:hover {
+  border-color: rgba(56, 182, 255, 0.38);
+}
 .planCard[aria-pressed="true"] {
-  border-color: #38b6ff8c;
-  background: linear-gradient(140deg, #163e5c77, #111e2b);
+  border-color: rgba(56, 182, 255, 0.78);
+  background: linear-gradient(155deg, rgba(22, 68, 102, 0.65), rgba(15, 29, 43, 0.96));
+  box-shadow:
+    0 0 0 1px rgba(56, 182, 255, 0.24),
+    0 12px 28px -16px rgba(56, 182, 255, 0.42);
 }
 .planCard > strong {
   display: block;
-  font-size: 13px;
-  font-weight: 600;
-  padding-right: 22px;
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  padding-right: 28px;
 }
 .trialBadge {
   display: inline-flex;
@@ -783,8 +793,11 @@
 .planEntitlements {
   display: flex;
   flex-direction: column;
-  gap: 7px;
-  margin-top: 15px;
+  gap: 8px;
+  width: 100%;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 .planEntitlements > span {
   display: flex;
