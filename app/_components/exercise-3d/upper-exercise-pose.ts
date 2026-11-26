@@ -52,7 +52,7 @@ export function getUpperExercisePose(exercise: UpperExercise, depth: number) {
       // clears its path; only above the forehead does the bar settle over the feet.
       const z = seated
         ? MathUtils.lerp(0.07, 0.16, p)
-        : MathUtils.lerp(0.18, 0.065, MathUtils.smoothstep(lifted, 0.5, 0.95));
+        : MathUtils.lerp(0.185, 0.065, MathUtils.smoothstep(lifted, 0.5, 0.95));
       const overheadShoulder = getScapularMotion(exercise, 0, side)
         .point(v(side * 0.215, 0.224, 0.132))
         .add(origin);

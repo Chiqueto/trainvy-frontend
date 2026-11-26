@@ -9,25 +9,26 @@ import {
 } from "three";
 
 const HEAD_PIVOT = new Vector3(0, 1.49, 0.103);
+const CERVICAL_BASE = new Vector3(0, 1.41, 0.095);
 function headClearanceWindow(depth: number) {
   const lift = 1 - MathUtils.clamp(depth, 0, 1);
   return (
-    MathUtils.smoothstep(lift, 0, 0.1) *
-    (1 - MathUtils.smoothstep(lift, 0.5, 0.74))
+    MathUtils.smoothstep(lift, 0, 0.22) *
+    (1 - MathUtils.smoothstep(lift, 0.44, 0.78))
   );
 }
 
-/** Small cervical retraction while the bar crosses face height, returning to
- * neutral as it clears the crown. Editorial avatar motion, not a clinical angle.
+/** Gentle cervical retraction and extension around the lower neck while the
+ * bar passes the face, returning smoothly to neutral overhead ("head through").
  */
 export function getMilitaryHeadRetraction(depth: number) {
-  return 0.045 * headClearanceWindow(depth);
+  return 0.025 * headClearanceWindow(depth);
 }
 
 export function getMilitaryHeadRotation(depth: number) {
   return new Quaternion().setFromAxisAngle(
     new Vector3(1, 0, 0),
-    MathUtils.degToRad(2) * headClearanceWindow(depth),
+    MathUtils.degToRad(-10) * headClearanceWindow(depth),
   );
 }
 
@@ -61,10 +62,13 @@ export function installMilitaryHeadRig(
     weights = mesh.geometry.getAttribute("skinWeight"),
     rootIndex = old.bones.indexOf(root);
   for (let i = 0; i < positions.count; i++) {
-    if (Math.abs(positions.getX(i)) > 0.15) continue;
+    const x = positions.getX(i);
+    const y = positions.getY(i);
+    if (Math.abs(x) > 0.08 && y < 1.48) continue;
+    if (Math.abs(x) > 0.15) continue;
     // Every point of the fitted head (cut at y=1.49) receives one rigid transform.
-    // Only the cervical transition BELOW that cut may blend with the torso.
-    const blend = MathUtils.smoothstep(positions.getY(i), 1.43, HEAD_PIVOT.y);
+    // The cervical transition below that cut bends smoothly from C7 (y=1.41).
+    const blend = MathUtils.smoothstep(y, CERVICAL_BASE.y, HEAD_PIVOT.y);
     if (!blend) continue;
     const js = [0, 1, 2, 3],
       source = js.find(
@@ -95,16 +99,20 @@ export function updateMilitaryHead(
 ) {
   const head = bones.get("military_head");
   if (!head) return;
+  const headRotation = active ? getMilitaryHeadRotation(depth) : new Quaternion();
+  const pivot = HEAD_PIVOT.clone()
+    .sub(CERVICAL_BASE)
+    .applyQuaternion(headRotation)
+    .add(CERVICAL_BASE);
   // The source root is fixed at y=1.142, z=0 in the GLB.
   head.position
     .copy(origin)
     .add(
       new Vector3(
         0,
-        HEAD_PIVOT.y - 1.142,
-        HEAD_PIVOT.z - (active ? getMilitaryHeadRetraction(depth) : 0),
+        pivot.y - 1.142,
+        pivot.z - (active ? getMilitaryHeadRetraction(depth) : 0),
       ).applyQuaternion(tilt),
     );
-  head.quaternion.copy(tilt);
-  if (active) head.quaternion.multiply(getMilitaryHeadRotation(depth));
+  head.quaternion.copy(tilt).multiply(headRotation);
 }

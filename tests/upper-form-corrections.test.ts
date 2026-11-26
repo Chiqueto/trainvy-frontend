@@ -57,11 +57,17 @@ describe("postural corrections from rendered arm orientation", () => {
     expect(
       Math.abs(getExercisePose("military-press", 0).bar.z - 0.08),
     ).toBeLessThan(0.025);
-    // Head accommodates the bar before chin height, without a large head tilt.
-    expect(getMilitaryHeadRetraction(0.9)).toBeGreaterThan(0.025);
+    // Head smoothly tilts back and retracts around the lower neck to clear the face,
+    // without snapping horizontally in the first 10% of the lift.
+    expect(getMilitaryHeadRetraction(0.9)).toBeGreaterThan(0.008);
+    expect(getMilitaryHeadRetraction(0.9)).toBeLessThan(0.018);
+    expect(getMilitaryHeadRetraction(0.7)).toBeLessThanOrEqual(0.026);
     expect(
-      getMilitaryHeadRotation(0.6).angleTo(getMilitaryHeadRotation(1)),
-    ).toBeLessThan(0.06);
+      getMilitaryHeadRotation(0.7).angleTo(getMilitaryHeadRotation(1)),
+    ).toBeGreaterThan(0.12);
+    expect(
+      getMilitaryHeadRotation(0.7).angleTo(getMilitaryHeadRotation(1)),
+    ).toBeLessThan(0.2);
   });
   it("keeps the military press elbow hinge facing forward without opening sideways through the repetition", () => {
     for (let step = 0; step <= 200; step++) {
