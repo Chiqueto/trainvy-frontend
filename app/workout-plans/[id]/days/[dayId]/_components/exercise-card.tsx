@@ -46,10 +46,12 @@ export function ExerciseCard({ exercise }: ExerciseCardProps) {
           <button
             type="button"
             onClick={() => setIsMediaOpen(true)}
-            title={has3D ? "Ver execução 3D" : "Ver execução do exercício"}
+            title={
+              has3D ? "Ver execução interativa" : "Ver execução do exercício"
+            }
             aria-label={
               has3D
-                ? `Ver execução 3D de ${exercise.name}`
+                ? `Ver execução interativa de ${exercise.name}`
                 : `Ver execução de ${exercise.name}`
             }
             className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-heading font-medium text-primary bg-primary/10 hover:bg-primary/20 border border-primary/20 transition-colors cursor-pointer"
@@ -59,7 +61,7 @@ export function ExerciseCard({ exercise }: ExerciseCardProps) {
             ) : (
               <Info className="size-3 text-primary" />
             )}
-            <span>{has3D ? "Ver 3D" : "Ver execução"}</span>
+            <span>Ver execução</span>
           </button>
         </div>
         <AiFeature capability="chat">

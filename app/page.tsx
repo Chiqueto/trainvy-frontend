@@ -4,7 +4,7 @@ import { TrainingHome } from "./_components/training-home";
 export const metadata: Metadata = {
   title: "Trainvy — Seu treino. Sua evolução.",
   description:
-    "Transforme esforço em evolução. Organize seus treinos, registre cada série e explore movimentos em 3D com o Trainvy. Comece com uma conta de atleta gratuita.",
+    "Transforme esforço em evolução. Organize seus treinos, registre cada série e explore movimentos interativos com o Trainvy. Comece com uma conta de atleta gratuita.",
   openGraph: {
     title: "Trainvy — Seu próximo nível começa aqui",
     description:

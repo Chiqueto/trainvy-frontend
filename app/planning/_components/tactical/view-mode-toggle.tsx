@@ -142,7 +142,7 @@ export function ViewModeToggle({
             ) : (
               <LayoutGrid size={16} />
             )}
-            {mode === "tactical" ? "Deck 3D" : "Cards"}
+            {mode === "tactical" ? "Mesa Interativa" : "Cards"}
           </button>
         ))}
       </div>

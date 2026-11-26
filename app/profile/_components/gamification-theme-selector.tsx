@@ -49,7 +49,7 @@ export function GamificationThemeSelector({
           </div>
           <div>
             <h2 className="font-heading text-base font-semibold leading-tight text-foreground">
-              Tema de Conclusão & Gamificação
+              Tema de Conclusão de Treino
             </h2>
             <p className="font-heading text-xs text-muted-foreground">
               Personalize os elogios e comparações de carga ao finalizar treinos

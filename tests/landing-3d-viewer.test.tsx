@@ -87,7 +87,7 @@ describe("Public landing 3D showcase", () => {
     );
 
     fireEvent.click(
-      screen.getByRole("button", { name: /Experimente o 3D/i }),
+      screen.getByRole("button", { name: /Experimente na prática/i }),
     );
 
     await screen.findByRole("region", {
@@ -98,7 +98,9 @@ describe("Public landing 3D showcase", () => {
       "squat",
     );
     expect(screen.queryByText(/Entre na sua conta para continuar/i)).toBeNull();
-    expect(screen.queryByRole("button", { name: "Continuar para o 3D" })).toBeNull();
+    expect(
+      screen.queryByRole("button", { name: "Continuar para a demonstração" }),
+    ).toBeNull();
     expect(getFeatureTermsAction).not.toHaveBeenCalled();
 
     fireEvent.click(screen.getByRole("button", { name: "Supino reto" }));
@@ -118,7 +120,9 @@ describe("Public landing 3D showcase", () => {
       </FeatureConsentProvider>,
     );
 
-    await screen.findByRole("button", { name: "Continuar para o 3D" });
+    await screen.findByRole("button", {
+      name: "Continuar para a demonstração",
+    });
     expect(screen.queryByTestId("scene")).toBeNull();
     expect(getFeatureTermsAction).toHaveBeenCalledWith("EXERCISE_3D");
   });

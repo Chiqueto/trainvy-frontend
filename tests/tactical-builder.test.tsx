@@ -126,7 +126,7 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe("Tactical builder", () => {
-  it("offers only Cards and Deck 3D and preserves names when switching", async () => {
+  it("offers only Cards and Mesa Interativa and preserves names when switching", async () => {
     render(<WorkoutPlanBuilder mode="edit" initialPlan={plan()} />);
     expect(
       screen.queryByRole("button", { name: "Visualização em lista" }),
@@ -141,7 +141,7 @@ describe("Tactical builder", () => {
       screen.getByRole("group", { name: "Visualização do editor" }),
     );
     expect(
-      deckModes.getByRole("button", { name: "Deck 3D", pressed: true }),
+      deckModes.getByRole("button", { name: "Mesa Interativa", pressed: true }),
     ).toBeDefined();
     fireEvent.click(deckModes.getByRole("button", { name: "Cards" }));
     const modes = screen.getByRole("group", { name: "Visualização do editor" });
@@ -154,7 +154,9 @@ describe("Tactical builder", () => {
     expect(
       (screen.getByLabelText("Nome do treino") as HTMLInputElement).value,
     ).toBe("Superiores");
-    fireEvent.click(within(modes).getByRole("button", { name: "Deck 3D" }));
+    fireEvent.click(
+      within(modes).getByRole("button", { name: "Mesa Interativa" }),
+    );
     expect(screen.getByRole("tab", { name: "Superiores" })).toBeDefined();
     await waitFor(() =>
       expect(localStorage.getItem("trainvy:builder-mode:user-a")).toBe(
@@ -177,7 +179,7 @@ describe("Tactical builder", () => {
       const modes = () =>
         within(screen.getByRole("group", { name: "Visualização do editor" }));
       expect(
-        modes().getByRole("button", { name: "Deck 3D", pressed: true }),
+        modes().getByRole("button", { name: "Mesa Interativa", pressed: true }),
       ).toBeDefined();
       expect(screen.queryByRole("button", { name: "Novo treino" })).toBeNull();
       fireEvent.click(modes().getByRole("button", { name: "Cards" }));
@@ -189,7 +191,7 @@ describe("Tactical builder", () => {
       });
       fireEvent.click(screen.getByRole("button", { name: "Voltar" }));
       expect(mocks.back).toHaveBeenCalledOnce();
-      fireEvent.click(modes().getByRole("button", { name: "Deck 3D" }));
+      fireEvent.click(modes().getByRole("button", { name: "Mesa Interativa" }));
       expect(screen.getByDisplayValue("Treino revisado")).toBeDefined();
       historyLength.mockReturnValue(1);
       fireEvent.click(screen.getByRole("button", { name: "Voltar" }));
@@ -312,7 +314,7 @@ describe("Tactical builder", () => {
     fireEvent.change(firstExercise.getByLabelText("Carga kg · 1"), {
       target: { value: "20.5" },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Deck 3D" }));
+    fireEvent.click(screen.getByRole("button", { name: "Mesa Interativa" }));
     fireEvent.click(screen.getByRole("button", { name: "Salvar plano" }));
     await waitFor(() => expect(mocks.save).toHaveBeenCalled());
     const saved = mocks.save.mock.calls[0][1].workoutDays[0].exercises;

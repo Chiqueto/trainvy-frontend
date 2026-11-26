@@ -180,7 +180,7 @@ export function AthleteAiWorkoutPlanModal({ isOpen, onClose }: Props) {
               </p>
             )}
             <p className="text-xs text-muted-foreground">
-              O conteúdo será enviado ao provedor de IA configurado para
+              O conteúdo será enviado ao serviço de IA configurado para
               extração. Os arquivos originais não são armazenados pelo Trainvy.
               Evite dados de saúde e dados de terceiros.
             </p>

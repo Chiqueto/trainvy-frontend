@@ -40,7 +40,7 @@ describe("Coach ↔ Athlete Foundation (Task 6.1 Frontend)", () => {
 
       expect(screen.getByText("2")).toBeDefined();
       expect(screen.getByText("/ 5 alunos")).toBeDefined();
-      expect(screen.getByText("3 vaga(s) livre(s)")).toBeDefined();
+      expect(screen.getByText("3 vagas livres")).toBeDefined();
     });
 
     it("destaca limite atingido quando activeCount >= limit", () => {
@@ -54,7 +54,7 @@ describe("Coach ↔ Athlete Foundation (Task 6.1 Frontend)", () => {
 
       expect(screen.getByText("12")).toBeDefined();
       expect(screen.getByText("/ Ilimitado")).toBeDefined();
-      expect(screen.queryByText("vaga(s) livre(s)")).toBeNull();
+      expect(screen.queryByText(/vagas? livres?/i)).toBeNull();
     });
   });
 

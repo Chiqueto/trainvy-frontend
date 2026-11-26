@@ -65,7 +65,7 @@ const Exercise3DViewer = dynamic(
       <div className="flex h-72 items-center justify-center rounded-2xl bg-slate-950/80 text-muted-foreground border border-white/10">
         <div className="flex items-center gap-2 text-xs font-heading font-medium text-slate-300">
           <Loader2 className="size-4 animate-spin text-blue-500" />
-          <span>Carregando estúdio 3D...</span>
+          <span>Carregando demonstração...</span>
         </div>
       </div>
     ),
@@ -378,7 +378,7 @@ export function ExerciseExecutionDialog({
               </h2>
               {animation && (
                 <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/15 text-blue-600 dark:text-blue-400 border border-blue-500/30 px-2 py-0.5 text-[10px] font-bold">
-                  <Box className="size-3" /> 3D
+                  <Box className="size-3" /> Interativo
                 </span>
               )}
             </div>
@@ -483,7 +483,7 @@ export function ExerciseExecutionDialog({
                     )}
                   >
                     <Box className="size-3.5 text-blue-600 dark:text-blue-400" />
-                    <span>Simulação 3D</span>
+                    <span>Demonstração</span>
                     <span className="rounded-full bg-blue-500/15 text-blue-600 dark:text-blue-400 text-[9px] px-1.5 py-0.2 font-mono">
                       Interativo
                     </span>
@@ -500,7 +500,7 @@ export function ExerciseExecutionDialog({
                     )}
                   >
                     <ImageIcon className="size-3.5" />
-                    <span>Guia Ilustrado (2D)</span>
+                    <span>Guia Ilustrado</span>
                   </button>
                 </div>
               )}
@@ -529,11 +529,11 @@ export function ExerciseExecutionDialog({
                 <div className="flex flex-col items-center justify-center p-6 text-center rounded-2xl border border-border/60 bg-muted/20 text-muted-foreground space-y-2">
                   <ImageIcon className="size-8 opacity-40" />
                   <p className="text-xs font-heading font-medium text-foreground">
-                    Guia ilustrado 2D em sincronização
+                    Guia ilustrado em sincronização
                   </p>
                   <p className="text-[11px] text-muted-foreground max-w-xs">
-                    A demonstração 3D interativa está ativa na aba
-                    &ldquo;Simulação 3D&rdquo;.
+                    A demonstração interativa está ativa na aba
+                    &ldquo;Demonstração&rdquo;.
                   </p>
                   <Button
                     type="button"
@@ -543,14 +543,14 @@ export function ExerciseExecutionDialog({
                     className="mt-1 text-xs"
                   >
                     <Box className="size-3.5 text-blue-600 dark:text-blue-400 mr-1.5" />
-                    Ver Simulação 3D
+                    Ver Demonstração
                   </Button>
                 </div>
               )}
 
               {data?.demonstration?.animationKey && activeTab === "3d" && (
                 <p className="text-xs text-muted-foreground">
-                  Referência 3D:{" "}
+                  Referência visual:{" "}
                   {EXERCISE_ANIMATIONS[data.demonstration.animationKey].name}.
                   Anatomia e execução ilustrativas dessa referência.
                 </p>

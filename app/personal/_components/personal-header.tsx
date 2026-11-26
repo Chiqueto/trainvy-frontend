@@ -90,7 +90,7 @@ export function PersonalHeader({
       {/* Navegação Rápida entre Alunos, Modelos e Exercícios */}
       <div
         data-tour="personal-tabs"
-        className="flex items-center gap-1.5 overflow-x-auto border-t border-border/50 pt-4 -mx-1 px-1 scrollbar-none"
+        className="grid grid-cols-3 gap-1.5 sm:flex sm:items-center border-t border-border/50 pt-4"
       >
         {tabs.map((tab) => {
           const Icon = tab.icon;
@@ -102,7 +102,7 @@ export function PersonalHeader({
               aria-current={isActive ? "page" : undefined}
               prefetch={true}
               className={cn(
-                "inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-heading font-medium transition-all whitespace-nowrap",
+                "inline-flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 px-2 py-2 sm:px-3.5 rounded-xl text-xs sm:text-sm font-heading font-medium transition-all whitespace-nowrap min-w-0",
                 isActive
                   ? "bg-primary text-primary-foreground font-semibold shadow-xs shadow-primary/20"
                   : "text-muted-foreground hover:text-foreground hover:bg-muted/80",

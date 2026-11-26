@@ -292,7 +292,7 @@ export function SessionExerciseCard({
                   type="button"
                   onClick={() => setIsMediaOpen(true)}
                   title={
-                    has3D ? "Ver execução 3D" : "Ver execução do exercício"
+                    has3D ? "Ver execução interativa" : "Ver execução do exercício"
                   }
                   aria-label={`Ver execução de ${exercise.exerciseNameSnapshot}`}
                   className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-heading font-medium text-primary bg-primary/10 hover:bg-primary/20 border border-primary/20 transition-colors cursor-pointer"
@@ -302,7 +302,7 @@ export function SessionExerciseCard({
                   ) : (
                     <Info className="size-3 text-primary" />
                   )}
-                  <span>{has3D ? "Ver 3D" : "Ver execução"}</span>
+                  <span>Ver execução</span>
                 </button>
               );
             })()}

@@ -174,10 +174,10 @@ export default async function PlanningPage() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-heading text-xs font-bold text-foreground">
-                  Catálogo & Modelagem 3D dos Exercícios
+                  Catálogo Visual de Exercícios
                 </span>
                 <span className="rounded-full bg-orange-500/20 px-2 py-0.5 text-[9px] font-bold text-orange-600 dark:text-orange-400 uppercase">
-                  3D Interativo
+                  Interativo
                 </span>
               </div>
               <p className="text-[11px] text-muted-foreground mt-0.5">

@@ -24,7 +24,7 @@ export async function startCoachSubscriptionAction(input: {
     if (res.status !== 200) {
       return {
         success: false as const,
-        error: extractError(res.data, "Não foi possível iniciar o checkout."),
+        error: extractError(res.data, "Não foi possível iniciar o pagamento."),
       };
     }
     revalidatePath("/personal/assinatura");

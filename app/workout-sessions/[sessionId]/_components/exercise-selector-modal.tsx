@@ -390,7 +390,7 @@ export function ExerciseSelectorModal({
                 }`}
               >
                 <Box className="size-3" />
-                <span>Com 3D</span>
+                <span>Interativos</span>
               </button>
               {ALL_MUSCLE_GROUPS.map((mg) => (
                 <button
@@ -545,11 +545,11 @@ export function ExerciseSelectorModal({
 
                           {getExerciseAnimation(exercise.id, exercise.name) !== null ? (
                             <span
-                              title="Demonstração 3D interativa disponível"
+                              title="Demonstração interativa disponível"
                               className="inline-flex items-center gap-1 rounded-full bg-orange-500/15 text-orange-600 dark:text-orange-400 border border-orange-500/30 px-1.5 py-0.5 text-[9px] font-bold"
                             >
                               <Box className="size-2.5" />
-                              <span>3D</span>
+                              <span>Interativo</span>
                             </span>
                           ) : exercise.hasMedia ? (
                             <span
@@ -564,11 +564,11 @@ export function ExerciseSelectorModal({
                       </div>
 
                       <div className="flex items-center gap-1.5 shrink-0">
-                        {/* Botão de Ver Execução / 3D direto do catálogo */}
+                        {/* Botão de Ver Execução direto do catálogo */}
                         <button
                           type="button"
-                          title={getExerciseAnimation(exercise.id, exercise.name) !== null ? "Ver demonstração 3D" : "Ver demonstração"}
-                          aria-label={getExerciseAnimation(exercise.id, exercise.name) !== null ? "Ver demonstração 3D" : "Ver demonstração"}
+                          title="Ver demonstração"
+                          aria-label="Ver demonstração"
                           onClick={(e) => {
                             e.stopPropagation();
                             setPreviewExercise({ id: exercise.id, name: exercise.name });
@@ -581,7 +581,7 @@ export function ExerciseSelectorModal({
                             <Eye className="size-3" />
                           )}
                           <span className="hidden sm:inline">
-                            {getExerciseAnimation(exercise.id, exercise.name) !== null ? "Ver 3D" : "Ver guia"}
+                            {getExerciseAnimation(exercise.id, exercise.name) !== null ? "Ver demo" : "Ver guia"}
                           </span>
                         </button>
 

@@ -46,7 +46,7 @@ export default async function PersonalCustomExercisesPage() {
       <main className="trainvy-page mx-auto w-full px-4 sm:px-6 py-6 flex flex-col gap-6">
         <PersonalHeader
           title="Exercícios e demonstrações"
-          description="Cadastre seus exercícios e personalize a execução com vídeos do YouTube e referências da biblioteca 3D."
+          description="Cadastre seus exercícios e personalize a execução com vídeos do YouTube e referências visuais do app."
           activeTab="exercises"
         />
 

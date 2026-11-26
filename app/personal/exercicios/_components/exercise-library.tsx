@@ -90,8 +90,8 @@ export function ExerciseLibrary({
               Sua demonstração, nos exercícios da biblioteca
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Adicione um vídeo ou uma referência 3D. A personalização aparece
-              para você e seus alunos com vínculo ativo.
+              Adicione um vídeo ou uma demonstração visual. A personalização
+              aparece para você e seus alunos com vínculo ativo.
             </p>
           </div>
           <div className="relative">

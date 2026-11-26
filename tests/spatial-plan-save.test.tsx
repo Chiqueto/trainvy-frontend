@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   fireEvent,
@@ -305,7 +305,7 @@ describe("Spatial plan editor and save parity", () => {
     expect(
       (screen.getByLabelText("Nome do plano *") as HTMLInputElement).value,
     ).toBe("Plano atualizado");
-    fireEvent.click(screen.getByRole("button", { name: "Deck 3D" }));
+    fireEvent.click(screen.getByRole("button", { name: "Mesa Interativa" }));
     expect((header() as HTMLInputElement).value).toBe("Plano atualizado");
     fireEvent.click(screen.getByRole("button", { name: "Salvar plano" }));
     await waitFor(() => expect(mocks.edit).toHaveBeenCalled());

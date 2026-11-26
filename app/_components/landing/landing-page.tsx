@@ -74,7 +74,7 @@ const Viewer = dynamic(
     loading: () => (
       <div className={styles.viewerLoading} role="status">
         <Rotate3D />
-        Preparando sua experiência 3D…
+        Preparando sua experiência interativa…
       </div>
     ),
   },
@@ -96,8 +96,8 @@ const questions = [
     "Não. Você pode montar e executar seus próprios treinos. Se treinar com um personal no Trainvy, também pode receber prescrições e compartilhar o acompanhamento pelo vínculo entre as contas.",
   ],
   [
-    "O que posso explorar na visualização 3D?",
-    "Nos exercícios com 3D disponível, você pode girar a câmera, mudar o ângulo, pausar e explorar o movimento. Os destaques musculares são ilustrativos. A visualização ajuda a entender o exercício e não substitui a orientação de um profissional.",
+    "O que posso explorar na visualização interativa?",
+    "Nos exercícios com visualização interativa, você pode girar a câmera, mudar o ângulo, pausar e explorar o movimento. Os destaques musculares são ilustrativos. A visualização ajuda a entender o exercício e não substitui a orientação de um profissional.",
   ],
   [
     "A IA decide meu treino sozinha?",
@@ -223,7 +223,7 @@ function WorkoutPhone() {
             <h4>Supino reto</h4>
           </div>
           <span className={styles.threeBadge}>
-            <Rotate3D size={12} /> 3D
+            <Rotate3D size={12} /> Interativo
           </span>
         </div>
         <div className={styles.setHeader}>
@@ -466,7 +466,7 @@ export function LandingPage() {
               O app
             </a>
             <a href="#movimento" onClick={() => setMenuOpen(false)}>
-              Experiência 3D <span>NOVO</span>
+              Movimento Interativo <span>NOVO</span>
             </a>
             <a href="#para-voce" onClick={() => setMenuOpen(false)}>
               Para você
@@ -519,7 +519,8 @@ export function LandingPage() {
               </h1>
               <p>
                 Transforme esforço em evolução. Treinos, inteligência artificial
-                e movimentos em 3D em uma experiência que acompanha o seu ritmo.
+                e demonstrações interativas em uma experiência que acompanha o seu
+                ritmo.
               </p>
               <div className={styles.heroButtons}>
                 <Link href="/auth/signup" className={styles.primaryButton}>
@@ -529,7 +530,7 @@ export function LandingPage() {
                   <span>
                     <Play size={12} fill="currentColor" />
                   </span>
-                  Explorar o 3D
+                  Explorar movimentos
                 </a>
               </div>
               <div className={styles.heroReassurance}>
@@ -799,7 +800,7 @@ export function LandingPage() {
                 </span>
               </h2>
               <p>
-                Saia do ângulo único. Explore os exercícios em 3D, descubra os
+                Saia do ângulo único. Explore os exercícios em 360°, descubra os
                 grupos musculares ilustrados e acompanhe cada fase do movimento.
               </p>
               <ul className={styles.motionBenefits}>
@@ -814,9 +815,9 @@ export function LandingPage() {
                 </li>
               </ul>
               <p className={styles.smallPrint}>
-                3D disponível em exercícios selecionados. As cores indicam
-                grupos musculares de forma ilustrativa e não medem ativação ou
-                esforço.
+                Visualização interativa disponível em exercícios selecionados.
+                As cores indicam grupos musculares de forma ilustrativa e não
+                medem ativação ou esforço.
               </p>
             </div>
             <div className={styles.motionDemo} ref={viewerArea} data-reveal>
@@ -862,7 +863,7 @@ export function LandingPage() {
                 <div className={styles.poster}>
                   <Image
                     src="/landing/movement-preview.webp"
-                    alt="Visualização 3D do Trainvy: modelo anatômico demonstrando um agachamento com barra"
+                    alt="Visualização interativa do Trainvy: modelo anatômico demonstrando um agachamento com barra"
                     fill
                     sizes="(max-width: 800px) 100vw, 640px"
                     className={styles.posterImage}
@@ -881,7 +882,7 @@ export function LandingPage() {
                       <Play size={20} fill="currentColor" />
                     </span>
                     <strong>
-                      Experimente o 3D
+                      Experimente na prática
                       <small>Explore sem sair desta página.</small>
                     </strong>
                     <ArrowUpRight size={22} />
@@ -898,7 +899,7 @@ export function LandingPage() {
                 <span>GRUPOS ILUSTRATIVOS</span>
               </div>
               <details className={styles.attribution}>
-                <summary>Créditos da anatomia 3D</summary>
+                <summary>Créditos da anatomia</summary>
                 <p>
                   Prévia renderizada no Trainvy. Anatomia adaptada de{" "}
                   <a
@@ -1203,7 +1204,7 @@ export function LandingPage() {
             <p>Seu treino. Sua evolução.</p>
           </div>
           <nav aria-label="Links do rodapé">
-            <a href="#movimento">Experiência 3D</a>
+            <a href="#movimento">Movimento Interativo</a>
             <Link href="/auth">
               Acessar o app <ArrowUpRight size={13} />
             </Link>

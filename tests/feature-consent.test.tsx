@@ -48,7 +48,7 @@ function mount() {
 }
 async function open() {
   fireEvent.click(
-    await screen.findByRole("button", { name: "Continuar para o 3D" }),
+    await screen.findByRole("button", { name: "Continuar para a demonstração" }),
   );
   await screen.findByRole("dialog");
 }
@@ -85,7 +85,9 @@ describe("feature acknowledgements", () => {
         <span>Segundo</span>
       </FeatureConsentGate>,
     );
-    await screen.findByRole("button", { name: "Continuar para o 3D" });
+    await screen.findByRole("button", {
+      name: "Continuar para a demonstração",
+    });
     expect(screen.queryByText("Segundo")).toBeNull();
     expect(getFeatureTermsAction).toHaveBeenCalledTimes(4);
     expect(authorizeFeatureAccessAction).toHaveBeenCalledOnce();
@@ -223,7 +225,7 @@ describe("feature acknowledgements", () => {
     mount();
     await screen.findByText("Conteúdo 3D");
     expect(
-      screen.queryByRole("button", { name: "Continuar para o 3D" }),
+      screen.queryByRole("button", { name: "Continuar para a demonstração" }),
     ).toBeNull();
     expect(screen.queryByRole("dialog")).toBeNull();
     expect(acceptFeatureTermsAction).not.toHaveBeenCalled();
@@ -253,7 +255,7 @@ describe("feature acknowledgements", () => {
     mount();
     expect(screen.queryByText("Conteúdo 3D")).toBeNull();
     expect(
-      screen.queryByRole("button", { name: "Continuar para o 3D" }),
+      screen.queryByRole("button", { name: "Continuar para a demonstração" }),
     ).toBeNull();
     expect(authorizeFeatureAccessAction).not.toHaveBeenCalled();
     resolve({ success: true, data: { ...terms, accepted: true } });

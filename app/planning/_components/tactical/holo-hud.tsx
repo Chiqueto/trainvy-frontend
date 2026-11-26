@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useCallback, useId, useState, useSyncExternalStore } from "react";
 import { Popover } from "radix-ui";
@@ -354,8 +354,8 @@ export function HoloHud({
         <button
           type="button"
           onClick={onToggleTilt}
-          title="Alternar perspectiva 3D"
-          aria-label="Alternar perspectiva 3D"
+          title="Alternar perspectiva da mesa"
+          aria-label="Alternar perspectiva da mesa"
           aria-pressed={tilt > 5}
           className={`spatial-icon-button !border-0 ${tilt > 5 ? "!bg-cyan-300/10 !text-cyan-200" : "!bg-transparent"}`}
         >
@@ -485,7 +485,7 @@ export function HoloHud({
           </button>
           <button type="button" aria-pressed={tilt > 5} onClick={onToggleTilt}>
             <Compass size={18} />
-            {tilt > 5 ? "Vista de cima" : "Perspectiva 3D"}
+            {tilt > 5 ? "Vista de cima" : "Perspectiva inclinada"}
           </button>
           <button
             type="button"

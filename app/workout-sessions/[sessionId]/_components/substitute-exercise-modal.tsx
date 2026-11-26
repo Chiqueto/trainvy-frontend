@@ -396,11 +396,11 @@ export function SubstituteExerciseModal({
                         </span>
                         {getExerciseAnimation(item.id, item.name) !== null && (
                           <span
-                            title="Demonstração 3D disponível"
+                            title="Demonstração interativa disponível"
                             className="inline-flex items-center gap-1 rounded-full bg-orange-500/15 text-orange-600 dark:text-orange-400 border border-orange-500/30 px-1.5 py-0.2 text-[9px] font-bold"
                           >
                             <Box className="size-2.5" />
-                            <span>3D</span>
+                            <span>Interativo</span>
                           </span>
                         )}
                       </div>

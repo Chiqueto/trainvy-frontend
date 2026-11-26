@@ -46,8 +46,8 @@ export function DemonstrationFields({
         Demonstração do exercício
       </legend>
       <p className="text-xs text-muted-foreground">
-        Adicione seu vídeo, escolha uma execução 3D ou use os dois. Seus alunos
-        com vínculo ativo verão esta demonstração.
+        Adicione seu vídeo, escolha uma execução interativa ou use os dois. Seus
+        alunos com vínculo ativo verão esta demonstração.
       </p>
       <div className="space-y-2">
         <Label htmlFor="demonstration-youtube">Link do YouTube</Label>
@@ -79,7 +79,7 @@ export function DemonstrationFields({
       )}
       <div className="space-y-2">
         <Label htmlFor="demonstration-animation">
-          Execução da biblioteca 3D
+          Execução da biblioteca interativa
         </Label>
         <select
           id="demonstration-animation"

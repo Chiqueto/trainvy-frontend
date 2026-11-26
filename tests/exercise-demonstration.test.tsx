@@ -96,9 +96,9 @@ describe("Exercise video and 3D demonstrations", () => {
       }),
     ).toBeDefined();
     expect(screen.queryByTestId("viewer")).toBeNull();
-    fireEvent.click(screen.getByRole("button", { name: /Simulação 3D/ }));
+    fireEvent.click(screen.getByRole("button", { name: /^Demonstração/ }));
     expect(screen.getByTestId("viewer").textContent).toBe("squat");
-    expect(screen.getByText(/Referência 3D:/).textContent).toContain(
+    expect(screen.getByText(/Referência visual:/).textContent).toContain(
       EXERCISE_ANIMATIONS.squat.name,
     );
     fireEvent.click(screen.getByRole("button", { name: "Vídeo do personal" }));

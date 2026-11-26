@@ -36,7 +36,7 @@ const workspaceSteps = [
 const builderSteps = [
   {
     title: "Conheça o novo editor de treinos",
-    text: "O deck 3D organiza sua ficha em um espaço visual. Este guia apresenta os controles; depois você pode explorar no seu ritmo.",
+    text: "A mesa interativa organiza sua ficha em um espaço visual. Este guia apresenta os controles; depois você pode explorar no seu ritmo.",
   },
   {
     title: "Organize a divisão",
@@ -45,12 +45,12 @@ const builderSteps = [
   },
   {
     title: "Monte a ficha no espaço visual",
-    text: "Adicione exercícios pelo catálogo e selecione os cartões para ajustar séries, repetições, carga e descanso. No espaço 3D, arraste os cartões para organizar a mesa; confira a ordem da ficha antes de salvar.",
+    text: "Adicione exercícios pelo catálogo e selecione os cartões para ajustar séries, repetições, carga e descanso. Na mesa interativa, arraste os cartões para organizar; confira a ordem da ficha antes de salvar.",
     target: '[data-tour="builder-arena"]',
   },
   {
     title: "Escolha sua visualização",
-    text: "Escolha Deck 3D para organizar os exercícios na mesa ou Cards para editar no formulário tradicional. A ficha é a mesma e sua preferência fica salva.",
+    text: "Escolha Mesa Interativa para organizar os exercícios na mesa ou Cards para editar no formulário tradicional. A ficha é a mesma e sua preferência fica salva.",
     target: '[data-tour="builder-views"]',
   },
   {
