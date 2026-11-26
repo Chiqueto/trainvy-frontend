@@ -29,6 +29,7 @@ import { getLegExtensionPose } from "./leg-extension-pose";
 import { getSeatedLegCurlPose } from "./seated-leg-curl-pose";
 import { getProneLegCurlPose } from "./prone-leg-curl-pose";
 import { getKneelingPushUpPose } from "./kneeling-push-up-pose";
+import { getElevatedPushUpPose } from "./elevated-push-up-pose";
 
 const v = (x: number, y: number, z: number) => new Vector3(x, y, z);
 const X = v(1, 0, 0);
@@ -131,6 +132,7 @@ export function getExercisePose(
   if (exercise === "seated-leg-curl") return getSeatedLegCurlPose(depth);
   if (exercise === "prone-leg-curl") return getProneLegCurlPose(depth);
   if (exercise === "kneeling-push-up") return getKneelingPushUpPose(depth);
+  if (exercise === "elevated-push-up") return getElevatedPushUpPose(depth);
   if (exercise === "hack-squat") return getHackSquatPose(depth);
   if (exercise === "leg-press-45") return getLegPress45Pose(depth);
   if (exercise === "horizontal-leg-press") return getHorizontalLegPressPose(depth);
@@ -429,7 +431,7 @@ export function createPoseDriver(bones: ReadonlyMap<string, Bone>) {
       const suffix = side < 0 ? "L" : "R";
       if (isUpperExercise(exercise) || exercise === "one-arm-row" ||
         isBarbellRow(exercise) || exercise === "machine-row" || exercise === "cable-row" ||
-        exercise === "lat-pulldown" || exercise === "front-lat-pulldown" || exercise === "hang-power-clean" || exercise === "sumo-deadlift" || exercise === "deadlift" || exercise === "sumo-dumbbell-squat" || exercise === "hip-abduction" || exercise === "hip-thrust" || exercise === "stiff" || exercise === "horizontal-leg-press" || exercise === "leg-press-45" || exercise === "hack-squat" || exercise === "prone-leg-curl" || exercise === "seated-leg-curl" || exercise === "leg-extension" || exercise === "decline-bench-press" || exercise === "pec-deck" || exercise === "machine-fly" || exercise === "machine-chest-press" || exercise === "kneeling-push-up") {
+        exercise === "lat-pulldown" || exercise === "front-lat-pulldown" || exercise === "hang-power-clean" || exercise === "sumo-deadlift" || exercise === "deadlift" || exercise === "sumo-dumbbell-squat" || exercise === "hip-abduction" || exercise === "hip-thrust" || exercise === "stiff" || exercise === "horizontal-leg-press" || exercise === "leg-press-45" || exercise === "hack-squat" || exercise === "prone-leg-curl" || exercise === "seated-leg-curl" || exercise === "leg-extension" || exercise === "decline-bench-press" || exercise === "pec-deck" || exercise === "machine-fly" || exercise === "machine-chest-press" || exercise === "kneeling-push-up" || exercise === "elevated-push-up") {
         const restHip = rest.get(`thigh_${suffix}`)!;
         const restKnee = rest.get(`shin_${suffix}`)!;
         const restAnkle = rest.get(`foot_${suffix}`)!;

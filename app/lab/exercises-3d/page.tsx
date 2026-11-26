@@ -233,6 +233,17 @@ const LAB_MEDIA_DATA: Partial<Record<ExerciseAnimation, GetExerciseMedia200>> = 
     attributionUrl: null,
     instructions: EXERCISE_ANIMATIONS["kneeling-push-up"].instructions,
   },
+  "elevated-push-up": {
+    exerciseId: EXERCISE_ANIMATIONS["elevated-push-up"].id,
+    hasMedia: false,
+    mediaType: null,
+    startImagePath: null,
+    endImagePath: null,
+    motionPath: null,
+    attributionName: null,
+    attributionUrl: null,
+    instructions: EXERCISE_ANIMATIONS["elevated-push-up"].instructions,
+  },
 };
 
 export default function Exercise3DLab() {
@@ -356,6 +367,15 @@ export default function Exercise3DLab() {
       cues: [
         EXERCISE_ANIMATIONS["kneeling-push-up"].instructions.setup,
         EXERCISE_ANIMATIONS["kneeling-push-up"].instructions.execution,
+      ],
+    },
+    "elevated-push-up": {
+      primary: EXERCISE_ANIMATIONS["elevated-push-up"].muscles.primary.join(", "),
+      secondary: EXERCISE_ANIMATIONS["elevated-push-up"].muscles.secondary.join(", "),
+      cadence: "Descida controlada, pausa breve no ponto baixo e empurre estável.",
+      cues: [
+        EXERCISE_ANIMATIONS["elevated-push-up"].instructions.setup,
+        EXERCISE_ANIMATIONS["elevated-push-up"].instructions.execution,
       ],
     },
     "machine-chest-press": {

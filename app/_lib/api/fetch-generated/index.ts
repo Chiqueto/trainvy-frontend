@@ -11478,6 +11478,7 @@ export type ListCoachAthleteProgressExercises200ItemDemonstration = {
     | "incline-smith-press"
     | "decline-smith-press"
     | "kneeling-push-up"
+    | "elevated-push-up"
     | "preacher-curl"
     | "high-supinated-bent-row"
     | "yates-row"
@@ -16142,6 +16143,7 @@ export const SaveExerciseDemonstrationBodyAnimationKey = {
   "incline-smith-press": "incline-smith-press",
   "decline-smith-press": "decline-smith-press",
   "kneeling-push-up": "kneeling-push-up",
+  "elevated-push-up": "elevated-push-up",
   "preacher-curl": "preacher-curl",
   "high-supinated-bent-row": "high-supinated-bent-row",
   "yates-row": "yates-row",
@@ -16217,6 +16219,7 @@ export const SaveExerciseDemonstration200AnimationKey = {
   "incline-smith-press": "incline-smith-press",
   "decline-smith-press": "decline-smith-press",
   "kneeling-push-up": "kneeling-push-up",
+  "elevated-push-up": "elevated-push-up",
   "preacher-curl": "preacher-curl",
   "high-supinated-bent-row": "high-supinated-bent-row",
   "yates-row": "yates-row",
@@ -16383,6 +16386,7 @@ export type ListExercises200ItemDemonstration = {
     | "incline-smith-press"
     | "decline-smith-press"
     | "kneeling-push-up"
+    | "elevated-push-up"
     | "preacher-curl"
     | "high-supinated-bent-row"
     | "yates-row"
@@ -16559,6 +16563,7 @@ export const CreateExerciseBodyDemonstrationAnimationKey = {
   "incline-smith-press": "incline-smith-press",
   "decline-smith-press": "decline-smith-press",
   "kneeling-push-up": "kneeling-push-up",
+  "elevated-push-up": "elevated-push-up",
   "preacher-curl": "preacher-curl",
   "high-supinated-bent-row": "high-supinated-bent-row",
   "yates-row": "yates-row",
@@ -16723,6 +16728,7 @@ export type CreateExercise201Demonstration = {
     | "incline-smith-press"
     | "decline-smith-press"
     | "kneeling-push-up"
+    | "elevated-push-up"
     | "preacher-curl"
     | "high-supinated-bent-row"
     | "yates-row"
@@ -16947,6 +16953,7 @@ export type UpdateExerciseMuscles200Demonstration = {
     | "incline-smith-press"
     | "decline-smith-press"
     | "kneeling-push-up"
+    | "elevated-push-up"
     | "preacher-curl"
     | "high-supinated-bent-row"
     | "yates-row"
@@ -17087,6 +17094,7 @@ export type GetExerciseMedia200Demonstration = {
     | "incline-smith-press"
     | "decline-smith-press"
     | "kneeling-push-up"
+    | "elevated-push-up"
     | "preacher-curl"
     | "high-supinated-bent-row"
     | "yates-row"
@@ -17253,6 +17261,7 @@ export const UpdateCustomExerciseBodyDemonstrationAnimationKey = {
   "incline-smith-press": "incline-smith-press",
   "decline-smith-press": "decline-smith-press",
   "kneeling-push-up": "kneeling-push-up",
+  "elevated-push-up": "elevated-push-up",
   "preacher-curl": "preacher-curl",
   "high-supinated-bent-row": "high-supinated-bent-row",
   "yates-row": "yates-row",
@@ -17417,6 +17426,7 @@ export type UpdateCustomExercise200Demonstration = {
     | "incline-smith-press"
     | "decline-smith-press"
     | "kneeling-push-up"
+    | "elevated-push-up"
     | "preacher-curl"
     | "high-supinated-bent-row"
     | "yates-row"

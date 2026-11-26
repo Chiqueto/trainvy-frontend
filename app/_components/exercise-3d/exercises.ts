@@ -22,6 +22,7 @@ import { LEG_EXTENSION_INSTRUCTIONS } from "./leg-extension-instructions";
 import { SEATED_LEG_CURL_INSTRUCTIONS } from "./seated-leg-curl-instructions";
 import { PRONE_LEG_CURL_INSTRUCTIONS } from "./prone-leg-curl-instructions";
 import { KNEELING_PUSH_UP_INSTRUCTIONS } from "./kneeling-push-up-instructions";
+import { ELEVATED_PUSH_UP_INSTRUCTIONS } from "./elevated-push-up-instructions";
 
 import { LAT_PULLDOWN_INSTRUCTIONS } from "./lat-pulldown-instructions";
 
@@ -85,7 +86,8 @@ export type ExerciseAnimation =
   | "hip-abduction"
   | "goblet-squat"
   | "sumo-dumbbell-squat"
-  | "kneeling-push-up";
+  | "kneeling-push-up"
+  | "elevated-push-up";
 
 export interface ExerciseDefinition {
   name: string;
@@ -322,6 +324,23 @@ export const EXERCISE_ANIMATIONS = {
       ],
     },
   },
+  "elevated-push-up": {
+    name: "Flexão de Braços com Mãos Elevadas",
+    equipment: "Peso corporal, banco ou plataforma elevada firme e solo",
+    id: "64c13c24-240c-44d8-88db-d52af9063792",
+    instructions: ELEVATED_PUSH_UP_INSTRUCTIONS,
+    muscles: {
+      primary: ["Peitoral maior (porções clavicular e esternocostal)"],
+      secondary: [
+        "Tríceps braquial",
+        "Deltoide anterior",
+        "Serrátil anterior",
+        "Reto abdominal e oblíquo externo",
+        "Eretores da coluna",
+        "Músculos estabilizadores do punho",
+      ],
+    },
+  },
 } satisfies Record<ExerciseAnimation, ExerciseDefinition>;
 
 // Conhecidos IDs legados de exercícios antes do catálogo canônico global
@@ -396,6 +415,7 @@ export function getExerciseAnimation(
 
   if (id === EXERCISE_ANIMATIONS["machine-fly"].id) return "machine-fly";
   if (id === EXERCISE_ANIMATIONS["kneeling-push-up"].id) return "kneeling-push-up";
+  if (id === EXERCISE_ANIMATIONS["elevated-push-up"].id) return "elevated-push-up";
   if (name) {
     const normalized = name
       .trim()
@@ -534,6 +554,19 @@ export function getExerciseAnimation(
       ].includes(normalized)
     ) {
       return "kneeling-push-up";
+    }
+
+    if (
+      [
+        "flexao de bracos com maos elevadas",
+        "flexao com maos elevadas",
+        "flexao inclinada",
+        "elevated push-up",
+        "hands-elevated push-up",
+        "incline push-up",
+      ].includes(normalized)
+    ) {
+      return "elevated-push-up";
     }
 
     if (

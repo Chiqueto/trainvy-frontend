@@ -34,6 +34,7 @@ import { LEG_EXTENSION_INSTRUCTIONS } from "../exercise-3d/leg-extension-instruc
 import { SEATED_LEG_CURL_INSTRUCTIONS } from "../exercise-3d/seated-leg-curl-instructions";
 import { PRONE_LEG_CURL_INSTRUCTIONS } from "../exercise-3d/prone-leg-curl-instructions";
 import { KNEELING_PUSH_UP_INSTRUCTIONS } from "../exercise-3d/kneeling-push-up-instructions";
+import { ELEVATED_PUSH_UP_INSTRUCTIONS } from "../exercise-3d/elevated-push-up-instructions";
 import { ONE_ARM_ROW_INSTRUCTIONS } from "../exercise-3d/one-arm-row-instructions";
 import { BENT_ROW_INSTRUCTIONS } from "../exercise-3d/bent-row-instructions";
 import { MACHINE_ROW_INSTRUCTIONS } from "../exercise-3d/machine-row-instructions";
@@ -85,6 +86,7 @@ const FALLBACK_3D_INSTRUCTIONS: Record<
 > = {
   "skull-crusher": EXERCISE_ANIMATIONS["skull-crusher"].instructions,
   "kneeling-push-up": KNEELING_PUSH_UP_INSTRUCTIONS,
+  "elevated-push-up": ELEVATED_PUSH_UP_INSTRUCTIONS,
   "straight-bar-pushdown": EXERCISE_ANIMATIONS["straight-bar-pushdown"].instructions,
   "decline-dumbbell-press": EXERCISE_ANIMATIONS["decline-dumbbell-press"].instructions,
   "incline-smith-press": EXERCISE_ANIMATIONS["incline-smith-press"].instructions,

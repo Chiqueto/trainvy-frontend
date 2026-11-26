@@ -49,7 +49,7 @@ export function getScapularMotion(
     const point=(rest:Vector3)=>rest.clone().sub(thorax).applyQuaternion(rotation).add(thorax).add(new Vector3(0,.022*lift,0));
     return {rotation,point};
   }
-  if (exercise === "kneeling-push-up") {
+  if (exercise === "kneeling-push-up" || exercise === "elevated-push-up") {
     // Protraction at the top plank (p=0), gentle retraction at bottom (p=1).
     const rotation = new Quaternion().setFromEuler(
       new Euler(0, -side * MathUtils.lerp(0.08, -0.06, p), 0, "YXZ"),

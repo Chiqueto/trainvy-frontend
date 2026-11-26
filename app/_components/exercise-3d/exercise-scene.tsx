@@ -7,6 +7,8 @@ import { RopePushdownMachine } from "./rope-pushdown-machine";
 import { createUpperExerciseMuscleMask } from "./upper-exercise-muscles";
 import { createKneelingPushUpMuscleMask } from "./kneeling-push-up-muscles";
 import { KneelingPushUpMat } from "./kneeling-push-up-mat";
+import { createElevatedPushUpMuscleMask } from "./elevated-push-up-muscles";
+import { ElevatedPushUpBench } from "./elevated-push-up-bench";
 import { isBarbellRow } from "./row-variants";
 import { PULLING_EXERCISES } from "./scapular-motion";
 import { prepareHandReplacement } from "./gripping-hand-geometry";
@@ -598,14 +600,17 @@ function Athlete({
           ? createUpperExerciseMuscleMask(g, exercise)
           : exercise === "kneeling-push-up"
             ? createKneelingPushUpMuscleMask(g)
-            : createMachineChestPressMuscleMask(g),
+            : exercise === "elevated-push-up"
+              ? createElevatedPushUpMuscleMask(g)
+              : createMachineChestPressMuscleMask(g),
       ),
     );
     rig.handReplacements.forEach((replacement) =>
       replacement.setEnabled(
         PULLING_EXERCISES.includes(exercise) ||
           isUpperExercise(exercise) ||
-          exercise === "kneeling-push-up",
+          exercise === "kneeling-push-up" ||
+          exercise === "elevated-push-up",
       ),
     );
     invalidate();
@@ -655,18 +660,26 @@ function Athlete({
       <primitive object={rig.scene} dispose={null} />
       {(PULLING_EXERCISES.includes(exercise) ||
         isUpperExercise(exercise) ||
-        exercise === "kneeling-push-up") && (
+        exercise === "kneeling-push-up" ||
+        exercise === "elevated-push-up") && (
         <GrippingHands
           ref={grippingHands}
           leftSupport={
-            exercise === "one-arm-row" || exercise === "kneeling-push-up"
+            exercise === "one-arm-row" ||
+            exercise === "kneeling-push-up" ||
+            exercise === "elevated-push-up"
           }
-          rightSupport={exercise === "kneeling-push-up"}
+          rightSupport={
+            exercise === "kneeling-push-up" ||
+            exercise === "elevated-push-up"
+          }
         />
       )}
       {exercise === "hip-abduction" && <HipAbductionSupplement athlete={rig.scene} material={rig.material} />}
       {exercise === "kneeling-push-up" ? (
         <KneelingPushUpMat />
+      ) : exercise === "elevated-push-up" ? (
+        <ElevatedPushUpBench />
       ) : exercise === "rope-pushdown" || exercise === "straight-bar-pushdown" ? (
         <RopePushdownMachine ref={upperEquipment} straightBar={exercise === "straight-bar-pushdown"} />
       ) : isUpperExercise(exercise) && (!isBenchVariant(exercise) || exercise === "skull-crusher") ? <UpperExerciseEquipment ref={upperEquipment} exercise={exercise} /> : exercise === "one-arm-row" ? <><OneArmRowBench /><group ref={rightDumbbell}><Dumbbell /></group></> : exercise === "machine-row" ? <MachineRowMachine ref={machineRowMachine} /> : exercise === "cable-row" ? <CableRowMachine ref={cableRowMachine} /> : (exercise === "lat-pulldown" || exercise === "front-lat-pulldown") ? <LatPulldownMachine ref={latPulldownMachine} /> : exercise === "seated-calf" ? (<SeatedCalfMachine ref={seatedCalfMachine} />) : exercise === "standing-calf" ? (
@@ -752,6 +765,19 @@ function getCameraParams(
         return { position: [0, 1.4, -3.1], target };
       default:
         return { position: [2.4, 1.3, 2.3], target };
+    }
+  }
+  if (exercise === "elevated-push-up") {
+    const target: [number, number, number] = [0, 0.48, -0.02];
+    switch (view) {
+      case "front":
+        return { position: [0, 1.55, 3.3], target };
+      case "side":
+        return { position: [3.4, 0.9, -0.02], target };
+      case "back":
+        return { position: [0, 1.55, -3.3], target };
+      default:
+        return { position: [2.5, 1.45, 2.4], target };
     }
   }
   if (exercise === "rope-pushdown" || exercise === "straight-bar-pushdown") {
