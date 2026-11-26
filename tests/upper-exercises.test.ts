@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { readFile } from "node:fs/promises";
 import { beforeAll, describe, expect, it } from "vitest";
-import { Bone, Quaternion, SkinnedMesh, Vector3 } from "three";
+import { Bone, MathUtils, Quaternion, SkinnedMesh, Vector3 } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "meshoptimizer";
 import {
@@ -28,6 +28,8 @@ import arms from "../app/_components/exercise-3d/fly-muscle-map.json";
 import cuff from "../app/_components/exercise-3d/lat-pulldown-detail-map.json";
 import triceps from "../app/_components/exercise-3d/one-arm-row-support-map.json";
 import { getRopePushdownAttachment } from "../app/_components/exercise-3d/rope-pushdown-machine";
+import { getPreacherCurlBenchGeometry } from "../app/_components/exercise-3d/preacher-curl-bench";
+import { PREACHER_CURL_ANGLE } from "../app/_components/exercise-3d/upper-exercise-pose";
 let mesh: SkinnedMesh, apply: ReturnType<typeof createPoseDriver>;
 beforeAll(async () => {
   const b = await readFile(
@@ -129,6 +131,62 @@ describe("five shoulder and elbow movements, with historical curl identity", () 
       expect(arm.grip.y).toBeGreaterThan(arm.elbow.y);
       expect(bottom.limbs[index].grip.y).toBeLessThan(arm.elbow.y);
     }
+    const bench = getPreacherCurlBenchGeometry();
+    const normal = new Vector3(
+      0,
+      Math.sin(PREACHER_CURL_ANGLE),
+      Math.cos(PREACHER_CURL_ANGLE),
+    );
+    const along = new Vector3(
+      0,
+      -Math.cos(PREACHER_CURL_ANGLE),
+      Math.sin(PREACHER_CURL_ANGLE),
+    );
+    const position = mesh.geometry.getAttribute("position");
+    const skinIndex = mesh.geometry.getAttribute("skinIndex");
+    const skinWeight = mesh.geometry.getAttribute("skinWeight");
+    const sledIndex = mesh.skeleton.bones.findIndex((b) => b.name === "sled");
+    const pose = apply("preacher-curl", 0.5);
+    const offset = pose.origin.clone().sub(new Vector3(0, 1.142, 0));
+    let padPenetration = 0;
+    let postPenetration = 0;
+    let minTorsoY = Infinity;
+    for (let i = 0; i < position.count; i++) {
+      let sledWeight = 0;
+      for (let j = 0; j < 4; j++) {
+        if (skinIndex.getComponent(i, j) === sledIndex) {
+          sledWeight += skinWeight.getComponent(i, j);
+        }
+      }
+      if (sledWeight <= 0.3 || Math.abs(position.getX(i)) > 0.28) continue;
+      const world = new Vector3(
+        position.getX(i),
+        position.getY(i),
+        position.getZ(i),
+      ).add(offset);
+      minTorsoY = Math.min(minTorsoY, world.y);
+      const relPad = world.clone().sub(bench.padCenter);
+      if (
+        Math.abs(relPad.x) <= bench.padSize[0] / 2 &&
+        Math.abs(relPad.dot(along)) <= bench.padSize[2] / 2 &&
+        Math.abs(relPad.dot(normal)) <= bench.padSize[1] / 2
+      ) {
+        padPenetration++;
+      }
+      if (
+        Math.abs(world.x - bench.padPostCenter.x) <= bench.padPostSize[0] / 2 &&
+        Math.abs(world.y - bench.padPostCenter.y) <= bench.padPostSize[1] / 2 &&
+        Math.abs(world.z - bench.padPostCenter.z) <= bench.padPostSize[2] / 2
+      ) {
+        postPenetration++;
+      }
+    }
+    expect(padPenetration).toBe(0);
+    expect(postPenetration).toBe(0);
+    expect(minTorsoY).toBeGreaterThanOrEqual(
+      bench.seatCenter.y + bench.seatSize[1] / 2 - 0.005,
+    );
+    expect(MathUtils.radToDeg(PREACHER_CURL_ANGLE)).toBeGreaterThan(50);
   });
   it("keeps the pushdown rope taut and gripped as the elbows extend", () => {
     const extended = getExercisePose("rope-pushdown", 0);

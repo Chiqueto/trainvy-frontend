@@ -6,7 +6,7 @@ import { isBenchVariant, type UpperExercise } from "./upper-exercise-types";
 import { getBenchVariantPose } from "./bench-variant-pose";
 const v = (x: number, y: number, z: number) => new Vector3(x, y, z);
 const palmOffset = v(0, 0.004, 0.012);
-export const PREACHER_CURL_ANGLE = MathUtils.degToRad(42);
+export const PREACHER_CURL_ANGLE = MathUtils.degToRad(56);
 export const PREACHER_CURL_HIP_HEIGHT = 0.56;
 
 export const isShoulderPress = (key: UpperExercise) =>
