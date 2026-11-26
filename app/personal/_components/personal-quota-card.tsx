@@ -37,15 +37,19 @@ export function PersonalQuotaCard({
         </div>
 
         {!isUnlimited && (
-          <div className="text-right">
+          <div className="text-right shrink-0">
             <span
-              className={`font-heading text-xs font-bold px-2.5 py-1 rounded-full ${
+              className={`inline-block whitespace-nowrap font-heading text-xs font-bold px-2.5 py-1 rounded-full ${
                 isFull
                   ? "bg-destructive/15 text-destructive border border-destructive/20"
                   : "bg-primary/15 text-primary border border-primary/20"
               }`}
             >
-              {isFull ? "Limite atingido" : `${remaining} vaga(s) livre(s)`}
+              {isFull
+                ? "Limite atingido"
+                : remaining === 1
+                  ? "1 vaga livre"
+                  : `${remaining} vagas livres`}
             </span>
           </div>
         )}

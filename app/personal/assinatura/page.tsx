@@ -41,7 +41,7 @@ export default async function PersonalSubscriptionPage({
       <main className="trainvy-page mx-auto w-full px-5 py-4 flex flex-col gap-5">
         <PersonalHeader
           title="Assinatura Profissional"
-          description="Gerencie seu plano, pagamentos via Asaas, upgrades, downgrades e histórico financeiro."
+          description="Gerencie seu plano, pagamentos, alterações e histórico financeiro."
           activeTab="subscription"
         />
         <SubscriptionManager

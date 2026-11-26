@@ -271,8 +271,8 @@ export function SubscriptionManager({
           <div className="flex items-center gap-2.5 text-foreground">
             <CheckCircle2 className="size-4 text-primary shrink-0" />
             <span>
-              Checkout concluído! Assim que o Asaas confirmar o pagamento via
-              webhook, seu acesso será atualizado automaticamente.
+              Pagamento enviado! Assim que for confirmado, seu acesso será
+              atualizado automaticamente.
             </span>
           </div>
           <Button
@@ -319,8 +319,7 @@ export function SubscriptionManager({
             </h2>
             {sub && (
               <p className="text-sm text-muted-foreground mt-0.5">
-                {formatMoney(sub.monthlyPriceInCents, sub.currency)} / mês ·
-                Provedor: {sub.billingProvider}
+                {formatMoney(sub.monthlyPriceInCents, sub.currency)} / mês
               </p>
             )}
           </div>
@@ -406,7 +405,7 @@ export function SubscriptionManager({
           <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-primary/30 bg-primary/5 p-4">
             <div className="text-xs space-y-0.5">
               <strong className="text-foreground block">
-                Checkout em aberto no Asaas
+                Pagamento em aberto
               </strong>
               <span className="text-muted-foreground">
                 Você já possui um link de pagamento gerado aguardando conclusão.
@@ -485,9 +484,7 @@ export function SubscriptionManager({
                 Entra em vigor em{" "}
                 <strong>
                   {formatDate(initial.pendingDowngrade.effectiveAt)}
-                </strong>{" "}
-                · Sincronização Asaas:{" "}
-                {initial.pendingDowngrade.asaasSyncStatus}
+                </strong>
               </p>
             </div>
             <Button
@@ -508,12 +505,11 @@ export function SubscriptionManager({
           <div>
             <h3 className="font-heading text-lg font-bold text-foreground flex items-center gap-2">
               <CreditCard className="size-5 text-primary" />
-              Assinar Plano Profissional via Asaas
+              Assinar Plano Profissional
             </h3>
             <p className="text-xs text-muted-foreground mt-1">
               Escolha o plano ideal para sua assessoria. O pagamento é processado
-              com segurança via Pix, Cartão de Crédito ou Boleto no checkout do
-              Asaas.
+              com segurança via Pix, Cartão de Crédito ou Boleto.
             </p>
           </div>
 
@@ -593,7 +589,7 @@ export function SubscriptionManager({
             ) : (
               <ArrowUpRight className="size-4" />
             )}
-            Ir para pagamento no Asaas
+            Ir para pagamento
           </Button>
         </section>
       )}
@@ -780,8 +776,8 @@ export function SubscriptionManager({
                 </h3>
                 <p className="text-xs text-muted-foreground mt-0.5">
                   {isCoolingOff
-                    ? "Você está dentro do prazo de 7 dias de arrependimento: o cancelamento solicita estorno integral imediato no Asaas e encerra o acesso."
-                    : "A recorrência será cancelada no Asaas e você continuará com acesso até o final do período já pago."}
+                    ? "Você está dentro do prazo de 7 dias de arrependimento: o cancelamento solicita estorno integral imediato e encerra o acesso."
+                    : "A recorrência será cancelada e você continuará com acesso até o final do período já pago."}
                 </p>
               </div>
               {!showCancelConfirm && (

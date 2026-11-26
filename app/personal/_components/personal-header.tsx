@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { UserCheck, Settings, Users, Layers, Dumbbell, CreditCard } from "lucide-react";
+import { UserCheck, Settings, Users, Layers, Dumbbell } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
@@ -41,21 +41,15 @@ export function PersonalHeader({
     },
     {
       id: "templates",
-      label: "Modelos de Treino",
+      label: "Modelos",
       href: "/personal/modelos",
       icon: Layers,
     },
     {
       id: "exercises",
-      label: "Exercícios Personalizados",
+      label: "Exercícios",
       href: "/personal/exercicios",
       icon: Dumbbell,
-    },
-    {
-      id: "subscription",
-      label: "Assinatura",
-      href: "/personal/assinatura",
-      icon: CreditCard,
     },
   ] as const;
 
