@@ -222,6 +222,17 @@ const LAB_MEDIA_DATA: Partial<Record<ExerciseAnimation, GetExerciseMedia200>> = 
     attributionUrl: null,
     instructions: null,
   },
+  "kneeling-push-up": {
+    exerciseId: EXERCISE_ANIMATIONS["kneeling-push-up"].id,
+    hasMedia: false,
+    mediaType: null,
+    startImagePath: null,
+    endImagePath: null,
+    motionPath: null,
+    attributionName: null,
+    attributionUrl: null,
+    instructions: EXERCISE_ANIMATIONS["kneeling-push-up"].instructions,
+  },
 };
 
 export default function Exercise3DLab() {
@@ -338,6 +349,15 @@ export default function Exercise3DLab() {
     },
     "machine-fly": { primary: "Peitoral maior", secondary: "Deltoide anterior e bíceps braquial", cadence: "Abertura controlada, pausa breve e fechamento suave.", cues: ["Costas no encosto e pés no chão.", "Segure os pegadores, sem apoio de antebraço.", "Mantenha os cotovelos levemente flexionados durante todo o arco."] },
     "flat-dumbbell-fly": { primary: "Peitoral maior", secondary: "Deltoide anterior e bíceps braquial", cadence: "Abertura controlada, pausa breve e fechamento suave.", cues: ["Tronco e pés apoiados.", "Abra os braços em arco com cotovelos levemente flexionados.", "Retorne pela mesma trajetória sem bater os halteres."] },
+    "kneeling-push-up": {
+      primary: EXERCISE_ANIMATIONS["kneeling-push-up"].muscles.primary.join(", "),
+      secondary: EXERCISE_ANIMATIONS["kneeling-push-up"].muscles.secondary.join(", "),
+      cadence: "Descida controlada, pausa breve no ponto baixo e empurre estável.",
+      cues: [
+        EXERCISE_ANIMATIONS["kneeling-push-up"].instructions.setup,
+        EXERCISE_ANIMATIONS["kneeling-push-up"].instructions.execution,
+      ],
+    },
     "machine-chest-press": {
       primary: "Peitoral maior (porções esternocostal e clavicular)",
       secondary: "Tríceps braquial e Deltoide anterior",

@@ -49,6 +49,15 @@ export function getScapularMotion(
     const point=(rest:Vector3)=>rest.clone().sub(thorax).applyQuaternion(rotation).add(thorax).add(new Vector3(0,.022*lift,0));
     return {rotation,point};
   }
+  if (exercise === "kneeling-push-up") {
+    // Protraction at the top plank (p=0), gentle retraction at bottom (p=1).
+    const rotation = new Quaternion().setFromEuler(
+      new Euler(0, -side * MathUtils.lerp(0.08, -0.06, p), 0, "YXZ"),
+    );
+    const point = (rest: Vector3) =>
+      rest.clone().add(new Vector3(0, 0, MathUtils.lerp(0.015, -0.012, p)));
+    return { rotation, point };
+  }
   if (exercise === "preacher-curl") {
     // Protract shoulders slightly forward onto the Scott pad so the torso stays clear of the bench.
     const rotation = new Quaternion().setFromEuler(

@@ -15,15 +15,15 @@ export interface GrippingHandsHandle {
 }
 export const GrippingHands = forwardRef<
   GrippingHandsHandle,
-  { leftSupport: boolean }
->(function GrippingHands({ leftSupport }, ref) {
+  { leftSupport: boolean; rightSupport?: boolean }
+>(function GrippingHands({ leftSupport, rightSupport = false }, ref) {
   const groups = useRef<(Group | null)[]>([]);
   const geometries = useMemo(
     () => [
       createGrippingHandGeometry(-1, leftSupport),
-      createGrippingHandGeometry(1),
+      createGrippingHandGeometry(1, rightSupport),
     ],
-    [leftSupport],
+    [leftSupport, rightSupport],
   );
   useEffect(() => () => geometries.forEach((g) => g.dispose()), [geometries]);
   useImperativeHandle(

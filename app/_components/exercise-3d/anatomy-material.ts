@@ -178,6 +178,7 @@ export function createTissueMaterial() {
   const setAppearance = (exercise: ExerciseAnimation, highlighted = true) => {
     const modes: Record<ExerciseAnimation, number> = {
       "preacher-curl": 32,
+      "kneeling-push-up": 32,
       "military-press": 32,
       "dumbbell-shoulder-press": 32,
       "lateral-raise": 32,
