@@ -53,6 +53,14 @@ export function Exercise3DViewer(props: {
   return <FeatureConsentGate key={props.exercise} feature="EXERCISE_3D" context={`exercise-3d:${props.exercise}`}><Viewer {...props} /></FeatureConsentGate>;
 }
 
+/** Public 3D showcase viewer for unauthenticated landing visitors; keeps built-in illustrative disclaimers without hitting /me/feature-terms. */
+export function PublicExercise3DViewer(props: {
+  exercise: ExerciseAnimation;
+  compact?: boolean;
+}) {
+  return <Viewer key={props.exercise} {...props} />;
+}
+
 function phaseLabel(phase: number, exercise: ExerciseAnimation) {
   if (["military-press","dumbbell-shoulder-press","lateral-raise","barbell-curl","legacy-barbell-curl","hammer-curl"].includes(exercise)) {
     if(phase<.04||phase>=.99)return exercise==="lateral-raise"?"Braços próximos da altura dos ombros":exercise.includes("press")?"Carga acima dos ombros":"Cotovelos flexionados, punhos alinhados";

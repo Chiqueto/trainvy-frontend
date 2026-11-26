@@ -66,7 +66,9 @@ function PlanningFeatureCard({ professional }: { professional: boolean }) {
 
 const Viewer = dynamic(
   () =>
-    import("../exercise-3d/exercise-3d-viewer").then((m) => m.Exercise3DViewer),
+    import("../exercise-3d/exercise-3d-viewer").then(
+      (m) => m.PublicExercise3DViewer,
+    ),
   {
     ssr: false,
     loading: () => (
