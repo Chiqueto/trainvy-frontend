@@ -227,16 +227,12 @@ try {
         `${name}: signup fits the viewport`,
       );
       await assert(
-        `document.querySelector('[data-account-type="ATHLETE"]').getAttribute('aria-pressed')==='true'`,
-        `${name}: athlete is selected by default`,
+        `document.querySelector('[data-account-type="ATHLETE"]').getAttribute('aria-pressed')==='false' && document.querySelector('[data-account-type="COACH"]').getAttribute('aria-pressed')==='false'`,
+        `${name}: no account type is selected by default`,
       );
       await screenshot(`auth-${name}-signup`);
       await evaluate(
         `document.querySelector('[data-account-type="COACH"]').click()`,
-      );
-      await until(
-        `(()=>{const b=document.querySelector('[data-account-type="COACH"]');if(b.getAttribute('aria-pressed')!=='true')b.click();return b.getAttribute('aria-pressed')==='true'})()`,
-        "coach selection hydrated",
       );
       await until(
         `document.querySelector('[data-plan-code]') || document.querySelector('[role="alert"]') || document.body.textContent.includes('Nenhum plano disponível')`,
@@ -248,11 +244,18 @@ try {
       );
       await screenshot(`auth-${name}-coach`);
       await evaluate(
+        `document.querySelector('button[aria-label^="Voltar para etapa 1"]')?.click()`,
+      );
+      await until(
+        `document.querySelector('[data-account-type="ATHLETE"]')`,
+        "back to account type step",
+      );
+      await evaluate(
         `document.querySelector('[data-account-type="ATHLETE"]').click()`,
       );
       await until(
-        `document.querySelector('[data-account-type="ATHLETE"]').getAttribute('aria-pressed')==='true'`,
-        "switch back to athlete",
+        `document.body.textContent.includes('Grátis')`,
+        "switch to athlete",
       );
     }
     await dimensions(1440, 1000);
@@ -270,7 +273,7 @@ try {
       "/auth/signup?accountType=COACH&returnTo=%2Fconvite%2Fqa_token_123456",
     );
     await until(
-      `document.querySelector('[data-account-type="COACH"]')?.getAttribute('aria-pressed')==='true'`,
+      `document.querySelector('[data-plan-code]') || document.querySelector('[role="status"]') || document.querySelector('[role="alert"]')`,
       "direct coach signup",
     );
     await assert(

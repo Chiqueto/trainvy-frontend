@@ -54,7 +54,7 @@ const plans = [
     description: null,
     currency: "BRL",
     monthlyPriceInCents: 4990,
-    entitlements: [{ entitlement: "MANAGE_ATHLETES" as const, limitValue: 5 }],
+    entitlements: [{ entitlement: "MANAGE_ATHLETES" as const, limitValue: 10 }],
   },
   {
     code: "COACH_AI",
@@ -62,7 +62,7 @@ const plans = [
     description: null,
     currency: "BRL",
     monthlyPriceInCents: 8990,
-    entitlements: [],
+    entitlements: [{ entitlement: "MANAGE_ATHLETES" as const, limitValue: null }],
   },
 ];
 async function fillCoachCredentials() {
@@ -136,6 +136,7 @@ describe("Account signup UI", () => {
     render(<SignupForm initialAccountType="COACH" />);
     await screen.findByText("Personal AI");
     fireEvent.click(screen.getByRole("button", { name: /Personal AI/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Continuar" }));
     await fillCoachCredentials();
     fireEvent.click(
       screen.getByRole("button", { name: "Continuar com Google" }),
@@ -143,14 +144,15 @@ describe("Account signup UI", () => {
     await screen.findByRole("alert");
     expect(
       screen
-        .getByRole("button", { name: /Personal AI/ })
-        .getAttribute("aria-pressed"),
-    ).toBe("true");
-    expect(
-      screen
         .getByRole("button", { name: "Continuar com Google" })
         .hasAttribute("disabled"),
     ).toBe(false);
+    fireEvent.click(screen.getByRole("button", { name: "Trocar plano" }));
+    expect(
+      screen
+        .getByRole("button", { name: /Personal AI/ })
+        .getAttribute("aria-pressed"),
+    ).toBe("true");
   });
   it("blocks coach signup when no public plan is available", async () => {
     vi.mocked(loadCoachPlans).mockResolvedValue({ success: true, plans: [] });
@@ -158,7 +160,7 @@ describe("Account signup UI", () => {
     await screen.findByText(/Nenhum plano disponível/);
     expect(
       screen
-        .getByRole("button", { name: "Continuar com Google" })
+        .getByRole("button", { name: "Continuar" })
         .hasAttribute("disabled"),
     ).toBe(true);
   });
@@ -166,11 +168,10 @@ describe("Account signup UI", () => {
     render(<SignupForm initialAccountType="COACH" />);
     await screen.findByText("Personal");
     expect(loadCoachPlans).toHaveBeenCalledOnce();
-    expect(
-      screen
-        .getByRole("button", { name: /Sou Personal/ })
-        .getAttribute("aria-pressed"),
-    ).toBe("true");
+    expect(screen.getByText("Até 10 alunos")).toBeTruthy();
+    expect(screen.getByText("Alunos ilimitados")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: /Personal.*49,90/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Continuar" }));
     await fillCoachCredentials();
     fireEvent.click(
       screen.getByRole("button", { name: "Continuar com Google" }),
@@ -197,9 +198,22 @@ describe("Account signup UI", () => {
     );
     expect(beginSignup).not.toHaveBeenCalled();
   });
-  it("athlete defaults to free without loading paid catalogue", async () => {
+  it("starts with nothing selected and advances athlete through the stepper without loading paid catalogue", async () => {
     render(<SignupForm />);
+    expect(
+      screen
+        .getByRole("button", { name: /Quero treinar/ })
+        .getAttribute("aria-pressed"),
+    ).toBe("false");
+    expect(
+      screen
+        .getByRole("button", { name: /Sou Personal/ })
+        .getAttribute("aria-pressed"),
+    ).toBe("false");
+    expect(screen.queryByText("Plano")).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: /Quero treinar/ }));
     expect(screen.getByText("Grátis")).toBeTruthy();
+    expect(screen.getByText("Plano")).toBeTruthy();
     expect(loadCoachPlans).not.toHaveBeenCalled();
     fireEvent.click(
       screen.getByRole("button", { name: "Continuar com Google" }),
@@ -214,11 +228,14 @@ describe("Account signup UI", () => {
       planCode: "ATHLETE_FREE",
     });
   });
-  it("coach prices come from backend and selected plan is sent without price", async () => {
+  it("coach prices come from backend and selected plan advances to CREF step before submit", async () => {
     render(<SignupForm />);
     fireEvent.click(screen.getByRole("button", { name: /Sou Personal/ }));
     expect(await screen.findByText(/49,90/)).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Continuar" }).hasAttribute("disabled")).toBe(true);
     fireEvent.click(screen.getByRole("button", { name: /Personal AI/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Continuar" }));
+    expect(screen.getByText("CREF")).toBeTruthy();
     await fillCoachCredentials();
     fireEvent.click(
       screen.getByRole("button", { name: "Continuar com Google" }),
@@ -232,6 +249,22 @@ describe("Account signup UI", () => {
       ),
     );
   });
+  it("supports navigating back via completed stepper circles", async () => {
+    render(<SignupForm />);
+    fireEvent.click(screen.getByRole("button", { name: /Sou Personal/ }));
+    await screen.findByText("Personal AI");
+    fireEvent.click(screen.getByRole("button", { name: /Personal AI/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Continuar" }));
+    expect(screen.getByText("CREF")).toBeTruthy();
+    fireEvent.click(
+      screen.getByRole("button", { name: "Voltar para etapa 1: Perfil" }),
+    );
+    expect(
+      screen
+        .getByRole("button", { name: /Sou Personal/ })
+        .getAttribute("aria-pressed"),
+    ).toBe("true");
+  });
   it("plan errors support retry", async () => {
     vi.mocked(loadCoachPlans).mockResolvedValueOnce({ success: false });
     render(<SignupForm />);
@@ -239,26 +272,27 @@ describe("Account signup UI", () => {
     expect(await screen.findByRole("alert")).toBeTruthy();
     expect(
       screen
-        .getByRole("button", { name: "Continuar com Google" })
+        .getByRole("button", { name: "Continuar" })
         .hasAttribute("disabled"),
     ).toBe(true);
     fireEvent.click(screen.getByRole("button", { name: "Tentar novamente" }));
     expect(await screen.findByText(/49,90/)).toBeTruthy();
   });
-  it("shows loading plans and blocks submit while fetching", async () => {
+  it("shows loading plans and blocks advance while fetching", async () => {
     vi.mocked(loadCoachPlans).mockReturnValue(new Promise(() => {}));
     render(<SignupForm />);
     fireEvent.click(screen.getByRole("button", { name: /Sou Personal/ }));
     expect(screen.getByRole("status").textContent).toContain("Carregando");
     expect(
       screen
-        .getByRole("button", { name: "Continuar com Google" })
+        .getByRole("button", { name: "Continuar" })
         .hasAttribute("disabled"),
     ).toBe(true);
   });
   it("failed intent never starts OAuth", async () => {
     vi.mocked(beginSignup).mockResolvedValue({ success: false });
     render(<SignupForm />);
+    fireEvent.click(screen.getByRole("button", { name: /Quero treinar/ }));
     fireEvent.click(
       screen.getByRole("button", { name: "Continuar com Google" }),
     );
@@ -267,6 +301,7 @@ describe("Account signup UI", () => {
   });
   it("authenticated incomplete user completes without repeating OAuth", async () => {
     render(<SignupForm authenticated />);
+    fireEvent.click(screen.getByRole("button", { name: /Quero treinar/ }));
     fireEvent.click(screen.getByRole("button", { name: "Concluir cadastro" }));
     await waitFor(() =>
       expect(mocks.push).toHaveBeenCalledWith("/auth/complete"),

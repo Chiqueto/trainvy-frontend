@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   AlertCircle,
+  ArrowLeft,
+  ArrowRight,
   ArrowUpRight,
   Check,
   Dumbbell,
@@ -71,10 +73,12 @@ const labels: Record<string, string> = {
   SOURCE_LIBRARY: "Biblioteca de fontes",
 };
 
+type SignupStep = 1 | 2 | 3;
+
 export function SignupForm({
   authenticated = false,
   returnTo,
-  initialAccountType = "ATHLETE",
+  initialAccountType,
 }: {
   authenticated?: boolean;
   returnTo?: string | null;
@@ -82,7 +86,15 @@ export function SignupForm({
 }) {
   const router = useRouter();
   const { professionalAiEnabled } = useAiAvailability();
-  const [type, setType] = useState<"ATHLETE" | "COACH">(initialAccountType);
+  const mainRef = useRef<HTMLElement>(null);
+  const hasInteractedRef = useRef(false);
+
+  const [type, setType] = useState<"ATHLETE" | "COACH" | null>(
+    initialAccountType ?? null,
+  );
+  const [step, setStep] = useState<SignupStep>(initialAccountType ? 2 : 1);
+  const [direction, setDirection] = useState<"forward" | "back">("forward");
+
   const [plans, setPlans] = useState<ListPublicPlans200Item[]>([]);
   const [planCode, setPlanCode] = useState("");
   const [loadingPlans, setLoadingPlans] = useState(
@@ -114,8 +126,12 @@ export function SignupForm({
         if (!current) return;
         if (result.success) {
           setPlans(result.plans);
-          setPlanCode(result.plans[0]?.code ?? "");
-        } else setPlanError(true);
+          setPlanCode((prev) =>
+            prev && result.plans.some((p) => p.code === prev) ? prev : "",
+          );
+        } else {
+          setPlanError(true);
+        }
         setLoadingPlans(false);
       })
       .catch(() => {
@@ -132,19 +148,40 @@ export function SignupForm({
           setTerm(res.term);
         }
       })
-      ?.catch?.(() => { });
+      ?.catch?.(() => {});
 
     return () => {
       current = false;
     };
   }, [type, retry, professionalAiEnabled]);
 
+  useEffect(() => {
+    if (!hasInteractedRef.current) return;
+    mainRef.current?.scrollIntoView?.({ behavior: "smooth", block: "start" });
+  }, [step]);
+
+  function navigateToStep(nextStep: SignupStep, dir: "forward" | "back") {
+    hasInteractedRef.current = true;
+    setDirection(dir);
+    setStep(nextStep);
+    setError("");
+  }
+
   function chooseType(value: "ATHLETE" | "COACH") {
-    if (value === type) return;
+    const changed = value !== type;
     setType(value);
     setError("");
-    setPlanError(false);
-    setLoadingPlans(value === "COACH");
+    if (changed) {
+      setPlanError(false);
+      setPlanCode("");
+      if (value === "COACH") {
+        setLoadingPlans(true);
+        setPlans([]);
+      } else {
+        setLoadingPlans(false);
+      }
+    }
+    navigateToStep(2, "forward");
   }
 
   const isCpfValid = cpf.replace(/\D/g, "").length === 11 && validCpf(cpf);
@@ -160,6 +197,7 @@ export function SignupForm({
       term !== null);
 
   async function submit() {
+    if (!type) return;
     setBusy(true);
     setError("");
     try {
@@ -192,7 +230,7 @@ export function SignupForm({
       if (!result.success) {
         setError(
           result.error ??
-          "Não foi possível iniciar seu cadastro. Tente novamente.",
+            "Não foi possível iniciar seu cadastro. Tente novamente.",
         );
         setBusy(false);
         return;
@@ -210,8 +248,8 @@ export function SignupForm({
         typeof window !== "undefined" && window.location.origin
           ? window.location.origin
           : (
-            process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-          ).replace(/\/+$/, "");
+              process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
+            ).replace(/\/+$/, "");
 
       const callbackURL = returnTo
         ? `${callbackOrigin}/auth/complete?returnTo=${encodeURIComponent(returnTo)}`
@@ -234,8 +272,18 @@ export function SignupForm({
     }
   }
 
+  const visibleSteps: Array<{ id: SignupStep; label: string }> = [
+    { id: 1, label: "Perfil" },
+  ];
+  if (step >= 2) {
+    visibleSteps.push({ id: 2, label: "Plano" });
+  }
+  if (step >= 3 && type === "COACH") {
+    visibleSteps.push({ id: 3, label: "CREF" });
+  }
+
   return (
-    <main className={styles.content}>
+    <main ref={mainRef} className={styles.content}>
       <h1 className={styles.heading}>
         Seu próximo nível
         <br />
@@ -261,344 +309,492 @@ export function SignupForm({
           </span>
         </div>
       )}
-      <div className={styles.stepLabel}>
-        <span>01</span> Como você vai usar o Trainvy?
-      </div>
-      <div className={styles.roleGrid} role="group" aria-label="Tipo de conta">
-        {(
-          [
-            [
-              "ATHLETE",
-              "Quero treinar",
-              "Organize seus treinos, registre suas cargas e acompanhe sua evolução.",
-            ],
-            [
-              "COACH",
-              "Sou Personal",
-              "Organize seus alunos, acompanhe os treinos e monte planejamentos.",
-            ],
-          ] as const
-        ).map(([value, title, description]) => (
-          <button
-            key={value}
-            data-account-type={value}
-            type="button"
-            aria-pressed={type === value}
-            disabled={busy}
-            onClick={() => chooseType(value)}
-            className={styles.roleCard}
-          >
-            <span className={styles.radioMark} aria-hidden="true">
-              {type === value && <Check size={11} />}
-            </span>
-            <span className={styles.roleIcon}>
-              {value === "ATHLETE" ? (
-                <Dumbbell size={18} />
-              ) : (
-                <Users size={18} />
-              )}
-            </span>
-            <strong>{title}</strong>
-            <span>{description}</span>
-          </button>
-        ))}
-      </div>
-      <section
-        className={styles.planSection}
-        aria-label={
-          type === "ATHLETE"
-            ? "Conta de atleta gratuita"
-            : "Planos para personal"
-        }
-        aria-busy={loadingPlans}
-      >
-        <div className={styles.stepLabel}>
-          <span>02</span>
-          {type === "ATHLETE" ? "Seu ponto de partida" : "Escolha seu plano"}
-        </div>
-        {type === "ATHLETE" ? (
-          <div className={styles.freePlan}>
-            <div className={styles.freePlanTop}>
-              <h2>Grátis</h2>
-              <span className={styles.freeBadge}>SEM MENSALIDADE</span>
-            </div>
-            <p>O primeiro passo não precisa esperar.</p>
-            <ul className={styles.benefitList}>
-              {[
-                "Organize e personalize seus treinos",
-                "Registre carga, repetições e RIR por série",
-                "Acompanhe seu histórico e evolução",
-              ].map((text) => (
-                <li key={text}>
-                  <Check size={13} />
-                  {text}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ) : (
-          <>
-            {loadingPlans ? (
-              <div role="status" className={styles.planLoader}>
-                <Loader2 size={17} className={styles.spin} />
-                Carregando planos...
-              </div>
-            ) : planError ? (
-              <div role="alert" className={styles.errorBlock}>
-                <div className={styles.alert}>
-                  <AlertCircle size={15} />
-                  <span>
-                    Não foi possível carregar os planos. Tente novamente para
-                    ver as opções disponíveis.
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  className={styles.retryButton}
-                  onClick={() => {
-                    setLoadingPlans(true);
-                    setPlanError(false);
-                    setRetry((n) => n + 1);
-                  }}
-                >
-                  <RotateCcw size={13} className="mr-2 inline" />
-                  Tentar novamente
-                </button>
-              </div>
-            ) : plans.length === 0 ? (
-              <p className={styles.emptyPlans}>
-                Nenhum plano disponível no momento. Você pode voltar mais tarde
-                ou começar com uma conta de atleta.
-              </p>
-            ) : (
-              <div className={styles.plansGrid}>
-                {plans.map((plan) => (
-                  <button
-                    key={plan.code}
-                    data-plan-code={plan.code}
-                    type="button"
-                    aria-pressed={planCode === plan.code}
-                    disabled={busy}
-                    onClick={() => setPlanCode(plan.code)}
-                    className={styles.planCard}
-                  >
-                    <span className={styles.radioMark} aria-hidden="true">
-                      {planCode === plan.code && <Check size={11} />}
-                    </span>
-                    <strong>{plan.name}</strong>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className={styles.planPrice}>
-                        {new Intl.NumberFormat("pt-BR", {
-                          style: "currency",
-                          currency: plan.currency,
-                        }).format(plan.monthlyPriceInCents / 100)}
-                        <small> / mês</small>
-                      </span>
-                      <span className="rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 text-[10px] font-bold text-emerald-400">
-                        30 DIAS GRÁTIS
-                      </span>
-                    </div>
-                    {plan.description && (
-                      <span className={styles.planDescription}>
-                        {plan.description}
-                      </span>
-                    )}
-                    <span className={styles.planEntitlements}>
-                      {plan.entitlements.map((e) => (
-                        <span key={e.entitlement}>
-                          <Check size={11} />
-                          <span>
-                            {labels[e.entitlement] ?? e.entitlement}
-                            {e.limitValue != null ? `: ${e.limitValue}` : ""}
-                          </span>
-                        </span>
-                      ))}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            )}
-            <p className={styles.plansNote}>
-              Seu cadastro inclui 30 dias de teste grátis com acesso total a todos os recursos. Sem cobrança imediata.
-            </p>
-          </>
-        )}
-      </section>
 
-      {type === "COACH" && (
-        <section
-          className="mt-6 space-y-4 rounded-2xl border border-border/80 bg-card/60 p-5 shadow-xs"
-          aria-label="Habilitação profissional obrigatória"
-        >
-          <div className={styles.stepLabel}>
-            <span>03</span> Habilitação profissional obrigatória (CREF)
-          </div>
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            Para atuar e prescrever treinos como Personal Trainer, informe suas credenciais profissionais e declare a responsabilidade técnica.
-          </p>
-
-          <div className="grid gap-3.5">
-            <label className="grid gap-1 text-xs font-semibold text-foreground">
-              Nome completo
-              <input
-                type="text"
-                required
-                disabled={busy}
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                placeholder="Seu nome completo"
-                minLength={5}
-                maxLength={180}
-                className="rounded-lg border border-border bg-background/80 px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none"
-              />
-            </label>
-
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <label className="grid gap-1 text-xs font-semibold text-foreground">
-                CPF
-                <input
-                  type="text"
-                  required
-                  disabled={busy}
-                  inputMode="numeric"
-                  autoComplete="off"
-                  value={cpf}
-                  onChange={(e) => setCpf(maskCpf(e.target.value))}
-                  placeholder="000.000.000-00"
-                  maxLength={14}
-                  className="rounded-lg border border-border bg-background/80 px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none"
+      <nav className={styles.stepper} aria-label="Etapas do cadastro">
+        {visibleSteps.map((item, idx) => {
+          const isCompleted = item.id < step;
+          const isCurrent = item.id === step;
+          return (
+            <Fragment key={item.id}>
+              {idx > 0 && (
+                <span
+                  className={styles.stepperLine}
+                  data-filled="true"
+                  aria-hidden="true"
                 />
-                {cpf.length > 0 && !isCpfValid && (
-                  <span className="text-[11px] text-destructive font-normal">
-                    CPF inválido
+              )}
+              <div
+                className={styles.stepperItem}
+                data-state={
+                  isCompleted ? "completed" : isCurrent ? "active" : "pending"
+                }
+              >
+                {isCompleted ? (
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => navigateToStep(item.id, "back")}
+                    className={styles.stepperCircle}
+                    aria-label={`Voltar para etapa ${item.id}: ${item.label}`}
+                  >
+                    {item.id}
+                  </button>
+                ) : (
+                  <span
+                    className={styles.stepperCircle}
+                    aria-current={isCurrent ? "step" : undefined}
+                  >
+                    {item.id}
                   </span>
                 )}
-              </label>
+                <span className={styles.stepperText}>{item.label}</span>
+              </div>
+            </Fragment>
+          );
+        })}
+      </nav>
 
-              <div className="grid grid-cols-2 gap-2">
+      <div
+        key={step}
+        className={
+          direction === "forward"
+            ? styles.stepPanelForward
+            : styles.stepPanelBack
+        }
+      >
+        {step === 1 && (
+          <section aria-label="Tipo de conta">
+            <div className={styles.stepLabel}>
+              <span>01</span> Como você vai usar o Trainvy?
+            </div>
+            <div
+              className={styles.roleGrid}
+              role="group"
+              aria-label="Tipo de conta"
+            >
+              {(
+                [
+                  [
+                    "ATHLETE",
+                    "Quero treinar",
+                    "Organize seus treinos, registre suas cargas e acompanhe sua evolução.",
+                  ],
+                  [
+                    "COACH",
+                    "Sou Personal",
+                    "Organize seus alunos, acompanhe os treinos e monte planejamentos.",
+                  ],
+                ] as const
+              ).map(([value, title, description]) => (
+                <button
+                  key={value}
+                  data-account-type={value}
+                  type="button"
+                  aria-pressed={type === value}
+                  disabled={busy}
+                  onClick={() => chooseType(value)}
+                  className={styles.roleCard}
+                >
+                  <span className={styles.radioMark} aria-hidden="true">
+                    {type === value && <Check size={11} />}
+                  </span>
+                  <span className={styles.roleIcon}>
+                    {value === "ATHLETE" ? (
+                      <Dumbbell size={18} />
+                    ) : (
+                      <Users size={18} />
+                    )}
+                  </span>
+                  <strong>{title}</strong>
+                  <span>{description}</span>
+                </button>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {step === 2 && type && (
+          <section
+            className={styles.planSection}
+            aria-label={
+              type === "ATHLETE"
+                ? "Conta de atleta gratuita"
+                : "Planos para personal"
+            }
+            aria-busy={loadingPlans}
+          >
+            <div className={styles.stepHeaderRow}>
+              <div className={styles.stepLabel}>
+                <span>02</span>
+                {type === "ATHLETE" ? "Seu ponto de partida" : "Escolha seu plano"}
+              </div>
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => navigateToStep(1, "back")}
+                className={styles.backStepButton}
+              >
+                <ArrowLeft size={13} />
+                Trocar perfil
+              </button>
+            </div>
+
+            {type === "ATHLETE" ? (
+              <>
+                <div className={styles.freePlan}>
+                  <div className={styles.freePlanTop}>
+                    <h2>Grátis</h2>
+                    <span className={styles.freeBadge}>SEM MENSALIDADE</span>
+                  </div>
+                  <p>O primeiro passo não precisa esperar.</p>
+                  <ul className={styles.benefitList}>
+                    {[
+                      "Organize e personalize seus treinos",
+                      "Registre carga, repetições e RIR por série",
+                      "Acompanhe seu histórico e evolução",
+                    ].map((text) => (
+                      <li key={text}>
+                        <Check size={13} />
+                        {text}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {error && (
+                  <div role="alert" className={styles.alert}>
+                    <AlertCircle size={16} />
+                    <span>{error}</span>
+                  </div>
+                )}
+
+                <button
+                  type="button"
+                  className={`${styles.googleButton} mt-5`}
+                  aria-busy={busy}
+                  disabled={busy}
+                  onClick={submit}
+                >
+                  {busy ? (
+                    <Loader2 className={styles.spin} size={17} />
+                  ) : authenticated ? (
+                    <ShieldCheck size={18} />
+                  ) : (
+                    <Image
+                      src="/google-icon.svg"
+                      alt=""
+                      width={18}
+                      height={18}
+                    />
+                  )}
+                  {busy
+                    ? "Preparando cadastro..."
+                    : authenticated
+                      ? "Concluir cadastro"
+                      : "Continuar com Google"}
+                  {!busy && (
+                    <ArrowUpRight size={17} className={styles.buttonArrow} />
+                  )}
+                </button>
+              </>
+            ) : (
+              <>
+                {loadingPlans ? (
+                  <div role="status" className={styles.planLoader}>
+                    <Loader2 size={17} className={styles.spin} />
+                    Carregando planos...
+                  </div>
+                ) : planError ? (
+                  <div role="alert" className={styles.errorBlock}>
+                    <div className={styles.alert}>
+                      <AlertCircle size={15} />
+                      <span>
+                        Não foi possível carregar os planos. Tente novamente
+                        para ver as opções disponíveis.
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      className={styles.retryButton}
+                      onClick={() => {
+                        setLoadingPlans(true);
+                        setPlanError(false);
+                        setRetry((n) => n + 1);
+                      }}
+                    >
+                      <RotateCcw size={13} className="mr-2 inline" />
+                      Tentar novamente
+                    </button>
+                  </div>
+                ) : plans.length === 0 ? (
+                  <p className={styles.emptyPlans}>
+                    Nenhum plano disponível no momento. Você pode voltar mais
+                    tarde ou começar com uma conta de atleta.
+                  </p>
+                ) : (
+                  <div className={styles.plansGrid}>
+                    {plans.map((plan) => (
+                      <button
+                        key={plan.code}
+                        data-plan-code={plan.code}
+                        type="button"
+                        aria-pressed={planCode === plan.code}
+                        disabled={busy}
+                        onClick={() => setPlanCode(plan.code)}
+                        className={styles.planCard}
+                      >
+                        <span className={styles.radioMark} aria-hidden="true">
+                          {planCode === plan.code && <Check size={11} />}
+                        </span>
+                        <strong>{plan.name}</strong>
+                        <span className={styles.trialBadge}>
+                          30 DIAS GRÁTIS
+                        </span>
+                        <div className={styles.planPriceRow}>
+                          <span className={styles.planPrice}>
+                            {new Intl.NumberFormat("pt-BR", {
+                              style: "currency",
+                              currency: plan.currency,
+                            }).format(plan.monthlyPriceInCents / 100)}
+                          </span>
+                          <small className={styles.planPeriod}>/ mês</small>
+                        </div>
+                        {plan.description && (
+                          <span className={styles.planDescription}>
+                            {plan.description}
+                          </span>
+                        )}
+                        <span className={styles.planEntitlements}>
+                          {plan.entitlements.map((e) => (
+                            <span key={e.entitlement}>
+                              <Check size={11} />
+                              <span>
+                                {e.entitlement === "MANAGE_ATHLETES"
+                                  ? e.limitValue != null
+                                    ? `Até ${e.limitValue} alunos`
+                                    : "Alunos ilimitados"
+                                  : `${labels[e.entitlement] ?? e.entitlement}${e.limitValue != null ? `: ${e.limitValue}` : ""}`}
+                              </span>
+                            </span>
+                          ))}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                <p className={styles.plansNote}>
+                  Seu cadastro inclui 30 dias de teste grátis com acesso total a
+                  todos os recursos. Sem cobrança imediata.
+                </p>
+
+                <button
+                  type="button"
+                  disabled={
+                    busy || loadingPlans || planError || !planCode
+                  }
+                  onClick={() => navigateToStep(3, "forward")}
+                  className={`${styles.primaryButton} mt-5`}
+                >
+                  Continuar
+                  <ArrowRight size={17} className={styles.buttonArrow} />
+                </button>
+              </>
+            )}
+          </section>
+        )}
+
+        {step === 3 && type === "COACH" && (
+          <section aria-label="Habilitação profissional obrigatória">
+            <div className={styles.stepHeaderRow}>
+              <div className={styles.stepLabel}>
+                <span>03</span> Habilitação profissional (CREF)
+              </div>
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => navigateToStep(2, "back")}
+                className={styles.backStepButton}
+              >
+                <ArrowLeft size={13} />
+                Trocar plano
+              </button>
+            </div>
+
+            <div className="space-y-4 rounded-2xl border border-border/80 bg-card/60 p-5 shadow-xs">
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Para atuar e prescrever treinos como Personal Trainer, informe
+                suas credenciais profissionais e declare a responsabilidade
+                técnica.
+              </p>
+
+              <div className="grid gap-3.5">
                 <label className="grid gap-1 text-xs font-semibold text-foreground">
-                  CREF (ex: 123456-G)
+                  Nome completo
                   <input
                     type="text"
                     required
                     disabled={busy}
-                    autoCapitalize="characters"
-                    autoComplete="off"
-                    value={cref}
-                    onChange={(e) => setCref(maskCref(e.target.value))}
-                    placeholder="123456-G"
-                    maxLength={8}
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="Seu nome completo"
+                    minLength={5}
+                    maxLength={180}
                     className="rounded-lg border border-border bg-background/80 px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none"
                   />
-                  {cref.length > 0 && !isCrefValid && (
-                    <span className="text-[11px] text-destructive font-normal">
-                      Formato inválido
-                    </span>
-                  )}
                 </label>
+
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <label className="grid gap-1 text-xs font-semibold text-foreground">
+                    CPF
+                    <input
+                      type="text"
+                      required
+                      disabled={busy}
+                      inputMode="numeric"
+                      autoComplete="off"
+                      value={cpf}
+                      onChange={(e) => setCpf(maskCpf(e.target.value))}
+                      placeholder="000.000.000-00"
+                      maxLength={14}
+                      className="rounded-lg border border-border bg-background/80 px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none"
+                    />
+                    {cpf.length > 0 && !isCpfValid && (
+                      <span className="text-[11px] text-destructive font-normal">
+                        CPF inválido
+                      </span>
+                    )}
+                  </label>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <label className="grid gap-1 text-xs font-semibold text-foreground">
+                      CREF (ex: 123456-G)
+                      <input
+                        type="text"
+                        required
+                        disabled={busy}
+                        autoCapitalize="characters"
+                        autoComplete="off"
+                        value={cref}
+                        onChange={(e) => setCref(maskCref(e.target.value))}
+                        placeholder="123456-G"
+                        maxLength={8}
+                        className="rounded-lg border border-border bg-background/80 px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none"
+                      />
+                      {cref.length > 0 && !isCrefValid && (
+                        <span className="text-[11px] text-destructive font-normal">
+                          Formato inválido
+                        </span>
+                      )}
+                    </label>
+                    <label className="grid gap-1 text-xs font-semibold text-foreground">
+                      UF do registro
+                      <select
+                        required
+                        disabled={busy}
+                        value={region}
+                        onChange={(e) => setRegion(e.target.value)}
+                        className="rounded-lg border border-border bg-background/80 px-3 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none"
+                      >
+                        <option value="">UF</option>
+                        {states.map((s) => (
+                          <option key={s} value={s}>
+                            {s}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  </div>
+                </div>
+
                 <label className="grid gap-1 text-xs font-semibold text-foreground">
-                  UF do registro
-                  <select
+                  Categoria / Habilitação
+                  <input
+                    type="text"
                     required
                     disabled={busy}
-                    value={region}
-                    onChange={(e) => setRegion(e.target.value)}
-                    className="rounded-lg border border-border bg-background/80 px-3 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none"
-                  >
-                    <option value="">UF</option>
-                    {states.map((s) => (
-                      <option key={s} value={s}>
-                        {s}
-                      </option>
-                    ))}
-                  </select>
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    placeholder="Ex.: Graduado (Bacharelado)"
+                    minLength={3}
+                    maxLength={160}
+                    className="rounded-lg border border-border bg-background/80 px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none"
+                  />
                 </label>
+
+                {term ? (
+                  <div className="rounded-xl border border-border/80 bg-background/60 p-3.5 space-y-2.5">
+                    <LegalDocumentReader
+                      document={{
+                        ...term,
+                        title:
+                          "Declaração de Habilitação e Responsabilidade Técnica",
+                      }}
+                    />
+                    <label className="flex items-start gap-2.5 text-xs text-muted-foreground leading-relaxed cursor-pointer select-none">
+                      <input
+                        type="checkbox"
+                        required
+                        disabled={busy}
+                        checked={termAccepted}
+                        onChange={(e) => setTermAccepted(e.target.checked)}
+                        className="mt-0.5 size-4 rounded border-border text-primary focus:ring-primary shrink-0"
+                      />
+                      <span>
+                        Declaro sob as penas da lei que possuo registro ativo no
+                        CREF informado e assumo responsabilidade técnica
+                        exclusiva pelas prescrições realizadas.
+                      </span>
+                    </label>
+                  </div>
+                ) : (
+                  <div className="rounded-xl border border-border/60 bg-background/40 p-3 text-xs text-muted-foreground animate-pulse">
+                    Carregando termo de responsabilidade técnica...
+                  </div>
+                )}
               </div>
             </div>
 
-            <label className="grid gap-1 text-xs font-semibold text-foreground">
-              Categoria / Habilitação
-              <input
-                type="text"
-                required
-                disabled={busy}
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                placeholder="Ex.: Graduado (Bacharelado)"
-                minLength={3}
-                maxLength={160}
-                className="rounded-lg border border-border bg-background/80 px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none"
-              />
-            </label>
-
-            {term ? (
-              <div className="rounded-xl border border-border/80 bg-background/60 p-3.5 space-y-2.5">
-                <LegalDocumentReader
-                  document={{
-                    ...term,
-                    title: "Declaração de Habilitação e Responsabilidade Técnica",
-                  }}
-                />
-                <label className="flex items-start gap-2.5 text-xs text-muted-foreground leading-relaxed cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    required
-                    disabled={busy}
-                    checked={termAccepted}
-                    onChange={(e) => setTermAccepted(e.target.checked)}
-                    className="mt-0.5 size-4 rounded border-border text-primary focus:ring-primary shrink-0"
-                  />
-                  <span>
-                    Declaro sob as penas da lei que possuo registro ativo no CREF informado e assumo responsabilidade técnica exclusiva pelas prescrições realizadas.
-                  </span>
-                </label>
-              </div>
-            ) : (
-              <div className="rounded-xl border border-border/60 bg-background/40 p-3 text-xs text-muted-foreground animate-pulse">
-                Carregando termo de responsabilidade técnica...
+            {error && (
+              <div role="alert" className={`${styles.alert} mt-4`}>
+                <AlertCircle size={16} />
+                <span>{error}</span>
               </div>
             )}
-          </div>
-        </section>
-      )}
 
-      {error && (
-        <div role="alert" className={styles.alert}>
-          <AlertCircle size={16} />
-          <span>{error}</span>
-        </div>
-      )}
-      <button
-        type="button"
-        className={styles.googleButton}
-        aria-busy={busy}
-        disabled={
-          busy ||
-          (type === "COACH" &&
-            (loadingPlans || planError || !planCode || !isCoachFormValid))
-        }
-        onClick={submit}
-      >
-        {busy ? (
-          <Loader2 className={styles.spin} size={17} />
-        ) : authenticated ? (
-          <ShieldCheck size={18} />
-        ) : (
-          <Image src="/google-icon.svg" alt="" width={18} height={18} />
+            <button
+              type="button"
+              className={`${styles.googleButton} mt-5`}
+              aria-busy={busy}
+              disabled={busy || !isCoachFormValid}
+              onClick={submit}
+            >
+              {busy ? (
+                <Loader2 className={styles.spin} size={17} />
+              ) : authenticated ? (
+                <ShieldCheck size={18} />
+              ) : (
+                <Image src="/google-icon.svg" alt="" width={18} height={18} />
+              )}
+              {busy
+                ? "Preparando cadastro..."
+                : authenticated
+                  ? "Concluir cadastro"
+                  : "Continuar com Google"}
+              {!busy && (
+                <ArrowUpRight size={17} className={styles.buttonArrow} />
+              )}
+            </button>
+
+            {!isCoachFormValid && (
+              <p className="text-center text-xs text-amber-500/90 mt-3">
+                Preencha seus dados profissionais (CREF) e aceite o termo para
+                continuar.
+              </p>
+            )}
+          </section>
         )}
-        {busy
-          ? "Preparando cadastro..."
-          : authenticated
-            ? "Concluir cadastro"
-            : "Continuar com Google"}
-        {!busy && <ArrowUpRight size={17} className={styles.buttonArrow} />}
-      </button>
-
-      {type === "COACH" && !isCoachFormValid && (
-        <p className="text-center text-xs text-amber-500/90 -mt-2">
-          Preencha seus dados profissionais (CREF) e aceite o termo para continuar.
-        </p>
-      )}
+      </div>
 
       <p className={styles.terms}>
         Ao continuar, você concorda com nossos{" "}

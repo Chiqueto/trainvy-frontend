@@ -36,7 +36,7 @@ export default async function SignupPage({
     <SignupForm
       authenticated={Boolean(session?.data?.user)}
       returnTo={sanitizedReturnTo}
-      initialAccountType={accountType === "COACH" ? "COACH" : "ATHLETE"}
+      initialAccountType={accountType === "COACH" ? "COACH" : undefined}
     />
   );
 }

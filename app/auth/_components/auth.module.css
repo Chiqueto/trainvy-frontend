@@ -433,10 +433,117 @@
   flex-wrap: wrap;
   color: #93a4b8;
   font-size: 11px;
-  margin: 16px 0 30px;
+  margin: 16px 0 22px;
 }
 .smallLogin a {
   color: #9bd8fd;
+}
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.stepperItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  animation: stepperPop 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.stepperCircle {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid #4a769755;
+  background: #0f1b28;
+  color: #7ea8c9;
+  font:
+    600 11px var(--font-geist-mono),
+    monospace;
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.2s ease;
+}
+.stepperItem[data-state="active"] .stepperCircle {
+  border-color: #38b6ff;
+  color: #7ad0ff;
+  background: #102a42;
+  box-shadow: 0 0 0 4px #38b6ff1c;
+}
+.stepperItem[data-state="completed"] .stepperCircle {
+  background: #38b6ff;
+  border-color: #38b6ff;
+  color: #071827;
+  box-shadow: 0 0 14px #38b6ff44;
+}
+.stepperItem[data-state="completed"] button.stepperCircle:hover:not(:disabled) {
+  transform: scale(1.06);
+  background: #5ec5ff;
+}
+.stepperText {
+  font-size: 11px;
+  font-weight: 550;
+  color: #6f88a0;
+  transition: color 0.25s ease;
+}
+.stepperItem[data-state="active"] .stepperText {
+  color: #e4f1fc;
+}
+.stepperItem[data-state="completed"] .stepperText {
+  color: #7ecbff;
+}
+.stepperLine {
+  flex: 1;
+  min-width: 22px;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #38b6ff, #38b6ff99);
+  transform-origin: left center;
+  animation: lineGrow 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.stepPanelForward {
+  animation: stepSlideForward 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.stepPanelBack {
+  animation: stepSlideBack 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.stepHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 13px;
+}
+.stepHeaderRow .stepLabel {
+  margin-bottom: 0;
+}
+.backStepButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid #ffffff1a;
+  background: #111c28;
+  color: #9bb9d4;
+  font-size: 10px;
+  font-weight: 550;
+  white-space: nowrap;
+  transition:
+    border-color 0.2s,
+    color 0.2s,
+    background 0.2s;
+}
+.backStepButton:hover:not(:disabled) {
+  border-color: #38b6ff66;
+  color: #dff1ff;
+  background: #162b3f;
 }
 .stepLabel {
   display: flex;
@@ -600,6 +707,9 @@
 }
 .planCard {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   text-align: left;
   padding: 17px 14px;
   border: 1px solid #ffffff17;
@@ -610,7 +720,7 @@
     background 0.2s,
     border-color 0.2s;
   min-width: 0;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 .planCard[aria-pressed="true"] {
   border-color: #38b6ff8c;
@@ -618,26 +728,50 @@
 }
 .planCard > strong {
   display: block;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
-  padding-right: 15px;
+  padding-right: 22px;
+}
+.trialBadge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin-top: 8px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.14);
+  border: 1px solid rgba(16, 185, 129, 0.32);
+  color: #34d399;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.planPriceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  flex-wrap: nowrap;
+  margin-top: 12px;
+  white-space: nowrap;
 }
 .planPrice {
-  display: block;
+  display: inline-block;
   font:
-    550 25px var(--font-inter-tight),
+    550 24px/1.1 var(--font-inter-tight),
     Arial,
     sans-serif;
   letter-spacing: -0.03em;
-  margin-top: 18px;
+  white-space: nowrap;
 }
-.planPrice small {
+.planPeriod {
   font:
-    9px var(--font-geist-sans),
+    400 10px var(--font-geist-sans),
     Arial,
     sans-serif;
   color: #829eb6;
   letter-spacing: 0;
+  white-space: nowrap;
 }
 .planDescription {
   display: block;
@@ -847,6 +981,44 @@
     transform: translateY(0);
   }
 }
+@keyframes stepperPop {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes lineGrow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes stepSlideForward {
+  from {
+    opacity: 0;
+    transform: translateX(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes stepSlideBack {
+  from {
+    opacity: 0;
+    transform: translateX(-22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
 @keyframes visualBreath {
   from {
     transform: scale(1);
@@ -921,6 +1093,12 @@
     font-size: 43px;
   }
 }
+@media (max-width: 560px) {
+  .plansGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
 @media (max-width: 440px) {
   .header {
     padding-inline: 20px;
@@ -971,10 +1149,10 @@
     right: 12px;
   }
   .planCard {
-    padding: 16px 12px;
+    padding: 16px 14px;
   }
   .planPrice {
-    font-size: 23px;
+    font-size: 24px;
   }
   .footer {
     width: calc(100% - 40px);
@@ -988,9 +1166,6 @@
 @media (max-width: 350px) {
   .heading {
     font-size: 34px;
-  }
-  .plansGrid {
-    grid-template-columns: 1fr;
   }
   .googleButton {
     font-size: 11px;
