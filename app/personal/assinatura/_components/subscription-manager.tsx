@@ -439,7 +439,11 @@ export function SubscriptionManager({
                 <strong>
                   {formatMoney(initial.pendingUpgrade.differenceInCents)}
                 </strong>{" "}
-                · Status: {initial.pendingUpgrade.status} · Expira em{" "}
+                ·{" "}
+                {initial.pendingUpgrade.status === "PAID_PENDING_PROVIDER_SYNC"
+                  ? "Sincronizando assinatura"
+                  : "Aguardando pagamento"}{" "}
+                · Expira em{" "}
                 {formatDate(initial.pendingUpgrade.expiresAt)}
               </p>
             </div>
@@ -492,6 +496,7 @@ export function SubscriptionManager({
               variant="outline"
               disabled={busy}
               onClick={handleCancelDowngrade}
+              className="w-full sm:w-auto whitespace-normal h-auto min-h-9 py-2 text-center"
             >
               Cancelar downgrade agendado
             </Button>
@@ -635,14 +640,16 @@ export function SubscriptionManager({
                         size="sm"
                         disabled={busy || Boolean(initial.pendingUpgrade)}
                         onClick={() => handleUpgrade(plan.code)}
-                        className="gap-1.5"
+                        className="w-full gap-1.5 whitespace-normal h-auto min-h-9 py-2 text-center"
                       >
-                        <ArrowUpRight className="size-3.5" />
-                        Fazer upgrade (+{" "}
-                        {formatMoney(
-                          plan.monthlyPriceInCents - sub.monthlyPriceInCents,
-                        )}
-                        )
+                        <ArrowUpRight className="size-3.5 shrink-0" />
+                        <span>
+                          Fazer upgrade (+{" "}
+                          {formatMoney(
+                            plan.monthlyPriceInCents - sub.monthlyPriceInCents,
+                          )}
+                          )
+                        </span>
                       </Button>
                     ) : (
                       <Button
@@ -650,10 +657,10 @@ export function SubscriptionManager({
                         variant="outline"
                         disabled={busy || Boolean(initial.pendingDowngrade)}
                         onClick={() => handleOpenDowngradePreview(plan.code)}
-                        className="gap-1.5"
+                        className="w-full gap-1.5 whitespace-normal h-auto min-h-9 py-2 text-center"
                       >
-                        <ArrowDownRight className="size-3.5" />
-                        Agendar downgrade
+                        <ArrowDownRight className="size-3.5 shrink-0" />
+                        <span>Agendar downgrade</span>
                       </Button>
                     )}
                   </div>
@@ -752,11 +759,12 @@ export function SubscriptionManager({
                   (downgradePreview.excessAthletesCount > 0 && !ackExcess)
                 }
                 onClick={handleScheduleDowngrade}
+                className="w-full sm:w-auto whitespace-normal h-auto min-h-10 py-2.5 text-center"
               >
                 {busy ? (
-                  <Loader2 className="size-4 animate-spin mr-2" />
+                  <Loader2 className="size-4 animate-spin mr-2 shrink-0" />
                 ) : null}
-                Confirmar agendamento de downgrade
+                <span>Confirmar agendamento de downgrade</span>
               </Button>
             </div>
           )}

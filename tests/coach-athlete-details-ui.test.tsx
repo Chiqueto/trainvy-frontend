@@ -167,6 +167,7 @@ describe("TASK 6.2A — Coach Athlete Overview & Details UI", () => {
       expect(screen.getByText("lucas@aluno.test")).toBeDefined();
       expect(screen.getByText("Vínculo Ativo")).toBeDefined();
       expect(screen.getByText("Início do Vínculo")).toBeDefined();
+      expect(screen.queryByText("ID do Aluno")).toBeNull();
       expect(screen.getByText(/Voltar para Alunos/i)).toBeDefined();
 
       // Guardrail de privacidade: não renderiza prescrição ou métricas privadas

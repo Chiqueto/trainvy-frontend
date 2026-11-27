@@ -300,7 +300,7 @@ export default async function AthleteDetailsPage({
                 </p>
               </div>
 
-              <div className="w-full grid grid-cols-2 gap-2 pt-2 border-t border-border/60 text-left">
+              <div className="w-full pt-2 border-t border-border/60 text-left">
                 <div className="rounded-xl bg-muted/40 p-2.5">
                   <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider block">
                     Início do Vínculo
@@ -308,18 +308,6 @@ export default async function AthleteDetailsPage({
                   <span className="text-xs font-semibold text-foreground flex items-center gap-1 mt-0.5">
                     <Calendar className="size-3 text-primary shrink-0" />
                     <span className="truncate">{formattedDate}</span>
-                  </span>
-                </div>
-
-                <div className="rounded-xl bg-muted/40 p-2.5">
-                  <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider block">
-                    ID do Aluno
-                  </span>
-                  <span
-                    className="text-xs font-mono font-medium text-foreground truncate block mt-0.5"
-                    title={athleteData.athleteId}
-                  >
-                    {athleteData.athleteId.substring(0, 10)}...
                   </span>
                 </div>
               </div>
