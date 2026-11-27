@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { CoachGuidedTour } from "@/app/personal/_components/coach-guided-tour";
+import { CoachTourProvider } from "@/app/_components/coach-tour-provider";
 import { CreateStudentModal } from "@/app/personal/_components/create-student-modal";
 import {
   completeTourAction,
@@ -13,6 +14,13 @@ const { push, refresh } = vi.hoisted(() => ({
   refresh: vi.fn(),
 }));
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push, refresh }) }));
+vi.mock("@/app/_lib/auth-client", () => ({
+  authClient: {
+    useSession: () => ({
+      data: { user: { id: "coach-1" }, session: { id: "sess-1" } },
+    }),
+  },
+}));
 vi.mock("@/app/personal/_tour-actions", () => ({
   loadToursAction: vi.fn(),
   completeTourAction: vi.fn(),
@@ -73,6 +81,28 @@ describe("Guias do personal", () => {
     render(<CoachGuidedTour tour="builder" />);
     await waitFor(() => expect(loadToursAction).toHaveBeenCalled());
     expect(screen.queryByRole("button")).toBeNull();
+  });
+
+  it("mantém estado do guia em cache ao trocar de aba dentro do CoachTourProvider", async () => {
+    vi.mocked(loadToursAction).mockResolvedValue({
+      coachOnboardingCompleted: true,
+      workoutBuilderOnboardingCompleted: true,
+    });
+    const view = render(
+      <CoachTourProvider>
+        <CoachGuidedTour tour="workspace" key="tab-a" />
+      </CoachTourProvider>,
+    );
+    await screen.findByRole("button", { name: "Rever guia" });
+    expect(loadToursAction).toHaveBeenCalledTimes(1);
+
+    view.rerender(
+      <CoachTourProvider>
+        <CoachGuidedTour tour="builder" key="tab-b" />
+      </CoachTourProvider>,
+    );
+    expect(screen.getByRole("button", { name: "Guia do editor" })).toBeDefined();
+    expect(loadToursAction).toHaveBeenCalledTimes(1);
   });
 });
 

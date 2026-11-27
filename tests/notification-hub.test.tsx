@@ -17,9 +17,17 @@ vi.mock("@/app/_actions/notifications", () => ({
   loadNotificationsAction: load,
   readNotificationAction: read,
 }));
+vi.mock("@/app/_lib/auth-client", () => ({
+  authClient: {
+    useSession: () => ({
+      data: { user: { id: "user-1" }, session: { id: "sess-1" } },
+    }),
+  },
+}));
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push }) }));
 vi.mock("sonner", () => ({ toast: { error: toastError } }));
 import { NotificationHub } from "@/app/_components/notification-hub";
+import { NotificationsProvider } from "@/app/_components/notifications-provider";
 
 const item = {
   id: "one",
@@ -133,5 +141,25 @@ describe("notification hub", () => {
     expect(
       screen.getByRole("button", { name: "Tentar novamente" }),
     ).toBeDefined();
+  });
+
+  it("shares notifications across tab switches inside NotificationsProvider without refetching", async () => {
+    const view = render(
+      <NotificationsProvider>
+        <NotificationHub variant="header" key="tab-1" />
+      </NotificationsProvider>,
+    );
+    await screen.findByRole("button", { name: "Notificações, 1 não lidas" });
+    expect(load).toHaveBeenCalledTimes(1);
+
+    view.rerender(
+      <NotificationsProvider>
+        <NotificationHub variant="header" key="tab-2" />
+      </NotificationsProvider>,
+    );
+    expect(
+      screen.getByRole("button", { name: "Notificações, 1 não lidas" }),
+    ).toBeDefined();
+    expect(load).toHaveBeenCalledTimes(1);
   });
 });

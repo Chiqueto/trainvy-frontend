@@ -5,6 +5,7 @@ import { Dialog } from "radix-ui";
 import { CircleHelp, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { useCoachTourContext } from "@/app/_components/coach-tour-provider";
 import { completeTourAction, loadToursAction } from "../_tour-actions";
 
 const workspaceSteps = [
@@ -61,8 +62,10 @@ const builderSteps = [
 ];
 
 export function CoachGuidedTour({ tour }: { tour: "workspace" | "builder" }) {
-  const [available, setAvailable] = useState(false);
-  const [open, setOpen] = useState(false);
+  const shared = useCoachTourContext();
+  const [localAvailable, setLocalAvailable] = useState(false);
+  const [localOpen, setLocalOpen] = useState(false);
+  const [manualOpen, setManualOpen] = useState<boolean | null>(null);
   const [step, setStep] = useState(0);
   const [pending, startTransition] = useTransition();
   const [rect, setRect] = useState<{
@@ -75,13 +78,31 @@ export function CoachGuidedTour({ tour }: { tour: "workspace" | "builder" }) {
     tour === "workspace" ? workspaceSteps : builderSteps;
   const current = steps[step];
 
+  const available = shared ? Boolean(shared.loaded && shared.state) : localAvailable;
+  const autoOpen = shared
+    ? Boolean(
+        shared.state &&
+          !(tour === "workspace"
+            ? shared.state.coachOnboardingCompleted
+            : shared.state.workoutBuilderOnboardingCompleted),
+      )
+    : localOpen;
+  const open = manualOpen !== null ? manualOpen : autoOpen;
+
   useEffect(() => {
+    if (shared) {
+      if (!shared.loaded) {
+        void shared.ensureLoaded();
+      }
+      return;
+    }
+
     let alive = true;
     loadToursAction()
       .then((state) => {
         if (!alive || !state) return;
-        setAvailable(true);
-        setOpen(
+        setLocalAvailable(true);
+        setLocalOpen(
           !(tour === "workspace"
             ? state.coachOnboardingCompleted
             : state.workoutBuilderOnboardingCompleted),
@@ -91,7 +112,7 @@ export function CoachGuidedTour({ tour }: { tour: "workspace" | "builder" }) {
     return () => {
       alive = false;
     };
-  }, [tour]);
+  }, [shared, tour]);
 
   useEffect(() => {
     if (!open || !current.target) return;
@@ -130,7 +151,11 @@ export function CoachGuidedTour({ tour }: { tour: "workspace" | "builder" }) {
   function finish() {
     startTransition(async () => {
       const saved = await completeTourAction(tour);
-      setOpen(false);
+      if (shared && saved) {
+        shared.markCompleted(tour);
+      }
+      setManualOpen(false);
+      setLocalOpen(false);
       if (!saved)
         toast.error(
           "Guia fechado. Não foi possível salvar sua escolha; ele pode aparecer no próximo acesso.",
@@ -152,7 +177,8 @@ export function CoachGuidedTour({ tour }: { tour: "workspace" | "builder" }) {
           size="sm"
           onClick={() => {
             setStep(0);
-            setOpen(true);
+            setManualOpen(true);
+            setLocalOpen(true);
           }}
           className="h-8 gap-1.5 rounded-lg border-border/60 bg-background/60 px-2.5 font-heading text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
         >

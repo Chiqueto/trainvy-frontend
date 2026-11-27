@@ -10,6 +10,7 @@ import {
   loadNotificationsAction,
   readNotificationAction,
 } from "@/app/_actions/notifications";
+import { useNotificationsContext } from "@/app/_components/notifications-provider";
 import type { ListNotifications200 } from "@/app/_lib/api/fetch-generated";
 
 function destination(data: unknown): string | null {
@@ -36,24 +37,25 @@ export function NotificationHub({
   variant?: "bell" | "card" | "header";
 }) {
   const router = useRouter();
+  const shared = useNotificationsContext();
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState<ListNotifications200 | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [saving, setSaving] = useState(false);
+  const [localData, setLocalData] = useState<ListNotifications200 | null>(null);
+  const [localError, setLocalError] = useState<string | null>(null);
+  const [localLoading, setLocalLoading] = useState(false);
+  const [localSaving, setLocalSaving] = useState(false);
   const busy = useRef(false);
   const alive = useRef(true);
 
-  const load = useCallback(async (cursor?: string) => {
+  const localLoad = useCallback(async (cursor?: string) => {
     if (busy.current) return;
     busy.current = true;
-    setLoading(true);
+    setLocalLoading(true);
     try {
       const result = await loadNotificationsAction(cursor);
       if (!alive.current) return;
       if (result.success) {
         const page = result.data;
-        setData((previous) =>
+        setLocalData((previous) =>
           cursor && previous
             ? {
                 ...page,
@@ -67,37 +69,71 @@ export function NotificationHub({
               }
             : page,
         );
-        setError(null);
-      } else setError(result.error);
+        setLocalError(null);
+      } else setLocalError(result.error);
     } catch {
-      if (alive.current) setError("Não foi possível carregar as notificações.");
+      if (alive.current)
+        setLocalError("Não foi possível carregar as notificações.");
     } finally {
       busy.current = false;
-      if (alive.current) setLoading(false);
+      if (alive.current) setLocalLoading(false);
     }
   }, []);
 
   useEffect(() => {
+    if (shared) return;
     alive.current = true;
     const refresh = () => {
-      if (document.visibilityState === "visible") void load();
+      if (document.visibilityState === "visible") void localLoad();
     };
-    void load();
+    const initialTimer = window.setTimeout(() => {
+      if (alive.current) void localLoad();
+    }, 0);
     const timer = window.setInterval(refresh, 60000);
     window.addEventListener("focus", refresh);
     document.addEventListener("visibilitychange", refresh);
     return () => {
       alive.current = false;
+      window.clearTimeout(initialTimer);
       window.clearInterval(timer);
       window.removeEventListener("focus", refresh);
       document.removeEventListener("visibilitychange", refresh);
     };
-  }, [load]);
+  }, [localLoad, shared]);
+
+  const data = shared ? shared.data : localData;
+  const error = shared ? shared.error : localError;
+  const loading = shared ? shared.loading : localLoading;
+  const saving = shared ? shared.saving : localSaving;
+
+  const load = useCallback(
+    async (cursor?: string, options?: { force?: boolean }) => {
+      if (shared) {
+        await shared.load(cursor, options);
+        return;
+      }
+      await localLoad(cursor);
+    },
+    [shared, localLoad],
+  );
 
   async function markRead(id?: string, url?: string | null) {
+    if (shared) {
+      const res = await shared.markRead(id);
+      if (!res.ok) {
+        toast.error(res.error);
+        return;
+      }
+      if (url) {
+        setOpen(false);
+        router.push(url);
+      }
+      return;
+    }
+
     if (busy.current) return;
     busy.current = true;
-    setSaving(true);
+    setLocalSaving(true);
     try {
       const result = await readNotificationAction(id);
       if (!result.success) {
@@ -105,7 +141,7 @@ export function NotificationHub({
         return;
       }
       const readAt = new Date().toISOString();
-      setData((previous) =>
+      setLocalData((previous) =>
         previous
           ? {
               ...previous,
@@ -136,7 +172,7 @@ export function NotificationHub({
       toast.error("Não foi possível marcar como lida. Tente novamente.");
     } finally {
       busy.current = false;
-      setSaving(false);
+      setLocalSaving(false);
     }
   }
 
@@ -234,7 +270,7 @@ export function NotificationHub({
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => void load()}
+                  onClick={() => void load(undefined, { force: true })}
                   disabled={loading}
                 >
                   Tentar novamente

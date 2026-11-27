@@ -14,6 +14,8 @@ import {
   AiAvailabilityProvider,
   AiFeature,
 } from "@/app/_components/ai-availability-provider";
+import { NotificationsProvider } from "@/app/_components/notifications-provider";
+import { CoachTourProvider } from "@/app/_components/coach-tour-provider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -94,13 +96,17 @@ export default function RootLayout({
             <NuqsAdapter>
               <FeatureConsentProvider>
                 <AiAvailabilityProvider>
-                  {children}
-                  <PwaInstallPrompt />
-                  <Suspense>
-                    <AiFeature capability="chat">
-                      <Chat />
-                    </AiFeature>
-                  </Suspense>
+                  <NotificationsProvider>
+                    <CoachTourProvider>
+                      {children}
+                      <PwaInstallPrompt />
+                      <Suspense>
+                        <AiFeature capability="chat">
+                          <Chat />
+                        </AiFeature>
+                      </Suspense>
+                    </CoachTourProvider>
+                  </NotificationsProvider>
                 </AiAvailabilityProvider>
               </FeatureConsentProvider>
             </NuqsAdapter>

@@ -151,7 +151,20 @@ self.addEventListener("push", (event) => {
     },
   };
 
-  event.waitUntil(self.registration.showNotification(title, options));
+  event.waitUntil(
+    Promise.all([
+      self.registration.showNotification(title, options),
+      clients
+        .matchAll({ type: "window", includeUncontrolled: true })
+        .then((clientList) => {
+          for (const client of clientList) {
+            if (new URL(client.url).origin === self.location.origin) {
+              client.postMessage({ type: "TRAINVY_PUSH_RECEIVED" });
+            }
+          }
+        }),
+    ]),
+  );
 });
 
 self.addEventListener("notificationclick", (event) => {
