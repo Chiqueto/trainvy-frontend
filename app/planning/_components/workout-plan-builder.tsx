@@ -13,6 +13,7 @@ import {
 } from "@/app/_components/ai-availability-provider";
 
 import { useState, useTransition } from "react";
+import Link from "next/link";
 import { trainingDaysOnly } from "@/app/_lib/training-days";
 import { useRouter } from "next/navigation";
 import { useHydrated } from "@/lib/use-hydrated";
@@ -43,6 +44,7 @@ interface WorkoutPlanBuilderProps {
   initialPlan?: GetEditableWorkoutPlan200;
   periodizationId?: string;
   initialOpenAi?: boolean;
+  maxTrainingDays?: number | null;
 }
 
 export function WorkoutPlanBuilder({
@@ -50,6 +52,7 @@ export function WorkoutPlanBuilder({
   periodizationId,
   initialOpenAi = false,
   initialPlan,
+  maxTrainingDays = null,
 }: WorkoutPlanBuilderProps) {
   const router = useRouter();
   const [activeDayIndex, setActiveDayIndex] = useState(0);
@@ -66,6 +69,7 @@ export function WorkoutPlanBuilder({
       : createInitialWorkoutDays().map((day) => ({ ...day, exercises: [] })),
   );
   const [error, setError] = useState<string>();
+  const [errorIsLimit, setErrorIsLimit] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [reviewOpen, setReviewOpen] = useState(false);
   const [isAiModalOpen, setIsAiModalOpen] = useState(initialOpenAi);
@@ -98,8 +102,21 @@ export function WorkoutPlanBuilder({
     }
 
     setError(undefined);
+    setErrorIsLimit(false);
     if (reviewOnly) {
       setReviewOpen(true);
+      return;
+    }
+    const activeTrainingDays = days.filter((d) => !d.isRest).length;
+    if (
+      maxTrainingDays !== null &&
+      maxTrainingDays !== undefined &&
+      activeTrainingDays > maxTrainingDays
+    ) {
+      setError(
+        `O plano Atleta Grátis permite até ${maxTrainingDays} treinos por plano próprio (${activeTrainingDays} configurados). Marque os demais dias como descanso ou assine o Atleta Pro.`,
+      );
+      setErrorIsLimit(true);
       return;
     }
     startTransition(async () => {
@@ -127,6 +144,11 @@ export function WorkoutPlanBuilder({
 
         if (!result.success) {
           setError(result.error);
+          setErrorIsLimit(
+            result.code === "ATHLETE_PLAN_LIMIT_REACHED" ||
+              result.code === "ATHLETE_WORKOUT_DAY_LIMIT_REACHED" ||
+              result.code === "PERIODIZATION_REQUIRES_PRO",
+          );
           return;
         }
 
@@ -293,12 +315,20 @@ export function WorkoutPlanBuilder({
         style={{ bottom: "var(--workout-builder-bottom, 1rem)" }}
       >
         {error && (
-          <p
+          <div
             role="alert"
-            className="rounded-xl bg-destructive/10 p-3 text-sm text-destructive"
+            className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-destructive/10 p-3 text-sm text-destructive"
           >
-            {error}
-          </p>
+            <span>{error}</span>
+            {errorIsLimit && (
+              <Link
+                href="/assinatura"
+                className="rounded-full bg-primary px-3 py-1 font-heading text-xs font-semibold text-primary-foreground"
+              >
+                Assinar Atleta Pro
+              </Link>
+            )}
+          </div>
         )}
 
         <WorkoutPlanSummary days={days} />

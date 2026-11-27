@@ -49,9 +49,16 @@ export function PlanPermissionsFields({
                 />
                 {entitlementLabels[key]}
               </label>
-              {key === "MANAGE_ATHLETES" && current && (
+              {(key === "MANAGE_ATHLETES" ||
+                key === "WORKOUT_PLAN_LIMIT" ||
+                key === "WORKOUT_DAY_LIMIT") &&
+                current && (
                 <label className="mt-2 flex flex-col gap-1 text-xs text-muted-foreground">
-                  Limite de atletas (vazio = sem limite)
+                  {key === "MANAGE_ATHLETES"
+                    ? "Limite de atletas (vazio = sem limite)"
+                    : key === "WORKOUT_PLAN_LIMIT"
+                      ? "Limite de planos próprios (vazio = sem limite)"
+                      : "Limite de treinos por plano próprio (vazio = sem limite)"}
                   <input
                     type="number"
                     min={0}

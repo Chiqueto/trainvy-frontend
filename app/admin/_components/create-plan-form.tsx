@@ -22,6 +22,7 @@ export function CreatePlanForm({
   const [code, setCode] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("0,00");
+  const [annualPrice, setAnnualPrice] = useState("");
   const [audience, setAudience] =
     useState<CreateAdminPlanBody["audience"]>("COACH");
   const [isPublic, setPublic] = useState(false);
@@ -39,8 +40,12 @@ export function CreatePlanForm({
         event.preventDefault();
         setError("");
         let monthlyPriceInCents: number;
+        let annualPriceInCents: number | null = null;
         try {
           monthlyPriceInCents = parsePrice(price);
+          if (annualPrice.trim() !== "") {
+            annualPriceInCents = parsePrice(annualPrice);
+          }
         } catch (e) {
           setError((e as Error).message);
           return;
@@ -52,7 +57,8 @@ export function CreatePlanForm({
             description: description.trim() || null,
             audience,
             monthlyPriceInCents,
-            isPublic: audience === "COACH" && isPublic,
+            annualPriceInCents,
+            isPublic: audience !== "INTERNAL" && isPublic,
             isActive: active,
             entitlements: permissions,
           });
@@ -111,12 +117,22 @@ export function CreatePlanForm({
           </select>
         </label>
         <label className="flex flex-col gap-2 text-sm">
-          Preço inicial de referência (R$)
+          Preço mensal (R$)
           <input
             required
             inputMode="decimal"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
+            className={inputClass}
+          />
+        </label>
+        <label className="flex flex-col gap-2 text-sm">
+          Preço anual opcional (R$)
+          <input
+            inputMode="decimal"
+            placeholder="Ex.: 99,90"
+            value={annualPrice}
+            onChange={(e) => setAnnualPrice(e.target.value)}
             className={inputClass}
           />
         </label>
@@ -138,21 +154,20 @@ export function CreatePlanForm({
           />
           Plano ativo
         </label>
-        {audience === "COACH" && (
+        {audience !== "INTERNAL" && (
           <label className="flex min-h-11 items-center gap-2 text-sm">
             <input
               type="checkbox"
               checked={isPublic}
               onChange={(e) => setPublic(e.target.checked)}
             />
-            Exibir no cadastro de personal
+            Exibir no catálogo público
           </label>
         )}
       </fieldset>
-      {audience !== "COACH" && (
+      {audience === "INTERNAL" && (
         <p className="text-xs text-muted-foreground">
-          Novos planos de atleta e uso interno ficam privados e podem ser
-          atribuídos manualmente no admin.
+          Planos de uso interno ficam privados e podem ser atribuídos manualmente no admin.
         </p>
       )}
       <PlanPermissionsFields

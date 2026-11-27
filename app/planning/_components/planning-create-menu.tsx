@@ -3,11 +3,23 @@ import { AiFeature } from "@/app/_components/ai-availability-provider";
 
 import { useState } from "react";
 import Link from "next/link";
-import { CalendarRange, Dumbbell, Plus, Sparkles } from "lucide-react";
+import { CalendarRange, Crown, Dumbbell, Plus, Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
-export function PlanningCreateMenu() {
+export interface PlanningQuotaSummary {
+  planLimit: number | null;
+  dayLimit: number | null;
+  selfPlansCount: number;
+  hasReachedPlanLimit: boolean;
+  canUsePeriodizations: boolean;
+}
+
+export function PlanningCreateMenu({
+  quota,
+}: {
+  quota?: PlanningQuotaSummary;
+}) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -71,32 +83,59 @@ export function PlanningCreateMenu() {
 
             <Link
               role="menuitem"
-              href="/planning/plans/new"
+              href={
+                quota?.hasReachedPlanLimit
+                  ? "/assinatura"
+                  : "/planning/plans/new"
+              }
               onClick={() => setIsOpen(false)}
               className="flex min-h-12 items-center gap-2.5 rounded-xl px-3 text-left font-heading text-xs font-medium transition hover:bg-accent"
             >
               <span className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                <Dumbbell className="size-4" />
+                {quota?.hasReachedPlanLimit ? (
+                  <Crown className="size-4" />
+                ) : (
+                  <Dumbbell className="size-4" />
+                )}
               </span>
-              <span>
+              <span className="flex-1 min-w-0">
                 <span className="block font-semibold">Novo plano</span>
                 <span className="text-[10px] text-muted-foreground">
-                  Plano standalone
+                  {quota?.hasReachedPlanLimit
+                    ? "Limite grátis atingido · Ver Atleta Pro"
+                    : quota?.planLimit != null
+                      ? `${quota.selfPlansCount}/${quota.planLimit} plano próprio usado`
+                      : "Plano standalone"}
                 </span>
               </span>
             </Link>
 
             <Link
               role="menuitem"
-              href="/planning/periodizations/new"
+              href={
+                quota && !quota.canUsePeriodizations
+                  ? "/assinatura"
+                  : "/planning/periodizations/new"
+              }
               onClick={() => setIsOpen(false)}
               className="flex min-h-12 items-center gap-2.5 rounded-xl px-3 text-left font-heading text-xs font-medium transition hover:bg-accent"
             >
               <span className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                <CalendarRange className="size-4" />
+                {quota && !quota.canUsePeriodizations ? (
+                  <Crown className="size-4" />
+                ) : (
+                  <CalendarRange className="size-4" />
+                )}
               </span>
-              <span>
-                <span className="block font-semibold">Nova periodização</span>
+              <span className="flex-1 min-w-0">
+                <span className="flex items-center gap-1.5 font-semibold">
+                  <span>Nova periodização</span>
+                  {quota && !quota.canUsePeriodizations && (
+                    <span className="rounded-full bg-primary/15 px-1.5 py-0.5 text-[9px] font-bold text-primary uppercase">
+                      Pro
+                    </span>
+                  )}
+                </span>
                 <span className="text-[10px] text-muted-foreground">
                   Ciclo de treino
                 </span>

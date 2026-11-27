@@ -43,6 +43,7 @@ const overviewPlans = [
     id: "eligible-plan",
     name: "Upper / Lower",
     isActive: false,
+    isPrescribedByCoach: false,
     workoutDaysCount: 7,
     createdAt: "2026-09-01T10:00:00.000Z",
     periodization: null,
@@ -51,6 +52,7 @@ const overviewPlans = [
     id: "active-plan",
     name: "Plano ativo oculto",
     isActive: true,
+    isPrescribedByCoach: false,
     workoutDaysCount: 5,
     createdAt: "2026-09-01T10:00:00.000Z",
     periodization: null,
@@ -59,6 +61,7 @@ const overviewPlans = [
     id: "linked-plan",
     name: "Plano vinculado oculto",
     isActive: false,
+    isPrescribedByCoach: false,
     workoutDaysCount: 4,
     createdAt: "2026-09-01T10:00:00.000Z",
     periodization: {

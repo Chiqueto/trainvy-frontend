@@ -108,6 +108,31 @@ export default async function PlanningPage() {
 
   const { activeContext, plans, periodizations } = overviewResponse.data;
 
+  const hasCommercialData = commercialRes?.status === 200 && Boolean(commercialRes.data);
+  const entitlements = hasCommercialData ? commercialRes.data.entitlements : [];
+  const planLimitEnt = entitlements.find(
+    (e) => e.key === "WORKOUT_PLAN_LIMIT",
+  );
+  const dayLimitEnt = entitlements.find((e) => e.key === "WORKOUT_DAY_LIMIT");
+  const hasPeriodizationsEnt = entitlements.some(
+    (e) => e.key === "PERIODIZATIONS",
+  );
+
+  const selfPlansCount = plans.filter((p) => !p.isPrescribedByCoach).length;
+  const planLimit =
+    isCoach || !hasCommercialData ? null : (planLimitEnt?.limitValue ?? null);
+  const dayLimit =
+    isCoach || !hasCommercialData ? null : (dayLimitEnt?.limitValue ?? null);
+  const canUsePeriodizations =
+    isCoach || !hasCommercialData || hasPeriodizationsEnt;
+  const planningQuota = {
+    planLimit,
+    dayLimit,
+    selfPlansCount,
+    hasReachedPlanLimit: planLimit !== null && selfPlansCount >= planLimit,
+    canUsePeriodizations,
+  };
+
   const athletePrescriptions: AthletePrescriptionItem[] =
     prescriptionsResponse?.status === 200 &&
     Array.isArray(prescriptionsResponse.data)
@@ -122,7 +147,7 @@ export default async function PlanningPage() {
           <Logo size="md" asLink />
           <div className="flex items-center gap-2">
             <NotificationHub variant="header" />
-            <PlanningCreateMenu />
+            <PlanningCreateMenu quota={planningQuota} />
           </div>
         </div>
 
@@ -201,6 +226,7 @@ export default async function PlanningPage() {
           activeContext={activeContext}
           plans={plans}
           periodizations={periodizations}
+          quota={planningQuota}
         />
       </main>
 

@@ -74,21 +74,89 @@ const paymentStatusLabels: Record<string, string> = {
   CHARGEBACK: "Chargeback",
 };
 
+function getPlanPriceForCycle(
+  plan: { monthlyPriceInCents: number; annualPriceInCents?: number | null },
+  cycle: "MONTHLY" | "YEARLY",
+) {
+  if (cycle === "YEARLY") {
+    return plan.annualPriceInCents ?? plan.monthlyPriceInCents * 12;
+  }
+  return plan.monthlyPriceInCents;
+}
+
+function BillingCycleToggle({
+  value,
+  onChange,
+  disabled,
+}: {
+  value: "MONTHLY" | "YEARLY";
+  onChange: (next: "MONTHLY" | "YEARLY") => void;
+  disabled?: boolean;
+}) {
+  return (
+    <div
+      role="group"
+      aria-label="Ciclo de cobrança"
+      className="inline-flex w-full sm:w-auto items-center rounded-2xl border border-border/80 bg-muted/40 p-1"
+    >
+      <button
+        type="button"
+        disabled={disabled}
+        onClick={() => onChange("MONTHLY")}
+        className={`flex-1 sm:flex-initial rounded-xl px-4 py-2 font-heading text-xs font-semibold transition-all ${
+          value === "MONTHLY"
+            ? "bg-background text-foreground shadow-xs"
+            : "text-muted-foreground hover:text-foreground"
+        }`}
+      >
+        Mensal
+      </button>
+      <button
+        type="button"
+        disabled={disabled}
+        onClick={() => onChange("YEARLY")}
+        className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded-xl px-4 py-2 font-heading text-xs font-semibold transition-all ${
+          value === "YEARLY"
+            ? "bg-background text-foreground shadow-xs"
+            : "text-muted-foreground hover:text-foreground"
+        }`}
+      >
+        <span>Anual</span>
+        <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
+          2 meses grátis
+        </span>
+      </button>
+    </div>
+  );
+}
+
 export function SubscriptionManager({
   initial,
   checkoutReturned,
+  audience = "COACH",
 }: {
   initial: GetCoachBillingOverview200;
   checkoutReturned: boolean;
+  audience?: "COACH" | "ATHLETE";
 }) {
   const router = useRouter();
   const sub = initial.subscription;
   const paidPlans = initial.availablePlans.filter(
     (p) => p.monthlyPriceInCents > 0,
   );
+  const currentPaidPlanCode =
+    sub && paidPlans.some((p) => p.code === sub.planCode)
+      ? sub.planCode
+      : undefined;
 
   const [selectedPlanCode, setSelectedPlanCode] = useState(
-    sub?.planCode ?? paidPlans[0]?.code ?? "",
+    currentPaidPlanCode ?? paidPlans[0]?.code ?? "",
+  );
+  const [selectedCycle, setSelectedCycle] = useState<"MONTHLY" | "YEARLY">(
+    sub?.billingCycle ?? "MONTHLY",
+  );
+  const [changeCycle, setChangeCycle] = useState<"MONTHLY" | "YEARLY">(
+    sub?.billingCycle ?? "MONTHLY",
   );
   const [cpfCnpj, setCpfCnpj] = useState("");
   const [busy, setBusy] = useState(false);
@@ -136,6 +204,7 @@ export function SubscriptionManager({
     const res = await startCoachSubscriptionAction({
       planCode: selectedPlanCode,
       cpfCnpj,
+      billingCycle: selectedCycle,
     });
     setBusy(false);
     if (!res.success) {
@@ -147,11 +216,14 @@ export function SubscriptionManager({
     router.refresh();
   }
 
-  async function handleUpgrade(targetCode: string) {
+  async function handleUpgrade(
+    targetCode: string,
+    targetCycle: "MONTHLY" | "YEARLY",
+  ) {
     setBusy(true);
     setError("");
     setMessage("");
-    const res = await initiateCoachUpgradeAction(targetCode);
+    const res = await initiateCoachUpgradeAction(targetCode, targetCycle);
     setBusy(false);
     if (!res.success) {
       setError(res.error);
@@ -178,17 +250,25 @@ export function SubscriptionManager({
     router.refresh();
   }
 
-  async function handleOpenDowngradePreview(targetCode: string) {
+  async function handleOpenDowngradePreview(
+    targetCode: string,
+    targetCycle: "MONTHLY" | "YEARLY",
+  ) {
     setBusy(true);
     setError("");
     setMessage("");
-    const res = await previewCoachDowngradeAction(targetCode);
+    const res = await previewCoachDowngradeAction(targetCode, targetCycle);
     setBusy(false);
     if (!res.success) {
       setError(res.error);
       return;
     }
-    setDowngradePreview(res.data);
+    setDowngradePreview({
+      ...res.data,
+      __targetCycle: targetCycle,
+    } as PreviewCoachSubscriptionDowngrade200 & {
+      __targetCycle?: "MONTHLY" | "YEARLY";
+    });
     const limit = res.data.targetAthleteLimit;
     if (limit !== null) {
       setRetainedAthleteIds(
@@ -205,8 +285,14 @@ export function SubscriptionManager({
     setBusy(true);
     setError("");
     setMessage("");
+    const targetCycle = (
+      downgradePreview as PreviewCoachSubscriptionDowngrade200 & {
+        __targetCycle?: "MONTHLY" | "YEARLY";
+      }
+    ).__targetCycle;
     const res = await scheduleCoachDowngradeAction({
       planCode: downgradePreview.targetPlan.code,
+      billingCycle: targetCycle,
       retainedAthleteIds,
       acknowledgeExcessAthletes: ackExcess,
     });
@@ -319,7 +405,9 @@ export function SubscriptionManager({
             </h2>
             {sub && (
               <p className="text-sm text-muted-foreground mt-0.5">
-                {formatMoney(sub.monthlyPriceInCents, sub.currency)} / mês
+                {sub.monthlyPriceInCents === 0
+                  ? "Gratuito · Sem mensalidade"
+                  : `${formatMoney(sub.monthlyPriceInCents, sub.currency)} / ${sub.billingCycle === "YEARLY" ? "ano" : "mês"}`}
               </p>
             )}
           </div>
@@ -370,10 +458,18 @@ export function SubscriptionManager({
             </div>
             <div>
               <span className="text-muted-foreground block">
-                Acesso Profissional
+                {audience === "ATHLETE"
+                  ? "Recursos Atleta Pro"
+                  : "Acesso Profissional"}
               </span>
               <strong className="text-foreground text-sm">
-                {initial.accessActive ? "Liberado" : "Bloqueado / Pendente"}
+                {audience === "ATHLETE"
+                  ? sub?.planCode === "ATHLETE_PRO" && initial.accessActive
+                    ? "Ilimitado ativo"
+                    : "Plano gratuito ativo"
+                  : initial.accessActive
+                    ? "Liberado"
+                    : "Bloqueado / Pendente"}
               </strong>
             </div>
           </div>
@@ -504,26 +600,39 @@ export function SubscriptionManager({
         </section>
       )}
 
-      {/* Iniciar Nova Assinatura via Asaas */}
-      {canStartNewCheckout && (
+      {/* Iniciar Nova Assinatura */}
+      {canStartNewCheckout && paidPlans.length > 0 && (
         <section className="rounded-3xl border border-border/70 bg-card p-5 sm:p-6 shadow-xs space-y-5">
-          <div>
-            <h3 className="font-heading text-lg font-bold text-foreground flex items-center gap-2">
-              <CreditCard className="size-5 text-primary" />
-              Assinar Plano Profissional
-            </h3>
-            <p className="text-xs text-muted-foreground mt-1">
-              Escolha o plano ideal para sua assessoria. O pagamento é processado
-              com segurança via Pix, Cartão de Crédito ou Boleto.
-            </p>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h3 className="font-heading text-lg font-bold text-foreground flex items-center gap-2">
+                <CreditCard className="size-5 text-primary" />
+                {audience === "ATHLETE"
+                  ? "Assinar Atleta Pro"
+                  : "Assinar Plano Profissional"}
+              </h3>
+              <p className="text-xs text-muted-foreground mt-1">
+                {audience === "ATHLETE"
+                  ? "Libere planos próprios ilimitados, treinos ilimitados e periodizações."
+                  : "Escolha o plano ideal para sua assessoria. Pagamento via Pix, Cartão de Crédito ou Boleto."}
+              </p>
+            </div>
+            <BillingCycleToggle
+              value={selectedCycle}
+              onChange={setSelectedCycle}
+              disabled={busy}
+            />
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div
+            className={`grid gap-3 ${paidPlans.length === 1 ? "sm:grid-cols-1" : "sm:grid-cols-2"}`}
+          >
             {paidPlans.map((plan) => {
               const selected = selectedPlanCode === plan.code;
               const athletesEnt = plan.entitlements.find(
                 (e) => e.entitlement === "MANAGE_ATHLETES",
               );
+              const displayPrice = getPlanPriceForCycle(plan, selectedCycle);
               return (
                 <button
                   key={plan.code}
@@ -542,22 +651,46 @@ export function SubscriptionManager({
                     {selected && <Check className="size-4 text-primary" />}
                   </div>
                   <div className="mt-1.5 font-heading text-2xl font-bold text-foreground">
-                    {formatMoney(plan.monthlyPriceInCents, plan.currency)}
+                    {formatMoney(displayPrice, plan.currency)}
                     <span className="text-xs font-normal text-muted-foreground">
                       {" "}
-                      / mês
+                      / {selectedCycle === "YEARLY" ? "ano" : "mês"}
                     </span>
                   </div>
+                  {selectedCycle === "YEARLY" && (
+                    <p className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
+                      Equivale a{" "}
+                      {formatMoney(Math.round(displayPrice / 12), plan.currency)}
+                      /mês
+                    </p>
+                  )}
                   {plan.description && (
                     <p className="mt-1.5 text-xs text-muted-foreground">
                       {plan.description}
                     </p>
                   )}
-                  <p className="mt-2 text-xs font-medium text-primary">
-                    {athletesEnt?.limitValue != null
-                      ? `Até ${athletesEnt.limitValue} alunos ativos`
-                      : "Alunos ilimitados"}
-                  </p>
+                  {audience === "COACH" ? (
+                    <p className="mt-2 text-xs font-medium text-primary">
+                      {athletesEnt?.limitValue != null
+                        ? `Até ${athletesEnt.limitValue} alunos ativos`
+                        : "Alunos ilimitados"}
+                    </p>
+                  ) : (
+                    <ul className="mt-3 space-y-1 text-xs text-foreground/90">
+                      <li className="flex items-center gap-1.5">
+                        <Check className="size-3.5 text-emerald-500 shrink-0" />
+                        <span>Planos próprios ilimitados</span>
+                      </li>
+                      <li className="flex items-center gap-1.5">
+                        <Check className="size-3.5 text-emerald-500 shrink-0" />
+                        <span>Mais de 5 treinos por plano</span>
+                      </li>
+                      <li className="flex items-center gap-1.5">
+                        <Check className="size-3.5 text-emerald-500 shrink-0" />
+                        <span>Periodizações e ciclos completos</span>
+                      </li>
+                    </ul>
+                  )}
                 </button>
               );
             })}
@@ -599,35 +732,49 @@ export function SubscriptionManager({
         </section>
       )}
 
-      {/* Alteração de Plano (Upgrade / Downgrade) para Assinatura Ativa */}
+      {/* Alteração de Plano ou Ciclo (Upgrade / Downgrade) para Assinatura Ativa */}
       {isAsaasActive && sub && (
         <section className="rounded-3xl border border-border/70 bg-card p-5 sm:p-6 shadow-xs space-y-4">
-          <h3 className="font-heading text-lg font-bold text-foreground">
-            Mudar de Plano
-          </h3>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <h3 className="font-heading text-lg font-bold text-foreground">
+              Mudar de Plano ou Ciclo
+            </h3>
+            <BillingCycleToggle
+              value={changeCycle}
+              onChange={setChangeCycle}
+              disabled={busy}
+            />
+          </div>
           <div className="grid gap-3 sm:grid-cols-2">
             {paidPlans
-              .filter((p) => p.code !== sub.planCode)
+              .filter(
+                (p) =>
+                  !(
+                    p.code === sub.planCode && changeCycle === sub.billingCycle
+                  ),
+              )
               .map((plan) => {
-                const isUpgrade =
-                  plan.monthlyPriceInCents > sub.monthlyPriceInCents;
+                const targetPrice = getPlanPriceForCycle(plan, changeCycle);
+                const isUpgrade = targetPrice > sub.monthlyPriceInCents;
+                const targetLabel =
+                  changeCycle === "YEARLY" ? `${plan.name} (Anual)` : plan.name;
                 return (
                   <div
-                    key={plan.code}
+                    key={`${plan.code}-${changeCycle}`}
                     className="rounded-2xl border border-border/70 bg-background/40 p-4 flex flex-col justify-between gap-3"
                   >
                     <div>
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between gap-2">
                         <strong className="font-heading text-base">
-                          {plan.name}
+                          {targetLabel}
                         </strong>
                         <Badge variant="outline" className="text-[10px]">
                           {isUpgrade ? "Upgrade imediato" : "Downgrade no ciclo"}
                         </Badge>
                       </div>
                       <p className="font-heading text-lg font-bold mt-1">
-                        {formatMoney(plan.monthlyPriceInCents, plan.currency)} /
-                        mês
+                        {formatMoney(targetPrice, plan.currency)} /{" "}
+                        {changeCycle === "YEARLY" ? "ano" : "mês"}
                       </p>
                       {plan.description && (
                         <p className="text-xs text-muted-foreground mt-1">
@@ -639,16 +786,13 @@ export function SubscriptionManager({
                       <Button
                         size="sm"
                         disabled={busy || Boolean(initial.pendingUpgrade)}
-                        onClick={() => handleUpgrade(plan.code)}
+                        onClick={() => handleUpgrade(plan.code, changeCycle)}
                         className="w-full gap-1.5 whitespace-normal h-auto min-h-9 py-2 text-center"
                       >
                         <ArrowUpRight className="size-3.5 shrink-0" />
                         <span>
                           Fazer upgrade (+{" "}
-                          {formatMoney(
-                            plan.monthlyPriceInCents - sub.monthlyPriceInCents,
-                          )}
-                          )
+                          {formatMoney(targetPrice - sub.monthlyPriceInCents)})
                         </span>
                       </Button>
                     ) : (
@@ -656,7 +800,9 @@ export function SubscriptionManager({
                         size="sm"
                         variant="outline"
                         disabled={busy || Boolean(initial.pendingDowngrade)}
-                        onClick={() => handleOpenDowngradePreview(plan.code)}
+                        onClick={() =>
+                          handleOpenDowngradePreview(plan.code, changeCycle)
+                        }
                         className="w-full gap-1.5 whitespace-normal h-auto min-h-9 py-2 text-center"
                       >
                         <ArrowDownRight className="size-3.5 shrink-0" />
@@ -674,15 +820,32 @@ export function SubscriptionManager({
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <h4 className="font-heading text-sm font-bold">
-                    Confirmar downgrade para {downgradePreview.targetPlan.name}
+                    Confirmar alteração para {downgradePreview.targetPlan.name}
                   </h4>
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    O novo valor (
-                    {formatMoney(
-                      downgradePreview.targetPlan.monthlyPriceInCents,
-                    )}
-                    /mês) entrará em vigor em{" "}
-                    <strong>{formatDate(downgradePreview.effectiveAt)}</strong>.
+                    {(() => {
+                      const previewCycle =
+                        (
+                          downgradePreview as PreviewCoachSubscriptionDowngrade200 & {
+                            __targetCycle?: "MONTHLY" | "YEARLY";
+                          }
+                        ).__targetCycle ?? "MONTHLY";
+                      const previewPrice = getPlanPriceForCycle(
+                        downgradePreview.targetPlan,
+                        previewCycle,
+                      );
+                      return (
+                        <>
+                          O novo valor ({formatMoney(previewPrice)}/
+                          {previewCycle === "YEARLY" ? "ano" : "mês"}) entrará em
+                          vigor em{" "}
+                          <strong>
+                            {formatDate(downgradePreview.effectiveAt)}
+                          </strong>
+                          .
+                        </>
+                      );
+                    })()}
                   </p>
                 </div>
                 <Button

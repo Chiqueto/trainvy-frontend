@@ -18,9 +18,14 @@ function extractError(data: unknown, fallback: string): string {
 export async function startCoachSubscriptionAction(input: {
   planCode: string;
   cpfCnpj: string;
+  billingCycle?: "MONTHLY" | "YEARLY";
 }) {
   try {
-    const res = await api.startCoachSubscription(input);
+    const res = await api.startCoachSubscription({
+      planCode: input.planCode,
+      cpfCnpj: input.cpfCnpj,
+      billingCycle: input.billingCycle ?? "MONTHLY",
+    });
     if (res.status !== 200) {
       return {
         success: false as const,
@@ -29,6 +34,9 @@ export async function startCoachSubscriptionAction(input: {
     }
     revalidatePath("/personal/assinatura");
     revalidatePath("/personal");
+    revalidatePath("/assinatura");
+    revalidatePath("/planning");
+    revalidatePath("/profile");
     return { success: true as const, data: res.data };
   } catch {
     return {
@@ -49,6 +57,9 @@ export async function cancelCoachSubscriptionAction(reason?: string) {
     }
     revalidatePath("/personal/assinatura");
     revalidatePath("/personal");
+    revalidatePath("/assinatura");
+    revalidatePath("/planning");
+    revalidatePath("/profile");
     return { success: true as const, data: res.data };
   } catch {
     return {
@@ -58,9 +69,15 @@ export async function cancelCoachSubscriptionAction(reason?: string) {
   }
 }
 
-export async function initiateCoachUpgradeAction(planCode: string) {
+export async function initiateCoachUpgradeAction(
+  planCode: string,
+  billingCycle?: "MONTHLY" | "YEARLY",
+) {
   try {
-    const res = await api.initiateCoachSubscriptionUpgrade({ planCode });
+    const res = await api.initiateCoachSubscriptionUpgrade({
+      planCode,
+      ...(billingCycle ? { billingCycle } : {}),
+    });
     if (res.status !== 200) {
       return {
         success: false as const,
@@ -69,6 +86,9 @@ export async function initiateCoachUpgradeAction(planCode: string) {
     }
     revalidatePath("/personal/assinatura");
     revalidatePath("/personal");
+    revalidatePath("/assinatura");
+    revalidatePath("/planning");
+    revalidatePath("/profile");
     return { success: true as const, data: res.data };
   } catch {
     return {
@@ -88,6 +108,7 @@ export async function cancelCoachUpgradeAction() {
       };
     }
     revalidatePath("/personal/assinatura");
+    revalidatePath("/assinatura");
     return { success: true as const };
   } catch {
     return {
@@ -97,15 +118,21 @@ export async function cancelCoachUpgradeAction() {
   }
 }
 
-export async function previewCoachDowngradeAction(planCode: string) {
+export async function previewCoachDowngradeAction(
+  planCode: string,
+  billingCycle?: "MONTHLY" | "YEARLY",
+) {
   try {
-    const res = await api.previewCoachSubscriptionDowngrade({ planCode });
+    const res = await api.previewCoachSubscriptionDowngrade({
+      planCode,
+      ...(billingCycle ? { billingCycle } : {}),
+    });
     if (res.status !== 200) {
       return {
         success: false as const,
         error: extractError(
           res.data,
-          "Não foi possível carregar o preview do downgrade.",
+          "Não foi possível carregar o preview da alteração.",
         ),
       };
     }
@@ -113,13 +140,14 @@ export async function previewCoachDowngradeAction(planCode: string) {
   } catch {
     return {
       success: false as const,
-      error: "Erro de comunicação ao consultar downgrade.",
+      error: "Erro de comunicação ao consultar alteração de plano.",
     };
   }
 }
 
 export async function scheduleCoachDowngradeAction(input: {
   planCode: string;
+  billingCycle?: "MONTHLY" | "YEARLY";
   retainedAthleteIds?: string[];
   acknowledgeExcessAthletes?: boolean;
 }) {
@@ -128,15 +156,16 @@ export async function scheduleCoachDowngradeAction(input: {
     if (res.status !== 200) {
       return {
         success: false as const,
-        error: extractError(res.data, "Não foi possível agendar o downgrade."),
+        error: extractError(res.data, "Não foi possível agendar a alteração."),
       };
     }
     revalidatePath("/personal/assinatura");
+    revalidatePath("/assinatura");
     return { success: true as const, data: res.data };
   } catch {
     return {
       success: false as const,
-      error: "Erro de comunicação ao agendar downgrade.",
+      error: "Erro de comunicação ao agendar alteração.",
     };
   }
 }
@@ -147,15 +176,16 @@ export async function cancelScheduledDowngradeAction() {
     if (res.status !== 200) {
       return {
         success: false as const,
-        error: extractError(res.data, "Não foi possível cancelar o downgrade."),
+        error: extractError(res.data, "Não foi possível cancelar a alteração agendada."),
       };
     }
     revalidatePath("/personal/assinatura");
+    revalidatePath("/assinatura");
     return { success: true as const };
   } catch {
     return {
       success: false as const,
-      error: "Erro de comunicação ao cancelar downgrade.",
+      error: "Erro de comunicação ao cancelar alteração.",
     };
   }
 }

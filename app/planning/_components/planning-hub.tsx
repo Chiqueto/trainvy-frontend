@@ -7,6 +7,7 @@ import {
   Calendar,
   CalendarRange,
   ChevronRight,
+  Crown,
   Dumbbell,
   Layers,
 } from "lucide-react";
@@ -19,18 +20,21 @@ import type {
 import { WorkoutCover } from "@/app/_components/workout-cover";
 import { Badge } from "@/components/ui/badge";
 import { PlannedDeadlineBadge } from "./planned-deadline-badge";
+import type { PlanningQuotaSummary } from "./planning-create-menu";
 import { WorkoutPlanCard } from "./workout-plan-card";
 
 interface PlanningHubProps {
   activeContext: GetPlanningOverview200ActiveContext;
   plans: GetPlanningOverview200PlansItem[];
   periodizations: GetPlanningOverview200PeriodizationsItem[];
+  quota?: PlanningQuotaSummary;
 }
 
 export function PlanningHub({
   activeContext,
   plans,
   periodizations,
+  quota,
 }: PlanningHubProps) {
   const [activeTab, setActiveTab] = useState<"plans" | "periodizations">(
     "plans",
@@ -246,6 +250,26 @@ export function PlanningHub({
         {/* Conteúdo da Aba: Planos de Treino */}
         {activeTab === "plans" && (
           <div className="flex flex-col gap-3 animate-in fade-in duration-200">
+            {quota && quota.planLimit !== null && (
+              <div className="flex flex-col gap-2.5 rounded-2xl border border-border/70 bg-card/80 p-3.5 sm:flex-row sm:items-center sm:justify-between">
+                <div className="space-y-0.5 text-xs">
+                  <p className="font-heading font-semibold text-foreground">
+                    Planos próprios: {quota.selfPlansCount}/{quota.planLimit} ·
+                    Até {quota.dayLimit ?? 5} treinos por ficha
+                  </p>
+                  <p className="text-[11px] text-muted-foreground">
+                    Planos prescritos pelo seu personal não entram nesse limite.
+                  </p>
+                </div>
+                <Link
+                  href="/assinatura"
+                  className="inline-flex w-fit shrink-0 items-center gap-1.5 rounded-full bg-primary/15 px-3 py-1.5 font-heading text-[11px] font-bold text-primary hover:bg-primary/20 transition-colors"
+                >
+                  <Crown className="size-3.5" />
+                  <span>Liberar ilimitado</span>
+                </Link>
+              </div>
+            )}
             {plans.length === 0 ? (
               <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-border/80 bg-card/40 py-10 px-5 text-center">
                 <Dumbbell className="size-8 text-muted-foreground/40 mb-1" />
@@ -275,6 +299,31 @@ export function PlanningHub({
         {/* Conteúdo da Aba: Periodizações */}
         {activeTab === "periodizations" && (
           <div className="flex flex-col gap-3 animate-in fade-in duration-200">
+            {quota && !quota.canUsePeriodizations && (
+              <div className="flex flex-col gap-3 rounded-2xl border border-primary/30 bg-primary/5 p-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-start gap-3">
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary">
+                    <Crown className="size-4" />
+                  </span>
+                  <div className="space-y-0.5 text-xs">
+                    <p className="font-heading font-bold text-foreground">
+                      Periodizações fazem parte do Atleta Pro
+                    </p>
+                    <p className="text-[11px] text-muted-foreground">
+                      Organize blocos progressivos por ciclo a partir de R$
+                      9,90/mês ou R$ 99,90/ano.
+                    </p>
+                  </div>
+                </div>
+                <Link
+                  href="/assinatura"
+                  className="inline-flex w-fit shrink-0 items-center gap-1.5 rounded-full bg-primary px-4 py-2 font-heading text-xs font-semibold text-primary-foreground shadow-xs hover:bg-primary/90"
+                >
+                  <span>Conhecer Atleta Pro</span>
+                  <ArrowRight className="size-3.5" />
+                </Link>
+              </div>
+            )}
             {periodizations.length === 0 ? (
               <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-border/80 bg-card/40 py-10 px-5 text-center">
                 <CalendarRange className="size-8 text-muted-foreground/40 mb-1" />
@@ -285,12 +334,14 @@ export function PlanningHub({
                   Periodizações organizam etapas e blocos de treino progressivos
                   ao longo das semanas.
                 </p>
-                <Link
-                  href="/planning/periodizations/new"
-                  className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 font-heading text-xs font-semibold text-primary-foreground shadow-sm"
-                >
-                  <span>Criar periodização</span>
-                </Link>
+                {(!quota || quota.canUsePeriodizations) && (
+                  <Link
+                    href="/planning/periodizations/new"
+                    className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 font-heading text-xs font-semibold text-primary-foreground shadow-sm"
+                  >
+                    <span>Criar periodização</span>
+                  </Link>
+                )}
               </div>
             ) : (
               <div className="flex flex-col gap-2.5">

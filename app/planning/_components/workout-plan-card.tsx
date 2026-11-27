@@ -39,7 +39,7 @@ export function WorkoutPlanCard({ plan }: WorkoutPlanCardProps) {
   const [dialog, setDialog] = useState<DialogKind>(null);
   const [copyName, setCopyName] = useState(`${plan.name} - Cópia`);
   const [feedback, setFeedback] = useState<
-    { kind: "success" | "error"; message: string } | undefined
+    { kind: "success" | "error"; message: string; showUpgrade?: boolean } | undefined
   >();
   const [isPending, startTransition] = useTransition();
 
@@ -67,7 +67,10 @@ export function WorkoutPlanCard({ plan }: WorkoutPlanCardProps) {
               : await deleteWorkoutPlanAction(plan.id);
 
       if (!result.success) {
-        setFeedback({ kind: "error", message: result.error });
+        const showUpgrade =
+          result.code === "ATHLETE_PLAN_LIMIT_REACHED" ||
+          result.code === "ATHLETE_WORKOUT_DAY_LIMIT_REACHED";
+        setFeedback({ kind: "error", message: result.error, showUpgrade });
         setDialog(null);
         return;
       }
@@ -113,6 +116,15 @@ export function WorkoutPlanCard({ plan }: WorkoutPlanCardProps) {
                 </span>
               )}
 
+              {plan.isPrescribedByCoach && (
+                <Badge
+                  variant="secondary"
+                  className="rounded-full px-2 py-0.5 text-[10px] font-semibold"
+                >
+                  Prescrito pelo personal
+                </Badge>
+              )}
+
               {plan.periodization && (
                 <Badge
                   variant={
@@ -138,6 +150,15 @@ export function WorkoutPlanCard({ plan }: WorkoutPlanCardProps) {
                 {plan.workoutDaysCount}{" "}
                 {plan.workoutDaysCount === 1 ? "dia" : "dias"}
               </span>
+              {plan.isPrescribedByCoach && (
+                <Badge
+                  variant="secondary"
+                  className="rounded-full px-2 py-0.5 text-[10px] font-semibold"
+                >
+                  Prescrito pelo personal
+                </Badge>
+              )}
+
               {plan.periodization && (
                 <span className="font-heading text-[11px] text-muted-foreground">
                   Ciclo:{" "}
@@ -222,15 +243,27 @@ export function WorkoutPlanCard({ plan }: WorkoutPlanCardProps) {
       </div>
 
       {feedback && (
-        <p
+        <div
           role={feedback.kind === "error" ? "alert" : "status"}
-          className={`mt-3 flex items-center gap-1.5 border-t border-border/50 pt-3 text-xs ${
+          className={`mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-border/50 pt-3 text-xs ${
             feedback.kind === "error" ? "text-destructive" : "text-primary"
           }`}
         >
-          {feedback.kind === "success" && <CheckCircle2 className="size-3.5" />}
-          {feedback.message}
-        </p>
+          <span className="flex items-center gap-1.5">
+            {feedback.kind === "success" && (
+              <CheckCircle2 className="size-3.5 shrink-0" />
+            )}
+            {feedback.message}
+          </span>
+          {feedback.showUpgrade && (
+            <Link
+              href="/assinatura"
+              className="rounded-full bg-primary px-3 py-1 font-heading text-[11px] font-semibold text-primary-foreground"
+            >
+              Ver Atleta Pro
+            </Link>
+          )}
+        </div>
       )}
 
       <PlanningConfirmDialog

@@ -54,6 +54,7 @@ const plans = [
     description: null,
     currency: "BRL",
     monthlyPriceInCents: 4990,
+    annualPriceInCents: 49990,
     entitlements: [{ entitlement: "MANAGE_ATHLETES" as const, limitValue: 10 }],
   },
   {
@@ -62,6 +63,7 @@ const plans = [
     description: null,
     currency: "BRL",
     monthlyPriceInCents: 8990,
+    annualPriceInCents: 89990,
     entitlements: [{ entitlement: "MANAGE_ATHLETES" as const, limitValue: null }],
   },
 ];

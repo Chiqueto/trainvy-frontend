@@ -69,6 +69,7 @@ const commercial: ListAdminPlans200Item = {
   description: null,
   audience: "COACH",
   monthlyPriceInCents: 3990,
+  annualPriceInCents: 39990,
   currency: "BRL",
   isPublic: true,
   isActive: true,
@@ -335,7 +336,7 @@ describe("Dynamic commercial plans in admin", () => {
       target: { value: "novo" },
     });
     fireEvent.change(
-      screen.getByLabelText("Preço inicial de referência (R$)"),
+      screen.getByLabelText("Preço mensal (R$)"),
       { target: { value: "49,90" } },
     );
     const form = screen.getByRole("form", { name: "Criar plano comercial" });

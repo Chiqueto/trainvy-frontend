@@ -44,6 +44,7 @@ const inactivePlan = {
   id: "plan-1",
   name: "Hipertrofia ABC",
   isActive: false,
+  isPrescribedByCoach: false,
   workoutDaysCount: 3,
   createdAt: "2026-09-01T10:00:00.000Z",
   periodization: null,

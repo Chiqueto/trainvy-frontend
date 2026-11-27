@@ -28,6 +28,12 @@ const PLANNING_ERROR_MESSAGES: Record<string, string> = {
     "A nova ordem contém etapas inválidas. Atualize a página e tente novamente.",
   PERIODIZATION_ALREADY_STARTED:
     "Uma periodização já iniciada não pode ser excluída.",
+  ATHLETE_PLAN_LIMIT_REACHED:
+    "O plano Atleta Grátis permite 1 plano próprio. Assine o Atleta Pro para criar planos ilimitados.",
+  ATHLETE_WORKOUT_DAY_LIMIT_REACHED:
+    "O plano Atleta Grátis permite até 5 treinos por plano próprio. Assine o Atleta Pro para liberar treinos ilimitados.",
+  PERIODIZATION_REQUIRES_PRO:
+    "Periodizações fazem parte do plano Atleta Pro. Assine para organizar ciclos de treino.",
 };
 
 export function getPlanningErrorMessage(code?: string): string {

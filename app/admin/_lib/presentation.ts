@@ -22,6 +22,9 @@ export const entitlementLabels: Record<
   AI_CHAT: "Chat IA",
   AI_PLAN_GENERATION: "Planejamento IA",
   SOURCE_LIBRARY: "Biblioteca de fontes",
+  WORKOUT_PLAN_LIMIT: "Limite de planos próprios",
+  WORKOUT_DAY_LIMIT: "Treinos por plano próprio",
+  PERIODIZATIONS: "Periodizações",
 };
 export const actionLabels: Record<ListAdminAuditAction, string> = {
   AI_AVAILABILITY_UPDATED: "Disponibilidade da IA alterada",

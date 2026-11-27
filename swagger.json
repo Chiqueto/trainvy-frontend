@@ -1370,6 +1370,29 @@
               }
             }
           },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
           "404": {
             "description": "Default Response",
             "content": {
@@ -2102,6 +2125,29 @@
             }
           },
           "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
             "description": "Default Response",
             "content": {
               "application/json": {
@@ -2998,6 +3044,29 @@
               }
             }
           },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
           "404": {
             "description": "Default Response",
             "content": {
@@ -3689,6 +3758,29 @@
             }
           },
           "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
             "description": "Default Response",
             "content": {
               "application/json": {
@@ -4418,6 +4510,29 @@
             }
           },
           "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
             "description": "Default Response",
             "content": {
               "application/json": {
@@ -5383,6 +5498,29 @@
               }
             }
           },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
           "404": {
             "description": "Default Response",
             "content": {
@@ -6103,6 +6241,29 @@
             }
           },
           "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
             "description": "Default Response",
             "content": {
               "application/json": {
@@ -8311,6 +8472,9 @@
                           "isActive": {
                             "type": "boolean"
                           },
+                          "isPrescribedByCoach": {
+                            "type": "boolean"
+                          },
                           "workoutDaysCount": {
                             "type": "integer",
                             "minimum": 0,
@@ -8364,6 +8528,7 @@
                           "id",
                           "name",
                           "isActive",
+                          "isPrescribedByCoach",
                           "workoutDaysCount",
                           "createdAt",
                           "periodization"
@@ -11375,6 +11540,12 @@
                         "minimum": 0,
                         "maximum": 9007199254740991
                       },
+                      "annualPriceInCents": {
+                        "nullable": true,
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
                       "currency": {
                         "type": "string"
                       },
@@ -11393,7 +11564,10 @@
                                 "ADVANCED_STATS",
                                 "AI_CHAT",
                                 "AI_PLAN_GENERATION",
-                                "SOURCE_LIBRARY"
+                                "SOURCE_LIBRARY",
+                                "WORKOUT_PLAN_LIMIT",
+                                "WORKOUT_DAY_LIMIT",
+                                "PERIODIZATIONS"
                               ]
                             },
                             "limitValue": {
@@ -11416,6 +11590,7 @@
                       "name",
                       "description",
                       "monthlyPriceInCents",
+                      "annualPriceInCents",
                       "currency",
                       "entitlements"
                     ],
@@ -12063,6 +12238,13 @@
                             "ASAAS"
                           ]
                         },
+                        "billingCycle": {
+                          "type": "string",
+                          "enum": [
+                            "MONTHLY",
+                            "YEARLY"
+                          ]
+                        },
                         "trialEndsAt": {
                           "nullable": true,
                           "type": "string",
@@ -12085,6 +12267,7 @@
                       "required": [
                         "status",
                         "billingProvider",
+                        "billingCycle",
                         "trialEndsAt",
                         "currentPeriodEnd",
                         "priceInCentsSnapshot",
@@ -12107,7 +12290,10 @@
                               "ADVANCED_STATS",
                               "AI_CHAT",
                               "AI_PLAN_GENERATION",
-                              "SOURCE_LIBRARY"
+                              "SOURCE_LIBRARY",
+                              "WORKOUT_PLAN_LIMIT",
+                              "WORKOUT_DAY_LIMIT",
+                              "PERIODIZATIONS"
                             ]
                           },
                           "limitValue": {
@@ -12344,6 +12530,13 @@
                             "ASAAS"
                           ]
                         },
+                        "billingCycle": {
+                          "type": "string",
+                          "enum": [
+                            "MONTHLY",
+                            "YEARLY"
+                          ]
+                        },
                         "trialEndsAt": {
                           "nullable": true,
                           "type": "string",
@@ -12395,6 +12588,7 @@
                         "currency",
                         "status",
                         "billingProvider",
+                        "billingCycle",
                         "trialEndsAt",
                         "currentPeriodStart",
                         "currentPeriodEnd",
@@ -12439,6 +12633,20 @@
                         "targetPlanName": {
                           "type": "string"
                         },
+                        "fromBillingCycle": {
+                          "type": "string",
+                          "enum": [
+                            "MONTHLY",
+                            "YEARLY"
+                          ]
+                        },
+                        "targetBillingCycle": {
+                          "type": "string",
+                          "enum": [
+                            "MONTHLY",
+                            "YEARLY"
+                          ]
+                        },
                         "status": {
                           "type": "string"
                         },
@@ -12460,6 +12668,8 @@
                         "fromPlanName",
                         "targetPlanCode",
                         "targetPlanName",
+                        "fromBillingCycle",
+                        "targetBillingCycle",
                         "status",
                         "createdAt",
                         "expiresAt"
@@ -12484,6 +12694,20 @@
                         },
                         "targetPlanName": {
                           "type": "string"
+                        },
+                        "fromBillingCycle": {
+                          "type": "string",
+                          "enum": [
+                            "MONTHLY",
+                            "YEARLY"
+                          ]
+                        },
+                        "targetBillingCycle": {
+                          "type": "string",
+                          "enum": [
+                            "MONTHLY",
+                            "YEARLY"
+                          ]
                         },
                         "effectiveAt": {
                           "type": "string",
@@ -12512,6 +12736,8 @@
                         "fromPlanName",
                         "targetPlanCode",
                         "targetPlanName",
+                        "fromBillingCycle",
+                        "targetBillingCycle",
                         "effectiveAt",
                         "status",
                         "asaasSyncStatus",
@@ -12534,6 +12760,13 @@
                           "billingType": {
                             "nullable": true,
                             "type": "string"
+                          },
+                          "billingCycle": {
+                            "type": "string",
+                            "enum": [
+                              "MONTHLY",
+                              "YEARLY"
+                            ]
                           },
                           "amountInCents": {
                             "type": "integer",
@@ -12589,6 +12822,7 @@
                           "id",
                           "status",
                           "billingType",
+                          "billingCycle",
                           "amountInCents",
                           "netAmountInCents",
                           "currency",
@@ -12679,6 +12913,12 @@
                             "minimum": -9007199254740991,
                             "maximum": 9007199254740991
                           },
+                          "annualPriceInCents": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
                           "currency": {
                             "type": "string"
                           },
@@ -12697,7 +12937,10 @@
                                     "ADVANCED_STATS",
                                     "AI_CHAT",
                                     "AI_PLAN_GENERATION",
-                                    "SOURCE_LIBRARY"
+                                    "SOURCE_LIBRARY",
+                                    "WORKOUT_PLAN_LIMIT",
+                                    "WORKOUT_DAY_LIMIT",
+                                    "PERIODIZATIONS"
                                   ]
                                 },
                                 "limitValue": {
@@ -12720,6 +12963,7 @@
                           "name",
                           "description",
                           "monthlyPriceInCents",
+                          "annualPriceInCents",
                           "currency",
                           "entitlements"
                         ],
@@ -12952,6 +13196,14 @@
                     "type": "string",
                     "minLength": 11,
                     "maxLength": 20
+                  },
+                  "billingCycle": {
+                    "default": "MONTHLY",
+                    "type": "string",
+                    "enum": [
+                      "MONTHLY",
+                      "YEARLY"
+                    ]
                   }
                 },
                 "required": [
@@ -12980,6 +13232,13 @@
                     "planName": {
                       "type": "string"
                     },
+                    "billingCycle": {
+                      "type": "string",
+                      "enum": [
+                        "MONTHLY",
+                        "YEARLY"
+                      ]
+                    },
                     "checkoutUrl": {
                       "type": "string"
                     },
@@ -13005,6 +13264,7 @@
                     "subscriptionId",
                     "planCode",
                     "planName",
+                    "billingCycle",
                     "checkoutUrl",
                     "status",
                     "reusedExistingCheckout",
@@ -13486,6 +13746,13 @@
                     "type": "string",
                     "minLength": 1,
                     "maxLength": 80
+                  },
+                  "billingCycle": {
+                    "type": "string",
+                    "enum": [
+                      "MONTHLY",
+                      "YEARLY"
+                    ]
                   }
                 },
                 "required": [
@@ -13529,6 +13796,20 @@
                     "targetPlanName": {
                       "type": "string"
                     },
+                    "fromBillingCycle": {
+                      "type": "string",
+                      "enum": [
+                        "MONTHLY",
+                        "YEARLY"
+                      ]
+                    },
+                    "targetBillingCycle": {
+                      "type": "string",
+                      "enum": [
+                        "MONTHLY",
+                        "YEARLY"
+                      ]
+                    },
                     "status": {
                       "type": "string"
                     },
@@ -13544,6 +13825,8 @@
                     "fromPlanCode",
                     "targetPlanCode",
                     "targetPlanName",
+                    "fromBillingCycle",
+                    "targetBillingCycle",
                     "status",
                     "message"
                   ],
@@ -13783,6 +14066,20 @@
                     "targetPlanName": {
                       "type": "string"
                     },
+                    "fromBillingCycle": {
+                      "type": "string",
+                      "enum": [
+                        "MONTHLY",
+                        "YEARLY"
+                      ]
+                    },
+                    "targetBillingCycle": {
+                      "type": "string",
+                      "enum": [
+                        "MONTHLY",
+                        "YEARLY"
+                      ]
+                    },
                     "status": {
                       "type": "string"
                     },
@@ -13804,6 +14101,8 @@
                     "fromPlanName",
                     "targetPlanCode",
                     "targetPlanName",
+                    "fromBillingCycle",
+                    "targetBillingCycle",
                     "status",
                     "createdAt",
                     "expiresAt"
@@ -14235,6 +14534,13 @@
                     "type": "string",
                     "minLength": 1,
                     "maxLength": 80
+                  },
+                  "billingCycle": {
+                    "type": "string",
+                    "enum": [
+                      "MONTHLY",
+                      "YEARLY"
+                    ]
                   }
                 },
                 "required": [
@@ -14270,12 +14576,19 @@
                           "type": "integer",
                           "minimum": -9007199254740991,
                           "maximum": 9007199254740991
+                        },
+                        "annualPriceInCents": {
+                          "nullable": true,
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
                         }
                       },
                       "required": [
                         "code",
                         "name",
-                        "monthlyPriceInCents"
+                        "monthlyPriceInCents",
+                        "annualPriceInCents"
                       ],
                       "additionalProperties": false
                     },
@@ -14292,12 +14605,19 @@
                           "type": "integer",
                           "minimum": -9007199254740991,
                           "maximum": 9007199254740991
+                        },
+                        "annualPriceInCents": {
+                          "nullable": true,
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
                         }
                       },
                       "required": [
                         "code",
                         "name",
-                        "monthlyPriceInCents"
+                        "monthlyPriceInCents",
+                        "annualPriceInCents"
                       ],
                       "additionalProperties": false
                     },
@@ -14584,6 +14904,13 @@
                     "minLength": 1,
                     "maxLength": 80
                   },
+                  "billingCycle": {
+                    "type": "string",
+                    "enum": [
+                      "MONTHLY",
+                      "YEARLY"
+                    ]
+                  },
                   "retainedAthleteIds": {
                     "maxItems": 500,
                     "type": "array",
@@ -14621,6 +14948,20 @@
                     "targetPlanName": {
                       "type": "string"
                     },
+                    "fromBillingCycle": {
+                      "type": "string",
+                      "enum": [
+                        "MONTHLY",
+                        "YEARLY"
+                      ]
+                    },
+                    "targetBillingCycle": {
+                      "type": "string",
+                      "enum": [
+                        "MONTHLY",
+                        "YEARLY"
+                      ]
+                    },
                     "effectiveAt": {
                       "type": "string",
                       "format": "date-time"
@@ -14636,6 +14977,8 @@
                     "downgradeId",
                     "targetPlanCode",
                     "targetPlanName",
+                    "fromBillingCycle",
+                    "targetBillingCycle",
                     "effectiveAt",
                     "status",
                     "message"
@@ -14863,6 +15206,20 @@
                     "targetPlanName": {
                       "type": "string"
                     },
+                    "fromBillingCycle": {
+                      "type": "string",
+                      "enum": [
+                        "MONTHLY",
+                        "YEARLY"
+                      ]
+                    },
+                    "targetBillingCycle": {
+                      "type": "string",
+                      "enum": [
+                        "MONTHLY",
+                        "YEARLY"
+                      ]
+                    },
                     "effectiveAt": {
                       "type": "string",
                       "format": "date-time"
@@ -14890,6 +15247,8 @@
                     "fromPlanName",
                     "targetPlanCode",
                     "targetPlanName",
+                    "fromBillingCycle",
+                    "targetBillingCycle",
                     "effectiveAt",
                     "status",
                     "asaasSyncStatus",
@@ -38700,6 +39059,12 @@
                     "minimum": 0,
                     "maximum": 2147483647
                   },
+                  "annualPriceInCents": {
+                    "nullable": true,
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 2147483647
+                  },
                   "isPublic": {
                     "default": false,
                     "type": "boolean"
@@ -38715,7 +39080,7 @@
                     "maximum": 2147483647
                   },
                   "entitlements": {
-                    "maxItems": 8,
+                    "maxItems": 15,
                     "type": "array",
                     "items": {
                       "type": "object",
@@ -38730,7 +39095,10 @@
                             "ADVANCED_STATS",
                             "AI_CHAT",
                             "AI_PLAN_GENERATION",
-                            "SOURCE_LIBRARY"
+                            "SOURCE_LIBRARY",
+                            "WORKOUT_PLAN_LIMIT",
+                            "WORKOUT_DAY_LIMIT",
+                            "PERIODIZATIONS"
                           ]
                         },
                         "limitValue": {
@@ -38796,6 +39164,12 @@
                       "minimum": -9007199254740991,
                       "maximum": 9007199254740991
                     },
+                    "annualPriceInCents": {
+                      "nullable": true,
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
                     "currency": {
                       "type": "string"
                     },
@@ -38825,7 +39199,10 @@
                               "ADVANCED_STATS",
                               "AI_CHAT",
                               "AI_PLAN_GENERATION",
-                              "SOURCE_LIBRARY"
+                              "SOURCE_LIBRARY",
+                              "WORKOUT_PLAN_LIMIT",
+                              "WORKOUT_DAY_LIMIT",
+                              "PERIODIZATIONS"
                             ]
                           },
                           "limitValue": {
@@ -38850,6 +39227,7 @@
                     "description",
                     "audience",
                     "monthlyPriceInCents",
+                    "annualPriceInCents",
                     "currency",
                     "isPublic",
                     "isActive",
@@ -39044,6 +39422,12 @@
                         "minimum": -9007199254740991,
                         "maximum": 9007199254740991
                       },
+                      "annualPriceInCents": {
+                        "nullable": true,
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      },
                       "currency": {
                         "type": "string"
                       },
@@ -39073,7 +39457,10 @@
                                 "ADVANCED_STATS",
                                 "AI_CHAT",
                                 "AI_PLAN_GENERATION",
-                                "SOURCE_LIBRARY"
+                                "SOURCE_LIBRARY",
+                                "WORKOUT_PLAN_LIMIT",
+                                "WORKOUT_DAY_LIMIT",
+                                "PERIODIZATIONS"
                               ]
                             },
                             "limitValue": {
@@ -39098,6 +39485,7 @@
                       "description",
                       "audience",
                       "monthlyPriceInCents",
+                      "annualPriceInCents",
                       "currency",
                       "isPublic",
                       "isActive",
@@ -41178,6 +41566,13 @@
                                 "ASAAS"
                               ]
                             },
+                            "billingCycle": {
+                              "type": "string",
+                              "enum": [
+                                "MONTHLY",
+                                "YEARLY"
+                              ]
+                            },
                             "trialEndsAt": {
                               "nullable": true,
                               "type": "string",
@@ -41200,6 +41595,7 @@
                           "required": [
                             "status",
                             "billingProvider",
+                            "billingCycle",
                             "trialEndsAt",
                             "currentPeriodEnd",
                             "priceInCentsSnapshot",
@@ -41222,7 +41618,10 @@
                                   "ADVANCED_STATS",
                                   "AI_CHAT",
                                   "AI_PLAN_GENERATION",
-                                  "SOURCE_LIBRARY"
+                                  "SOURCE_LIBRARY",
+                                  "WORKOUT_PLAN_LIMIT",
+                                  "WORKOUT_DAY_LIMIT",
+                                  "PERIODIZATIONS"
                                 ]
                               },
                               "limitValue": {
@@ -41467,6 +41866,12 @@
                       "minimum": -9007199254740991,
                       "maximum": 9007199254740991
                     },
+                    "annualPriceInCents": {
+                      "nullable": true,
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
                     "currency": {
                       "type": "string"
                     },
@@ -41496,7 +41901,10 @@
                               "ADVANCED_STATS",
                               "AI_CHAT",
                               "AI_PLAN_GENERATION",
-                              "SOURCE_LIBRARY"
+                              "SOURCE_LIBRARY",
+                              "WORKOUT_PLAN_LIMIT",
+                              "WORKOUT_DAY_LIMIT",
+                              "PERIODIZATIONS"
                             ]
                           },
                           "limitValue": {
@@ -41521,6 +41929,7 @@
                     "description",
                     "audience",
                     "monthlyPriceInCents",
+                    "annualPriceInCents",
                     "currency",
                     "isPublic",
                     "isActive",
@@ -41699,6 +42108,12 @@
                     "minimum": 0,
                     "maximum": 2147483647
                   },
+                  "annualPriceInCents": {
+                    "nullable": true,
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 2147483647
+                  },
                   "isPublic": {
                     "type": "boolean"
                   },
@@ -41764,6 +42179,12 @@
                       "minimum": -9007199254740991,
                       "maximum": 9007199254740991
                     },
+                    "annualPriceInCents": {
+                      "nullable": true,
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
                     "currency": {
                       "type": "string"
                     },
@@ -41793,7 +42214,10 @@
                               "ADVANCED_STATS",
                               "AI_CHAT",
                               "AI_PLAN_GENERATION",
-                              "SOURCE_LIBRARY"
+                              "SOURCE_LIBRARY",
+                              "WORKOUT_PLAN_LIMIT",
+                              "WORKOUT_DAY_LIMIT",
+                              "PERIODIZATIONS"
                             ]
                           },
                           "limitValue": {
@@ -41818,6 +42242,7 @@
                     "description",
                     "audience",
                     "monthlyPriceInCents",
+                    "annualPriceInCents",
                     "currency",
                     "isPublic",
                     "isActive",
@@ -41984,7 +42409,7 @@
                 "type": "object",
                 "properties": {
                   "entitlements": {
-                    "maxItems": 8,
+                    "maxItems": 15,
                     "type": "array",
                     "items": {
                       "type": "object",
@@ -41999,7 +42424,10 @@
                             "ADVANCED_STATS",
                             "AI_CHAT",
                             "AI_PLAN_GENERATION",
-                            "SOURCE_LIBRARY"
+                            "SOURCE_LIBRARY",
+                            "WORKOUT_PLAN_LIMIT",
+                            "WORKOUT_DAY_LIMIT",
+                            "PERIODIZATIONS"
                           ]
                         },
                         "limitValue": {
@@ -42073,6 +42501,12 @@
                       "minimum": -9007199254740991,
                       "maximum": 9007199254740991
                     },
+                    "annualPriceInCents": {
+                      "nullable": true,
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
                     "currency": {
                       "type": "string"
                     },
@@ -42102,7 +42536,10 @@
                               "ADVANCED_STATS",
                               "AI_CHAT",
                               "AI_PLAN_GENERATION",
-                              "SOURCE_LIBRARY"
+                              "SOURCE_LIBRARY",
+                              "WORKOUT_PLAN_LIMIT",
+                              "WORKOUT_DAY_LIMIT",
+                              "PERIODIZATIONS"
                             ]
                           },
                           "limitValue": {
@@ -42127,6 +42564,7 @@
                     "description",
                     "audience",
                     "monthlyPriceInCents",
+                    "annualPriceInCents",
                     "currency",
                     "isPublic",
                     "isActive",
@@ -54302,6 +54740,29 @@
             }
           },
           "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "code"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "403": {
             "description": "Default Response",
             "content": {
               "application/json": {

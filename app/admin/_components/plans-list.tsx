@@ -127,6 +127,11 @@ export function PlansList({ initial }: { initial: ListAdminPlans200Item[] }) {
                     /mês
                   </span>
                 </p>
+                {plan.annualPriceInCents != null && (
+                  <p className="text-xs font-semibold text-primary mt-0.5">
+                    ou {money(plan.annualPriceInCents, plan.currency)} /ano
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2 border-t border-border/60 pt-3">
@@ -146,16 +151,26 @@ export function PlansList({ initial }: { initial: ListAdminPlans200Item[] }) {
                         </span>
                       </div>
                       {(e.limitValue !== null ||
-                        e.entitlement === "MANAGE_ATHLETES") && (
+                        e.entitlement === "MANAGE_ATHLETES" ||
+                        e.entitlement === "WORKOUT_PLAN_LIMIT" ||
+                        e.entitlement === "WORKOUT_DAY_LIMIT") && (
                         <span className="font-mono text-[11px] font-bold text-primary">
                           {e.entitlement === "MANAGE_ATHLETES"
                             ? e.limitValue === null
                               ? "Ilimitados"
                               : `Até ${e.limitValue} alunos`
-                            : e.entitlement === "AI_CHAT" ||
-                                e.entitlement === "AI_PLAN_GENERATION"
-                              ? `Cota compartilhada: ${e.limitValue}/dia`
-                              : `limite: ${e.limitValue}`}
+                            : e.entitlement === "WORKOUT_PLAN_LIMIT"
+                              ? e.limitValue === null
+                                ? "Ilimitados"
+                                : `Até ${e.limitValue} plano(s)`
+                              : e.entitlement === "WORKOUT_DAY_LIMIT"
+                                ? e.limitValue === null
+                                  ? "Ilimitados"
+                                  : `Até ${e.limitValue} treinos`
+                                : e.entitlement === "AI_CHAT" ||
+                                    e.entitlement === "AI_PLAN_GENERATION"
+                                  ? `Cota compartilhada: ${e.limitValue}/dia`
+                                  : `limite: ${e.limitValue}`}
                         </span>
                       )}
                     </li>

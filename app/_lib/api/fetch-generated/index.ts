@@ -808,6 +808,11 @@ export type CreateWorkoutPlan401 = {
   code: string;
 };
 
+export type CreateWorkoutPlan403 = {
+  error: string;
+  code: string;
+};
+
 export type CreateWorkoutPlan404 = {
   error: string;
   code: string;
@@ -1126,6 +1131,11 @@ export type EditWorkoutPlan400 = {
 };
 
 export type EditWorkoutPlan401 = {
+  error: string;
+  code: string;
+};
+
+export type EditWorkoutPlan403 = {
   error: string;
   code: string;
 };
@@ -1573,6 +1583,11 @@ export type EditWorkoutDay401 = {
   code: string;
 };
 
+export type EditWorkoutDay403 = {
+  error: string;
+  code: string;
+};
+
 export type EditWorkoutDay404 = {
   error: string;
   code: string;
@@ -1843,6 +1858,11 @@ export type DuplicateWorkoutPlan401 = {
   code: string;
 };
 
+export type DuplicateWorkoutPlan403 = {
+  error: string;
+  code: string;
+};
+
 export type DuplicateWorkoutPlan404 = {
   error: string;
   code: string;
@@ -2070,6 +2090,11 @@ export type CreatePeriodization400 = {
 };
 
 export type CreatePeriodization401 = {
+  error: string;
+  code: string;
+};
+
+export type CreatePeriodization403 = {
   error: string;
   code: string;
 };
@@ -2339,6 +2364,11 @@ export type AddWorkoutPlanToPeriodization400 = {
 };
 
 export type AddWorkoutPlanToPeriodization401 = {
+  error: string;
+  code: string;
+};
+
+export type AddWorkoutPlanToPeriodization403 = {
   error: string;
   code: string;
 };
@@ -2772,6 +2802,11 @@ export type CreateWorkoutPlanInPeriodization400 = {
 };
 
 export type CreateWorkoutPlanInPeriodization401 = {
+  error: string;
+  code: string;
+};
+
+export type CreateWorkoutPlanInPeriodization403 = {
   error: string;
   code: string;
 };
@@ -3509,6 +3544,7 @@ export type GetPlanningOverview200PlansItem = {
   id: string;
   name: string;
   isActive: boolean;
+  isPrescribedByCoach: boolean;
   /**
    * @minimum 0
    * @maximum 9007199254740991
@@ -4483,6 +4519,9 @@ export const ListPublicPlans200ItemEntitlementsItemEntitlement = {
   AI_CHAT: "AI_CHAT",
   AI_PLAN_GENERATION: "AI_PLAN_GENERATION",
   SOURCE_LIBRARY: "SOURCE_LIBRARY",
+  WORKOUT_PLAN_LIMIT: "WORKOUT_PLAN_LIMIT",
+  WORKOUT_DAY_LIMIT: "WORKOUT_DAY_LIMIT",
+  PERIODIZATIONS: "PERIODIZATIONS",
 } as const;
 
 export type ListPublicPlans200ItemEntitlementsItem = {
@@ -4505,6 +4544,12 @@ export type ListPublicPlans200Item = {
    * @maximum 9007199254740991
    */
   monthlyPriceInCents: number;
+  /**
+   * @minimum 0
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  annualPriceInCents: number | null;
   currency: string;
   entitlements: ListPublicPlans200ItemEntitlementsItem[];
 };
@@ -4685,6 +4730,7 @@ export type GetCommercialContext200Subscription = {
     | "CANCELED"
     | "EXPIRED";
   billingProvider: "NONE" | "MANUAL" | "ASAAS";
+  billingCycle: "MONTHLY" | "YEARLY";
   /** @nullable */
   trialEndsAt: string | null;
   /** @nullable */
@@ -4709,6 +4755,9 @@ export const GetCommercialContext200EntitlementsItemKey = {
   AI_CHAT: "AI_CHAT",
   AI_PLAN_GENERATION: "AI_PLAN_GENERATION",
   SOURCE_LIBRARY: "SOURCE_LIBRARY",
+  WORKOUT_PLAN_LIMIT: "WORKOUT_PLAN_LIMIT",
+  WORKOUT_DAY_LIMIT: "WORKOUT_DAY_LIMIT",
+  PERIODIZATIONS: "PERIODIZATIONS",
 } as const;
 
 export type GetCommercialContext200EntitlementsItem = {
@@ -4788,6 +4837,7 @@ export type GetCoachBillingOverview200Subscription = {
     | "CANCELED"
     | "EXPIRED";
   billingProvider: "NONE" | "MANUAL" | "ASAAS";
+  billingCycle: "MONTHLY" | "YEARLY";
   /** @nullable */
   trialEndsAt: string | null;
   /** @nullable */
@@ -4825,6 +4875,8 @@ export type GetCoachBillingOverview200PendingUpgrade = {
   fromPlanName: string;
   targetPlanCode: string;
   targetPlanName: string;
+  fromBillingCycle: "MONTHLY" | "YEARLY";
+  targetBillingCycle: "MONTHLY" | "YEARLY";
   status: string;
   createdAt: string;
   expiresAt: string;
@@ -4839,6 +4891,8 @@ export type GetCoachBillingOverview200PendingDowngrade = {
   fromPlanName: string;
   targetPlanCode: string;
   targetPlanName: string;
+  fromBillingCycle: "MONTHLY" | "YEARLY";
+  targetBillingCycle: "MONTHLY" | "YEARLY";
   effectiveAt: string;
   status: string;
   asaasSyncStatus: string;
@@ -4846,11 +4900,20 @@ export type GetCoachBillingOverview200PendingDowngrade = {
   createdAt: string;
 } | null;
 
+export type GetCoachBillingOverview200PaymentsItemBillingCycle =
+  (typeof GetCoachBillingOverview200PaymentsItemBillingCycle)[keyof typeof GetCoachBillingOverview200PaymentsItemBillingCycle];
+
+export const GetCoachBillingOverview200PaymentsItemBillingCycle = {
+  MONTHLY: "MONTHLY",
+  YEARLY: "YEARLY",
+} as const;
+
 export type GetCoachBillingOverview200PaymentsItem = {
   id: string;
   status: string;
   /** @nullable */
   billingType: string | null;
+  billingCycle: GetCoachBillingOverview200PaymentsItemBillingCycle;
   /**
    * @minimum -9007199254740991
    * @maximum 9007199254740991
@@ -4912,6 +4975,9 @@ export const GetCoachBillingOverview200AvailablePlansItemEntitlementsItemEntitle
     AI_CHAT: "AI_CHAT",
     AI_PLAN_GENERATION: "AI_PLAN_GENERATION",
     SOURCE_LIBRARY: "SOURCE_LIBRARY",
+    WORKOUT_PLAN_LIMIT: "WORKOUT_PLAN_LIMIT",
+    WORKOUT_DAY_LIMIT: "WORKOUT_DAY_LIMIT",
+    PERIODIZATIONS: "PERIODIZATIONS",
   } as const;
 
 export type GetCoachBillingOverview200AvailablePlansItemEntitlementsItem = {
@@ -4934,6 +5000,12 @@ export type GetCoachBillingOverview200AvailablePlansItem = {
    * @maximum 9007199254740991
    */
   monthlyPriceInCents: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  annualPriceInCents: number | null;
   currency: string;
   entitlements: GetCoachBillingOverview200AvailablePlansItemEntitlementsItem[];
 };
@@ -4993,6 +5065,14 @@ export type GetCoachBillingOverview503 = {
   code: string;
 };
 
+export type StartCoachSubscriptionBodyBillingCycle =
+  (typeof StartCoachSubscriptionBodyBillingCycle)[keyof typeof StartCoachSubscriptionBodyBillingCycle];
+
+export const StartCoachSubscriptionBodyBillingCycle = {
+  MONTHLY: "MONTHLY",
+  YEARLY: "YEARLY",
+} as const;
+
 export type StartCoachSubscriptionBody = {
   /**
    * @minLength 1
@@ -5004,7 +5084,16 @@ export type StartCoachSubscriptionBody = {
    * @maxLength 20
    */
   cpfCnpj: string;
+  billingCycle?: StartCoachSubscriptionBodyBillingCycle;
 };
+
+export type StartCoachSubscription200BillingCycle =
+  (typeof StartCoachSubscription200BillingCycle)[keyof typeof StartCoachSubscription200BillingCycle];
+
+export const StartCoachSubscription200BillingCycle = {
+  MONTHLY: "MONTHLY",
+  YEARLY: "YEARLY",
+} as const;
 
 export type StartCoachSubscription200Status =
   (typeof StartCoachSubscription200Status)[keyof typeof StartCoachSubscription200Status];
@@ -5022,6 +5111,7 @@ export type StartCoachSubscription200 = {
   subscriptionId: string;
   planCode: string;
   planName: string;
+  billingCycle: StartCoachSubscription200BillingCycle;
   checkoutUrl: string;
   status: StartCoachSubscription200Status;
   reusedExistingCheckout: boolean;
@@ -5137,13 +5227,38 @@ export type CancelCoachSubscription503 = {
   code: string;
 };
 
+export type InitiateCoachSubscriptionUpgradeBodyBillingCycle =
+  (typeof InitiateCoachSubscriptionUpgradeBodyBillingCycle)[keyof typeof InitiateCoachSubscriptionUpgradeBodyBillingCycle];
+
+export const InitiateCoachSubscriptionUpgradeBodyBillingCycle = {
+  MONTHLY: "MONTHLY",
+  YEARLY: "YEARLY",
+} as const;
+
 export type InitiateCoachSubscriptionUpgradeBody = {
   /**
    * @minLength 1
    * @maxLength 80
    */
   planCode: string;
+  billingCycle?: InitiateCoachSubscriptionUpgradeBodyBillingCycle;
 };
+
+export type InitiateCoachSubscriptionUpgrade200FromBillingCycle =
+  (typeof InitiateCoachSubscriptionUpgrade200FromBillingCycle)[keyof typeof InitiateCoachSubscriptionUpgrade200FromBillingCycle];
+
+export const InitiateCoachSubscriptionUpgrade200FromBillingCycle = {
+  MONTHLY: "MONTHLY",
+  YEARLY: "YEARLY",
+} as const;
+
+export type InitiateCoachSubscriptionUpgrade200TargetBillingCycle =
+  (typeof InitiateCoachSubscriptionUpgrade200TargetBillingCycle)[keyof typeof InitiateCoachSubscriptionUpgrade200TargetBillingCycle];
+
+export const InitiateCoachSubscriptionUpgrade200TargetBillingCycle = {
+  MONTHLY: "MONTHLY",
+  YEARLY: "YEARLY",
+} as const;
 
 export type InitiateCoachSubscriptionUpgrade200 = {
   upgradeId: string;
@@ -5159,6 +5274,8 @@ export type InitiateCoachSubscriptionUpgrade200 = {
   fromPlanCode: string;
   targetPlanCode: string;
   targetPlanName: string;
+  fromBillingCycle: InitiateCoachSubscriptionUpgrade200FromBillingCycle;
+  targetBillingCycle: InitiateCoachSubscriptionUpgrade200TargetBillingCycle;
   status: string;
   message: string;
 };
@@ -5221,6 +5338,8 @@ export type GetPendingCoachSubscriptionUpgrade200 = {
   fromPlanName: string;
   targetPlanCode: string;
   targetPlanName: string;
+  fromBillingCycle: "MONTHLY" | "YEARLY";
+  targetBillingCycle: "MONTHLY" | "YEARLY";
   status: string;
   createdAt: string;
   expiresAt: string;
@@ -5310,12 +5429,21 @@ export type CancelPendingCoachSubscriptionUpgrade503 = {
   code: string;
 };
 
+export type PreviewCoachSubscriptionDowngradeBodyBillingCycle =
+  (typeof PreviewCoachSubscriptionDowngradeBodyBillingCycle)[keyof typeof PreviewCoachSubscriptionDowngradeBodyBillingCycle];
+
+export const PreviewCoachSubscriptionDowngradeBodyBillingCycle = {
+  MONTHLY: "MONTHLY",
+  YEARLY: "YEARLY",
+} as const;
+
 export type PreviewCoachSubscriptionDowngradeBody = {
   /**
    * @minLength 1
    * @maxLength 80
    */
   planCode: string;
+  billingCycle?: PreviewCoachSubscriptionDowngradeBodyBillingCycle;
 };
 
 export type PreviewCoachSubscriptionDowngrade200FromPlan = {
@@ -5326,6 +5454,12 @@ export type PreviewCoachSubscriptionDowngrade200FromPlan = {
    * @maximum 9007199254740991
    */
   monthlyPriceInCents: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  annualPriceInCents: number | null;
 };
 
 export type PreviewCoachSubscriptionDowngrade200TargetPlan = {
@@ -5336,6 +5470,12 @@ export type PreviewCoachSubscriptionDowngrade200TargetPlan = {
    * @maximum 9007199254740991
    */
   monthlyPriceInCents: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  annualPriceInCents: number | null;
 };
 
 export type PreviewCoachSubscriptionDowngrade200AthletesItem = {
@@ -5414,21 +5554,48 @@ export type PreviewCoachSubscriptionDowngrade503 = {
   code: string;
 };
 
+export type ScheduleCoachSubscriptionDowngradeBodyBillingCycle =
+  (typeof ScheduleCoachSubscriptionDowngradeBodyBillingCycle)[keyof typeof ScheduleCoachSubscriptionDowngradeBodyBillingCycle];
+
+export const ScheduleCoachSubscriptionDowngradeBodyBillingCycle = {
+  MONTHLY: "MONTHLY",
+  YEARLY: "YEARLY",
+} as const;
+
 export type ScheduleCoachSubscriptionDowngradeBody = {
   /**
    * @minLength 1
    * @maxLength 80
    */
   planCode: string;
+  billingCycle?: ScheduleCoachSubscriptionDowngradeBodyBillingCycle;
   /** @maxItems 500 */
   retainedAthleteIds?: string[];
   acknowledgeExcessAthletes?: boolean;
 };
 
+export type ScheduleCoachSubscriptionDowngrade200FromBillingCycle =
+  (typeof ScheduleCoachSubscriptionDowngrade200FromBillingCycle)[keyof typeof ScheduleCoachSubscriptionDowngrade200FromBillingCycle];
+
+export const ScheduleCoachSubscriptionDowngrade200FromBillingCycle = {
+  MONTHLY: "MONTHLY",
+  YEARLY: "YEARLY",
+} as const;
+
+export type ScheduleCoachSubscriptionDowngrade200TargetBillingCycle =
+  (typeof ScheduleCoachSubscriptionDowngrade200TargetBillingCycle)[keyof typeof ScheduleCoachSubscriptionDowngrade200TargetBillingCycle];
+
+export const ScheduleCoachSubscriptionDowngrade200TargetBillingCycle = {
+  MONTHLY: "MONTHLY",
+  YEARLY: "YEARLY",
+} as const;
+
 export type ScheduleCoachSubscriptionDowngrade200 = {
   downgradeId: string;
   targetPlanCode: string;
   targetPlanName: string;
+  fromBillingCycle: ScheduleCoachSubscriptionDowngrade200FromBillingCycle;
+  targetBillingCycle: ScheduleCoachSubscriptionDowngrade200TargetBillingCycle;
   effectiveAt: string;
   status: string;
   message: string;
@@ -5483,6 +5650,8 @@ export type GetPendingCoachSubscriptionDowngrade200 = {
   fromPlanName: string;
   targetPlanCode: string;
   targetPlanName: string;
+  fromBillingCycle: "MONTHLY" | "YEARLY";
+  targetBillingCycle: "MONTHLY" | "YEARLY";
   effectiveAt: string;
   status: string;
   asaasSyncStatus: string;
@@ -14782,6 +14951,9 @@ export const CreateAdminPlanBodyEntitlementsItemEntitlement = {
   AI_CHAT: "AI_CHAT",
   AI_PLAN_GENERATION: "AI_PLAN_GENERATION",
   SOURCE_LIBRARY: "SOURCE_LIBRARY",
+  WORKOUT_PLAN_LIMIT: "WORKOUT_PLAN_LIMIT",
+  WORKOUT_DAY_LIMIT: "WORKOUT_DAY_LIMIT",
+  PERIODIZATIONS: "PERIODIZATIONS",
 } as const;
 
 export type CreateAdminPlanBodyEntitlementsItem = {
@@ -14817,6 +14989,12 @@ export type CreateAdminPlanBody = {
    * @maximum 2147483647
    */
   monthlyPriceInCents: number;
+  /**
+   * @minimum 0
+   * @maximum 2147483647
+   * @nullable
+   */
+  annualPriceInCents?: number | null;
   isPublic?: boolean;
   isActive?: boolean;
   /**
@@ -14824,7 +15002,7 @@ export type CreateAdminPlanBody = {
    * @maximum 2147483647
    */
   sortOrder?: number;
-  /** @maxItems 8 */
+  /** @maxItems 15 */
   entitlements: CreateAdminPlanBodyEntitlementsItem[];
 };
 
@@ -14849,6 +15027,9 @@ export const CreateAdminPlan201EntitlementsItemEntitlement = {
   AI_CHAT: "AI_CHAT",
   AI_PLAN_GENERATION: "AI_PLAN_GENERATION",
   SOURCE_LIBRARY: "SOURCE_LIBRARY",
+  WORKOUT_PLAN_LIMIT: "WORKOUT_PLAN_LIMIT",
+  WORKOUT_DAY_LIMIT: "WORKOUT_DAY_LIMIT",
+  PERIODIZATIONS: "PERIODIZATIONS",
 } as const;
 
 export type CreateAdminPlan201EntitlementsItem = {
@@ -14877,6 +15058,12 @@ export type CreateAdminPlan201 = {
    * @maximum 9007199254740991
    */
   monthlyPriceInCents: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  annualPriceInCents: number | null;
   currency: string;
   isPublic: boolean;
   isActive: boolean;
@@ -14939,6 +15126,9 @@ export const ListAdminPlans200ItemEntitlementsItemEntitlement = {
   AI_CHAT: "AI_CHAT",
   AI_PLAN_GENERATION: "AI_PLAN_GENERATION",
   SOURCE_LIBRARY: "SOURCE_LIBRARY",
+  WORKOUT_PLAN_LIMIT: "WORKOUT_PLAN_LIMIT",
+  WORKOUT_DAY_LIMIT: "WORKOUT_DAY_LIMIT",
+  PERIODIZATIONS: "PERIODIZATIONS",
 } as const;
 
 export type ListAdminPlans200ItemEntitlementsItem = {
@@ -14967,6 +15157,12 @@ export type ListAdminPlans200Item = {
    * @maximum 9007199254740991
    */
   monthlyPriceInCents: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  annualPriceInCents: number | null;
   currency: string;
   isPublic: boolean;
   isActive: boolean;
@@ -15733,6 +15929,7 @@ export type GetAdminUser200CommercialContextSubscription = {
     | "CANCELED"
     | "EXPIRED";
   billingProvider: "NONE" | "MANUAL" | "ASAAS";
+  billingCycle: "MONTHLY" | "YEARLY";
   /** @nullable */
   trialEndsAt: string | null;
   /** @nullable */
@@ -15757,6 +15954,9 @@ export const GetAdminUser200CommercialContextEntitlementsItemKey = {
   AI_CHAT: "AI_CHAT",
   AI_PLAN_GENERATION: "AI_PLAN_GENERATION",
   SOURCE_LIBRARY: "SOURCE_LIBRARY",
+  WORKOUT_PLAN_LIMIT: "WORKOUT_PLAN_LIMIT",
+  WORKOUT_DAY_LIMIT: "WORKOUT_DAY_LIMIT",
+  PERIODIZATIONS: "PERIODIZATIONS",
 } as const;
 
 export type GetAdminUser200CommercialContextEntitlementsItem = {
@@ -15858,6 +16058,9 @@ export const GetAdminPlan200EntitlementsItemEntitlement = {
   AI_CHAT: "AI_CHAT",
   AI_PLAN_GENERATION: "AI_PLAN_GENERATION",
   SOURCE_LIBRARY: "SOURCE_LIBRARY",
+  WORKOUT_PLAN_LIMIT: "WORKOUT_PLAN_LIMIT",
+  WORKOUT_DAY_LIMIT: "WORKOUT_DAY_LIMIT",
+  PERIODIZATIONS: "PERIODIZATIONS",
 } as const;
 
 export type GetAdminPlan200EntitlementsItem = {
@@ -15886,6 +16089,12 @@ export type GetAdminPlan200 = {
    * @maximum 9007199254740991
    */
   monthlyPriceInCents: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  annualPriceInCents: number | null;
   currency: string;
   isPublic: boolean;
   isActive: boolean;
@@ -15943,6 +16152,12 @@ export type UpdateAdminPlanBody = {
    * @maximum 2147483647
    */
   monthlyPriceInCents?: number;
+  /**
+   * @minimum 0
+   * @maximum 2147483647
+   * @nullable
+   */
+  annualPriceInCents?: number | null;
   isPublic?: boolean;
   isActive?: boolean;
   /**
@@ -15973,6 +16188,9 @@ export const UpdateAdminPlan200EntitlementsItemEntitlement = {
   AI_CHAT: "AI_CHAT",
   AI_PLAN_GENERATION: "AI_PLAN_GENERATION",
   SOURCE_LIBRARY: "SOURCE_LIBRARY",
+  WORKOUT_PLAN_LIMIT: "WORKOUT_PLAN_LIMIT",
+  WORKOUT_DAY_LIMIT: "WORKOUT_DAY_LIMIT",
+  PERIODIZATIONS: "PERIODIZATIONS",
 } as const;
 
 export type UpdateAdminPlan200EntitlementsItem = {
@@ -16001,6 +16219,12 @@ export type UpdateAdminPlan200 = {
    * @maximum 9007199254740991
    */
   monthlyPriceInCents: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  annualPriceInCents: number | null;
   currency: string;
   isPublic: boolean;
   isActive: boolean;
@@ -16054,6 +16278,9 @@ export const UpdateAdminPlanEntitlementsBodyEntitlementsItemEntitlement = {
   AI_CHAT: "AI_CHAT",
   AI_PLAN_GENERATION: "AI_PLAN_GENERATION",
   SOURCE_LIBRARY: "SOURCE_LIBRARY",
+  WORKOUT_PLAN_LIMIT: "WORKOUT_PLAN_LIMIT",
+  WORKOUT_DAY_LIMIT: "WORKOUT_DAY_LIMIT",
+  PERIODIZATIONS: "PERIODIZATIONS",
 } as const;
 
 export type UpdateAdminPlanEntitlementsBodyEntitlementsItem = {
@@ -16067,7 +16294,7 @@ export type UpdateAdminPlanEntitlementsBodyEntitlementsItem = {
 };
 
 export type UpdateAdminPlanEntitlementsBody = {
-  /** @maxItems 8 */
+  /** @maxItems 15 */
   entitlements: UpdateAdminPlanEntitlementsBodyEntitlementsItem[];
 };
 
@@ -16092,6 +16319,9 @@ export const UpdateAdminPlanEntitlements200EntitlementsItemEntitlement = {
   AI_CHAT: "AI_CHAT",
   AI_PLAN_GENERATION: "AI_PLAN_GENERATION",
   SOURCE_LIBRARY: "SOURCE_LIBRARY",
+  WORKOUT_PLAN_LIMIT: "WORKOUT_PLAN_LIMIT",
+  WORKOUT_DAY_LIMIT: "WORKOUT_DAY_LIMIT",
+  PERIODIZATIONS: "PERIODIZATIONS",
 } as const;
 
 export type UpdateAdminPlanEntitlements200EntitlementsItem = {
@@ -16120,6 +16350,12 @@ export type UpdateAdminPlanEntitlements200 = {
    * @maximum 9007199254740991
    */
   monthlyPriceInCents: number;
+  /**
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   * @nullable
+   */
+  annualPriceInCents: number | null;
   currency: string;
   isPublic: boolean;
   isActive: boolean;
@@ -21702,6 +21938,11 @@ export type GetEditableWorkoutPlan401 = {
   code: string;
 };
 
+export type GetEditableWorkoutPlan403 = {
+  error: string;
+  code: string;
+};
+
 export type GetEditableWorkoutPlan404 = {
   error: string;
   code: string;
@@ -23337,6 +23578,11 @@ export type createWorkoutPlanResponse401 = {
   status: 401;
 };
 
+export type createWorkoutPlanResponse403 = {
+  data: CreateWorkoutPlan403;
+  status: 403;
+};
+
 export type createWorkoutPlanResponse404 = {
   data: CreateWorkoutPlan404;
   status: 404;
@@ -23358,6 +23604,7 @@ export type createWorkoutPlanResponseSuccess = createWorkoutPlanResponse201 & {
 export type createWorkoutPlanResponseError = (
   | createWorkoutPlanResponse400
   | createWorkoutPlanResponse401
+  | createWorkoutPlanResponse403
   | createWorkoutPlanResponse404
   | createWorkoutPlanResponse409
   | createWorkoutPlanResponse500
@@ -23507,6 +23754,11 @@ export type editWorkoutPlanResponse401 = {
   status: 401;
 };
 
+export type editWorkoutPlanResponse403 = {
+  data: EditWorkoutPlan403;
+  status: 403;
+};
+
 export type editWorkoutPlanResponse404 = {
   data: EditWorkoutPlan404;
   status: 404;
@@ -23528,6 +23780,7 @@ export type editWorkoutPlanResponseSuccess = editWorkoutPlanResponse200 & {
 export type editWorkoutPlanResponseError = (
   | editWorkoutPlanResponse400
   | editWorkoutPlanResponse401
+  | editWorkoutPlanResponse403
   | editWorkoutPlanResponse404
   | editWorkoutPlanResponse409
   | editWorkoutPlanResponse500
@@ -23627,6 +23880,11 @@ export type editWorkoutDayResponse401 = {
   status: 401;
 };
 
+export type editWorkoutDayResponse403 = {
+  data: EditWorkoutDay403;
+  status: 403;
+};
+
 export type editWorkoutDayResponse404 = {
   data: EditWorkoutDay404;
   status: 404;
@@ -23648,6 +23906,7 @@ export type editWorkoutDayResponseSuccess = editWorkoutDayResponse200 & {
 export type editWorkoutDayResponseError = (
   | editWorkoutDayResponse400
   | editWorkoutDayResponse401
+  | editWorkoutDayResponse403
   | editWorkoutDayResponse404
   | editWorkoutDayResponse409
   | editWorkoutDayResponse500
@@ -23819,6 +24078,11 @@ export type duplicateWorkoutPlanResponse401 = {
   status: 401;
 };
 
+export type duplicateWorkoutPlanResponse403 = {
+  data: DuplicateWorkoutPlan403;
+  status: 403;
+};
+
 export type duplicateWorkoutPlanResponse404 = {
   data: DuplicateWorkoutPlan404;
   status: 404;
@@ -23841,6 +24105,7 @@ export type duplicateWorkoutPlanResponseSuccess =
 export type duplicateWorkoutPlanResponseError = (
   | duplicateWorkoutPlanResponse400
   | duplicateWorkoutPlanResponse401
+  | duplicateWorkoutPlanResponse403
   | duplicateWorkoutPlanResponse404
   | duplicateWorkoutPlanResponse409
   | duplicateWorkoutPlanResponse500
@@ -24033,6 +24298,11 @@ export type createPeriodizationResponse401 = {
   status: 401;
 };
 
+export type createPeriodizationResponse403 = {
+  data: CreatePeriodization403;
+  status: 403;
+};
+
 export type createPeriodizationResponse500 = {
   data: CreatePeriodization500;
   status: 500;
@@ -24045,6 +24315,7 @@ export type createPeriodizationResponseSuccess =
 export type createPeriodizationResponseError = (
   | createPeriodizationResponse400
   | createPeriodizationResponse401
+  | createPeriodizationResponse403
   | createPeriodizationResponse500
 ) & {
   headers: Headers;
@@ -24313,6 +24584,11 @@ export type addWorkoutPlanToPeriodizationResponse401 = {
   status: 401;
 };
 
+export type addWorkoutPlanToPeriodizationResponse403 = {
+  data: AddWorkoutPlanToPeriodization403;
+  status: 403;
+};
+
 export type addWorkoutPlanToPeriodizationResponse404 = {
   data: AddWorkoutPlanToPeriodization404;
   status: 404;
@@ -24335,6 +24611,7 @@ export type addWorkoutPlanToPeriodizationResponseSuccess =
 export type addWorkoutPlanToPeriodizationResponseError = (
   | addWorkoutPlanToPeriodizationResponse400
   | addWorkoutPlanToPeriodizationResponse401
+  | addWorkoutPlanToPeriodizationResponse403
   | addWorkoutPlanToPeriodizationResponse404
   | addWorkoutPlanToPeriodizationResponse409
   | addWorkoutPlanToPeriodizationResponse500
@@ -24384,6 +24661,11 @@ export type createWorkoutPlanInPeriodizationResponse401 = {
   status: 401;
 };
 
+export type createWorkoutPlanInPeriodizationResponse403 = {
+  data: CreateWorkoutPlanInPeriodization403;
+  status: 403;
+};
+
 export type createWorkoutPlanInPeriodizationResponse404 = {
   data: CreateWorkoutPlanInPeriodization404;
   status: 404;
@@ -24406,6 +24688,7 @@ export type createWorkoutPlanInPeriodizationResponseSuccess =
 export type createWorkoutPlanInPeriodizationResponseError = (
   | createWorkoutPlanInPeriodizationResponse400
   | createWorkoutPlanInPeriodizationResponse401
+  | createWorkoutPlanInPeriodizationResponse403
   | createWorkoutPlanInPeriodizationResponse404
   | createWorkoutPlanInPeriodizationResponse409
   | createWorkoutPlanInPeriodizationResponse500
@@ -35732,6 +36015,11 @@ export type getEditableWorkoutPlanResponse401 = {
   status: 401;
 };
 
+export type getEditableWorkoutPlanResponse403 = {
+  data: GetEditableWorkoutPlan403;
+  status: 403;
+};
+
 export type getEditableWorkoutPlanResponse404 = {
   data: GetEditableWorkoutPlan404;
   status: 404;
@@ -35754,6 +36042,7 @@ export type getEditableWorkoutPlanResponseSuccess =
 export type getEditableWorkoutPlanResponseError = (
   | getEditableWorkoutPlanResponse400
   | getEditableWorkoutPlanResponse401
+  | getEditableWorkoutPlanResponse403
   | getEditableWorkoutPlanResponse404
   | getEditableWorkoutPlanResponse409
   | getEditableWorkoutPlanResponse500

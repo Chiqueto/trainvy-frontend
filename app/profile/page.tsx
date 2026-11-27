@@ -172,12 +172,34 @@ async function ProfileContent() {
           </>
         )}
 
-        {/* Meu Treinador (para atletas) */}
+        {/* Meu Treinador e Assinatura (para atletas) */}
         {!isCoach && (
-          <MyCoachSection
-            relationship={relationship}
-            initialSharingConsent={sharingConsent}
-          />
+          <>
+            <Link
+              href="/assinatura"
+              className="group flex w-full min-w-0 items-center gap-3 rounded-2xl border border-border/70 bg-card p-4 text-left transition-colors hover:border-primary/40"
+            >
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <CreditCard className="size-5" />
+              </span>
+              <span className="min-w-0 flex-1 space-y-0.5">
+                <span className="block text-sm font-semibold">
+                  Minha Assinatura
+                </span>
+                <span className="block text-xs text-muted-foreground">
+                  {commercialData?.plan?.code === "ATHLETE_PRO" &&
+                  commercialData.subscription?.status === "ACTIVE"
+                    ? `${commercialData.plan.name} · Planos e periodizações ilimitadas`
+                    : `${commercialData?.plan?.name ?? "Atleta Grátis"} · Conhecer Atleta Pro`}
+                </span>
+              </span>
+              <ArrowRight className="size-4 shrink-0 text-muted-foreground group-hover:text-primary" />
+            </Link>
+            <MyCoachSection
+              relationship={relationship}
+              initialSharingConsent={sharingConsent}
+            />
+          </>
         )}
 
         <LegalConsent />
